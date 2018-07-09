@@ -1,0 +1,80 @@
+{
+  "proband": {
+    "familyOrPatientId": "proband1",
+    "sex": "MALE",
+    "age": 32,
+    "diseases": [
+      {
+        "id": "MIM:219700",
+        "label": "CYSTIC FIBROSIS; CF"
+      }
+    ],
+    "phenotypes": [
+      {
+        "type": {
+          "id": "HP:0003074",
+          "label": "Hyperglycemia"
+        }
+      },
+      {
+        "type": {
+          "id": "HP:0000822",
+          "label": "Hypertension"
+        },
+        "negated": true
+      }
+    ]
+  },
+  "gene": {
+    "id": "1080",
+    "symbol": "CFTR"
+  },
+  "publication": {
+    "authorList": "Aznarez I, Chan EM, Zielenski J, Blencowe BJ, Tsui LC",
+    "title": "Characterization of disease-associated mutations affecting an exonic splicing enhancer and two cryptic splice sites in exon 13 of the cystic fibrosis transmembrane conductance regulator gene",
+    "journal": "Hum Mol Genet",
+    "year": 2003,
+    "volume": "12(16)",
+    "pages": "2031-40",
+    "pmid": "12913074"
+  },
+  "variants": [
+    {
+      "contig": "1",
+      "position": 1234,
+      "deletion": "A",
+      "insertion": "G",
+      "genotype": "HET",
+      "variantEvidence": {
+        "type": "SPLICING",
+        "cosegregation": true,
+        "minigeneValidation": true,
+        "cDnaSequencingValidation": true
+      },
+      "variantClass": "SPLICE"
+    },
+    {
+      "contig": "2",
+      "position": 3456,
+      "deletion": "A",
+      "insertion": "C",
+      "genotype": "HOM_ALT",
+      "variantEvidence": {
+        "type": "MENDELIAN",
+        "comparability": true,
+        "reporterRegulation": "up",
+        "emsaValidationPerformed": true,
+        "emsaTfSymbol": "HNF4A",
+        "emsaGeneId": "3223"
+      },
+      "variantClass": "CODING"
+    }
+  ],
+  "metadata": {
+    "metadataContent": "Authors describe patient suffering from ..."
+  },
+  "biocurator": {
+    "biocuratorId": "HPO:cnorris",
+    "email": "chuck_norris@hpo.jax.org"
+  }
+}

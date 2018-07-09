@@ -1,0 +1,263 @@
+syntax = "proto3";
+
+option java_package = "org.monarchinitiative.hpocaseannotator.core.model.proto";
+
+option java_multiple_files = true;
+
+import "google/protobuf/timestamp.proto";
+
+message CaseModel {
+
+    // timestamp for when this case model was created/updated
+    google.protobuf.Timestamp updated = 1;
+
+    Proband proband = 2;
+
+    Gene gene = 3;
+
+    Publication publication = 4;
+
+    repeated Variant variants = 5;
+
+    Metadata metadata = 8;
+
+    Biocurator biocurator = 9;
+}
+
+message Publication {
+    // e.g. 'Aznarez I, Chan EM, Zielenski J, Blencowe BJ, Tsui LC'
+    string author_list = 1;
+    // e.g. 'Characterization of disease-associated mutations affecting an exonic splicing enhancer and two cryptic splice sites in exon 13 of the cystic fibrosis transmembrane conductance regulator gene'
+    string title = 2;
+    // e.g. 'Hum Mol Genet'
+    string journal = 3;
+    // e.g. 2003
+    int32 year = 4;
+    // e.g. '12(16)'
+    string volume = 5;
+    // e.g. '2031-40'
+    string pages = 6;
+    // since PMIDs will not be sorted numerically, PMID will be string. E.g. '12913074'
+    string pmid = 7;
+}
+
+message Proband {
+
+    // ID used by authors of the publication to refere to the patient
+    string family_or_patient_id = 1;
+
+    // biological sex, not gender
+    Sex sex = 2;
+
+    // age of the proband written in the publication
+    int32 age = 3;
+
+    repeated Disease diseases = 4;
+
+    repeated Phenotype phenotypes = 5;
+
+    enum Sex {
+        UNREPORTED = 0;
+        MALE = 1;
+        FEMALE = 2;
+    }
+}
+
+// snatched from phenopackets v1 schema, some fields were removed, others were added
+message Variant {
+    // genome assembly isn't strictly necessary if using the sequence accession as that will be unique for the assembly/sequence
+    GenomeAssembly genome_assembly = 1;
+    // string describing the chromosome, e.g. chr1, chrX, chrM, ...
+    string contig = 2;
+    // Sequence position at which the change is located, in the specified coordinate system.
+    int32 position = 4; //start, end...
+    // Deleted bases on the forward strand - equivalent to the VCF REF
+    string deletion = 5;
+    // Inserted bases on the forward strand - equivalent to the VCF ALT
+    string insertion = 6;
+
+    Genotype genotype = 7;
+
+    VariantEvidence variant_evidence = 8;
+
+    VariantClass variant_class = 9;
+}
+
+// snatched from phenopackets v1 schema
+message Phenotype {
+    // Free-text description of the phenotype. Note this is not a acceptable place to document/describe the phenotype -
+    // the type and onset etc... fields should be used for this purpose.
+    string description = 1;
+
+    // The primary ontology class which describes the phenotype. For example "HP:0001363"  "Craniosynostosis"
+    // FHIR mapping: Condition.identifier
+    OntologyClass type = 2;
+
+    // Flag to indicate whether the phenotype was observed or not. Default is 'false', in other words the phenotype was
+    // observed. Therefore it is only required in cases to indicate that the phenotype was looked for, but not observed.
+    bool negated = 3;
+}
+
+// Simple identifier name tuple to link to a concept (snatched from phenopackets v1 schema)
+message Disease {
+    // The identifier of this disease e.g. MONDO:0007043, OMIM:101600, Orphanet:710, DOID:14705 (note these are all equivalent)
+    string id = 1;
+    // Textual name of the disease e.g. Pfeiffer syndrome
+    string label = 2;
+}
+
+// Simple placeholder for a Gene concept (snatched from phenopackets v1 schema)
+message Gene {
+    // a CURIE with a prefix that is NCBIGene, HGNC, ENSEMBL, UCSC e.g. HGNC:347, ENSG00000120705, uc003ldc.6
+    // https://www.genenames.org/cgi-bin/gene_symbol_report?q=data/hgnc_data.php&hgnc_id=HGNC:3477
+    string id = 1;
+    // The official gene symbol as designated by the organism gene nomenclature committee e.g. ETF1 or Etf1
+    string symbol = 2;
+}
+
+
+message Metadata {
+    // identifier for the contributor/program
+    string created_by = 1;
+
+    string metadata_content = 2;
+}
+
+// Human genome reference assembly - major version (snatched from phenopackets v1 schema)
+enum GenomeAssembly {
+    option allow_alias = true;
+    //  defaulted to GRCh37 as this is more common than NCBI36?
+    GRCH_37 = 0;
+    HG_19 = 0;
+
+    NCBI_36 = 1;
+    HG_18 = 1;
+
+    GRCH_38 = 2;
+    HG_38 = 2;
+}
+
+
+enum Genotype {
+    UNKNOWN = 0;
+    // homozygous reference (wild type)
+    HOM_REF = 1;
+    // heterozygous, 0/1 in VCF notation
+    HET = 2;
+    // homozygous alternate, 1/1 in VCF notation
+    HOM_ALT = 3;
+    // hemizygous
+    HEMIZYGOUS = 4;
+}
+
+enum VariantClass {
+    MISSING = 0;
+    CODING = 1;
+    ENHANCER = 2;
+    PROMOTER = 3;
+    SPLICE = 4;
+    FIVE_UTR = 5;
+    THREE_UTR = 6;
+    ICR = 7;
+    MICRO_RNA_GENE = 8;
+    RNP_RNA_COMPONENT = 9;
+    LINC_RNA = 10;
+}
+
+enum VariantEvidenceType {
+    // placeholder for default value, if this value is present, all the other evidence is invalid.
+    UNKNOWN_TYPE = 0;
+    // coding and non-coding variants curated in the Genomiser project
+    MENDELIAN = 1;
+    // splicing-related variants curated in the ESE project
+    SPLICING = 2;
+    // TODO - what project?
+    SOMATIC = 3;
+
+}
+
+// A class (aka term, concept) in an ontology.
+// FHIR mapping: CodeableConcept (http://www.hl7.org/fhir/datatypes.html#CodeableConcept)
+//   see also Coding (http://www.hl7.org/fhir/datatypes.html#Coding)
+message OntologyClass {
+    // a CURIE-style identifier e.g. HP:0100024, MP:0001284, UBERON:0001690.
+    // This is the primary key for the ontology class
+    // REQUIRED?
+    string id = 1;
+
+    // class label, aka name. E.g. "Abnormality of cardiovascular system"
+    string label = 2;
+}
+
+
+message Biocurator {
+
+    // ID of the last person who accessed the data
+    string biocurator_id = 1;
+    //
+    string email = 2;
+}
+
+// container for all the types of currently recognized evidence information in SplicingEvidence, MendelianEvidence, etc
+message VariantEvidence {
+
+    // it is not allowed to set required field in proto3 syntax. Presence of this field will always be enforced in
+    // HRMD software though
+    VariantEvidenceType type = 1;
+
+    // ------------------------- general "evidence" for all variants -------------------------
+    bool cosegregation = 2;
+
+    bool comparability = 3;
+
+    // ------------------------- evidence related to SPLICING VariantEvidenceType --------------------------------------
+
+    bool minigene_validation = 4;
+
+    bool site_directed_mutagenesis_validation = 5;
+
+    bool rt_pcr_validation = 6;
+
+    bool sr_protein_overexpression_validation = 7;
+
+    bool sr_protein_knockdown_validation = 8;
+
+    bool c_dna_sequencing_validation = 9;
+
+    bool pcr_validation = 10;
+
+    bool mut_of_wt_splice_site_validation = 11;
+
+    bool other_splicing_validation = 12;
+
+    // for future needs
+    reserved 13 to 30;
+
+    // ------------------------- evidence related to MENDELIAN VariantEvidenceType -------------------------------------
+    // Note: some of these fields are used also in SOMATIC VariantEvidenceType
+
+    string regulator = 31;
+
+    // for values [up, down, no]
+    string reporter_regulation = 32;
+
+    string reporter_residual_activity = 33;
+
+    bool emsa_validation_performed = 34;
+
+    string emsa_tf_symbol = 35;
+
+    string emsa_gene_id = 36;
+
+    string other_mendelian_choices = 37;
+
+    string other_mendelian_effect = 38;
+
+    // for future needs
+    reserved 39 to 60;
+    // ------------------------- evidence related to SOMATIC VariantEvidenceType ---------------------------------------
+
+    int32 m_patients = 61;
+
+    int32 n_patients = 62;
+}
