@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.*?>
+
+<fx:root xmlns:fx="http://javafx.com/fxml/1" type="TitledPane" xmlns="http://javafx.com/javafx/8">
+    <content>
+        <VBox>
+            <children>
+                <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                      style="-fx-background-color: #B1E6F2;" VBox.vgrow="NEVER">
+                    <children>
+                        <Label id="variantLabel" prefHeight="25.0" prefWidth="135.0" text="Variant">
+                            <HBox.margin>
+                                <Insets bottom="5.0" left="15.0" right="5.0" top="5.0"/>
+                            </HBox.margin>
+                            <font>
+                                <Font name="System Bold" size="15.0"/>
+                            </font>
+                        </Label>
+                        <GridPane HBox.hgrow="SOMETIMES">
+                            <columnConstraints>
+                                <ColumnConstraints halignment="LEFT" maxWidth="1.7976931348623157E308"
+                                                   minWidth="-Infinity"/>
+                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308"
+                                                   minWidth="-Infinity"/>
+                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308"
+                                                   minWidth="-Infinity"/>
+                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308"
+                                                   minWidth="-Infinity"/>
+                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308"
+                                                   minWidth="-Infinity"/>
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="15.0" vgrow="NEVER"/>
+                                <RowConstraints vgrow="NEVER"/>
+                                <RowConstraints vgrow="NEVER"/>
+                            </rowConstraints>
+                            <children>
+                                <ComboBox fx:id="varChromosomeComboBox" maxWidth="1.7976931348623157E308"
+                                          minHeight="30.0" minWidth="90.0" prefHeight="30.0" prefWidth="90.0"
+                                          promptText="Chr" GridPane.rowIndex="1">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </GridPane.margin>
+                                </ComboBox>
+                                <TextField fx:id="varPositionTextField" minHeight="30.0" minWidth="120.0"
+                                           prefHeight="30.0" prefWidth="120.0" promptText="Position"
+                                           GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </GridPane.margin>
+                                </TextField>
+                                <TextField fx:id="varReferenceTextField" maxWidth="1.7976931348623157E308"
+                                           prefHeight="30.0" prefWidth="190.0" promptText="Reference allele"
+                                           GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </GridPane.margin>
+                                </TextField>
+                                <TextField fx:id="varAlternateTextField" prefHeight="30.0" prefWidth="190.0"
+                                           promptText="Alternate allele" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </GridPane.margin>
+                                </TextField>
+                                <TextField fx:id="varSnippetTextField" prefHeight="30.0" prefWidth="190.0"
+                                           promptText="Snippet" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </GridPane.margin>
+                                </TextField>
+                                <ComboBox fx:id="varGenotypeComboBox" maxWidth="1.7976931348623157E308" minHeight="30.0"
+                                          minWidth="120.0" prefHeight="30.0" prefWidth="120.0" promptText="Genotype"
+                                          GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </GridPane.margin>
+                                </ComboBox>
+                                <ComboBox fx:id="varClassComboBox" maxHeight="1.7976931348623157E308"
+                                          maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="190.0"
+                                          prefHeight="30.0" prefWidth="190.0" promptText="Variant class"
+                                          GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </GridPane.margin>
+                                </ComboBox>
+                                <ComboBox fx:id="varPathomechanismComboBox" maxHeight="1.7976931348623157E308"
+                                          maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="190.0"
+                                          prefHeight="30.0" prefWidth="190.0" promptText="Pathomechanism"
+                                          GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </GridPane.margin>
+                                </ComboBox>
+                                <ComboBox fx:id="varConsequenceComboBox" maxHeight="1.7976931348623157E308"
+                                          maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="190.0"
+                                          prefHeight="30.0" prefWidth="190.0" promptText="Consequence"
+                                          GridPane.columnIndex="4" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="2">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </GridPane.margin>
+                                </ComboBox>
+                            </children>
+                            <HBox.margin>
+                                <Insets/>
+                            </HBox.margin>
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                            </padding>
+                        </GridPane>
+                        <GridPane>
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES"/>
+                                <ColumnConstraints hgrow="SOMETIMES"/>
+                                <ColumnConstraints hgrow="SOMETIMES"/>
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" vgrow="NEVER"/>
+                                <RowConstraints minHeight="10.0" vgrow="NEVER"/>
+                                <RowConstraints minHeight="10.0" vgrow="NEVER"/>
+                            </rowConstraints>
+                            <children>
+                                <Label prefHeight="30.0" text="Cryptic splice site" textAlignment="CENTER"
+                                       wrapText="true" GridPane.columnSpan="3" GridPane.halignment="CENTER">
+                                    <font>
+                                        <Font name="System Bold" size="15.0"/>
+                                    </font>
+                                    <GridPane.margin>
+                                        <Insets/>
+                                    </GridPane.margin>
+                                </Label>
+                                <Label alignment="CENTER" contentDisplay="CENTER" minHeight="30.0" minWidth="80.0"
+                                       prefHeight="30.0" prefWidth="80.0" text="Position" textAlignment="CENTER"
+                                       GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
+                                <Label alignment="CENTER" contentDisplay="CENTER" minHeight="30.0" minWidth="80.0"
+                                       prefHeight="30.0" prefWidth="80.0" text="Type" textAlignment="CENTER"
+                                       GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
+                                <Label alignment="CENTER" contentDisplay="CENTER" minHeight="30.0" minWidth="80.0"
+                                       prefHeight="30.0" prefWidth="80.0" text="Snippet" textAlignment="CENTER"
+                                       GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
+                                <TextField fx:id="crypticSpliceSitePositionTextField" maxHeight="1.7976931348623157E308"
+                                           maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="120.0"
+                                           prefHeight="30.0" prefWidth="120.0" promptText="Position"
+                                           GridPane.rowIndex="2">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </GridPane.margin>
+                                </TextField>
+                                <ComboBox fx:id="crypticSpliceSiteTypeComboBox" minHeight="30.0" minWidth="120.0"
+                                          prefHeight="30.0" prefWidth="120.0" GridPane.columnIndex="1"
+                                          GridPane.rowIndex="2">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </GridPane.margin>
+                                </ComboBox>
+                                <TextField fx:id="crypticSpliceSiteSnippetTextField" minHeight="30.0" minWidth="170.0"
+                                           prefHeight="30.0" prefWidth="170.0" promptText="CSS snippet"
+                                           GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </GridPane.margin>
+                                </TextField>
+                            </children>
+                            <HBox.margin>
+                                <Insets left="20.0"/>
+                            </HBox.margin>
+                        </GridPane>
+                    </children>
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                      style="-fx-background-color: #F9EDED;">
+                    <children>
+                        <Label id="validationLabel" prefHeight="25.0" prefWidth="135.0" text="Validation">
+                            <HBox.margin>
+                                <Insets bottom="5.0" left="15.0" right="5.0" top="5.0"/>
+                            </HBox.margin>
+                            <font>
+                                <Font name="System Bold" size="15.0"/>
+                            </font>
+                        </Label>
+                        <VBox alignment="TOP_CENTER" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="In vivo and in vitro" textAlignment="CENTER">
+                                    <font>
+                                        <Font name="System Bold" size="15.0"/>
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </VBox.margin>
+                                </Label>
+                                <Label alignment="TOP_LEFT"
+                                       text="Experiments with patient-derived samples or with artificial DNA constructs"
+                                       textAlignment="CENTER">
+                                    <font>
+                                        <Font name="System Italic" size="13.0"/>
+                                    </font>
+                                </Label>
+                                <GridPane>
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints vgrow="SOMETIMES"/>
+                                        <RowConstraints vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <CheckBox fx:id="minigeneCheckBox" alignment="CENTER" minHeight="30.0"
+                                                  mnemonicParsing="false" text="Minigene">
+                                            <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                            </padding>
+                                        </CheckBox>
+                                        <CheckBox fx:id="siteDirectedMutagenesisCheckBox" alignment="CENTER"
+                                                  minHeight="30.0" mnemonicParsing="false"
+                                                  text="Site directed mutagenesis" GridPane.columnIndex="1">
+                                            <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                            </padding>
+                                        </CheckBox>
+                                        <CheckBox fx:id="rtPCRCheckBox" alignment="CENTER" minHeight="30.0"
+                                                  mnemonicParsing="false" text="RT-PCR (patient sample)"
+                                                  GridPane.columnIndex="2">
+                                            <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                            </padding>
+                                        </CheckBox>
+                                        <CheckBox fx:id="cDNASeqencingCheckBox" alignment="CENTER" minHeight="30.0"
+                                                  mnemonicParsing="false" text="cDNA sequencing (patient sample)"
+                                                  GridPane.columnIndex="3">
+                                            <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                            </padding>
+                                        </CheckBox>
+                                        <CheckBox fx:id="srProteinOverexpressionCheckBox" alignment="CENTER"
+                                                  minHeight="30.0" mnemonicParsing="false"
+                                                  text="SR protein overexpression" GridPane.rowIndex="1">
+                                            <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                            </padding>
+                                        </CheckBox>
+                                        <CheckBox fx:id="srProteinKnockdownCheckBox" alignment="CENTER" minHeight="30.0"
+                                                  mnemonicParsing="false" text="SR protein knockdown"
+                                                  GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                            <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                            </padding>
+                                        </CheckBox>
+                                        <CheckBox fx:id="mutationOfWTSpliceSiteCheckBox" alignment="CENTER"
+                                                  minHeight="30.0" mnemonicParsing="false"
+                                                  text="Mutation of WT splice site" GridPane.columnIndex="2"
+                                                  GridPane.rowIndex="1">
+                                            <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                            </padding>
+                                        </CheckBox>
+                                        <CheckBox fx:id="otherCheckBox" alignment="CENTER" minHeight="30.0"
+                                                  mnemonicParsing="false" text="Other" GridPane.columnIndex="3"
+                                                  GridPane.rowIndex="1">
+                                            <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                            </padding>
+                                        </CheckBox>
+                                        <CheckBox fx:id="pcrCheckBox" alignment="CENTER" minHeight="30.0"
+                                                  mnemonicParsing="false" text="PCR" GridPane.columnIndex="4">
+                                            <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                            </padding>
+                                        </CheckBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="15.0"/>
+                                    </VBox.margin>
+                                </GridPane>
+                                <HBox alignment="CENTER_LEFT" VBox.vgrow="NEVER">
+                                    <children>
+                                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="25.0"
+                                               text="Cosegregation">
+                                            <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                            </HBox.margin>
+                                        </Label>
+                                        <ComboBox fx:id="cosegregationComboBox" maxWidth="1.7976931348623157E308"
+                                                  minHeight="30.0" minWidth="120.0" prefHeight="30.0" prefWidth="120.0">
+                                            <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                            </HBox.margin>
+                                        </ComboBox>
+                                        <Label prefHeight="25.0" text="Comparability">
+                                            <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                            </HBox.margin>
+                                        </Label>
+                                        <ComboBox fx:id="comparabilityComboBox" maxWidth="1.7976931348623157E308"
+                                                  minHeight="30.0" minWidth="120.0" prefHeight="30.0" prefWidth="120.0">
+                                            <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                            </HBox.margin>
+                                        </ComboBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </VBox.margin>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+                </HBox>
+            </children>
+        </VBox>
+    </content>
+</fx:root>

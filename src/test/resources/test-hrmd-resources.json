@@ -1,0 +1,8 @@
+{
+  "dataDir": "target/test-classes",
+  "refGenome": "target/test-classes",
+  "hpOBOPath": "target/test-classes/HP.obo",
+  "entrezGeneFilePath": "target/test-classes/Homo_sapiens.gene_info.gz",
+  "diseaseCaseDir": "target/test-classes",
+  "biocuratorId": "HPO:wwhite"
+}

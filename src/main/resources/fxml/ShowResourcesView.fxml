@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<StackPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+           xmlns="http://javafx.com/javafx/8.0.111"
+           fx:controller="org.monarchinitiative.hpo_case_annotator.controller.ShowResourcesController">
+    <children>
+        <VBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+              StackPane.alignment="CENTER_LEFT">
+            <children>
+                <Label text="Resources:" VBox.vgrow="NEVER">
+                    <font>
+                        <Font name="System Bold" size="15.0"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </VBox.margin>
+                </Label>
+                <TableView fx:id="contentTableView" editable="true" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="nameTableColumn" editable="false" prefWidth="300.0" text="Name"/>
+                        <TableColumn fx:id="valueTableColumn" editable="false" prefWidth="500.0" text="Value"/>
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

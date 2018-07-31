@@ -1,0 +1,17 @@
+.button {
+	
+}
+
+/* Add variant button */
+#addVariantButton {-fx-graphic: url("/img/new-born-chicken-icon.png");}
+
+#variantsHBox {
+	-fx-background-color: #B1E6F2;
+}
+
+#variantsTitleLabel {
+	-fx-font-weight: bold;
+	-fx-font-size: large;  
+}
+
+#removeVariantButton { -fx-graphic: url("/img/delete-icon.png");} 

@@ -1,0 +1,40 @@
+/* Global settings */
+.root {
+	
+}
+
+/* General settings for Button class */
+.button {
+	
+}
+
+#mainScene {
+	
+}
+
+#saveXMLButton {
+	
+}
+
+/* Add images to MenuItems*/
+#newMenuItem > .label {-fx-graphic: url("/img/document-new-icon.png");}
+#openMenuItem > .label {-fx-graphic: url("/img/open-icon.png");}
+#saveMenuItem > .label {-fx-graphic: url("/img/save-icon.png");}
+#saveAsMenuItem > .label {-fx-graphic: url("/img/save-icon.png");}
+#exitMenuItem > .label {-fx-graphic: url("/img/exit-icon.png");}
+#downloadHPOBOMenuItem > .label {-fx-graphic: url("/img/download-icon.png");}
+#downloadEntrezGeneMenuItem > .label {-fx-graphic: url("/img/dna-icon.png");}
+#setGenomePathMenuItem > .label {-fx-graphic: url("/img/genome-icon.png");}
+#setBiocuratorMenuItem > .label {-fx-graphic: url("/img/personal-information-icon.png");}
+#showCurrentSettingsMenuItem > .label {-fx-graphic: url("/img/bugs-bunny.png");}
+#setXMLDirectoryMenuItem > .label {-fx-graphic: url("/img/xml-tool-icon.png");}
+#showCuratedPublicationsMenuItem > .label {-fx-graphic: url("/img/summary-icon.png");}
+#validateCurrentEntryMenuItem > .label {-fx-graphic: url("/img/minion.png");}
+#validateAllXMLFilesMenuItem > .label {-fx-graphic: url("/img/big-v.png")}
+#exportToTSVMenuItem > .label {-fx-graphic: url("/img/export-icon.png");}
+#exportToSummaryFileMenuItem > .label {-fx-graphic: url("/img/summary-icon.png");}
+#exportListOfComHetCasesWithOneCodingVariantMenuItem > .label {-fx-graphic: url("/img/fun.png");}
+#phenopacketMenuItem > .label { -fx-graphic: url("/img/marsattacks-icon.png");}
+#helpMenuItem > .label {-fx-graphic: url("/img/help-icon.png");}
+#TFListMenuItem > .label {-fx-graphic: url("/img/donald-duck.png");}
+#NCIThesaurusMenuItem > .label {-fx-graphic: url("/img/goofy.png");}

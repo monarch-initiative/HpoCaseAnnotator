@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_121" class="java.beans.XMLDecoder">
+    <object class="org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel" id="DiseaseCaseModel0">
+        <void property="biocurator">
+            <void property="bioCuratorId">
+                <string>HPO:walterwhite</string>
+            </void>
+        </void>
+        <void property="disease">
+            <void property="database">
+                <string>OMIM</string>
+            </void>
+            <void property="diseaseId">
+                <string>609536</string>
+            </void>
+            <void property="diseaseName">
+                <string>COMPLEMENT COMPONENT 5 DEFICIENCY; C5D</string>
+            </void>
+        </void>
+        <void property="familyInfo">
+            <void property="age">
+                <string>19</string>
+            </void>
+            <void property="familyOrPatientID">
+                <string>II:9</string>
+            </void>
+            <void property="sex">
+                <string>male</string>
+            </void>
+        </void>
+        <void property="genomeBuild">
+            <string>GRCh37</string>
+        </void>
+        <void property="hpoList">
+            <void method="add">
+                <object class="org.monarchinitiative.hpo_case_annotator.model.HPO">
+                    <void property="hpoId">
+                        <string>HP:0001287</string>
+                    </void>
+                    <void property="hpoName">
+                        <string>Meningitis</string>
+                    </void>
+                    <void property="observed">
+                        <string>YES</string>
+                    </void>
+                </object>
+            </void>
+            <void method="add">
+                <object class="org.monarchinitiative.hpo_case_annotator.model.HPO">
+                    <void property="hpoId">
+                        <string>HP:0030955</string>
+                    </void>
+                    <void property="hpoName">
+                        <string>Alcoholism</string>
+                    </void>
+                    <void property="observed">
+                        <string>NOT</string>
+                    </void>
+                </object>
+            </void>
+            <void method="add">
+                <object class="org.monarchinitiative.hpo_case_annotator.model.HPO">
+                    <void property="hpoId">
+                        <string>HP:0002721</string>
+                    </void>
+                    <void property="hpoName">
+                        <string>Immunodeficiency</string>
+                    </void>
+                    <void property="observed">
+                        <string>YES</string>
+                    </void>
+                </object>
+            </void>
+        </void>
+        <void property="metadata">
+            <void property="metadataText">
+                <string>Authors describe proband coming from large family with history of consanguinity carrying primary complete C5 deficiency. Blah, blah...</string>
+            </void>
+        </void>
+        <void property="publication">
+            <void property="authorlist">
+                <string>Aguilar-Ramirez P, Reis ES, Florido MP, Barbosa AS, Farah CS, Costa-Carvalho BT, Isaac L</string>
+            </void>
+            <void property="journal">
+                <string>Mol Immunol</string>
+            </void>
+            <void property="pages">
+                <string>2116-23</string>
+            </void>
+            <void property="pmid">
+                <string>19375167</string>
+            </void>
+            <void property="title">
+                <string>Skipping of exon 30 in C5 gene results in complete human C5 deficiency and demonstrates the importance of C5d and CUB domains for stability</string>
+            </void>
+            <void property="volume">
+                <string>46(10)</string>
+            </void>
+            <void property="year">
+                <string>2009</string>
+            </void>
+        </void>
+        <void property="targetGene">
+            <void property="chromosome">
+                <string>9</string>
+            </void>
+            <void property="entrezID">
+                <string>727</string>
+            </void>
+            <void property="geneName">
+                <string>C5</string>
+            </void>
+        </void>
+        <void property="variants">
+            <void method="add">
+                <object class="org.monarchinitiative.hpo_case_annotator.model.SplicingVariant" id="SplicingVariant0">
+                    <void property="alternateAllele">
+                        <string>T</string>
+                    </void>
+                    <void property="chromosome">
+                        <string>9</string>
+                    </void>
+                    <void property="comparability">
+                        <string>no</string>
+                    </void>
+                    <void property="consequence">
+                        <string>Exon skipping</string>
+                    </void>
+                    <void property="cosegregation">
+                        <string>yes</string>
+                    </void>
+                    <void property="crypticPosition">
+                        <string>123737090</string>
+                    </void>
+                    <void property="crypticSpliceSiteSnippet">
+                        <string>ATATG|GCGAGTTCTT</string>
+                    </void>
+                    <void property="crypticSpliceSiteType">
+                        <string>5&apos; splice site</string>
+                    </void>
+                    <void property="genotype">
+                        <string>homozygous</string>
+                    </void>
+                    <void property="pathomechanism">
+                        <string>splicing|3css|activated</string>
+                    </void>
+                    <void property="position">
+                        <string>123737057</string>
+                    </void>
+                    <void property="referenceAllele">
+                        <string>C</string>
+                    </void>
+                    <void property="snippet">
+                        <string>TTCATTTAC[C/T]TCTACTGG</string>
+                    </void>
+                    <void property="splicingValidation">
+                        <void property="CDNASequencingValidation">
+                            <boolean>true</boolean>
+                        </void>
+                        <void property="minigeneValidation">
+                            <boolean>true</boolean>
+                        </void>
+                        <void property="otherValidation">
+                            <boolean>true</boolean>
+                        </void>
+                        <void property="rtPCRValidation">
+                            <boolean>true</boolean>
+                        </void>
+                        <void property="srProteinKnockdownValidation">
+                            <boolean>true</boolean>
+                        </void>
+                    </void>
+                    <void property="variantClass">
+                        <string>splicing</string>
+                    </void>
+                </object>
+            </void>
+            <void method="add">
+                <object class="org.monarchinitiative.hpo_case_annotator.model.MendelianVariant">
+                    <void property="alternateAllele">
+                        <string>G</string>
+                    </void>
+                    <void property="chromosome">
+                        <string>9</string>
+                    </void>
+                    <void property="comparability">
+                        <string>no</string>
+                    </void>
+                    <void property="cosegregation">
+                        <string>no</string>
+                    </void>
+                    <void property="emsaGeneId">
+                        <string>TF_GENEID_TEST</string>
+                    </void>
+                    <void property="emsaTFSymbol">
+                        <string>TF_SYMBOL_TEST</string>
+                    </void>
+                    <void property="emsaValidationPerformed">
+                        <string>yes</string>
+                    </void>
+                    <void property="genotype">
+                        <string>homozygous</string>
+                    </void>
+                    <void property="other">
+                        <string>down</string>
+                    </void>
+                    <void property="otherEffect">
+                        <string>in vitro mRNA expression assay</string>
+                    </void>
+                    <void property="pathomechanism">
+                        <string>promoter|reduced-transcription</string>
+                    </void>
+                    <void property="position">
+                        <string>123737057</string>
+                    </void>
+                    <void property="referenceAllele">
+                        <string>C</string>
+                    </void>
+                    <void property="regulator">
+                        <string>TEST_REGULATOR</string>
+                    </void>
+                    <void property="reporterRegulation">
+                        <string>no</string>
+                    </void>
+                    <void property="reporterResidualActivity">
+                        <string>RES_ACT</string>
+                    </void>
+                    <void property="snippet">
+                        <string>TTCATTTAC[C/G]TCTACTGG</string>
+                    </void>
+                    <void property="variantClass">
+                        <string>promoter</string>
+                    </void>
+                </object>
+            </void>
+            <void method="add">
+                <object class="org.monarchinitiative.hpo_case_annotator.model.SomaticVariant">
+                    <void property="MPatients">
+                        <string>100</string>
+                    </void>
+                    <void property="NPatients">
+                        <string>78</string>
+                    </void>
+                    <void property="alternateAllele">
+                        <string>A</string>
+                    </void>
+                    <void property="chromosome">
+                        <string>9</string>
+                    </void>
+                    <void property="emsaGeneId">
+                        <string>TF_GENE_SYMBOL_TEST</string>
+                    </void>
+                    <void property="emsaTFSymbol">
+                        <string>TF_EMSA_SOM_TEST</string>
+                    </void>
+                    <void property="emsaValidationPerformed">
+                        <string>no</string>
+                    </void>
+                    <void property="genotype">
+                        <string>heterozygous</string>
+                    </void>
+                    <void property="other">
+                        <string>up</string>
+                    </void>
+                    <void property="otherEffect">
+                        <string>Transgenic model</string>
+                    </void>
+                    <void property="pathomechanism">
+                        <string>5UTR|transcription</string>
+                    </void>
+                    <void property="position">
+                        <string>123737057</string>
+                    </void>
+                    <void property="referenceAllele">
+                        <string>C</string>
+                    </void>
+                    <void property="regulator">
+                        <string>SOMATIC_REGULATOR</string>
+                    </void>
+                    <void property="reporterRegulation">
+                        <string>up</string>
+                    </void>
+                    <void property="reporterResidualActivity">
+                        <string>SOMATIC_RP_PERC</string>
+                    </void>
+                    <void property="snippet">
+                        <string>TTCATTTAC[C/A]TCTACTGG</string>
+                    </void>
+                    <void property="variantClass">
+                        <string>5UTR</string>
+                    </void>
+                </object>
+            </void>
+        </void>
+    </object>
+</java>
+
