@@ -1,3 +1,7 @@
+# built Sphinx docs
+docs/build/
+
+# Maven target directory
 target/
 
 # Compiled class file
