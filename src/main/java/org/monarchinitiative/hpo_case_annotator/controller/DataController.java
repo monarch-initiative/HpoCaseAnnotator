@@ -6,7 +6,6 @@ import com.github.monarchinitiative.hpotextmining.model.PhenotypeTerm;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.controller.variant.MendelianVariantController;
 import org.monarchinitiative.hpo_case_annotator.controller.variant.SomaticVariantController;
 import org.monarchinitiative.hpo_case_annotator.controller.variant.SplicingVariantController;
@@ -47,7 +46,7 @@ public final class DataController {
 
     private final ValidationRunner validationRunner;
 
-    private final ChoiceBasket basket;
+    private final ChoiceBasket choiceBasket;
 
     @FXML
     public Button hpoTextMiningButton;
@@ -117,12 +116,12 @@ public final class DataController {
 
     @Inject
     public DataController(OptionalResources optionalResources, Properties properties,
-                          ExecutorService executorService, ValidationRunner validationRunner, ChoiceBasket basket) {
+                          ExecutorService executorService, ValidationRunner validationRunner, ChoiceBasket choiceBasket) {
         this.optionalResources = optionalResources;
         this.properties = properties;
         this.executorService = executorService;
         this.validationRunner = validationRunner;
-        this.basket = basket;
+        this.choiceBasket = choiceBasket;
     }
 
 
@@ -155,14 +154,14 @@ public final class DataController {
      * @return @link BaseVariantController subclass, which is also subclass of {@link TitledPane} and can be displayed
      * as a content within this {@link DataController}.
      */
-    private static TitledPane getVariantController(VariantMode mode, Variant variant) {
+    private TitledPane getVariantController(VariantMode mode, Variant variant) {
         switch (mode) {
             case MENDELIAN:
-                return new MendelianVariantController((MendelianVariant) variant);
+                return new MendelianVariantController((MendelianVariant) variant, choiceBasket);
             case SPLICING:
-                return new SplicingVariantController((SplicingVariant) variant);
+                return new SplicingVariantController((SplicingVariant) variant, choiceBasket);
             case SOMATIC:
-                return new SomaticVariantController((SomaticVariant) variant);
+                return new SomaticVariantController((SomaticVariant) variant, choiceBasket);
             default:
                 String msg = String.format("ERROR: Unknown variant mode %s\n%s", mode.name(), variant);
                 LOGGER.error(msg);
@@ -421,9 +420,9 @@ public final class DataController {
      *
      */
     public void initialize() {
-        genomeBuildComboBox.getItems().addAll(basket.getGenomeBuild());
-        diseaseDatabaseComboBox.getItems().addAll(basket.getDiseaseDatabases());
-        sexComboBox.getItems().addAll(basket.getSex());
+        genomeBuildComboBox.getItems().addAll(choiceBasket.getGenomeBuild());
+        diseaseDatabaseComboBox.getItems().addAll(choiceBasket.getDiseaseDatabases());
+        sexComboBox.getItems().addAll(choiceBasket.getSex());
 
         hpoTextMiningButton.disableProperty().bind(optionalResources.ontologyProperty().isNull());
         entrezIDTextField.disableProperty().bind(optionalResources.entrezIsMissingProperty());

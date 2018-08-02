@@ -6,6 +6,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import org.monarchinitiative.hpo_case_annotator.controller.DataController;
+import org.monarchinitiative.hpo_case_annotator.model.ChoiceBasket;
 import org.monarchinitiative.hpo_case_annotator.model.SomaticVariant;
 import org.monarchinitiative.hpo_case_annotator.model.Variant;
 
@@ -104,8 +105,8 @@ public final class SomaticVariantController extends BaseVariantController {
      *
      * @param variant instance of {@link SomaticVariant} model object.
      */
-    public SomaticVariantController(SomaticVariant variant) {
-        super();
+    public SomaticVariantController(SomaticVariant variant, ChoiceBasket choiceBasket) {
+        super(choiceBasket);
         this.variant = variant;
 
         try {
@@ -136,14 +137,14 @@ public final class SomaticVariantController extends BaseVariantController {
      */
     @Override
     protected void populateContent() {
-        chromosomeComboBox.getItems().addAll(basket.getChromosome());
-        genotypeComboBox.getItems().addAll(basket.getGenotype());
-        variantClassComboBox.getItems().addAll(basket.getVariantClass());
-        pathomechanismComboBox.getItems().addAll(basket.getPathomechanism());
-        reporterComboBox.getItems().addAll(basket.getReporter());
-        emsaComboBox.getItems().addAll(basket.getEmsa());
-        otherChoicesComboBox.getItems().addAll(basket.getOtherChoices());
-        otherEffectComboBox.getItems().addAll(basket.getOtherEffect());
+        chromosomeComboBox.getItems().addAll(choiceBasket.getChromosome());
+        genotypeComboBox.getItems().addAll(choiceBasket.getGenotype());
+        variantClassComboBox.getItems().addAll(choiceBasket.getVariantClass());
+        pathomechanismComboBox.getItems().addAll(choiceBasket.getPathomechanism());
+        reporterComboBox.getItems().addAll(choiceBasket.getReporter());
+        emsaComboBox.getItems().addAll(choiceBasket.getEmsa());
+        otherChoicesComboBox.getItems().addAll(choiceBasket.getOtherChoices());
+        otherEffectComboBox.getItems().addAll(choiceBasket.getOtherEffect());
 
         addTooltip(positionTextField, "Genomic position of variant in 1-based (VCF style) numbering");
         addTooltip(referenceTextField, "Representation of reference allele in VCF style (see help)");

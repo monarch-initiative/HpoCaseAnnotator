@@ -6,6 +6,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import org.monarchinitiative.hpo_case_annotator.controller.DataController;
+import org.monarchinitiative.hpo_case_annotator.model.ChoiceBasket;
 import org.monarchinitiative.hpo_case_annotator.model.SplicingVariant;
 import org.monarchinitiative.hpo_case_annotator.model.Variant;
 
@@ -114,8 +115,8 @@ public final class SplicingVariantController extends BaseVariantController {
      *
      * @param variant instance of {@link SplicingVariant} model object.
      */
-    public SplicingVariantController(SplicingVariant variant) {
-        super();
+    public SplicingVariantController(SplicingVariant variant, ChoiceBasket choiceBasket) {
+        super(choiceBasket);
         this.variant = variant;
 
         try {
@@ -145,14 +146,14 @@ public final class SplicingVariantController extends BaseVariantController {
      */
     @Override
     protected void populateContent() {
-        varChromosomeComboBox.getItems().addAll(basket.getChromosome());
-        varGenotypeComboBox.getItems().addAll(basket.getGenotype());
-        varClassComboBox.getItems().addAll(basket.getVariantClass());
-        varPathomechanismComboBox.getItems().addAll(basket.getPathomechanism());
-        varConsequenceComboBox.getItems().addAll(basket.getConsequence());
-        crypticSpliceSiteTypeComboBox.getItems().addAll(basket.getCrypticSpliceSiteType());
-        cosegregationComboBox.getItems().addAll(basket.getCosegregation());
-        comparabilityComboBox.getItems().addAll(basket.getComparability());
+        varChromosomeComboBox.getItems().addAll(choiceBasket.getChromosome());
+        varGenotypeComboBox.getItems().addAll(choiceBasket.getGenotype());
+        varClassComboBox.getItems().addAll(choiceBasket.getVariantClass());
+        varPathomechanismComboBox.getItems().addAll(choiceBasket.getPathomechanism());
+        varConsequenceComboBox.getItems().addAll(choiceBasket.getConsequence());
+        crypticSpliceSiteTypeComboBox.getItems().addAll(choiceBasket.getCrypticSpliceSiteType());
+        cosegregationComboBox.getItems().addAll(choiceBasket.getCosegregation());
+        comparabilityComboBox.getItems().addAll(choiceBasket.getComparability());
 
         //Create tooltips
         addTooltip(varPositionTextField, "Genomic position of variant in 1-based (VCF style) numbering");

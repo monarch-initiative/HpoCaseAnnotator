@@ -8,9 +8,6 @@ import org.monarchinitiative.hpo_case_annotator.controller.DataController;
 import org.monarchinitiative.hpo_case_annotator.model.ChoiceBasket;
 import org.monarchinitiative.hpo_case_annotator.model.Variant;
 
-import java.io.File;
-import java.util.Optional;
-
 /**
  * Place for shared content of VariantControllers. Needs to be subclassed by every class that wants to act as a controller
  * of {@link Variant} model class and be placed in {@link DataController}.
@@ -22,12 +19,11 @@ public abstract class BaseVariantController extends TitledPane {
      * Bean containing data to be used for populating content of FXML elements such as ComboBoxes. Loaded from
      * choice-basket.yml file.
      */
-    protected static ChoiceBasket basket;
+    protected final ChoiceBasket choiceBasket;
 
 
-    protected BaseVariantController() {
-//        Optional<File> oParams = HRMDResourceManager.getParametersFile();
-//        basket = ChoiceBasket.loadChoices(oParams.get());
+    protected BaseVariantController(ChoiceBasket choiceBasket) {
+        this.choiceBasket = choiceBasket;
     }
 
 
