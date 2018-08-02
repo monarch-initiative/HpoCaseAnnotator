@@ -81,4 +81,12 @@ public final class ValidationRunner {
     public boolean seenThisPMIDBefore(String pmid) {
         return pubMedValidator.seenThisPMIDBefore(pmid);
     }
+
+
+    public ValidationResult validateCompletness(DiseaseCaseModel model) throws ValidationException {
+        ValidationResult result = completenessValidator.validateDiseaseCase(model);
+        if (result.equals(ValidationResult.PASSED))
+            return result;
+        throw new ValidationException(completenessValidator.getErrorMessage());
+    }
 }

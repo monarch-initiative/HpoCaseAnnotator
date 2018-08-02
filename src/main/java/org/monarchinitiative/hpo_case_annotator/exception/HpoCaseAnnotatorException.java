@@ -1,24 +1,24 @@
 package org.monarchinitiative.hpo_case_annotator.exception;
 
-public class HRMDException extends Exception {
+public class HpoCaseAnnotatorException extends Exception {
 
     public final static long serialVersionUID = 1;
 
     private String message = null;
 
 
-    public HRMDException() {
+    public HpoCaseAnnotatorException() {
         super();
     }
 
 
-    public HRMDException(String message) {
+    public HpoCaseAnnotatorException(String message) {
         super(message);
         this.message = message;
     }
 
 
-    public HRMDException(Throwable cause) {
+    public HpoCaseAnnotatorException(Throwable cause) {
         super(cause);
     }
 

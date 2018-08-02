@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 
 /**
- * The driver class of the HRMD gui app.
+ * The driver class of the Hpo Case Annotator app.
  */
 public class Play extends Application {
 

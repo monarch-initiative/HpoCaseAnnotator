@@ -13,6 +13,7 @@ import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.io.*;
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
 import org.monarchinitiative.hpo_case_annotator.util.PopUps;
+import org.monarchinitiative.hpo_case_annotator.validation.ValidationException;
 import org.monarchinitiative.hpo_case_annotator.validation.ValidationLine;
 import org.monarchinitiative.hpo_case_annotator.validation.ValidationRunner;
 import org.slf4j.Logger;
@@ -350,12 +351,12 @@ public final class MainController {
     private void saveModel(File currentModelPath, DiseaseCaseModel model) {
         String conversationTitle = "Save data into file";
 
-//        TODO - completness check
-//        if (completenessValidator.validateDiseaseCase(model) != ValidationResult.PASSED) {
-//            PopUps.showInfoMessage(completenessValidator.getErrorMessage(), "The data is not complete, thus not " +
-//                    "saved.");
-//            return;
-//        }
+        try {
+            validationRunner.validateCompletness(model);
+        } catch (ValidationException e) {
+            PopUps.showInfoMessage(e.getMessage(), "Incomplete data");
+            return;
+        }
 
         if (currentModelPath == null) {
             String suggestedXmlName = model.getFileName() + ".xml";
