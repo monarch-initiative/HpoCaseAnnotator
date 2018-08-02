@@ -238,18 +238,6 @@
             <artifactId>ontologizerlib-io</artifactId>
             <version>0.1</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.github.monarch-initiative/hpotextmining-core -->
-        <dependency>
-            <groupId>com.github.monarch-initiative</groupId>
-            <artifactId>hpotextmining-core</artifactId>
-            <version>0.2.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
         <!-- argparse4j used for parsing the command line -->
         <dependency>

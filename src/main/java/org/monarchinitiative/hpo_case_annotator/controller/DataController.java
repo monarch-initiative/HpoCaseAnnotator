@@ -1,15 +1,19 @@
 package org.monarchinitiative.hpo_case_annotator.controller;
 
-import com.github.monarchinitiative.hpotextmining.HPOTextMining;
-import com.github.monarchinitiative.hpotextmining.TextMiningResult;
-import com.github.monarchinitiative.hpotextmining.model.PhenotypeTerm;
+import com.google.inject.Injector;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.JavaFXBuilderFactory;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.controller.variant.MendelianVariantController;
 import org.monarchinitiative.hpo_case_annotator.controller.variant.SomaticVariantController;
 import org.monarchinitiative.hpo_case_annotator.controller.variant.SplicingVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
+import org.monarchinitiative.hpo_case_annotator.hpotextmining.controllers.Main;
 import org.monarchinitiative.hpo_case_annotator.io.PubMedParser;
 import org.monarchinitiative.hpo_case_annotator.io.RetrievePubMedSummary;
 import org.monarchinitiative.hpo_case_annotator.model.*;
@@ -21,12 +25,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.Set;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.FutureTask;
 import java.util.stream.Collectors;
@@ -47,6 +51,10 @@ public final class DataController {
     private final ValidationRunner validationRunner;
 
     private final ChoiceBasket choiceBasket;
+
+    private final ResourceBundle resourceBundle;
+
+    private final Injector injector;
 
     @FXML
     public Button hpoTextMiningButton;
@@ -116,12 +124,15 @@ public final class DataController {
 
     @Inject
     public DataController(OptionalResources optionalResources, Properties properties,
-                          ExecutorService executorService, ValidationRunner validationRunner, ChoiceBasket choiceBasket) {
+                          ExecutorService executorService, ValidationRunner validationRunner,
+                          ChoiceBasket choiceBasket, ResourceBundle resourceBundle, Injector injector) {
         this.optionalResources = optionalResources;
         this.properties = properties;
         this.executorService = executorService;
         this.validationRunner = validationRunner;
         this.choiceBasket = choiceBasket;
+        this.resourceBundle = resourceBundle;
+        this.injector = injector;
     }
 
 
@@ -324,28 +335,32 @@ public final class DataController {
 
     @FXML
     void hpoTextMiningButtonAction() {
-        URL textMiningUrl = null;
         try {
-            textMiningUrl = new URL(properties.getProperty("text.mining.url"));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("Main.fxml"), resourceBundle,
+                    new JavaFXBuilderFactory(), injector::getInstance);
+            Parent parent = loader.load();
+            Main main = loader.getController();
+            main.setPhenotypeTerms(model.getHpoList().stream()
+                    .map(hpo ->
+                            new Main.PhenotypeTerm(optionalResources.getOntology().getTerm(hpo.getHpoId()),
+                                    hpo.getObserved().equals("YES")))
+                    .collect(Collectors.toSet()));
+            Stage stage = new Stage();
+            stage.initOwner(hpoTextMiningButton.getParent().getScene().getWindow());
+            stage.setScene(new Scene(parent));
+            stage.showAndWait();
+            // wait until user finishes
+            model.getHpoList().clear();
+            model.getHpoList().addAll(main.getPhenotypeTerms().stream()
+                    .map(term -> new HPO(term.getHpoId(), term.getName(), (term.isPresent()) ? "YES" : "NOT"))
+                    .collect(Collectors.toSet()));
         } catch (MalformedURLException e) {
-            LOGGER.warn(e.getMessage());
+            LOGGER.warn("HPO text mining url is in wrong format", e);
+        } catch (IOException e) {
+            LOGGER.warn("Unable to perform text mining", e);
+            e.printStackTrace();
         }
-        Set<PhenotypeTerm> terms = model.getHpoList().stream()
-                .map(hpo -> new PhenotypeTerm(optionalResources.getOntology().getTerm(hpo.getHpoId()), (hpo.getObserved().equals
-                        ("YES"))))
-                .collect(Collectors.toSet());
 
-        HPOTextMining hpoTextMining = new HPOTextMining(optionalResources.getOntology(), textMiningUrl,
-                hpoTextMiningButton.getParent().getScene().getWindow());
-        hpoTextMining.addTerms(terms); // terms already present in the model
-        hpoTextMining.setPmid((model.getPublication().getPmid() == null) ? "" : model.getPublication().getPmid());
-        TextMiningResult result = hpoTextMining.runAnalysis();
-
-        // possible change in pmid is ignored here
-        model.getHpoList().clear();// all terms were sent out so we're getting them back if they weren't removed by user
-        model.getHpoList().addAll(result.getTerms().stream()
-                .map(term -> new HPO(term.getHpoId(), term.getName(), (term.isPresent()) ? "YES" : "NOT"))
-                .collect(Collectors.toSet()));
     }
 
 
