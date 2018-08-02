@@ -1,15 +1,17 @@
 package org.monarchinitiative.hpo_case_annotator.controller;
 
 import javafx.stage.Stage;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.monarchinitiative.hpo_case_annotator.TestApplicationConfig;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.monarchinitiative.hpo_case_annotator.GuiceJUnitRunner;
+import org.monarchinitiative.hpo_case_annotator.GuiceModules;
+import org.monarchinitiative.hpo_case_annotator.gui.HpoCaseAnnotatorModule;
 import org.testfx.framework.junit.ApplicationTest;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestApplicationConfig.class)
+@Ignore("Gui tests are ignored for now")
+@RunWith(GuiceJUnitRunner.class)
+@GuiceModules({HpoCaseAnnotatorModule.class})
 public class ShowValidationResultsControllerTest extends ApplicationTest {
 
     @Test

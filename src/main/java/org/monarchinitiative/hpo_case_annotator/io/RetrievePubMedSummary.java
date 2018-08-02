@@ -1,7 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.io;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class RetrievePubMedSummary {
 
     public static final String NON_EXISTING_PMID = "cannot get document summary";
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger LOGGER = LoggerFactory.getLogger(RetrievePubMedSummary.class);
 
 
     /**
@@ -75,27 +75,12 @@ public class RetrievePubMedSummary {
      * @return String with the html content in single line.
      */
     static String getResponse(URL url) {
-        InputStream is = null;
-        BufferedReader br;
-        String line;
-        List<String> lines = new ArrayList<>();
-        try {
-            is = url.openStream();
-            br = new BufferedReader(new InputStreamReader(is));
-            while ((line = br.readLine()) != null) {
-                lines.add(line);
-            }
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
+            return br.lines().collect(Collectors.joining(" "));
         } catch (IOException e) {
-            log.warn(e);
+            LOGGER.warn("Unable to retrieve response from PubMed server", e);
             return null;
-        } finally {
-            try {
-                if (is != null) is.close();
-            } catch (IOException ioe) {
-                // pass it
-            }
         }
-        return lines.stream().collect(Collectors.joining(" "));
     }
 
 }

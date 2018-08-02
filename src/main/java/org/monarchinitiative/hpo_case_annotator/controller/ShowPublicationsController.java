@@ -1,7 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.controller;
 
-import com.genestalker.springscreen.core.DialogController;
-import com.genestalker.springscreen.core.FXMLDialog;
 import javafx.application.HostServices;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -11,12 +9,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
 import org.monarchinitiative.hpo_case_annotator.model.Variant;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,22 +21,19 @@ import java.util.stream.Collectors;
  * {@link DiseaseCaseModel} instances to be presented is supposed to be entered using {@link
  * ShowPublicationsController#setData(Collection)} method. The content of table is read-only.
  */
-public final class ShowPublicationsController implements DialogController {
+public final class ShowPublicationsController {
 
     /**
      * Template for hyperlink pointing to PubMed entry of the publication.
      */
     private static final String PUBMED_BASE_LINK = "https://www.ncbi.nlm.nih.gov/pubmed/%s";
 
-    private FXMLDialog dialog;
-
     private Set<DiseaseCaseModel> model_cache = new HashSet<>();
 
     /**
      * Allows to open hyperlink in OS-dependent default web browser.
      */
-    @Autowired
-    private HostServices hostServices;
+    private final HostServices hostServices;
 
     @FXML
     private TableView<DiseaseCaseModel> publicationsTableView;
@@ -80,6 +72,11 @@ public final class ShowPublicationsController implements DialogController {
     private TableColumn<DiseaseCaseModel, Hyperlink> pubMedTableColumn;
 
 
+    public ShowPublicationsController(HostServices hostServices) {
+        this.hostServices = hostServices;
+    }
+
+
     /**
      * Crunch variants present in the current {@link DiseaseCaseModel} into string representation that will be
      * presented to user.
@@ -109,24 +106,9 @@ public final class ShowPublicationsController implements DialogController {
 
 
     /**
-     * {@inheritDoc}
-     *
-     * @param dialog
+     * Initialize graphical elements of the controller
      */
-    @Override
-    public void setDialog(FXMLDialog dialog) {
-        this.dialog = dialog;
-    }
-
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param location
-     * @param resources
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize() {
         firstAuthorTableColumn.setCellValueFactory(cdf ->
                 new ReadOnlyStringWrapper(cdf.getValue().getPublication().getFirstAuthorSurname()));
         titleTableColumn.setCellValueFactory(cdf ->

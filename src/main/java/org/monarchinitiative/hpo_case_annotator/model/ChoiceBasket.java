@@ -1,11 +1,11 @@
 package org.monarchinitiative.hpo_case_annotator.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +15,8 @@ import java.util.Map;
  * @author Daniel Danis
  */
 public class ChoiceBasket {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChoiceBasket.class);
 
     private List<String> genomeBuild;
 
@@ -47,80 +49,40 @@ public class ChoiceBasket {
     private List<String> sex;
 
 
-    private ChoiceBasket() { //private no-op ;)
-    }
-
-//    private static void checkFilePresence() {
-//        Optional<File> destinationFile = LegacyHRMDResourceManager.getParametersFile();
-//        if (! destinationFile.exists() ) {
-//                FileChannel source = null;
-//                FileChannel destination = null;
-//            try {
-//                source = new FileInputStream(new File(defaultPath)).getChannel();
-//                destination = new FileOutputStream(destinationFile).getChannel();
-//                destination.transferFrom(source, 0, source.size());
-//            } catch (IOException ioe) {
-//                Alert alert = new Alert(Alert.AlertType.ERROR);
-//                alert.setTitle("HRMD initialization");
-//                PopUps.showException("HRMD initialization",
-//                        "Error",
-//                        String.format("Error occurred while copying of %s file to %s.", defaultPath, destinationFile.getAbsolutePath()),
-//                        ioe);
-//            } finally {
-//                try {
-//                    if (source != null) {
-//                        source.close();
-//                    }
-//                    if (destination != null) {
-//                        destination.close();
-//                    }
-//                } catch (IOException ioe) {
-//                    // swallow
-//                }
-//            }
-//        }
-//    }
-
-
-    /**
-     * Parse given YAML file into {@link ChoiceBasket} object.
-     *
-     * @param where {@link File} object with path to YAML file.
-     * @return {@link ChoiceBasket} populated with content of YAML file.
-     */
-    public static ChoiceBasket loadChoices(File where) {
-//        checkFilePresence();
-        ChoiceBasket pp = new ChoiceBasket();
-
+    public ChoiceBasket(InputStream where) {
         Yaml yaml = new Yaml();
         Map<String, List<String>> magicTrick = null;
-        try {
-            // TODO - do this "magical" parsing somehow better
-            magicTrick = (Map<String, List<String>>) yaml.load(new BufferedReader(new FileReader(where)));
-        } catch (FileNotFoundException fnfe) {
-            System.out.println(String.format("ERROR: Problem parsing params YAML file from location %s",
-                    where.getAbsolutePath()));
-            System.out.println(fnfe.getMessage());
-            fnfe.printStackTrace();
-        }
 
-        pp.setGenomeBuild(magicTrick.get("genomeBuild"));
-        pp.setChromosome(magicTrick.get("chromosome"));
-        pp.setGenotype(magicTrick.get("genotype"));
-        pp.setVariantClass(magicTrick.get("variantClass"));
-        pp.setPathomechanism(magicTrick.get("pathomechanism"));
-        pp.setConsequence(magicTrick.get("consequence"));
-        pp.setCrypticSpliceSiteType(magicTrick.get("crypticSpliceSiteType"));
-        pp.setReporter(magicTrick.get("reporter"));
-        pp.setEmsa(magicTrick.get("emsa"));
-        pp.setOtherChoices(magicTrick.get("otherChoices"));
-        pp.setOtherEffect(magicTrick.get("otherEffect"));
-        pp.setDiseaseDatabases(magicTrick.get("diseaseDatabases"));
-        pp.setCosegregation(magicTrick.get("cosegregation"));
-        pp.setComparability(magicTrick.get("comparability"));
-        pp.setSex(magicTrick.get("sex"));
+        // TODO - do this "magical" parsing somehow better
+        magicTrick = (Map<String, List<String>>) yaml.load(where);
 
-        return pp;
+
+        setGenomeBuild(magicTrick.get("genomeBuild"));
+        setChromosome(magicTrick.get("chromosome"));
+        setGenotype(magicTrick.get("genotype"));
+        setVariantClass(magicTrick.get("variantClass"));
+        setPathomechanism(magicTrick.get("pathomechanism"));
+        setConsequence(magicTrick.get("consequence"));
+        setCrypticSpliceSiteType(magicTrick.get("crypticSpliceSiteType"));
+        setReporter(magicTrick.get("reporter"));
+        setEmsa(magicTrick.get("emsa"));
+        setOtherChoices(magicTrick.get("otherChoices"));
+        setOtherEffect(magicTrick.get("otherEffect"));
+        setDiseaseDatabases(magicTrick.get("diseaseDatabases"));
+        setCosegregation(magicTrick.get("cosegregation"));
+        setComparability(magicTrick.get("comparability"));
+        setSex(magicTrick.get("sex"));
+    }
+
+
+    public ChoiceBasket(File where) throws FileNotFoundException {
+        this(new FileInputStream(where));
+    }
+
+
+    public ChoiceBasket(URL url) throws IOException {
+        this(url.openStream());
+
     }
 
 

@@ -2,8 +2,8 @@ package org.monarchinitiative.hpo_case_annotator.validation;
 
 import org.monarchinitiative.hpo_case_annotator.io.ModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
  */
 public final class PubMedValidator extends AbstractValidator {
 
-    @Autowired
-    private ModelParser modelParser;
 
+    private final ModelParser modelParser;
 
-    public PubMedValidator() {
-        // no-op
+    @Inject
+    public PubMedValidator(ModelParser modelParser) {
+        this.modelParser = modelParser;
     }
 
 

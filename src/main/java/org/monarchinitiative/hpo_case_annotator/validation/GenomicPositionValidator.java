@@ -3,11 +3,14 @@ package org.monarchinitiative.hpo_case_annotator.validation;
 import htsjdk.samtools.reference.FastaSequenceIndex;
 import htsjdk.samtools.reference.IndexedFastaSequenceFile;
 import htsjdk.samtools.reference.ReferenceSequence;
-import org.monarchinitiative.hpo_case_annotator.gui.application.HRMDResourceManager;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
 import org.monarchinitiative.hpo_case_annotator.model.SplicingVariant;
 import org.monarchinitiative.hpo_case_annotator.model.Variant;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.util.List;
 
@@ -17,7 +20,7 @@ import java.util.List;
 public final class GenomicPositionValidator extends AbstractValidator {
 
     //
-    private String genomeDirectory = "";
+    private final ObjectProperty<File> refGenomeDir = new SimpleObjectProperty<>(this, "refGenomeDir");
 
     /** Object representing the fasta index file */
     private FastaSequenceIndex fai = null;
@@ -30,21 +33,13 @@ public final class GenomicPositionValidator extends AbstractValidator {
      */
     private String currentChromosome = "";
 
-    /**
-     * The constructor is passed the location of a directory that contains exactly one FASTA file (ending: *.fa or
-     * *.fasta) that represents the human genome together with the corresponding fasta index file (fai).
-     */
-    private HRMDResourceManager resourceManager;
-
-
-    public GenomicPositionValidator(HRMDResourceManager resourceManager) {
-        this.resourceManager = resourceManager;
+    @Inject
+    public GenomicPositionValidator(OptionalResources optionalResources) {
+        refGenomeDir.bind(optionalResources.refGenomeDirProperty());
     }
 
-
-    /* Used for testing. */
-    public GenomicPositionValidator(String genomeDirectory) {
-        this.genomeDirectory = genomeDirectory;
+    public GenomicPositionValidator(File refGenomeDir) {
+        this.refGenomeDir.set(refGenomeDir);
     }
 
 
@@ -148,7 +143,7 @@ public final class GenomicPositionValidator extends AbstractValidator {
         suffixLen = snippet.length() - border - 1;
         String refGenomePrefixSeq, refGenomeSuffixSeq, enteredPrefixSeq, enteredSuffixSeq;
 
-        int pos = 0;
+        int pos;
         try {
             pos = Integer.parseInt(position);
         } catch (NumberFormatException nfe) {
@@ -228,11 +223,10 @@ public final class GenomicPositionValidator extends AbstractValidator {
      * <p>
      */
     private void openChromosomeFaAndFai(String chrom) {
-        String genomeDir = (resourceManager != null) ? resourceManager.getResources().getRefGenomeDir() : genomeDirectory;
-        String faPath = String.format("%s/%s.fa", genomeDir, chrom);
-        String faiPath = String.format("%s.fai", faPath);
-        this.fai = new FastaSequenceIndex(new File(faiPath));
-        this.fa = new IndexedFastaSequenceFile(new File(faPath), fai);
+        File faPath = new File(refGenomeDir.get(), chrom + ".fa");
+        File faiPath = new File(refGenomeDir.get(), chrom + ".fa.fai");
+        this.fai = new FastaSequenceIndex(faiPath);
+        this.fa = new IndexedFastaSequenceFile(faPath, fai);
     }
 
 
@@ -295,7 +289,7 @@ public final class GenomicPositionValidator extends AbstractValidator {
         int x1, x2;
         boolean isInDel = false;
         boolean combinedIndel = false;
-        boolean OK = true;
+        boolean OK;
         x1 = snippet.indexOf("["); // opening bracket
         if (x1 < 0) {
             setErrorMessage(String.format("Could not find opening bracket in snippet: %s", snippet));
@@ -365,15 +359,15 @@ public final class GenomicPositionValidator extends AbstractValidator {
         }
 
 
-        if (sRef == null || sRef.length() == 0) {
+        if (sRef.length() == 0) {
             setErrorMessage(String.format("Malformed (null) string for REF in snippet: %s", snippet));
             return false; // malformed.
         }
-        if (sAlt == null || sAlt.length() == 0) {
+        if (sAlt.length() == 0) {
             setErrorMessage(String.format("Malformed (null) string for ALT in snippet: %s", snippet));
             return false; // malformed.
         }
-        /** Case of insertion */
+        /* Case of insertion */
         if (sRef.equals("-")) {
             if (sAlt.equals(alt.substring(1))) {
                 setErrorMessage(OKAY);
@@ -444,11 +438,11 @@ public final class GenomicPositionValidator extends AbstractValidator {
 
 
 //    *************************** LEGACY CODE ****************************** //
-/**
- * Use to sort the mutation objects according to chromosome and position. Note that we use string sorting for the
- * chromosome because the actual order doesnt matter, but we want to do all of the mutations for a given chromosome at
- * the same time. we sort mutations withn a certain chromosome according to position because this might affect
- * performance.
+/*
+  Use to sort the mutation objects according to chromosome and position. Note that we use string sorting for the
+  chromosome because the actual order doesnt matter, but we want to do all of the mutations for a given chromosome at
+  the same time. we sort mutations withn a certain chromosome according to position because this might affect
+  performance.
  */
 //    public static Comparator<MendelianDiseaseCaseModel> MutationByChromComparator 
 //        = new Comparator<MendelianDiseaseCaseModel>() {

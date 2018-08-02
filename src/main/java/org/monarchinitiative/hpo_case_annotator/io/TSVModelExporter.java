@@ -1,9 +1,9 @@
 package org.monarchinitiative.hpo_case_annotator.io;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
 import org.monarchinitiative.hpo_case_annotator.model.SplicingVariant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
@@ -13,7 +13,7 @@ public final class TSVModelExporter implements ModelExporter {
 
     public static final String XML_MODEL_SUFFIX = ".xml";
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger log = LoggerFactory.getLogger(TSVModelExporter.class);
 
     /**
      * Path to directory with model files in XML format.
@@ -88,8 +88,7 @@ public final class TSVModelExporter implements ModelExporter {
         try {
             writer.write(header + System.lineSeparator());
         } catch (IOException e) {
-            log.warn("Error writing header.");
-            log.warn(e);
+            log.warn("Error writing header.", e);
         }
 
         for (String variant : variants) {

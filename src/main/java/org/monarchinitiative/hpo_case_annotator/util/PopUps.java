@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class PopUps {
+public final class PopUps {
 
     /**
      * Show information to user.
@@ -52,7 +52,6 @@ public class PopUps {
      * @param title            - Title of PopUp window
      * @return the selected file or null if no file was selected
      */
-    @Deprecated // Use ScreensConfig instead
     public static File selectFileToOpen(Stage ownerWindow, File initialDirectory, String title) {
         final FileChooser filechooser = new FileChooser();
         filechooser.setInitialDirectory(initialDirectory);
@@ -69,7 +68,6 @@ public class PopUps {
      * @param title            Title of PopUp window
      * @return the selected file or null if no file was selected
      */
-    @Deprecated // Use ScreensConfig instead
     public static File selectFileToSave(Stage ownerWindow, File initialDirectory, String title, String initialFileName) {
         final FileChooser filechooser = new FileChooser();
         filechooser.setInitialDirectory(initialDirectory);
@@ -85,9 +83,9 @@ public class PopUps {
      * @param ownerWindow      - Stage with which the DirectoryChooser will be associated
      * @param initialDirectory - Where to start the search
      * @param title            - Title of PopUp window
-     * @return
+     * @return {@link File} selected by user or <code>null</code>, if user closed dialog window without choosing
+     * anything
      */
-    @Deprecated // Use ScreensConfig instead
     public static File selectDirectory(Stage ownerWindow, File initialDirectory, String title) {
         final DirectoryChooser dirchooser = new DirectoryChooser();
         dirchooser.setInitialDirectory(initialDirectory);

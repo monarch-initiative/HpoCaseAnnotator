@@ -1,8 +1,8 @@
 package org.monarchinitiative.hpo_case_annotator.validation;
 
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -17,11 +17,20 @@ import java.util.stream.Collectors;
  */
 public final class ValidationRunner {
 
-    @Autowired
-    private GenomicPositionValidator genomicPositionValidator;
 
-    @Autowired
-    private CompletenessValidator completenessValidator;
+    private final GenomicPositionValidator genomicPositionValidator;
+
+    private final CompletenessValidator completenessValidator;
+
+    private final PubMedValidator pubMedValidator;
+
+    @Inject
+    public ValidationRunner(GenomicPositionValidator genomicPositionValidator,
+                            CompletenessValidator completenessValidator, PubMedValidator pubMedValidator) {
+        this.genomicPositionValidator = genomicPositionValidator;
+        this.completenessValidator = completenessValidator;
+        this.pubMedValidator = pubMedValidator;
+    }
 
 
     /**
@@ -66,5 +75,10 @@ public final class ValidationRunner {
                 genomicPositionValidator.getErrorMessage()));
 
         return valList;
+    }
+
+
+    public boolean seenThisPMIDBefore(String pmid) {
+        return pubMedValidator.seenThisPMIDBefore(pmid);
     }
 }

@@ -1,11 +1,14 @@
 package org.monarchinitiative.hpo_case_annotator.io;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import org.apache.commons.io.output.WriterOutputStream;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.monarchinitiative.hpo_case_annotator.gui.application.HRMDResourceManager;
+import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
@@ -23,35 +26,27 @@ public final class XMLModelParser implements ModelParser {
 
     public static final String MODEL_SUFFIX = ".xml";
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger log = LoggerFactory.getLogger(XMLModelParser.class);
 
     /**
      * Path to directory where XML files containing model data are stored.
      */
-    private File modelDir;
+    private final ObjectProperty<File> modelDir = new SimpleObjectProperty<>(this, "modelDir");
 
     /**
      * Store message describing problems encountered during handling of model data.
      */
     private String errorMessage;
 
-    private HRMDResourceManager resourceManager;
-
 
     /**
      * Create parser that will read and save model XML files to provided directory.
      *
-     * @param modelDirPath location of the model XML files.
+     * @param optionalResources bean containing (among other things) path to folder with models
      */
-    public XMLModelParser(String modelDirPath) {
-        this.modelDir = new File(modelDirPath);
-        log.info(String.format("XMLModelParser initialized with directory %s containing %d model files",
-                modelDir.getPath(), getModelNames().size()));
-    }
-
-
-    public XMLModelParser(HRMDResourceManager resourceManager) {
-        this.resourceManager = resourceManager;
+    @Inject
+    public XMLModelParser(OptionalResources optionalResources) {
+        modelDir.bind(optionalResources.diseaseCaseDirProperty());
     }
 
 
@@ -96,54 +91,6 @@ public final class XMLModelParser implements ModelParser {
 
 
     /**
-     * Use {@link java.beans.XMLEncoder} to encode given bean to XML format and as String.
-     */
-    @Deprecated
-    public static String getBeanAsString(Object model) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        XMLEncoder xmlEncoder = new XMLEncoder(baos);
-        xmlEncoder.writeObject(model);
-        xmlEncoder.close();
-        return baos.toString();
-    }
-
-
-    @Deprecated
-    public static boolean saveBeanToFile(Object bean, File whereToSave) {
-        try {
-            XMLEncoder xmlEncoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(whereToSave)));
-            xmlEncoder.writeObject(bean);
-            xmlEncoder.close();
-        } catch (FileNotFoundException fnfe) {
-            fnfe.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-
-    @Deprecated
-    public static Object loadBeanFromFile(File whereToLoadFrom) {
-        try {
-            XMLDecoder xmlDecoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(whereToLoadFrom)));
-            Object obj = xmlDecoder.readObject();
-            xmlDecoder.close();
-            return obj;
-        } catch (FileNotFoundException fnfe) {
-            fnfe.printStackTrace();
-            return null;
-        }
-    }
-
-
-    private File getModelDir() {
-        String modelDirPath = (resourceManager != null) ? resourceManager.getResources().getDiseaseCaseDir()
-                : modelDir.getAbsolutePath();
-        return new File(modelDirPath);
-    }
-
-
-    /**
      * {@inheritDoc}
      *
      * @param name  String with name to use to save the model data (without suffix).
@@ -152,7 +99,7 @@ public final class XMLModelParser implements ModelParser {
      */
     @Override
     public boolean saveModel(String name, DiseaseCaseModel model) {
-        return saveDiseaseCaseModel(model, new File(getModelDir(), name));
+        return saveDiseaseCaseModel(model, new File(modelDir.get(), name));
     }
 
 
@@ -184,13 +131,13 @@ public final class XMLModelParser implements ModelParser {
      */
     @Override
     public Optional<DiseaseCaseModel> readModel(String fileName) {
-        File where = new File(getModelDir(), fileName);
-        if (!(where.exists() && where.isFile())) {
-            log.warn(String.format("Requested file %s either doesn't exist or is not a file", where.getPath()));
+        File where = new File(modelDir.get(), fileName);
+        if (!where.isFile()) {
+            log.warn(String.format("Provided path %s does not point to a file", where.getPath()));
             return Optional.empty();
         }
         if (!where.getName().endsWith(MODEL_SUFFIX)) {
-            String msg = String.format("File %s doesn't end with expected suffix %s", fileName, MODEL_SUFFIX);
+            String msg = String.format("File %s does not end with expected suffix %s", fileName, MODEL_SUFFIX);
             log.warn(msg);
             errorMessage = msg;
             return Optional.empty();
@@ -206,7 +153,10 @@ public final class XMLModelParser implements ModelParser {
      */
     @Override
     public Collection<String> getModelNames() {
-        File[] files = getModelDir().listFiles(f -> f.getName().endsWith(MODEL_SUFFIX));
+        if (modelDir.get() == null) {
+            return new HashSet<>();
+        }
+        File[] files = modelDir.get().listFiles(f -> f.getName().endsWith(MODEL_SUFFIX));
         if (files == null) {
             return new HashSet<>();
         }

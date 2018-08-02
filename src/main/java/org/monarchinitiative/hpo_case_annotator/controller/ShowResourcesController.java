@@ -6,16 +6,14 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import org.monarchinitiative.hpo_case_annotator.gui.application.HRMDResourceManager;
-import org.monarchinitiative.hpo_case_annotator.gui.application.HRMDResources;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
- * This class is the controller for dialog that presents values of resources (values of {@link HRMDResources}
+ * This class is the controller for dialog that presents values of resources (values of {@link OptionalResources}
  * properties) to the user in a table. Individual resources are presented as rows where resource name is in the first
  * column and resource value is contained in the second column.<p>The content of table is read-only.
  *
@@ -23,10 +21,10 @@ import java.util.ResourceBundle;
  * @version 0.0.2
  * @since 0.0
  */
+@Deprecated
 public final class ShowResourcesController implements DialogController {
 
-    @Autowired
-    private HRMDResourceManager hrmdResourceManager;
+//    private final HRMDResourceManager hrmdResourceManager;
 
     private FXMLDialog dialog;
 
@@ -39,6 +37,10 @@ public final class ShowResourcesController implements DialogController {
     @FXML
     private TableColumn<Map.Entry, String> valueTableColumn;
 
+
+//    public ShowResourcesController(HRMDResourceManager hrmdResourceManager) {
+//        this.hrmdResourceManager = hrmdResourceManager;
+//    }
 
     @Override
     public void setDialog(FXMLDialog dialog) {
@@ -54,8 +56,8 @@ public final class ShowResourcesController implements DialogController {
         nameTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getKey().toString()));
         valueTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getValue().toString()));
 
-        HRMDResources hrmdResources = hrmdResourceManager.getResources();
-        contentTableView.getItems().addAll(hrmdResources.getResourceMap().entrySet());
+//        OptionalResources optionalResources = hrmdResourceManager.getResources();
+//        contentTableView.getItems().addAll(optionalResources.getResourceMap().entrySet());
         // TODO - render resources in html
     }
 

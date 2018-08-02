@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" fx:controller="org.monarchinitiative.hpo_case_annotator.controller.MainController">
+    <children>
+        <MenuBar minWidth="500.0" prefHeight="30.0" VBox.vgrow="NEVER">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#newMenuItemAction" text="New" />
+                        <MenuItem mnemonicParsing="false" onAction="#openMenuItemAction" text="Open" />
+                        <MenuItem mnemonicParsing="false" onAction="#saveMenuItemAction" text="Save" />
+                        <MenuItem mnemonicParsing="false" onAction="#saveAsMenuItemAction" text="Save as" />
+                        <MenuItem mnemonicParsing="false" onAction="#exitMenuItemAction" text="Exit" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="View">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#showEditCurrentPublicationMenuItemAction" text="Show / edit current publication" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Settings">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#setResourcesMenuItemAction" text="Set resources" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Project">
+                    <items>
+                        <MenuItem id="showCuratedPublicationsMenuItem" mnemonicParsing="false" onAction="#showCuratedPublicationsMenuItemAction" text="Show curated publications" />
+                    </items>
+                </Menu>
+                <Menu text="Validate">
+                    <items>
+                        <MenuItem id="validateCurrentEntryMenuItem" mnemonicParsing="false" onAction="#validateCurrentEntryMenuItemAction" text="Validate current case" />
+                        <MenuItem id="validateAllXMLFilesMenuItem" mnemonicParsing="false" onAction="#validateAllFilesMenuItemAction" text="Validate all cases" />
+                    </items>
+                </Menu>
+                <Menu text="Export">
+                    <items>
+                        <MenuItem id="exportToCSVMenuItem" mnemonicParsing="false" onAction="#exportToCSVMenuItemAction" text="Export all mutation data to CSV file" />
+                        <MenuItem id="exportToSummaryFileMenuItem" mnemonicParsing="false" onAction="#exportToSummaryFileMenuItemAction" text="Export all mutation data to summary file" />
+                        <MenuItem id="exportListOfComHetCasesWithOneCodingVariantMenuItem" mnemonicParsing="false" onAction="#exportListOfComHetCasesWithOneCodingVariantMenuItemAction" text="Export list of compound het cases with one coding variant" />
+                        <MenuItem id="phenopacketMenuItem" mnemonicParsing="false" onAction="#exportPhenopacketMenuItemAction" text="Export phenopacket" />
+                        <MenuItem mnemonicParsing="false" onAction="#exportPhenoModelsMenuItemAction" text="Export variants in GPI format" />
+                    </items>
+                </Menu>
+                <Menu text="Help">
+                    <items>
+                        <MenuItem id="helpMenuItem" mnemonicParsing="false" onAction="#helpMenuItemAction" text="Help" />
+                        <MenuItem id="TFListMenuItem" mnemonicParsing="false" onAction="#TFListMenuItemAction" text="TF list" />
+                        <MenuItem id="NCIThesaurusMenuItem" mnemonicParsing="false" onAction="#NCIThesaurusMenuItemAction" text="NCI Thesaurus" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <ScrollPane fx:id="contentScrollPane" fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="5.0" minWidth="5.0" pannable="true" VBox.vgrow="ALWAYS" />
+    </children>
+</VBox>

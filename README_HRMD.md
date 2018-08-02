@@ -35,7 +35,7 @@ During the first start of the app the user is asked to:
 - set the **biocurator ID**
 
 ### Content of GUI elements
-The entries in many GUI elements (such as the chromosomes, pathomechanisms, etc.) can be modified by editing the *templateParameters.yml* file. This file is a part of the assembly ZIP file and must be placed in the same directory where the JAR file is. Please follow [YAML syntax](https://en.wikipedia.org/wiki/YAML) when editing the file.
+The entries in many GUI elements (such as the chromosomes, pathomechanisms, etc.) can be modified by editing the *choice-basket.yml* file. This file is a part of the assembly ZIP file and must be placed in the same directory where the JAR file is. Please follow [YAML syntax](https://en.wikipedia.org/wiki/YAML) when editing the file.
 
 Contact peter.robinson@jax.org or daniel.danis@jax.org for any further details. The project is currently in a preliminary stage.
 

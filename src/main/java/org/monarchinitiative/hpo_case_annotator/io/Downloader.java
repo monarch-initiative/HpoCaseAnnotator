@@ -1,9 +1,9 @@
 package org.monarchinitiative.hpo_case_annotator.io;
 
 import javafx.concurrent.Task;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.hpo_case_annotator.util.PopUps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,7 +15,7 @@ import java.net.URLConnection;
 
 public class Downloader extends Task<Void> {
 
-    private static final Logger log = LogManager.getLogger(Downloader.class);
+    private static final Logger log = LoggerFactory.getLogger(Downloader.class);
 
     /**
      * This is the absolute path to the place where downloaded file will be

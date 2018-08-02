@@ -2,11 +2,11 @@ package org.monarchinitiative.hpo_case_annotator.io;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,50 +21,46 @@ import java.util.Map;
  *
  * @author Daniel Danis
  */
-public class OMIMParser {
+public final class OMIMParser {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(OMIMParser.class);
 
     private static final String omimResourceFile = "/dat/omim.tsv";
 
     /**
      * Map containing MIM IDs as keys and canonical names as values.
      */
-    private final Map<String, String> mimid2canonicalName;
+    private final Map<String, String> mimid2canonicalName = new HashMap<>();
 
     /**
      * Map containing canonical names as keys and MIM IDs as values.
      */
-    private final Map<String, String> canonicalName2mimid;
+    private final Map<String, String> canonicalName2mimid = new HashMap<>();
 
 
-    public OMIMParser() {
-        this.mimid2canonicalName = new HashMap<>();
-        this.canonicalName2mimid = new HashMap<>();
-        initialize();
+    public OMIMParser(File file) throws FileNotFoundException {
+        this(new FileInputStream(file));
+    }
+
+
+    public OMIMParser(URL url) throws IOException {
+        this(url.openStream());
     }
 
 
     /**
      * Parse content of omimResourceFile and populate maps with data.
      */
-    private void initialize() {
-
-        InputStream is = OMIMParser.class.getResourceAsStream(omimResourceFile);
-
-        BufferedReader breader;
-
-        try {
-            breader = new BufferedReader(new InputStreamReader(is));
-
-            String line = null;
-
-            line = breader.readLine(); // Very first line is header (starting with '#' character)
+    public OMIMParser(InputStream inputStream) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line = reader.readLine(); // Very first line is header (starting with '#' character)
             if (!line.startsWith("#")) {
                 Alert a = new Alert(AlertType.INFORMATION);
                 a.setTitle("Parse of OMIM file");
                 a.setHeaderText("Bad format of OMIM file!");
                 a.setContentText("First line does not start with '#' character");
                 a.showAndWait();
-                breader.close();
+                reader.close();
             }
 
             /* Here we are interested in populating the OMIM beans within 'mimid2OMIM'
@@ -72,12 +68,12 @@ public class OMIMParser {
              * OMIM.tab to be sorted by MIMID.
              */
             String current = "-12548"; // dummy value
-            while ((line = breader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 /* We are dealing with tsv file here. We try to split each line into 3 fields:
                  * 1st -> name; 2nd -> canonical name; 3rd -> mimID */
 
                 String fields[] = line.split("\t");
-                String omimName = fields[0];
+//                String omimName = fields[0];
                 String omimCanonicalName = fields[1];
                 String mimID = fields[2];
 
@@ -90,11 +86,8 @@ public class OMIMParser {
                 canonicalName2mimid.put(omimCanonicalName, mimID);
 
             }
-            breader.close();
         } catch (IOException e) {
-            System.err.println(String.format("Error occured during parsing of OMIM file. \n%s",
-                    e.getMessage()));
-            e.printStackTrace();
+            LOGGER.warn("Error occured during parsing of OMIM file.", e);
         }
     }
 

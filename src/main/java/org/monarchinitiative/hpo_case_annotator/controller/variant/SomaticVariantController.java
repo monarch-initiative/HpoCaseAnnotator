@@ -22,7 +22,7 @@ public final class SomaticVariantController extends BaseVariantController {
     /**
      * FXML file describing layout of "view". Acts as view in MVC pattern.
      */
-    private static final String fxmlResource = "/fxml/variant/SomaticVariantView.fxml";
+    private static final String fxmlResource = "/org/monarchinitiative/hpo_case_annotator/controller/variant/SomaticVariantView.fxml";
 
     /**
      * Path to CSS file containing info for rendering all Variant "views".

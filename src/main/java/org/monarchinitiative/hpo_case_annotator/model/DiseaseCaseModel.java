@@ -251,8 +251,8 @@ public final class DiseaseCaseModel {
      * @return String usable as with filename of this model.
      */
     public String getFileName() {
-        String fa = (getPublication().getFirstAuthorSurname() == null) ? "author" : getPublication()
-                .getFirstAuthorSurname();
+        getPublication().getFirstAuthorSurname();
+        String fa = getPublication().getFirstAuthorSurname();
         String ye = (getPublication().getYear() == null) ? "year" : getPublication().getYear();
         String gn = (getTargetGene().getGeneName() == null) ? "genesymbol" : getTargetGene().getGeneName();
         return String.format("%s-%s-%s", fa, ye, gn);

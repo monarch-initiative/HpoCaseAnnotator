@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.model;
 
 import com.fasterxml.jackson.annotation.*;
-import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -13,21 +12,19 @@ import javafx.beans.property.StringProperty;
  */
 public final class Publication {
 
-    private final StringProperty authorlist = new SimpleStringProperty(this, "authorlist");
+    private final StringProperty authorlist = new SimpleStringProperty(this, "authorlist", "");
 
-    private final StringProperty title = new SimpleStringProperty(this, "title");
+    private final StringProperty title = new SimpleStringProperty(this, "title", "");
 
-    private final StringProperty journal = new SimpleStringProperty(this, "journal");
+    private final StringProperty journal = new SimpleStringProperty(this, "journal", "");
 
-    private final StringProperty year = new SimpleStringProperty(this, "year");
+    private final StringProperty year = new SimpleStringProperty(this, "year", "");
 
-    private final StringProperty volume = new SimpleStringProperty(this, "volume");
+    private final StringProperty volume = new SimpleStringProperty(this, "volume", "");
 
-    private final StringProperty pages = new SimpleStringProperty(this, "pages");
+    private final StringProperty pages = new SimpleStringProperty(this, "pages", "");
 
-    private final StringProperty pmid = new SimpleStringProperty(this, "pmid");
-
-    private ReadOnlyStringProperty summary = new SimpleStringProperty(this, "summary");
+    private final StringProperty pmid = new SimpleStringProperty(this, "pmid", "");
 
 
     @JsonCreator
@@ -65,7 +62,7 @@ public final class Publication {
         StringBuilder sb = new StringBuilder(10);
         int len = (words.length < 10) ? words.length : 10;
         for (int i = 0; i < len; i++) {
-            sb.append(words[i] + " ");
+            sb.append(words[i]).append(" ");
         }
         if (len == 10) sb.append("..."); // we shortened title, adding dots
         return sb.toString().trim();
@@ -91,12 +88,15 @@ public final class Publication {
 
     @JsonIgnore
     public final String getFirstAuthorSurname() {
-        if (getAuthorlist() == null) {
+        if (getAuthorlist() == null || getAuthorlist().isEmpty()) {
             return "author";
         }
         String firstAuthor = getAuthorlist().split(",")[0];
         int lastindex = firstAuthor.lastIndexOf(' ');
-        return firstAuthor.substring(0, lastindex);
+        if (lastindex >= 0)
+            return firstAuthor.substring(0, lastindex);
+        else
+            return "author";
     }
 
 
@@ -200,18 +200,6 @@ public final class Publication {
     public StringProperty pmidProperty() {
         return pmid;
     }
-
-
-    @JsonIgnore
-    public final String getSummary() {
-        return this.toString();
-    }
-
-
-    public ReadOnlyStringProperty summaryProperty() {
-        return summary;
-    }
-
 
     /**
      * Test if instance contains some data.

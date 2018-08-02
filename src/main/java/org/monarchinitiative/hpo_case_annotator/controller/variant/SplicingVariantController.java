@@ -22,7 +22,7 @@ public final class SplicingVariantController extends BaseVariantController {
     /**
      * FXML file describing layout of "view". Acts as view in MVC pattern.
      */
-    private static final String fxmlResource = "/fxml/variant/SplicingVariantView.fxml";
+    private static final String fxmlResource = "/org/monarchinitiative/hpo_case_annotator/controller/variant/SplicingVariantView.fxml";
 
     /**
      * Path to CSS file containing info for rendering all Variant "views".

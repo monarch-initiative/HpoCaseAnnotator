@@ -1,9 +1,9 @@
 package org.monarchinitiative.hpo_case_annotator.io;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.hpo_case_annotator.model.HPO;
 import org.monarchinitiative.hpo_case_annotator.util.PopUps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -19,7 +19,7 @@ public class HPOParser {
      */
     private static final String windowTitle = "Loading of HPO terms";
 
-    private static Logger log = LogManager.getLogger(HPOParser.class);
+    private static Logger log = LoggerFactory.getLogger(HPOParser.class);
 
     /**
      * Path to the hp.obo file

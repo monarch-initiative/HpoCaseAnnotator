@@ -1,30 +1,32 @@
 package org.monarchinitiative.hpo_case_annotator.controller;
 
-import com.genestalker.springscreen.core.DialogController;
-import com.genestalker.springscreen.core.FXMLDialog;
+import javafx.application.HostServices;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.JavaFXBuilderFactory;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.monarchinitiative.hpo_case_annotator.gui.application.HRMDResourceManager;
-import org.monarchinitiative.hpo_case_annotator.gui.application.ScreensConfig;
+import javafx.stage.Stage;
+import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.io.*;
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
-import org.monarchinitiative.hpo_case_annotator.model.Publication;
 import org.monarchinitiative.hpo_case_annotator.util.PopUps;
-import org.monarchinitiative.hpo_case_annotator.validation.CompletenessValidator;
 import org.monarchinitiative.hpo_case_annotator.validation.ValidationLine;
-import org.monarchinitiative.hpo_case_annotator.validation.ValidationResult;
 import org.monarchinitiative.hpo_case_annotator.validation.ValidationRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 /**
@@ -32,113 +34,139 @@ import java.util.stream.Collectors;
  *
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
  */
-public final class MainController implements DialogController {
+public final class MainController {
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
 
-    /**
-     * Reference to the {@link FXMLDialog} object representing the window of the MVC view element of this controller.
-     */
-    private FXMLDialog dialog;
+    private final Stage primaryStage;
 
-    @Autowired
-    private ScreensConfig screensConfig;
+    private final Properties properties;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Autowired
-    private HRMDResourceManager resourceManager;
+    private final File appHomeDir;
 
-    @Autowired
-    private ValidationRunner validationRunner;
+    private final DataController dataController;
 
-    @Autowired
-    private CompletenessValidator completenessValidator;
+    private final ResourceBundle resourceBundle;
 
-    @Autowired
-    @Qualifier("xmlModelParser")
-    private ModelParser modelParser;
+    private final OptionalResources optionalResources;
+
+    private final ExecutorService executorService;
+
+    private final ModelParser modelParser;
+
+    private final ValidationRunner validationRunner;
+
+    private HostServices hostServices;
+
+    @Inject
+    public MainController(OptionalResources optionalResources, DataController dataController,
+                          ResourceBundle resourceBundle, Stage primaryStage,
+                          Properties properties, @Named("appHomeDir") File appHomeDir, ExecutorService executorService,
+                          ModelParser modelParser, ValidationRunner validationRunner) {
+        this.optionalResources = optionalResources;
+        this.dataController = dataController;
+        this.resourceBundle = resourceBundle;
+        this.primaryStage = primaryStage;
+        this.properties = properties;
+        this.appHomeDir = appHomeDir;
+        this.executorService = executorService;
+        this.modelParser = modelParser;
+        this.validationRunner = validationRunner;
+    }
+
+
+//    @Inject
+    public void setHostServices(HostServices hostServices) {
+        this.hostServices = hostServices;
+    }
 
     @FXML
     private ScrollPane contentScrollPane;
 
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param dialog The {@link FXMLDialog} instance which represents an independent window.
-     */
-    @Override
-    public void setDialog(FXMLDialog dialog) {
-        this.dialog = dialog;
-    }
-
-
     @FXML
     void newMenuItemAction() {
-        screensConfig.dataController().setModel(new DiseaseCaseModel());
-        screensConfig.dataController().setCurrentModelPath(null);
+        dataController.setModel(new DiseaseCaseModel());
+        dataController.setCurrentModelPath(null);
     }
 
 
     @FXML
     void openMenuItemAction() {
-        Optional<File> which = ScreensConfig.selectFileToOpen(dialog,
-                new File(resourceManager.getResources().getDiseaseCaseDir()), "Select model to open");
-        which.ifPresent(selected -> {
-            Optional<DiseaseCaseModel> dcm = XMLModelParser.loadDiseaseCaseModel(selected);
+        File which = PopUps.selectFileToOpen(primaryStage,
+                optionalResources.getDiseaseCaseDir(), "Select model to open");
+        if (which != null) {
+            Optional<DiseaseCaseModel> dcm = XMLModelParser.loadDiseaseCaseModel(which);
             dcm.ifPresent(model -> {
-                screensConfig.dataController().setModel(model);
-                screensConfig.dataController().setCurrentModelPath(selected);
+                dataController.setModel(model);
+                dataController.setCurrentModelPath(which);
             });
-        });
+        }
     }
 
 
     @FXML
     void saveMenuItemAction() {
-        saveModel(screensConfig.dataController().getCurrentModelPath(),
-                screensConfig.dataController().getModel());
+        saveModel(dataController.getCurrentModelPath(), dataController.getModel());
     }
 
 
     @FXML
     void saveAsMenuItemAction() {
-        saveModel(null, screensConfig.dataController().getModel());
+        saveModel(null, dataController.getModel());
     }
 
 
     @FXML
     void exitMenuItemAction() {
-        dialog.close();
+        Platform.exit();
     }
 
 
     @FXML
     void showEditCurrentPublicationMenuItemAction() {
-        FXMLDialog showDialog = screensConfig.showEditPublicationDialog();
-        Publication publication = screensConfig.dataController().getModel().getPublication();
-        screensConfig.showEditPublicationController().setPublication(publication);
-        showDialog.show();
+        try {
+            ShowEditPublicationController controller = new ShowEditPublicationController(dataController.getModel().getPublication());
+
+            Parent parent = FXMLLoader.load(
+                    ShowEditPublicationController.class.getResource("ShowEditPublicationView.fxml"),
+                    resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
+            Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.setScene(new Scene(parent));
+            stage.showAndWait();
+        } catch (IOException e) {
+            LOGGER.warn("Unable to show dialog for editing of the current publication", e);
+            e.printStackTrace();
+        }
     }
 
 
     @FXML
     void setResourcesMenuItemAction() {
-        screensConfig.setResourcesDialog().show();
-    }
-
-
-    @FXML
-    void showResourcesMenuItemAction() {
-        screensConfig.showResourcesDialog().show();
+        try {
+            SetResourcesController controller = new SetResourcesController(optionalResources, properties, appHomeDir, executorService);
+            Parent parent = FXMLLoader.load(
+                    SetResourcesController.class.getResource("SetResourcesView.fxml"),
+                    resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
+            Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.setScene(new Scene(parent));
+            stage.showAndWait();
+        } catch (IOException e) {
+            LOGGER.warn("Unable to display dialog for setting resources", e);
+            e.printStackTrace();
+        }
     }
 
 
     @FXML
     void showCuratedPublicationsMenuItemAction() {
-        File where = new File(resourceManager.getResources().getDiseaseCaseDir());
+        File where = optionalResources.getDiseaseCaseDir();
+        if (where == null || !where.isDirectory()) {
+            PopUps.showInfoMessage("Set curated files directory first", "Unable to show curated publications");
+            return;
+        }
         File[] files = where.listFiles(f -> f.getName().endsWith(".xml"));
         if (files == null) {
             PopUps.showInfoMessage(String.format("No models in directory %s", where.getPath()), "Show curated publications");
@@ -149,20 +177,40 @@ public final class MainController implements DialogController {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
-        FXMLDialog showPublicationsDialog = screensConfig.showPublicationsDialog();
-        showPublicationsDialog.setTitle(String.format("Curated publications in directory %s", where.getPath()));
-        screensConfig.showPublicationsController().setData(models);
-        showPublicationsDialog.showAndWait();
+
+        try {
+            ShowPublicationsController controller = new ShowPublicationsController(hostServices);
+            controller.setData(models);
+            Parent parent = FXMLLoader.load(ShowPublicationsController.class.getResource("ShowPublicationsView.fxml"),
+                    resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
+            Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.setScene(new Scene(parent));
+            stage.showAndWait();
+        } catch (IOException e) {
+            LOGGER.warn("Unable to display dialog for showing curated publications", e);
+            e.printStackTrace();
+        }
     }
 
 
     @FXML
     void validateCurrentEntryMenuItemAction() {
         List<ValidationLine> lines = validationRunner.validateModels(
-                Collections.singleton(screensConfig.dataController().getModel()));
-        FXMLDialog dialog = screensConfig.showValidationResultsDialog();
-        screensConfig.showValidationResultsController().setValidationLines(lines);
-        dialog.show();
+                Collections.singleton(dataController.getModel()));
+        try {
+            ShowValidationResultsController controller = new ShowValidationResultsController();
+            Parent parent = FXMLLoader.load(ShowValidationResultsController.class.getResource("ShowValidationResultsView.fxml"),
+                    resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
+            controller.setValidationLines(lines);
+            Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.setScene(new Scene(parent));
+            stage.showAndWait();
+        } catch (IOException e) {
+            LOGGER.warn("Unable to display dialog for validation of the current publication", e);
+            e.printStackTrace();
+        }
     }
 
 
@@ -173,27 +221,36 @@ public final class MainController implements DialogController {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
-
         List<ValidationLine> lines = validationRunner.validateModels(models);
-        FXMLDialog dialog = screensConfig.showValidationResultsDialog();
-        screensConfig.showValidationResultsController().setValidationLines(lines);
-        dialog.show();
+
+        try {
+            ShowValidationResultsController controller = new ShowValidationResultsController();
+            Parent parent = FXMLLoader.load(ShowValidationResultsController.class.getResource("ShowValidationResultsView.fxml"),
+                    resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
+            controller.setValidationLines(lines);
+            Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.setScene(new Scene(parent));
+            stage.showAndWait();
+        } catch (IOException e) {
+            LOGGER.warn("Unable to display dialog for validation of the curated publications", e);
+            e.printStackTrace();
+        }
     }
 
 
     @FXML
     void exportToCSVMenuItemAction() {
-        ModelExporter exporter = new TSVModelExporter(resourceManager.getResources().getDiseaseCaseDir(), "\t");
-        Optional<File> where = ScreensConfig.selectFileToSave(dialog, new File(resourceManager.getResources()
-                        .getDiseaseCaseDir()),
+        ModelExporter exporter = new TSVModelExporter(optionalResources.getDiseaseCaseDir().getAbsolutePath(), "\t");
+        File where = PopUps.selectFileToSave(primaryStage, optionalResources.getDiseaseCaseDir(),
                 "Export variants to CSV file", "variants.tsv");
-        where.ifPresent(dest -> {
-            try (Writer writer = new FileWriter(dest)) {
+        if (where != null) {
+            try (Writer writer = new FileWriter(where)) {
                 exporter.exportModels(writer);
             } catch (IOException e) {
-                log.warn(String.format("Error occured during variant export: %s", e.getMessage()));
+                LOGGER.warn(String.format("Error occured during variant export: %s", e.getMessage()), e);
             }
-        });
+        }
     }
 
 
@@ -211,59 +268,77 @@ public final class MainController implements DialogController {
 
     @FXML
     void exportPhenopacketMenuItemAction() {
-        String suggestedFileName = screensConfig.dataController().getModel().getFileName() + ".phenopacket";
-        Optional<File> where = ScreensConfig.selectFileToSave(dialog,
-                new File(resourceManager.getResources().getDiseaseCaseDir()), "Save as Phenopacket", suggestedFileName);
-        where.ifPresent(dest -> {
-            PhenopacketExporter exporter = new PhenopacketExporter(dest, screensConfig.dataController().getModel());
+        String suggestedFileName = dataController.getModel().getFileName() + ".phenopacket";
+        File where = PopUps.selectFileToSave(primaryStage,
+                optionalResources.getDiseaseCaseDir(), "Save as Phenopacket", suggestedFileName);
+        if (where != null) {
+            PhenopacketExporter exporter = new PhenopacketExporter(where, dataController.getModel());
             exporter.writeToPhenopacket();
-        });
+        }
     }
 
 
     @FXML
     void exportPhenoModelsMenuItemAction() {
-        ModelExporter phenoExporter = new PhenoModelExporter(resourceManager.getResources().getDiseaseCaseDir(), "\t");
-        Optional<File> where = ScreensConfig.selectFileToSave(dialog, new File(resourceManager.getResources()
-                        .getDiseaseCaseDir()),
+        ModelExporter phenoExporter = new PhenoModelExporter(optionalResources.getDiseaseCaseDir().getAbsolutePath(), "\t");
+        File where = PopUps.selectFileToSave(primaryStage, optionalResources.getDiseaseCaseDir(),
                 "Export variants in format required by GPI project", "gpi_variants.tsv");
-        where.ifPresent(dest -> {
-            try (Writer writer = new FileWriter(dest)) {
+        if (where != null) {
+            try (Writer writer = new FileWriter(where)) {
                 phenoExporter.exportModels(writer);
             } catch (IOException e) {
-                log.warn(String.format("Error occured during variant export: %s", e.getMessage()));
+                LOGGER.warn(String.format("Error occured during variant export: %s", e.getMessage()), e);
             }
-        });
+        }
     }
 
 
     @FXML
     void helpMenuItemAction() {
-        FXMLDialog dialog = screensConfig.showHtmlContentDialog();
-        screensConfig.showHtmlContentController().setContent(getClass().getResource("/html/hrmd.html"));
-        dialog.show();
+        showHtmlContent(getClass().getResource("/html/hrmd.html"));
     }
 
 
     @FXML
     void TFListMenuItemAction() {
-        FXMLDialog dialog = screensConfig.showHtmlContentDialog();
-        screensConfig.showHtmlContentController().setContent(getClass().getResource("/html/tflist.html"));
-        dialog.show();
+        showHtmlContent(getClass().getResource("/html/tflist.html"));
     }
 
 
     @FXML
     void NCIThesaurusMenuItemAction() {
-        FXMLDialog dialog = screensConfig.showHtmlContentDialog();
-        screensConfig.showHtmlContentController().setContent(getClass().getResource("/html/ncithesaurus.html"));
-        dialog.show();
+        showHtmlContent(getClass().getResource("/html/ncithesaurus.html"));
     }
 
 
-    @Override
-    public void initialize(URL location, ResourceBundle resourceBundle) {
-        contentScrollPane.setContent(screensConfig.dataPane());
+    private void showHtmlContent(URL contentUrl) {
+        try {
+            ShowHtmlContentController controller = new ShowHtmlContentController();
+            Parent parent = FXMLLoader.load(ShowHtmlContentController.class.getResource("ShowHtmlContentView.fxml"),
+                    resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
+            controller.setContent(contentUrl);
+            Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.setScene(new Scene(parent));
+            stage.showAndWait();
+        } catch (IOException e) {
+            LOGGER.warn("Unable to display help dialog", e);
+            e.printStackTrace();
+        }
+    }
+
+
+    public void initialize() {
+        StartupTask task = new StartupTask(optionalResources, properties);
+        executorService.submit(task);
+        try {
+            Parent parent = FXMLLoader.load(DataController.class.getResource("DataView.fxml"),
+                    resourceBundle, new JavaFXBuilderFactory(), clazz -> dataController);
+            contentScrollPane.setContent(parent);
+        } catch (IOException e) {
+            LOGGER.warn(String.format("Error occured during initialization of the data view: %s", e.getMessage()));
+            e.printStackTrace();
+        }
     }
 
 
@@ -275,25 +350,26 @@ public final class MainController implements DialogController {
     private void saveModel(File currentModelPath, DiseaseCaseModel model) {
         String conversationTitle = "Save data into file";
 
-        if (completenessValidator.validateDiseaseCase(model) != ValidationResult.PASSED) {
-            PopUps.showInfoMessage(completenessValidator.getErrorMessage(), "The data is not complete, thus not " +
-                    "saved.");
-            return;
-        }
+//        TODO - completness check
+//        if (completenessValidator.validateDiseaseCase(model) != ValidationResult.PASSED) {
+//            PopUps.showInfoMessage(completenessValidator.getErrorMessage(), "The data is not complete, thus not " +
+//                    "saved.");
+//            return;
+//        }
 
         if (currentModelPath == null) {
             String suggestedXmlName = model.getFileName() + ".xml";
-            Optional<File> where = ScreensConfig.selectFileToSave(dialog, new File(resourceManager.getResources()
-                    .getDiseaseCaseDir()), conversationTitle, suggestedXmlName);
-            if (!where.isPresent())
+            File where = PopUps.selectFileToSave(primaryStage, optionalResources.getDiseaseCaseDir(), conversationTitle,
+                    suggestedXmlName);
+            if (where == null) {
                 return;
-
-            currentModelPath = where.get();
+            }
+            currentModelPath = where;
         }
-        model.getBiocurator().setBioCuratorId(resourceManager.getResources().getBiocuratorId());
+        model.getBiocurator().setBioCuratorId(optionalResources.getBiocuratorId());
         XMLModelParser.saveDiseaseCaseModel(model, currentModelPath);
 
-        screensConfig.dataController().setCurrentModelPath(currentModelPath);
+        dataController.setCurrentModelPath(currentModelPath);
         PopUps.showInfoMessage(String.format("Data saved into file %s", currentModelPath.getName()), conversationTitle);
     }
 }

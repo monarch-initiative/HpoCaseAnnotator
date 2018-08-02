@@ -3,13 +3,13 @@ package org.monarchinitiative.hpo_case_annotator.io;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.monarchinitiative.hpo_case_annotator.TestApplicationConfig;
+import org.monarchinitiative.hpo_case_annotator.GuiceJUnitRunner;
+import org.monarchinitiative.hpo_case_annotator.GuiceModules;
+import org.monarchinitiative.hpo_case_annotator.TestHpoCaseAnnotatorModule;
+import org.monarchinitiative.hpo_case_annotator.gui.HpoCaseAnnotatorModule;
 import org.monarchinitiative.hpo_case_annotator.model.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.inject.Inject;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,16 +22,15 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestApplicationConfig.class)
+@RunWith(GuiceJUnitRunner.class)
+@GuiceModules({TestHpoCaseAnnotatorModule.class})
 public class XMLModelParserTest {
 
 
     /**
      * Tested instance.
      */
-    @Autowired
-    @Qualifier("xmlModelParser")
+    @Inject
     private XMLModelParser parser;
 
 
@@ -368,5 +367,11 @@ public class XMLModelParserTest {
         assertEquals("Ars-2000-NF1-95-89.xml", modelNames.get(1));
         assertEquals("Davidson-2010-BEST1.xml", modelNames.get(2));
         assertEquals("Hull-1994-CFTR.xml", modelNames.get(3));
+    }
+
+
+    @Test
+    public void tramtara() {
+        System.out.println(getClass().getCanonicalName());
     }
 }

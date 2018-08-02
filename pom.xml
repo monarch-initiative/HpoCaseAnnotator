@@ -20,44 +20,13 @@
         <jdk.version>1.8</jdk.version>
         <spring.version>4.3.8.RELEASE</spring.version>
         <junit.version>4.12</junit.version>
-        <log4j.version>2.9.1</log4j.version>
-        <protobuf.version>3.5.1</protobuf.version>
+        <slf4j.version>1.7.25</slf4j.version>
     </properties>
 
     <build>
         <finalName>HpoCaseAnnotator-${project.version}</finalName>
 
-
-        <extensions>
-            <!--<extension>-->
-                <!--<groupId>kr.motd.maven</groupId>-->
-                <!--<artifactId>os-maven-plugin</artifactId>-->
-                <!--<version>1.5.0.Final</version>-->
-            <!--</extension>-->
-        </extensions>
-
         <plugins>
-            <!--<plugin>-->
-                <!--<groupId>org.xolstice.maven.plugins</groupId>-->
-                <!--<artifactId>protobuf-maven-plugin</artifactId>-->
-                <!--<version>0.5.1</version>-->
-                <!--<extensions>true</extensions>-->
-                <!--<configuration>-->
-                    <!--<protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}-->
-                    <!--</protocArtifact>-->
-                    <!--<pluginId>grpc-java</pluginId>-->
-                    <!--<pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}-->
-                    <!--</pluginArtifact>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<goals>-->
-                            <!--<goal>compile</goal>-->
-                            <!--<goal>test-compile</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
 
             <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% RESOURCES %%%%%%%%% RESOURCES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
             <!-- From effective pom.xml -->
@@ -75,7 +44,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <!--TODO - logging configuration during tests-->
                 <version>2.19.1</version>
             </plugin>
             <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% DEPENDENCIES %%%%%%%%% DEPENDENCIES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
@@ -106,15 +74,13 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Main</mainClass>
+                            <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Play</mainClass>
                         </manifest>
                     </archive>
                     <excludes>
                         <!--Won't be in JAR, but still will be accessible during project build -->
                         <exclude>assembly/**</exclude>
-                        <exclude>**/*.properties</exclude>
                         <exclude>uml_model.dia</exclude>
-                        <!--<exclude>templateParameters.yml</exclude>-->
                         <exclude>data/**</exclude>
                     </excludes>
                 </configuration>
@@ -128,7 +94,7 @@
                     <descriptor>src/main/resources/assembly/assembly.xml</descriptor>
                     <archive>
                         <manifest>
-                            <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Main</mainClass>
+                            <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Play</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -159,27 +125,11 @@
             </exclusions>
         </dependency>
 
-
-        <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
         <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>${protobuf.version}</version>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>4.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java-util</artifactId>
-            <version>${protobuf.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.google.protobuf/protoc -->
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protoc</artifactId>
-            <version>${protobuf.version}</version>
-            <type>pom</type>
-        </dependency>
-
 
         <!-- Phenopacket format for exchange of phenotype data. -->
         <dependency>
@@ -191,6 +141,10 @@
                     <groupId>org.yaml</groupId>
                     <artifactId>snakeyaml</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.github.samtools/htsjdk -->
@@ -199,19 +153,19 @@
             <artifactId>htsjdk</artifactId>
             <version>1.141</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j.version}</version>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.11.1</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
         <dependency>
             <groupId>org.yaml</groupId>
@@ -232,11 +186,6 @@
             <version>${jackson.fasterxml.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.genestalker.springscreen</groupId>
-            <artifactId>springscreen-core</artifactId>
-            <version>0.0.1</version>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/de.ontologizer/ontologizerlib-io -->
         <dependency>
             <groupId>de.ontologizer</groupId>
@@ -248,6 +197,12 @@
             <groupId>com.github.monarch-initiative</groupId>
             <artifactId>hpotextmining-core</artifactId>
             <version>0.2.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- argparse4j used for parsing the command line -->
@@ -264,25 +219,19 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
-            <scope>test</scope>
-        </dependency>
         <!-- Libraries for GUI testing -->
         <!-- https://mvnrepository.com/artifact/org.testfx/testfx-core -->
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-core</artifactId>
-            <version>4.0.5-alpha</version>
+            <version>4.0.13-alpha</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.testfx/testfx-junit -->
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-junit</artifactId>
-            <version>4.0.5-alpha</version>
+            <version>4.0.13-alpha</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.testfx/openjfx-monocle -->

@@ -1,16 +1,13 @@
 package org.monarchinitiative.hpo_case_annotator.controller;
 
-import com.genestalker.springscreen.core.DialogController;
-import com.genestalker.springscreen.core.FXMLDialog;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
  * This class is the controller for dialog that presents content using {@link WebView}. Therefore, content should be in
@@ -20,11 +17,10 @@ import java.util.ResourceBundle;
  * @version 0.0.2
  * @since 0.0
  */
-public final class ShowHtmlContentController implements DialogController {
+public final class ShowHtmlContentController {
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger log = LoggerFactory.getLogger(ShowHtmlContentController.class);
 
-    private FXMLDialog dialog;
 
     @FXML
     private WebView contentWebView;
@@ -35,14 +31,7 @@ public final class ShowHtmlContentController implements DialogController {
     private WebEngine webEngine;
 
 
-    @Override
-    public void setDialog(FXMLDialog dialog) {
-        this.dialog = dialog;
-    }
-
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize() {
         webEngine = contentWebView.getEngine();
     }
 

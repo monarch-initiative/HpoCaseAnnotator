@@ -2,13 +2,14 @@ package org.monarchinitiative.hpo_case_annotator.validation;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.monarchinitiative.hpo_case_annotator.TestApplicationConfig;
+import org.monarchinitiative.hpo_case_annotator.GuiceJUnitRunner;
+import org.monarchinitiative.hpo_case_annotator.GuiceModules;
+import org.monarchinitiative.hpo_case_annotator.TestHpoCaseAnnotatorModule;
+import org.monarchinitiative.hpo_case_annotator.gui.HpoCaseAnnotatorModule;
 import org.monarchinitiative.hpo_case_annotator.io.XMLModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collections;
@@ -17,14 +18,14 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestApplicationConfig.class)
+@RunWith(GuiceJUnitRunner.class)
+@GuiceModules({TestHpoCaseAnnotatorModule.class})
 public class ValidationRunnerTest {
 
     /**
      * Tested instance.
      */
-    @Autowired
+    @Inject
     private ValidationRunner runner;
 
 

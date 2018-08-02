@@ -1,6 +1,8 @@
 package org.monarchinitiative.hpo_case_annotator.controller;
 
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.JavaFXBuilderFactory;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -13,23 +15,26 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.monarchinitiative.hpo_case_annotator.TestApplicationConfig;
+import org.monarchinitiative.hpo_case_annotator.GuiceJUnitRunner;
+import org.monarchinitiative.hpo_case_annotator.GuiceModules;
+import org.monarchinitiative.hpo_case_annotator.TestHpoCaseAnnotatorModule;
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
 import org.monarchinitiative.hpo_case_annotator.model.Publication;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.testfx.framework.junit.ApplicationTest;
 
+import javax.inject.Inject;
+import java.util.ResourceBundle;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Note that the autocompletion attached to several gui elements here causes exceptions to be thrown if the robot's
  * input produces some autocompletion suggestions. Therefore, nonsense and non-medical characters are used as input.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestApplicationConfig.class)
-@Ignore
+@Ignore("Gui tests are ignored for now")
+@RunWith(GuiceJUnitRunner.class)
+@GuiceModules({TestHpoCaseAnnotatorModule.class})
 public class DataControllerTest extends ApplicationTest {
 
     private static final String PUBMED = "1: van Bon BW, Balciuniene J, Fruhman G, Nagamani SC, Broome DL, Cameron" +
@@ -44,8 +49,11 @@ public class DataControllerTest extends ApplicationTest {
      */
     private static String PESTO, SIMBA;
 
-    @Autowired
+    @Inject
     private DataController controller;
+
+    @Inject
+    private ResourceBundle resourceBundle;
 
     private DiseaseCaseModel model;
 
@@ -54,12 +62,12 @@ public class DataControllerTest extends ApplicationTest {
     public static void setUp() throws Exception {
         PESTO = "PESTO";
         SIMBA = "SAMBA";
-//        if (Boolean.getBoolean("headless")) {
+        if (Boolean.getBoolean("headless")) {
         System.setProperty("headless", "true"); // set this to false if you want to see the robot in action.
         System.setProperty("testfx.headless", "true"); // REQUIRED
         System.setProperty("testfx.robot", "glass"); // REQUIRED
         System.setProperty("prism.order", "sw"); // REQUIRED
-//        }
+        }
 
     }
 
@@ -80,7 +88,7 @@ public class DataControllerTest extends ApplicationTest {
         controller.setModel(model);
         // Genome build ComboBox
         ComboBox<String> genome = lookup("#genomeBuildComboBox").query();
-        genome.getItems().clear();  // clear values that are added from templateParameters.yml file to not depend on them.
+        genome.getItems().clear();  // clear values that are added from choice-basket.yml file to not depend on them.
         genome.getItems().add(PESTO);
         assertEquals(null, model.getGenomeBuild());
         clickOn(genome).moveBy(0, 35).press(MouseButton.PRIMARY);
@@ -116,7 +124,7 @@ public class DataControllerTest extends ApplicationTest {
 
         // disease database
         ComboBox<String> database = lookup("#diseaseDatabaseComboBox").query();
-        database.getItems().clear(); // clear values that are added from templateParameters.yml file to not depend on them.
+        database.getItems().clear(); // clear values that are added from choice-basket.yml file to not depend on them.
         database.getItems().add(SIMBA);
         assertEquals(null, model.getDisease().getDatabase());
         clickOn(database).moveBy(0, 35).press(MouseButton.PRIMARY);
@@ -162,9 +170,9 @@ public class DataControllerTest extends ApplicationTest {
         controller.setModel(model);
         // sex combobox
         ComboBox<String> sex = lookup("#sexComboBox").query();
-        sex.getItems().clear(); // clear values that are added from templateParameters.yml file to not depend on them.
+        sex.getItems().clear(); // clear values that are added from choice-basket.yml file to not depend on them.
         sex.getItems().add(SIMBA);
-        assertEquals(null, model.getFamilyInfo().getSex());
+        assertNull(model.getFamilyInfo().getSex());
         clickOn(sex).moveBy(0, 35).press(MouseButton.PRIMARY);
         assertEquals(SIMBA, model.getFamilyInfo().getSex());
     }
@@ -176,7 +184,7 @@ public class DataControllerTest extends ApplicationTest {
 
         // age textField
         TextField age = lookup("#ageTextField").query();
-        assertEquals(null, model.getFamilyInfo().getAge());
+        assertNull(model.getFamilyInfo().getAge());
         doubleClickOn(age).write("23");
         assertEquals("23", model.getFamilyInfo().getAge());
     }
@@ -275,10 +283,11 @@ public class DataControllerTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
+        Parent parent = FXMLLoader.load(DataController.class.getResource("/org/monarchinitiative/hpo_case_annotator/controller/DataView.fxml"), resourceBundle, new
+                JavaFXBuilderFactory(), clazz -> controller);
         model = new DiseaseCaseModel();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TestDataView.fxml"));
-        loader.setControllerFactory(param -> controller);
-        stage.setScene(new Scene(loader.load()));
+        stage.setScene(new Scene(parent));
         stage.show();
+//        getHostServices()
     }
 }

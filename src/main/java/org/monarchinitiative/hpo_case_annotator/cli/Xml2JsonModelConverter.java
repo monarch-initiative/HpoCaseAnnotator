@@ -1,10 +1,10 @@
 package org.monarchinitiative.hpo_case_annotator.cli;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.hpo_case_annotator.io.JSONModelParser;
 import org.monarchinitiative.hpo_case_annotator.io.XMLModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Optional;
@@ -14,7 +14,7 @@ import java.util.Optional;
  */
 public class Xml2JsonModelConverter {
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger log = LoggerFactory.getLogger(Xml2JsonModelConverter.class);
 
     private final File sourceDir;
 

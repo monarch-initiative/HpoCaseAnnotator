@@ -2,22 +2,23 @@ package org.monarchinitiative.hpo_case_annotator.validation;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.monarchinitiative.hpo_case_annotator.TestApplicationConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.monarchinitiative.hpo_case_annotator.GuiceJUnitRunner;
+import org.monarchinitiative.hpo_case_annotator.GuiceModules;
+import org.monarchinitiative.hpo_case_annotator.TestHpoCaseAnnotatorModule;
+
+import javax.inject.Inject;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestApplicationConfig.class)
+@RunWith(GuiceJUnitRunner.class)
+@GuiceModules({TestHpoCaseAnnotatorModule.class})
 public class PubMedValidatorTest {
 
     /**
      * Tested instance.
      */
-    @Autowired
+    @Inject
     private PubMedValidator validator;
 
 

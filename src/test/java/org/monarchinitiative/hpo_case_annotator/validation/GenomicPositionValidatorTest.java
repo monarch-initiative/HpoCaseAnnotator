@@ -40,7 +40,7 @@ public class GenomicPositionValidatorTest {
 
     @Before
     public void setUp() throws Exception {
-        validator = new GenomicPositionValidator("target/test-classes/testgenome");
+        validator = new GenomicPositionValidator(new File("target/test-classes/testgenome"));
     }
 
 

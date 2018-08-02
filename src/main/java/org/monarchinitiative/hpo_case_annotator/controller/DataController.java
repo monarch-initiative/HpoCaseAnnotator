@@ -5,32 +5,28 @@ import com.github.monarchinitiative.hpotextmining.TextMiningResult;
 import com.github.monarchinitiative.hpotextmining.model.PhenotypeTerm;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import ontologizer.ontology.Ontology;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import org.monarchinitiative.hpo_case_annotator.controller.variant.MendelianVariantController;
 import org.monarchinitiative.hpo_case_annotator.controller.variant.SomaticVariantController;
 import org.monarchinitiative.hpo_case_annotator.controller.variant.SplicingVariantController;
-import org.monarchinitiative.hpo_case_annotator.gui.application.HRMDResourceManager;
+import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.io.PubMedParser;
 import org.monarchinitiative.hpo_case_annotator.io.RetrievePubMedSummary;
 import org.monarchinitiative.hpo_case_annotator.model.*;
 import org.monarchinitiative.hpo_case_annotator.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.util.WidthAwareTextFields;
-import org.monarchinitiative.hpo_case_annotator.validation.PubMedValidator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import org.monarchinitiative.hpo_case_annotator.validation.ValidationRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.FutureTask;
@@ -39,29 +35,27 @@ import java.util.stream.Collectors;
 /**
  * This class is a controller for all elements presented in GUI window except Menu. It manages model data.
  */
-public final class DataController implements Initializable {
+public final class DataController {
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataController.class);
+
+    private final OptionalResources optionalResources;
+
+    private final Properties properties;
+
+    private final ExecutorService executorService;
+
+    private final ValidationRunner validationRunner;
+
+    private final ChoiceBasket basket;
+
+    @FXML
+    public Button hpoTextMiningButton;
 
     /**
      * The model class that is displayed in the elements of this controller.
      */
-    private DiseaseCaseModel model;
-
-    @Autowired
-    private HRMDResourceManager resourceManager;
-
-    @Autowired
-    private Environment env;
-
-    @Autowired
-    private Ontology ontology;
-
-    @Autowired
-    private ExecutorService executorService;
-
-    @Autowired
-    private PubMedValidator pubMedValidator;
+    private DiseaseCaseModel model = new DiseaseCaseModel();
 
     @FXML
     private Label currentModelLabel;
@@ -121,6 +115,17 @@ public final class DataController implements Initializable {
     private File currentModelPath;
 
 
+    @Inject
+    public DataController(OptionalResources optionalResources, Properties properties,
+                          ExecutorService executorService, ValidationRunner validationRunner, ChoiceBasket basket) {
+        this.optionalResources = optionalResources;
+        this.properties = properties;
+        this.executorService = executorService;
+        this.validationRunner = validationRunner;
+        this.basket = basket;
+    }
+
+
     /**
      * Determine {@link VariantMode} of given {@link Variant} .
      *
@@ -160,7 +165,7 @@ public final class DataController implements Initializable {
                 return new SomaticVariantController((SomaticVariant) variant);
             default:
                 String msg = String.format("ERROR: Unknown variant mode %s\n%s", mode.name(), variant);
-                log.error(msg);
+                LOGGER.error(msg);
                 throw new RuntimeException(msg);
         }
     }
@@ -215,7 +220,7 @@ public final class DataController implements Initializable {
     private void initializeBindings(DiseaseCaseModel model) {
 
         // Current model title, this is "readOnly" binding
-        currentModelLabel.textProperty().bind(model.getPublication().titleProperty());
+         currentModelLabel.textProperty().bind(model.getPublication().titleProperty());
 
         // Genome build
         genomeBuildComboBox.valueProperty().bindBidirectional(model.genomeBuildProperty());
@@ -311,7 +316,7 @@ public final class DataController implements Initializable {
                     throw new IllegalStateException(String.format("Invalid variant mode %s", expanded.getText()));
             }
             if (!model.getVariants().remove(toBeRemoved)) { // and also from the Model.
-                log.warn(String.format("Unable to remove variant %s from the model instance.", toBeRemoved));
+                LOGGER.warn(String.format("Unable to remove variant %s from the model instance.", toBeRemoved));
             }
         }
 
@@ -322,15 +327,17 @@ public final class DataController implements Initializable {
     void hpoTextMiningButtonAction() {
         URL textMiningUrl = null;
         try {
-            textMiningUrl = new URL(env.getProperty("text.mining.url"));
+            textMiningUrl = new URL(properties.getProperty("text.mining.url"));
         } catch (MalformedURLException e) {
-            log.warn(e.getMessage());
+            LOGGER.warn(e.getMessage());
         }
         Set<PhenotypeTerm> terms = model.getHpoList().stream()
-                .map(hpo -> new PhenotypeTerm(ontology.getTerm(hpo.getHpoId()), (hpo.getObserved().equals("YES"))))
+                .map(hpo -> new PhenotypeTerm(optionalResources.getOntology().getTerm(hpo.getHpoId()), (hpo.getObserved().equals
+                        ("YES"))))
                 .collect(Collectors.toSet());
 
-        HPOTextMining hpoTextMining = new HPOTextMining(ontology, textMiningUrl, new Stage());
+        HPOTextMining hpoTextMining = new HPOTextMining(optionalResources.getOntology(), textMiningUrl,
+                hpoTextMiningButton.getParent().getScene().getWindow());
         hpoTextMining.addTerms(terms); // terms already present in the model
         hpoTextMining.setPmid((model.getPublication().getPmid() == null) ? "" : model.getPublication().getPmid());
         TextMiningResult result = hpoTextMining.runAnalysis();
@@ -359,7 +366,7 @@ public final class DataController implements Initializable {
         }
 
         Publication publication = pub.get();
-        if (pubMedValidator.seenThisPMIDBefore(publication.getPmid())) {
+        if (validationRunner.seenThisPMIDBefore(publication.getPmid())) {
             boolean choice = PopUps.getBooleanFromUser(
                     "Shall we continue?",
                     "This publication has been already used in this project.",
@@ -410,71 +417,20 @@ public final class DataController implements Initializable {
 
 
     /**
-     * {@inheritDoc}<p>The new empty {@link DiseaseCaseModel} is implicitly created here. </p>
+     * New empty {@link DiseaseCaseModel} is implicitly created here. </p>
      *
-     * @param location
-     * @param resources
      */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        HRMDResourceManager.getParametersFile().ifPresent(file -> {
-            ChoiceBasket basket = ChoiceBasket.loadChoices(file);
-            genomeBuildComboBox.getItems().addAll(basket.getGenomeBuild());
-            diseaseDatabaseComboBox.getItems().addAll(basket.getDiseaseDatabases());
-            sexComboBox.getItems().addAll(basket.getSex());
-        });
+    public void initialize() {
+        genomeBuildComboBox.getItems().addAll(basket.getGenomeBuild());
+        diseaseDatabaseComboBox.getItems().addAll(basket.getDiseaseDatabases());
+        sexComboBox.getItems().addAll(basket.getSex());
 
-        setModel(new DiseaseCaseModel());
-        enableAutocompletions();
-    }
-
-
-    /**
-     * Create autocompletions on GUI elements e.g. allowing completion of gene symbol after entering gene id. Add
-     * suggestion boxes offering e.g. disease name based on a few typed characters.
-     */
-    private void enableAutocompletions() {
-
-        // create bindings for autocompletion of Entrez ID & Symbol
-        WidthAwareTextFields.bindWidthAwareAutoCompletion(entrezIDTextField, resourceManager.getEntrezId2symbol().keySet());
-        WidthAwareTextFields.bindWidthAwareAutoCompletion(geneSymbolTextField, resourceManager.getSymbol2entrezId().keySet());
-        entrezIDTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
-            if (newValue == null || newValue.equals("")) {
-                geneSymbolTextField.clear();
-            } else {
-                if (resourceManager.getEntrezId2symbol().containsKey(newValue)) {
-                    geneSymbolTextField.setText(resourceManager.getEntrezId2symbol().get(newValue));
-                }
-            }
-        }));
-        geneSymbolTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
-            if (newValue == null || newValue.equals("")) {
-                entrezIDTextField.clear();
-            } else {
-                if (resourceManager.getSymbol2entrezId().containsKey(newValue))
-                    entrezIDTextField.setText(resourceManager.getSymbol2entrezId().get(newValue));
-            }
-        }));
-
-        // create bindings for autocompletion of Disease ID & name (label)
-        WidthAwareTextFields.bindWidthAwareAutoCompletion(diseaseIDTextField, resourceManager.getMimid2canonicalName().keySet());
-        WidthAwareTextFields.bindWidthAwareAutoCompletion(diseaseNameTextField, resourceManager.getCanonicalName2mimid().keySet());
-        diseaseIDTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
-            if (newValue == null || newValue.equals("")) {
-                diseaseNameTextField.clear();
-            } else {
-                if (resourceManager.getMimid2canonicalName().containsKey(newValue))
-                    diseaseNameTextField.setText(resourceManager.getMimid2canonicalName().get(newValue));
-            }
-        }));
-        diseaseNameTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
-            if (newValue == null || newValue.equals("")) {
-                diseaseIDTextField.clear();
-            } else {
-                if (resourceManager.getCanonicalName2mimid().containsKey(newValue))
-                    diseaseIDTextField.setText(resourceManager.getCanonicalName2mimid().get(newValue));
-            }
-        }));
+        hpoTextMiningButton.disableProperty().bind(optionalResources.ontologyProperty().isNull());
+        entrezIDTextField.disableProperty().bind(optionalResources.entrezIsMissingProperty());
+        geneSymbolTextField.disableProperty().bind(optionalResources.entrezIsMissingProperty());
+        diseaseDatabaseComboBox.disableProperty().bind(optionalResources.omimIsMissingProperty());
+        diseaseIDTextField.disableProperty().bind(optionalResources.omimIsMissingProperty());
+        diseaseNameTextField.disableProperty().bind(optionalResources.omimIsMissingProperty());
 
         // Trim whitespaces in input & enable PMID lookup after a valid integer has been entered into the pmidTextField
         pmidTextField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -489,6 +445,71 @@ public final class DataController implements Initializable {
             }
             pmidTextField.setText(in);
         });
+
+        if (!optionalResources.getOmimIsMissing()) enableOmimAutocompletions();
+        optionalResources.omimIsMissingProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) enableOmimAutocompletions();
+        });
+
+        if (!optionalResources.getEntrezIsMissing()) enableEntrezAutocompletions();
+        optionalResources.entrezIsMissingProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) enableEntrezAutocompletions();
+        });
+    }
+
+
+    /**
+     * Create autocompletions on GUI elements - allow completion of gene symbol after entering gene id and vice-versa
+     */
+    private void enableEntrezAutocompletions() {
+        // create bindings for autocompletion of Entrez ID & Symbol
+        WidthAwareTextFields.bindWidthAwareAutoCompletion(entrezIDTextField, optionalResources.getEntrezId2symbol().keySet());
+        WidthAwareTextFields.bindWidthAwareAutoCompletion(geneSymbolTextField, optionalResources.getSymbol2entrezId().keySet());
+        entrezIDTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.equals("")) {
+                geneSymbolTextField.clear();
+            } else {
+                if (optionalResources.getEntrezId2symbol().containsKey(newValue)) {
+                    geneSymbolTextField.setText(optionalResources.getEntrezId2symbol().get(newValue));
+                }
+            }
+        }));
+        geneSymbolTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.equals("")) {
+                entrezIDTextField.clear();
+            } else {
+                if (optionalResources.getSymbol2entrezId().containsKey(newValue))
+                    entrezIDTextField.setText(optionalResources.getSymbol2entrezId().get(newValue));
+            }
+        }));
+    }
+
+
+    /**
+     * Create autocompletions on GUI elements - add suggestion boxes offering disease name based on a few typed
+     * characters.
+     */
+    private void enableOmimAutocompletions() {
+        // create bindings for autocompletion of Disease ID & name (label)
+        WidthAwareTextFields.bindWidthAwareAutoCompletion(diseaseIDTextField, optionalResources.getMimid2canonicalName().keySet());
+        WidthAwareTextFields.bindWidthAwareAutoCompletion(diseaseNameTextField, optionalResources.getCanonicalName2mimid().keySet());
+        diseaseIDTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.equals("")) {
+                diseaseNameTextField.clear();
+            } else {
+                if (optionalResources.getMimid2canonicalName().containsKey(newValue))
+                    diseaseNameTextField.setText(optionalResources.getMimid2canonicalName().get(newValue));
+            }
+        }));
+        diseaseNameTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.equals("")) {
+                diseaseIDTextField.clear();
+            } else {
+                if (optionalResources.getCanonicalName2mimid().containsKey(newValue))
+                    diseaseIDTextField.setText(optionalResources.getCanonicalName2mimid().get(newValue));
+            }
+        }));
+
     }
 
 }

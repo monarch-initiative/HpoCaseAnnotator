@@ -5,7 +5,6 @@ import javafx.scene.control.Control;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import org.monarchinitiative.hpo_case_annotator.controller.DataController;
-import org.monarchinitiative.hpo_case_annotator.gui.application.HRMDResourceManager;
 import org.monarchinitiative.hpo_case_annotator.model.ChoiceBasket;
 import org.monarchinitiative.hpo_case_annotator.model.Variant;
 
@@ -21,14 +20,14 @@ public abstract class BaseVariantController extends TitledPane {
 
     /**
      * Bean containing data to be used for populating content of FXML elements such as ComboBoxes. Loaded from
-     * templateParameters.yml file.
+     * choice-basket.yml file.
      */
     protected static ChoiceBasket basket;
 
 
     protected BaseVariantController() {
-        Optional<File> oParams = HRMDResourceManager.getParametersFile();
-        basket = ChoiceBasket.loadChoices(oParams.get());
+//        Optional<File> oParams = HRMDResourceManager.getParametersFile();
+//        basket = ChoiceBasket.loadChoices(oParams.get());
     }
 
 

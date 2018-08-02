@@ -14,7 +14,7 @@
             <directory>${project.build.directory}</directory>
             <outputDirectory>${file.separator}</outputDirectory>
             <includes>
-                <include>HrmdGuiFX-${project.version}.jar</include>
+                <include>${project.build.finalName}.jar</include>
             </includes>
         </fileSet>
         <fileSet>
@@ -27,9 +27,9 @@
             <directory>${project.basedir}${file.separator}src${file.separator}main${file.separator}resources</directory>
             <outputDirectory>${file.separator}</outputDirectory>
             <includes>
-                <include>hrmd-gui.properties</include>
-                <include>templateParameters.yml</include>
-                <include>log4j.xml</include>
+                <include>hpo-case-annotator.properties</include>
+                <include>choice-basket.yml</include>
+                <include>log4j2.xml</include>
             </includes>
         </fileSet>
     </fileSets>

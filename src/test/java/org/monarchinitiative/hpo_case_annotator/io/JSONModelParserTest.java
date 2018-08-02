@@ -3,12 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.io;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.monarchinitiative.hpo_case_annotator.TestApplicationConfig;
 import org.monarchinitiative.hpo_case_annotator.model.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.StringWriter;
 import java.nio.file.Files;
@@ -21,13 +16,13 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestApplicationConfig.class)
+
+@Ignore("Not yet used")
 public class JSONModelParserTest {
 
     private DiseaseCaseModel model;
 
-    @Autowired
+    //    @Autowired
     private JSONModelParser parser;
 
 

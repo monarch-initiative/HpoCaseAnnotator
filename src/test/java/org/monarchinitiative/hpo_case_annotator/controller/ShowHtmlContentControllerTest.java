@@ -5,14 +5,15 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.monarchinitiative.hpo_case_annotator.TestApplicationConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.monarchinitiative.hpo_case_annotator.GuiceJUnitRunner;
+import org.monarchinitiative.hpo_case_annotator.GuiceModules;
+import org.monarchinitiative.hpo_case_annotator.gui.HpoCaseAnnotatorModule;
 import org.testfx.framework.junit.ApplicationTest;
 
+import javax.inject.Inject;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,11 +24,12 @@ import static org.junit.Assert.assertTrue;
 /**
  * This test tests presenting content of {@link ShowHtmlContentController} to the user.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestApplicationConfig.class)
+@Ignore("Gui tests are ignored for now")
+@RunWith(GuiceJUnitRunner.class)
+@GuiceModules({HpoCaseAnnotatorModule.class})
 public class ShowHtmlContentControllerTest extends ApplicationTest {
 
-    @Autowired
+    @Inject
     private ShowHtmlContentController controller;
 
 

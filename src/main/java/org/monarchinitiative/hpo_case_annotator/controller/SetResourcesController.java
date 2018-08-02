@@ -1,73 +1,60 @@
 package org.monarchinitiative.hpo_case_annotator.controller;
 
-import com.genestalker.springscreen.core.DialogController;
-import com.genestalker.springscreen.core.FXMLDialog;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.monarchinitiative.hpo_case_annotator.gui.application.HRMDResourceManager;
-import org.monarchinitiative.hpo_case_annotator.gui.application.HRMDResources;
-import org.monarchinitiative.hpo_case_annotator.gui.application.ScreensConfig;
+import javafx.stage.Stage;
+import ontologizer.ontology.Ontology;
+import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.io.Downloader;
+import org.monarchinitiative.hpo_case_annotator.io.EntrezParser;
 import org.monarchinitiative.hpo_case_annotator.util.PopUps;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 
 /**
- * This class is the controller of the setResources dialog. The user is enforced to perform initial setup of the
- * resources that are required to run the GUI. The resource paths are stored using {@link HRMDResourceManager}. The
- * dialog can be closed only after initialization of all resources, otherwise the user is forced to exit GUI. <p>Created
- * by Daniel Danis on 7/16/17.
+ * This class is the controller of the setResources dialog. The user performs initial setup of the
+ * resources that are required to run the GUI. The resource paths are stored in {@link OptionalResources} object. No
+ * setting to {@link Properties} object is being done.
+ * <p>
+ *     Created by Daniel Danis on 7/16/17.
  */
-public final class SetResourcesController implements DialogController {
+public final class SetResourcesController {
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger LOGGER = LoggerFactory.getLogger(SetResourcesController.class);
 
-    /**
-     * Reference to the {@link FXMLDialog} object representing the window of the MVC view element of this controller.
-     */
-    private FXMLDialog dialog;
+    private final OptionalResources optionalResources;
 
-    @Autowired
-    private HRMDResourceManager resourceManager;
+    private final Properties properties;
 
-    @Autowired
-    private Environment env;
+    private final File appHomeDir;
 
-    @Autowired
-    private ExecutorService executorService;
-
-    private HRMDResources resources;
+    private final ExecutorService executorService;
 
     @FXML
-    private TextField refGenomeTextField;
+    public Label refGenomeLabel;
 
     @FXML
-    private TextField hpOBOTextField;
+    public Label hpOboLabel;
 
     @FXML
-    private TextField entrezGeneFileTextField;
+    public Label entrezGeneLabel;
+
+    @FXML
+    public Label curatedFilesDirLabel;
 
     @FXML
     private TextField biocuratorIDTextField;
-
-    @FXML
-    private TextField dataDirectoryTextField;
-
-    @FXML
-    private TextField curatedDirTextField;
 
     @FXML
     private ProgressBar progressBar;
@@ -76,28 +63,12 @@ public final class SetResourcesController implements DialogController {
     private Label taskNameLabel;
 
 
-    /**
-     * Validate content of HRMDResources and continue only if all resources had been initialized. Otherwise show warning
-     * and don't let user pass.
-     */
-    @FXML
-    void continueButtonAction() {
-        if (resourceManager.isInitialized()) {
-            resourceManager.saveResources();
-            dialog.close();
-        } else {
-            PopUps.showWarningDialog("Sorry", "Unable to continue", "Please initialize all resources.");
-        }
-    }
-
-
-    /**
-     * Exit the GUI without setting anything.
-     */
-    @FXML
-    void exitButtonAction() {
-        dialog.close();
-        Platform.exit();
+    @Inject
+    SetResourcesController(OptionalResources optionalResources, Properties properties, File appHomeDir, ExecutorService executorService) {
+        this.optionalResources = optionalResources;
+        this.properties = properties;
+        this.appHomeDir = appHomeDir;
+        this.executorService = executorService;
     }
 
 
@@ -106,49 +77,64 @@ public final class SetResourcesController implements DialogController {
      */
     @FXML
     void setCuratedDirButtonAction() {
-        Optional<File> curatedDir = ScreensConfig.selectDirectory(dialog, HRMDResourceManager.getUserHomeDir(), "Set " +
+        File curatedDir = PopUps.selectDirectory(new Stage(), new File(System.getProperty("user.home")), "Set " +
                 "directory for curated files.");
-        curatedDir.ifPresent(f -> resources.setDiseaseCaseDir(f.getAbsolutePath()));
+        if (curatedDir != null) {
+            optionalResources.setDiseaseCaseDir(curatedDir);
+            curatedFilesDirLabel.setText(curatedDir.getAbsolutePath());
+        } else {
+            optionalResources.setDiseaseCaseDir(null);
+            curatedFilesDirLabel.setText("unset");
+        }
     }
 
 
     /**
-     * Open DirChooser and ask user to provide a directory where resources like HP.obo and Entrez gene file will be
-     * stored.
-     */
-    @FXML
-    void setDataDirectoryButtonAction() {
-        Optional<File> dataDir = ScreensConfig.selectDirectory(dialog, HRMDResourceManager.getUserHomeDir(), "Set data " +
-                "directory");
-        dataDir.ifPresent(f -> resources.setDataDir(f.getAbsolutePath()));
-    }
-
-
-    /**
-     * Download entrez gene file to the data directory if the path to data directory has been set.
+     * Download entrez gene file to the app home directory.
      */
     @FXML
     void downloadEntrezGenesButtonAction() {
-        if (!resourceManager.getDataDir().isPresent()) {
-            PopUps.showWarningDialog("Error", "Unable to download Entrez genes file", "Set path to data directory " +
-                    "first");
-            return;
+        File target = new File(appHomeDir, OptionalResources.DEFAULT_ENTREZ_FILE_NAME);
+        if (target.isFile()) {
+            boolean response = PopUps.getBooleanFromUser("Overwrite?", "Entrez file already exists at the target " +
+                    "location", "Download Entrez gene file");
+            if (!response) {
+                EntrezParser parser = new EntrezParser(target.getAbsolutePath());
+                optionalResources.setEntrezId2gene(parser.getEntrezMap());
+                optionalResources.setEntrezId2symbol(parser.getEntrezId2symbol());
+                optionalResources.setSymbol2entrezId(parser.getSymbol2entrezId());
+                optionalResources.setEntrezPath(target);
+                entrezGeneLabel.setText(target.getAbsolutePath());
+                return;
+            }
         }
-
-        File target = new File(resourceManager.getDataDir().get(), HRMDResourceManager.DEFAULT_ENTREZ_FILE_NAME);
-        URL url;
+        URL entrezGeneUrl;
         try {
-            url = new URL(env.getProperty("entrez.gene.url"));
+            entrezGeneUrl = new URL(properties.getProperty("entrez.gene.url"));
         } catch (MalformedURLException e) {
-            PopUps.showException("Download Entrez gene file", "Error occured", String.format("Malformed URL: %s", env.getProperty("entrez.gene.url")),
-                    e);
-            log.error(String.format("Malformed URL: %s", env.getProperty("entrez.gene.url")), e);
+            PopUps.showException("Download Entrez gene file", "Error occured", String.format("Malformed URL: %s",
+                    properties.getProperty("entrez.gene.url")), e);
+            LOGGER.error(String.format("Malformed URL: %s", properties.getProperty("entrez.gene.url")), e);
             return;
         }
-        Task<Void> task = new Downloader(url, target);
+        Task<Void> task = new Downloader(entrezGeneUrl, target);
         taskNameLabel.textProperty().bind(task.messageProperty());
         progressBar.progressProperty().bind(task.progressProperty());
-        task.setOnSucceeded(e -> resources.setEntrezGenePath(target.getAbsolutePath()));
+        task.setOnSucceeded(e -> {
+            EntrezParser parser = new EntrezParser(target.getAbsolutePath());
+            optionalResources.setEntrezId2gene(parser.getEntrezMap());
+            optionalResources.setEntrezId2symbol(parser.getEntrezId2symbol());
+            optionalResources.setSymbol2entrezId(parser.getSymbol2entrezId());
+            optionalResources.setEntrezPath(target);
+            entrezGeneLabel.setText(target.getAbsolutePath());
+        });
+        task.setOnFailed(e -> {
+            optionalResources.setEntrezId2gene(null);
+            optionalResources.setEntrezId2symbol(null);
+            optionalResources.setSymbol2entrezId(null);
+            optionalResources.setEntrezPath(null);
+            entrezGeneLabel.setText("unset");
+        });
         executorService.submit(task);
     }
 
@@ -158,25 +144,40 @@ public final class SetResourcesController implements DialogController {
      */
     @FXML
     void downloadHPOFileButtonAction() {
-        if (!resourceManager.getDataDir().isPresent()) {
-            PopUps.showWarningDialog("Error", "Unable to download HPO.obo file", "Set path to data directory " +
-                    "first");
-            return;
+        File target = new File(appHomeDir, OptionalResources.DEFAULT_HPO_FILE_NAME);
+        if (target.isFile()) {
+            boolean response = PopUps.getBooleanFromUser("Overwrite?", "HPO file already exists at the target " +
+                    "location", "Download " +
+                    "HPO obo file");
+            if (!response) {
+                optionalResources.setOntology(OptionalResources.deserializeOntology(target));
+                optionalResources.setOntologyPath(target);
+                hpOboLabel.setText(target.getAbsolutePath());
+                return;
+            }
         }
-        File target = new File(resourceManager.getDataDir().get(), HRMDResourceManager.DEFAULT_HPO_FILE_NAME);
         URL url;
         try {
-            url = new URL(env.getProperty("hp.obo.url"));
+            url = new URL(properties.getProperty("hp.obo.url"));
         } catch (MalformedURLException e) {
-            PopUps.showException("Download Entrez gene file", "Error occured", String.format("Malformed URL: %s", env
-                    .getProperty("hp.obo.url")), e);
-            log.error(String.format("Malformed URL: %s", env.getProperty("hp.obo.url")), e);
+            PopUps.showException("Download HPO obo file", "Error occured", String.format("Malformed URL: %s",
+                    properties.getProperty("hp.obo.url")), e);
+            LOGGER.error(String.format("Malformed URL: %s", properties.getProperty("hp.obo.url")), e);
             return;
         }
         Task<Void> task = new Downloader(url, target);
         taskNameLabel.textProperty().bind(task.messageProperty());
         progressBar.progressProperty().bind(task.progressProperty());
-        task.setOnSucceeded(e -> resources.setHpOBOPath(target.getAbsolutePath()));
+        task.setOnSucceeded(e -> {
+            optionalResources.setOntology(OptionalResources.deserializeOntology(target));
+            optionalResources.setOntologyPath(target);
+            hpOboLabel.setText(target.getAbsolutePath());
+        });
+        task.setOnFailed(e -> {
+            optionalResources.setOntologyPath(null);
+            optionalResources.setOntology(null);
+            hpOboLabel.setText("unset");
+        });
         executorService.submit(task);
     }
 
@@ -186,38 +187,39 @@ public final class SetResourcesController implements DialogController {
      */
     @FXML
     void setReferenceGenomeButtonAction() {
-        Optional<File> ref = ScreensConfig.selectDirectory(dialog, HRMDResourceManager.getUserHomeDir(), "Set " +
+        File ref = PopUps.selectDirectory(new Stage(), new File(System.getProperty("user.home")), "Set " +
                 "path to directory with reference genome.");
-        ref.ifPresent(f -> resources.setRefGenomeDir(f.getAbsolutePath()));
+        if (ref != null) {
+            optionalResources.setRefGenomeDir(ref);
+            refGenomeLabel.setText(ref.getAbsolutePath());
+        } else {
+            optionalResources.setRefGenomeDir(null);
+            refGenomeLabel.setText("unset");
+        }
     }
 
 
     /**
-     * {@inheritDoc}
-     *
-     * @param location
-     * @param resourceBundle
+     * Initialize elements of this controller.
      */
-    @Override
-    public void initialize(URL location, ResourceBundle resourceBundle) {
-        resources = resourceManager.getResources();
-        dataDirectoryTextField.textProperty().bind(resources.dataDirProperty());
-        refGenomeTextField.textProperty().bind(resources.refGenomeDirProperty());
-        hpOBOTextField.textProperty().bind(resources.hpOBOPathProperty());
-        entrezGeneFileTextField.textProperty().bind(resources.entrezGenePathProperty());
-        curatedDirTextField.textProperty().bind(resources.diseaseCaseDirProperty());
-        biocuratorIDTextField.textProperty().bindBidirectional(resources.biocuratorIdProperty());
-    }
-
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param dialog The {@link FXMLDialog} instance which represents an independent window.
-     */
-    @Override
-    public void setDialog(FXMLDialog dialog) {
-        this.dialog = dialog;
+    public void initialize() {
+//        refGenomeLabel.textProperty().bind(optionalResources.refGenomeDirProperty().asString());
+        refGenomeLabel.setText((optionalResources.getRefGenomeDir() != null)
+                ? optionalResources.getRefGenomeDir().getAbsolutePath()
+                : "unset");
+//        hpOboLabel.textProperty().bind(optionalResources.ontologyPathProperty().asString());
+        hpOboLabel.setText((optionalResources.getOntologyPath() != null)
+                ? optionalResources.getOntologyPath().getAbsolutePath()
+                : "unset");
+//        entrezGeneLabel.textProperty().bind(optionalResources.entrezPathProperty().asString());
+        entrezGeneLabel.setText((optionalResources.getEntrezPath() != null)
+                ? optionalResources.getEntrezPath().getAbsolutePath()
+                : "unset");
+//        curatedFilesDirLabel.textProperty().bind(optionalResources.diseaseCaseDirProperty().asString());
+        curatedFilesDirLabel.setText((optionalResources.getDiseaseCaseDir() != null)
+                ? optionalResources.getDiseaseCaseDir().getAbsolutePath()
+                : "unset");
+        biocuratorIDTextField.textProperty().bindBidirectional(optionalResources.biocuratorIdProperty());
     }
 
 }
