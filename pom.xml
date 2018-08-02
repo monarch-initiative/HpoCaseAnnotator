@@ -74,7 +74,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Play</mainClass>
+                            <mainClass>org.monarchinitiative.hpo_case_annotator.Play</mainClass>
                         </manifest>
                     </archive>
                     <excludes>
@@ -97,7 +97,7 @@
                     </descriptors>
                     <archive>
                         <manifest>
-                            <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Play</mainClass>
+                            <mainClass>org.monarchinitiative.hpo_case_annotator.Play</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -129,7 +129,7 @@
                             <outfile>target/${project.build.finalName}.exe</outfile>
                             <downloadUrl>http://java.com/download</downloadUrl>
                             <classPath>
-                                <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Play</mainClass>
+                                <mainClass>org.monarchinitiative.hpo_case_annotator.Play</mainClass>
                             </classPath>
                             <jre>
                                 <bundledJre64Bit>false</bundledJre64Bit>

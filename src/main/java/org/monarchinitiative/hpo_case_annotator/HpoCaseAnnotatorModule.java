@@ -2,13 +2,12 @@ package org.monarchinitiative.hpo_case_annotator;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.name.Names;
 import javafx.application.HostServices;
-import ontologizer.ontology.Ontology;
+import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.controllers.DataController;
 import org.monarchinitiative.hpo_case_annotator.controllers.MainController;
-import org.monarchinitiative.hpo_case_annotator.io.EntrezParser;
 import org.monarchinitiative.hpo_case_annotator.io.ModelParser;
-import org.monarchinitiative.hpo_case_annotator.io.OMIMParser;
 import org.monarchinitiative.hpo_case_annotator.io.XMLModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.ChoiceBasket;
 import org.monarchinitiative.hpo_case_annotator.validation.CompletenessValidator;
@@ -21,88 +20,115 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Beans/dependencies required for testing are defined here. Last time it was not possible to define
- * {@link HostServices} bean.
- *
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
  * @version 0.0.1
  * @since 0.0
  */
-public class TestHpoCaseAnnotatorModule extends AbstractModule {
+public class HpoCaseAnnotatorModule extends AbstractModule {
 
-    private static final String PROPERTIES_FILE_NAME = "test-hca.properties";
+    private static final Logger LOGGER = LoggerFactory.getLogger(HpoCaseAnnotatorModule.class);
+
+    private static final String PROPERTIES_FILE_NAME = "hpo-case-annotator.properties";
 
     private static final String CHOICE_BASKET_FILE_NAME = "choice-basket.yml";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestHpoCaseAnnotatorModule.class);
+    /**
+     * This is the {@link Stage} which is provided by JavaFX and registered into the Spring container in the
+     * {@link Play#start(Stage)} method.
+     */
+    private final Stage primaryStage;
+
+    private final HostServices hostServices;
+
+
+    HpoCaseAnnotatorModule(Stage primaryStage, HostServices hostServices) {
+        this.primaryStage = primaryStage;
+        this.hostServices = hostServices;
+    }
 
 
     @Override
     protected void configure() {
-        bind(DataController.class);
-        bind(MainController.class);
+        bind(Stage.class)
+                .annotatedWith(Names.named("primaryStage"))
+                .toInstance(primaryStage);
+
+        bind(HostServices.class)
+                .toInstance(hostServices);
+
+        bind(ExecutorService.class)
+                .toInstance(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
 
         bind(ResourceBundle.class)
                 .toInstance(ResourceBundle.getBundle(Play.class.getName()));
 
-        bind(ExecutorService.class)
-                .toInstance(Executors.newFixedThreadPool(1));
+        bind(OptionalResources.class)
+                .asEagerSingleton();
 
         bind(ModelParser.class)
                 .to(XMLModelParser.class);
-
 
         bind(ValidationRunner.class);
         bind(GenomicPositionValidator.class);
         bind(CompletenessValidator.class);
         bind(PubMedValidator.class);
 
+        bind(DataController.class);
+        bind(MainController.class);
     }
 
 
+    /**
+     * Return {@link Properties} with paths to resources. At first, {@link File} <code>propertiesFilePath</code>
+     * will be tried. If the file doesn't exist, we will fall back to the <code>hpo-case-annotator.properties</code>
+     * that is bundled in the JAR file.
+     *
+     * @param propertiesFilePath {@link File} pointing to the <code>application.properties</code> file
+     * @return application {@link Properties}
+     */
     @Provides
     @Singleton
-    public Properties properties() throws IOException {
+    public Properties properties(@Named("propertiesFilePath") File propertiesFilePath) throws IOException {
         Properties properties = new Properties();
-
-        properties.load(TestHpoCaseAnnotatorModule.class.getResourceAsStream("/" + PROPERTIES_FILE_NAME));
+        if (propertiesFilePath.isFile()) {
+            try {
+                LOGGER.info("Loading app properties from {}", propertiesFilePath.getAbsolutePath());
+                properties.load(new FileReader(propertiesFilePath));
+            } catch (IOException e) {
+                LOGGER.warn("Cannot load app properties", e);
+                throw e;
+            }
+        } else {
+            try {
+                URL propertiesUrl = Play.class.getResource("/" + PROPERTIES_FILE_NAME);
+                LOGGER.info("Loading bundled app properties {}", propertiesUrl.getPath());
+                properties.load(Play.class.getResourceAsStream("/" + PROPERTIES_FILE_NAME));
+            } catch (IOException e) {
+                LOGGER.warn("Cannot load app properties", e);
+                throw e;
+            }
+        }
         return properties;
     }
 
 
-    @Provides
-    @Singleton
-    public OptionalResources optionalResources(Properties properties) throws FileNotFoundException {
-        OptionalResources optionalResources = new OptionalResources();
-        optionalResources.setRefGenomeDir(new File(properties.getProperty("test.genome.dir")));
-        optionalResources.setDiseaseCaseDir(new File(properties.getProperty("test.xml.model.dir")));
-        // Ontology
-        Ontology ontology = OptionalResources.deserializeOntology(
-                new File(properties.getProperty("test.hp.obo.path")));
-        optionalResources.setOntology(ontology);
-        // Entrez genes
-        EntrezParser entrezParser = new EntrezParser(properties.getProperty("test.entrez.file.path"));
-        optionalResources.setEntrezId2gene(entrezParser.getEntrezMap());
-        optionalResources.setEntrezId2symbol(entrezParser.getEntrezId2symbol());
-        optionalResources.setSymbol2entrezId(entrezParser.getSymbol2entrezId());
-        // OMIM file
-        OMIMParser omimParser = new OMIMParser(new File(properties.getProperty("test.omim.file.path")));
-        optionalResources.setCanonicalName2mimid(omimParser.getCanonicalName2mimid());
-        optionalResources.setMimid2canonicalName(omimParser.getMimid2canonicalName());
-
-        optionalResources.setBiocuratorId("HPO:walterwhite");
-        return optionalResources;
-    }
-
+    /**
+     * Figure out where YAML parameters file is localized. There are two possible paths: <ul> <li>in
+     * the directory where the JAR file is (<code>codeHomeDir</code>)</li> <li>inside of the JAR file</li> </ul> The
+     * first has a priority.
+     *
+     * @return {@link Optional <File>} object with requested path.
+     */
 
     @Provides
     @Singleton
@@ -112,9 +138,9 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
             LOGGER.info("Loading choice basket from file {}", target.getAbsolutePath());
             return new ChoiceBasket(target);
         }
-
         try { // try to load content from bundled file
             URL url = getClass().getResource("/" + CHOICE_BASKET_FILE_NAME);
+            LOGGER.info("Loading bundled choice basked from {}", url.toString());
             return new ChoiceBasket(url);
         } catch (IOException e) {
             LOGGER.warn("Tried to load bundled choice basket from but failed", e);
@@ -205,5 +231,4 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
         }
         return appHomeDir;
     }
-
 }

@@ -19,7 +19,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import ontologizer.ontology.Term;
-import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
+import org.monarchinitiative.hpo_case_annotator.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.hpotextmining.HPOMiner;
 import org.monarchinitiative.hpo_case_annotator.hpotextmining.MinedTerm;
 import org.monarchinitiative.hpo_case_annotator.util.PopUps;

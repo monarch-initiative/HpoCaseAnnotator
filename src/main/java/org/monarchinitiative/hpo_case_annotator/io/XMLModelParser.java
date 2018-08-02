@@ -3,7 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.io;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.apache.commons.io.output.WriterOutputStream;
-import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
+import org.monarchinitiative.hpo_case_annotator.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

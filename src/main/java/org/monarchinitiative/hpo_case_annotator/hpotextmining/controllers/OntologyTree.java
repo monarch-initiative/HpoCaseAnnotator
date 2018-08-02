@@ -8,7 +8,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import ontologizer.ontology.Ontology;
 import ontologizer.ontology.Term;
-import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
+import org.monarchinitiative.hpo_case_annotator.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.util.WidthAwareTextFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

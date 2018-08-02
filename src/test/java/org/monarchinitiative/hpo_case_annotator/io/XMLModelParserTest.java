@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.monarchinitiative.hpo_case_annotator.GuiceJUnitRunner;
 import org.monarchinitiative.hpo_case_annotator.GuiceModules;
 import org.monarchinitiative.hpo_case_annotator.TestHpoCaseAnnotatorModule;
-import org.monarchinitiative.hpo_case_annotator.gui.HpoCaseAnnotatorModule;
 import org.monarchinitiative.hpo_case_annotator.model.*;
 
 import javax.inject.Inject;

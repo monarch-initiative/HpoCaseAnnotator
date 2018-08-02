@@ -3,7 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.hpotextmining.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
-import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
+import org.monarchinitiative.hpo_case_annotator.OptionalResources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

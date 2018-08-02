@@ -1,12 +1,11 @@
 package org.monarchinitiative.hpo_case_annotator.io;
 
 import javafx.concurrent.Task;
-import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
-import org.monarchinitiative.hpo_case_annotator.gui.Play;
+import org.monarchinitiative.hpo_case_annotator.OptionalResources;
+import org.monarchinitiative.hpo_case_annotator.Play;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.text.html.Option;
 import java.io.File;
 import java.util.Properties;
 

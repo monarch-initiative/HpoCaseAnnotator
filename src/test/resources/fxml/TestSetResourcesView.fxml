@@ -6,7 +6,7 @@
 <?import javafx.scene.text.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="450.0" maxWidth="900.0" prefHeight="450.0" prefWidth="900.0"
             xmlns="http://javafx.com/javafx/8.0.111"
-            fx:controller="org.monarchinitiative.hpo_case_annotator.controller.SetResourcesController">
+            fx:controller="org.monarchinitiative.hpo_case_annotator.controllers.SetResourcesController">
     <children>
         <Label contentDisplay="CENTER" layoutX="20.0" layoutY="20.0" minWidth="100.0" text="Initialize GUI resources:"
                textAlignment="CENTER" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
