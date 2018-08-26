@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.web.WebView?>
+<StackPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+           xmlns="http://javafx.com/javafx/8.0.111"
+           fx:controller="org.monarchinitiative.org.monarchinitiative.hpo_case_annotator.controllers.ShowHtmlContentController">
+    <children>
+        <WebView fx:id="contentWebView" prefWidth="900.0"/>
+    </children>
+</StackPane>

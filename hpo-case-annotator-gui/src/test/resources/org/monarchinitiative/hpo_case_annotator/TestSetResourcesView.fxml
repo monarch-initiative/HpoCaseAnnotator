@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="450.0" maxWidth="900.0" prefHeight="450.0" prefWidth="900.0"
+            xmlns="http://javafx.com/javafx/8.0.111"
+            fx:controller="org.monarchinitiative.org.monarchinitiative.hpo_case_annotator.controllers.SetResourcesController">
+    <children>
+        <Label contentDisplay="CENTER" layoutX="20.0" layoutY="20.0" minWidth="100.0" text="Initialize GUI resources:"
+               textAlignment="CENTER" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+            <font>
+                <Font name="System Bold" size="20.0"/>
+            </font>
+        </Label>
+        <GridPane layoutX="32.0" layoutY="72.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
+            <columnConstraints>
+                <ColumnConstraints fillWidth="false" minWidth="10.0" prefWidth="180.0"/>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0"/>
+                <ColumnConstraints halignment="CENTER" minWidth="10.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <Label text="Data directory">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </GridPane.margin>
+                    <font>
+                        <Font name="System Bold" size="13.0"/>
+                    </font>
+                </Label>
+                <Label text="Reference genome" GridPane.rowIndex="1">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </GridPane.margin>
+                    <font>
+                        <Font name="System Bold" size="13.0"/>
+                    </font>
+                </Label>
+                <Label text="HPO obo" GridPane.rowIndex="2">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </GridPane.margin>
+                    <font>
+                        <Font name="System Bold" size="13.0"/>
+                    </font>
+                </Label>
+                <Label text="Entrez genes" GridPane.rowIndex="3">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </GridPane.margin>
+                    <font>
+                        <Font name="System Bold" size="13.0"/>
+                    </font>
+                </Label>
+                <TextField fx:id="refGenomeTextField" editable="false" minHeight="30.0"
+                           promptText="directory with reference genome files" GridPane.columnIndex="1"
+                           GridPane.rowIndex="1">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </GridPane.margin>
+                </TextField>
+                <TextField fx:id="hpOBOTextField" editable="false" minHeight="30.0" promptText="path to the HP.obo file"
+                           GridPane.columnIndex="1" GridPane.rowIndex="2">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </GridPane.margin>
+                </TextField>
+                <TextField fx:id="entrezGeneFileTextField" editable="false" minHeight="30.0"
+                           promptText="path to the Entrez gene file" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </GridPane.margin>
+                </TextField>
+                <Button fx:id="setReferenceGenomeButton" minHeight="30.0" minWidth="90.0" mnemonicParsing="false"
+                        onAction="#setReferenceGenomeButtonAction" text="Set" GridPane.columnIndex="2"
+                        GridPane.rowIndex="1">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </GridPane.margin>
+                </Button>
+                <Button fx:id="downloadHPOFileButton" minHeight="30.0" minWidth="90.0" mnemonicParsing="false"
+                        onAction="#downloadHPOFileButtonAction" text="Download" GridPane.columnIndex="2"
+                        GridPane.rowIndex="2">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </GridPane.margin>
+                </Button>
+                <Button fx:id="downloadEntrezGenesButton" minHeight="30.0" minWidth="90.0" mnemonicParsing="false"
+                        onAction="#downloadEntrezGenesButtonAction" text="Download" GridPane.columnIndex="2"
+                        GridPane.rowIndex="3">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </GridPane.margin>
+                </Button>
+                <TextField fx:id="biocuratorIDTextField" minHeight="30.0" promptText="enter your curator ID here"
+                           GridPane.columnIndex="1" GridPane.rowIndex="5">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </GridPane.margin>
+                </TextField>
+                <TextField fx:id="curatedDirTextField" minHeight="30.0" promptText="where the curated files are stored"
+                           GridPane.columnIndex="1" GridPane.rowIndex="4">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </GridPane.margin>
+                </TextField>
+                <Label text="Curated files directory" GridPane.rowIndex="4">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </GridPane.margin>
+                    <font>
+                        <Font name="System Bold" size="13.0"/>
+                    </font>
+                </Label>
+                <Label text="Biocurator ID" GridPane.rowIndex="5">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </GridPane.margin>
+                    <font>
+                        <Font name="System Bold" size="13.0"/>
+                    </font>
+                </Label>
+                <Button minHeight="30.0" minWidth="90.0" mnemonicParsing="false" onAction="#setCuratedDirButtonAction"
+                        text="Set" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                <TextField fx:id="dataDirectoryTextField" minHeight="30.0"
+                           promptText="set directory where the resource files will be stored" GridPane.columnIndex="1">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </GridPane.margin>
+                </TextField>
+                <Button minHeight="30.0" minWidth="90.0" mnemonicParsing="false"
+                        onAction="#setDataDirectoryButtonAction" text="Set" GridPane.columnIndex="2"/>
+            </children>
+        </GridPane>
+        <Separator layoutY="330.0" prefHeight="2.0" prefWidth="900.0" AnchorPane.topAnchor="330.0"/>
+        <ProgressBar fx:id="progressBar" layoutX="180.0" layoutY="355.0" prefHeight="20.0" prefWidth="600.0"
+                     progress="0.0" AnchorPane.topAnchor="355.0"/>
+        <Label fx:id="taskNameLabel" layoutX="17.0" layoutY="268.0" textFill="GREY" AnchorPane.leftAnchor="20.0"
+               AnchorPane.topAnchor="355.0"/>
+        <Button layoutX="788.0" layoutY="248.0" minHeight="30.0" minWidth="90.0" mnemonicParsing="false"
+                onAction="#exitButtonAction" text="Exit GUI" AnchorPane.bottomAnchor="20.0"
+                AnchorPane.leftAnchor="20.0"/>
+        <Button fx:id="continueButton" layoutX="791.0" layoutY="402.0" minHeight="30.0" minWidth="90.0"
+                mnemonicParsing="false" onAction="#continueButtonAction" text="Continue" AnchorPane.bottomAnchor="20.0"
+                AnchorPane.rightAnchor="20.0"/>
+    </children>
+</AnchorPane>

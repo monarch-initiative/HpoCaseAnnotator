@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mutation PUBLIC "mutation" "cancer-mutation.dtd">
+<mutation>
+  <publication>
+    <authorlist>Rachakonda PS, Hosen I, de Verdier PJ, Fallah M, Heidenreich B, Ryk C, Wiklund NP, Steineck G, Schadendorf D, Hemminki K, Kumar R</authorlist>
+    <title>TERT promoter mutations in bladder cancer affect patient survival and disease recurrence through modification by a common polymorphism</title>
+    <journal>Proc Natl Acad Sci U S A</journal>
+    <year>2013</year>
+    <volume>110(43)</volume>
+    <pages>17426-31</pages>
+    <pmid>24101484</pmid>
+  </publication>
+  <variantlist>
+    <variant genotype="heterozygous" class="promoter">
+      <build>37</build>
+      <chromosome>5</chromosome>
+      <pos>1295228</pos>
+      <ref>G</ref>
+      <alt>A</alt>
+      <snippet>CGGA[G/A]GGG</snippet>
+      <regulator>TERT promoter</regulator>
+      <pathomechanism>promoter|increased-transcription</pathomechanism>
+      <validation>
+        <reporter direction="up">200.00</reporter>
+        <frequency m="175" n="327"/>
+      </validation>
+    </variant>
+  </variantlist>
+  <disease>
+    <name>Bladder Carcinoma</name>
+    <database>NCI</database>
+    <id>C4912</id>
+  </disease>
+  <metadata>The authors investigated tumors from a well-characterized series of 327 patients with urothelial cell carcinoma of bladder. The somatic mutations, mainly at positions -124 and -146 bp from ATG start site that create binding motifs for E-twenty six/ternary complex factors (Ets/TCF), affected 65.4% of the tumors, with even distribution across different stages and grades. The authors' data showed that a common polymorphism rs2853669, within a preexisting Ets2 binding site in the TERT promoter, acts as a modifier of the effect of the mutations on survival and tumor recurrence. The patients with the mutations showed poor survival in the absence [hazard ratio (HR) 2.19, 95% confidence interval (CI) 1.02-4.70] but not in the presence (HR 0.42, 95% CI 0.18-1.01) of the variant allele of the polymorphism. The mutations in the absence of the variant allele were highly associated with the disease recurrence in patients with Tis, Ta, and T1 tumors (HR 1.85, 95% CI 1.11-3.08).</metadata>
+  <targetgene>
+    <entrezid>7015</entrezid>
+    <genesymbol>TERT</genesymbol>
+  </targetgene>
+  <biocurator>HPO:mjabif</biocurator>
+  <datecreated>1450708378462</datecreated>
+  <datemodified>1450708378462</datemodified>
+</mutation>

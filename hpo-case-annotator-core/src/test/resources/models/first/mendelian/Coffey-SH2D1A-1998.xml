@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mutation PUBLIC "mutation" "hrgm.dtd">
+<mutation>
+  <publication>
+    <authorlist>Coffey AJ, Brooksbank RA, Brandau O, Oohashi T, Howell GR, Bye JM, Cahn AP, Durham J, Heath P, Wray P, Pavitt R, Wilkinson J, Leversha M, Huckle E, Shaw-Smith CJ, Dunham A, Rhodes S, Schuster V, Porta G, Yin L, Serafini P, Sylla  B, Zollo M, Franco B, Bolino A, Seri M, Lanyi A, Davis JR, Webster D, Harris A, Lenoir G, de St Basile G, Jones A, Behloradsky BH, Achatz H, Murken J, Fassler R, Sumegi J, Romeo G, Vaudin M, Ross MT, Meindl A, Bentley DR</authorlist>
+    <title>Host response to EBV  infection in X-linked lymphoproliferative disease results from mutations in an SH2-domain encoding gene</title>
+    <journal>Nat Genet</journal>
+    <year>1998</year>
+    <volume>20(2)</volume>
+    <pages>129-35</pages>
+    <pmid>9771704</pmid>
+  </publication>
+  <variantlist>
+    <variant genotype="heterozygous" class="5UTR">
+      <build>37</build>
+      <chromosome>X</chromosome>
+      <pos>123480184</pos>
+      <ref>C</ref>
+      <alt>T</alt>
+      <snippet>C[C/T]AAT</snippet>
+      <regulator>SH2D1A 5'UTR</regulator>
+      <pathomechanism>5UTR|unknown</pathomechanism>
+      <validation>
+        <comparability present="yes"/>
+      </validation>
+    </variant>
+  </variantlist>
+  <disease>
+    <name>Lymphoproliferative syndrome, X-linked, 1</name>
+    <database>OMIM</database>
+    <id>308240</id>
+  </disease>
+  <phenotypelist>
+    <phenotype>
+      <hpoid>HP:0004313</hpoid>
+      <hponame>Hypogammaglobulinemia</hponame>
+    </phenotype>
+  </phenotypelist>
+  <identifier></identifier>
+  <metadata>X-linked lymphoproliferative syndrome (XLP or Duncan disease) is characterized by extreme sensitivity to Epstein-Barr virus (EBV), resulting in a complex phenotype manifested by severe or fatal infectious mononucleosis, acquired hypogammaglobulinemia and malignant lymphoma. SH2D1A is mutated in XLP patients. Following infection with EBV, patients with XLP mount a vigorous uncontrolled polyclonal expansion of T and B cells. XLP has a variable phenotype manifested as severe or fatal infectious mononucleosis (51% of cases), acquired hypogammaglobulinemia (31%), or malignant lymphoma (26%), alone or in combination. A mutation at position -10 was found located in a potential CCAAT box (CCAAT->CTAAT). Examination of the upstream sequence indicates that there is no TATA box in the putative promoter; a CCAAT sequence element is present at the -12 position. The SH2D1A gene is located on the plus strand of chromosome X. The original publication states: The SH2D1A cDNA is 2530 bp and contains an open reading frame (ORF) of 462 bp, with an initiation codon 79 bp from the start of the ORF (Fig. 2), and the 5' terminus of genbank sequence AL023657 aligns to chrX:1234801894. It can be seen there is a CCAAT box sequence ten base pairs upstream of this at chrX:123,480,184C>T (GRCh37). However, according to the current gene models, the sequence is in the 5' UTR. No experimental evidence is provided for the pathogenicity of this variant. No specific phenotypic data is provided so we have annotated simply to hypogammaglobulinemia.</metadata>
+  <targetgene>
+    <entrezid>4068</entrezid>
+    <genesymbol>SH2D1A</genesymbol>
+  </targetgene>
+  <biocurator>HPO:probinson</biocurator>
+</mutation>

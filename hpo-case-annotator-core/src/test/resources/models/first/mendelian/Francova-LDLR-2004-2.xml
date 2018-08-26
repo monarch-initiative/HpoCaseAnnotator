@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mutation PUBLIC "mutation" "hrgm.dtd">
+<mutation>
+  <publication>
+    <authorlist>Francová H, Trbusek M, Zapletalová P, Kuhrová V</authorlist>
+    <title>New promoter mutations in the low-density lipoprotein receptor gene which induce familial hypercholesterolaemia phenotype: molecular and functional analysis</title>
+    <journal>J Inherit Metab Dis</journal>
+    <year>2004</year>
+    <volume>27(4)</volume>
+    <pages>523-8</pages>
+    <pmid>15303010</pmid>
+  </publication>
+  <variantlist>
+    <variant genotype="heterozygous" class="5UTR">
+      <build>37</build>
+      <chromosome>19</chromosome>
+      <pos>11200072</pos>
+      <ref>C</ref>
+      <alt>T</alt>
+      <snippet>ATCAC[C/T]CCACTG</snippet>
+      <regulator>LDLR 5UTR</regulator>
+      <pathomechanism>5UTR|unknown</pathomechanism>
+      <validation>
+        <comparability present="yes"/>
+      </validation>
+    </variant>
+  </variantlist>
+  <disease>
+    <name>Hypercholesterolemia, familial</name>
+    <database>OMIM</database>
+    <id>143890</id>
+  </disease>
+  <phenotypelist>
+    <phenotype>
+      <hpoid>HP:0002621</hpoid>
+      <hponame>Atherosclerosis</hponame>
+    </phenotype>
+    <phenotype>
+      <hpoid>HP:0003124</hpoid>
+      <hponame>Hypercholesterolemia</hponame>
+    </phenotype>
+  </phenotypelist>
+  <identifier>Family 1</identifier>
+  <metadata>Adult heterozygous familial hypercholesterolaemia (FH) individuals have a markedly raised plasma cholesterol that is associated with accelerated atherosclerosis and premature coronary heart disease. Molecular screening in an indifivial with FH revealed a promoter mutation -60C>T in the conserved nucleotide sequence of the sterol-dependent regulation element repeat 2. BLAT analysis of the sequence in Figure 1 places the mutation at chr19:11200072C>T. No detailed phenotype information is provided. No experimental confirmation is provided, but the mutation is noted to affect a known sterol-dependent regulation element repeat.</metadata>
+  <targetgene>
+    <entrezid>3949</entrezid>
+    <genesymbol>LDLR</genesymbol>
+  </targetgene>
+  <biocurator>HPO:probinson</biocurator>
+</mutation>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mutation PUBLIC "mutation" "cancer-mutation.dtd">
+<mutation>
+  <publication>
+    <authorlist>Poulos RC, Thoms JA, Shah A, Beck D, Pimanda JE, Wong JW</authorlist>
+    <title>Systematic Screening of Promoter Regions Pinpoints Functional Cis-Regulatory Mutations in a Cutaneous Melanoma Genome</title>
+    <journal>Mol Cancer Res</journal>
+    <year>2015</year>
+    <volume>13(8)</volume>
+    <pages>1218-26</pages>
+    <pmid>26082173</pmid>
+  </publication>
+  <variantlist>
+    <variant genotype="heterozygous" class="5UTR">
+      <build>37</build>
+      <chromosome>8</chromosome>
+      <pos>125551344</pos>
+      <ref>C</ref>
+      <alt>T</alt>
+      <snippet>TCCGC[C/T]CTTCC</snippet>
+      <regulator>NDUFB9 promoter</regulator>
+      <pathomechanism>5UTR|reduced-transcription</pathomechanism>
+      <validation>
+        <reporter direction="down">80.00</reporter>
+        <frequency m="19" n="432"/>
+      </validation>
+    </variant>
+  </variantlist>
+  <disease>
+    <name>Cutaneous Melanoma</name>
+    <database>NCI</database>
+    <id>C3510</id>
+  </disease>
+  <metadata>The authors describe an NDUFB9 putative promoter mutation (chr8:125,551,344 C>T) within the 5'-untranslated region (UTR) of NDUFB9. The mutation was found in 19 of 432 samples with cutaneous melanoma. The protein encoded by NDUFB9 is part of both the mitochondrial dysfunction and oxidative phosphorylation (OXPHOS) key canonical pathways. In reporter assays, activity of the mutant NDUFB9 promoter decreased compared to wild-type. The mutation is predicted to abolish an SP1/Krueppel-like factor (KLF) binding motif and lies in a highly conserved region. The authors showed that he mutation co-occurs significantly in melanoma with nonsilent NF1 coding mutations.</metadata>
+  <targetgene>
+    <entrezid>4715</entrezid>
+    <genesymbol>NDUFB9</genesymbol>
+  </targetgene>
+  <biocurator>HPO:probinson</biocurator>
+  <datecreated>1447846454600</datecreated>
+  <datemodified>1447846454600</datemodified>
+</mutation>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mutation PUBLIC "mutation" "hrgm.dtd">
+<mutation>
+  <publication>
+    <authorlist>Hetet G, Devaux I, Soufir N, Grandchamp B, Beaumont C</authorlist>
+    <title>Molecular analyses of patients with hyperferritinemia and normal serum iron values reveal both L ferritin IRE and 3 new ferroportin (slc11A3) mutations</title>
+    <journal>Blood</journal>
+    <year>2003</year>
+    <volume>102(5)</volume>
+    <pages>1904-10</pages>
+    <pmid>12730114</pmid>
+  </publication>
+  <variantlist>
+    <variant genotype="heterozygous" class="5UTR">
+      <build>37</build>
+      <chromosome>19</chromosome>
+      <pos>49468606</pos>
+      <ref>GTGTTTGGACGGAACAG</ref>
+      <alt>G</alt>
+      <snippet>ACAG[TGTTTGGACGGAACAG/-]ATC</snippet>
+      <regulator>FTL 5 UTR</regulator>
+      <pathomechanism>5UTR|secondary-structure|base-pairing|disrupted</pathomechanism>
+      <validation>
+        <comparability present="yes"/>
+      </validation>
+    </variant>
+  </variantlist>
+  <disease>
+    <name>Hyperferritinemia-cataract syndrome</name>
+    <database>OMIM</database>
+    <id>600886</id>
+  </disease>
+  <phenotypelist>
+    <phenotype>
+      <hpoid>HP:0003281</hpoid>
+      <hponame>Increased serum ferritin</hponame>
+    </phenotype>
+    <phenotype>
+      <hpoid>HP:0000518</hpoid>
+      <hponame>Cataract</hponame>
+    </phenotype>
+  </phenotypelist>
+  <identifier>Family 2</identifier>
+  <metadata>The ferritin gene FTL is located on the positive strand of chrosome 19 from 49,468,566-49,470,136 (GRCh37). The numbering used in the publication corresponds to the 5UTR sequence found in NM_000146.3. Therefore, the deletion refered to as delT42-G57 affects the genomic positions 49468597-49468622. If we display this in the context of the 5UTR sequence from positions 41-60, we see  acag[TGTTTGGACGGAACAG/-]atc. Note that according to the VCF convention the leftmost possible positions are chosen. The mutation corresponds to NM_000146.3:c.-168_-143del26.</metadata>
+  <targetgene>
+    <entrezid>2512</entrezid>
+    <genesymbol>FTL</genesymbol>
+  </targetgene>
+  <biocurator>HPO:probinson</biocurator>
+</mutation>
