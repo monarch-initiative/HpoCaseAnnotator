@@ -96,7 +96,7 @@ public final class OntologyTree {
 
 
     @Inject
-    public OntologyTree(OptionalResources optionalResources) {
+    OntologyTree(OptionalResources optionalResources) {
         this.optionalResources = optionalResources;
     }
 
@@ -106,7 +106,7 @@ public final class OntologyTree {
      *
      * @param addHook {@link Consumer} of {@link Main.PhenotypeTerm}
      */
-    public void setAddHook(Consumer<Main.PhenotypeTerm> addHook) {
+    void setAddHook(Consumer<Main.PhenotypeTerm> addHook) {
         this.addHook = addHook;
     }
 

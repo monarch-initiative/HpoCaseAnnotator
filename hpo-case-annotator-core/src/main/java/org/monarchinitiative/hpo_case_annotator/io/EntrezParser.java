@@ -17,7 +17,8 @@ public class EntrezParser {
 
 
     /**
-     * Parse Entrez file from given path.
+     * Initialize parser with given file. The file is not read during the initialization, method {@link #readFile()} must
+     * be invoked to read the file.
      *
      * @param entrezFilePath Path to the Homo_sapiens.gene_info.gz file
      */
@@ -44,20 +45,24 @@ public class EntrezParser {
     }
 
 
-    public void readFile(String path) throws IOException {
+    /**
+     * Read the file content and populate data maps which are empty before calling of this function.
+     *
+     * @throws IOException in case of error during file parsing (e.g. bad fileformat)
+     */
+    public void readFile() throws IOException {
         String encoding = "UTF-8";
 
         if (entrezFile == null)
-            throw new IOException("Null instead of valid file provided");
+            throw new IOException("Null instead of a valid file provided");
         else if (!entrezFile.exists()) {
             throw new IOException("Entrez file does not exist here: " + entrezFile.getPath());
         }
 
-
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(path)), encoding))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(entrezFile)), encoding))) {
             String line = br.readLine(); // Very first line is header
             if (!line.startsWith("#")) {
-                throw new IOException(String.format("Warning, bad format of Entrez Gene file at %s.", path));
+                throw new IOException(String.format("Warning, bad format of Entrez Gene file at %s.", entrezFile.getAbsolutePath()));
             }
             while ((line = br.readLine()) != null) {
                 //System.out.println(line);

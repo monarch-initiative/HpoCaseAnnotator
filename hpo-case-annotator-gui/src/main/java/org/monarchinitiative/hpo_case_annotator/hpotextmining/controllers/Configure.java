@@ -34,7 +34,7 @@ public final class Configure {
 
 
     @Inject
-    public Configure(OptionalResources optionalResources) {
+    Configure(OptionalResources optionalResources) {
         this.optionalResources = optionalResources;
     }
 

@@ -5,6 +5,7 @@ import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
 import org.monarchinitiative.hpo_case_annotator.model.TargetGene;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -21,8 +22,9 @@ public class EntrezGeneValidator extends AbstractValidator {
      *
      * @param pathToEntrezFile path to Entrez GTF file.
      */
-    public EntrezGeneValidator(File pathToEntrezFile) {
+    public EntrezGeneValidator(File pathToEntrezFile) throws IOException {
         EntrezParser parser = new EntrezParser(pathToEntrezFile);
+        parser.readFile();
         this.entrezId2gene = parser.getEntrezMap();
     }
 

@@ -164,7 +164,7 @@ public final class DataController {
      * @return @link BaseVariantController subclass, which is also subclass of {@link TitledPane} and can be displayed
      * as a content within this {@link DataController}.
      */
-    private TitledPane getVariantController(VariantMode mode, Variant variant) {
+    private TitledPane getVariantController(VariantMode mode, Variant variant) throws IOException {
         switch (mode) {
             case MENDELIAN:
                 return new MendelianVariantController((MendelianVariant) variant, choiceBasket);
@@ -175,7 +175,7 @@ public final class DataController {
             default:
                 String msg = String.format("ERROR: Unknown variant mode %s\n%s", mode.name(), variant);
                 LOGGER.error(msg);
-                throw new RuntimeException(msg);
+                throw new IOException(msg);
         }
     }
 
@@ -263,9 +263,15 @@ public final class DataController {
      */
     private void loadVariants(Collection<Variant> variants) {
         variantsAccordion.getPanes().clear();
-        variants.forEach(variant -> variantsAccordion.getPanes()
-                // variant controller is also TitledPane.
-                .add(getVariantController(getVariantMode(variant), variant)));
+        variants.forEach(variant -> {
+            try {
+                variantsAccordion.getPanes()
+                        // variant controller is also TitledPane.
+                        .add(getVariantController(getVariantMode(variant), variant));
+            } catch (IOException e) {
+                PopUps.showException("Error loading variant", "Error", "Unable to display variant", e);
+            }
+        });
     }
 
 
@@ -296,8 +302,13 @@ public final class DataController {
                     throw new IllegalArgumentException(String.format("ERROR: Unknown mode %s", mode));
             }
             // Pass reference to new Variant into Model and into View
-            model.getVariants().add(variant);
-            variantsAccordion.getPanes().add(getVariantController(mode, variant));
+            try {
+                TitledPane pane = getVariantController(mode, variant);
+                variantsAccordion.getPanes().add(pane);
+                model.getVariants().add(variant);
+            } catch (IOException e) {
+                PopUps.showException("Error loading variant", "Error", "Unable to display variant", e);
+            }
         });
     }
 

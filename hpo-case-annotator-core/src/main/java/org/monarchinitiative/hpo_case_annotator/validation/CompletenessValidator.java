@@ -6,10 +6,26 @@ import org.monarchinitiative.hpo_case_annotator.model.Variant;
 
 /**
  * This validator performs test to assess whether enough data has been entered to particular {@link DiseaseCaseModel}
- * instance. {@link DiseaseCaseModel} passes this validation if it contains: <ul><li>Publication</li><li>Genome
- * build</li><li>At least one {@link Variant}</li></ul><p>Each <b>variant</b> is considered complete if it contains:
- * <ul><li>Chromosome</li><li>Position</li><li>Reference allele</li><li>Alternate allele</li><li>Snippet</li><li>Genotype</li><li>Variant
- * class</li><li>Pathomechanism</li></ul>
+ * instance.
+ *
+ * {@link DiseaseCaseModel} passes this validation if it contains:
+ * <ul>
+ *     <li>Publication</li>
+ *     <li>Genome build</li>
+ *     <li>At least one {@link Variant}</li>
+ * </ul>
+ * <p>
+ *     Each <b>variant</b> is considered complete if it contains:
+ * <ul>
+ *     <li>Chromosome</li>
+ *     <li>Position</li>
+ *     <li>Reference allele</li>
+ *     <li>Alternate allele</li>
+ *     <li>Snippet</li>
+ *     <li>Genotype</li>
+ *     <li>Variant class</li>
+ *     <li>Pathomechanism</li>
+ * </ul>
  *
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
  */

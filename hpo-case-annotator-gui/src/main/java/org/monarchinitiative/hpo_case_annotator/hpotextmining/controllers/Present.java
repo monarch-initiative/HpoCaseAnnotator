@@ -130,7 +130,7 @@ public final class Present {
 
 
     @Inject
-    public Present(HPOMiner miner, ExecutorService executor, OptionalResources optionalResources) {
+    Present(HPOMiner miner, ExecutorService executor, OptionalResources optionalResources) {
         this.miner = miner;
         this.executor = executor;
         this.optionalResources = optionalResources;

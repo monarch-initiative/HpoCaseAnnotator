@@ -12,219 +12,186 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root xmlns:fx="http://javafx.com/fxml/1" style="-: #F1E1BA;" type="TitledPane"
-         xmlns="http://javafx.com/javafx/8.0.111">
+<fx:root maxHeight="274.0" maxWidth="1200.0" minHeight="274.0" minWidth="1200.0" prefHeight="274.0" prefWidth="1200.0" style="-: #F1E1BA;" type="TitledPane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
     <content>
         <VBox>
             <children>
-                <HBox fx:id="variantHBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                      style="-fx-background-color: #B1E6F2;">
+                <HBox fx:id="variantHBox" style="-fx-background-color: #B1E6F2;" VBox.vgrow="NEVER">
                     <children>
                         <Label id="variantLabel" prefHeight="25.0" prefWidth="130.0" text="Variant:">
                             <HBox.margin>
-                                <Insets bottom="5.0" left="15.0" right="5.0" top="5.0"/>
+                                <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
                             </HBox.margin>
                             <font>
-                                <Font name="System Bold" size="13.0"/>
+                                <Font name="System Bold" size="13.0" />
                             </font>
                         </Label>
-                        <GridPane HBox.hgrow="ALWAYS">
+                        <GridPane HBox.hgrow="SOMETIMES">
                             <columnConstraints>
-                                <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="1.7976931348623157E308"
-                                                   minWidth="-Infinity"/>
-                                <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="1.7976931348623157E308"
-                                                   minWidth="-Infinity"/>
-                                <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="1.7976931348623157E308"
-                                                   minWidth="-Infinity"/>
-                                <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="1.7976931348623157E308"
-                                                   minWidth="-Infinity"/>
-                                <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="1.7976931348623157E308"
-                                                   minWidth="-Infinity"/>
+                                <ColumnConstraints halignment="LEFT" hgrow="NEVER" />
+                                <ColumnConstraints halignment="LEFT" hgrow="NEVER" />
+                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="-Infinity" />
+                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
                             </columnConstraints>
                             <rowConstraints>
-                                <RowConstraints minHeight="10.0" vgrow="ALWAYS"/>
-                                <RowConstraints minHeight="10.0" vgrow="ALWAYS"/>
+                                <RowConstraints />
+                                <RowConstraints />
                             </rowConstraints>
                             <children>
-                                <ComboBox fx:id="chromosomeComboBox" maxWidth="1.7976931348623157E308" minHeight="30.0"
-                                          minWidth="90.0" prefHeight="30.0" prefWidth="90.0" promptText="Chr">
+                                <ComboBox fx:id="chromosomeComboBox" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="90.0" prefHeight="30.0" prefWidth="90.0" promptText="Chr">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </ComboBox>
-                                <TextField fx:id="positionTextField" prefHeight="30.0" prefWidth="90.0"
-                                           promptText="Position" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS">
+                                <TextField fx:id="positionTextField" prefHeight="30.0" prefWidth="90.0" promptText="Position" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </TextField>
-                                <TextField fx:id="referenceTextField" prefHeight="30.0" prefWidth="190.0"
-                                           promptText="Reference" GridPane.columnIndex="2">
+                                <TextField fx:id="referenceTextField" prefHeight="30.0" promptText="Reference" GridPane.columnIndex="2">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </TextField>
-                                <TextField fx:id="alternateTextField" prefHeight="30.0" prefWidth="190.0"
-                                           promptText="Alternate" GridPane.columnIndex="3">
+                                <TextField fx:id="alternateTextField" prefHeight="30.0" promptText="Alternate" GridPane.columnIndex="3">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </TextField>
-                                <TextField fx:id="snippetTextField" maxWidth="300.0" prefHeight="30.0" prefWidth="190.0"
-                                           promptText="Snippet" GridPane.columnIndex="4" GridPane.hgrow="SOMETIMES">
+                                <TextField fx:id="snippetTextField" prefHeight="30.0" promptText="Snippet" GridPane.columnIndex="4">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </TextField>
-                                <ComboBox fx:id="genotypeComboBox" maxWidth="1.7976931348623157E308" minHeight="30.0"
-                                          minWidth="120.0" prefHeight="30.0" prefWidth="120.0" promptText="Genotype"
-                                          GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+                                <ComboBox fx:id="genotypeComboBox" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="120.0" prefHeight="30.0" prefWidth="120.0" promptText="Genotype" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </ComboBox>
-                                <ComboBox fx:id="variantClassComboBox" prefHeight="30.0" prefWidth="190.0"
-                                          promptText="Variant class" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                <ComboBox fx:id="variantClassComboBox" prefHeight="30.0" prefWidth="250.0" promptText="Variant class" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </ComboBox>
-                                <ComboBox fx:id="pathomechanismComboBox" prefHeight="30.0" prefWidth="190.0"
-                                          promptText="Pathomechanism" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                <ComboBox fx:id="pathomechanismComboBox" prefHeight="30.0" prefWidth="250.0" promptText="Pathomechanism" GridPane.columnIndex="3" GridPane.rowIndex="1">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </ComboBox>
-                                <TextField fx:id="regulatorTextField" maxWidth="300.0" prefHeight="30.0"
-                                           prefWidth="190.0" promptText="Regulator" GridPane.columnIndex="4"
-                                           GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1">
+                                <TextField fx:id="regulatorTextField" prefHeight="30.0" prefWidth="276.0" promptText="Regulator" GridPane.columnIndex="4" GridPane.rowIndex="1">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </TextField>
                             </children>
                             <HBox.margin>
-                                <Insets/>
+                                <Insets />
                             </HBox.margin>
                         </GridPane>
                     </children>
                 </HBox>
-                <HBox fx:id="validationHBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                      style="-fx-background-color: #F1E1BA;">
+                <HBox fx:id="validationHBox" style="-fx-background-color: #F1E1BA;" VBox.vgrow="NEVER">
                     <children>
-                        <Label id="validationLabel" prefHeight="25.0" prefWidth="130.0" text="Validation:"
-                               HBox.hgrow="NEVER">
+                        <Label id="validationLabel" prefHeight="25.0" prefWidth="130.0" text="Validation:" HBox.hgrow="NEVER">
                             <HBox.margin>
-                                <Insets bottom="5.0" left="15.0" right="5.0" top="5.0"/>
+                                <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
                             </HBox.margin>
                             <font>
-                                <Font name="System Bold" size="13.0"/>
+                                <Font name="System Bold" size="13.0" />
                             </font>
                         </Label>
-                        <GridPane HBox.hgrow="ALWAYS">
+                        <GridPane HBox.hgrow="SOMETIMES">
                             <columnConstraints>
-                                <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="1.7976931348623157E308"
-                                                   minWidth="-Infinity"/>
-                                <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="1.7976931348623157E308"
-                                                   minWidth="-Infinity"/>
-                                <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="1.7976931348623157E308"
-                                                   minWidth="-Infinity"/>
-                                <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="1.7976931348623157E308"
-                                                   minWidth="-Infinity"/>
+                                <ColumnConstraints halignment="LEFT" />
+                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="-Infinity" />
                             </columnConstraints>
                             <rowConstraints>
-                                <RowConstraints maxHeight="27.0" minHeight="10.0" prefHeight="27.0" vgrow="SOMETIMES"/>
-                                <RowConstraints minHeight="3.0" vgrow="NEVER"/>
-                                <RowConstraints minHeight="10.0" vgrow="ALWAYS"/>
-                                <RowConstraints minHeight="10.0" vgrow="ALWAYS"/>
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
                             </rowConstraints>
                             <children>
-                                <ComboBox fx:id="reporterComboBox" prefHeight="30.0" prefWidth="190.0"
-                                          visibleRowCount="4" GridPane.rowIndex="1">
+                                <ComboBox fx:id="reporterComboBox" prefHeight="30.0" prefWidth="190.0" visibleRowCount="4" GridPane.rowIndex="1">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </ComboBox>
-                                <TextField fx:id="residualActivityTextField" prefHeight="30.0" prefWidth="190.0"
-                                           promptText="\% residual activity" GridPane.rowIndex="2">
+                                <TextField fx:id="residualActivityTextField" prefHeight="30.0" prefWidth="190.0" promptText="\% residual activity" GridPane.rowIndex="2">
                                     <font>
-                                        <Font name="System Italic" size="10.0"/>
+                                        <Font name="System Italic" size="10.0" />
                                     </font>
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </TextField>
-                                <ComboBox fx:id="emsaComboBox" prefHeight="30.0" prefWidth="190.0"
-                                          GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                <ComboBox fx:id="emsaComboBox" prefHeight="30.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </ComboBox>
-                                <TextField fx:id="emsaTFSymbolTextField" prefHeight="30.0" prefWidth="190.0"
-                                           promptText="TF Symbol" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                <TextField fx:id="emsaTFSymbolTextField" prefHeight="30.0" prefWidth="250.0" promptText="TF Symbol" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                     <font>
-                                        <Font name="System Italic" size="10.0"/>
+                                        <Font name="System Italic" size="10.0" />
                                     </font>
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </TextField>
-                                <TextField fx:id="emsaGeneIDTextField" prefHeight="30.0" prefWidth="190.0"
-                                           promptText="Gene ID" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                <TextField fx:id="emsaGeneIDTextField" prefHeight="30.0" prefWidth="250.0" promptText="Gene ID" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                     <font>
-                                        <Font name="System Italic" size="10.0"/>
+                                        <Font name="System Italic" size="10.0" />
                                     </font>
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </TextField>
-                                <ComboBox fx:id="cosegregationComboBox" minWidth="150.0" prefHeight="30.0"
-                                          prefWidth="190.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                <ComboBox fx:id="cosegregationComboBox" prefHeight="30.0" prefWidth="250.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </ComboBox>
-                                <ComboBox fx:id="comparabilityComboBox" minWidth="150.0" prefHeight="30.0"
-                                          prefWidth="190.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                <ComboBox fx:id="comparabilityComboBox" prefHeight="30.0" prefWidth="250.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </ComboBox>
-                                <ComboBox fx:id="otherChoicesComboBox" minWidth="260.0" prefHeight="30.0"
-                                          GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                <ComboBox fx:id="otherChoicesComboBox" prefHeight="30.0" prefWidth="250.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </ComboBox>
-                                <ComboBox fx:id="otherEffectComboBox" prefHeight="30.0" prefWidth="260.0"
-                                          GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                <ComboBox fx:id="otherEffectComboBox" prefHeight="30.0" prefWidth="250.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </ComboBox>
                                 <Label alignment="CENTER" text="Reporter:" textAlignment="CENTER">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </Label>
                                 <Label text="EMSA validation" GridPane.columnIndex="1">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </Label>
                                 <Label text="Cosegregation:" GridPane.columnIndex="2">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </Label>
                                 <Label text="Comparability:" GridPane.columnIndex="2" GridPane.rowIndex="2">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </Label>
                                 <Label text="Other:" GridPane.columnIndex="3">
                                     <GridPane.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </Label>
                             </children>

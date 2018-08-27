@@ -73,7 +73,7 @@ public final class MainController {
     /**
      * Prepare runner using resources available at the moment.
      *
-     * @param optionalResources
+     * @param optionalResources with paths application resources
      * @return {@link ValidationRunner} usable to validate {@link DiseaseCaseModel}s
      */
     private static ValidationRunner getRunner(OptionalResources optionalResources) {
@@ -101,34 +101,21 @@ public final class MainController {
     @FXML
     void openMenuItemAction() {
         // we support opening of these files:
-        final String REMM_XML = "XML format from the REMM project (*.xml)";
-        final String SPLICING_XML = "XML format from the splicing project (*.xml)";
+        final String SPLICING_XML = "XML data format (*.xml)";
 
         FileChooser filechooser = new FileChooser();
         filechooser.setInitialDirectory(optionalResources.getDiseaseCaseDir());
         filechooser.setTitle("Select model to open");
-        // the first format used to store curated files
-        FileChooser.ExtensionFilter firstModelExtensionFilter =
-                new FileChooser.ExtensionFilter(REMM_XML, "*.xml");
-        // the newest format which is also used to save files
-        FileChooser.ExtensionFilter secondModelExtensionFilter =
+        // the newest XML format which is used to save data
+        FileChooser.ExtensionFilter xmlFileFormat =
                 new FileChooser.ExtensionFilter(SPLICING_XML, "*.xml");
-        filechooser.getExtensionFilters().addAll(firstModelExtensionFilter, secondModelExtensionFilter);
-        filechooser.setSelectedExtensionFilter(secondModelExtensionFilter);
+        filechooser.getExtensionFilters().add(xmlFileFormat);
+        filechooser.setSelectedExtensionFilter(xmlFileFormat);
         File which = filechooser.showOpenDialog(primaryStage);
 
         if (which != null) {
             DiseaseCaseModel dcm;
             switch (filechooser.getSelectedExtensionFilter().getDescription()) {
-                case REMM_XML:
-                    FirstModelXMLParser parser = new FirstModelXMLParser(optionalResources.getDiseaseCaseDir());
-                    try {
-                        dcm = parser.readModel(new FileInputStream(which));
-                    } catch (IOException e) {
-                        PopUps.showException("Open XML model", "Unable to decode XML file", "Did you set proper extension?", e);
-                        return;
-                    }
-                    break;
                 case SPLICING_XML:
                     try {
                         dcm = XMLModelParser.loadDiseaseCaseModel(new FileInputStream(which));
@@ -217,7 +204,6 @@ public final class MainController {
         Collection<DiseaseCaseModel> models = new ArrayList<>();
         for (File path : files) {
             try {
-                // TODO - we need to 'guess' which parser to use here
                 models.add(XMLModelParser.loadDiseaseCaseModel(new FileInputStream(path)));
             } catch (FileNotFoundException e) {
                 PopUps.showException("Open XML model", "Unable to decode XML file", "Did you set proper extension?", e);
@@ -405,8 +391,10 @@ public final class MainController {
         try {
             validationRunner.validateCompletness(model);
         } catch (ValidationException e) {
-            PopUps.showInfoMessage(e.getMessage(), "Incomplete data");
-            return;
+            boolean response = PopUps.getBooleanFromUser( "Do you want to save it anyway?",
+                    "Incomplete data - " + e.getMessage(), "Validate data before saving");
+            if (!response)
+                return;
         }
 
         if (currentModelPath == null) {

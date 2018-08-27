@@ -21,16 +21,6 @@ import java.io.IOException;
 public final class SomaticVariantController extends BaseVariantController {
 
     /**
-     * FXML file describing layout of "view". Acts as view in MVC pattern.
-     */
-    private static final String fxmlResource = "/org/monarchinitiative/org.monarchinitiative.hpo_case_annotator/controller/variant/SomaticVariantView.fxml";
-
-    /**
-     * Path to CSS file containing info for rendering all Variant "views".
-     */
-    private static final String CSSheet = "/css/VariantView.css";
-
-    /**
      * Instance of class which acts as a Model component of MVC pattern and its properties are bound to view elements
      */
     private final SomaticVariant variant;
@@ -105,20 +95,16 @@ public final class SomaticVariantController extends BaseVariantController {
      *
      * @param variant instance of {@link SomaticVariant} model object.
      */
-    public SomaticVariantController(SomaticVariant variant, ChoiceBasket choiceBasket) {
+    public SomaticVariantController(SomaticVariant variant, ChoiceBasket choiceBasket) throws IOException {
         super(choiceBasket);
         this.variant = variant;
 
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlResource));
-            loader.setController(this);
-            loader.setRoot(this);
-            this.getStylesheets().add(getClass().getResource(CSSheet).toExternalForm());
-            loader.load();
-        } catch (IOException ioe) {
-            System.out.println(ioe.getMessage());
-            ioe.printStackTrace();
-        }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("SomaticVariantView.fxml"));
+        loader.setController(this);
+        loader.setRoot(this);
+        this.getStylesheets().add(getClass().getResource("VariantView.css").toExternalForm());
+        loader.load();
 
         populateContent();
         initializeBindings();

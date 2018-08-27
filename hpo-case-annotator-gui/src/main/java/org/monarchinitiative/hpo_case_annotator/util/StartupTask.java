@@ -44,6 +44,20 @@ public final class StartupTask extends Task<Void> {
     }
 
 
+    /**
+     * Read {@link Properties} and initialize app resources in the {@link OptionalResources}:
+     *
+     * <ul>
+     *     <li>reference genome</li>
+     *     <li>HPO ontology</li>
+     *     <li>Entrez gene file</li>
+     *     <li>Curated files directory</li>
+     *     <li>Biocurator ID, and </li>
+     *     <li>OMIM file</li>
+     * </ul>
+     * @return nothing
+     * @throws Exception if an error occurs
+     */
     @Override
     protected Void call() throws Exception {
         // Reference genome first
@@ -71,12 +85,13 @@ public final class StartupTask extends Task<Void> {
             File entrezGenesFile = new File(entrezPath);
             LOGGER.info("Loading Entrez genes from file {}", entrezGenesFile.getAbsolutePath());
             EntrezParser entrezParser = new EntrezParser(entrezGenesFile);
+            entrezParser.readFile();
             optionalResources.setEntrezId2symbol(entrezParser.getEntrezId2symbol());
             optionalResources.setSymbol2entrezId(entrezParser.getSymbol2entrezId());
             optionalResources.setEntrezId2gene(entrezParser.getEntrezMap());
             optionalResources.setEntrezPath(entrezGenesFile);
         } else {
-            LOGGER.info("Skipping loading Entrez genes since the locatino is unset");
+            LOGGER.info("Skipping loading Entrez genes since the location is unset");
         }
         // Curated files directory
         String curatedDirPath = properties.getProperty(OptionalResources.DISEASE_CASE_DIR_PROPERTY);

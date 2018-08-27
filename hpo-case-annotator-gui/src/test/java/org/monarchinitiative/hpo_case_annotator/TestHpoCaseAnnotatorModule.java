@@ -81,7 +81,7 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public OptionalResources optionalResources(Properties properties) throws FileNotFoundException {
+    public OptionalResources optionalResources(Properties properties) throws IOException {
         OptionalResources optionalResources = new OptionalResources();
         optionalResources.setRefGenomeDir(new File(properties.getProperty("test.genome.dir")));
         optionalResources.setDiseaseCaseDir(new File(properties.getProperty("test.xml.model.dir")));
@@ -91,6 +91,7 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
         optionalResources.setOntology(ontology);
         // Entrez genes
         EntrezParser entrezParser = new EntrezParser(new File(properties.getProperty("test.entrez.file.path")));
+        entrezParser.readFile();
         optionalResources.setEntrezId2gene(entrezParser.getEntrezMap());
         optionalResources.setEntrezId2symbol(entrezParser.getEntrezId2symbol());
         optionalResources.setSymbol2entrezId(entrezParser.getSymbol2entrezId());

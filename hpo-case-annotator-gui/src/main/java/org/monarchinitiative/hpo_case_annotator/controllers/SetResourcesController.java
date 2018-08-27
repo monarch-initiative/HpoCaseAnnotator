@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
@@ -96,13 +97,20 @@ public final class SetResourcesController {
         if (target.isFile()) {
             boolean response = PopUps.getBooleanFromUser("Overwrite?", "Entrez file already exists at the target " +
                     "location", "Download Entrez gene file");
-            if (!response) {
-                EntrezParser parser = new EntrezParser(target);
-                optionalResources.setEntrezId2gene(parser.getEntrezMap());
-                optionalResources.setEntrezId2symbol(parser.getEntrezId2symbol());
-                optionalResources.setSymbol2entrezId(parser.getSymbol2entrezId());
-                optionalResources.setEntrezPath(target);
-                entrezGeneLabel.setText(target.getAbsolutePath());
+            if (!response) { // re-loading the old file
+                try {
+                    EntrezParser parser = new EntrezParser(target);
+                    parser.readFile();
+                    optionalResources.setEntrezId2gene(parser.getEntrezMap());
+                    optionalResources.setEntrezId2symbol(parser.getEntrezId2symbol());
+                    optionalResources.setSymbol2entrezId(parser.getSymbol2entrezId());
+                    optionalResources.setEntrezPath(target);
+                    entrezGeneLabel.setText(target.getAbsolutePath());
+                } catch (IOException e) {
+                    LOGGER.warn(e.getMessage());
+                    PopUps.showException("Download Entrez gene file", "Error occured", String.format("Error during parsing of Entrez gene file at '%s'",
+                            target.getAbsolutePath()), e);
+                }
                 return;
             }
         }
@@ -119,12 +127,19 @@ public final class SetResourcesController {
         taskNameLabel.textProperty().bind(task.messageProperty());
         progressBar.progressProperty().bind(task.progressProperty());
         task.setOnSucceeded(e -> {
-            EntrezParser parser = new EntrezParser(target);
-            optionalResources.setEntrezId2gene(parser.getEntrezMap());
-            optionalResources.setEntrezId2symbol(parser.getEntrezId2symbol());
-            optionalResources.setSymbol2entrezId(parser.getSymbol2entrezId());
-            optionalResources.setEntrezPath(target);
-            entrezGeneLabel.setText(target.getAbsolutePath());
+            try {
+                EntrezParser parser = new EntrezParser(target);
+                parser.readFile();
+                optionalResources.setEntrezId2gene(parser.getEntrezMap());
+                optionalResources.setEntrezId2symbol(parser.getEntrezId2symbol());
+                optionalResources.setSymbol2entrezId(parser.getSymbol2entrezId());
+                optionalResources.setEntrezPath(target);
+                entrezGeneLabel.setText(target.getAbsolutePath());
+            } catch (IOException ex) {
+                LOGGER.warn(ex.getMessage());
+                PopUps.showException("Download Entrez gene file", "Error occured", String.format("Error during parsing of Entrez gene file at '%s'",
+                        target.getAbsolutePath()), ex);
+            }
         });
         task.setOnFailed(e -> {
             optionalResources.setEntrezId2gene(null);
