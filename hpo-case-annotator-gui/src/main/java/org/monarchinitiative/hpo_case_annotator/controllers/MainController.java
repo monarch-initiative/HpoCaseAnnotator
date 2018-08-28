@@ -380,9 +380,15 @@ public final class MainController {
 
 
     /**
-     * Save model to file in project's model directory.<p> <ul><li>Ensure that DiseaseCaseDir exists</li><li>Validate
-     * completness of model</li><li>Check if we are saving model which has been opened from XML file or a new Model and
-     * ask user where to save, if necessary .</li><li>Save it</li></ul>
+     * Save model to file in project's model directory.
+     * <p>
+     * <ul>
+     *  <li>Ensure that DiseaseCaseDir exists</li>
+     *  <li>Validate completness of model</li>
+     *  <li>Check if we are saving model which has been opened from XML file or a new Model and ask user where
+     *         to save, if necessary.</li>
+     *  <li>Save it</li>
+     * </ul>
      */
     private void saveModel(File currentModelPath, DiseaseCaseModel model) {
         ValidationRunner validationRunner = getRunner(optionalResources);

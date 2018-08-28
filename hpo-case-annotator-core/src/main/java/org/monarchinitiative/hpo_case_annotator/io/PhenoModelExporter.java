@@ -33,7 +33,7 @@ public class PhenoModelExporter implements ModelExporter {
     public PhenoModelExporter(String modelDir, String delimiter) {
         this.modelDir = new File(modelDir);
         this.delimiter = delimiter;
-        LOGGER.info(String.format("Initialized PhenoModelExporter using %s as delimiter and %s as model directory",
+        LOGGER.debug(String.format("Initialized PhenoModelExporter using %s as delimiter and %s as model directory",
                 delimiter, modelDir));
     }
 

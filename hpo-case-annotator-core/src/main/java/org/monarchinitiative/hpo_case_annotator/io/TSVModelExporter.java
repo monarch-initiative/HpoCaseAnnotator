@@ -37,7 +37,7 @@ public final class TSVModelExporter implements ModelExporter {
     public TSVModelExporter(String modelDir, String delimiter) {
         this.modelDir = new File(modelDir);
         this.delimiter = delimiter;
-        LOGGER.info(String.format("Initialized TSVModelExporter using %s as delimiter and %s as model directory",
+        LOGGER.debug(String.format("Initialized TSVModelExporter using %s as delimiter and %s as model directory",
                 delimiter, modelDir));
     }
 
