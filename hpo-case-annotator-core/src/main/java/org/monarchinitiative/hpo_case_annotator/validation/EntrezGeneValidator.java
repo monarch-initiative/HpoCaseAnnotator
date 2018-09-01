@@ -11,6 +11,7 @@ import java.util.Map;
 /**
  * This validator is supposed to check that the entered gene information is correct (e.g. gene id matches gene symbol).
  */
+@Deprecated // since gene IDs or symbols are autocompleted during entry
 public class EntrezGeneValidator extends AbstractValidator {
 
     /** Key: Entrez ID; value: TargetGene bean */
@@ -38,20 +39,20 @@ public class EntrezGeneValidator extends AbstractValidator {
         TargetGene testGene = model.getTargetGene();
         TargetGene refGene = getEntrez(model.getTargetGene().getEntrezID());
         if (refGene == null) {
-            setErrorMessage(String.format("Gene with id %s and name %s was not found in Entrez gene file",
-                    model.getTargetGene().getEntrezID(), model.getTargetGene().getGeneName()));
+//            setErrorMessage(String.format("Gene with id %s and name %s was not found in Entrez gene file",
+//                    model.getTargetGene().getEntrezID(), model.getTargetGene().getGeneName()));
             return ValidationResult.FAILED;
         }
 
         /* Since we perform lookup by ID only thing that we know for sure
          * is whether the Gene names match or not. */
         if (!testGene.getGeneName().equals(refGene.getGeneName())) {
-            setErrorMessage(String.format("Gene names for ID %s do not match. Observed: %s Expected: %s",
-                    testGene.getEntrezID(), testGene.getGeneName(), refGene.getGeneName()));
+//            setErrorMessage(String.format("Gene names for ID %s do not match. Observed: %s Expected: %s",
+//                    testGene.getEntrezID(), testGene.getGeneName(), refGene.getGeneName()));
             return ValidationResult.FAILED;
         }
 
-        setErrorMessage(OKAY);
+//        setErrorMessage(OKAY);
         return ValidationResult.PASSED;
     }
 

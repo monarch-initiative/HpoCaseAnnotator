@@ -141,7 +141,15 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <!-- Do NOT run Sphinx docs generation here-->
+            <plugin>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>sphinx-maven-plugin</artifactId>
+                <version>2.2.2</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

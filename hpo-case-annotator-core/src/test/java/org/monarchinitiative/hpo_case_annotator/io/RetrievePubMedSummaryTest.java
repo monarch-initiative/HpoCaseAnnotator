@@ -14,7 +14,7 @@ import static org.junit.Assert.assertFalse;
  * html response containing summary text for specific pmid and subsequently decoding the html response into the summary
  * text.
  */
-@Ignore // TODO - these tests are failing sometimes, functionality is not that crucial. Ignoring for now
+@Ignore("These tests are dependent on working internet connection. Run manually, when necessary")
 public class RetrievePubMedSummaryTest {
 
     /**

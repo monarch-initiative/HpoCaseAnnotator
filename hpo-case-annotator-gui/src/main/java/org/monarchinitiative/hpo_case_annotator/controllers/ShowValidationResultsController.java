@@ -46,15 +46,20 @@ public final class ShowValidationResultsController {
     public void initialize() {
         modelName.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getModelName()));
         validatorName.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getValidatorName()));
-        validationResult.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getValidationResult()));
+        validationResult.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getValidationResult().toString()));
         errorMessage.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getErrorMessage()));
+        modelName.setSortType(TableColumn.SortType.ASCENDING);
+        validatorName.setSortType(TableColumn.SortType.ASCENDING);
+        validationResultsTableView.getSortOrder().add(modelName);
+        validationResultsTableView.getSortOrder().add(validatorName);
     }
 
 
-    public void setValidationLines(Collection<ValidationLine> lines) {
+    void setValidationLines(Collection<ValidationLine> lines) {
         if (validationResultsTableView != null) { // controller was processed by FXMLLoader
             validationResultsTableView.getItems().clear();
             validationResultsTableView.getItems().addAll(lines);
+            validationResultsTableView.sort();
         } else {
             LOGGER.warn("Unable to add validation lines, controller was not processed by FXMLLoader.");
         }

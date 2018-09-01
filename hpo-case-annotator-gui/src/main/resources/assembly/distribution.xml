@@ -28,6 +28,7 @@
             <outputDirectory>${file.separator}</outputDirectory>
             <includes>
                 <include>hpo-case-annotator.properties</include>
+                <include>ref-genomes.properties</include>
                 <include>choice-basket.yml</include>
                 <include>log4j2.xml</include>
             </includes>

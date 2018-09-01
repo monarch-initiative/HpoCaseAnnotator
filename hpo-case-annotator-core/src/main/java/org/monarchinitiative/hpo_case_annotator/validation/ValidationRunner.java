@@ -1,10 +1,16 @@
 package org.monarchinitiative.hpo_case_annotator.validation;
 
+import org.monarchinitiative.hpo_case_annotator.first_model.mutation.Validation;
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
+import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssemblies;
+import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssembly;
+import org.monarchinitiative.hpo_case_annotator.refgenome.SequenceDao;
+import org.monarchinitiative.hpo_case_annotator.refgenome.SingleFastaSequenceDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.io.File;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -16,19 +22,18 @@ import java.util.stream.Collectors;
  */
 public final class ValidationRunner {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ValidationRunner.class);
 
     private final GenomicPositionValidator genomicPositionValidator;
 
     private final CompletenessValidator completenessValidator;
 
-    private final PubMedValidator pubMedValidator;
 
 
     public ValidationRunner(GenomicPositionValidator genomicPositionValidator,
-                            CompletenessValidator completenessValidator, PubMedValidator pubMedValidator) {
+                            CompletenessValidator completenessValidator) {
         this.genomicPositionValidator = genomicPositionValidator;
         this.completenessValidator = completenessValidator;
-        this.pubMedValidator = pubMedValidator;
     }
 
 
@@ -58,29 +63,65 @@ public final class ValidationRunner {
 
         // Completeness validator
         ValidationResult completenessResult = completenessValidator.validateDiseaseCase(model);
-        String errorMessage = completenessValidator.getErrorMessage();
 
         valList.add(new ValidationLine(modelName,
                 completenessValidator.getClass().getSimpleName(),
-                completenessResult.toString(),
-                errorMessage));
+                completenessResult));
         if (completenessResult.equals(ValidationResult.FAILED))
-            return valList; // if model is incomplete, further validation is a waste of time
+            return valList; // further validation is a waste of time if the model is incomplete
 
         // Genomic position validator
         valList.add(new ValidationLine(modelName,
                 genomicPositionValidator.getClass().getSimpleName(),
-                genomicPositionValidator.validateDiseaseCase(model).toString(),
-                genomicPositionValidator.getErrorMessage()));
+                genomicPositionValidator.validateDiseaseCase(model)));
 
         return valList;
     }
 
+    public static Collection<ValidationLine> validateModel(DiseaseCaseModel model, GenomeAssemblies assemblies) {
+        Set<ValidationLine> lines = new HashSet<>();
 
-    public ValidationResult validateCompletness(DiseaseCaseModel model) throws ValidationException {
+        // validate completness
+        CompletenessValidator completenessValidator = new CompletenessValidator();
         ValidationResult result = completenessValidator.validateDiseaseCase(model);
-        if (result.equals(ValidationResult.PASSED))
-            return result;
-        throw new ValidationException(completenessValidator.getErrorMessage());
+        lines.add(new ValidationLine(model.getFileName(), completenessValidator.getClass().getSimpleName(), result));
+        if (result != ValidationResult.PASSED)
+            return lines; // further validation is a waste of time, since the model is incomplete
+
+        // figure out which genome build is used in the current model
+        GenomeAssembly assembly;
+        switch (model.getGenomeBuild().toLowerCase()) {
+            case "grch37":
+            case "hg19":
+                assembly = assemblies.getAssemblyMap().get(GenomeAssembly.HG19.toString());
+                break;
+            case "grch38":
+            case "hg38":
+                assembly = assemblies.getAssemblyMap().get(GenomeAssembly.HG38.toString());
+                break;
+            default:
+                LOGGER.warn("Unknown genome build '{}' in model '{}'", model.getGenomeBuild(), model.getFileName());
+                lines.add(new ValidationLine(model.getFileName(), "GenomeBuildValidator",
+                        AbstractValidator.makeValidationResult(ValidationResult.FAILED, "Unknown genome build '" + model.getGenomeBuild() + "'")));
+                return lines;
+        }
+
+        // validate genomic coordinates
+        File fastaFile = assembly.getFastaPath();
+        if (fastaFile == null || !fastaFile.isFile()) {
+            lines.add(new ValidationLine(model.getFileName(), GenomicPositionValidator.class.getSimpleName(),
+                    AbstractValidator.makeValidationResult(ValidationResult.UNAPPLICABLE, "Genome build '" + assembly.toString() + "' not available. Download in Set resources dialog")));
+        } else {
+            try (SequenceDao sequenceDao = new SingleFastaSequenceDao(assembly.getFastaPath())) {
+                GenomicPositionValidator genomicPositionValidator = new GenomicPositionValidator(sequenceDao);
+                lines.add(new ValidationLine(model.getFileName(), GenomicPositionValidator.class.getSimpleName(),
+                        genomicPositionValidator.validateDiseaseCase(model)));
+            } catch (Exception e) {
+                LOGGER.warn("Error occured during validation of genomic coordinates of the model '{}' using assembly '{}'", model.getFileName(), assembly.toString());
+                lines.add(new ValidationLine(model.getFileName(), GenomicPositionValidator.class.getSimpleName(),
+                        AbstractValidator.makeValidationResult(ValidationResult.UNAPPLICABLE, "Error occured during validation using assembly '" + assembly.toString() + "'")));
+            }
+        }
+        return lines;
     }
 }

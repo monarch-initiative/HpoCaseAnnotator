@@ -14,11 +14,12 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.controllers.MainController;
 import org.monarchinitiative.hpo_case_annotator.hpotextmining.HpoTextMiningModule;
+import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssemblies;
+import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssembliesSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -71,10 +72,7 @@ public class Play extends Application {
         // save properties
         OptionalResources optionalResources = injector.getInstance(OptionalResources.class); // singleton
         Properties properties = injector.getInstance(Properties.class);
-        if (optionalResources.getRefGenomeDir() != null) {
-            properties.setProperty(OptionalResources.REF_GENOME_DIR_PROPERTY,
-                    optionalResources.getRefGenomeDir().getAbsolutePath());
-        }
+
         if (optionalResources.getOntologyPath() != null) {
             properties.setProperty(OptionalResources.ONTOLOGY_PATH_PROPERTY,
                     optionalResources.getOntologyPath().getAbsolutePath());
@@ -94,6 +92,13 @@ public class Play extends Application {
         File where = injector.getInstance(Key.get(File.class, Names.named("propertiesFilePath")));
         properties.store(new FileWriter(where), "Hpo Case Annotator properties");
         LOGGER.info("Properties saved to {}", where.getAbsolutePath());
+
+        where = injector.getInstance(Key.get(File.class, Names.named("refGenomePropertiesFilePath")));
+        GenomeAssemblies assemblies = injector.getInstance(GenomeAssemblies.class); // singleton
+        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(where))) {
+            GenomeAssembliesSerializer.serialize(assemblies, os);
+            LOGGER.info("Reference genome data configuration saved to {}", where.getAbsolutePath());
+        }
     }
 
 }

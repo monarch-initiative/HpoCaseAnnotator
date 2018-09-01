@@ -9,7 +9,7 @@ import java.io.File;
  */
 public class TestResources {
 
-    public static final File TEST_REF_GENOME = new File(TestResources.class.getResource("/testgenome").getFile());
+    public static final File TEST_REF_GENOME_FASTA = new File(TestResources.class.getResource("/org/monarchinitiative/hpo_case_annotator/refgenome/shortHg19.fa").getFile());
 
     public static final File TEST_MODEL_FILE_DIR = new File(TestResources.class.getResource("/models/xml").getFile());
 

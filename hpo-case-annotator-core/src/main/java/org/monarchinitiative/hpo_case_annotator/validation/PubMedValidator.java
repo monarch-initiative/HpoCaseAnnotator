@@ -37,8 +37,7 @@ public final class PubMedValidator extends AbstractValidator {
      */
     @Override
     public ValidationResult validateDiseaseCase(DiseaseCaseModel model) {
-        setErrorMessage(OKAY);
-        return ValidationResult.PASSED;
+        return makeValidationResult(ValidationResult.PASSED, OKAY);
     }
 
 

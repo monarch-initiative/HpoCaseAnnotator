@@ -3,17 +3,22 @@ package org.monarchinitiative.hpo_case_annotator.controllers;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.io.Downloader;
 import org.monarchinitiative.hpo_case_annotator.io.EntrezParser;
+import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssemblies;
+import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssembly;
+import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssemblyDownloader;
 import org.monarchinitiative.hpo_case_annotator.util.PopUps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -26,7 +31,7 @@ import java.util.concurrent.ExecutorService;
  * resources that are required to run the GUI. The resource paths are stored in {@link OptionalResources} object. No
  * setting to {@link Properties} object is being done.
  * <p>
- *     Created by Daniel Danis on 7/16/17.
+ * Created by Daniel Danis on 7/16/17.
  */
 public final class SetResourcesController {
 
@@ -40,34 +45,65 @@ public final class SetResourcesController {
 
     private final ExecutorService executorService;
 
-    @FXML
-    public Label refGenomeLabel;
+    private final Stage primaryStage;
+
+    private final GenomeAssemblies assemblies;
 
     @FXML
-    public Label hpOboLabel;
+    public ProgressIndicator hg19ProgressIndicator;
 
     @FXML
-    public Label entrezGeneLabel;
+    public ProgressIndicator hg38ProgressIndicator;
 
     @FXML
-    public Label curatedFilesDirLabel;
+    public ProgressIndicator hpoProgressIndicator;
+
+    @FXML
+    public ProgressIndicator entrezProgressIndicator;
+
+    @FXML
+    public Label hg19ProgressLabel;
+
+    @FXML
+    public Label hg38ProgressLabel;
+
+    @FXML
+    private Label hg38GenomeLabel;
+
+    @FXML
+    private Label hpOboLabel;
+
+    @FXML
+    private Label entrezGeneLabel;
+
+    @FXML
+    private Label curatedFilesDirLabel;
+
+    @FXML
+    private Label hg19GenomeLabel;
 
     @FXML
     private TextField biocuratorIDTextField;
 
-    @FXML
-    private ProgressBar progressBar;
-
-    @FXML
-    private Label taskNameLabel;
-
 
     @Inject
-    SetResourcesController(OptionalResources optionalResources, Properties properties, File appHomeDir, ExecutorService executorService) {
+    SetResourcesController(OptionalResources optionalResources, Properties properties, File appHomeDir,
+                           ExecutorService executorService, @Named("primaryStage") Stage primaryStage, GenomeAssemblies assemblies) {
         this.optionalResources = optionalResources;
         this.properties = properties;
         this.appHomeDir = appHomeDir;
         this.executorService = executorService;
+        this.primaryStage = primaryStage;
+        this.assemblies = assemblies;
+    }
+
+
+    /**
+     * @param assemblyPath must not be <code>null</code>, must be a file and the name must have suffix <em>.fa</em>
+     * @return <code>true</code> if the {@link File} satisfies criteria stated above
+     */
+    private static boolean notNullAndValidFasta(File assemblyPath) {
+        return assemblyPath != null && assemblyPath.isFile() && assemblyPath.getName().endsWith(".fa");
     }
 
 
@@ -76,7 +112,7 @@ public final class SetResourcesController {
      */
     @FXML
     void setCuratedDirButtonAction() {
-        File curatedDir = PopUps.selectDirectory(new Stage(), new File(System.getProperty("user.home")), "Set " +
+        File curatedDir = PopUps.selectDirectory(primaryStage, new File(System.getProperty("user.home")), "Set " +
                 "directory for curated files.");
         if (curatedDir != null) {
             optionalResources.setDiseaseCaseDir(curatedDir);
@@ -123,9 +159,11 @@ public final class SetResourcesController {
             LOGGER.error(String.format("Malformed URL: %s", properties.getProperty("entrez.gene.url")), e);
             return;
         }
+
         Task<Void> task = new Downloader(entrezGeneUrl, target);
-        taskNameLabel.textProperty().bind(task.messageProperty());
-        progressBar.progressProperty().bind(task.progressProperty());
+        entrezProgressIndicator.progressProperty().unbind();
+        entrezProgressIndicator.progressProperty().bind(task.progressProperty());
+
         task.setOnSucceeded(e -> {
             try {
                 EntrezParser parser = new EntrezParser(target);
@@ -179,8 +217,9 @@ public final class SetResourcesController {
             return;
         }
         Task<Void> task = new Downloader(url, target);
-        taskNameLabel.textProperty().bind(task.messageProperty());
-        progressBar.progressProperty().bind(task.progressProperty());
+
+        hpoProgressIndicator.progressProperty().unbind();
+        hpoProgressIndicator.progressProperty().bind(task.progressProperty());
         task.setOnSucceeded(e -> {
             optionalResources.setOntology(OptionalResources.deserializeOntology(target));
             optionalResources.setOntologyPath(target);
@@ -196,43 +235,189 @@ public final class SetResourcesController {
 
 
     /**
-     * Set path to directory with reference genome files.
-     */
-    @FXML
-    void setReferenceGenomeButtonAction() {
-        File ref = PopUps.selectDirectory(new Stage(), new File(System.getProperty("user.home")), "Set " +
-                "path to directory with reference genome.");
-        if (ref != null) {
-            optionalResources.setRefGenomeDir(ref);
-            refGenomeLabel.setText(ref.getAbsolutePath());
-        } else {
-            optionalResources.setRefGenomeDir(null);
-            refGenomeLabel.setText("unset");
-        }
-    }
-
-
-    /**
      * Initialize elements of this controller.
      */
     public void initialize() {
-//        refGenomeLabel.textProperty().bind(optionalResources.refGenomeDirProperty().asString());
-        refGenomeLabel.setText((optionalResources.getRefGenomeDir() != null)
-                ? optionalResources.getRefGenomeDir().getAbsolutePath()
-                : "unset");
-//        hpOboLabel.textProperty().bind(optionalResources.ontologyPathProperty().asString());
-        hpOboLabel.setText((optionalResources.getOntologyPath() != null)
-                ? optionalResources.getOntologyPath().getAbsolutePath()
-                : "unset");
-//        entrezGeneLabel.textProperty().bind(optionalResources.entrezPathProperty().asString());
-        entrezGeneLabel.setText((optionalResources.getEntrezPath() != null)
-                ? optionalResources.getEntrezPath().getAbsolutePath()
-                : "unset");
-//        curatedFilesDirLabel.textProperty().bind(optionalResources.diseaseCaseDirProperty().asString());
+        if (assemblies.getAssemblyMap().containsKey(GenomeAssembly.HG19.toString())) {
+            File hg19Assembly = assemblies.getAssemblyMap().get(GenomeAssembly.HG19.toString()).getFastaPath();
+            if (notNullAndValidFasta(hg19Assembly)) {
+                hg19GenomeLabel.setText(assemblies.getAssemblyMap().get(GenomeAssembly.HG19.toString()).getFastaPath().getAbsolutePath());
+                hg19ProgressIndicator.setProgress(1);
+            } else {
+                LOGGER.info("Removing invalid path from hg19 build");
+                assemblies.getAssemblyMap().remove(GenomeAssembly.HG19.toString());
+                hg19GenomeLabel.setText("");
+                hg19ProgressIndicator.setProgress(0);
+            }
+        }
+
+        if (assemblies.getAssemblyMap().containsKey(GenomeAssembly.HG38.toString())) {
+            File hg38Assembly = assemblies.getAssemblyMap().get(GenomeAssembly.HG38.toString()).getFastaPath();
+            if (notNullAndValidFasta(hg38Assembly)) {
+                hg38GenomeLabel.setText(assemblies.getAssemblyMap().get(GenomeAssembly.HG38.toString()).getFastaPath().getAbsolutePath());
+                hg38ProgressIndicator.setProgress(1);
+            } else {
+                LOGGER.info("Removing invalid path from hg38 build");
+                assemblies.getAssemblyMap().remove(GenomeAssembly.HG38.toString());
+                hg38GenomeLabel.setText("");
+                hg38ProgressIndicator.setProgress(0);
+            }
+        }
+
+        if (optionalResources.getOntologyPath() != null) {
+            hpOboLabel.setText(optionalResources.getOntologyPath().getAbsolutePath());
+            hpoProgressIndicator.setProgress(1);
+        } else {
+            hpOboLabel.setText("unset");
+            hpoProgressIndicator.setProgress(0);
+        }
+
+        if (optionalResources.getEntrezPath() != null) {
+            entrezGeneLabel.setText(optionalResources.getEntrezPath().getAbsolutePath());
+            entrezProgressIndicator.setProgress(1);
+        } else {
+            entrezGeneLabel.setText("unset");
+            entrezProgressIndicator.setProgress(0);
+        }
+
         curatedFilesDirLabel.setText((optionalResources.getDiseaseCaseDir() != null)
                 ? optionalResources.getDiseaseCaseDir().getAbsolutePath()
                 : "unset");
         biocuratorIDTextField.textProperty().bindBidirectional(optionalResources.biocuratorIdProperty());
     }
 
+
+    @FXML
+    public void downloadHg19RefGenomeButtonAction() {
+        try {
+            URL url = new URL(properties.getProperty("hg19.chromfa.url"));
+            FileChooser chooser = new FileChooser();
+            chooser.setInitialDirectory(appHomeDir);
+            chooser.setTitle("Save hg19 fasta as");
+            chooser.setInitialFileName(GenomeAssembly.HG19.toString() + ".fa");
+            File target = chooser.showSaveDialog(primaryStage);
+            if (target == null) return;
+
+            GenomeAssemblyDownloader downloader = new GenomeAssemblyDownloader(url, target);
+            hg19ProgressIndicator.progressProperty().unbind();
+            hg19ProgressIndicator.progressProperty().bind(downloader.progressProperty());
+            hg19ProgressLabel.textProperty().unbind();
+            hg19ProgressLabel.textProperty().bind(downloader.messageProperty());
+
+            downloader.setOnSucceeded(e -> {
+                hg19GenomeLabel.setText(target.getAbsolutePath());
+                GenomeAssembly hg19 = GenomeAssembly.HG19;
+                hg19.setFastaPath(target);
+                assemblies.getAssemblyMap().put(hg19.toString(), hg19);
+            });
+            downloader.setOnFailed(e -> {
+                hg19GenomeLabel.setText("");
+                assemblies.getAssemblyMap().remove(GenomeAssembly.HG19.toString());
+            });
+            downloader.setOnCancelled(e -> {
+                hg19GenomeLabel.setText(e.getSource().getException().getMessage());
+                assemblies.getAssemblyMap().remove(GenomeAssembly.HG19.toString());
+            });
+
+            executorService.submit(downloader);
+        } catch (MalformedURLException mue) {
+            LOGGER.warn("Malformed url for downloading hg19 ref genome '{}'", properties.getProperty("hg19.chromfa.url"));
+            PopUps.showException("Download hg19 reference genome", "Error",
+                    "Malformed url for hg19 ref genome: " + properties.getProperty("hg19.chromfa.url"), mue);
+        }
+    }
+
+
+    @FXML
+    public void downloadHg38RefGenomeButtonAction() {
+        try {
+            URL url = new URL(properties.getProperty("hg38.chromfa.url"));
+            FileChooser chooser = new FileChooser();
+            chooser.setInitialDirectory(appHomeDir);
+            chooser.setTitle("Save hg38 fasta as");
+            chooser.setInitialFileName(GenomeAssembly.HG38.toString() + ".fa");
+            File target = chooser.showSaveDialog(primaryStage);
+            if (target == null) return;
+
+
+            GenomeAssemblyDownloader downloader = new GenomeAssemblyDownloader(url, target);
+            hg38ProgressIndicator.progressProperty().unbind();
+            hg38ProgressIndicator.progressProperty().bind(downloader.progressProperty());
+            hg38ProgressLabel.textProperty().unbind();
+            hg38ProgressLabel.textProperty().bind(downloader.messageProperty());
+
+            downloader.setOnSucceeded(e -> {
+                hg38GenomeLabel.setText(target.getAbsolutePath());
+                GenomeAssembly hg38 = GenomeAssembly.HG38;
+                hg38.setFastaPath(target);
+                assemblies.getAssemblyMap().put(hg38.toString(), hg38);
+            });
+            downloader.setOnFailed(e -> {
+                hg38GenomeLabel.setText("");
+                assemblies.getAssemblyMap().remove(GenomeAssembly.HG38.toString());
+            });
+            downloader.setOnCancelled(e -> {
+                hg38GenomeLabel.setText("");
+                assemblies.getAssemblyMap().remove(GenomeAssembly.HG38.toString());
+            });
+
+            executorService.submit(downloader);
+        } catch (MalformedURLException mue) {
+            LOGGER.warn("Malformed url for downloading hg19 ref genome '{}'", properties.getProperty("hg19.chromfa.url"));
+            PopUps.showException("Download hg19 reference genome", "Error",
+                    "Malformed url for hg19 ref genome: " + properties.getProperty("hg19.chromfa.url"), mue);
+        }
+    }
+
+
+    @FXML
+    public void setPathToHg19ButtonAction() {
+        FileChooser chooser = new FileChooser();
+        chooser.setInitialDirectory(appHomeDir);
+        chooser.setTitle("Select local hg19 FASTA file");
+        chooser.setInitialFileName(GenomeAssembly.HG19.toString() + ".fa");
+
+        while (true) { // loop until we get proper FASTA file
+            File target = chooser.showOpenDialog(primaryStage);
+            if (target == null) break;
+            else if (!target.isFile()) { // we need to get path to a file
+                PopUps.showInfoMessage("Provide path to valid FASTA file", String.format("'%s' - not a file", target.getAbsolutePath()));
+            } else if (!target.getName().endsWith(".fa")) { // and the file needs to have proper suffix
+                PopUps.showInfoMessage("Provide path to file that has '*.fa' suffix", String.format("'%s' has a bad suffix", target.getName()));
+            } else { // all set, set path and break
+                hg19GenomeLabel.setText(target.getAbsolutePath());
+                GenomeAssembly hg19 = GenomeAssembly.HG19;
+                hg19.setFastaPath(target);
+                assemblies.getAssemblyMap().put(hg19.toString(), hg19);
+                hg19ProgressIndicator.setProgress(1);
+                break;
+            }
+        }
+    }
+
+
+    @FXML
+    public void setPathToHg38ButtonAction() {
+        FileChooser chooser = new FileChooser();
+        chooser.setInitialDirectory(appHomeDir);
+        chooser.setTitle("Select local hg38 FASTA file");
+        chooser.setInitialFileName(GenomeAssembly.HG38.toString() + ".fa");
+
+        while (true) { // loop until we get proper FASTA file
+            File target = chooser.showOpenDialog(primaryStage);
+            if (target == null) break;
+            else if (!target.isFile()) { // we need to get path to a file
+                PopUps.showInfoMessage("Provide path to valid FASTA file", String.format("'%s' - not a file", target.getAbsolutePath()));
+            } else if (!target.getName().endsWith(".fa")) { // and the file needs to have proper suffix
+                PopUps.showInfoMessage("Provide path to file that has '*.fa' suffix", String.format("'%s' has a bad suffix", target.getName()));
+            } else { // all set, set path and break
+                hg38GenomeLabel.setText(target.getAbsolutePath());
+                GenomeAssembly hg38 = GenomeAssembly.HG38;
+                hg38.setFastaPath(target);
+                assemblies.getAssemblyMap().put(hg38.toString(), hg38);
+                hg38ProgressIndicator.setProgress(1);
+                break;
+            }
+        }
+    }
 }

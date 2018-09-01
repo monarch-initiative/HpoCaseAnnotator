@@ -87,15 +87,6 @@ public class SetResourcesControllerTest extends ApplicationTest {
 
 
     @Test
-    public void writeRefGen() throws Exception {
-        TextField field = lookup("#refGenomeTextField").query();
-        clickOn(field).write("tralala");
-        assertEquals("target/test-classes", field.getText());
-        assertEquals("target/test-classes", resources.getRefGenomeDir()); // the textfield is not editable.
-    }
-
-
-    @Test
     public void writeHPobo() throws Exception {
 //        TextField field = lookup("#hpOBOTextField").query();
 //        clickOn(field).write("tralala");

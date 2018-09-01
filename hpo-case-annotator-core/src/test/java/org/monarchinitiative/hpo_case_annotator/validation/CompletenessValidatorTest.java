@@ -36,7 +36,7 @@ public class CompletenessValidatorTest {
             DiseaseCaseModel model = XMLModelParser.loadDiseaseCaseModel(io);
             ValidationResult result = validator.validateDiseaseCase(model);
             assertEquals(ValidationResult.PASSED, result);
-            assertEquals(validator.OKAY, validator.getErrorMessage());
+            assertEquals(validator.OKAY, result.getMessage());
         }
     }
 
@@ -48,7 +48,7 @@ public class CompletenessValidatorTest {
     public void validateDiseaseCaseArs() throws Exception {
         ValidationResult result = validator.validateDiseaseCase(getArs());
         assertEquals(ValidationResult.PASSED, result);
-        assertEquals(validator.OKAY, validator.getErrorMessage());
+        assertEquals(validator.OKAY, result.getMessage());
     }
 
 
@@ -59,8 +59,9 @@ public class CompletenessValidatorTest {
     public void testMissingGenomeBuild() throws Exception {
         DiseaseCaseModel model = getArs();
         model.setGenomeBuild(null);
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(model));
-        assertEquals("Missing genome build", validator.getErrorMessage());
+        ValidationResult result = validator.validateDiseaseCase(model);
+        assertEquals(ValidationResult.FAILED, result);
+        assertEquals("Missing genome build", result.getMessage());
     }
 
 
@@ -71,8 +72,9 @@ public class CompletenessValidatorTest {
     public void testMissingPublication() throws Exception {
         DiseaseCaseModel model = getArs();
         model.setPublication(null);
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(model));
-        assertEquals("Missing publication data", validator.getErrorMessage());
+        ValidationResult result = validator.validateDiseaseCase(model);
+        assertEquals(ValidationResult.FAILED, result);
+        assertEquals("Missing publication data", result.getMessage());
     }
 
 
@@ -83,8 +85,9 @@ public class CompletenessValidatorTest {
     public void testMissingVariant() throws Exception {
         DiseaseCaseModel model = getArs();
         model.getVariants().clear();
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(model));
-        assertEquals("Model must contain at least one variant", validator.getErrorMessage());
+        ValidationResult result = validator.validateDiseaseCase(model);
+        assertEquals(ValidationResult.FAILED, result);
+        assertEquals("Model must contain at least one variant", result.getMessage());
     }
 
 
@@ -97,38 +100,45 @@ public class CompletenessValidatorTest {
         Variant variant = model.getVariants().get(0);
 
         variant.setChromosome("");
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(model));
-        assertEquals(":10490A>CC - SPLICING - At least one mandatory field is empty", validator.getErrorMessage());
+        ValidationResult result = validator.validateDiseaseCase(model);
+        assertEquals(ValidationResult.FAILED, result);
+        assertEquals(":10490A>CC - SPLICING - At least one mandatory field is empty", result.getMessage());
         variant.setChromosome("7");
 
         variant.setPosition("");
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(model));
-        assertEquals("7:A>CC - SPLICING - At least one mandatory field is empty", validator.getErrorMessage());
+        result = validator.validateDiseaseCase(model);
+        assertEquals(ValidationResult.FAILED, result);
+        assertEquals("7:A>CC - SPLICING - At least one mandatory field is empty", result.getMessage());
         variant.setPosition("10490");
 
         variant.setReferenceAllele("");
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(model));
-        assertEquals("7:10490>CC - SPLICING - At least one mandatory field is empty", validator.getErrorMessage());
+        result = validator.validateDiseaseCase(model);
+        assertEquals(ValidationResult.FAILED, result);
+        assertEquals("7:10490>CC - SPLICING - At least one mandatory field is empty", result.getMessage());
         variant.setReferenceAllele("A");
 
         variant.setAlternateAllele("");
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(model));
-        assertEquals("7:10490A> - SPLICING - At least one mandatory field is empty", validator.getErrorMessage());
+        result = validator.validateDiseaseCase(model);
+        assertEquals(ValidationResult.FAILED, result);
+        assertEquals("7:10490A> - SPLICING - At least one mandatory field is empty", result.getMessage());
         variant.setAlternateAllele("CC");
 
         variant.setSnippet("");
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(model));
-        assertEquals("7:10490A>CC - SPLICING - At least one mandatory field is empty", validator.getErrorMessage());
+        result = validator.validateDiseaseCase(model);
+        assertEquals(ValidationResult.FAILED, result);
+        assertEquals("7:10490A>CC - SPLICING - At least one mandatory field is empty", result.getMessage());
         variant.setSnippet("TATCTT[A/CC]AGGCTTTT");
 
         variant.setGenotype("");
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(model));
-        assertEquals("7:10490A>CC - SPLICING - At least one mandatory field is empty", validator.getErrorMessage());
+        result = validator.validateDiseaseCase(model);
+        assertEquals(ValidationResult.FAILED, result);
+        assertEquals("7:10490A>CC - SPLICING - At least one mandatory field is empty", result.getMessage());
         variant.setGenotype("heterozygous");
 
         variant.setVariantClass("");
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(model));
-        assertEquals("7:10490A>CC - SPLICING - At least one mandatory field is empty", validator.getErrorMessage());
+        result = validator.validateDiseaseCase(model);
+        assertEquals(ValidationResult.FAILED, result);
+        assertEquals("7:10490A>CC - SPLICING - At least one mandatory field is empty", result.getMessage());
         variant.setVariantClass("coding");
     }
 
@@ -142,18 +152,21 @@ public class CompletenessValidatorTest {
         SplicingVariant variant = (SplicingVariant) model.getVariants().get(0);
 
         variant.setCrypticPosition("12345");
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(model));
-        assertEquals("CSS fields are incomplete", validator.getErrorMessage());
+        ValidationResult result = validator.validateDiseaseCase(model);
+        assertEquals(ValidationResult.FAILED, result);
+        assertEquals("CSS fields are incomplete", result.getMessage());
         variant.setCrypticPosition("");
 
         variant.setCrypticSpliceSiteSnippet("ACGT|ACGT");
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(model));
-        assertEquals("CSS fields are incomplete", validator.getErrorMessage());
+        result = validator.validateDiseaseCase(model);
+        assertEquals(ValidationResult.FAILED, result);
+        assertEquals("CSS fields are incomplete", result.getMessage());
         variant.setCrypticSpliceSiteSnippet("");
 
         variant.setCrypticSpliceSiteType("5' cryptic splice site");
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(model));
-        assertEquals("CSS fields are incomplete", validator.getErrorMessage());
+        result = validator.validateDiseaseCase(model);
+        assertEquals(ValidationResult.FAILED, result);
+        assertEquals("CSS fields are incomplete", result.getMessage());
         variant.setCrypticSpliceSiteType("");
     }
 

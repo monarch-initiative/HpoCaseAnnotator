@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.validation;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.monarchinitiative.hpo_case_annotator.TestResources;
 import org.monarchinitiative.hpo_case_annotator.io.ModelParser;
@@ -26,10 +27,9 @@ public class ValidationRunnerTest {
     @Before
     public void setUp() throws Exception {
         CompletenessValidator completenessValidator = new CompletenessValidator();
-        GenomicPositionValidator genomicPositionValidator = new GenomicPositionValidator(TestResources.TEST_REF_GENOME);
+        GenomicPositionValidator genomicPositionValidator = new GenomicPositionValidator(TestResources.TEST_REF_GENOME_FASTA);
         ModelParser modelParser = new XMLModelParser(TestResources.TEST_MODEL_FILE_DIR);
-        PubMedValidator pubMedValidator = new PubMedValidator(modelParser);
-        runner = new ValidationRunner(genomicPositionValidator, completenessValidator, pubMedValidator);
+        runner = new ValidationRunner(genomicPositionValidator, completenessValidator);
     }
 
 
@@ -44,13 +44,13 @@ public class ValidationRunnerTest {
         ValidationLine first = validationLines.get(0);
         assertEquals("Ars-2000-NF1", first.getModelName());
         assertEquals("CompletenessValidator", first.getValidatorName());
-        assertEquals("PASSED", first.getValidationResult());
+        assertEquals(ValidationResult.PASSED, first.getValidationResult());
         assertEquals("All right!", first.getErrorMessage());
 
         ValidationLine second = validationLines.get(1);
         assertEquals("Ars-2000-NF1", second.getModelName());
         assertEquals("GenomicPositionValidator", second.getValidatorName());
-        assertEquals("PASSED", second.getValidationResult());
+        assertEquals(ValidationResult.PASSED, second.getValidationResult());
         assertEquals("All right!", second.getErrorMessage());
     }
 

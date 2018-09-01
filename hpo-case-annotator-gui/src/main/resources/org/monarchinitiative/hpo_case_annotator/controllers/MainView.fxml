@@ -3,33 +3,40 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.input.KeyCodeCombination?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" fx:controller="org.monarchinitiative.hpo_case_annotator.controllers.MainController">
-    <children>
-        <MenuBar minWidth="500.0" prefHeight="30.0" VBox.vgrow="NEVER">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.controllers.MainController">
+   <center>
+      <StackPane fx:id="contentStackPane" alignment="TOP_CENTER" style="-fx-background-color: #ffffff;" BorderPane.alignment="TOP_CENTER" />
+   </center>
+   <top>
+        <MenuBar BorderPane.alignment="TOP_CENTER">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#newMenuItemAction" text="New">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
+                     </accelerator>
+                  </MenuItem>
                         <MenuItem mnemonicParsing="false" onAction="#openMenuItemAction" text="Open">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
+                     </accelerator>
+                  </MenuItem>
                         <MenuItem mnemonicParsing="false" onAction="#saveMenuItemAction" text="Save">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
+                     </accelerator>
+                  </MenuItem>
                         <MenuItem mnemonicParsing="false" onAction="#saveAsMenuItemAction" text="Save as" />
                         <MenuItem mnemonicParsing="false" onAction="#exitMenuItemAction" text="Exit">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
+                     </accelerator>
+                  </MenuItem>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="View">
@@ -71,6 +78,5 @@
                 </Menu>
             </menus>
         </MenuBar>
-        <ScrollPane fx:id="contentScrollPane" fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="5.0" minWidth="5.0" pannable="true" VBox.vgrow="ALWAYS" />
-    </children>
-</VBox>
+   </top>
+</BorderPane>

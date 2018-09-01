@@ -12,41 +12,11 @@ public abstract class AbstractValidator {
     /**
      * Message presented when everything is OK.
      */
-    public final String OKAY = "All right!";
-
-    /**
-     * If validation fails a message describing the failure will be stored here.
-     */
-    private String errorMessage;
-
+    final String OKAY = "All right!";
 
     protected AbstractValidator() {
         // no-op, prevent instantiation through public constructor.
     }
-
-
-    /**
-     * Read XML files in provided directory and parse them into List with {@link org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel}
-     * instances.
-     *
-     * @param diseaseCaseDirPath path do directory with
-     * @return {@link List} containing
-     */
-//    @Deprecated // same functionality is in XMLModelParser
-//    protected static List<DiseaseCaseModel> readDiseaseCaseModels(String diseaseCaseDirPath) {
-//        File dirPath = new File(diseaseCaseDirPath);
-//
-//        File[] randomGenericCkorList = dirPath.listFiles();
-//
-//        List<DiseaseCaseModel> modelList = new ArrayList<>();
-//        for (File f : randomGenericCkorList) {
-//            if (f.getName().endsWith(".xml")) {
-//                Optional<DiseaseCaseModel> modelOptional = XMLModelParser.loadDiseaseCaseModel(f.getAbsoluteFile());
-//                modelOptional.ifPresent(modelList::add);
-//            }
-//        }
-//        return modelList;
-//    }
 
 
     /**
@@ -57,21 +27,14 @@ public abstract class AbstractValidator {
         return s == null || s.equals("");
     }
 
-
+    public static ValidationResult makeValidationResult(ValidationResult result, String message) {
+        result.setMessage(message);
+        return result;
+    }
     /**
-     * @param model {@link DiseaseCaseModel} instance about to be validated.
-     * @return {@link ValidationResult}
+     * @param model {@link DiseaseCaseModel} instance about to be validated
+     * @return {@link ValidationResult} with message describing validation outcome
      */
     public abstract ValidationResult validateDiseaseCase(DiseaseCaseModel model);
 
-
-    // ************************ Getters & Setters *****************************
-    public String getErrorMessage() {
-        return this.errorMessage;
-    }
-
-
-    public void setErrorMessage(String newMsg) {
-        this.errorMessage = newMsg;
-    }
 }

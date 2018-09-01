@@ -12,6 +12,7 @@ import ontologizer.io.obo.OBOParserFileInput;
 import ontologizer.ontology.Ontology;
 import ontologizer.ontology.TermContainer;
 import org.monarchinitiative.hpo_case_annotator.model.TargetGene;
+import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssembly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +36,6 @@ public final class OptionalResources {
      */
     public static final String DEFAULT_ENTREZ_FILE_NAME = "Homo_sapiens.gene_info.gz";
 
-    public static final String REF_GENOME_DIR_PROPERTY = "ref.genome.dir";
-
     public static final String DISEASE_CASE_DIR_PROPERTY = "disease.case.dir";
 
     public static final String BIOCURATOR_ID_PROPERTY = "biocurator.id";
@@ -50,8 +49,6 @@ public final class OptionalResources {
     private final BooleanBinding entrezIsMissing;
 
     private final BooleanBinding omimIsMissing;
-
-    private final ObjectProperty<File> refGenomeDir = new SimpleObjectProperty<>(this, "refGenomeDir");
 
     private final ObjectProperty<File> diseaseCaseDir = new SimpleObjectProperty<>(this, "diseaseCaseDir");
 
@@ -76,7 +73,6 @@ public final class OptionalResources {
     private File ontologyPath;
 
     private File entrezPath;
-
 
     public OptionalResources() {
         this.entrezIsMissing = Bindings.createBooleanBinding(() -> Stream.of(entrezId2geneProperty(),
@@ -201,21 +197,6 @@ public final class OptionalResources {
 
     public ObjectProperty<Map<String, String>> entrezId2symbolProperty() {
         return entrezId2symbol;
-    }
-
-
-    public File getRefGenomeDir() {
-        return refGenomeDir.get();
-    }
-
-
-    public void setRefGenomeDir(File refGenomeDir) {
-        this.refGenomeDir.set(refGenomeDir);
-    }
-
-
-    public ObjectProperty<File> refGenomeDirProperty() {
-        return refGenomeDir;
     }
 
 

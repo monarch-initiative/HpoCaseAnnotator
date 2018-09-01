@@ -28,18 +28,8 @@
         <slf4j.version>1.7.25</slf4j.version>
     </properties>
 
-    <reporting>
+    <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.9</version>
-                <reportSets>
-                    <reportSet>
-                        <reports />
-                    </reportSet>
-                </reportSets>
-            </plugin>
             <plugin>
                 <groupId>kr.motd.maven</groupId>
                 <artifactId>sphinx-maven-plugin</artifactId>
@@ -48,15 +38,16 @@
                     <sourceDirectory>${project.basedir}/docs/source</sourceDirectory>
                     <outputDirectory>${project.basedir}/docs/build</outputDirectory>
                 </configuration>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>generate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
+                <executions>
+                    <execution>
+                        <id>make-docs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
-    </reporting>
-
+    </build>
 </project>

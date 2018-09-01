@@ -35,8 +35,7 @@ public class HPOValidator extends AbstractValidator {
      */
     @Override
     public ValidationResult validateDiseaseCase(DiseaseCaseModel model) {
-        setErrorMessage("HPO validation currently unapplicable.");
-        return ValidationResult.UNAPPLICABLE;
+        return makeValidationResult(ValidationResult.UNAPPLICABLE, "HPO validation currently unapplicable");
         //        List<HPO> hpoList = model.getHpoList();
 //
 //        for (HPO term : hpoList) {

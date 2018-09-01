@@ -5,6 +5,7 @@ import org.monarchinitiative.hpo_case_annotator.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.Play;
 import org.monarchinitiative.hpo_case_annotator.io.EntrezParser;
 import org.monarchinitiative.hpo_case_annotator.io.OMIMParser;
+import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssemblies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,10 +38,13 @@ public final class StartupTask extends Task<Void> {
 
     private final Properties properties;
 
+    private final GenomeAssemblies assemblies;
 
-    public StartupTask(OptionalResources optionalResources, Properties properties) {
+
+    public StartupTask(OptionalResources optionalResources, Properties properties, GenomeAssemblies assemblies) {
         this.optionalResources = optionalResources;
         this.properties = properties;
+        this.assemblies = assemblies;
     }
 
 
@@ -48,7 +52,6 @@ public final class StartupTask extends Task<Void> {
      * Read {@link Properties} and initialize app resources in the {@link OptionalResources}:
      *
      * <ul>
-     *     <li>reference genome</li>
      *     <li>HPO ontology</li>
      *     <li>Entrez gene file</li>
      *     <li>Curated files directory</li>
@@ -60,15 +63,6 @@ public final class StartupTask extends Task<Void> {
      */
     @Override
     protected Void call() throws Exception {
-        // Reference genome first
-        String refGenomePath = properties.getProperty(OptionalResources.REF_GENOME_DIR_PROPERTY);
-        if (refGenomePath!=null && new File(refGenomePath).isDirectory()) {
-            File refGenome = new File(refGenomePath);
-            LOGGER.info("Setting reference genome directory to {}", refGenome.getAbsolutePath());
-            optionalResources.setRefGenomeDir(refGenome);
-        } else
-            LOGGER.info("Skipping setting of the reference genome dictionary. Path {} does not point to directory",
-                    refGenomePath);
         // Then HPO
         String ontologyPath = properties.getProperty(OptionalResources.ONTOLOGY_PATH_PROPERTY);
         if (ontologyPath != null && new File(ontologyPath).isFile()) {

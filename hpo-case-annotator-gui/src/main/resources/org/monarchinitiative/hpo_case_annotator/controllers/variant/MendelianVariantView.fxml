@@ -91,7 +91,7 @@
                         </GridPane>
                     </children>
                 </HBox>
-                <HBox fx:id="validationHBox" style="-fx-background-color: #F1E1BA;" VBox.vgrow="NEVER">
+                <HBox fx:id="validationHBox" style="-fx-background-color: #C1FFC1;" VBox.vgrow="NEVER">
                     <children>
                         <Label id="validationLabel" prefHeight="25.0" prefWidth="130.0" text="Validation:" HBox.hgrow="NEVER">
                             <HBox.margin>

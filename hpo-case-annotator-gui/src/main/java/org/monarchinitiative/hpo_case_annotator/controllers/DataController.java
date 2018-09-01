@@ -21,7 +21,6 @@ import org.monarchinitiative.hpo_case_annotator.model.*;
 import org.monarchinitiative.hpo_case_annotator.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.util.WidthAwareTextFields;
 import org.monarchinitiative.hpo_case_annotator.validation.PubMedValidator;
-import org.monarchinitiative.hpo_case_annotator.validation.ValidationRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +30,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.FutureTask;
@@ -45,8 +43,6 @@ public final class DataController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataController.class);
 
     private final OptionalResources optionalResources;
-
-    private final Properties properties;
 
     private final ExecutorService executorService;
 
@@ -72,9 +68,6 @@ public final class DataController {
 
     @FXML
     private TextField inputPubMedDataTextField;
-
-    @FXML
-    private Button inputPubMedButton;
 
     @FXML
     private TextField pmidTextField;
@@ -123,11 +116,9 @@ public final class DataController {
 
 
     @Inject
-    public DataController(OptionalResources optionalResources, Properties properties,
-                          ExecutorService executorService,
-                          ChoiceBasket choiceBasket, ResourceBundle resourceBundle, Injector injector) {
+    public DataController(OptionalResources optionalResources, ExecutorService executorService, ChoiceBasket choiceBasket,
+                          ResourceBundle resourceBundle, Injector injector) {
         this.optionalResources = optionalResources;
-        this.properties = properties;
         this.executorService = executorService;
         this.choiceBasket = choiceBasket;
         this.resourceBundle = resourceBundle;
@@ -152,6 +143,21 @@ public final class DataController {
             return VariantMode.SOMATIC;
         }
         throw new IllegalArgumentException("ERROR: Variant of unknown type");
+    }
+
+
+    private static String convertGenomeBuild(DiseaseCaseModel model) {
+        switch (model.getGenomeBuild().toLowerCase()) {
+            case "grch37":
+            case "hg19":
+                return "hg19";
+            case "grch38":
+            case "hg38":
+                return "hg38";
+            default:
+                LOGGER.warn("Unknown genome build '{}' in model '{}'", model.getGenomeBuild(), model.getFileName());
+                return model.getGenomeBuild();
+        }
     }
 
 
@@ -229,9 +235,10 @@ public final class DataController {
     private void initializeBindings(DiseaseCaseModel model) {
 
         // Current model title, this is "readOnly" binding
-         currentModelLabel.textProperty().bind(model.getPublication().titleProperty());
+        currentModelLabel.textProperty().bind(model.getPublication().titleProperty());
 
         // Genome build
+        model.setGenomeBuild(convertGenomeBuild(model));
         genomeBuildComboBox.valueProperty().bindBidirectional(model.genomeBuildProperty());
 
         // Gene
@@ -443,7 +450,6 @@ public final class DataController {
 
     /**
      * New empty {@link DiseaseCaseModel} is implicitly created here. </p>
-     *
      */
     public void initialize() {
         genomeBuildComboBox.getItems().addAll(choiceBasket.getGenomeBuild());

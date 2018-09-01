@@ -7,23 +7,16 @@ import javafx.application.HostServices;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.controllers.DataController;
 import org.monarchinitiative.hpo_case_annotator.controllers.MainController;
-import org.monarchinitiative.hpo_case_annotator.io.ModelParser;
-import org.monarchinitiative.hpo_case_annotator.io.XMLModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.ChoiceBasket;
-import org.monarchinitiative.hpo_case_annotator.validation.CompletenessValidator;
-import org.monarchinitiative.hpo_case_annotator.validation.GenomicPositionValidator;
-import org.monarchinitiative.hpo_case_annotator.validation.PubMedValidator;
-import org.monarchinitiative.hpo_case_annotator.validation.ValidationRunner;
+import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssemblies;
+import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssembliesSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
-import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -39,6 +32,8 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
     private static final Logger LOGGER = LoggerFactory.getLogger(HpoCaseAnnotatorModule.class);
 
     private static final String PROPERTIES_FILE_NAME = "hpo-case-annotator.properties";
+
+    private static final String GENOME_ASSEMBLIES_FILE_NAME = "genome-assemblies.properties";
 
     private static final String CHOICE_BASKET_FILE_NAME = "choice-basket.yml";
 
@@ -86,8 +81,9 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
      * will be tried. If the file doesn't exist, we will fall back to the <code>hpo-case-annotator.properties</code>
      * that is bundled in the JAR file.
      *
-     * @param propertiesFilePath {@link File} pointing to the <code>application.properties</code> file
+     * @param propertiesFilePath {@link File} pointing to the <code>hpo-case-annotator.properties</code> file
      * @return application {@link Properties}
+     * @throws IOException if I/O error occurs
      */
     @Provides
     @Singleton
@@ -120,14 +116,16 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
      * the directory where the JAR file is (<code>codeHomeDir</code>)</li> <li>inside of the JAR file</li> </ul> The
      * first has a priority.
      *
-     * @return {@link Optional <File>} object with requested path.
+     * Use the YAML file to populate content of the {@link ChoiceBasket}.
+     *
+     * @return {@link ChoiceBasket} populated with content of the YAML file
      */
 
     @Provides
     @Singleton
     public ChoiceBasket choiceBasket(@Named("codeHomeDir") File codeHomeDir) throws IOException {
         File target = new File(codeHomeDir, CHOICE_BASKET_FILE_NAME);
-        if (target.exists()) { // load from the file located next to the JAR file
+        if (target.isFile()) { // load from the file located next to the JAR file
             LOGGER.info("Loading choice basket from file {}", target.getAbsolutePath());
             return new ChoiceBasket(target);
         }
@@ -138,6 +136,23 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
         } catch (IOException e) {
             LOGGER.warn("Tried to load bundled choice basket from but failed", e);
             throw e;
+        }
+    }
+
+    @Provides
+    @Singleton
+    public GenomeAssemblies genomeAssemblies(@Named("refGenomePropertiesFilePath") File refGenomePropertiesFilePath) throws IOException {
+        if (refGenomePropertiesFilePath.isFile()) {
+            try (InputStream is = new FileInputStream(refGenomePropertiesFilePath)) {
+                LOGGER.info("Loading genome assemblies from '{}'", refGenomePropertiesFilePath.getAbsolutePath());
+                return GenomeAssembliesSerializer.deserialize(is);
+            } catch (IOException ioe) {
+                LOGGER.warn("Tried to load genome assembly definitions from '{}' but failed", refGenomePropertiesFilePath.getAbsolutePath());
+                throw ioe;
+            }
+        } else {
+            LOGGER.info("No genome assemblies to be loaded");
+            return new GenomeAssemblies();
         }
     }
 
@@ -178,6 +193,12 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
         return new File(appHomeDir, PROPERTIES_FILE_NAME);
     }
 
+
+    @Provides
+    @Named("refGenomePropertiesFilePath")
+    public File refGenomePropertiesFilePath(@Named("appHomeDir") File appHomeDir) {
+        return new File(appHomeDir, GENOME_ASSEMBLIES_FILE_NAME);
+    }
 
     /**
      * Get path to application home directory, where HpoCaseAnnotator stores global settings and files. The path depends

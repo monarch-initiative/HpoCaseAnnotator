@@ -11,6 +11,8 @@ import org.monarchinitiative.hpo_case_annotator.io.ModelParser;
 import org.monarchinitiative.hpo_case_annotator.io.OMIMParser;
 import org.monarchinitiative.hpo_case_annotator.io.XMLModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.ChoiceBasket;
+import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssemblies;
+import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssembliesSerializer;
 import org.monarchinitiative.hpo_case_annotator.validation.CompletenessValidator;
 import org.monarchinitiative.hpo_case_annotator.validation.GenomicPositionValidator;
 import org.monarchinitiative.hpo_case_annotator.validation.PubMedValidator;
@@ -21,8 +23,9 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -42,6 +45,8 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
     private static final String PROPERTIES_FILE_NAME = "test-hca.properties";
 
     private static final String CHOICE_BASKET_FILE_NAME = "choice-basket.yml";
+
+    private static final String GENOME_ASSEMBLIES_FILE_NAME = "test-genome-assemblies.properties";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestHpoCaseAnnotatorModule.class);
 
@@ -81,9 +86,8 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public OptionalResources optionalResources(Properties properties) throws IOException {
+    public OptionalResources optionalResources(Properties properties, GenomeAssemblies assemblies) throws IOException {
         OptionalResources optionalResources = new OptionalResources();
-        optionalResources.setRefGenomeDir(new File(properties.getProperty("test.genome.dir")));
         optionalResources.setDiseaseCaseDir(new File(properties.getProperty("test.xml.model.dir")));
         // Ontology
         Ontology ontology = OptionalResources.deserializeOntology(
@@ -123,6 +127,24 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
         }
     }
 
+    @Provides
+    @Singleton
+    public GenomeAssemblies genomeAssemblies(@Named("refGenomePropertiesFilePath") File refGenomePropertiesFilePath) throws IOException {
+
+        if (refGenomePropertiesFilePath.isFile()) {
+            try (InputStream is = new FileInputStream(refGenomePropertiesFilePath)) {
+                LOGGER.debug("Loading genome assemblies from '{}'", refGenomePropertiesFilePath.getAbsolutePath());
+                return GenomeAssembliesSerializer.deserialize(is);
+            } catch (IOException ioe) {
+                LOGGER.warn("Tried to load genome assembly definitions from '{}' but failed", refGenomePropertiesFilePath.getAbsolutePath());
+                throw ioe;
+            }
+        } else {
+            LOGGER.debug("No genome assemblies to be loaded");
+            return new GenomeAssemblies();
+        }
+    }
+
     // ----------------------------------------- FILES -----------------------------------------------------------------
 
 
@@ -148,6 +170,11 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
         }
     }
 
+    @Provides
+    @Named("refGenomePropertiesFilePath")
+    public File refGenomePropertiesFilePath(@Named("appHomeDir") File appHomeDir) {
+        return new File(appHomeDir, GENOME_ASSEMBLIES_FILE_NAME);
+    }
 
     /**
      * @param appHomeDir path to application home directory, where HpoCaseAnnotator stores global settings and files. The path depends

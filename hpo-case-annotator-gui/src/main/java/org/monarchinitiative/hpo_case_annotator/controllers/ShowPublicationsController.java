@@ -72,7 +72,7 @@ public final class ShowPublicationsController {
     private TableColumn<DiseaseCaseModel, Hyperlink> pubMedTableColumn;
 
 
-    public ShowPublicationsController(HostServices hostServices) {
+    ShowPublicationsController(HostServices hostServices) {
         this.hostServices = hostServices;
     }
 
@@ -135,6 +135,11 @@ public final class ShowPublicationsController {
         if (model_cache.size() > 0) {
             publicationsTableView.getItems().addAll(model_cache);
         }
+
+        firstAuthorTableColumn.setSortType(TableColumn.SortType.ASCENDING);
+        titleTableColumn.setSortType(TableColumn.SortType.ASCENDING);
+        publicationsTableView.getSortOrder().add(firstAuthorTableColumn);
+        publicationsTableView.getSortOrder().add(titleTableColumn);
     }
 
 
@@ -149,6 +154,7 @@ public final class ShowPublicationsController {
         } else {
             publicationsTableView.getItems().clear();
             publicationsTableView.getItems().addAll(models);
+            publicationsTableView.sort();
         }
     }
 }

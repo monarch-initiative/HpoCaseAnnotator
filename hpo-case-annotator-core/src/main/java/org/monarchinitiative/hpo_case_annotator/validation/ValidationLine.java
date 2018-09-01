@@ -7,28 +7,18 @@ package org.monarchinitiative.hpo_case_annotator.validation;
 public class ValidationLine {
 
     /* Disease case model name - First author & year */
-    private String modelName;
+    private final String modelName;
 
     /* Name of the class that has been used to validate model */
-    private String validatorName;
+    private final String validatorName;
 
     /* Value of ValidationResult enum */
-    private String validationResult;
+    private final ValidationResult validationResult;
 
-    /* Error message, if any */
-    private String errorMessage;
-
-
-    public ValidationLine(String modelName, String validatorName, String validationResult, String errorMessage) {
+    public ValidationLine(String modelName, String validatorName, ValidationResult result) {
         this.modelName = modelName;
         this.validatorName = validatorName;
-        this.validationResult = validationResult;
-        this.errorMessage = errorMessage;
-    }
-
-
-    public ValidationLine() {
-        // no-op, for being a nice behaved POJO..
+        this.validationResult = result;
     }
 
 
@@ -37,48 +27,32 @@ public class ValidationLine {
     }
 
 
-    public void setModelName(String modelName) {
-        this.modelName = modelName;
-    }
-
 
     public String getValidatorName() {
         return validatorName;
     }
 
 
-    public void setValidatorName(String validatorName) {
-        this.validatorName = validatorName;
-    }
 
-
-    public String getValidationResult() {
+    public ValidationResult getValidationResult() {
         return validationResult;
     }
 
 
-    public void setValidationResult(String validationResult) {
-        this.validationResult = validationResult;
-    }
-
 
     public String getErrorMessage() {
-        return errorMessage;
+        return validationResult.getMessage();
     }
 
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
 
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("ValidationLine{");
+        final StringBuilder sb = new StringBuilder("ValidationLine{");
         sb.append("modelName='").append(modelName).append('\'');
         sb.append(", validatorName='").append(validatorName).append('\'');
         sb.append(", validationResult='").append(validationResult).append('\'');
-        sb.append(", errorMessage='").append(errorMessage).append('\'');
+        sb.append(", errorMessage='").append(validationResult.getMessage()).append('\'');
         sb.append('}');
         return sb.toString();
     }

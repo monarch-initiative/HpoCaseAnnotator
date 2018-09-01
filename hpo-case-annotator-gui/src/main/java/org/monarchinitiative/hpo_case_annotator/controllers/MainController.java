@@ -7,15 +7,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.io.*;
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
+import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.util.StartupTask;
-import org.monarchinitiative.hpo_case_annotator.validation.*;
+import org.monarchinitiative.hpo_case_annotator.validation.CompletenessValidator;
+import org.monarchinitiative.hpo_case_annotator.validation.ValidationLine;
+import org.monarchinitiative.hpo_case_annotator.validation.ValidationRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +29,7 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
+import java.util.stream.Collectors;
 
 /**
  * This class is the controller of the main dialog of the HRMD app. <p>
@@ -49,17 +54,19 @@ public final class MainController {
 
     private final ExecutorService executorService;
 
+    private final GenomeAssemblies assemblies;
 
     private HostServices hostServices;
 
     @FXML
-    private ScrollPane contentScrollPane;
+    public StackPane contentStackPane;
 
 
     @Inject
     public MainController(OptionalResources optionalResources, DataController dataController,
                           ResourceBundle resourceBundle, Stage primaryStage,
-                          Properties properties, @Named("appHomeDir") File appHomeDir, ExecutorService executorService) {
+                          Properties properties, @Named("appHomeDir") File appHomeDir, ExecutorService executorService,
+                          GenomeAssemblies assemblies, HostServices hostServices) {
         this.optionalResources = optionalResources;
         this.dataController = dataController;
         this.resourceBundle = resourceBundle;
@@ -67,26 +74,7 @@ public final class MainController {
         this.properties = properties;
         this.appHomeDir = appHomeDir;
         this.executorService = executorService;
-    }
-
-
-    /**
-     * Prepare runner using resources available at the moment.
-     *
-     * @param optionalResources with paths application resources
-     * @return {@link ValidationRunner} usable to validate {@link DiseaseCaseModel}s
-     */
-    private static ValidationRunner getRunner(OptionalResources optionalResources) {
-        GenomicPositionValidator genomicPositionValidator = new GenomicPositionValidator(optionalResources.getRefGenomeDir());
-        CompletenessValidator completenessValidator = new CompletenessValidator();
-        PubMedValidator pubMedValidator = new PubMedValidator(new XMLModelParser(optionalResources.getDiseaseCaseDir()));
-
-        return new ValidationRunner(genomicPositionValidator, completenessValidator, pubMedValidator);
-    }
-
-
-    //    @Inject
-    public void setHostServices(HostServices hostServices) {
+        this.assemblies = assemblies;
         this.hostServices = hostServices;
     }
 
@@ -161,6 +149,7 @@ public final class MainController {
                     ShowEditPublicationController.class.getResource("ShowEditPublicationView.fxml"),
                     resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
             Stage stage = new Stage();
+            stage.setTitle("Edit metadata of the current publication");
             stage.initOwner(primaryStage);
             stage.setScene(new Scene(parent));
             stage.showAndWait();
@@ -174,12 +163,16 @@ public final class MainController {
     @FXML
     void setResourcesMenuItemAction() {
         try {
-            SetResourcesController controller = new SetResourcesController(optionalResources, properties, appHomeDir, executorService);
+            SetResourcesController controller = new SetResourcesController(optionalResources, properties, appHomeDir,
+                    executorService, primaryStage, assemblies);
             Parent parent = FXMLLoader.load(
                     SetResourcesController.class.getResource("SetResourcesView.fxml"),
                     resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
             Stage stage = new Stage();
+            stage.setTitle("Initialize Hpo Case Annotator resources");
             stage.initOwner(primaryStage);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
             stage.setScene(new Scene(parent));
             stage.showAndWait();
         } catch (IOException e) {
@@ -216,6 +209,7 @@ public final class MainController {
             Parent parent = FXMLLoader.load(ShowPublicationsController.class.getResource("ShowPublicationsView.fxml"),
                     resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
             Stage stage = new Stage();
+            stage.setTitle("Curated publications in '" + where.getAbsolutePath() + "'");
             stage.initOwner(primaryStage);
             stage.setScene(new Scene(parent));
             stage.showAndWait();
@@ -228,9 +222,8 @@ public final class MainController {
 
     @FXML
     void validateCurrentEntryMenuItemAction() {
-        ValidationRunner validationRunner = getRunner(optionalResources);
-        List<ValidationLine> lines = validationRunner.validateModels(
-                Collections.singleton(dataController.getModel()));
+        List<ValidationLine> lines = new ArrayList<>(ValidationRunner.validateModel(dataController.getModel(), assemblies));
+
         try {
             ShowValidationResultsController controller = new ShowValidationResultsController();
             Parent parent = FXMLLoader.load(ShowValidationResultsController.class.getResource("ShowValidationResultsView.fxml"),
@@ -241,16 +234,16 @@ public final class MainController {
             stage.setScene(new Scene(parent));
             stage.showAndWait();
         } catch (IOException e) {
-            LOGGER.warn("Unable to display dialog for validation of the current publication", e);
+            LOGGER.warn("Unable to display dialog for validation of the curated publications", e);
         }
     }
 
 
     @FXML
     void validateAllFilesMenuItemAction() {
-        ValidationRunner validationRunner = getRunner(optionalResources);
+        // read all model files
         ModelParser modelParser = new XMLModelParser(optionalResources.getDiseaseCaseDir());
-        Set<DiseaseCaseModel> models = new HashSet<>();
+        List<DiseaseCaseModel> models = new ArrayList<>();
         for (File modelFile : modelParser.getModelNames()) {
             try (FileInputStream fis = new FileInputStream(modelFile)) {
                 models.add(modelParser.readModel(fis));
@@ -259,7 +252,10 @@ public final class MainController {
             }
         }
 
-        List<ValidationLine> lines = validationRunner.validateModels(models);
+        List<ValidationLine> lines = models.stream()
+                .map(m -> ValidationRunner.validateModel(m, assemblies))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
 
         try {
             ShowValidationResultsController controller = new ShowValidationResultsController();
@@ -267,6 +263,7 @@ public final class MainController {
                     resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
             controller.setValidationLines(lines);
             Stage stage = new Stage();
+            stage.setTitle("Validation results");
             stage.initOwner(primaryStage);
             stage.setScene(new Scene(parent));
             stage.showAndWait();
@@ -366,12 +363,12 @@ public final class MainController {
 
 
     public void initialize() {
-        StartupTask task = new StartupTask(optionalResources, properties);
+        StartupTask task = new StartupTask(optionalResources, properties, assemblies);
         executorService.submit(task);
         try {
             Parent parent = FXMLLoader.load(DataController.class.getResource("DataView.fxml"),
                     resourceBundle, new JavaFXBuilderFactory(), clazz -> dataController);
-            contentScrollPane.setContent(parent);
+            contentStackPane.getChildren().add(parent);
         } catch (IOException e) {
             LOGGER.warn(String.format("Error occured during initialization of the data view: %s", e.getMessage()));
             e.printStackTrace();
@@ -381,27 +378,22 @@ public final class MainController {
 
     /**
      * Save model to file in project's model directory.
-     * <p>
+     *
      * <ul>
-     *  <li>Ensure that DiseaseCaseDir exists</li>
-     *  <li>Validate completness of model</li>
-     *  <li>Check if we are saving model which has been opened from XML file or a new Model and ask user where
-     *         to save, if necessary.</li>
-     *  <li>Save it</li>
+     * <li>Ensure that DiseaseCaseDir exists</li>
+     * <li>Validate completness of model</li>
+     * <li>Check if we are saving model which has been opened from XML file or a new Model and ask user where
+     * to save, if necessary.</li>
+     * <li>Save it</li>
      * </ul>
      */
     private void saveModel(File currentModelPath, DiseaseCaseModel model) {
-        ValidationRunner validationRunner = getRunner(optionalResources);
-        String conversationTitle = "Save data into file";
+        CompletenessValidator completenessValidator = new CompletenessValidator();
 
-        try {
-            validationRunner.validateCompletness(model);
-        } catch (ValidationException e) {
-            boolean response = PopUps.getBooleanFromUser( "Do you want to save it anyway?",
-                    "Incomplete data - " + e.getMessage(), "Validate data before saving");
-            if (!response)
-                return;
-        }
+        completenessValidator.validateDiseaseCase(model);
+
+
+        String conversationTitle = "Save data into file";
 
         if (currentModelPath == null) {
             String suggestedXmlName = model.getFileName() + ".xml";
