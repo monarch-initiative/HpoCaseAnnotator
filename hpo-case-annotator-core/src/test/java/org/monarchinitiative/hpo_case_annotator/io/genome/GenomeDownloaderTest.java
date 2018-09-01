@@ -2,8 +2,10 @@ package org.monarchinitiative.hpo_case_annotator.io.genome;
 
 import htsjdk.samtools.reference.IndexedFastaSequenceFile;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssemblyDownloaderTest;
 
 import java.io.File;
 import java.net.URL;
@@ -20,8 +22,10 @@ public class GenomeDownloaderTest {
 
     /**
      * URL pointing to tar.gz archive with fasta files containing first 1000 lines for each chromosome.
+     *
+     * Note: GenomeAssemblyDownloaderTest is used intentionally here!
      */
-    private static final URL GENOME_URL = GenomeDownloaderTest.class.getResource("shortHg19ChromFa.tar.gz");
+    private static final URL GENOME_URL = GenomeAssemblyDownloaderTest.class.getResource("shortHg19ChromFa.tar.gz");
 
     private static final File BASE_DIR = new File(GenomeDownloaderTest.class.getResource("").getFile());
 
