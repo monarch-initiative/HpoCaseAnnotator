@@ -1,83 +1,90 @@
-============
-Installation
-============
+========================================================
+Getting the app for your operating system & installation
+========================================================
 
-Requirements
-------------
+Getting the app
+---------------
 
-Hpo Case Annotator needs Java 8 to run. You can determine what version of Java you have on your computer by entering the following command::
+Windows
+#######
 
-  $ java -version
-  java version "1.8.0_161"
-  Java(TM) SE Runtime Environment (build 1.8.0_161-b12)
-  Java HotSpot(TM) 64-Bit Server VM (build 25.161-b12, mixed mode)
+There is a prebuilt *exe* file for Windows users available at `Hpo Case Annotator releases <https://github.com/monarch-initiative/HpoCaseAnnotator/releases>`_ page. However, you need to have Java Runtime Environment installed on the machine. Otherwise, you will be prompted to download one.
 
 
-Getting the app for your operating system
------------------------------------------
+Mac OSX
+#######
 
-- **Linux**
+**Use prebuilt app**
 
-Most users should use the prebuilt App `HpoCaseAnnotator-1.0.6-uber.jar` available from https://github.com/monarch-initiative/HpoCaseAnnotator/releases. The `JAR` file is executed::
+Mac users should use the prebuilt App `HpoCaseAnnotator-1.0.6-uber.jar` available at `Hpo Case Annotator releases <https://github.com/monarch-initiative/HpoCaseAnnotator/releases>`_ page. The `JAR` file is executed by double-clicking with mouse. Another way of launching the app is to use the Terminal::
 
   $ java -jar HpoCaseAnnotator-1.0.6-uber.jar
 
-It is also possible to build the VPV application from source using Maven::
+**Build from sources**
+
+It is also possible to build the *Hpo Case Annotator* from source code using Maven::
 
   $ git clone https://github.com/monarch-initiative/HpoCaseAnnotator.git
   cd HpoCaseAnnotator
   mvn package
 
-Built ``JAR`` file will be present in ``target`` directory.
+After successful build process the ``HpoCaseAnnotator-Gui-1.0.6-uber.jar`` will be present in ``hpo-case-annotator-gui/target`` directory.
 
-- **Mac OSX**
 
-Mac users should download the same prebuilt ``JAR`` file as Linux users.
+Linux
+#####
+Linux users should download the same prebuilt ``HpoCaseAnnotator-Gui-1.0.6-uber.jar`` file as the Mac users or build the app from source code using Maven
 
-- **Windows**
-
-Windows users can use `HpoCaseAnnotator-1.0.6.exe` available from https://github.com/monarch-initiative/HpoCaseAnnotator/releases. User will be prompted to download Java Runtime Environment, if Java is not installed on the machine.
 
 Initial setup
 -------------
 
-After startup a dialog window will be opened.
+After a successful startup the dialog window will be opened:
 
-.. image:: img/startup.png
+.. image:: img/hca_welcome.png
 
-Not all the functionality is *not* enabled upon the first startup, since there are some resources that need to be downloaded first. Click on ``Settings | Set resources``:
 
-.. image:: img/set_resources.png
+Note, that *not* all the functionality is enabled after the first startup, since there are some resources that need to be downloaded first. Click on ``Settings | Set resources`` to start setting up the app.
+
+A new dialog window will be opened:
+
+.. image:: img/hca_resources_welcome.png
 
 Reference genome
-^^^^^^^^^^^^^^^^
-Hpo Case Annotator needs a sequence of the reference genome in order to perform quality checks. Here we tell the app where we have stored the Genome FASTA files and the corresponding fasta index (fai) file. We will use this to check whether the wildtype sequence entered for each mutation matches the corresponding genomic position.
+################
+*Hpo Case Annotator* needs access to the sequence of the reference genome in order to e.g. check whether the wildtype sequence entered for each variant matches the corresponding genomic position. *Hpo Case Annotator* is able to download and pre-process the reference genome or you can provide the FASTA file yourself.
 
-We will use a FASTA file for each chromosome of the human genome. For now, we will use build 37, i.e., *GRCh37*, which was also known as *hg19*. We will assume that there is a fasta index file in the same directory that has the exact same same as the fasta file except that it ends with "fai" instead of "fa".
+Currently, **GRCh37 (hg19)** and **GRCh38 (hg38)** genome assemblies are supported.
 
-If you do not have this data on your computer anyway, then you can do the following to set things up:
+- **Download and pre-process the reference genome sequences automatically**
 
-- Download the file **chromFa.tar.gz** from UCSC. It is 905 M. Remember to use the file from *GRCh37* (i.e., hg19) and not *GRCh38*! Here is the URL: http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/.
-- Use ``tar xvfz`` to unpack these files (warning: they will unpack without a surrounding directory!) You will get a lot of FASTA files including many for scaffolds (we only need the canonical chromosomes for now, but the scaffold files will not hurt either).
-- We will use ``samtools`` to create a fasta index file (fai). Download/build it here: https://github.com/samtools/samtools
-- The command to create an index is then (for example.fa) simply ``samtools faindex example.fa``
-- The index file basically will allow us to quickly navigate to the right part of the genome FASTA file to extract the sequence we need to check our mutation data (HRMDgui uses the HTS-JDK library to do this!).
+In order to download the reference genome click on the *Download* buttons of individual genome assemblies. Each assembly file has roughly 1 GB and the download process may take up to 20 minutes depending on the speed of your internet connection. After successful download, sequences of all the chromosomes will be concatenated into a single FASTA file and index will be created automatically using ``HTS-JDK`` library.
 
-If you have downloaded and unpacked the genome fasta files as above (I recommend to use a directory called ``hg19`` for this), then you can use the following shell command to create FAI files for each of the FASTA files (note that I leave out the chrUn and random scaffolds, they do not have anything of interest for this project).
+- **Provide FASTA file**
 
-::
+You do not have to download the reference genome files if there are already some present in your system. Use **Set path** buttons to set paths to local FASTA files. Corresponding index (\*.fai) files should be present in the same directory.
 
-  for f in `find . -name '*.fa' | grep -v chrUn | grep -v random`
-  do
-    echo "$f"
-    samtools faidx $f
-  done
 
-Obviously you will need to adjust the command if ``samtools`` is not in your path. This is all we need for the genomic position Q/C routines.
+This is all we need for the genomic position Q/C routines.
 
 HPO obo
-^^^^^^^
-The app will automatically download the newest version of Human Phenotype Ontology (HPO) in ``OBO`` format.
-Go to the <b>setup</b> menu and choose <i>HPO download</i>.
-This needs to be done once (and can be updated as necessary). We download a copy of the <b>hp.obo</b> file so that the
-App can autocomplete the HPO terms names (the user should just enter the HPO ID (e.g., HP:0001234).
+#######
+The app will automatically download the newest version of *Human Phenotype Ontology* (HPO) in ``OBO`` format, the file has ~5 MB. This needs to be done once (and can be updated as necessary). We download a copy of the OBO file so that the App can autocomplete the HPO terms names and labels.
+
+Entrez genes
+############
+The app will also download information regarding genes. This also a one-time operation and after the download autocompletion of gene symbols and IDs will be available.
+
+Curated files directory
+#######################
+Each curated case is stored as a file in ``XML`` format. Here we set path to a directory where the XML files created in a single project are stored.
+
+Biocurator ID
+#############
+Here provide your biocurator ID.
+
+All of the resources are required to be downloaded just once and after these steps the app is fully prepared for work.
+
+.. image:: img/hca_resources_finished.png
+
+
