@@ -5,7 +5,7 @@
     <parent>
         <artifactId>hpo-case-annotator</artifactId>
         <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
-        <version>1.0.6</version>
+        <version>1.0.6-beta</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -157,7 +157,7 @@
         <dependency>
             <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
             <artifactId>hpo-case-annotator-core</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.6-beta</version>
         </dependency>
 
         <dependency>
