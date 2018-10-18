@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.io.*;
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
+import org.monarchinitiative.hpo_case_annotator.model.proto.HelloWorld;
 import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.util.StartupTask;

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option java_package = "org.monarchinitiative.hpo_case_annotator.model.proto";
+option java_multiple_files = true;
+
+// a model object representing information gained from biocuration of a publication
+message Case {
+
+}
