@@ -1,14 +1,15 @@
 package org.monarchinitiative.hpo_case_annotator.validation;
 
-import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
-import org.monarchinitiative.hpo_case_annotator.model.SplicingVariant;
-import org.monarchinitiative.hpo_case_annotator.model.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.CrypticSpliceSiteType;
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 
 /**
- * This validator performs test to assess whether enough data has been entered to particular {@link DiseaseCaseModel}
+ * This validator performs test to assess whether enough data has been entered to particular {@link DiseaseCase}
  * instance.
  * <p>
- * {@link DiseaseCaseModel} passes this validation if it contains:
+ * {@link DiseaseCase} passes this validation if it contains:
  * <ul>
  * <li>Publication</li>
  * <li>Genome build</li>
@@ -39,12 +40,12 @@ public final class CompletenessValidator extends AbstractValidator {
      * @return true if at least one from required fields is uninitialized.
      */
     static boolean variantInitialized(Variant variant) {
-        return !isNullOrEmpty(variant.getChromosome())
-                || !isNullOrEmpty(variant.getPosition())
-                || !isNullOrEmpty(variant.getReferenceAllele())
-                || !isNullOrEmpty(variant.getAlternateAllele())
+        return !isNullOrEmpty(variant.getContig())
+                || variant.getPos() != 0
+                || !isNullOrEmpty(variant.getRefAllele())
+                || !isNullOrEmpty(variant.getAltAllele())
                 || !isNullOrEmpty(variant.getSnippet())
-                || !isNullOrEmpty(variant.getGenotype())
+                || !(variant.getGenotype().equals(Genotype.UNRECOGNIZED) || variant.getGenotype().equals(Genotype.UNDEFINED))
                 || !isNullOrEmpty(variant.getVariantClass())
                 || !isNullOrEmpty(variant.getPathomechanism());
     }
@@ -54,23 +55,23 @@ public final class CompletenessValidator extends AbstractValidator {
      * For a model to be complete it must contain: <ul> <li>Publication</li> <li>Genome build</li> <li>At least one
      * {@link Variant}</li></ul>
      *
-     * @param model {@link DiseaseCaseModel} instance about to be validated.
+     * @param model {@link DiseaseCase} instance about to be validated.
      * @return {@link ValidationResult}
      */
     @Override
-    public ValidationResult validateDiseaseCase(DiseaseCaseModel model) {
+    public ValidationResult validateDiseaseCase(DiseaseCase model) {
         ValidationResult result;
         // At first validate the requirements of DiseaseCaseModel
         ValidationResult r = modelIsComplete(model);
         if (r == ValidationResult.FAILED) return r;
 
         // Model must contain at least one variant
-        if (model.getVariants() == null || model.getVariants().isEmpty()) {
+        if (model.getVariantList() == null || model.getVariantList().isEmpty()) {
             return makeValidationResult(ValidationResult.FAILED, "Model must contain at least one variant");
         }
 
         // Then validate general requirements of Variant class
-        return model.getVariants().stream()
+        return model.getVariantList().stream()
                 .map(this::variantIsComplete)
                 .filter(vr -> vr != ValidationResult.PASSED)
                 .findFirst() // find the first variant that failed validation
@@ -83,7 +84,7 @@ public final class CompletenessValidator extends AbstractValidator {
      *
      * @return {@link ValidationResult} Passed if everything is set, Failed if something is missing.
      */
-    private ValidationResult modelIsComplete(DiseaseCaseModel model) {
+    private ValidationResult modelIsComplete(DiseaseCase model) {
         if (model.getPublication() == null) {
             return makeValidationResult(ValidationResult.FAILED, "Missing publication data");
         }
@@ -104,50 +105,50 @@ public final class CompletenessValidator extends AbstractValidator {
     private ValidationResult variantIsComplete(Variant variant) {
         // TODO - perform sophisticated validation - e.g. check that value is number if number is required
         // This is mandatory for each variant regardless of type
-        if (isNullOrEmpty(variant.getChromosome())
-                || isNullOrEmpty(variant.getPosition())
-                || isNullOrEmpty(variant.getReferenceAllele())
-                || isNullOrEmpty(variant.getAlternateAllele())
+        if (isNullOrEmpty(variant.getContig())
+                || variant.getPos() != 0
+                || isNullOrEmpty(variant.getRefAllele())
+                || isNullOrEmpty(variant.getAltAllele())
                 || isNullOrEmpty(variant.getSnippet())
-                || isNullOrEmpty(variant.getGenotype())
+                || !(variant.getGenotype().equals(Genotype.UNRECOGNIZED) || variant.getGenotype().equals(Genotype.UNDEFINED))
                 || isNullOrEmpty(variant.getVariantClass())
                 || isNullOrEmpty(variant.getPathomechanism())
                 ) {
-            return makeValidationResult(ValidationResult.FAILED, String.format("%s:%s%s>%s - %s - At least one mandatory field is empty",
-                    variant.getChromosome(), variant.getPosition(),
-                    variant.getReferenceAllele(), variant.getAlternateAllele(),
-                    variant.getVariantMode().name()));
+            return makeValidationResult(ValidationResult.FAILED, String.format("%s:%d%s>%s - %s - At least one mandatory field is empty",
+                    variant.getContig(), variant.getPos(),
+                    variant.getRefAllele(), variant.getAltAllele(),
+                    variant.getVariantValidation().getContext().toString()));
         }
 
         // Subclass specific validation
-        switch (variant.getVariantMode()) {
+        switch (variant.getVariantValidation().getContext()) {
             case MENDELIAN:
                 // MendelianVariant mev = (MendelianVariant) variant;
                 // Do specific validation here, nothing yet
                 return makeValidationResult(ValidationResult.PASSED, OKAY);
+
             case SOMATIC:
                 // SomaticVariant sov = (SomaticVariant) variant;
                 // Do specific validation here, nothing yet
                 return makeValidationResult(ValidationResult.PASSED, OKAY);
-            case SPLICING:
-                SplicingVariant spv = (SplicingVariant) variant;
 
+            case SPLICING:
             /* Here we check for completness of all aspects that are different between
              SplicingVariant & Variant. At the moment it is CSS stuff. Entering CSS data
              is not mandatory but if some bit of data has been entered it must be complete. */
-                String cp = spv.getCrypticPosition();
-                String ct = spv.getCrypticSpliceSiteType();
-                String cs = spv.getCrypticSpliceSiteSnippet();
-                if (isNullOrEmpty(cp) && isNullOrEmpty(ct) && isNullOrEmpty(cs)) {
+                int cp = variant.getCrypticPosition();
+                CrypticSpliceSiteType ct = variant.getCrypticSpliceSiteType();
+                String cs = variant.getCrypticSpliceSiteSnippet();
+                if (cp == 0 && (ct.equals(CrypticSpliceSiteType.UNRECOGNIZED) || ct.equals(CrypticSpliceSiteType.NO)) && isNullOrEmpty(cs)) {
                     return makeValidationResult(ValidationResult.PASSED, OKAY); // nothing was entered, so it's ok
                 }
 
-                if (!isNullOrEmpty(cp) && !isNullOrEmpty(ct) && !isNullOrEmpty(cs)) {
+                if (cp == 0 && !(ct.equals(CrypticSpliceSiteType.UNRECOGNIZED) || ct.equals(CrypticSpliceSiteType.NO)) && !isNullOrEmpty(cs)) {
                     return makeValidationResult(ValidationResult.PASSED, OKAY); // nothing is missing
                 }
                 return makeValidationResult(ValidationResult.FAILED, "CSS fields are incomplete");
             default:
-                return makeValidationResult(ValidationResult.FAILED, "Unsupported mode " + variant.getVariantMode().name() + "'");
+                return makeValidationResult(ValidationResult.FAILED, "Unsupported mode " + variant.getVariantValidation().getContext().toString() + "'");
         }
     }
 

@@ -75,7 +75,7 @@
                         <string>yes</string>
                     </void>
                     <void property="genotype">
-                        <string>heterozygous</string>
+                        <string>HETEROZYGOUS</string>
                     </void>
                     <void property="pathomechanism">
                         <string>coding|missense</string>

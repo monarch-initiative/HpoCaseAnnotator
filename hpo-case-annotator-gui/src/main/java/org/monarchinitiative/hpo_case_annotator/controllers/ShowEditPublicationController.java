@@ -2,7 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-import org.monarchinitiative.hpo_case_annotator.model.Publication;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 
 /**
  * This class is the controller for dialog that allows user to view/edit attributes of the current publication. Dialog
@@ -39,19 +39,20 @@ public final class ShowEditPublicationController {
     @FXML
     private TextField pmidTextField;
 
+
     public ShowEditPublicationController(Publication publication) {
         this.publication = publication;
     }
 
 
     public void initialize() {
-        titleTextField.textProperty().bindBidirectional(publication.titleProperty());
-        authorsTextField.textProperty().bindBidirectional(publication.authorlistProperty());
-        journalTextField.textProperty().bindBidirectional(publication.journalProperty());
-        yearTextField.textProperty().bindBidirectional(publication.yearProperty());
-        volumeTextField.textProperty().bindBidirectional(publication.volumeProperty());
-        pagesTextField.textProperty().bindBidirectional(publication.pagesProperty());
-        pmidTextField.textProperty().bindBidirectional(publication.pmidProperty());
+        authorsTextField.setText(publication.getAuthorList());
+        titleTextField.setText(publication.getTitle());
+        journalTextField.setText(publication.getJournal());
+        yearTextField.setText(publication.getYear());
+        volumeTextField.setText(publication.getVolume());
+        pagesTextField.setText(publication.getPages());
+        pmidTextField.setText(publication.getPmid());
     }
 
 
@@ -61,8 +62,15 @@ public final class ShowEditPublicationController {
      * @return {@link Publication} with actual data
      */
     Publication getPublication() {
-        return new Publication(publication.getAuthorlist(), publication.getTitle(), publication.getJournal(),
-                publication.getYear(), publication.getVolume(), publication.getPages(), publication.getPmid());
+        return Publication.newBuilder()
+                .setAuthorList(authorsTextField.getText())
+                .setTitle(titleTextField.getText())
+                .setJournal(journalTextField.getText())
+                .setYear(yearTextField.getText())
+                .setVolume(volumeTextField.getText())
+                .setPages(pagesTextField.getText())
+                .setPmid(pmidTextField.getText())
+                .build();
     }
 
 }

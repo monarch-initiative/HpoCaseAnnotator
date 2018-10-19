@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.controllers;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -13,7 +14,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.io.*;
-import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Utils;
 import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.util.StartupTask;
@@ -27,6 +30,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
@@ -56,7 +61,7 @@ public final class MainController {
 
     private final GenomeAssemblies assemblies;
 
-    private HostServices hostServices;
+    private final HostServices hostServices;
 
     @FXML
     public StackPane contentStackPane;
@@ -81,7 +86,7 @@ public final class MainController {
 
     @FXML
     void newMenuItemAction() {
-        dataController.setModel(new DiseaseCaseModel());
+        dataController.presentCase(DiseaseCase.getDefaultInstance());
         dataController.setCurrentModelPath(null);
     }
 
@@ -90,25 +95,41 @@ public final class MainController {
     void openMenuItemAction() {
         // we support opening of these files:
         final String SPLICING_XML = "XML data format (*.xml)";
+        final String PROTO_JSON = "JSON data format (*.json)";
 
         FileChooser filechooser = new FileChooser();
         filechooser.setInitialDirectory(optionalResources.getDiseaseCaseDir());
         filechooser.setTitle("Select model to open");
         // the newest XML format which is used to save data
-        FileChooser.ExtensionFilter xmlFileFormat =
-                new FileChooser.ExtensionFilter(SPLICING_XML, "*.xml");
-        filechooser.getExtensionFilters().add(xmlFileFormat);
-        filechooser.setSelectedExtensionFilter(xmlFileFormat);
+        FileChooser.ExtensionFilter xmlFileFormat = new FileChooser.ExtensionFilter(SPLICING_XML, "*.xml");
+        FileChooser.ExtensionFilter jsonFileFormat = new FileChooser.ExtensionFilter(PROTO_JSON, "*.json");
+        filechooser.getExtensionFilters().addAll(xmlFileFormat, jsonFileFormat);
+        filechooser.setSelectedExtensionFilter(jsonFileFormat);
         File which = filechooser.showOpenDialog(primaryStage);
 
+        DiseaseCase diseaseCase;
         if (which != null) {
-            DiseaseCaseModel dcm;
             switch (filechooser.getSelectedExtensionFilter().getDescription()) {
                 case SPLICING_XML:
                     try {
-                        dcm = XMLModelParser.loadDiseaseCaseModel(new FileInputStream(which));
+                        diseaseCase = XMLModelParser.loadDiseaseCase(new FileInputStream(which));
                     } catch (FileNotFoundException e) {
                         PopUps.showException("Open XML model", "Unable to decode XML file", "Did you set proper extension?", e);
+                        return;
+                    }
+                    break;
+                case PROTO_JSON:
+                    ProtoJSONModelParser pp = new ProtoJSONModelParser(optionalResources.getDiseaseCaseDir().toPath());
+                    try {
+                        diseaseCase = pp.readModel(new FileInputStream(which));
+                    } catch (FileNotFoundException e) {
+                        PopUps.showException("Open JSON model", String.format("File '%s' not found", which.getAbsolutePath()), "", e);
+                        return;
+                    } catch (InvalidProtocolBufferException e) {
+                        PopUps.showException("Open JSON model", String.format("Error parsing file content '%s'", which.getAbsolutePath()), "", e);
+                        return;
+                    } catch (IOException e) {
+                        PopUps.showException("Open JSON model", String.format("Error while reading file '%s'", which.getAbsolutePath()), "", e);
                         return;
                     }
                     break;
@@ -116,7 +137,7 @@ public final class MainController {
                     throw new RuntimeException("This should not have had happened!");
             }
 
-            dataController.setModel(dcm);
+            dataController.presentCase(diseaseCase);
             dataController.setCurrentModelPath(which);
         }
     }
@@ -124,13 +145,13 @@ public final class MainController {
 
     @FXML
     void saveMenuItemAction() {
-        saveModel(dataController.getCurrentModelPath(), dataController.getModel());
+        saveModel(dataController.getCurrentModelPath(), dataController.getCase());
     }
 
 
     @FXML
     void saveAsMenuItemAction() {
-        saveModel(null, dataController.getModel());
+        saveModel(null, dataController.getCase());
     }
 
 
@@ -143,7 +164,7 @@ public final class MainController {
     @FXML
     void showEditCurrentPublicationMenuItemAction() {
         try {
-            ShowEditPublicationController controller = new ShowEditPublicationController(dataController.getModel().getPublication());
+            ShowEditPublicationController controller = new ShowEditPublicationController(dataController.getCase().getPublication());
 
             Parent parent = FXMLLoader.load(
                     ShowEditPublicationController.class.getResource("ShowEditPublicationView.fxml"),
@@ -155,7 +176,6 @@ public final class MainController {
             stage.showAndWait();
         } catch (IOException e) {
             LOGGER.warn("Unable to show dialog for editing of the current publication", e);
-            e.printStackTrace();
         }
     }
 
@@ -194,10 +214,10 @@ public final class MainController {
             PopUps.showInfoMessage(String.format("No models in directory %s", where.getPath()), "Show curated publications");
             return;
         }
-        Collection<DiseaseCaseModel> models = new ArrayList<>();
+        Collection<DiseaseCase> models = new ArrayList<>();
         for (File path : files) {
             try {
-                models.add(XMLModelParser.loadDiseaseCaseModel(new FileInputStream(path)));
+                models.add(XMLModelParser.loadDiseaseCase(new FileInputStream(path)));
             } catch (FileNotFoundException e) {
                 PopUps.showException("Open XML model", "Unable to decode XML file", "Did you set proper extension?", e);
             }
@@ -222,7 +242,7 @@ public final class MainController {
 
     @FXML
     void validateCurrentEntryMenuItemAction() {
-        List<ValidationLine> lines = new ArrayList<>(ValidationRunner.validateModel(dataController.getModel(), assemblies));
+        List<ValidationLine> lines = new ArrayList<>(ValidationRunner.validateModel(dataController.getCase(), assemblies));
 
         try {
             ShowValidationResultsController controller = new ShowValidationResultsController();
@@ -243,7 +263,7 @@ public final class MainController {
     void validateAllFilesMenuItemAction() {
         // read all model files
         ModelParser modelParser = new XMLModelParser(optionalResources.getDiseaseCaseDir());
-        List<DiseaseCaseModel> models = new ArrayList<>();
+        List<DiseaseCase> models = new ArrayList<>();
         for (File modelFile : modelParser.getModelNames()) {
             try (FileInputStream fis = new FileInputStream(modelFile)) {
                 models.add(modelParser.readModel(fis));
@@ -302,11 +322,12 @@ public final class MainController {
 
     @FXML
     void exportPhenopacketMenuItemAction() {
-        String suggestedFileName = dataController.getModel().getFileName() + ".phenopacket";
+        DiseaseCase diseaseCase = dataController.getCase();
+        String suggestedFileName = Utils.getNameFor(diseaseCase) + ".phenopacket";
         File where = PopUps.selectFileToSave(primaryStage,
                 optionalResources.getDiseaseCaseDir(), "Save as Phenopacket", suggestedFileName);
         if (where != null) {
-            PhenopacketExporter exporter = new PhenopacketExporter(where, dataController.getModel());
+            PhenopacketExporter exporter = new PhenopacketExporter(where, dataController.getCase());
             exporter.writeToPhenopacket();
         }
     }
@@ -387,30 +408,66 @@ public final class MainController {
      * <li>Save it</li>
      * </ul>
      */
-    private void saveModel(File currentModelPath, DiseaseCaseModel model) {
+    private void saveModel(File currentModelPath, DiseaseCase model) {
         CompletenessValidator completenessValidator = new CompletenessValidator();
-
         completenessValidator.validateDiseaseCase(model);
-
-
         String conversationTitle = "Save data into file";
 
+
         if (currentModelPath == null) {
-            String suggestedXmlName = model.getFileName() + ".xml";
-            File where = PopUps.selectFileToSave(primaryStage, optionalResources.getDiseaseCaseDir(), conversationTitle,
-                    suggestedXmlName);
-            if (where == null) {
+            FileChooser fileChooser = new FileChooser();
+
+            final String SPLICING_XML = "XML data format (*.xml)";
+            final String PROTO_JSON = "JSON data format (*.json)";
+            FileChooser.ExtensionFilter xmlFileFormat = new FileChooser.ExtensionFilter(SPLICING_XML, "*.xml");
+            FileChooser.ExtensionFilter jsonFileFormat = new FileChooser.ExtensionFilter(PROTO_JSON, "*.json");
+            //        fileChooser.setSelectedExtensionFilter(jsonFileFormat);
+
+            fileChooser.setTitle(conversationTitle);
+            String suggestedName = Utils.getNameFor(model) + ".json";
+            fileChooser.setInitialFileName(suggestedName);
+            fileChooser.setInitialDirectory(optionalResources.getDiseaseCaseDir());
+            fileChooser.getExtensionFilters().addAll(jsonFileFormat, xmlFileFormat);
+            File which = fileChooser.showSaveDialog(primaryStage);
+
+            if (which == null) {
                 return;
             }
-            currentModelPath = where;
-        }
-        model.getBiocurator().setBioCuratorId(optionalResources.getBiocuratorId());
-        try (FileOutputStream fos = new FileOutputStream(currentModelPath)) {
-            XMLModelParser.saveDiseaseCaseModel(model, fos);
-        } catch (IOException e) {
-            PopUps.showException("Save data into file", "Unable to store data into file", "", e);
+            currentModelPath = which;
+
+            if (fileChooser.getSelectedExtensionFilter().equals(jsonFileFormat)) {
+                try (OutputStream os = Files.newOutputStream(currentModelPath.toPath())) {
+                    ProtoJSONModelParser.saveDiseaseCase(os, model, Charset.forName("UTF-8")); // TODO - charset is hardcoded
+                } catch (IOException e) {
+                    PopUps.showException("Save data into file", "Unable to store data into file", "", e);
+                    LOGGER.warn("Unable to store data into file {}", currentModelPath.getAbsolutePath(), e);
+                    return;
+                }
+            } else if (fileChooser.getSelectedExtensionFilter().equals(xmlFileFormat)) {
+                try (FileOutputStream fos = new FileOutputStream(currentModelPath)) {
+                    XMLModelParser.saveDiseaseCase(model, fos);
+                } catch (IOException e) {
+                    PopUps.showException("Save data into file", "Unable to store data into file", "", e);
+                    LOGGER.warn("Unable to store data into file {}", currentModelPath.getAbsolutePath(), e);
+                    return;
+                }
+            }
+        } else {
+            // update the Biocurator ID
+            model = model.toBuilder()
+                    .setBiocurator(Biocurator.newBuilder().setBiocuratorId(optionalResources.getBiocuratorId())
+                            .build())
+                    .build();
+            try (OutputStream fos = Files.newOutputStream(currentModelPath.toPath())) {
+                ProtoJSONModelParser.saveDiseaseCase(fos, model, Charset.forName("UTF-8")); // TODO - charset is hardcoded
+            } catch (IOException e) {
+                PopUps.showException("Save data into file", "Unable to store data into file", "", e);
+                LOGGER.warn("Unable to store data into file {}", currentModelPath.getAbsolutePath(), e);
+                return;
+            }
         }
 
+        // SUCCESS (if we got here)
         dataController.setCurrentModelPath(currentModelPath);
         PopUps.showInfoMessage(String.format("Data saved into file %s", currentModelPath.getName()), conversationTitle);
     }

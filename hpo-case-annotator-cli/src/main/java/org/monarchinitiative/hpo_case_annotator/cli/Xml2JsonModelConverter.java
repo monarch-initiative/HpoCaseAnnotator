@@ -1,8 +1,10 @@
 package org.monarchinitiative.hpo_case_annotator.cli;
 
 import org.monarchinitiative.hpo_case_annotator.io.JSONModelParser;
+import org.monarchinitiative.hpo_case_annotator.io.ProtoJSONModelParser;
 import org.monarchinitiative.hpo_case_annotator.io.XMLModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,22 +19,12 @@ public class Xml2JsonModelConverter {
 
     private final File sourceDir;
 
-    private final JSONModelParser jsonModelParser;
+    private final ProtoJSONModelParser jsonModelParser;
 
 
     Xml2JsonModelConverter(File sourceDir, File destDir) {
         this.sourceDir = sourceDir;
-        this.jsonModelParser = new JSONModelParser(destDir);
-    }
-
-
-    public File getSourceDir() {
-        return sourceDir;
-    }
-
-
-    public JSONModelParser getJsonModelParser() {
-        return jsonModelParser;
+        this.jsonModelParser = new ProtoJSONModelParser(destDir.toPath());
     }
 
 
@@ -41,7 +33,7 @@ public class Xml2JsonModelConverter {
         for (File modelPath : models) {
             File outPath = new File(modelPath.getParentFile(), modelPath.getName().replace(".xml", ".json"));
             try (InputStream inputStream = new FileInputStream(modelPath); OutputStream outputStream = new FileOutputStream(outPath)) {
-                DiseaseCaseModel model = XMLModelParser.loadDiseaseCaseModel(inputStream);
+                DiseaseCase model = XMLModelParser.loadDiseaseCase(inputStream);
                 jsonModelParser.saveModel(outputStream, model);
             } catch (IOException e) {
                 LOGGER.warn("Error parsing file {}", modelPath.getAbsolutePath(), e.getMessage());

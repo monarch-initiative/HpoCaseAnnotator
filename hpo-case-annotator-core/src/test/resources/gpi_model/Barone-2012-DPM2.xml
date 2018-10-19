@@ -27,7 +27,7 @@
                 <string>Patient 1</string>
             </void>
             <void property="sex">
-                <string>female</string>
+                <string>FEMALE</string>
             </void>
         </void>
         <void property="genomeBuild">
@@ -584,7 +584,7 @@
                         <string>9</string>
                     </void>
                     <void property="genotype">
-                        <string>heterozygous</string>
+                        <string>HETEROZYGOUS</string>
                     </void>
                     <void property="pathomechanism">
                         <string>coding|missense</string>
@@ -615,7 +615,7 @@
                         <string>Exon skipping</string>
                     </void>
                     <void property="genotype">
-                        <string>heterozygous</string>
+                        <string>HETEROZYGOUS</string>
                     </void>
                     <void property="pathomechanism">
                         <string>splicing|3ss|disrupted</string>

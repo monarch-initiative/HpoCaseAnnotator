@@ -12,7 +12,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 
-public final class JSONModelParser implements ModelParser {
+@Deprecated // we might be using Protocol Buffers to do JSON parsing so maybe we do not need to use this at the moment
+public final class JSONModelParser
+//        implements ModelParser
+{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JSONModelParser.class);
 
@@ -44,7 +47,7 @@ public final class JSONModelParser implements ModelParser {
      * @param outputStream instance where the data will be written in JSON format.
      * @param model  {@link DiseaseCaseModel} with data to be saved.
      */
-    @Override
+//    @Override
     public void saveModel(OutputStream outputStream, DiseaseCaseModel model) throws IOException {
         mapper.writeValue(outputStream, model);
     }
@@ -56,13 +59,13 @@ public final class JSONModelParser implements ModelParser {
      * @param inputStream containing data formatted in JSON format
      * @return Optional with {@link DiseaseCaseModel} if parsing went ok
      */
-    @Override
+//    @Override
     public DiseaseCaseModel readModel(InputStream inputStream) throws IOException {
         return mapper.readValue(inputStream, DiseaseCaseModel.class);
     }
 
 
-    @Override
+//    @Override
     public Collection<File> getModelNames() {
 //        TODO - implement me
         throw new RuntimeException("Not yet implemented");

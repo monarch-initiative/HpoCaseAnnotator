@@ -1,8 +1,9 @@
 package org.monarchinitiative.hpo_case_annotator.validation;
 
-import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
 import org.monarchinitiative.hpo_case_annotator.model.SplicingVariant;
-import org.monarchinitiative.hpo_case_annotator.model.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.CrypticSpliceSiteType;
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.refgenome.SequenceDao;
 import org.monarchinitiative.hpo_case_annotator.refgenome.SingleFastaSequenceDao;
 
@@ -27,13 +28,13 @@ public final class GenomicPositionValidator extends AbstractValidator {
 
 
     @Override
-    public ValidationResult validateDiseaseCase(DiseaseCaseModel model) {
+    public ValidationResult validateDiseaseCase(DiseaseCase model) {
         /* Expecting, that completeness validation was performed before so
          * there is at least one variant to validate and it contains all
          * required fields
          */
 
-        return model.getVariants().stream()
+        return model.getVariantList().stream()
                 .map(this::variantValid)
                 .filter(vr -> vr != ValidationResult.PASSED)
                 .findFirst() // find the first variant that failed validation
@@ -45,10 +46,10 @@ public final class GenomicPositionValidator extends AbstractValidator {
      * @return true if the variant and the snippet sequence matches the genome reference
      */
     ValidationResult variantValid(Variant variant) {
-        int pos = Integer.parseInt(variant.getPosition());
-        String chrom = variant.getChromosome();
-        String ref = variant.getReferenceAllele();
-        String alt = variant.getAlternateAllele();
+        int pos = variant.getPos();
+        String chrom = variant.getContig();
+        String ref = variant.getRefAllele();
+        String alt = variant.getAltAllele();
         int len = ref.length();
         int to_pos = pos + len - 1;
         String expected = sequenceDao.fetchSequence(chrom, pos - 1, to_pos);
@@ -74,15 +75,15 @@ public final class GenomicPositionValidator extends AbstractValidator {
 
 
         // Once again everything looks okay, now perform checks specific for variant subtypes
-        switch (variant.getVariantMode()) {
+        switch (variant.getVariantValidation().getContext()) {
             case MENDELIAN:
                 return makeValidationResult(ValidationResult.PASSED, OKAY);
             case SOMATIC:
                 return makeValidationResult(ValidationResult.PASSED, OKAY);
             case SPLICING:
-                return variantValid((SplicingVariant) variant);
+                return splicingAspectsOfVariantsAreValid(variant);
             default:
-                return makeValidationResult(ValidationResult.UNAPPLICABLE, "Unknown variant mode '" + variant.getVariantMode() + "'");
+                return makeValidationResult(ValidationResult.UNAPPLICABLE, "Unknown variant validation context '" + variant.getVariantValidation().getContext() + "'");
         }
     }
 
@@ -99,14 +100,14 @@ public final class GenomicPositionValidator extends AbstractValidator {
      * @param variant {@link SplicingVariant} to be validated
      * @return {@link ValidationResult} with the validation result
      */
-    private ValidationResult variantValid(SplicingVariant variant) {
+    private ValidationResult splicingAspectsOfVariantsAreValid(Variant variant) {
         // indicates position of nt in 5' direction before border (|) in VCF (1-based) numbering
         // ACGTACGTA|ACGTACGT -> position of 'A' (9th nucleotide, left of border).
-        String position = variant.getCrypticPosition();
-        String type = variant.getCrypticSpliceSiteType();
+        int pos = variant.getCrypticPosition();
+        CrypticSpliceSiteType type = variant.getCrypticSpliceSiteType();
         String snippet = variant.getCrypticSpliceSiteSnippet();
 
-        if (isNullOrEmpty(position) && isNullOrEmpty(type) && isNullOrEmpty(snippet)) {
+        if (pos == 0 && (type.equals(CrypticSpliceSiteType.UNRECOGNIZED) || type.equals(CrypticSpliceSiteType.NO)) && isNullOrEmpty(snippet)) {
             // CSS data was not set and as it is not mandatory to set CSS data variant is valid.
             return makeValidationResult(ValidationResult.PASSED, OKAY);
         }
@@ -115,7 +116,7 @@ public final class GenomicPositionValidator extends AbstractValidator {
             return makeValidationResult(ValidationResult.FAILED, String.format("Unable to find '|' symbol in CSS snippet %s", snippet));
         }
 
-        String chrom = variant.getChromosome();
+        String chrom = variant.getContig();
         int border = snippet.indexOf('|');
         int prefixLen, suffixLen;
         // ACGT|ACGTAC - length -> 11, border -> 4, prefixLen -> 4, suffixLen -> 6
@@ -123,12 +124,6 @@ public final class GenomicPositionValidator extends AbstractValidator {
         suffixLen = snippet.length() - border - 1;
         String refGenomePrefixSeq, refGenomeSuffixSeq, enteredPrefixSeq, enteredSuffixSeq;
 
-        int pos;
-        try {
-            pos = Integer.parseInt(position);
-        } catch (NumberFormatException nfe) {
-            return makeValidationResult(ValidationResult.FAILED, String.format("CSS position '%s' is not valid integer", position));
-        }
 
         // extract sequences from snippet
         enteredPrefixSeq = snippet.substring(0, border);
@@ -168,6 +163,7 @@ public final class GenomicPositionValidator extends AbstractValidator {
         }
         return counter;
     }
+
 
     private ValidationResult prefixMatches(String chrom, String snippet, String prefix, int pos) {
         //System.out.println("pref=" + pref + ", middle=" + middle + ", suff=" + suff + ", for snippet " + snippet);

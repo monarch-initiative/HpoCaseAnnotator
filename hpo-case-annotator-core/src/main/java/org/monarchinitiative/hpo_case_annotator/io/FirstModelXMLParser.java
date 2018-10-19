@@ -28,7 +28,7 @@ import java.util.*;
  * @version 0.0.1
  * @since 0.0
  */
-public class FirstModelXMLParser implements ModelParser {
+public class FirstModelXMLParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FirstModelXMLParser.class);
 
@@ -136,13 +136,13 @@ public class FirstModelXMLParser implements ModelParser {
     }
 
 
-    @Override
+//    @Override
     public void saveModel(OutputStream outputStream, DiseaseCaseModel model) throws IOException {
         throw new IOException("This parser cannot be used for saving model");
     }
 
 
-    @Override
+//    @Override
     public DiseaseCaseModel readModel(InputStream inputStream) throws IOException {
         try {
             return convert(mutationReader.getSingleMutation(inputStream));
@@ -153,7 +153,7 @@ public class FirstModelXMLParser implements ModelParser {
     }
 
 
-    @Override
+//    @Override
     public Collection<File> getModelNames() {
         if (diseaseCaseDir == null) {
             return new HashSet<>();

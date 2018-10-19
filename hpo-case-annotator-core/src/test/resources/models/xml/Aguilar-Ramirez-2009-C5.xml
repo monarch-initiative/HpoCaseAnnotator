@@ -25,7 +25,7 @@
                 <string>II:9</string>
             </void>
             <void property="sex">
-                <string>male</string>
+                <string>MALE</string>
             </void>
         </void>
         <void property="genomeBuild">
@@ -136,10 +136,10 @@
                         <string>ATATG|GCGAGTTCTT</string>
                     </void>
                     <void property="crypticSpliceSiteType">
-                        <string>5&apos; splice site</string>
+                        <string>FIVE_PRIME</string>
                     </void>
                     <void property="genotype">
-                        <string>homozygous</string>
+                        <string>HOMOZYGOUS_ALTERNATE</string>
                     </void>
                     <void property="pathomechanism">
                         <string>splicing|3css|activated</string>
@@ -199,7 +199,7 @@
                         <string>yes</string>
                     </void>
                     <void property="genotype">
-                        <string>homozygous</string>
+                        <string>HOMOZYGOUS_ALTERNATE</string>
                     </void>
                     <void property="other">
                         <string>down</string>
@@ -257,7 +257,7 @@
                         <string>no</string>
                     </void>
                     <void property="genotype">
-                        <string>heterozygous</string>
+                        <string>HETEROZYGOUS</string>
                     </void>
                     <void property="other">
                         <string>up</string>

@@ -11,13 +11,13 @@ import javafx.beans.property.StringProperty;
 public final class FamilyInfo {
 
     /* What was the id of proband/index case */
-    private final StringProperty familyOrPatientID = new SimpleStringProperty(this, "familyOrPatientID");
+    private final StringProperty familyOrPatientID = new SimpleStringProperty(this, "familyOrPatientID", "");
 
     /* What was his/her sex */
-    private final StringProperty sex = new SimpleStringProperty(this, "sex");
+    private final StringProperty sex = new SimpleStringProperty(this, "sex", "");
 
     /* What was the age of proband */
-    private final StringProperty age = new SimpleStringProperty(this, "age");
+    private final StringProperty age = new SimpleStringProperty(this, "age", "");
 
 
     public FamilyInfo(String familyOrPatientId, String sex, String age) {

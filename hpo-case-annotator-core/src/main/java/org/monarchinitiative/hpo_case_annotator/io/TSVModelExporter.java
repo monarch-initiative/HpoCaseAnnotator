@@ -1,11 +1,15 @@
 package org.monarchinitiative.hpo_case_annotator.io;
 
-import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
 import org.monarchinitiative.hpo_case_annotator.model.SplicingVariant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -53,20 +57,6 @@ public final class TSVModelExporter implements ModelExporter {
     }
 
 
-    @Override
-    public void exportModels(String filePath) throws IOException {
-        exportModels(new File(filePath));
-    }
-
-
-    @Override
-    public void exportModels(File filePath) throws IOException {
-        try (Writer writer = new BufferedWriter(new FileWriter(filePath))) {
-            exportModels(writer);
-        }
-    }
-
-
     /**
      * Read model XML files, extract variants and write variant per line using provided writer.
      *
@@ -81,7 +71,7 @@ public final class TSVModelExporter implements ModelExporter {
         Collection<String> variants = new ArrayList<>();
         for (File path : models) {
             try (FileInputStream fis = new FileInputStream(path)) {
-                DiseaseCaseModel model = XMLModelParser.loadDiseaseCaseModel(fis);
+                DiseaseCase model = XMLModelParser.loadDiseaseCase(fis);
                 variants.addAll(meltModelToVariants(model));
             } catch (IOException e) {
                 LOGGER.warn("Error reading model file {}", path.getAbsolutePath(), e.getMessage());
@@ -111,26 +101,26 @@ public final class TSVModelExporter implements ModelExporter {
      * Convert data from models into lines of the table. Iterate through variants present in model and create line per
      * variant. Each line contains fields with variant attributes, fields are separated using {@link #delimiter}.
      *
-     * @param model instance of {@link DiseaseCaseModel} with data.
+     * @param model instance of {@link DiseaseCase} with data.
      * @return {@link Set} of Strings representing individual variants.
      */
-    Set<String> meltModelToVariants(DiseaseCaseModel model) {
-        return model.getVariants().stream()
+    Set<String> meltModelToVariants(DiseaseCase model) {
+        return model.getVariantList().stream()
                 .map(var -> {
                     List<String> fields = new ArrayList<>();
-                    fields.add(var.getChromosome());
-                    fields.add(var.getPosition());
-                    fields.add(var.getReferenceAllele());
-                    fields.add(var.getAlternateAllele());
-                    fields.add(var.getGenotype());
+                    fields.add(var.getContig());
+                    fields.add(String.valueOf(var.getPos()));
+                    fields.add(var.getRefAllele());
+                    fields.add(var.getAltAllele());
+                    fields.add(var.getGenotype().toString());
                     fields.add(var.getVariantClass());
                     fields.add(var.getPathomechanism());
-                    fields.add((var instanceof SplicingVariant) ? ((SplicingVariant) var).getConsequence() : "N/A");
-                    fields.add((var instanceof SplicingVariant) ? ((SplicingVariant) var).getCrypticSpliceSiteType() : "N/A");
-                    fields.add((var instanceof SplicingVariant) ? ((SplicingVariant) var).getCrypticPosition() : "N/A");
-                    fields.add(model.getTargetGene().getGeneName());
+                    fields.add(var.getConsequence().equals("") ? "N/A" : var.getConsequence());
+                    fields.add(var.getCrypticSpliceSiteType().toString());
+                    fields.add(var.getCrypticPosition() == 0 ? "NaN" : String.valueOf(var.getCrypticPosition()));
+                    fields.add(model.getGene().getSymbol());
                     fields.add(model.getPublication().getPmid());
-                    fields.add(model.getFileName());
+                    fields.add(Utils.getNameFor(model));
 
                     return fields.stream().collect(Collectors.joining(delimiter));
                 })

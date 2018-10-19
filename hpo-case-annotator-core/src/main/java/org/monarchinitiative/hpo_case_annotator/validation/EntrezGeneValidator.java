@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.validation;
 import org.monarchinitiative.hpo_case_annotator.io.EntrezParser;
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
 import org.monarchinitiative.hpo_case_annotator.model.TargetGene;
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,26 +35,26 @@ public class EntrezGeneValidator extends AbstractValidator {
      * Test that the Entrez gene id & symbol match. Then test that the gene is on the correct chromosome.
      */
     @Override
-    public ValidationResult validateDiseaseCase(DiseaseCaseModel model) {
+    public ValidationResult validateDiseaseCase(DiseaseCase model) {
 
-        TargetGene testGene = model.getTargetGene();
-        TargetGene refGene = getEntrez(model.getTargetGene().getEntrezID());
-        if (refGene == null) {
+//        TargetGene testGene = model.getTargetGene();
+//        TargetGene refGene = getEntrez(model.getTargetGene().getEntrezID());
+//        if (refGene == null) {
 //            setErrorMessage(String.format("Gene with id %s and name %s was not found in Entrez gene file",
 //                    model.getTargetGene().getEntrezID(), model.getTargetGene().getGeneName()));
             return ValidationResult.FAILED;
-        }
+//        }
 
         /* Since we perform lookup by ID only thing that we know for sure
          * is whether the Gene names match or not. */
-        if (!testGene.getGeneName().equals(refGene.getGeneName())) {
+//        if (!testGene.getGeneName().equals(refGene.getGeneName())) {
 //            setErrorMessage(String.format("Gene names for ID %s do not match. Observed: %s Expected: %s",
 //                    testGene.getEntrezID(), testGene.getGeneName(), refGene.getGeneName()));
-            return ValidationResult.FAILED;
-        }
+//            return ValidationResult.FAILED;
+//        }
 
 //        setErrorMessage(OKAY);
-        return ValidationResult.PASSED;
+//        return ValidationResult.PASSED;
     }
 
 

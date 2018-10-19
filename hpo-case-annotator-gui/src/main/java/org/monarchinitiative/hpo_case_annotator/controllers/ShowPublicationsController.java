@@ -7,8 +7,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
-import org.monarchinitiative.hpo_case_annotator.model.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Utils;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * This class is the controller for dialog that presents attributes of curated publications in table. Individual cases
  * are presented as rows and attributes such as author, gene, variant are presented as columns. <p>Collection with
- * {@link DiseaseCaseModel} instances to be presented is supposed to be entered using {@link
+ * {@link DiseaseCase} instances to be presented is supposed to be entered using {@link
  * ShowPublicationsController#setData(Collection)} method. The content of table is read-only.
  */
 public final class ShowPublicationsController {
@@ -33,43 +34,43 @@ public final class ShowPublicationsController {
      */
     private final HostServices hostServices;
 
-    private Set<DiseaseCaseModel> model_cache = new HashSet<>();
+    private Set<DiseaseCase> model_cache = new HashSet<>();
 
     @FXML
-    private TableView<DiseaseCaseModel> publicationsTableView;
+    private TableView<DiseaseCase> publicationsTableView;
 
     /**
      * ############################ COLUMNS OF THE TABLEVIEW #######################################################
      */
     @FXML
-    private TableColumn<DiseaseCaseModel, String> firstAuthorTableColumn;
+    private TableColumn<DiseaseCase, String> firstAuthorTableColumn;
 
     @FXML
-    private TableColumn<DiseaseCaseModel, String> titleTableColumn;
+    private TableColumn<DiseaseCase, String> titleTableColumn;
 
     @FXML
-    private TableColumn<DiseaseCaseModel, String> journalTableColumn;
+    private TableColumn<DiseaseCase, String> journalTableColumn;
 
     @FXML
-    private TableColumn<DiseaseCaseModel, String> yearTableColumn;
+    private TableColumn<DiseaseCase, String> yearTableColumn;
 
     @FXML
-    private TableColumn<DiseaseCaseModel, String> probandTableColumn;
+    private TableColumn<DiseaseCase, String> probandTableColumn;
 
     @FXML
-    private TableColumn<DiseaseCaseModel, String> pmidTableColumn;
+    private TableColumn<DiseaseCase, String> pmidTableColumn;
 
     @FXML
-    private TableColumn<DiseaseCaseModel, String> geneTableColumn;
+    private TableColumn<DiseaseCase, String> geneTableColumn;
 
     @FXML
-    private TableColumn<DiseaseCaseModel, String> variantsTableColumn;
+    private TableColumn<DiseaseCase, String> variantsTableColumn;
 
     @FXML
-    private TableColumn<DiseaseCaseModel, String> variantClassTableColumn;
+    private TableColumn<DiseaseCase, String> variantClassTableColumn;
 
     @FXML
-    private TableColumn<DiseaseCaseModel, Hyperlink> pubMedTableColumn;
+    private TableColumn<DiseaseCase, Hyperlink> pubMedTableColumn;
 
 
     ShowPublicationsController(HostServices hostServices) {
@@ -78,28 +79,28 @@ public final class ShowPublicationsController {
 
 
     /**
-     * Crunch variants present in the current {@link DiseaseCaseModel} into string representation that will be
+     * Crunch variants present in the current {@link DiseaseCase} into string representation that will be
      * presented to user.
      *
-     * @param model {@link DiseaseCaseModel} instance being presented in the table row
+     * @param model {@link DiseaseCase} instance being presented in the table row
      * @return String representation of variants present in the model. E.g. chr1:12345G>C,chr3:4321C>G
      */
-    private static String crunchVariants(DiseaseCaseModel model) {
-        return model.getVariants().stream()
-                .map(Variant::toString)
+    private static String crunchVariants(DiseaseCase model) {
+        return model.getVariantList().stream()
+                .map(v -> String.format("%s:%d%s>%s", v.getContig(), v.getPos(), v.getRefAllele(), v.getAltAllele()))
                 .collect(Collectors.joining(","));
     }
 
 
     /**
-     * Crunch data present in the <em>variant class</em> attribute of variants in the current {@link DiseaseCaseModel}
+     * Crunch data present in the <em>variant class</em> attribute of variants in the current {@link DiseaseCase}
      * into string representation that will be presented to user in <em>Variant class</em> column of this table.
      *
-     * @param model {@link DiseaseCaseModel} instance being presented in the table row
+     * @param model {@link DiseaseCase} instance being presented in the table row
      * @return String obtained by iteration through variants and concatenation of the values. E.g splicing,coding
      */
-    private static String crunchVClasses(DiseaseCaseModel model) {
-        return model.getVariants().stream()
+    private static String crunchVClasses(DiseaseCase model) {
+        return model.getVariantList().stream()
                 .map(Variant::getVariantClass)
                 .collect(Collectors.joining(","));
     }
@@ -110,7 +111,7 @@ public final class ShowPublicationsController {
      */
     public void initialize() {
         firstAuthorTableColumn.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getPublication().getFirstAuthorSurname()));
+                new ReadOnlyStringWrapper(Utils.getFirstAuthorsSurname(cdf.getValue().getPublication())));
         titleTableColumn.setCellValueFactory(cdf ->
                 new ReadOnlyStringWrapper(cdf.getValue().getPublication().getTitle()));
         journalTableColumn.setCellValueFactory(cdf ->
@@ -118,11 +119,11 @@ public final class ShowPublicationsController {
         yearTableColumn.setCellValueFactory(cdf ->
                 new ReadOnlyStringWrapper(cdf.getValue().getPublication().getYear()));
         probandTableColumn.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getFamilyInfo().getFamilyOrPatientID()));
+                new ReadOnlyStringWrapper(cdf.getValue().getFamilyInfo().getFamilyOrProbandId()));
         pmidTableColumn.setCellValueFactory(cdf ->
                 new ReadOnlyStringWrapper(cdf.getValue().getPublication().getPmid()));
         geneTableColumn.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getTargetGene().getGeneName()));
+                new ReadOnlyStringWrapper(cdf.getValue().getGene().getSymbol()));
         variantsTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(crunchVariants(cdf.getValue())));
 
         variantClassTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(crunchVClasses(cdf.getValue())));
@@ -146,9 +147,9 @@ public final class ShowPublicationsController {
     /**
      * Entry point for collection of data that will be presented by this dialog.
      *
-     * @param models {@link Collection} containing {@link DiseaseCaseModel} instances.
+     * @param models {@link Collection} containing {@link DiseaseCase} instances.
      */
-    public void setData(Collection<DiseaseCaseModel> models) {
+    public void setData(Collection<DiseaseCase> models) {
         if (publicationsTableView == null) { // controller hasn't been processed by FXMLLoader yet.
             model_cache.addAll(models);
         } else {

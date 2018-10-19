@@ -155,10 +155,10 @@
                         <string>ATATG|GCGAGTTCTT</string>
                     </void>
                     <void property="crypticSpliceSiteType">
-                        <string>5 splice site</string>
+                        <string>FIVE_PRIME</string>
                     </void>
                     <void property="genotype">
-                        <string>heterozygous</string>
+                        <string>HETEROZYGOUS</string>
                     </void>
                     <void property="pathomechanism">
                         <string>splicing|5ss|disrupted</string>
@@ -194,7 +194,7 @@
                         <string>yes</string>
                     </void>
                     <void property="genotype">
-                        <string>heterozygous</string>
+                        <string>HETEROZYGOUS</string>
                     </void>
                     <void property="pathomechanism">
                         <string>coding|missense</string>

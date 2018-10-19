@@ -1,17 +1,23 @@
 package org.monarchinitiative.hpo_case_annotator.io;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 
 /**
  * Classes
  */
 public interface ModelExporter {
 
-    void exportModels(String filePath) throws IOException;
-
-    void exportModels(File filePath) throws IOException;
-
     void exportModels(Writer writer);
+
+    default void exportModels(String filePath) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            exportModels(writer);
+        }
+    }
+
+    default void exportModels(File filePath) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            exportModels(writer);
+        }
+    }
 }

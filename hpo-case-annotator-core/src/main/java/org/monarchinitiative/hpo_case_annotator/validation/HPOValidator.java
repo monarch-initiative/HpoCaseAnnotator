@@ -9,7 +9,10 @@ import java.util.Map;
 /**
  * This validator is supposed to validate HPO terms (e.g. that id & label match together).
  */
-public class HPOValidator extends AbstractValidator {
+@Deprecated // since it should not be possible to add a corrupted HPO term
+public class HPOValidator
+//        extends AbstractValidator
+{
 
     private Map<String, HPO> hpoMap;
 
@@ -33,9 +36,10 @@ public class HPOValidator extends AbstractValidator {
      * XML file, it is required to enter both id and name, and these are checked here
      * against the hp.obo file. This is just for Q/C (sanity check).
      */
-    @Override
+//    @Override
     public ValidationResult validateDiseaseCase(DiseaseCaseModel model) {
-        return makeValidationResult(ValidationResult.UNAPPLICABLE, "HPO validation currently unapplicable");
+        return null;
+//        return makeValidationResult(ValidationResult.UNAPPLICABLE, "HPO validation currently unapplicable");
         //        List<HPO> hpoList = model.getHpoList();
 //
 //        for (HPO term : hpoList) {

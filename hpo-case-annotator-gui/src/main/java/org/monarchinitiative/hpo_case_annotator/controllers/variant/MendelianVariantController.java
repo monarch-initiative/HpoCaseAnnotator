@@ -7,27 +7,24 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import org.monarchinitiative.hpo_case_annotator.controllers.DataController;
 import org.monarchinitiative.hpo_case_annotator.model.ChoiceBasket;
-import org.monarchinitiative.hpo_case_annotator.model.MendelianVariant;
-import org.monarchinitiative.hpo_case_annotator.model.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
- * Controller class responsible for presenting instances of {@link MendelianVariant} model class. Acts as a controller
- * in MVC pattern.
+ * Controller class responsible for presenting {@link org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation.Context#MENDELIAN} variants.
+ * Acts as a controller in the MVC pattern.
  * <p>
  * Created by Daniel Danis.
  */
-public final class MendelianVariantController extends BaseVariantController {
+public final class MendelianVariantController extends AbstractVariantController {
 
-
-    /**
-     * Instance of class which acts as a Model component of MVC pattern and its properties are bound to view elements
-     */
-    private final MendelianVariant variant;
 
     // ******************** FXML elements, injected by FXMLLoader ********************************** //
-
     @FXML
     private HBox variantHBox;
 
@@ -47,7 +44,7 @@ public final class MendelianVariantController extends BaseVariantController {
     private TextField snippetTextField;
 
     @FXML
-    private ComboBox<String> genotypeComboBox;
+    private ComboBox<Genotype> genotypeComboBox;
 
     @FXML
     private ComboBox<String> variantClassComboBox;
@@ -94,13 +91,9 @@ public final class MendelianVariantController extends BaseVariantController {
     /**
      * Create instance of this class which acts as a controller from MVC pattern. Given the fact that this class extends
      * {@link javafx.scene.control.TitledPane} it can be managed by {@link DataController}.
-     *
-     * @param variant instance of {@link MendelianVariant} model object.
      */
-    public MendelianVariantController(MendelianVariant variant, ChoiceBasket choiceBasket) throws IOException {
+    public MendelianVariantController(ChoiceBasket choiceBasket) throws IOException {
         super(choiceBasket);
-        this.variant = variant;
-
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MendelianVariantView.fxml"));
         loader.setController(this);
@@ -108,15 +101,7 @@ public final class MendelianVariantController extends BaseVariantController {
         this.getStylesheets().add(getClass().getResource("VariantView.css").toExternalForm());
         loader.load();
 
-
         populateContent();
-        initializeBindings();
-    }
-
-
-    @Override
-    public Variant getVariant() {
-        return variant;
     }
 
 
@@ -125,8 +110,10 @@ public final class MendelianVariantController extends BaseVariantController {
      */
     @Override
     protected void populateContent() {
+        this.setText(VariantValidation.Context.MENDELIAN.toString());
+
         chromosomeComboBox.getItems().addAll(choiceBasket.getChromosome());
-        genotypeComboBox.getItems().addAll(choiceBasket.getGenotype());
+        genotypeComboBox.getItems().addAll(Arrays.stream(Genotype.values()).filter(g -> !g.equals(Genotype.UNRECOGNIZED)).collect(Collectors.toList()));
         variantClassComboBox.getItems().addAll(choiceBasket.getVariantClass());
         pathomechanismComboBox.getItems().addAll(choiceBasket.getPathomechanism());
         reporterComboBox.getItems().addAll(choiceBasket.getReporter());
@@ -143,32 +130,58 @@ public final class MendelianVariantController extends BaseVariantController {
     }
 
 
-    /**
-     * Create bindings of FXML view elements with model fields to ensure proper synchronization between model & view content
-     */
     @Override
-    protected void initializeBindings() {
+    public void presentVariant(Variant variant) {
         // Variant
-        chromosomeComboBox.valueProperty().bindBidirectional(variant.chromosomeProperty());
-        positionTextField.textProperty().bindBidirectional(variant.positionProperty());
-        referenceTextField.textProperty().bindBidirectional(variant.referenceAlleleProperty());
-        alternateTextField.textProperty().bindBidirectional(variant.alternateAlleleProperty());
-        snippetTextField.textProperty().bindBidirectional(variant.snippetProperty());
-        genotypeComboBox.valueProperty().bindBidirectional(variant.genotypeProperty());
-        variantClassComboBox.valueProperty().bindBidirectional(variant.variantClassProperty());
-        pathomechanismComboBox.valueProperty().bindBidirectional(variant.pathomechanismProperty());
-        regulatorTextField.textProperty().bindBidirectional(variant.regulatorProperty());
-        // Validation
-        reporterComboBox.valueProperty().bindBidirectional(variant.reporterRegulationProperty());
-        residualActivityTextField.textProperty().bindBidirectional(variant.reporterResidualActivityProperty());
-        emsaComboBox.valueProperty().bindBidirectional(variant.emsaValidationPerformedProperty());
-        emsaTFSymbolTextField.textProperty().bindBidirectional(variant.emsaTFSymbolProperty());
-        emsaGeneIDTextField.textProperty().bindBidirectional(variant.emsaGeneIdProperty());
-        cosegregationComboBox.valueProperty().bindBidirectional(variant.cosegregationProperty());
-        comparabilityComboBox.valueProperty().bindBidirectional(variant.comparabilityProperty());
-        otherChoicesComboBox.valueProperty().bindBidirectional(variant.otherProperty());
-        otherEffectComboBox.valueProperty().bindBidirectional(variant.otherEffectProperty());
+        chromosomeComboBox.setValue(variant.getContig());
+        positionTextField.setText(String.valueOf(variant.getPos()));
+        referenceTextField.setText(variant.getRefAllele());
+        alternateTextField.setText(variant.getAltAllele());
+        snippetTextField.setText(variant.getSnippet());
+        genotypeComboBox.setValue(variant.getGenotype());
+        variantClassComboBox.setValue(variant.getVariantClass());
+        pathomechanismComboBox.setValue(variant.getPathomechanism());
 
-        this.setText(variant.getVariantMode().name());
+        // Validation
+        VariantValidation validation = variant.getVariantValidation();
+        regulatorTextField.setText(validation.getRegulator());
+        reporterComboBox.setValue(validation.getReporterRegulation());
+        residualActivityTextField.setText(validation.getReporterResidualActivity());
+        emsaComboBox.setValue(validation.getEmsaValidationPerformed() ? "yes" : "no");
+        emsaTFSymbolTextField.setText(validation.getEmsaTfSymbol());
+        emsaGeneIDTextField.setText(validation.getEmsaGeneId());
+        cosegregationComboBox.setValue(validation.getCosegregation() ? "yes" : "no");
+        comparabilityComboBox.setValue(validation.getComparability() ? "yes" : "no");
+        otherChoicesComboBox.setValue(validation.getOtherChoices());
+        otherEffectComboBox.setValue(validation.getOtherEffect());
+    }
+
+
+    @Override
+    public Variant getVariant() {
+        return Variant.newBuilder()
+                .setContig(chromosomeComboBox.getValue())
+                .setPos(Integer.parseInt(positionTextField.getText())) // TODO - make sure that the integer is an integer here
+                .setRefAllele(referenceTextField.getText())
+                .setAltAllele(alternateTextField.getText())
+                .setSnippet(snippetTextField.getText())
+                .setGenotype(genotypeComboBox.getValue())
+                .setVariantClass(variantClassComboBox.getValue())
+                .setPathomechanism(pathomechanismComboBox.getValue())
+                // VALIDATION
+                .setVariantValidation(VariantValidation.newBuilder()
+                        .setContext(VariantValidation.Context.MENDELIAN)
+                        .setRegulator(regulatorTextField.getText())
+                        .setReporterRegulation(reporterComboBox.getValue())
+                        .setReporterResidualActivity(residualActivityTextField.getText())
+                        .setEmsaValidationPerformed(emsaComboBox.getValue().equals("yes"))
+                        .setEmsaTfSymbol(emsaTFSymbolTextField.getText())
+                        .setEmsaGeneId(emsaGeneIDTextField.getText())
+                        .setCosegregation(cosegregationComboBox.getValue().equals("yes"))
+                        .setComparability(comparabilityComboBox.getValue().equals("yes"))
+                        .setOtherChoices(otherChoicesComboBox.getValue())
+                        .setOtherEffect(otherEffectComboBox.getValue())
+                        .build())
+                .build();
     }
 }

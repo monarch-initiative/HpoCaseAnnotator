@@ -7,23 +7,22 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import org.monarchinitiative.hpo_case_annotator.controllers.DataController;
 import org.monarchinitiative.hpo_case_annotator.model.ChoiceBasket;
-import org.monarchinitiative.hpo_case_annotator.model.SplicingVariant;
-import org.monarchinitiative.hpo_case_annotator.model.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.CrypticSpliceSiteType;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
- * Controller class responsible for presenting instances of {@link SplicingVariant} model class. Acts as a controller
- * in MVC pattern.
+ * Controller class responsible for presenting {@link org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation.Context#SPLICING} variants.
+ * Acts as a controller in the MVC pattern.
  * <p>
  * Created by Daniel Danis.
  */
-public final class SplicingVariantController extends BaseVariantController {
-
-    /**
-     * Instance of class which acts as a Model component of MVC pattern and its properties are bound to view elements
-     */
-    private final SplicingVariant variant;
+public final class SplicingVariantController extends AbstractVariantController {
 
     // ******************** FXML elements, injected by FXMLLoader ********************************** //
     // ************************* Variant *********************************** //
@@ -44,7 +43,7 @@ public final class SplicingVariantController extends BaseVariantController {
     private TextField varSnippetTextField;
 
     @FXML
-    private ComboBox<String> varGenotypeComboBox;
+    private ComboBox<Genotype> varGenotypeComboBox;
 
     @FXML
     private ComboBox<String> varClassComboBox;
@@ -59,7 +58,7 @@ public final class SplicingVariantController extends BaseVariantController {
     private TextField crypticSpliceSitePositionTextField;
 
     @FXML
-    private ComboBox<String> crypticSpliceSiteTypeComboBox;
+    private ComboBox<CrypticSpliceSiteType> crypticSpliceSiteTypeComboBox;
 
     @FXML
     private TextField crypticSpliceSiteSnippetTextField;
@@ -102,12 +101,9 @@ public final class SplicingVariantController extends BaseVariantController {
     /**
      * Create instance of this class which acts as a controller from MVC pattern. Given the fact that this class extends
      * {@link javafx.scene.control.TitledPane} it can be managed by {@link DataController}.
-     *
-     * @param variant instance of {@link SplicingVariant} model object.
      */
-    public SplicingVariantController(SplicingVariant variant, ChoiceBasket choiceBasket) throws IOException {
+    public SplicingVariantController(ChoiceBasket choiceBasket) throws IOException {
         super(choiceBasket);
-        this.variant = variant;
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("SplicingVariantView.fxml"));
         loader.setController(this);
@@ -116,13 +112,6 @@ public final class SplicingVariantController extends BaseVariantController {
         loader.load();
 
         populateContent();
-        initializeBindings();
-    }
-
-
-    @Override
-    public Variant getVariant() {
-        return variant;
     }
 
 
@@ -131,12 +120,14 @@ public final class SplicingVariantController extends BaseVariantController {
      */
     @Override
     protected void populateContent() {
+        this.setText(VariantValidation.Context.SPLICING.toString());
+
         varChromosomeComboBox.getItems().addAll(choiceBasket.getChromosome());
-        varGenotypeComboBox.getItems().addAll(choiceBasket.getGenotype());
+        varGenotypeComboBox.getItems().addAll(Arrays.stream(Genotype.values()).filter(g -> !g.equals(Genotype.UNRECOGNIZED)).collect(Collectors.toList()));
         varClassComboBox.getItems().addAll(choiceBasket.getVariantClass());
         varPathomechanismComboBox.getItems().addAll(choiceBasket.getPathomechanism());
         varConsequenceComboBox.getItems().addAll(choiceBasket.getConsequence());
-        crypticSpliceSiteTypeComboBox.getItems().addAll(choiceBasket.getCrypticSpliceSiteType());
+        crypticSpliceSiteTypeComboBox.getItems().addAll(Arrays.stream(CrypticSpliceSiteType.values()).filter(c -> !c.equals(CrypticSpliceSiteType.UNRECOGNIZED)).collect(Collectors.toList()));
         cosegregationComboBox.getItems().addAll(choiceBasket.getCosegregation());
         comparabilityComboBox.getItems().addAll(choiceBasket.getComparability());
 
@@ -155,40 +146,71 @@ public final class SplicingVariantController extends BaseVariantController {
     }
 
 
-    /**
-     * Create bindings of FXML view elements with model fields to ensure proper synchronization between model & view content
-     */
     @Override
-    protected void initializeBindings() {
-        varChromosomeComboBox.valueProperty().bindBidirectional(variant.chromosomeProperty());
-        varPositionTextField.textProperty().bindBidirectional(variant.positionProperty());
-        varReferenceTextField.textProperty().bindBidirectional(variant.referenceAlleleProperty());
-        varAlternateTextField.textProperty().bindBidirectional(variant.alternateAlleleProperty());
-        varSnippetTextField.textProperty().bindBidirectional(variant.snippetProperty());
-        varGenotypeComboBox.valueProperty().bindBidirectional(variant.genotypeProperty());
-        varClassComboBox.valueProperty().bindBidirectional(variant.variantClassProperty());
-        varPathomechanismComboBox.valueProperty().bindBidirectional(variant.pathomechanismProperty());
-        varConsequenceComboBox.valueProperty().bindBidirectional(variant.consequenceProperty());
-        crypticSpliceSitePositionTextField.textProperty().bindBidirectional(variant.crypticPositionProperty());
-        crypticSpliceSiteTypeComboBox.valueProperty().bindBidirectional(variant.crypticSpliceSiteTypeProperty());
-        crypticSpliceSiteSnippetTextField.textProperty().bindBidirectional(variant.crypticSpliceSiteSnippetProperty());
+    public void presentVariant(Variant variant) {
+        // Variant related fields
+        varChromosomeComboBox.setValue(variant.getContig());
+        varPositionTextField.setText(String.valueOf(variant.getPos()));
+        varReferenceTextField.setText(variant.getRefAllele());
+        varAlternateTextField.setText(variant.getAltAllele());
+        varSnippetTextField.setText(variant.getSnippet());
+        varGenotypeComboBox.setValue(variant.getGenotype());
+        varClassComboBox.setValue(variant.getVariantClass());
+        varPathomechanismComboBox.setValue(variant.getPathomechanism());
+        varConsequenceComboBox.setValue(variant.getConsequence());
+
+        crypticSpliceSitePositionTextField.setText(String.valueOf(variant.getCrypticPosition()));
+        crypticSpliceSiteTypeComboBox.setValue(variant.getCrypticSpliceSiteType());
+        crypticSpliceSiteSnippetTextField.setText(variant.getCrypticSpliceSiteSnippet());
 
         // Validation checkboxes
-        minigeneCheckBox.selectedProperty().bindBidirectional(variant.getSplicingValidation().minigeneValidationProperty());
-        siteDirectedMutagenesisCheckBox.selectedProperty().bindBidirectional(variant.getSplicingValidation().siteDirectedMutagenesisValidationProperty());
-        rtPCRCheckBox.selectedProperty().bindBidirectional(variant.getSplicingValidation().rtPCRValidationProperty());
-        cDNASeqencingCheckBox.selectedProperty().bindBidirectional(variant.getSplicingValidation().cDNASequencingValidationProperty());
-        pcrCheckBox.selectedProperty().bindBidirectional(variant.getSplicingValidation().pcrValidationProperty());
-        srProteinOverexpressionCheckBox.selectedProperty().bindBidirectional(variant.getSplicingValidation().srProteinOverexpressionValidationProperty());
-        srProteinKnockdownCheckBox.selectedProperty().bindBidirectional(variant.getSplicingValidation().srProteinKnockdownValidationProperty());
-        mutationOfWTSpliceSiteCheckBox.selectedProperty().bindBidirectional(variant.getSplicingValidation().mutOfWTSpliceSiteValidationProperty());
-        otherCheckBox.selectedProperty().bindBidirectional(variant.getSplicingValidation().otherValidationProperty());
+        VariantValidation validation = variant.getVariantValidation();
+        minigeneCheckBox.setSelected(validation.getMinigeneValidation());
+        siteDirectedMutagenesisCheckBox.setSelected(validation.getSiteDirectedMutagenesisValidation());
+        rtPCRCheckBox.setSelected(validation.getRtPcrValidation());
+        cDNASeqencingCheckBox.setSelected(validation.getCDnaSequencingValidation());
+        pcrCheckBox.setSelected(validation.getPcrValidation());
+        srProteinOverexpressionCheckBox.setSelected(validation.getSrProteinOverexpressionValidation());
+        srProteinKnockdownCheckBox.setSelected(validation.getSrProteinKnockdownValidation());
+        mutationOfWTSpliceSiteCheckBox.setSelected(validation.getMutOfWtSpliceSiteValidation());
+        otherCheckBox.setSelected(validation.getOtherValidation());
 
-        // Other validation stuff
-        cosegregationComboBox.valueProperty().bindBidirectional(variant.cosegregationProperty());
-        comparabilityComboBox.valueProperty().bindBidirectional(variant.comparabilityProperty());
+        // Others
+        cosegregationComboBox.setValue(validation.getCosegregation() ? "yes" : "no");
+        comparabilityComboBox.setValue(validation.getComparability() ? "yes" : "no");
+    }
 
-        // Set title to pane
-        this.setText(variant.getVariantMode().name());
+
+    @Override
+    public Variant getVariant() {
+        return Variant.newBuilder()
+                .setContig(varChromosomeComboBox.getValue())
+                .setPos(Integer.parseInt(varPositionTextField.getText())) // TODO - make sure that the int is an int here
+                .setRefAllele(varReferenceTextField.getText())
+                .setAltAllele(varAlternateTextField.getText())
+                .setSnippet(varSnippetTextField.getText())
+                .setGenotype(varGenotypeComboBox.getValue())
+                .setVariantClass(varClassComboBox.getValue())
+                .setPathomechanism(varPathomechanismComboBox.getValue())
+                .setConsequence(varConsequenceComboBox.getValue())
+                .setCrypticPosition(Integer.parseInt(crypticSpliceSitePositionTextField.getText()))
+                .setCrypticSpliceSiteType(crypticSpliceSiteTypeComboBox.getValue())
+                .setCrypticSpliceSiteSnippet(crypticSpliceSitePositionTextField.getText())
+                .setVariantValidation(VariantValidation.newBuilder()
+                        .setContext(VariantValidation.Context.SPLICING)
+                        .setMinigeneValidation(minigeneCheckBox.isSelected())
+                        .setSiteDirectedMutagenesisValidation(siteDirectedMutagenesisCheckBox.isSelected())
+                        .setRtPcrValidation(rtPCRCheckBox.isSelected())
+                        .setCDnaSequencingValidation(cDNASeqencingCheckBox.isSelected())
+                        .setPcrValidation(pcrCheckBox.isSelected())
+                        .setSrProteinOverexpressionValidation(srProteinOverexpressionCheckBox.isSelected())
+                        .setSrProteinKnockdownValidation(srProteinKnockdownCheckBox.isSelected())
+                        .setMutOfWtSpliceSiteValidation(mutationOfWTSpliceSiteCheckBox.isSelected())
+                        .setOtherValidation(otherCheckBox.isSelected())
+
+                        .setCosegregation(cosegregationComboBox.getValue().equals("yes"))
+                        .setComparability(comparabilityComboBox.getValue().equals("yes"))
+                        .build())
+                .build();
     }
 }

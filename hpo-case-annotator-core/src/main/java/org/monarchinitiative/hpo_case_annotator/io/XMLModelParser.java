@@ -3,12 +3,13 @@ package org.monarchinitiative.hpo_case_annotator.io;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.monarchinitiative.hpo_case_annotator.model.Codecs;
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
@@ -22,8 +23,6 @@ import java.util.HashSet;
 public final class XMLModelParser implements ModelParser {
 
     public static final String MODEL_SUFFIX = ".xml";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(XMLModelParser.class);
 
     /**
      * Path to directory where XML files containing model data are stored.
@@ -46,9 +45,10 @@ public final class XMLModelParser implements ModelParser {
      * @param model        {@link DiseaseCaseModel} containing data to be serializec.
      * @param outputStream where data will be serialized in XML format
      */
-    public static void saveDiseaseCaseModel(DiseaseCaseModel model, OutputStream outputStream) {
+    public static void saveDiseaseCase(DiseaseCase model, OutputStream outputStream) {
         try (XMLEncoder xmlEncoder = new XMLEncoder(outputStream)) {
-            xmlEncoder.writeObject(model);
+            DiseaseCaseModel dcm = Codecs.diseaseCase2DiseaseCaseModel(model);
+            xmlEncoder.writeObject(dcm);
         }
     }
 
@@ -60,9 +60,10 @@ public final class XMLModelParser implements ModelParser {
      * @param inputStream pointing to data stored in XML format is stored
      * @return {@link DiseaseCaseModel} with read data
      */
-    public static DiseaseCaseModel loadDiseaseCaseModel(InputStream inputStream) {
+    public static DiseaseCase loadDiseaseCase(InputStream inputStream) {
         try (XMLDecoder xmlDecoder = new XMLDecoder(inputStream)) {
-            return ((DiseaseCaseModel) xmlDecoder.readObject());
+            DiseaseCaseModel dcm = (DiseaseCaseModel) xmlDecoder.readObject();
+            return Codecs.diseaseCaseModel2DiseaseCase(dcm);
         }
     }
 
@@ -86,10 +87,8 @@ public final class XMLModelParser implements ModelParser {
      * {@inheritDoc}
      */
     @Override
-    public void saveModel(OutputStream outputStream, DiseaseCaseModel model) {
-        try (XMLEncoder xmlEncoder = new XMLEncoder(outputStream)) {
-            xmlEncoder.writeObject(model);
-        }
+    public void saveModel(OutputStream outputStream, DiseaseCase model) throws IOException {
+        saveDiseaseCase(model, outputStream);
     }
 
 
@@ -97,8 +96,8 @@ public final class XMLModelParser implements ModelParser {
      * {@inheritDoc}
      */
     @Override
-    public DiseaseCaseModel readModel(InputStream inputStream) {
-        return loadDiseaseCaseModel(inputStream);
+    public DiseaseCase readModel(InputStream inputStream) {
+        return loadDiseaseCase(inputStream);
     }
 
 

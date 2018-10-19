@@ -6,14 +6,14 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import org.monarchinitiative.hpo_case_annotator.controllers.DataController;
 import org.monarchinitiative.hpo_case_annotator.model.ChoiceBasket;
-import org.monarchinitiative.hpo_case_annotator.model.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 
 /**
  * Place for shared content of VariantControllers. Needs to be subclassed by every class that wants to act as a controller
  * of {@link Variant} model class and be placed in {@link DataController}.
  * Created by ielis on 5/17/17.
  */
-public abstract class BaseVariantController extends TitledPane {
+public abstract class AbstractVariantController extends TitledPane {
 
     /**
      * Bean containing data to be used for populating content of FXML elements such as ComboBoxes. Loaded from
@@ -22,7 +22,7 @@ public abstract class BaseVariantController extends TitledPane {
     protected final ChoiceBasket choiceBasket;
 
 
-    protected BaseVariantController(ChoiceBasket choiceBasket) {
+    protected AbstractVariantController(ChoiceBasket choiceBasket) {
         this.choiceBasket = choiceBasket;
     }
 
@@ -49,21 +49,11 @@ public abstract class BaseVariantController extends TitledPane {
 
 
     /**
-     * Get reference to {@link Variant} instance of this controller.
-     *
-     * @return
-     */
-    protected abstract Variant getVariant();
-
-
-    /**
      * Read yaml configuration file and initialize content of fxml view elements.
      */
     protected abstract void populateContent();
 
+    public abstract void presentVariant(Variant variant);
 
-    /**
-     * Create bindings of FXML view elements with model fields to ensure proper synchronization between model & view content
-     */
-    protected abstract void initializeBindings();
+    public abstract Variant getVariant();
 }

@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.exception;
+package org.monarchinitiative.hpo_case_annotator;
 
 public class HpoCaseAnnotatorException extends Exception {
 

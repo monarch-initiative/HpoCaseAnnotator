@@ -17,28 +17,28 @@ public final class MendelianVariant extends Variant {
     private final VariantMode variantMode = VariantMode.MENDELIAN;
 
     /* Regulator */
-    private StringProperty regulator = new SimpleStringProperty(this, "regulator");
+    private StringProperty regulator = new SimpleStringProperty(this, "regulator", "");
 
     /* Reporter combobox - choices {up, down, no} */
-    private StringProperty reporterRegulation = new SimpleStringProperty(this, "reporterRegulation");
+    private StringProperty reporterRegulation = new SimpleStringProperty(this, "reporterRegulation", "");
 
     /* Reporter residual activity text field */
-    private StringProperty reporterResidualActivity = new SimpleStringProperty(this, "reporterResidualActivity");
+    private StringProperty reporterResidualActivity = new SimpleStringProperty(this, "reporterResidualActivity", "");
 
     /* EMSA combobox - choices {yes, no} */
-    private StringProperty emsaValidationPerformed = new SimpleStringProperty(this, "emsaValidationPerformed");
+    private StringProperty emsaValidationPerformed = new SimpleStringProperty(this, "emsaValidationPerformed", "");
 
     /* EMSA TF symbol text field */
-    private StringProperty emsaTFSymbol = new SimpleStringProperty(this, "emsaTFSymbol");
+    private StringProperty emsaTFSymbol = new SimpleStringProperty(this, "emsaTFSymbol", "");
 
     /* EMSA Gene ID text field */
-    private StringProperty emsaGeneId = new SimpleStringProperty(this, "emsaGeneId");
+    private StringProperty emsaGeneId = new SimpleStringProperty(this, "emsaGeneId", "");
 
     /* Other effect - {no, up, down, demonstrated} */
-    private StringProperty otherChoices = new SimpleStringProperty(this, "otherChoices");
+    private StringProperty otherChoices = new SimpleStringProperty(this, "otherChoices", "");
 
     /* Other effect - more verbose choices */
-    private StringProperty otherEffect = new SimpleStringProperty(this, "otherEffect");
+    private StringProperty otherEffect = new SimpleStringProperty(this, "otherEffect", "");
 
 
     public final VariantMode getVariantMode() {

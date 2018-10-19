@@ -1,11 +1,16 @@
 package org.monarchinitiative.hpo_case_annotator.io;
 
-import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
-import org.monarchinitiative.hpo_case_annotator.model.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.proto.OntologyClass;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Utils;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -39,28 +44,14 @@ public class PhenoModelExporter implements ModelExporter {
 
 
     @Override
-    public void exportModels(String filePath) throws IOException {
-        exportModels(new File(filePath));
-    }
-
-
-    @Override
-    public void exportModels(File filePath) throws IOException {
-        try (Writer writer = new BufferedWriter(new FileWriter(filePath))) {
-            exportModels(writer);
-        }
-    }
-
-
-    @Override
     public void exportModels(Writer writer) {
         File[] models = modelDir.listFiles(f -> f.getName().endsWith(XML_MODEL_SUFFIX));
         if (models == null)
             return;
-        Collection<DiseaseCaseModel> cases = new ArrayList<>();
+        Collection<DiseaseCase> cases = new ArrayList<>();
         for (File path : models) {
             try (FileInputStream fis = new FileInputStream(path)) {
-                DiseaseCaseModel model = XMLModelParser.loadDiseaseCaseModel(fis);
+                DiseaseCase model = XMLModelParser.loadDiseaseCase(fis);
                 cases.add(model);
             } catch (IOException e) {
                 LOGGER.warn("Error reading model file {}", path.getAbsolutePath(), e.getMessage());
@@ -73,9 +64,9 @@ public class PhenoModelExporter implements ModelExporter {
         int c = 0;
         try {
             writer.write(header + "\n");
-            for (DiseaseCaseModel csmod : cases) {
+            for (DiseaseCase csmod : cases) {
                 c++;
-                String patientID = String.format("P%d-%s\t", c, csmod.getTargetGene().getGeneName());
+                String patientID = String.format("P%d-%s\t", c, csmod.getGene().getSymbol());
                 writer.write(patientID);
                 exportModel(csmod, writer);
             }
@@ -92,25 +83,25 @@ public class PhenoModelExporter implements ModelExporter {
      *     GeneSymbol--PMID--FirstAuthor--Variants--HPO1;HPO2;...
      * </pre>
      */
-    void exportModel(DiseaseCaseModel model, Writer writer) throws IOException {
+    void exportModel(DiseaseCase model, Writer writer) throws IOException {
         // ID_SUMMARY: author;year;gene_symbol;patient_id
         String id_summary = String.format("%s;%s;%s;%s",
-                model.getPublication().getFirstAuthorSurname(),
+                Utils.getFirstAuthorsSurname(model.getPublication()),
                 model.getPublication().getYear(),
-                model.getTargetGene().getGeneName(),
-                model.getFamilyInfo().getFamilyOrPatientID());
+                model.getGene().getSymbol(),
+                model.getFamilyInfo().getFamilyOrProbandId());
 
         writer.write(String.format("%s\t%s\t%s\t%s\t%s\t%s\n",
-                model.getTargetGene().getGeneName(),
+                model.getGene().getSymbol(),
                 model.getPublication().getPmid(),
-                model.getPublication().getFirstAuthorSurname(),
+                Utils.getFirstAuthorsSurname(model.getPublication()),
                 id_summary,
                 getVariantString(model),
                 getPhenoString(model)));
         LOGGER.trace(String.format("%s\t%s\t%s\t%s\t%s\t%s\n",
-                model.getTargetGene().getGeneName(),
+                model.getGene().getSymbol(),
                 model.getPublication().getPmid(),
-                model.getPublication().getFirstAuthorSurname(),
+                Utils.getFirstAuthorsSurname(model.getPublication()),
                 id_summary,
                 getVariantString(model),
                 getPhenoString(model)));
@@ -120,12 +111,12 @@ public class PhenoModelExporter implements ModelExporter {
     /**
      * This export format is designed for the GPI study. It outputs the mutations strings.
      */
-    String getVariantString(DiseaseCaseModel model) {
+    private String getVariantString(DiseaseCase model) {
         StringBuilder sb = new StringBuilder();
         boolean second = false;
-        for (Variant v : model.getVariants()) {
-            String vs = String.format("%s:%s%s>%s[%s,%s%s]", v.getChromosome(),
-                    v.getPosition(), v.getReferenceAllele(), v.getAlternateAllele(), v.getGenotype(), v.getVariantClass(), v.getPathomechanism());
+        for (Variant v : model.getVariantList()) {
+            String vs = String.format("%s:%s%s>%s[%s,%s%s]", v.getContig(),
+                    v.getPos(), v.getRefAllele(), v.getAltAllele(), v.getGenotype(), v.getVariantClass(), v.getPathomechanism());
             if (second) sb.append(";");
             else second = true;
             sb.append(vs);
@@ -138,12 +129,14 @@ public class PhenoModelExporter implements ModelExporter {
      * This export format is designed for the GPI study. It outputs
      * a semicolon-separated list of HPO terms.
      */
-    String getPhenoString(DiseaseCaseModel model) {
+    private String getPhenoString(DiseaseCase model) {
         try {
-            if (model.getHpoList() == null) {
+            if (model.getPhenotypeList() == null) {
                 return String.format("WARNING: No HPO terms found for model: %s", model);
             } else {
-                return model.getHpoList().stream().filter(hpo -> hpo.getObserved().equals("YES")).map(hpo -> hpo.getHpoId())
+                return model.getPhenotypeList().stream()
+                        .filter(oc -> !oc.getNotObserved())
+                        .map(OntologyClass::getId)
                         .collect(Collectors.joining(";"));
             }
         } catch (Exception e) {

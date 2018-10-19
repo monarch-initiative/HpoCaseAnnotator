@@ -132,7 +132,6 @@ message VariantValidation {
 
 
 message Publication {
-
     // e.g. Smedley D, Schubach M, Jacobsen JOB, Köhler S, Zemojtel T, Spielmann M, Jäger M, Hochheiser H, Washington NL, McMurry JA, Haendel MA, Mungall CJ, Lewis SE, Groza T, Valentini G, Robinson PN
     string author_list = 3;
     // e.g. A Whole-Genome Analysis Framework for Effective Identification of Pathogenic Regulatory Variants in Mendelian Disease
@@ -158,7 +157,7 @@ message Gene {
 }
 
 
-// A class (aka term, concept) in an ontology (borrowed from phenopackets
+// A class (aka term, concept) in an ontology (borrowed from phenopackets)
 message OntologyClass {
     // a CURIE-style identifier e.g. HP:0100024, MP:0001284, UBERON:0001690.
     // This is the primary key for the ontology class
@@ -193,8 +192,8 @@ message FamilyInfo {
     string family_or_proband_id = 1;
 
     Sex sex = 2;
-    // e.g. 18
-    int32 age = 3;
+    // e.g. 18, or 10m
+    string age = 3;
 }
 
 

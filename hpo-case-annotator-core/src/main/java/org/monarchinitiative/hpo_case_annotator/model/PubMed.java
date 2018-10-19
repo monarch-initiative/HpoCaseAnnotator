@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-@Deprecated
 public class PubMed {
 
 

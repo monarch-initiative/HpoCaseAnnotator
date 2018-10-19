@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -139,13 +138,13 @@ public final class PopUps {
      * @param windowTitle title of the popup window
      * @return {@link Optional} object containing String selected by user or empty if user selected cancel
      */
-    public static Optional<String> getToggleChoiceFromUser(String[] choices, String labelText, String windowTitle) {
+    public static Optional<String> getToggleChoiceFromUser(List<String> choices, String labelText, String windowTitle) {
         Alert al = new Alert(AlertType.CONFIRMATION);
 
         al.setTitle(windowTitle);
         al.setHeaderText(null);
         al.setContentText(labelText);
-        List<ButtonType> buttons = Arrays.stream(choices).map(ButtonType::new).collect(Collectors.toList());
+        List<ButtonType> buttons = choices.stream().map(ButtonType::new).collect(Collectors.toList());
 
         buttons.add(new ButtonType("Cancel", ButtonData.CANCEL_CLOSE));
 

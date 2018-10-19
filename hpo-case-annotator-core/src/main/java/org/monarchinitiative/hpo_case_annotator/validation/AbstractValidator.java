@@ -1,8 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.validation;
 
-import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
-
-import java.util.List;
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 
 /**
  * Base class for all validators for sharing common resources and utility methods.
@@ -14,10 +12,6 @@ public abstract class AbstractValidator {
      */
     final String OKAY = "All right!";
 
-    protected AbstractValidator() {
-        // no-op, prevent instantiation through public constructor.
-    }
-
 
     /**
      * @param s {@link String} that is tested.
@@ -27,14 +21,22 @@ public abstract class AbstractValidator {
         return s == null || s.equals("");
     }
 
+
     public static ValidationResult makeValidationResult(ValidationResult result, String message) {
         result.setMessage(message);
         return result;
     }
+
+
+    protected AbstractValidator() {
+        // no-op, prevent instantiation through public constructor.
+    }
+
+
     /**
-     * @param model {@link DiseaseCaseModel} instance about to be validated
+     * @param model {@link DiseaseCase} instance about to be validated
      * @return {@link ValidationResult} with message describing validation outcome
      */
-    public abstract ValidationResult validateDiseaseCase(DiseaseCaseModel model);
+    public abstract ValidationResult validateDiseaseCase(DiseaseCase model);
 
 }

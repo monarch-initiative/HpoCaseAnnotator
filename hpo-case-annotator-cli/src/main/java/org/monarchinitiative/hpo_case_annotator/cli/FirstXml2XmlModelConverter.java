@@ -3,18 +3,16 @@ package org.monarchinitiative.hpo_case_annotator.cli;
 import org.monarchinitiative.hpo_case_annotator.io.FirstModelXMLParser;
 import org.monarchinitiative.hpo_case_annotator.io.ModelParser;
 import org.monarchinitiative.hpo_case_annotator.io.XMLModelParser;
-import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
+import org.monarchinitiative.hpo_case_annotator.model.Codecs;
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * This class converts XML files storing data in the <em>first</em> XML format into the format using Java beans.
- *
+ * <p>
  * The class reads XML files using {@link FirstModelXMLParser} and writes the files using {@link XMLModelParser}.
  *
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
@@ -25,7 +23,9 @@ class FirstXml2XmlModelConverter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FirstXml2XmlModelConverter.class);
 
-    private final ModelParser inputParser, outputParser;
+    private final FirstModelXMLParser inputParser;
+
+    private final ModelParser outputParser;
 
     private final File destDir, sourceDir;
 
@@ -47,8 +47,10 @@ class FirstXml2XmlModelConverter {
         LOGGER.info("Found {} files in directory '{}'", inputParser.getModelNames().size(), sourceDir.getAbsolutePath());
         for (File xmlPath : inputParser.getModelNames()) {
             LOGGER.info("Processing {}", xmlPath);
-            DiseaseCaseModel model = inputParser.readModel(new FileInputStream(xmlPath));
-            outputParser.saveModel(new FileOutputStream(new File(destDir, xmlPath.getName())), model);
+            DiseaseCase model = Codecs.diseaseCaseModel2DiseaseCase(inputParser.readModel(new FileInputStream(xmlPath)));
+            try (OutputStream os = new FileOutputStream(new File(destDir, xmlPath.getName()))) {
+                outputParser.saveModel(os, model);
+            }
         }
     }
 }

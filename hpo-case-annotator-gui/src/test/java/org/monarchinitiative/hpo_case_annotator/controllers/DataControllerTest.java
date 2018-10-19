@@ -85,7 +85,7 @@ public class DataControllerTest extends ApplicationTest {
 
     @Test
     public void testGenomeBox() throws Exception {
-        controller.setModel(model);
+//        controller.setModel(model);
         // Genome build ComboBox
         ComboBox<String> genome = lookup("#genomeBuildComboBox").query();
         genome.getItems().clear();  // clear values that are added from choice-basket.yml file to not depend on them.
@@ -98,7 +98,7 @@ public class DataControllerTest extends ApplicationTest {
 
     @Test
     public void entrezID() throws Exception {
-        controller.setModel(model);
+//        controller.setModel(model);
         // entrez id textField
         TextField entrez = lookup("#entrezIDTextField").query();
         assertEquals(null, model.getTargetGene().getEntrezID());
@@ -109,7 +109,7 @@ public class DataControllerTest extends ApplicationTest {
 
     @Test
     public void geneSymbol() throws Exception {
-        controller.setModel(model);
+//        controller.setModel(model);
         // gene symbol textField
         TextField geneSymbol = lookup("#geneSymbolTextField").query();
         assertEquals(null, model.getTargetGene().getGeneName());
@@ -120,7 +120,7 @@ public class DataControllerTest extends ApplicationTest {
 
     @Test
     public void diseaseDB() throws Exception {
-        controller.setModel(model);
+//        controller.setModel(model);
 
         // disease database
         ComboBox<String> database = lookup("#diseaseDatabaseComboBox").query();
@@ -134,7 +134,7 @@ public class DataControllerTest extends ApplicationTest {
 
     @Test
     public void diseaseName() throws Exception {
-        controller.setModel(model);
+//        controller.setModel(model);
         // disease name textField
         TextField diseaseName = lookup("#diseaseNameTextField").query();
         assertEquals(null, model.getDisease().getDiseaseName());
@@ -145,7 +145,7 @@ public class DataControllerTest extends ApplicationTest {
 
     @Test
     public void diseaseID() throws Exception {
-        controller.setModel(model);
+//        controller.setModel(model);
         // disease id textField
         TextField diseaseID = lookup("#diseaseIDTextField").query();
         assertEquals(null, model.getDisease().getDiseaseId());
@@ -156,7 +156,7 @@ public class DataControllerTest extends ApplicationTest {
 
     @Test
     public void probandID() throws Exception {
-        controller.setModel(model);
+//        controller.setModel(model);
         // proband family ID textField
         TextField probFam = lookup("#probandFamilyTextField").query();
         assertEquals(null, model.getFamilyInfo().getFamilyOrPatientID());
@@ -167,7 +167,7 @@ public class DataControllerTest extends ApplicationTest {
 
     @Test
     public void sex() throws Exception {
-        controller.setModel(model);
+//        controller.setModel(model);
         // sex combobox
         ComboBox<String> sex = lookup("#sexComboBox").query();
         sex.getItems().clear(); // clear values that are added from choice-basket.yml file to not depend on them.
@@ -180,7 +180,7 @@ public class DataControllerTest extends ApplicationTest {
 
     @Test
     public void age() throws Exception {
-        controller.setModel(model);
+//        controller.setModel(model);
 
         // age textField
         TextField age = lookup("#ageTextField").query();
@@ -192,7 +192,7 @@ public class DataControllerTest extends ApplicationTest {
 
     @Test
     public void bioc() throws Exception {
-        controller.setModel(model);
+//        controller.setModel(model);
         // biocurator textField - NOT EDITABLE
         TextField bioc = lookup("#biocuratorIdTextField").query();
         assertEquals(null, model.getBiocurator().getBioCuratorId());
@@ -203,7 +203,7 @@ public class DataControllerTest extends ApplicationTest {
 
     @Test
     public void metadata() throws Exception {
-        controller.setModel(model);
+//        controller.setModel(model);
         // metadata textField - NOT EDITABLE
         TextArea metada = lookup("#metadataTextArea").query();
         assertEquals(null, model.getMetadata().getMetadataText());
@@ -240,7 +240,7 @@ public class DataControllerTest extends ApplicationTest {
     @Test
     public void inputPubMedDataButton() throws Exception {
         DiseaseCaseModel model = new DiseaseCaseModel();
-        controller.setModel(model);
+//        controller.setModel(model);
         TextField pubMed = lookup("#inputPubMedDataTextField").query();
         Button pubMedButton = lookup("#inputPubMedButton").query();
         pubMed.setText(PUBMED);

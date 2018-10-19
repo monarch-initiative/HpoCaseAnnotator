@@ -12,7 +12,7 @@ import javafx.beans.property.StringProperty;
  */
 public final class Metadata {
 
-    private final StringProperty metadataText = new SimpleStringProperty(this, "metadataText");
+    private final StringProperty metadataText = new SimpleStringProperty(this, "metadataText", "");
 
 
     public Metadata(String metadataText) {

@@ -1,7 +1,8 @@
 package org.monarchinitiative.hpo_case_annotator.validation;
 
-import org.monarchinitiative.hpo_case_annotator.first_model.mutation.Validation;
-import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
+
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Utils;
 import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.refgenome.GenomeAssembly;
 import org.monarchinitiative.hpo_case_annotator.refgenome.SequenceDao;
@@ -14,7 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * This class performs validation of {@link DiseaseCaseModel} instances.
+ * This class performs validation of {@link DiseaseCase} instances.
  *
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
  * @version 0.0.2
@@ -40,10 +41,10 @@ public final class ValidationRunner {
     /**
      * Run validation on given collection of models and return results as a list of validation lines.
      *
-     * @param models {@link Collection} of {@link DiseaseCaseModel} instances.
+     * @param models {@link Collection} of {@link DiseaseCase} instances.
      * @return {@link List} of {@link ValidationLine}s.
      */
-    public List<ValidationLine> validateModels(Collection<DiseaseCaseModel> models) {
+    public List<ValidationLine> validateModels(Collection<DiseaseCase> models) {
         return models.stream()
                 .map(this::singleValidation)
                 .flatMap(List::stream)
@@ -54,12 +55,12 @@ public final class ValidationRunner {
     /**
      * Validate single model instance with validators.
      *
-     * @param model {@link DiseaseCaseModel} instance to be validated.
+     * @param model {@link DiseaseCase} instance to be validated.
      * @return {@link List} of {@link ValidationLine}s created by validators.
      */
-    private List<ValidationLine> singleValidation(DiseaseCaseModel model) {
+    private List<ValidationLine> singleValidation(DiseaseCase model) {
         List<ValidationLine> valList = new ArrayList<>();
-        String modelName = model.getFileName();
+        String modelName = Utils.getNameFor(model);
 
         // Completeness validator
         ValidationResult completenessResult = completenessValidator.validateDiseaseCase(model);
@@ -78,13 +79,13 @@ public final class ValidationRunner {
         return valList;
     }
 
-    public static Collection<ValidationLine> validateModel(DiseaseCaseModel model, GenomeAssemblies assemblies) {
+    public static Collection<ValidationLine> validateModel(DiseaseCase model, GenomeAssemblies assemblies) {
         Set<ValidationLine> lines = new HashSet<>();
 
         // validate completness
         CompletenessValidator completenessValidator = new CompletenessValidator();
         ValidationResult result = completenessValidator.validateDiseaseCase(model);
-        lines.add(new ValidationLine(model.getFileName(), completenessValidator.getClass().getSimpleName(), result));
+        lines.add(new ValidationLine(Utils.getNameFor(model), completenessValidator.getClass().getSimpleName(), result));
         if (result != ValidationResult.PASSED)
             return lines; // further validation is a waste of time, since the model is incomplete
 
@@ -100,8 +101,8 @@ public final class ValidationRunner {
                 assembly = assemblies.getAssemblyMap().get(GenomeAssembly.HG38.toString());
                 break;
             default:
-                LOGGER.warn("Unknown genome build '{}' in model '{}'", model.getGenomeBuild(), model.getFileName());
-                lines.add(new ValidationLine(model.getFileName(), "GenomeBuildValidator",
+                LOGGER.warn("Unknown genome build '{}' in model '{}'", model.getGenomeBuild(), Utils.getNameFor(model));
+                lines.add(new ValidationLine(Utils.getNameFor(model), "GenomeBuildValidator",
                         AbstractValidator.makeValidationResult(ValidationResult.FAILED, "Unknown genome build '" + model.getGenomeBuild() + "'")));
                 return lines;
         }
@@ -109,16 +110,16 @@ public final class ValidationRunner {
         // validate genomic coordinates
         File fastaFile = assembly.getFastaPath();
         if (fastaFile == null || !fastaFile.isFile()) {
-            lines.add(new ValidationLine(model.getFileName(), GenomicPositionValidator.class.getSimpleName(),
+            lines.add(new ValidationLine(Utils.getNameFor(model), GenomicPositionValidator.class.getSimpleName(),
                     AbstractValidator.makeValidationResult(ValidationResult.UNAPPLICABLE, "Genome build '" + assembly.toString() + "' not available. Download in Set resources dialog")));
         } else {
             try (SequenceDao sequenceDao = new SingleFastaSequenceDao(assembly.getFastaPath())) {
                 GenomicPositionValidator genomicPositionValidator = new GenomicPositionValidator(sequenceDao);
-                lines.add(new ValidationLine(model.getFileName(), GenomicPositionValidator.class.getSimpleName(),
+                lines.add(new ValidationLine(Utils.getNameFor(model), GenomicPositionValidator.class.getSimpleName(),
                         genomicPositionValidator.validateDiseaseCase(model)));
             } catch (Exception e) {
-                LOGGER.warn("Error occured during validation of genomic coordinates of the model '{}' using assembly '{}'", model.getFileName(), assembly.toString());
-                lines.add(new ValidationLine(model.getFileName(), GenomicPositionValidator.class.getSimpleName(),
+                LOGGER.warn("Error occured during validation of genomic coordinates of the model '{}' using assembly '{}'", Utils.getNameFor(model), assembly.toString());
+                lines.add(new ValidationLine(Utils.getNameFor(model), GenomicPositionValidator.class.getSimpleName(),
                         AbstractValidator.makeValidationResult(ValidationResult.UNAPPLICABLE, "Error occured during validation using assembly '" + assembly.toString() + "'")));
             }
         }

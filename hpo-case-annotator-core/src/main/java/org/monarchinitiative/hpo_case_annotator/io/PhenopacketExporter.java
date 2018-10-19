@@ -2,9 +2,9 @@ package org.monarchinitiative.hpo_case_annotator.io;
 
 
 import com.google.common.collect.ImmutableList;
-import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
-import org.monarchinitiative.hpo_case_annotator.model.HPO;
-import org.monarchinitiative.hpo_case_annotator.model.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Utils;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.phenopackets.api.PhenoPacket;
 import org.phenopackets.api.io.JsonGenerator;
 import org.phenopackets.api.model.association.PhenotypeAssociation;
@@ -20,15 +20,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PhenopacketExporter {
 
-    DiseaseCaseModel model = null;
+    DiseaseCase model = null;
 
     private File pathToFileToSave = null;
 
 
-    public PhenopacketExporter(File wheretosave, DiseaseCaseModel mod) {
+    public PhenopacketExporter(File wheretosave, DiseaseCase mod) {
         this.pathToFileToSave = wheretosave;
         this.model = mod;
     }
@@ -37,7 +38,7 @@ public class PhenopacketExporter {
     /** To do -- choose appropriate HPO Terms for this! */
     private DiseaseOccurrence getDiseaseStage() {
         DiseaseStage stage = new DiseaseStage();
-        String age = this.model.getFamilyInfo().getAge();
+        String age = String.valueOf(this.model.getFamilyInfo().getAge());
         stage.setDescription(age);
         stage.setTypes(ImmutableList.of(
                 OntologyClass.of("HP:0040279", "Onset")
@@ -59,22 +60,19 @@ public class PhenopacketExporter {
 
     private Person getPerson() {
         Person person = new Person();
-        person.setId(model.getFamilyInfo().getFamilyOrPatientID());
-        person.setLabel(model.getFamilyInfo().getFamilyOrPatientID());
-        person.setSex(model.getFamilyInfo().getSex());
+        person.setId(model.getFamilyInfo().getFamilyOrProbandId());
+        person.setLabel(model.getFamilyInfo().getFamilyOrProbandId());
+        person.setSex(model.getFamilyInfo().getSex().toString());
         return person;
     }
 
 
     private Phenotype getDiseasePhenotype() {
         Phenotype diseasePhenotype = new Phenotype();
-        List<HPO> hpolist = model.getHpoList();
-        List<OntologyClass> oclist = new ArrayList<>();
+        List<OntologyClass> oclist = model.getPhenotypeList().stream()
+                .map(oc -> new OntologyClass.Builder(oc.getId()).setLabel(oc.getLabel()).build())
+                .collect(Collectors.toList());
 
-        for (HPO hpo : hpolist) {
-            OntologyClass oc = new OntologyClass.Builder(hpo.getHpoId()).setLabel(hpo.getHpoName()).build();
-            oclist.add(oc);
-        }
         diseasePhenotype.setTypes(ImmutableList.copyOf(oclist));
         return diseasePhenotype;
     }
@@ -82,19 +80,18 @@ public class PhenopacketExporter {
 
     private List<org.phenopackets.api.model.entity.Variant> getVariants() {
 
-        List<Variant> varlist = this.model.getVariants();
+        List<Variant> varlist = this.model.getVariantList();
         List<org.phenopackets.api.model.entity.Variant> ppvarlist = new ArrayList<>();
 
         for (Variant var : varlist) {
             org.phenopackets.api.model.entity.Variant v = new org.phenopackets.api.model.entity.Variant();
-            v.setChromosome(var.getChromosome());
-            v.setRefBases(var.getReferenceAllele());
-            v.setAltBases(var.getAlternateAllele());
-            String posstring = var.getPosition();
+            v.setChromosome(var.getContig());
+            v.setRefBases(var.getRefAllele());
+            v.setAltBases(var.getAltAllele());
             try {
-                Integer pos = Integer.parseInt(posstring);
+                int pos = var.getPos();
                 v.setStartPosition(pos);
-                String ra = var.getReferenceAllele();
+                String ra = var.getRefAllele();
                 int endpos = pos + ra.length() - 1; /* todo really, are we sure? */
                 v.setEndPosition(endpos);
             } catch (NumberFormatException e) {
@@ -113,10 +110,10 @@ public class PhenopacketExporter {
 
 
     public PhenoPacket createPhenopacketFromDiseaseCaseModel() {
-        String title = this.model.getPublication().getFirstAuthorSurname() +
+        String title = Utils.getFirstAuthorsSurname(this.model.getPublication()) +
                 "-" + model.getPublication().getYear() +
-                "-" + model.getTargetGene().getGeneName();
-        String age = model.getFamilyInfo().getAge();
+                "-" + model.getGene().getSymbol();
+        String age = String.valueOf(model.getFamilyInfo().getAge());
         /* Add disease occurence (onset) information */
         DiseaseOccurrence occurrence = getDiseaseStage();
         org.phenopackets.api.model.entity.Disease disease = getDisease();

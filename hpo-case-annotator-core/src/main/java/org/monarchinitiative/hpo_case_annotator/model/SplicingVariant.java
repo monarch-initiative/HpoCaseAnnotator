@@ -15,20 +15,20 @@ public final class SplicingVariant extends Variant {
     private ObjectProperty<SplicingValidation> splicingValidation = new SimpleObjectProperty<>(this, "splicingValidation", new SplicingValidation());
 
     /* Consequence of nucleotide change. Result of mutation, e.g. Exon skipping or cryptic splice site creation */
-    private StringProperty consequence = new SimpleStringProperty(this, "consequence");
+    private StringProperty consequence = new SimpleStringProperty(this, "consequence", "");
 
     /* This is 1-based coordinate of novel, variant-induced cryptic splice site.
      * Either it is the first base of truncated exon due to the novel 3'SS or
      * last base of truncated exon due to the novel 5'SS. */
-    private StringProperty crypticPosition = new SimpleStringProperty(this, "crypticPosition");
+    private StringProperty crypticPosition = new SimpleStringProperty(this, "crypticPosition", "");
 
     /* Type of Cryptic Splice Site - either new 5'SS or 3'SS. */
-    private StringProperty crypticSpliceSiteType = new SimpleStringProperty(this, "crypticSpliceSiteType");
+    private StringProperty crypticSpliceSiteType = new SimpleStringProperty(this, "crypticSpliceSiteType", "");
 
     /* Sequence snippet describing new splice site, e.g. CCTCGACGAGC]GTGCGA. Bracket symbol denotes
      * either end ']' of exonic sequence in case of novel 5'SS,
      * or start '[' of exonic sequence in case of new 3'SS */
-    private StringProperty crypticSpliceSiteSnippet = new SimpleStringProperty(this, "crypticSpliceSiteSnippet");
+    private StringProperty crypticSpliceSiteSnippet = new SimpleStringProperty(this, "crypticSpliceSiteSnippet", "");
 
 
     public final VariantMode getVariantMode() {
