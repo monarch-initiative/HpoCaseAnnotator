@@ -433,13 +433,19 @@ public final class MainController {
             if (which == null) {
                 return;
             }
+
+            while (which.getName().matches(".*\\s.*")) { // at least one whitespace with or without surrounding characters
+                if (PopUps.getBooleanFromUser("Provide new name or cancel", String.format("File name '%s' contains whitespace character", which.getName()), "Warning"))
+                    which = fileChooser.showSaveDialog(primaryStage);
+                else return;
+            }
             currentModelPath = which;
 
             if (fileChooser.getSelectedExtensionFilter().getDescription().equals(jsonFileFormat.getDescription())) {
                 try (OutputStream os = Files.newOutputStream(currentModelPath.toPath())) {
                     ProtoJSONModelParser.saveDiseaseCase(os, model, Charset.forName("UTF-8")); // TODO - charset is hardcoded
                 } catch (IOException e) {
-                    PopUps.showException("Save data into file", "Unable to store data into file", "", e);
+                    PopUps.showException(conversationTitle, "Unable to store data into file", "", e);
                     LOGGER.warn("Unable to store data into file {}", currentModelPath.getAbsolutePath(), e);
                     return;
                 }
@@ -447,7 +453,7 @@ public final class MainController {
                 try (FileOutputStream fos = new FileOutputStream(currentModelPath)) {
                     XMLModelParser.saveDiseaseCase(model, fos);
                 } catch (IOException e) {
-                    PopUps.showException("Save data into file", "Unable to store data into file", "", e);
+                    PopUps.showException(conversationTitle, "Unable to store data into file", "", e);
                     LOGGER.warn("Unable to store data into file {}", currentModelPath.getAbsolutePath(), e);
                     return;
                 }
@@ -458,10 +464,15 @@ public final class MainController {
                     .setBiocurator(Biocurator.newBuilder().setBiocuratorId(optionalResources.getBiocuratorId())
                             .build())
                     .build();
-            try (OutputStream fos = Files.newOutputStream(currentModelPath.toPath())) {
-                ProtoJSONModelParser.saveDiseaseCase(fos, model, Charset.forName("UTF-8")); // TODO - charset is hardcoded
+            try (OutputStream os = Files.newOutputStream(currentModelPath.toPath())) {
+                // save in the same format the model was saved
+                if (currentModelPath.getName().endsWith(".xml")) {
+                    XMLModelParser.saveDiseaseCase(model, os);
+                } else if (currentModelPath.getName().endsWith(".json")){
+                    ProtoJSONModelParser.saveDiseaseCase(os, model, Charset.forName("UTF-8")); // TODO - charset is hardcoded
+                }
             } catch (IOException e) {
-                PopUps.showException("Save data into file", "Unable to store data into file", "", e);
+                PopUps.showException(conversationTitle, "Unable to store data into file", "", e);
                 LOGGER.warn("Unable to store data into file {}", currentModelPath.getAbsolutePath(), e);
                 return;
             }

@@ -7,6 +7,7 @@ import com.google.common.collect.ComparisonChain;
  * href="http://semver.org/">semantic versioning</a>. <p> The partial conformation is caused by the fact that the class
  * recognizes major, minor and patch version numbers but <em>not</em> pre-release and build metadata.
  */
+@Deprecated
 public class HRMDModelVersion implements Comparable<HRMDModelVersion> {
 
     /**

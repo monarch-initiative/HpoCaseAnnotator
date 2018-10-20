@@ -2,8 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.model;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class PublicationTest {
 
@@ -36,9 +35,9 @@ public class PublicationTest {
                 "554-78", "4556775");
         three = new Publication("Other A.", "Not just some random fun", "Fun J", "2017", "21",
                 "554-78", "4556788");
-        assertTrue(one.equals(two));
-        assertTrue(two.equals(one));
-        assertFalse(one.equals(three));
-        assertFalse(three.equals(one));
+        assertEquals(one, two);
+        assertEquals(two, one);
+        assertNotEquals(one, three);
+        assertNotEquals(three, one);
     }
 }

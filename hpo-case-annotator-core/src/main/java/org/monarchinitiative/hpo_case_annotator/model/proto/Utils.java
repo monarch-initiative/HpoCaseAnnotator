@@ -21,7 +21,7 @@ public class Utils {
             String firstAuthor = publication.getAuthorList().split(",")[0];
             int lastindex = firstAuthor.lastIndexOf(' ');
             if (lastindex >= 0)
-                author = firstAuthor.substring(0, lastindex);
+                author = firstAuthor.substring(0, lastindex).replaceAll("\\s", "_");
             else
                 author = "author";
         }
