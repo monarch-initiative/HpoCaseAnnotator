@@ -435,7 +435,7 @@ public final class MainController {
             }
             currentModelPath = which;
 
-            if (fileChooser.getSelectedExtensionFilter().equals(jsonFileFormat)) {
+            if (fileChooser.getSelectedExtensionFilter().getDescription().equals(jsonFileFormat.getDescription())) {
                 try (OutputStream os = Files.newOutputStream(currentModelPath.toPath())) {
                     ProtoJSONModelParser.saveDiseaseCase(os, model, Charset.forName("UTF-8")); // TODO - charset is hardcoded
                 } catch (IOException e) {
@@ -443,7 +443,7 @@ public final class MainController {
                     LOGGER.warn("Unable to store data into file {}", currentModelPath.getAbsolutePath(), e);
                     return;
                 }
-            } else if (fileChooser.getSelectedExtensionFilter().equals(xmlFileFormat)) {
+            } else if (fileChooser.getSelectedExtensionFilter().getDescription().equals(xmlFileFormat.getDescription())) {
                 try (FileOutputStream fos = new FileOutputStream(currentModelPath)) {
                     XMLModelParser.saveDiseaseCase(model, fos);
                 } catch (IOException e) {
