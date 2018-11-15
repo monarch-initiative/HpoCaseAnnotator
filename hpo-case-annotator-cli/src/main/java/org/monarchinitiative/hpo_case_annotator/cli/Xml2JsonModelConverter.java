@@ -1,9 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.cli;
 
-import org.monarchinitiative.hpo_case_annotator.io.JSONModelParser;
-import org.monarchinitiative.hpo_case_annotator.io.ProtoJSONModelParser;
-import org.monarchinitiative.hpo_case_annotator.io.XMLModelParser;
-import org.monarchinitiative.hpo_case_annotator.model.DiseaseCaseModel;
+import org.monarchinitiative.hpo_case_annotator.model.io.ProtoJSONModelParser;
+import org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -10,6 +10,7 @@
         <module>hpo-case-annotator-core</module>
         <module>hpo-case-annotator-cli</module>
         <module>hpo-case-annotator-gui</module>
+        <module>hpo-case-annotator-model</module>
     </modules>
     <packaging>pom</packaging>
 

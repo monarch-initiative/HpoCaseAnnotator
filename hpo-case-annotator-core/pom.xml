@@ -12,13 +12,6 @@
     <artifactId>hpo-case-annotator-core</artifactId>
 
     <build>
-        <extensions>
-            <extension>
-                <groupId>kr.motd.maven</groupId>
-                <artifactId>os-maven-plugin</artifactId>
-                <version>1.5.0.Final</version>
-            </extension>
-        </extensions>
         <plugins>
             <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% COMPILER %%%%%%%%%%%%%%%% COMPILER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
             <plugin>
@@ -29,25 +22,6 @@
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
                 </configuration>
-            </plugin>
-            <!-- For generation of model classes -->
-            <plugin>
-                <groupId>org.xolstice.maven.plugins</groupId>
-                <artifactId>protobuf-maven-plugin</artifactId>
-                <version>0.5.1</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <protocArtifact>
-                        com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
-                    </protocArtifact>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <!-- Do NOT run Sphinx docs generation here-->
             <plugin>
@@ -63,6 +37,13 @@
 
 
     <dependencies>
+        <!-- For model classes -->
+        <dependency>
+            <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
+            <artifactId>hpo-case-annotator-model</artifactId>
+            <version>1.0.7-beta</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/de.charite.compbio/jannovar-core -->
         <dependency>
             <groupId>de.charite.compbio</groupId>
@@ -141,18 +122,6 @@
             <groupId>de.ontologizer</groupId>
             <artifactId>ontologizerlib-io</artifactId>
             <version>0.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>${protobuf.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java-util</artifactId>
-            <version>${protobuf.version}</version>
         </dependency>
 
         <!--################### TESTING ##########################-->
