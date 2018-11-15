@@ -1,6 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.model;
-
-import org.monarchinitiative.hpo_case_annotator.model.proto.*;
+package org.monarchinitiative.hpo_case_annotator.model.proto;
 
 /**
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
@@ -8,6 +6,7 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 public class ModelsForTesting {
 
     // TODO - add other models for testing here
+
 
     public static DiseaseCase benMahmoud2013B3GLCT() {
         return DiseaseCase.newBuilder()

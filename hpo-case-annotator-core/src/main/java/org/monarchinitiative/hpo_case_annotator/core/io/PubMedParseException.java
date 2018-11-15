@@ -1,6 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.core.io;
 
-import org.monarchinitiative.hpo_case_annotator.HpoCaseAnnotatorException;
+import org.monarchinitiative.hpo_case_annotator.core.HpoCaseAnnotatorException;
 
 /**
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>

@@ -1,7 +1,6 @@
-package org.monarchinitiative.hpo_case_annotator.model;
+package org.monarchinitiative.hpo_case_annotator.model.xml_model;
 
 import org.junit.Test;
-import org.monarchinitiative.hpo_case_annotator.model.xml_model.Publication;
 
 import static org.junit.Assert.*;
 

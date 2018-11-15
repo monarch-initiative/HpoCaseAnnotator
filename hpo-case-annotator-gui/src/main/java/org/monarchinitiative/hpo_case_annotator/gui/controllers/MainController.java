@@ -243,6 +243,7 @@ public final class MainController {
 
     @FXML
     void validateCurrentEntryMenuItemAction() {
+        // TODO - reject validation of incomplete model
         List<ValidationLine> lines = new ArrayList<>(ValidationRunner.validateModel(dataController.getCase(), assemblies));
 
         try {

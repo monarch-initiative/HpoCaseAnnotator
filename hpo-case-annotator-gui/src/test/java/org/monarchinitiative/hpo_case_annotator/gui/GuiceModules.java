@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator;
+package org.monarchinitiative.hpo_case_annotator.gui;
 
 import java.lang.annotation.*;
 

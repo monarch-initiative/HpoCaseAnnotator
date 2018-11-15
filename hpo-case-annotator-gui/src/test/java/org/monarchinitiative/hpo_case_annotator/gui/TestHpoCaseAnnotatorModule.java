@@ -1,11 +1,9 @@
-package org.monarchinitiative.hpo_case_annotator;
+package org.monarchinitiative.hpo_case_annotator.gui;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import javafx.application.HostServices;
 import ontologizer.ontology.Ontology;
-import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
-import org.monarchinitiative.hpo_case_annotator.gui.Play;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController;
 import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;

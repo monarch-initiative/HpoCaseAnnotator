@@ -1,10 +1,7 @@
-package org.monarchinitiative.hpo_case_annotator.model;
+package org.monarchinitiative.hpo_case_annotator.model.proto;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Utils;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
