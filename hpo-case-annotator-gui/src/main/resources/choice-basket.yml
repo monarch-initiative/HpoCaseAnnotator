@@ -13,12 +13,6 @@ genomeBuild: ['hg19', 'hg38']
 chromosome: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
   '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', 'X', 'Y', 'MT']
 
-# Possible genotypes of variant
-genotype: ['heterozygous', 'homozygous', 'hemizygous', 'not_reported']
-
-# Possible sex of proband (NOT gender!)
-sex: ['male', 'female']
-
 # Variant class - the root term of pathomechanism.
 variantClass: ['coding', 'enhancer', 'promoter', 'splicing', '5UTR',
   '3UTR', 'ICR', 'microRNAgene', 'RNP_RNAcomponent', 'LINC_RNA',
@@ -85,9 +79,6 @@ comparability: ['yes', 'no']
 cosegregation: ['yes', 'no']
 
 ### Specific for Splicing mutations ####################################
-# Cryptic splice site type
-# The empty string at the beginning of list is intentional
-crypticSpliceSiteType: ['', '5 splice site', '3 splice site']
 
 # Source of material used for validation - To be removed
 #materialSource: ['Patient', 'in-vitro']
