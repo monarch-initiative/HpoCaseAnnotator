@@ -171,7 +171,7 @@ public class XMLModelParserTest {
 
     @Before
     public void setUp() throws Exception {
-        parser = new XMLModelParser(TestResources.TEST_MODEL_FILE_DIR);
+        parser = new XMLModelParser(new File(TestResources.TEST_XML_MODEL_FILE_DIR.getFile()));
     }
 
 

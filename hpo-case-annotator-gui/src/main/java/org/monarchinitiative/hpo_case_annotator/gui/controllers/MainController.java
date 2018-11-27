@@ -297,12 +297,46 @@ public final class MainController {
 
     @FXML
     void exportToCSVMenuItemAction() {
-        ModelExporter exporter = new TSVModelExporter(optionalResources.getDiseaseCaseDir().getAbsolutePath(), "\t");
+        final Optional<String> toggleChoiceFromUser = PopUps.getToggleChoiceFromUser(Arrays.asList("JSON", "XML"),
+                String.format("What encoding is used for models in \n'%s'?", optionalResources.getDiseaseCaseDir().getAbsolutePath()),
+                "Export as CSV");
+        if (!toggleChoiceFromUser.isPresent()) {
+            return;
+        }
+
+        String encoding = toggleChoiceFromUser.get();
+        final ModelParser parser;
+        switch (encoding) {
+            case "JSON":
+                parser = new ProtoJSONModelParser(optionalResources.getDiseaseCaseDir().toPath());
+                break;
+            case "XML":
+                parser = new XMLModelParser(optionalResources.getDiseaseCaseDir());
+                break;
+            default:
+                LOGGER.warn("Invalid choice '{}'", encoding);
+                return;
+        }
+
+        // read all the cases
+        Set<DiseaseCase> cases = new HashSet<>();
+        for (File modelName : parser.getModelNames()) {
+            try (InputStream is = new BufferedInputStream(new FileInputStream(modelName))) {
+                cases.add(parser.readModel(is));
+            } catch (FileNotFoundException e) {
+                LOGGER.warn("File '{}' not found", modelName, e);
+            } catch (IOException e) {
+                LOGGER.warn("Error reading file '{}'", modelName, e);
+            }
+        }
+
+        ModelExporter exporter = new TSVModelExporter("\t");
         File where = PopUps.selectFileToSave(primaryStage, optionalResources.getDiseaseCaseDir(),
                 "Export variants to CSV file", "variants.tsv");
         if (where != null) {
             try (Writer writer = new FileWriter(where)) {
-                exporter.exportModels(writer);
+                exporter.exportModels(cases, writer);
+                LOGGER.info("Exported {} cases", cases.size());
             } catch (IOException e) {
                 LOGGER.warn(String.format("Error occured during variant export: %s", e.getMessage()), e);
             }
@@ -337,12 +371,47 @@ public final class MainController {
 
     @FXML
     void exportPhenoModelsMenuItemAction() {
-        ModelExporter phenoExporter = new PhenoModelExporter(optionalResources.getDiseaseCaseDir().getAbsolutePath(), "\t");
+
+        final Optional<String> toggleChoiceFromUser = PopUps.getToggleChoiceFromUser(Arrays.asList("JSON", "XML"),
+                String.format("What encoding is used for models in \n'%s'?", optionalResources.getDiseaseCaseDir().getAbsolutePath()),
+                "Export as CSV");
+        if (!toggleChoiceFromUser.isPresent()) {
+            return;
+        }
+
+        String encoding = toggleChoiceFromUser.get();
+        final ModelParser parser;
+        switch (encoding) {
+            case "JSON":
+                parser = new ProtoJSONModelParser(optionalResources.getDiseaseCaseDir().toPath());
+                break;
+            case "XML":
+                parser = new XMLModelParser(optionalResources.getDiseaseCaseDir());
+                break;
+            default:
+                LOGGER.warn("Invalid choice '{}'", encoding);
+                return;
+        }
+
+        // read all the cases
+        Set<DiseaseCase> cases = new HashSet<>();
+        for (File modelName : parser.getModelNames()) {
+            try (InputStream is = new BufferedInputStream(new FileInputStream(modelName))) {
+                cases.add(parser.readModel(is));
+            } catch (FileNotFoundException e) {
+                LOGGER.warn("File '{}' not found", modelName, e);
+            } catch (IOException e) {
+                LOGGER.warn("Error reading file '{}'", modelName, e);
+            }
+        }
+
+        // write the cases to selected file
+        ModelExporter phenoExporter = new PhenoModelExporter("\t");
         File where = PopUps.selectFileToSave(primaryStage, optionalResources.getDiseaseCaseDir(),
                 "Export variants in format required by GPI project", "gpi_variants.tsv");
         if (where != null) {
             try (Writer writer = new FileWriter(where)) {
-                phenoExporter.exportModels(writer);
+                phenoExporter.exportModels(cases, writer);
             } catch (IOException e) {
                 LOGGER.warn(String.format("Error occured during variant export: %s", e.getMessage()), e);
             }

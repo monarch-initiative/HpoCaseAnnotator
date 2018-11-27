@@ -5,26 +5,18 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public final class TSVModelExporter implements ModelExporter {
 
-    public static final String XML_MODEL_SUFFIX = ".xml";
-
     private static final Logger LOGGER = LoggerFactory.getLogger(TSVModelExporter.class);
-
-    /**
-     * Path to directory with model files in XML format.
-     */
-    private final File modelDir;
 
     /**
      * String used to separate columns of the table.
@@ -35,64 +27,19 @@ public final class TSVModelExporter implements ModelExporter {
     /**
      * Create exporter that will export data from models in XML format present in provided directory.
      *
-     * @param modelDir String with path to directory containing model XML files
+     * @param delimiter String to be used as column delimiter
      */
-    public TSVModelExporter(String modelDir, String delimiter) {
-        this.modelDir = new File(modelDir);
+    public TSVModelExporter(String delimiter) {
         this.delimiter = delimiter;
-        LOGGER.debug(String.format("Initialized TSVModelExporter using %s as delimiter and %s as model directory",
-                delimiter, modelDir));
+        LOGGER.debug("Initialized TSVModelExporter using {} as delimiter", delimiter);
     }
 
 
     /**
-     * Create exporter that will export data from models in XML format present in provided directory using a default
-     * delimiter ("\t").
-     *
-     * @param modelDir String with path to directory containing model XML files
+     * Create exporter that will export data using a default delimiter <code>"\t"</code>.
      */
-    public TSVModelExporter(String modelDir) {
-        this(modelDir, "\t");
-    }
-
-
-    /**
-     * Read model XML files, extract variants and write variant per line using provided writer.
-     *
-     * @param writer {@link Writer} to be used for writing results.
-     */
-    @Override
-    public void exportModels(Writer writer) {
-        File[] models = modelDir.listFiles(f -> f.getName().endsWith(XML_MODEL_SUFFIX));
-        if (models == null)
-            return;
-
-        Collection<String> variants = new ArrayList<>();
-        for (File path : models) {
-            try (FileInputStream fis = new FileInputStream(path)) {
-                DiseaseCase model = XMLModelParser.loadDiseaseCase(fis);
-                variants.addAll(meltModelToVariants(model));
-            } catch (IOException e) {
-                LOGGER.warn("Error reading model file {}", path.getAbsolutePath(), e.getMessage());
-            }
-        }
-        LOGGER.trace("exportModels");
-
-        String header = "#CHROM\tPOS\tREF\tALT\tGT\tVCLASS\tPATHOM\tCONSQ\tCSSTYPE\tCSSPOS\tSYMBOL\tPMID\tFILE_NAME";
-        try {
-            writer.write(header + System.lineSeparator());
-        } catch (IOException e) {
-            LOGGER.warn("Error writing header.", e);
-        }
-
-        for (String variant : variants) {
-            try {
-                writer.write(variant + System.lineSeparator());
-            } catch (IOException e) {
-                LOGGER.warn(String.format("Error writing variant %s", variant));
-                LOGGER.warn(e.getMessage());
-            }
-        }
+    public TSVModelExporter() {
+        this("\t");
     }
 
 
@@ -100,11 +47,11 @@ public final class TSVModelExporter implements ModelExporter {
      * Convert data from models into lines of the table. Iterate through variants present in model and create line per
      * variant. Each line contains fields with variant attributes, fields are separated using {@link #delimiter}.
      *
-     * @param model instance of {@link DiseaseCase} with data.
-     * @return {@link Set} of Strings representing individual variants.
+     * @return {@link Function} for converting {@link DiseaseCase} to {@link Set} of Strings representing individual
+     * variants
      */
-    Set<String> meltModelToVariants(DiseaseCase model) {
-        return model.getVariantList().stream()
+    private Function<DiseaseCase, Set<String>> modelToVariants() {
+        return model -> model.getVariantList().stream()
                 .map(var -> {
                     List<String> fields = new ArrayList<>();
                     fields.add(var.getContig());
@@ -121,8 +68,37 @@ public final class TSVModelExporter implements ModelExporter {
                     fields.add(model.getPublication().getPmid());
                     fields.add(Utils.getNameFor(model));
 
-                    return fields.stream().collect(Collectors.joining(delimiter));
+                    return String.join(delimiter, fields);
                 })
                 .collect(Collectors.toSet());
+    }
+
+
+    /**
+     * Extract variants from provided {@link DiseaseCase}s and write variant per line using provided
+     * <code>writer</code>.
+     *
+     * @param writer {@link Writer} to be used for writing results
+     */
+    @Override
+    public void exportModels(Collection<DiseaseCase> cases, Writer writer) {
+
+        String header = "#CHROM\tPOS\tREF\tALT\tGT\tVCLASS\tPATHOM\tCONSQ\tCSSTYPE\tCSSPOS\tSYMBOL\tPMID\tFILE_NAME";
+        try {
+            writer.write(header + System.lineSeparator());
+        } catch (IOException e) {
+            LOGGER.warn("Error writing header", e);
+            return;
+        }
+        cases.stream()
+                .map(modelToVariants())
+                .flatMap(Collection::stream)
+                .forEach(variant -> {
+                    try {
+                        writer.write(variant + System.lineSeparator());
+                    } catch (IOException e) {
+                        LOGGER.warn("Error writing variant {}", variant, e);
+                    }
+                });
     }
 }

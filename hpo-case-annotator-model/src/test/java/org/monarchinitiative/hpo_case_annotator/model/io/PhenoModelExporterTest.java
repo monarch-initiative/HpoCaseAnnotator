@@ -1,12 +1,19 @@
 package org.monarchinitiative.hpo_case_annotator.model.io;
 
-import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.monarchinitiative.hpo_case_annotator.model.TestResources;
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 
+import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,21 +33,27 @@ public class PhenoModelExporterTest {
 
     private static final String DELIMITER = "\t";
 
+    private static final Collection<DiseaseCase> cases = new HashSet<>();
+
     /**
      * Tested instance
      */
     private PhenoModelExporter exporter;
 
 
-    @Before
-    public void setUp() throws Exception {
-        this.exporter = new PhenoModelExporter(TestResources.TEST_GPI_MODEL_FILE_DIR.getAbsolutePath(), DELIMITER);
+    @BeforeClass
+    public static void setUpBefore() throws Exception {
+        Path baroneCase = Paths.get(TestResources.TEST_GPI_MODEL_FILE_DIR.toURI()).resolve("Barone-2012-DPM2.xml");
+        try (InputStream is = Files.newInputStream(baroneCase)) {
+            DiseaseCase diseaseCase = XMLModelParser.loadDiseaseCase(is);
+            cases.add(diseaseCase);
+        }
     }
 
 
-    @After
-    public void tearDown() throws Exception {
-        this.exporter = null;
+    @Before
+    public void setUp() throws Exception {
+        this.exporter = new PhenoModelExporter(DELIMITER);
     }
 
 
@@ -57,7 +70,7 @@ public class PhenoModelExporterTest {
     @Test
     public void negatedHPONotIncluded() {
         StringWriter writer = new StringWriter();
-        exporter.exportModels(writer);
+        exporter.exportModels(cases, writer);
         String record = Arrays.stream(writer.toString().split("\n"))
                 .filter(line -> !line.startsWith("#"))
                 .collect(Collectors.toList())
