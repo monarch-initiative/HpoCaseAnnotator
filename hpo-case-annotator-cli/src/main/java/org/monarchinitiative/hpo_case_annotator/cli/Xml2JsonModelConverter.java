@@ -19,17 +19,20 @@ public class Xml2JsonModelConverter {
 
     private final ProtoJSONModelParser jsonModelParser;
 
+    private final File destDir;
+
 
     Xml2JsonModelConverter(File sourceDir, File destDir) {
         this.sourceDir = sourceDir;
         this.jsonModelParser = new ProtoJSONModelParser(destDir.toPath());
+        this.destDir = destDir;
     }
 
 
     void run() {
         File[] models = sourceDir.listFiles(f -> f.getName().endsWith(XMLModelParser.MODEL_SUFFIX));
         for (File modelPath : models) {
-            File outPath = new File(modelPath.getParentFile(), modelPath.getName().replace(".xml", ".json"));
+            File outPath = new File(destDir, modelPath.getName().replace(".xml", ".json"));
             try (InputStream inputStream = new FileInputStream(modelPath); OutputStream outputStream = new FileOutputStream(outPath)) {
                 DiseaseCase model = XMLModelParser.loadDiseaseCase(inputStream);
                 jsonModelParser.saveModel(outputStream, model);
