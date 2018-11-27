@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 
 
 /**
- * The purpose of this class is simply to read in all of the individual Mutation XML files and to return either a List<Mutation>
- * or a Map<String,Mutation> that will be used by other parts of the program to perform quality control.
+ * The purpose of this class is simply to read in all of the individual Mutation XML files and to return either a List Mutation
+ * or a Map String,Mutation that will be used by other parts of the program to perform quality control.
  *
  * @author Peter Robinson
  * @version 0.1.0.8 (31 December 2015)

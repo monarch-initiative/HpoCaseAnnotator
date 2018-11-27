@@ -31,7 +31,6 @@
     </properties>
 
     <scm>
-        <!--git@github.com:monarch-initiative/HpoCaseAnnotator.git-->
         <connection>scm:git:git@github.com:monarch-initiative/HpoCaseAnnotator.git</connection>
         <developerConnection>scm:git:git@github.com:monarch-initiative/HpoCaseAnnotator.git</developerConnection>
         <url>https://github.com/monarch-initiative/HpoCaseAnnotator</url>
@@ -77,6 +76,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.0.1</version>
+                    <configuration>
+                        <doclint>none</doclint>
+                    </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -2,28 +2,27 @@ package org.monarchinitiative.hpo_case_annotator.model.first_model.mutation;
 
 
 /**
- * This class encapsulates all of the information about the validation of
- * a particular regulatory mutation. Note that there are four main items that
- * we would like to record.
+ * This class encapsulates all of the information about the validation of a particular regulatory mutation. Note that
+ * there are four main items that we would like to record.
  * <p>Note that this class can sotre data about either a Mendelian mutation or a
- * cancer mutation, and it is up to the XML Handler and the GUI to use the
- * correct methods. In essence, the only relevant differences is that a different
- * subset of data is used to validate the cancer mutations and the mendelian mutations.
- * For instance, Mendelian mutations have cosegregation, and cancer mutations often have
- * data like "m of n patients" with a certain cancer.
+ * cancer mutation, and it is up to the XML Handler and the GUI to use the correct methods. In essence, the only
+ * relevant differences is that a different subset of data is used to validate the cancer mutations and the mendelian
+ * mutations. For instance, Mendelian mutations have cosegregation, and cancer mutations often have data like "m of n
+ * patients" with a certain cancer.
  * <ul>
  * <li> Reporter. An assay such as luciferase or CAT that measures the transcriptional
- * activity of a promoter or an enhancer. It can be decreased or increased by the mutation,
- * and this is indicated by the radio button in the GUI.
+ * activity of a promoter or an enhancer. It can be decreased or increased by the mutation, and this is indicated by the
+ * radio button in the GUI.
  * <li>EMSA. Electrophoretic mobility shift assay. Enter the Entrez Gene id corresponding to the
  * transcription factor that was investigated.
  * <li>Cogregration. The mutation cosegregates with the disease in the family (Mendelian).
  * <li>Number of patients with mutation -- n of m patients with a certain kind of cancer (Oncology).
- * <li>Comparability. This is the last resort, and means that we believe the sequence variant is a valid regulatory mutation because
- * it is comparable with other published mutations for which experimental evidence exists (e.g., on the same nucleotide or otherwise
- * comparable).
+ * <li>Comparability. This is the last resort, and means that we believe the sequence variant is a valid regulatory
+ * mutation because
+ * it is comparable with other published mutations for which experimental evidence exists (e.g., on the same nucleotide
+ * or otherwise comparable).
  * <li>Other. A list of rarer possibilities. Effect size is always with respect to the category of other.
- * </ol>
+ * </ul>
  *
  * @author Peter Robinson
  * @version 0.1.6 (9 Nov, 2015)
@@ -43,21 +42,22 @@ public class Validation {
     protected Effect otherEffect = Effect.NO;
 
     /**
-     * The gene symbol of the transcription factor that was investigated by
-     * EMSA (electrophoretic mobility assay).
+     * The gene symbol of the transcription factor that was investigated by EMSA (electrophoretic mobility assay).
      */
     protected String emsaSymbol = null;
 
     /**
-     * The Entrez gene ID of the transcription factor that was investigated by
-     * EMSA (electrophoretic mobility assay).
+     * The Entrez gene ID of the transcription factor that was investigated by EMSA (electrophoretic mobility assay).
      */
     protected Integer emsaGeneID = null;
 
     /** True if the mutation was shown to cosegregate with the disease */
     protected boolean hasCosegregation = false;
 
-    /** True if teh mutation was found to be pathogenic because it was similar to other published regulatory mutations in the gene */
+    /**
+     * True if teh mutation was found to be pathogenic because it was similar to other published regulatory mutations in
+     * the gene
+     */
     protected boolean hasComparability = false;
 
     /** True if there is an "other" reason for believing pathogenicity (see combobox) */
@@ -71,6 +71,7 @@ public class Validation {
 
     /** The total number of patients in a cancer study (N). */
     protected Integer nPatients = null;
+
 
     public Validation() {
 

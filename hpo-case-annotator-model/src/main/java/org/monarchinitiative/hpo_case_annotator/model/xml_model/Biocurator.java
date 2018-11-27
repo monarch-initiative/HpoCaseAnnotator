@@ -4,7 +4,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- * Bean for storing Biocurator details. Currently only biocurator ID, but we're open to also store e.g name & e-mail
+ * Bean for storing Biocurator details. Currently only biocurator ID, but we're open to also store e.g name and e-mail
  * later.
  *
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
