@@ -74,6 +74,13 @@
             <version>${protobuf.version}</version>
         </dependency>
 
+        <!-- Phenopacket format for exchange of phenotype data. -->
+        <dependency>
+            <groupId>org.phenopackets</groupId>
+            <artifactId>phenopacket-schema</artifactId>
+            <version>${phenopacket.version}</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
         <dependency>
             <groupId>org.slf4j</groupId>

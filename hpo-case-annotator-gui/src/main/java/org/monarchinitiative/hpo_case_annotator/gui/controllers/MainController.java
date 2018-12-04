@@ -12,7 +12,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.monarchinitiative.hpo_case_annotator.core.io.PhenopacketExporter;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.validation.CompletenessValidator;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationLine;
@@ -363,8 +362,10 @@ public final class MainController {
         File where = PopUps.selectFileToSave(primaryStage,
                 optionalResources.getDiseaseCaseDir(), "Save as Phenopacket", suggestedFileName);
         if (where != null) {
-            PhenopacketExporter exporter = new PhenopacketExporter(where, dataController.getCase());
-            exporter.writeToPhenopacket();
+            PopUps.showInfoMessage("Sorry, Phenopacket export does not work at the moment", "Save as Phenopacket");
+//            TODO - make the PhenoPacket export work
+//            PhenopacketExporter exporter = new PhenopacketExporter(where, dataController.getCase());
+//            exporter.writeToPhenopacket();
         }
     }
 
