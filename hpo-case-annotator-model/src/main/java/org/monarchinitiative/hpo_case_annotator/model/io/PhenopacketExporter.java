@@ -5,6 +5,7 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 
 import java.io.File;
 
+@Deprecated // in favor of PhenopacketCodec
 public class PhenopacketExporter {
 
     DiseaseCase model = null;
@@ -100,7 +101,7 @@ public class PhenopacketExporter {
 //
 //
 //    public PhenoPacket createPhenopacketFromDiseaseCaseModel() {
-//        String title = Utils.getFirstAuthorsSurname(this.model.getPublication()) +
+//        String title = ModelUtils.getFirstAuthorsSurname(this.model.getPublication()) +
 //                "-" + model.getPublication().getYear() +
 //                "-" + model.getGene().getSymbol();
 //        String age = String.valueOf(model.getFamilyInfo().getAge());

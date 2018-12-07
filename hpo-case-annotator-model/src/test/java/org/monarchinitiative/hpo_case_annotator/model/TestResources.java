@@ -1,5 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.model;
 
+import org.monarchinitiative.hpo_case_annotator.model.proto.Disease;
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.phenopackets.schema.v1.PhenoPacket;
 
 import java.net.URL;
@@ -23,5 +25,10 @@ public class TestResources {
      */
     public static PhenoPacket rareDiseasePhenoPacket() {
         return RareDiseasePhenoPacketExample.rareDiseasePhenoPacket();
+    }
+
+
+    public static DiseaseCase benMahmoud2013B3GLCT() {
+        return DiseaseCaseModelExample.benMahmoud2013B3GLCT();
     }
 }

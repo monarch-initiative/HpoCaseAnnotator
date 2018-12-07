@@ -1,14 +1,16 @@
-package org.monarchinitiative.hpo_case_annotator.model.proto;
+package org.monarchinitiative.hpo_case_annotator.model;
+
+import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 
 /**
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
  */
-public class ModelsForTesting {
+public class DiseaseCaseModelExample {
 
     // TODO - add other models for testing here
 
 
-    public static DiseaseCase benMahmoud2013B3GLCT() {
+    static DiseaseCase benMahmoud2013B3GLCT() {
         return DiseaseCase.newBuilder()
                 .setGenomeBuild("GRCh37")
                 .setPublication(Publication.newBuilder()
@@ -82,6 +84,8 @@ public class ModelsForTesting {
                         .build())
                 .setFamilyInfo(FamilyInfo.newBuilder()
                         .setFamilyOrProbandId("Tunisian patients")
+                        .setAge("P25Y") // this is not part of the original curated file, included here for testing
+                        .setSex(Sex.MALE)
                         .build())
                 .setBiocurator(Biocurator.newBuilder()
                         .setBiocuratorId("HPO:ahegde")
