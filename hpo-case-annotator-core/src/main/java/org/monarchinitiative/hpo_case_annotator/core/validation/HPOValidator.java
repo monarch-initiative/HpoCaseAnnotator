@@ -1,6 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
-import ontologizer.ontology.Ontology;
 import org.monarchinitiative.hpo_case_annotator.model.xml_model.DiseaseCaseModel;
 import org.monarchinitiative.hpo_case_annotator.model.xml_model.HPO;
 
@@ -24,9 +23,9 @@ public class HPOValidator
     }
 
 
-    public HPOValidator(Ontology ontology) {
+//    public HPOValidator(Ontology ontology) {
         // TODO - implement HPO checking.
-    }
+//    }
 
 
     /**

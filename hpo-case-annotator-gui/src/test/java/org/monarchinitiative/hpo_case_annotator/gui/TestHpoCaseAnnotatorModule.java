@@ -3,7 +3,6 @@ package org.monarchinitiative.hpo_case_annotator.gui;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import javafx.application.HostServices;
-import ontologizer.ontology.Ontology;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController;
 import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
@@ -17,6 +16,7 @@ import org.monarchinitiative.hpo_case_annotator.core.validation.CompletenessVali
 import org.monarchinitiative.hpo_case_annotator.core.validation.GenomicPositionValidator;
 import org.monarchinitiative.hpo_case_annotator.core.validation.PubMedValidator;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

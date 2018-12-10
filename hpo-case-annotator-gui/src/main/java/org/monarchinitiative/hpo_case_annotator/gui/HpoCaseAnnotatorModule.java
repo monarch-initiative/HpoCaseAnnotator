@@ -16,7 +16,9 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -75,6 +77,13 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
         bind(MainController.class);
     }
 
+
+    @Provides
+    @Singleton
+    @Named("scigraphMiningUrl")
+    public URL scigraphMiningUrl(Properties properties) throws MalformedURLException {
+        return new URL(Objects.requireNonNull(properties.getProperty("scigraph.mining.url")));
+    }
 
     /**
      * Return {@link Properties} with paths to resources. At first, {@link File} <code>propertiesFilePath</code>

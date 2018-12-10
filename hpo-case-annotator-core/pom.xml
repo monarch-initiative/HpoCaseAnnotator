@@ -116,11 +116,10 @@
             <version>${jackson.fasterxml.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/de.ontologizer/ontologizerlib-io -->
         <dependency>
-            <groupId>de.ontologizer</groupId>
-            <artifactId>ontologizerlib-io</artifactId>
-            <version>0.1</version>
+            <groupId>org.monarchinitiative.phenol</groupId>
+            <artifactId>phenol-io</artifactId>
+            <version>${phenol.version}</version>
         </dependency>
 
         <!--################### TESTING ##########################-->

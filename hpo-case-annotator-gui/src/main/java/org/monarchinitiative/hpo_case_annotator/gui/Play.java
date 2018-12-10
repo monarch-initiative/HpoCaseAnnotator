@@ -13,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController;
-import org.monarchinitiative.hpo_case_annotator.gui.hpotextmining.HpoTextMiningModule;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembliesSerializer;
 import org.slf4j.Logger;
@@ -49,7 +48,7 @@ public class Play extends Application {
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
         StyleManager.getInstance().addUserAgentStylesheet("hpo-case-annotator.css");
 
-        injector = Guice.createInjector(new HpoCaseAnnotatorModule(window, getHostServices()), new HpoTextMiningModule());
+        injector = Guice.createInjector(new HpoCaseAnnotatorModule(window, getHostServices()));
         ResourceBundle resourceBundle = injector.getInstance(ResourceBundle.class);
 
         Parent rootNode = FXMLLoader.load(MainController.class.getResource("MainView.fxml"), resourceBundle,

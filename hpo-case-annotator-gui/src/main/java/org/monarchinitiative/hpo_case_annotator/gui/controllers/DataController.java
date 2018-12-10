@@ -1,11 +1,12 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
+import com.github.monarchinitiative.hpotextmining.gui.controller.HpoTextMining;
+import com.github.monarchinitiative.hpotextmining.gui.controller.Main;
 import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.JavaFXBuilderFactory;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -19,19 +20,21 @@ import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.Abstract
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SomaticVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SplicingVariantController;
-import org.monarchinitiative.hpo_case_annotator.gui.hpotextmining.controllers.Main;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.WidthAwareTextFields;
 import org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.monarchinitiative.hpo_case_annotator.model.xml_model.DiseaseCaseModel;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
+import org.monarchinitiative.phenol.ontology.data.Term;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.FutureTask;
@@ -142,6 +145,29 @@ public final class DataController implements DiseaseCaseController {
         }
     }
 
+    /**
+     * @return {@link Function} for mapping {@link com.github.monarchinitiative.hpotextmining.gui.controller.Main.PhenotypeTerm} to
+     * {@link OntologyClass}
+     */
+    private static Function<Main.PhenotypeTerm, OntologyClass> phenotypeTermToOntologyClass() {
+        return pt -> OntologyClass.newBuilder()
+                .setId(pt.getTerm().getId().getIdWithPrefix())
+                .setLabel(pt.getTerm().getName())
+                .setNotObserved(!pt.isPresent())
+                .build();
+    }
+
+    /**
+     * @param ontology {@link Ontology} needed for mapping
+     * @return {@link Function} mapping {@link OntologyClass} to {@link Main.PhenotypeTerm} instance
+     */
+    private static Function<OntologyClass, Main.PhenotypeTerm> ontologyClassToPhenotypeTerm(Ontology ontology) {
+        return oc -> {
+            TermId id = TermId.constructWithPrefix(oc.getId());
+            Term term = ontology.getTermMap().get(id);
+            return new Main.PhenotypeTerm(term, !oc.getNotObserved());
+        };
+    }
 
     /**
      * Get {@link TitledPane} appropriate for displaying a {@link Variant} with given {@link VariantValidation.Context}
@@ -165,13 +191,11 @@ public final class DataController implements DiseaseCaseController {
         }
     }
 
-
     private AbstractVariantController getVariantController(Variant variant) throws IOException {
         AbstractVariantController controller = getVariantController(variant.getVariantValidation().getContext());
         controller.presentVariant(variant);
         return controller;
     }
-
 
     /**
      * Get path to XML file corresponding to current model.
@@ -182,7 +206,6 @@ public final class DataController implements DiseaseCaseController {
         return currentModelPath;
     }
 
-
     /**
      * Set path to XML file corresponding to current model.
      *
@@ -191,7 +214,6 @@ public final class DataController implements DiseaseCaseController {
     public void setCurrentModelPath(File currentModelPath) {
         this.currentModelPath = currentModelPath;
     }
-
 
     /**
      * Load variant data into GUI accordion.
@@ -210,7 +232,6 @@ public final class DataController implements DiseaseCaseController {
             }
         });
     }
-
 
     /**
      * Ask user to select variant mode and add variant into model & into view.
@@ -238,7 +259,6 @@ public final class DataController implements DiseaseCaseController {
         });
     }
 
-
     /**
      * Remove variant represented by expanded TitledPane in variant accordion from view & model.
      */
@@ -249,40 +269,34 @@ public final class DataController implements DiseaseCaseController {
             variantsAccordion.getPanes().remove(expanded); // remove variant from the View
     }
 
-
     @FXML
     void hpoTextMiningButtonAction() {
         try {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("Main.fxml"), resourceBundle,
-                    new JavaFXBuilderFactory(), injector::getInstance);
-            Parent parent = loader.load();
-            Main main = loader.getController();
-            main.setPhenotypeTerms(phenotypes.stream()
-                    .map(hpo ->
-                            new Main.PhenotypeTerm(optionalResources.getOntology().getTerm(hpo.getId()),
-                                    !hpo.getNotObserved()))
-                    .collect(Collectors.toSet()));
+            URL scigraphMiningUrl = injector.getInstance(Key.get(URL.class, Names.named("scigraphMiningUrl")));
+            HpoTextMining hpoTextMining = HpoTextMining.builder()
+                    .withSciGraphUrl(scigraphMiningUrl)
+                    .withOntology(optionalResources.getOntology())
+                    .withExecutorService(executorService)
+                    .withPhenotypeTerms(phenotypes.stream()
+                            .map(ontologyClassToPhenotypeTerm(optionalResources.getOntology()))
+                            .collect(Collectors.toSet()))
+                    .build();
+
             Stage stage = new Stage();
             stage.initOwner(hpoTextMiningButton.getParent().getScene().getWindow());
-            stage.setScene(new Scene(parent));
+            stage.setTitle("HPO text mining analysis");
+            stage.setScene(new Scene(hpoTextMining.getMainParent()));
             stage.showAndWait();
-            // wait until user finishes
+
             phenotypes.clear();
-            phenotypes.addAll(main.getPhenotypeTerms().stream()
-                    .map(term -> OntologyClass.newBuilder()
-                            .setId(term.getHpoId())
-                            .setLabel(term.getName())
-                            .setNotObserved(!term.isPresent())
-                            .build())
+            phenotypes.addAll(hpoTextMining.getApprovedTerms().stream()
+                    .map(phenotypeTermToOntologyClass())
                     .collect(Collectors.toSet()));
-        } catch (MalformedURLException e) {
-            LOGGER.warn("HPO text mining url is in wrong format", e);
         } catch (IOException e) {
-            LOGGER.warn("Unable to perform text mining", e);
+            // TODO - improve error handling
+            LOGGER.warn("Error ocurred during text mining", e);
         }
-
     }
-
 
     /**
      * Parse inputted PubMed string and set Publication info to the model.

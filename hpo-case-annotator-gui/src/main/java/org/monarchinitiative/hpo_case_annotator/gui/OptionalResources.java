@@ -6,16 +6,15 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import ontologizer.io.obo.OBOParser;
-import ontologizer.io.obo.OBOParserException;
-import ontologizer.io.obo.OBOParserFileInput;
-import ontologizer.ontology.Ontology;
-import ontologizer.ontology.TermContainer;
 import org.monarchinitiative.hpo_case_annotator.model.xml_model.TargetGene;
+import org.monarchinitiative.phenol.base.PhenolException;
+import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -85,15 +84,12 @@ public final class OptionalResources {
 
     public static Ontology deserializeOntology(File ontologyPath) {
         try {
-            OBOParser parser = new OBOParser(new OBOParserFileInput(ontologyPath.getAbsolutePath()), OBOParser
-                    .PARSE_DEFINITIONS);
-            LOGGER.info(parser.doParse());
-            TermContainer termContainer = new TermContainer(parser.getTermMap(), parser.getFormatVersion(), parser
-                    .getDate());
-            return Ontology.create(termContainer);
-        } catch (IOException | OBOParserException e) {
-            LOGGER.warn("Error occured during deserialization of obo file at {}", ontologyPath, e);
-            e.printStackTrace();
+            HpOboParser parser = new HpOboParser(ontologyPath);
+            return parser.parse();
+        } catch (FileNotFoundException e) {
+            LOGGER.warn("File not found", e);
+        } catch (PhenolException e) {
+            LOGGER.warn("Error occured during parsing of ontology file '{}'", ontologyPath, e);
         }
         return null;
     }
