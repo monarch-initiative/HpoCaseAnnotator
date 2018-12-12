@@ -1,5 +1,9 @@
 package org.monarchinitiative.hpo_case_annotator.model;
 
+import org.monarchinitiative.hpo_case_annotator.model.proto.Disease;
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.phenopackets.schema.v1.PhenoPacket;
+
 import java.net.URL;
 
 public class TestResources {
@@ -11,5 +15,20 @@ public class TestResources {
 
     private TestResources() {
         // private no-op
+    }
+
+    /**
+     * Utility method for returning a {@link PhenoPacket} rare disease example based on the case defined in
+     * src/test/resources/toronto_rare_disease_example.md
+     *
+     * @return a {@link PhenoPacket} containing a rare disease patient and relations.
+     */
+    public static PhenoPacket rareDiseasePhenoPacket() {
+        return RareDiseasePhenoPacketExample.rareDiseasePhenoPacket();
+    }
+
+
+    public static DiseaseCase benMahmoud2013B3GLCT() {
+        return DiseaseCaseModelExample.benMahmoud2013B3GLCT();
     }
 }

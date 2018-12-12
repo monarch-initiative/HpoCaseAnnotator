@@ -8,7 +8,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Utils;
+import org.monarchinitiative.hpo_case_annotator.model.proto.ModelUtils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 
 import java.util.Collection;
@@ -111,7 +111,7 @@ public final class ShowPublicationsController {
      */
     public void initialize() {
         firstAuthorTableColumn.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(Utils.getFirstAuthorsSurname(cdf.getValue().getPublication())));
+                new ReadOnlyStringWrapper(ModelUtils.getFirstAuthorsSurname(cdf.getValue().getPublication())));
         titleTableColumn.setCellValueFactory(cdf ->
                 new ReadOnlyStringWrapper(cdf.getValue().getPublication().getTitle()));
         journalTableColumn.setCellValueFactory(cdf ->

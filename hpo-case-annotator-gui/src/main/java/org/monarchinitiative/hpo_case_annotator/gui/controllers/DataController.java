@@ -468,6 +468,10 @@ public final class DataController implements DiseaseCaseController {
 
         publication = diseaseCase.getPublication();
 
+        // Phenotype terms
+        phenotypes.clear();
+        phenotypes.addAll(diseaseCase.getPhenotypeList());
+
         // Gene
         entrezIDTextField.setText(String.valueOf(diseaseCase.getGene().getEntrezId()));
         geneSymbolTextField.setText(diseaseCase.getGene().getSymbol());

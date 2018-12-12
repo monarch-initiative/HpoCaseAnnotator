@@ -2,7 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.core.validation;
 
 
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Utils;
+import org.monarchinitiative.hpo_case_annotator.model.proto.ModelUtils;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembly;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.SequenceDao;
@@ -60,7 +60,7 @@ public final class ValidationRunner {
      */
     private List<ValidationLine> singleValidation(DiseaseCase model) {
         List<ValidationLine> valList = new ArrayList<>();
-        String modelName = Utils.getNameFor(model);
+        String modelName = ModelUtils.getNameFor(model);
 
         // Completeness validator
         ValidationResult completenessResult = completenessValidator.validateDiseaseCase(model);
@@ -85,7 +85,7 @@ public final class ValidationRunner {
         // validate completness
         CompletenessValidator completenessValidator = new CompletenessValidator();
         ValidationResult result = completenessValidator.validateDiseaseCase(model);
-        lines.add(new ValidationLine(Utils.getNameFor(model), completenessValidator.getClass().getSimpleName(), result));
+        lines.add(new ValidationLine(ModelUtils.getNameFor(model), completenessValidator.getClass().getSimpleName(), result));
         if (result != ValidationResult.PASSED)
             return lines; // further validation is a waste of time, since the model is incomplete
 
@@ -101,8 +101,8 @@ public final class ValidationRunner {
                 assembly = assemblies.getAssemblyMap().get(GenomeAssembly.HG38.toString());
                 break;
             default:
-                LOGGER.warn("Unknown genome build '{}' in model '{}'", model.getGenomeBuild(), Utils.getNameFor(model));
-                lines.add(new ValidationLine(Utils.getNameFor(model), "GenomeBuildValidator",
+                LOGGER.warn("Unknown genome build '{}' in model '{}'", model.getGenomeBuild(), ModelUtils.getNameFor(model));
+                lines.add(new ValidationLine(ModelUtils.getNameFor(model), "GenomeBuildValidator",
                         AbstractValidator.makeValidationResult(ValidationResult.FAILED, "Unknown genome build '" + model.getGenomeBuild() + "'")));
                 return lines;
         }
@@ -110,16 +110,16 @@ public final class ValidationRunner {
         // validate genomic coordinates
         File fastaFile = assembly.getFastaPath();
         if (fastaFile == null || !fastaFile.isFile()) {
-            lines.add(new ValidationLine(Utils.getNameFor(model), GenomicPositionValidator.class.getSimpleName(),
+            lines.add(new ValidationLine(ModelUtils.getNameFor(model), GenomicPositionValidator.class.getSimpleName(),
                     AbstractValidator.makeValidationResult(ValidationResult.UNAPPLICABLE, "Genome build '" + assembly.toString() + "' not available. Download in Set resources dialog")));
         } else {
             try (SequenceDao sequenceDao = new SingleFastaSequenceDao(assembly.getFastaPath())) {
                 GenomicPositionValidator genomicPositionValidator = new GenomicPositionValidator(sequenceDao);
-                lines.add(new ValidationLine(Utils.getNameFor(model), GenomicPositionValidator.class.getSimpleName(),
+                lines.add(new ValidationLine(ModelUtils.getNameFor(model), GenomicPositionValidator.class.getSimpleName(),
                         genomicPositionValidator.validateDiseaseCase(model)));
             } catch (Exception e) {
-                LOGGER.warn("Error occured during validation of genomic coordinates of the model '{}' using assembly '{}'", Utils.getNameFor(model), assembly.toString());
-                lines.add(new ValidationLine(Utils.getNameFor(model), GenomicPositionValidator.class.getSimpleName(),
+                LOGGER.warn("Error occured during validation of genomic coordinates of the model '{}' using assembly '{}'", ModelUtils.getNameFor(model), assembly.toString());
+                lines.add(new ValidationLine(ModelUtils.getNameFor(model), GenomicPositionValidator.class.getSimpleName(),
                         AbstractValidator.makeValidationResult(ValidationResult.UNAPPLICABLE, "Error occured during validation using assembly '" + assembly.toString() + "'")));
             }
         }

@@ -1,7 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.model.io;
 
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Utils;
+import org.monarchinitiative.hpo_case_annotator.model.proto.ModelUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +66,7 @@ public final class TSVModelExporter implements ModelExporter {
                     fields.add(var.getCrypticPosition() == 0 ? "NaN" : String.valueOf(var.getCrypticPosition()));
                     fields.add(model.getGene().getSymbol());
                     fields.add(model.getPublication().getPmid());
-                    fields.add(Utils.getNameFor(model));
+                    fields.add(ModelUtils.getNameFor(model));
 
                     return String.join(delimiter, fields);
                 })

@@ -12,7 +12,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.monarchinitiative.hpo_case_annotator.core.io.PhenopacketExporter;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.validation.CompletenessValidator;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationLine;
@@ -23,7 +22,8 @@ import org.monarchinitiative.hpo_case_annotator.gui.util.StartupTask;
 import org.monarchinitiative.hpo_case_annotator.model.io.*;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Utils;
+import org.monarchinitiative.hpo_case_annotator.model.proto.ModelUtils;
+import org.phenopackets.schema.v1.PhenoPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -359,12 +359,26 @@ public final class MainController {
     @FXML
     void exportPhenopacketMenuItemAction() {
         DiseaseCase diseaseCase = dataController.getCase();
-        String suggestedFileName = Utils.getNameFor(diseaseCase) + ".phenopacket";
-        File where = PopUps.selectFileToSave(primaryStage,
-                optionalResources.getDiseaseCaseDir(), "Save as Phenopacket", suggestedFileName);
+        String suggestedFileName = ModelUtils.getNameFor(diseaseCase) + ".phenopacket";
+        String title = "Save as Phenopacket";
+
+        final FileChooser filechooser = new FileChooser();
+        filechooser.setTitle(title);
+        filechooser.setInitialDirectory(optionalResources.getDiseaseCaseDir());
+        filechooser.setInitialFileName(suggestedFileName);
+        FileChooser.ExtensionFilter jsonFormat = new FileChooser.ExtensionFilter("Phenopacket in JSON format", "*.phenopacket");
+        filechooser.getExtensionFilters().add(jsonFormat);
+        filechooser.setSelectedExtensionFilter(jsonFormat);
+
+        File where = filechooser.showSaveDialog(primaryStage);
         if (where != null) {
-            PhenopacketExporter exporter = new PhenopacketExporter(where, dataController.getCase());
-            exporter.writeToPhenopacket();
+            try (BufferedWriter writer = Files.newBufferedWriter(where.toPath())) {
+                final PhenoPacket packet = PhenopacketCodec.diseaseCaseToPhenopacket(diseaseCase);
+                PhenopacketCodec.writeAsPhenopacket(writer, packet);
+            } catch (IOException e) {
+                LOGGER.warn("Error occured during Phenopacket export", e);
+                PopUps.showException(title, "Error occured during Phenopacket export", e.getMessage(), e);
+            }
         }
     }
 
@@ -495,7 +509,7 @@ public final class MainController {
             //        fileChooser.setSelectedExtensionFilter(jsonFileFormat);
 
             fileChooser.setTitle(conversationTitle);
-            String suggestedName = Utils.getNameFor(model) + ".json";
+            String suggestedName = ModelUtils.getNameFor(model) + ".json";
             fileChooser.setInitialFileName(suggestedName);
             fileChooser.setInitialDirectory(optionalResources.getDiseaseCaseDir());
             fileChooser.getExtensionFilters().addAll(jsonFileFormat, xmlFileFormat);
