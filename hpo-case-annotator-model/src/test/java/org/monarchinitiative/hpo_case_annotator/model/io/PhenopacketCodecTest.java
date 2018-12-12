@@ -26,6 +26,7 @@ public class PhenopacketCodecTest {
     public void diseaseCaseToPhenopacket() {
         // arange
         DiseaseCase diseaseCase = TestResources.benMahmoud2013B3GLCT();
+        String metadata = diseaseCase.getMetadata();
 
         // act
         final PhenoPacket packet = PhenopacketCodec.diseaseCaseToPhenopacket(diseaseCase);
@@ -51,6 +52,7 @@ public class PhenopacketCodecTest {
                                 .build())
                         .setReference(ExternalReference.newBuilder()
                                 .setId("PMID:23954224")
+                                .setDescription(metadata)
                                 .build())
                         .build())
                 .build()));
@@ -66,6 +68,7 @@ public class PhenopacketCodecTest {
                                 .build())
                         .setReference(ExternalReference.newBuilder()
                                 .setId("PMID:23954224")
+                                .setDescription(metadata)
                                 .build())
                         .build())
                 .build()));
@@ -123,8 +126,8 @@ public class PhenopacketCodecTest {
     @Test
     @Ignore // TODO - implement phenopacket to DiseaseCase parsing
     public void phenopacketToDiseaseCase() {
-        PhenoPacket packet = TestResources.rareDiseasePhenoPacket();
-        final DiseaseCase diseaseCase = PhenopacketCodec.phenopacketToDiseaseCase(packet);
-        assertThat(diseaseCase, is(notNullValue()));
+//        PhenoPacket packet = TestResources.rareDiseasePhenoPacket();
+//        final DiseaseCase diseaseCase = PhenopacketCodec.phenopacketToDiseaseCase(packet);
+//        assertThat(diseaseCase, is(notNullValue()));
     }
 }
