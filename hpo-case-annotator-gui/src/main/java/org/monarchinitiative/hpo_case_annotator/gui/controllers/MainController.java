@@ -112,17 +112,16 @@ public final class MainController {
         if (which != null) {
             switch (filechooser.getSelectedExtensionFilter().getDescription()) {
                 case SPLICING_XML:
-                    try {
-                        diseaseCase = XMLModelParser.loadDiseaseCase(new FileInputStream(which));
-                    } catch (FileNotFoundException e) {
+                    try (InputStream is = new BufferedInputStream(new FileInputStream(which))) {
+                        diseaseCase = XMLModelParser.loadDiseaseCase(is);
+                    } catch (IOException e) {
                         PopUps.showException("Open XML model", "Unable to decode XML file", "Did you set proper extension?", e);
                         return;
                     }
                     break;
                 case PROTO_JSON:
-                    ProtoJSONModelParser pp = new ProtoJSONModelParser(optionalResources.getDiseaseCaseDir().toPath());
-                    try {
-                        diseaseCase = pp.readModel(new FileInputStream(which));
+                    try (InputStream is = new BufferedInputStream(new FileInputStream(which))) {
+                        diseaseCase = ProtoJSONModelParser.readDiseaseCase(is);
                     } catch (FileNotFoundException e) {
                         PopUps.showException("Open JSON model", String.format("File '%s' not found", which.getAbsolutePath()), "", e);
                         return;
