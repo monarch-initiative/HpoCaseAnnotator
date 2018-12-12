@@ -24,7 +24,6 @@ import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.WidthAwareTextFields;
 import org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
-import org.monarchinitiative.hpo_case_annotator.model.xml_model.DiseaseCaseModel;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -130,20 +129,6 @@ public final class DataController implements DiseaseCaseController {
         this.injector = injector;
     }
 
-
-    private static String convertGenomeBuild(DiseaseCaseModel model) {
-        switch (model.getGenomeBuild().toLowerCase()) {
-            case "grch37":
-            case "hg19":
-                return "hg19";
-            case "grch38":
-            case "hg38":
-                return "hg38";
-            default:
-                LOGGER.warn("Unknown genome build '{}' in model '{}'", model.getGenomeBuild(), model.getFileName());
-                return model.getGenomeBuild();
-        }
-    }
 
     /**
      * @return {@link Function} for mapping {@link com.github.monarchinitiative.hpotextmining.gui.controller.Main.PhenotypeTerm} to
@@ -271,6 +256,7 @@ public final class DataController implements DiseaseCaseController {
 
     @FXML
     void hpoTextMiningButtonAction() {
+        String conversationTitle = "HPO text mining analysis";
         try {
             URL scigraphMiningUrl = injector.getInstance(Key.get(URL.class, Names.named("scigraphMiningUrl")));
             HpoTextMining hpoTextMining = HpoTextMining.builder()
@@ -284,7 +270,7 @@ public final class DataController implements DiseaseCaseController {
 
             Stage stage = new Stage();
             stage.initOwner(hpoTextMiningButton.getParent().getScene().getWindow());
-            stage.setTitle("HPO text mining analysis");
+            stage.setTitle(conversationTitle);
             stage.setScene(new Scene(hpoTextMining.getMainParent()));
             stage.showAndWait();
 
@@ -293,8 +279,8 @@ public final class DataController implements DiseaseCaseController {
                     .map(phenotypeTermToOntologyClass())
                     .collect(Collectors.toSet()));
         } catch (IOException e) {
-            // TODO - improve error handling
-            LOGGER.warn("Error ocurred during text mining", e);
+            LOGGER.warn("Error occurred during text mining", e);
+            PopUps.showException(conversationTitle, "Error occurred during text mining", e.getMessage(), e);
         }
     }
 
@@ -478,7 +464,6 @@ public final class DataController implements DiseaseCaseController {
         currentModelLabel.setText(diseaseCase.getPublication().getTitle());
 
         // Genome build
-        // model.setGenomeBuild(convertGenomeBuild(model));
         genomeBuildComboBox.setValue(diseaseCase.getGenomeBuild());
 
         publication = diseaseCase.getPublication();
@@ -486,6 +471,9 @@ public final class DataController implements DiseaseCaseController {
         // Gene
         entrezIDTextField.setText(String.valueOf(diseaseCase.getGene().getEntrezId()));
         geneSymbolTextField.setText(diseaseCase.getGene().getSymbol());
+
+        // Phenotypes
+        phenotypes.addAll(diseaseCase.getPhenotypeList());
 
         // Disease
         diseaseDatabaseComboBox.setValue(diseaseCase.getDisease().getDatabase());
