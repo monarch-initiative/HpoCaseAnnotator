@@ -189,21 +189,23 @@
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-core</artifactId>
-            <version>4.0.13-alpha</version>
+            <version>${testfx.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.testfx/testfx-junit -->
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-junit</artifactId>
-            <version>4.0.13-alpha</version>
+            <version>${testfx.version}</version>
             <scope>test</scope>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.testfx/openjfx-monocle -->
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>openjfx-monocle</artifactId>
             <version>1.8.0_20</version>
+            <scope>test</scope>
         </dependency>
         <!-- End of libraries for GUI testing -->
 

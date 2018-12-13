@@ -3,23 +3,15 @@ package org.monarchinitiative.hpo_case_annotator.gui;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import javafx.application.HostServices;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValuesTest;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController;
 import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
 import org.monarchinitiative.hpo_case_annotator.core.io.OMIMParser;
+import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
+import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembliesSerializer;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValuesTest;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SomaticVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SplicingVariantController;
-import org.monarchinitiative.hpo_case_annotator.model.io.ModelParser;
-import org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser;
-import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
-import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembliesSerializer;
-import org.monarchinitiative.hpo_case_annotator.core.validation.CompletenessValidator;
-import org.monarchinitiative.hpo_case_annotator.core.validation.GenomicPositionValidator;
-import org.monarchinitiative.hpo_case_annotator.core.validation.PubMedValidator;
-import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +22,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -55,8 +46,8 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(DataController.class);
-        bind(MainController.class);
+//        bind(DataController.class);
+//        bind(MainController.class);
         bind(MendelianVariantController.class);
         bind(SomaticVariantController.class);
         bind(SplicingVariantController.class);
@@ -67,15 +58,11 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
         bind(ExecutorService.class)
                 .toInstance(Executors.newFixedThreadPool(1));
 
-        bind(ModelParser.class)
-                .to(XMLModelParser.class);
 
-
-        bind(ValidationRunner.class);
-        bind(GenomicPositionValidator.class);
-        bind(CompletenessValidator.class);
-        bind(PubMedValidator.class);
-
+//        bind(ValidationRunner.class);
+//        bind(GenomicPositionValidator.class);
+//        bind(CompletenessValidator.class);
+//        bind(PubMedValidator.class);
     }
 
 

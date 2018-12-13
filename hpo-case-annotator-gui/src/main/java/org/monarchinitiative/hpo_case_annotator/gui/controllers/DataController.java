@@ -6,7 +6,10 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 import javafx.application.Platform;
+import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -16,9 +19,6 @@ import org.monarchinitiative.hpo_case_annotator.core.io.RetrievePubMedSummary;
 import org.monarchinitiative.hpo_case_annotator.core.validation.PubMedValidator;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.AbstractVariantController;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SomaticVariantController;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SplicingVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.WidthAwareTextFields;
 import org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser;
@@ -58,6 +58,8 @@ public final class DataController implements DiseaseCaseController {
 
     private final List<OntologyClass> phenotypes = new ArrayList<>();
 
+    private final List<AbstractVariantController> variantControllers;
+
     @FXML
     public Button hpoTextMiningButton;
 
@@ -84,6 +86,9 @@ public final class DataController implements DiseaseCaseController {
     @FXML
     private TextField geneSymbolTextField;
 
+    /**
+     * This element displays variants
+     */
     @FXML
     private Accordion variantsAccordion;
 
@@ -126,6 +131,7 @@ public final class DataController implements DiseaseCaseController {
         this.elementValues = elementValues;
         this.resourceBundle = resourceBundle;
         this.injector = injector;
+        variantControllers = new ArrayList<>();
     }
 
 
@@ -153,33 +159,6 @@ public final class DataController implements DiseaseCaseController {
         };
     }
 
-    /**
-     * Get {@link TitledPane} appropriate for displaying a {@link Variant} with given {@link VariantValidation.Context}
-     * <code>ctx</code>.
-     *
-     * @param ctx {@link VariantValidation.Context}
-     * @return @link BaseVariantController subclass, which is also subclass of {@link TitledPane} and can be displayed
-     * as a content within this {@link DataController}.
-     */
-    private AbstractVariantController getVariantController(VariantValidation.Context ctx) throws IOException {
-        switch (ctx) {
-            case MENDELIAN:
-                return injector.getInstance(MendelianVariantController.class);
-            case SPLICING:
-                return injector.getInstance(SplicingVariantController.class);
-            case SOMATIC:
-                return injector.getInstance(SomaticVariantController.class);
-            default:
-                LOGGER.error("Unknown variant validation context {}", ctx);
-                throw new IOException();
-        }
-    }
-
-    private AbstractVariantController getVariantController(Variant variant) throws IOException {
-        AbstractVariantController controller = getVariantController(variant.getVariantValidation().getContext());
-        controller.presentVariant(variant);
-        return controller;
-    }
 
     /**
      * Get path to XML file corresponding to current model.
@@ -208,14 +187,54 @@ public final class DataController implements DiseaseCaseController {
         variantsAccordion.getPanes().clear();
         variants.forEach(variant -> {
             try {
-                // variant controller is also a TitledPane
-                variantsAccordion.getPanes()
-                        .add(getVariantController(variant));
+                loadVariant(variant);
             } catch (IOException e) {
                 PopUps.showException("Error loading variant", "Error", "Unable to display variant", e);
             }
         });
     }
+
+    /**
+     * Load a single variant into the controller.
+     * <p>
+     * <b>IMPORTANT</b> - this is the only place where the variant should be added into the {@link DataController}!
+     *
+     * @param variant {@link Variant} to be loaded
+     * @throws IOException if loading fails. Whoa..
+     */
+    private void loadVariant(Variant variant) throws IOException {
+        URL location;
+        final VariantValidation.Context ctx = variant.getVariantValidation().getContext();
+        switch (ctx) {
+            case MENDELIAN:
+                location = AbstractVariantController.class.getResource("MendelianVariant.fxml");
+                break;
+            case SOMATIC:
+                location = AbstractVariantController.class.getResource("SomaticVariant.fxml");
+                break;
+            case SPLICING:
+                location = AbstractVariantController.class.getResource("SplicingVariant.fxml");
+                break;
+            default:
+                LOGGER.warn("Unknown variant validation context '{}'", variant.getVariantValidation().getContext());
+                return;
+        }
+
+        FXMLLoader loader = new FXMLLoader(location);
+        loader.setControllerFactory(injector::getInstance);
+        Parent variantRoot = loader.load();
+        if (variantRoot instanceof TitledPane) { // this should be true if the top level FXML element
+            final TitledPane tp = (TitledPane) variantRoot;
+            variantsAccordion.getPanes().add(tp);
+            AbstractVariantController controller = loader.getController();
+            tp.textProperty().bind(controller.variantTitleBinding());
+            controller.presentVariant(variant);
+            variantControllers.add(controller);
+        } else {
+            throw new IOException(String.format("Unable to display root FXML element loaded from '%s' which is not a TitledPane", location.toExternalForm()));
+        }
+    }
+
 
     /**
      * Ask user to select variant mode and add variant into model & into view.
@@ -233,10 +252,14 @@ public final class DataController implements DiseaseCaseController {
         modeName.ifPresent(mn -> {
             VariantValidation.Context ctx = VariantValidation.Context.valueOf(mn);
 
-            // Pass reference to new Variant into Model and into View
+            Variant variant = Variant.newBuilder() // we will be presenting an empty variant with specific 'ctx'
+                    .setVariantValidation(VariantValidation.newBuilder()
+                            .setContext(ctx)
+                            .build())
+                    .build();
+
             try {
-                TitledPane pane = getVariantController(ctx);
-                variantsAccordion.getPanes().add(pane);
+                loadVariant(variant);
             } catch (IOException e) {
                 PopUps.showException("Error loading variant", "Error", "Unable to display variant", e);
             }
@@ -249,8 +272,13 @@ public final class DataController implements DiseaseCaseController {
     @FXML
     void removeVariantAction() {
         TitledPane expanded = variantsAccordion.getExpandedPane();
-        if (expanded != null)
-            variantsAccordion.getPanes().remove(expanded); // remove variant from the View
+        if (expanded != null) {
+            final int idx = variantsAccordion.getPanes().indexOf(expanded);
+            variantsAccordion.getPanes().remove(idx); // remove variant from the View
+            variantControllers.remove(idx); // and controller from the controller list
+        } else {
+            PopUps.showInfoMessage("Expand variant area before removing", "Remove variant");
+        }
     }
 
     @FXML
@@ -522,15 +550,16 @@ public final class DataController implements DiseaseCaseController {
                         .setBiocuratorId(biocuratorIdTextField.getText())
                         .build())
                 // variants
-                .addAllVariant(variantsAccordion.getPanes().stream().map(variantControllerToVariant()).collect(Collectors.toList()))
+                .addAllVariant(variantControllers.stream()
+                        .map(AbstractVariantController::getVariant)
+                        .collect(Collectors.toList()))
                 .build();
 
     }
 
-
-    private Function<TitledPane, Variant> variantControllerToVariant() {
-        return tp -> tp instanceof AbstractVariantController
-                ? ((AbstractVariantController) tp).getVariant()
-                : null;
+    @Override
+    public BooleanBinding isCompleteDiseaseCase() {
+        // TODO - implement
+        return null;
     }
 }
