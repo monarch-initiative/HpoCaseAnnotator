@@ -130,7 +130,7 @@ public class MendelianVariantControllerTest extends ApplicationTest {
                 .clickOn("#variantClassComboBox").moveBy(0, 30).clickOn(MouseButton.PRIMARY)
                 .clickOn("#pathomechanismComboBox").moveBy(0, 30).clickOn(MouseButton.PRIMARY)
                 .clickOn("#regulatorTextField").write("regulator")
-                .clickOn("#reporterComboBox").moveBy(0, 40).clickOn(MouseButton.PRIMARY)
+                .clickOn("#reporterComboBox").moveBy(0, 20).clickOn(MouseButton.PRIMARY)
                 .clickOn("#residualActivityTextField").write("55")
                 .clickOn("#emsaComboBox").moveBy(0, 25).clickOn(MouseButton.PRIMARY)
                 .clickOn("#emsaTFSymbolTextField").write("GTA")
@@ -156,7 +156,7 @@ public class MendelianVariantControllerTest extends ApplicationTest {
         assertThat(validation.getCosegregation(), is(true));
         assertThat(validation.getComparability(), is(true));
         assertThat(validation.getRegulator(), is("regulator"));
-        assertThat(validation.getReporterRegulation(), is("up"));
+        assertThat(validation.getReporterRegulation(), is("no"));
         assertThat(validation.getReporterResidualActivity(), is("55"));
         assertThat(validation.getEmsaValidationPerformed(), is(true));
         assertThat(validation.getEmsaTfSymbol(), is("GTA"));
