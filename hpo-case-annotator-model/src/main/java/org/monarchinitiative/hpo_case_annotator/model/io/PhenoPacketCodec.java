@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * This class converts {@link DiseaseCase} to {@link org.phenopackets.schema.v1.PhenoPacket} and back.
  */
-public class PhenopacketCodec {
+public class PhenoPacketCodec {
 
     private static final JsonFormat.Printer JSON_PRINTER = JsonFormat.printer();
 
@@ -43,7 +43,7 @@ public class PhenopacketCodec {
 
     public static final List<Resource> RESOURCES = makeResources();
 
-    private PhenopacketCodec() {
+    private PhenoPacketCodec() {
         // no-op, static utility class
     }
 

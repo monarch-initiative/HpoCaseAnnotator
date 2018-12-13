@@ -373,8 +373,8 @@ public final class MainController {
         File where = filechooser.showSaveDialog(primaryStage);
         if (where != null) {
             try (BufferedWriter writer = Files.newBufferedWriter(where.toPath())) {
-                final PhenoPacket packet = PhenopacketCodec.diseaseCaseToPhenopacket(diseaseCase);
-                PhenopacketCodec.writeAsPhenopacket(writer, packet);
+                final PhenoPacket packet = PhenoPacketCodec.diseaseCaseToPhenopacket(diseaseCase);
+                PhenoPacketCodec.writeAsPhenopacket(writer, packet);
             } catch (IOException e) {
                 LOGGER.warn("Error occured during Phenopacket export", e);
                 PopUps.showException(title, "Error occured during Phenopacket export", e.getMessage(), e);
