@@ -6,12 +6,13 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
-import org.monarchinitiative.hpo_case_annotator.core.io.ChoiceBasket;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.model.proto.CrypticSpliceSiteType;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -102,8 +103,9 @@ public final class SplicingVariantController extends AbstractVariantController {
      * Create instance of this class which acts as a controller from MVC pattern. Given the fact that this class extends
      * {@link javafx.scene.control.TitledPane} it can be managed by {@link DataController}.
      */
-    public SplicingVariantController(ChoiceBasket choiceBasket) throws IOException {
-        super(choiceBasket);
+    @Inject
+    public SplicingVariantController(GuiElementValues elementValues) throws IOException {
+        super(elementValues);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("SplicingVariantView.fxml"));
         loader.setController(this);
@@ -122,14 +124,14 @@ public final class SplicingVariantController extends AbstractVariantController {
     protected void populateContent() {
         this.setText(VariantValidation.Context.SPLICING.toString());
 
-        varChromosomeComboBox.getItems().addAll(choiceBasket.getChromosome());
+        varChromosomeComboBox.getItems().addAll(elementValues.getChromosome());
         varGenotypeComboBox.getItems().addAll(Arrays.stream(Genotype.values()).filter(g -> !g.equals(Genotype.UNRECOGNIZED)).collect(Collectors.toList()));
-        varClassComboBox.getItems().addAll(choiceBasket.getVariantClass());
-        varPathomechanismComboBox.getItems().addAll(choiceBasket.getPathomechanism());
-        varConsequenceComboBox.getItems().addAll(choiceBasket.getConsequence());
+        varClassComboBox.getItems().addAll(elementValues.getVariantClass());
+        varPathomechanismComboBox.getItems().addAll(elementValues.getPathomechanism());
+        varConsequenceComboBox.getItems().addAll(elementValues.getConsequence());
         crypticSpliceSiteTypeComboBox.getItems().addAll(Arrays.stream(CrypticSpliceSiteType.values()).filter(c -> !c.equals(CrypticSpliceSiteType.UNRECOGNIZED)).collect(Collectors.toList()));
-        cosegregationComboBox.getItems().addAll(choiceBasket.getCosegregation());
-        comparabilityComboBox.getItems().addAll(choiceBasket.getComparability());
+        cosegregationComboBox.getItems().addAll(elementValues.getCosegregation());
+        comparabilityComboBox.getItems().addAll(elementValues.getComparability());
 
         //Create tooltips
         addTooltip(varPositionTextField, "Genomic position of variant in 1-based (VCF style) numbering");

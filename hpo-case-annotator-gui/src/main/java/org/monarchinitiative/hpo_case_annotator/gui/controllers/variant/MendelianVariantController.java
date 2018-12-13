@@ -6,11 +6,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
-import org.monarchinitiative.hpo_case_annotator.core.io.ChoiceBasket;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -92,8 +93,9 @@ public final class MendelianVariantController extends AbstractVariantController 
      * Create instance of this class which acts as a controller from MVC pattern. Given the fact that this class extends
      * {@link javafx.scene.control.TitledPane} it can be managed by {@link DataController}.
      */
-    public MendelianVariantController(ChoiceBasket choiceBasket) throws IOException {
-        super(choiceBasket);
+    @Inject
+    public MendelianVariantController(GuiElementValues elementValues) throws IOException {
+        super(elementValues);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MendelianVariantView.fxml"));
         loader.setController(this);
@@ -112,16 +114,16 @@ public final class MendelianVariantController extends AbstractVariantController 
     protected void populateContent() {
         this.setText(VariantValidation.Context.MENDELIAN.toString());
 
-        chromosomeComboBox.getItems().addAll(choiceBasket.getChromosome());
+        chromosomeComboBox.getItems().addAll(elementValues.getChromosome());
         genotypeComboBox.getItems().addAll(Arrays.stream(Genotype.values()).filter(g -> !g.equals(Genotype.UNRECOGNIZED)).collect(Collectors.toList()));
-        variantClassComboBox.getItems().addAll(choiceBasket.getVariantClass());
-        pathomechanismComboBox.getItems().addAll(choiceBasket.getPathomechanism());
-        reporterComboBox.getItems().addAll(choiceBasket.getReporter());
-        emsaComboBox.getItems().addAll(choiceBasket.getEmsa());
-        cosegregationComboBox.getItems().addAll(choiceBasket.getCosegregation());
-        comparabilityComboBox.getItems().addAll(choiceBasket.getComparability());
-        otherChoicesComboBox.getItems().addAll(choiceBasket.getOtherChoices());
-        otherEffectComboBox.getItems().addAll(choiceBasket.getOtherEffect());
+        variantClassComboBox.getItems().addAll(elementValues.getVariantClass());
+        pathomechanismComboBox.getItems().addAll(elementValues.getPathomechanism());
+        reporterComboBox.getItems().addAll(elementValues.getReporter());
+        emsaComboBox.getItems().addAll(elementValues.getEmsa());
+        cosegregationComboBox.getItems().addAll(elementValues.getCosegregation());
+        comparabilityComboBox.getItems().addAll(elementValues.getComparability());
+        otherChoicesComboBox.getItems().addAll(elementValues.getOtherChoices());
+        otherEffectComboBox.getItems().addAll(elementValues.getOtherEffect());
 
         // Create tooltips here
         addTooltip(positionTextField, "Genomic position of variant in 1-based (VCF style) numbering");

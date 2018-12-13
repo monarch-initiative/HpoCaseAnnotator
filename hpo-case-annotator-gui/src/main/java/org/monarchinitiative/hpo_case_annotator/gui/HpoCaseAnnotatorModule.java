@@ -5,11 +5,14 @@ import com.google.inject.Provides;
 import com.google.inject.name.Names;
 import javafx.application.HostServices;
 import javafx.stage.Stage;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController;
-import org.monarchinitiative.hpo_case_annotator.core.io.ChoiceBasket;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembliesSerializer;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SomaticVariantController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SplicingVariantController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +21,7 @@ import javax.inject.Singleton;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -37,7 +41,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
     private static final String GENOME_ASSEMBLIES_FILE_NAME = "genome-assemblies.properties";
 
-    private static final String CHOICE_BASKET_FILE_NAME = "choice-basket.yml";
+    private static final String GUI_ELEMENTS_VALUES = "gui-elements-values.yml";
 
     /**
      * This is the {@link Stage} which is provided by JavaFX and registered into the Spring container in the
@@ -75,6 +79,9 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
         bind(DataController.class);
         bind(MainController.class);
+        bind(MendelianVariantController.class);
+        bind(SomaticVariantController.class);
+        bind(SplicingVariantController.class);
     }
 
 
@@ -121,32 +128,34 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
 
     /**
-     * Figure out where YAML parameters file is localized. There are two possible paths: <ul> <li>in
-     * the directory where the JAR file is (<code>codeHomeDir</code>)</li> <li>inside of the JAR file</li> </ul> The
-     * first has a priority.
+     * Figure out where YAML parameters file is localized. There are two possible paths:
+     * <ul>
+     *     <li>in the directory where the JAR file is (<code>codeHomeDir</code>)</li>
+     *     <li>inside of the JAR file</li>
+     * </ul>
+     * File at the first path has a priority.
+     * <p>
+     * Use the YAML file to populate content of the {@link GuiElementValues}.
      *
-     * Use the YAML file to populate content of the {@link ChoiceBasket}.
-     *
-     * @return {@link ChoiceBasket} populated with content of the YAML file
+     * @return {@link GuiElementValues} populated with content of the YAML file
      */
-
     @Provides
     @Singleton
-    public ChoiceBasket choiceBasket(@Named("codeHomeDir") File codeHomeDir) throws IOException {
-        File target = new File(codeHomeDir, CHOICE_BASKET_FILE_NAME);
+    public GuiElementValues guiElementValues(@Named("codeHomeDir") File codeHomeDir) throws IOException {
+        File target = new File(codeHomeDir, GUI_ELEMENTS_VALUES);
         if (target.isFile()) { // load from the file located next to the JAR file
-            LOGGER.info("Loading choice basket from file {}", target.getAbsolutePath());
-            return new ChoiceBasket(target);
-        }
-        try { // try to load content from bundled file
-            URL url = getClass().getResource("/" + CHOICE_BASKET_FILE_NAME);
-            LOGGER.info("Loading bundled choice basked from {}", url.toString());
-            return new ChoiceBasket(url);
-        } catch (IOException e) {
-            LOGGER.warn("Tried to load bundled choice basket from but failed", e);
-            throw e;
+            try (InputStream is = Files.newInputStream(target.toPath())) {
+                LOGGER.info("Loading gui element values from file {}", target.getAbsolutePath());
+                return GuiElementValues.guiElementValuesFrom(is);
+            }
+        } else { // try to load content from bundled file
+            try (InputStream is = getClass().getResourceAsStream("/" + GUI_ELEMENTS_VALUES)) {
+                LOGGER.info("Loading bundled gui element values file");
+                return GuiElementValues.guiElementValuesFrom(is);
+            }
         }
     }
+
 
     @Provides
     @Singleton

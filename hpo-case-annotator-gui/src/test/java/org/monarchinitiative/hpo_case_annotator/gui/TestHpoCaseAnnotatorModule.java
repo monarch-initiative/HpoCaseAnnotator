@@ -4,12 +4,16 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import javafx.application.HostServices;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValuesTest;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController;
 import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
 import org.monarchinitiative.hpo_case_annotator.core.io.OMIMParser;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SomaticVariantController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SplicingVariantController;
 import org.monarchinitiative.hpo_case_annotator.model.io.ModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser;
-import org.monarchinitiative.hpo_case_annotator.core.io.ChoiceBasket;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembliesSerializer;
 import org.monarchinitiative.hpo_case_annotator.core.validation.CompletenessValidator;
@@ -44,8 +48,6 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
 
     private static final String PROPERTIES_FILE_NAME = "test-hca.properties";
 
-    private static final String CHOICE_BASKET_FILE_NAME = "choice-basket.yml";
-
     private static final String GENOME_ASSEMBLIES_FILE_NAME = "test-genome-assemblies.properties";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestHpoCaseAnnotatorModule.class);
@@ -55,6 +57,9 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
     protected void configure() {
         bind(DataController.class);
         bind(MainController.class);
+        bind(MendelianVariantController.class);
+        bind(SomaticVariantController.class);
+        bind(SplicingVariantController.class);
 
         bind(ResourceBundle.class)
                 .toInstance(ResourceBundle.getBundle(Play.class.getName()));
@@ -111,21 +116,12 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public ChoiceBasket choiceBasket(@Named("codeHomeDir") File codeHomeDir) throws IOException {
-        File target = new File(codeHomeDir, CHOICE_BASKET_FILE_NAME);
-        if (target.exists()) { // load from the file located next to the JAR file
-            LOGGER.info("Loading choice basket from file {}", target.getAbsolutePath());
-            return new ChoiceBasket(target);
-        }
-
-        try { // try to load content from bundled file
-            URL url = getClass().getResource("/" + CHOICE_BASKET_FILE_NAME);
-            return new ChoiceBasket(url);
-        } catch (IOException e) {
-            LOGGER.warn("Tried to load bundled choice basket from but failed", e);
-            throw e;
+    public GuiElementValues guiElementValues() throws IOException {
+        try (InputStream is = GuiElementValuesTest.class.getResourceAsStream("test-gui-elements-values.yml")) {
+            return GuiElementValues.guiElementValuesFrom(is);
         }
     }
+
 
     @Provides
     @Singleton

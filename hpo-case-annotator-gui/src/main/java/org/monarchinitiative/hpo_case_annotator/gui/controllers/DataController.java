@@ -10,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.monarchinitiative.hpo_case_annotator.core.io.ChoiceBasket;
 import org.monarchinitiative.hpo_case_annotator.core.io.PubMedParseException;
 import org.monarchinitiative.hpo_case_annotator.core.io.PubMedParser;
 import org.monarchinitiative.hpo_case_annotator.core.io.RetrievePubMedSummary;
@@ -51,7 +50,7 @@ public final class DataController implements DiseaseCaseController {
 
     private final ExecutorService executorService;
 
-    private final ChoiceBasket choiceBasket;
+    private final GuiElementValues elementValues;
 
     private final ResourceBundle resourceBundle;
 
@@ -120,11 +119,11 @@ public final class DataController implements DiseaseCaseController {
 
 
     @Inject
-    public DataController(OptionalResources optionalResources, ExecutorService executorService, ChoiceBasket choiceBasket,
+    public DataController(OptionalResources optionalResources, ExecutorService executorService, GuiElementValues elementValues,
                           ResourceBundle resourceBundle, Injector injector) {
         this.optionalResources = optionalResources;
         this.executorService = executorService;
-        this.choiceBasket = choiceBasket;
+        this.elementValues = elementValues;
         this.resourceBundle = resourceBundle;
         this.injector = injector;
     }
@@ -165,11 +164,11 @@ public final class DataController implements DiseaseCaseController {
     private AbstractVariantController getVariantController(VariantValidation.Context ctx) throws IOException {
         switch (ctx) {
             case MENDELIAN:
-                return new MendelianVariantController(choiceBasket);
+                return injector.getInstance(MendelianVariantController.class);
             case SPLICING:
-                return new SplicingVariantController(choiceBasket);
+                return injector.getInstance(SplicingVariantController.class);
             case SOMATIC:
-                return new SomaticVariantController(choiceBasket);
+                return injector.getInstance(SomaticVariantController.class);
             default:
                 LOGGER.error("Unknown variant validation context {}", ctx);
                 throw new IOException();
@@ -364,8 +363,8 @@ public final class DataController implements DiseaseCaseController {
      * Populate view elements with choices, create bindings and autocompletions.
      */
     public void initialize() {
-        genomeBuildComboBox.getItems().addAll(choiceBasket.getGenomeBuild());
-        diseaseDatabaseComboBox.getItems().addAll(choiceBasket.getDiseaseDatabases());
+        genomeBuildComboBox.getItems().addAll(elementValues.getGenomeBuild());
+        diseaseDatabaseComboBox.getItems().addAll(elementValues.getDiseaseDatabases());
         sexComboBox.getItems().addAll(Arrays.stream(Sex.values()).filter(s -> !s.equals(Sex.UNRECOGNIZED)).collect(Collectors.toList()));
 
         hpoTextMiningButton.disableProperty().bind(optionalResources.ontologyProperty().isNull());

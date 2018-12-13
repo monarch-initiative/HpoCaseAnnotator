@@ -1,0 +1,87 @@
+# This is the template file which contains lists of choices used to populate
+# content of HRMD gui.
+#
+# Feel free to add, modify or remove list elements. Everything will work as
+# long as you'll adhere to Yaml syntax and prevent changing list names.
+# (List -> chromosome, genotype, pathomechanism... ). That would
+# certainly break the program and make you hit the roof.
+
+## Shared among all modes ##############################################
+genomeBuild: ['hg19', 'hg38']
+
+# Chromosomes. Self-explanatory, huh?
+chromosome: ['1', '4', '5', 'X']
+
+# Variant class - the root term of pathomechanism.
+variantClass: ['coding', 'enhancer', 'promoter']
+
+# Pathomechanism
+pathomechanism: ['unknown', 'coding|missense', 'coding|stop-codon']
+
+# Impact on sequence, mainly splicing-related impacts. Inspired by Gene XII - page 521
+consequence: ["Exon skipping", "Intron retention"]
+
+# Set the database (please use the OMIM id if at all possible). For
+# OMIM, use the phenotype id, and not the gene id!.
+diseaseDatabases: ['OMIM', 'NCI']
+
+# Comparability -> This is the weakest evidence class. Enter yes if the
+# reason for believing that the mutation is pathogenic is simply that it
+# is comparable to other published mutations of comparable type in the
+# gene.
+comparability: ['yes', 'no']
+
+# Cosegregation -> enter yes if the mutation cosegregates with the
+# disease in the family being investigated.
+cosegregation: ['yes', 'no']
+
+### Specific for Splicing mutations ####################################
+
+# Source of material used for validation - To be removed
+#materialSource: ['Patient', 'in-vitro']
+
+# Assay type - To be removed
+#assayType: ['Minigene', 'Site directed mutagenesis', 'Real-time PCR', 'RNA (cDNA) sequencing', 'CRISPR-Cas',
+#  'SR-protein overexpression', 'SR-protein-knockdown', 'PCR']
+
+# Name of the agent used in experiment - To be removed
+#agentName: ['dsx', 'RTB', 'pCG', 'pCR4.1-TOPO', 'pET01', 'pSL1180',
+#  'pSPL', 'pSXN', 'hnRNPA1', 'SRSF1|SF2/ASF', 'SRSF2|SC35', 'SRSF3|SRp20', 'SRSF4|SRp75', 'SRSF5|SRp40', 'SRSF6|SRp55',
+#  'SRSF7|9G8', 'SRSF8|SRp46', 'SRSF9|SRp30c', 'SRSF10|SRp38', 'SRSF11|p54', 'SRSF12|SRrp35']
+
+# Quantification method - To be removed
+#quantificationMethod: ['Semi-quantitative PCR', 'Fluorescence-based quantification', 'RT-PCR',
+#  'Approximation']
+
+# Tissue type or cell line used - To be removed
+#tissueOrCellLine: ['skeletal muscle', 'fibroblasts', '293T', 'COS-7', 'HEK293', 'HeLa', 'CHO', 'GH3']
+
+
+### Specific for Mendelian mutations ###################################
+# Luciferase assay (or the similar CAT assay) to judge transcriptional
+# activity. Indicate whether the mutation is associated with increased
+# activity (up) or decreased activity (down) as compared with the
+# wildtype construct (in percent).
+reporter: ['no', 'up', 'down']
+
+# EMSA (electrophoretic mobility shift assay). This is used to indicate
+# whether a protein binds to a given DNA sequence. For our purposes, we
+# are referring to the protein affected by the mutation. Enter the
+# corresponding protein if there is a change in binding. Enter the
+# Entrez Gene ID and Gene Symbol of the protein that is affected by the
+# mutation (usually a transcription factor)
+emsa: ['yes', 'no']
+
+# Other "choices"
+otherChoices: ['no']
+
+# This is for any other kind of experimental assay that shows an effect
+# of a regulatory or non-coding mutation. The categories are at present:
+otherEffect: ['Telomerase', 'Nonspecific_EMSA']
+
+# For now this is hardcoded into checkboxes in SplicingVariantController/View
+# spliceValidation: ['Minigene', 'Site-directed mutagenesis', 'Real-time PCR (patient sample)', 'cDNA sequencing (patient sample)',
+# 'SR protein knockdown','SR protein overexpression', 'Mutation of WT splice site', 'Other']
+
+
+## eof ##

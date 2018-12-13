@@ -5,7 +5,7 @@ import javafx.scene.control.Control;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
-import org.monarchinitiative.hpo_case_annotator.core.io.ChoiceBasket;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 
 /**
@@ -16,14 +16,13 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 public abstract class AbstractVariantController extends TitledPane {
 
     /**
-     * Bean containing data to be used for populating content of FXML elements such as ComboBoxes. Loaded from
-     * choice-basket.yml file.
+     * POJO containing data to be used for populating content of FXML elements such as ComboBoxes.
      */
-    protected final ChoiceBasket choiceBasket;
+    protected final GuiElementValues elementValues;
 
 
-    protected AbstractVariantController(ChoiceBasket choiceBasket) {
-        this.choiceBasket = choiceBasket;
+    protected AbstractVariantController(GuiElementValues elementValues) {
+        this.elementValues = elementValues;
     }
 
 
