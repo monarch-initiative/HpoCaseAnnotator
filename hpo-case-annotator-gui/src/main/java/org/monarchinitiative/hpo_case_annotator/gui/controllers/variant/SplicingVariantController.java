@@ -119,7 +119,7 @@ public final class SplicingVariantController extends AbstractVariantController {
         //        this.setText(VariantValidation.Context.SPLICING.toString());
 
         varChromosomeComboBox.getItems().addAll(elementValues.getChromosome());
-        varPositionTextField.setTextFormatter(makeTextFormatter(varPositionTextField, INTEGER_REGEXP));
+        varPositionTextField.setTextFormatter(makeTextFormatter(varPositionTextField, VARIANT_POSITION_REGEXP));
         varReferenceTextField.setTextFormatter(makeTextFormatter(varReferenceTextField, ALLELE_REGEXP));
         varAlternateTextField.setTextFormatter(makeTextFormatter(varAlternateTextField, ALLELE_REGEXP));
         varSnippetTextField.setTextFormatter(makeTextFormatter(varSnippetTextField, SNIPPET_REGEXP));
@@ -127,7 +127,7 @@ public final class SplicingVariantController extends AbstractVariantController {
         varClassComboBox.getItems().addAll(elementValues.getVariantClass());
         varPathomechanismComboBox.getItems().addAll(elementValues.getPathomechanism());
         varConsequenceComboBox.getItems().addAll(elementValues.getConsequence());
-        crypticSpliceSitePositionTextField.setTextFormatter(makeTextFormatter(crypticSpliceSitePositionTextField, INTEGER_REGEXP));
+        crypticSpliceSitePositionTextField.setTextFormatter(makeTextFormatter(crypticSpliceSitePositionTextField, VARIANT_POSITION_REGEXP));
         crypticSpliceSiteTypeComboBox.getItems().addAll(Arrays.stream(CrypticSpliceSiteType.values()).filter(c -> !c.equals(CrypticSpliceSiteType.UNRECOGNIZED)).collect(Collectors.toList()));
         crypticSpliceSiteSnippetTextField.setTextFormatter(makeTextFormatter(crypticSpliceSiteSnippetTextField, CSS_SNIPPET_REGEXP));
         cosegregationComboBox.getItems().addAll(elementValues.getCosegregation());
@@ -149,11 +149,14 @@ public final class SplicingVariantController extends AbstractVariantController {
                 "E.g: intron|exon, exon|intron");
 
         // value of the ComboBox is null if user did not click on anything, TextField contains empty string
-        isCompleteBinding = varChromosomeComboBox.valueProperty().isNotNull()
-                .and(Bindings.createBooleanBinding(() -> varReferenceTextField.getText().matches(ALLELE_REGEXP), varReferenceTextField.textProperty()))
-                .and(Bindings.createBooleanBinding(() -> varAlternateTextField.getText().matches(ALLELE_REGEXP), varAlternateTextField.textProperty()))
-                .and(Bindings.createBooleanBinding(() -> varSnippetTextField.getText().matches(SNIPPET_REGEXP), varSnippetTextField.textProperty()))
-                .and(varGenotypeComboBox.valueProperty().isNotNull());
+        isCompleteBinding = Bindings.createBooleanBinding(() -> varChromosomeComboBox.getValue() != null &&
+                        varPositionTextField.getText() != null && varPositionTextField.getText().matches(VARIANT_POSITION_REGEXP) &&
+                        varReferenceTextField.getText() != null && varReferenceTextField.getText().matches(ALLELE_REGEXP) &&
+                        varAlternateTextField.getText() != null && varAlternateTextField.getText().matches(ALLELE_REGEXP) &&
+                        varSnippetTextField.getText() != null && varSnippetTextField.getText().matches(SNIPPET_REGEXP) &&
+                        varGenotypeComboBox.getValue() != null,
+                varChromosomeComboBox.valueProperty(), varPositionTextField.textProperty(), varReferenceTextField.textProperty(),
+                varAlternateTextField.textProperty(), varSnippetTextField.textProperty(), varGenotypeComboBox.valueProperty());
     }
 
     @Override
@@ -234,11 +237,16 @@ public final class SplicingVariantController extends AbstractVariantController {
 
     @Override
     public Binding<String> variantTitleBinding() {
-        return Bindings.createStringBinding(() ->
-                        String.format("Splicing variant: %s:%s%s>%s", varChromosomeComboBox.getValue(),
+        return Bindings.createStringBinding(() -> {
+                    if (isCompleteBinding.get()) {
+                        return String.format("Splicing variant: %s:%s%s>%s", varChromosomeComboBox.getValue(),
                                 varPositionTextField.getText(), varReferenceTextField.getText(),
-                                varAlternateTextField.getText()),
-                varChromosomeComboBox.valueProperty(), varPositionTextField.textProperty(),
-                varReferenceTextField.textProperty(), varAlternateTextField.textProperty());
+                                varAlternateTextField.getText());
+                    } else {
+                        return "Splicing variant: INCOMPLETE";
+                    }
+                },
+                varChromosomeComboBox.valueProperty(), varPositionTextField.textProperty(), varReferenceTextField.textProperty(),
+                varAlternateTextField.textProperty(), varSnippetTextField.textProperty(), varGenotypeComboBox.valueProperty());
     }
 }

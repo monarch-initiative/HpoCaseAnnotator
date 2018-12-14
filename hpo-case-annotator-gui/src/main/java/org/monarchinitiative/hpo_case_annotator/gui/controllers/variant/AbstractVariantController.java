@@ -2,7 +2,6 @@ package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.StringProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextFormatter;
@@ -19,14 +18,23 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 public abstract class AbstractVariantController {
 
     /**
-     *
+     * Variant position data must match this regexp - any integer except for zero.
      */
-    static final String INTEGER_REGEXP = "\\d+";
+    static final String VARIANT_POSITION_REGEXP = "(!0|[123456789]+)";
 
+    /**
+     * Alleles (REF, ALT) must match this regexp - only <code>A,C,G,T,a,c,g,t</code> nucleotides are permitted.
+     */
     static final String ALLELE_REGEXP = "[ACGTacgt]+";
 
-    static final String SNIPPET_REGEXP = "[ACGT]+\\[([ACGT]+|-)/([ACGT]+|-)][ACGT]+";
+    /**
+     * Sequence snippet must match this regexp - strings like <code>'ACGT[A/CC]ACGTT', 'ACGT[A/-]ACGTT'</code>
+     */
+    static final String SNIPPET_REGEXP = "[ACGT]+\\[([ACGT]+)/([ACGT]+|-)][ACGT]+";
 
+    /**
+     * Sequence snippet for cryptic splice site boundary must match this regexp - string like <code>'AccAC|CaccaT'</code>
+     */
     static final String CSS_SNIPPET_REGEXP = "[ACGTacgt]+\\|[ACGTacgt]+";
 
     /**
@@ -49,6 +57,8 @@ public abstract class AbstractVariantController {
      */
     static void decorateWithTooltip(Control control, String tooltipText) {
         Tooltip t = new Tooltip(tooltipText);
+        String k = "";
+        k.matches("(!0|[123456789]+)");
         control.setTooltip(t);
         control.focusedProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue) {

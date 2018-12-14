@@ -105,7 +105,7 @@ public final class SomaticVariantController extends AbstractVariantController {
     public void initialize() {
         //        this.setText(VariantValidation.Context.SOMATIC.toString());
         chromosomeComboBox.getItems().addAll(elementValues.getChromosome());
-        positionTextField.setTextFormatter(makeTextFormatter(positionTextField, INTEGER_REGEXP));
+        positionTextField.setTextFormatter(makeTextFormatter(positionTextField, VARIANT_POSITION_REGEXP));
         referenceTextField.setTextFormatter(makeTextFormatter(referenceTextField, ALLELE_REGEXP));
         alternateTextField.setTextFormatter(makeTextFormatter(alternateTextField, ALLELE_REGEXP));
         snippetTextField.setTextFormatter(makeTextFormatter(snippetTextField, SNIPPET_REGEXP));
@@ -124,11 +124,14 @@ public final class SomaticVariantController extends AbstractVariantController {
         decorateWithTooltip(snippetTextField, "Snippet of nucleotide sequence near variant, e.g. 'ACGT[A/C]ACTG'");
 
         // value of the ComboBox is null if user did not click on anything, TextField contains empty string
-        isCompleteBinding = chromosomeComboBox.valueProperty().isNotNull()
-                .and(Bindings.createBooleanBinding(() -> referenceTextField.getText().matches(ALLELE_REGEXP), referenceTextField.textProperty()))
-                .and(Bindings.createBooleanBinding(() -> alternateTextField.getText().matches(ALLELE_REGEXP), alternateTextField.textProperty()))
-                .and(Bindings.createBooleanBinding(() -> snippetTextField.getText().matches(SNIPPET_REGEXP), snippetTextField.textProperty()))
-                .and(genotypeComboBox.valueProperty().isNotNull());
+        isCompleteBinding = Bindings.createBooleanBinding(() -> chromosomeComboBox.getValue() != null &&
+                        positionTextField.getText() != null && positionTextField.getText().matches(VARIANT_POSITION_REGEXP) &&
+                        referenceTextField.getText() != null && referenceTextField.getText().matches(ALLELE_REGEXP) &&
+                        alternateTextField.getText() != null && alternateTextField.getText().matches(ALLELE_REGEXP) &&
+                        snippetTextField.getText() != null && snippetTextField.getText().matches(SNIPPET_REGEXP) &&
+                        genotypeComboBox.getValue() != null,
+                chromosomeComboBox.valueProperty(), positionTextField.textProperty(), referenceTextField.textProperty(),
+                alternateTextField.textProperty(), snippetTextField.textProperty(), genotypeComboBox.valueProperty());
 
     }
 
@@ -197,11 +200,16 @@ public final class SomaticVariantController extends AbstractVariantController {
 
     @Override
     public Binding<String> variantTitleBinding() {
-        return Bindings.createStringBinding(() ->
-                        String.format("Somatic variant: %s:%s%s>%s", chromosomeComboBox.getValue(),
+        return Bindings.createStringBinding(() -> {
+                    if (isCompleteBinding.get()) {
+                        return String.format("Somatic variant: %s:%s%s>%s", chromosomeComboBox.getValue(),
                                 positionTextField.getText(), referenceTextField.getText(),
-                                alternateTextField.getText()),
-                chromosomeComboBox.valueProperty(), positionTextField.textProperty(),
-                referenceTextField.textProperty(), alternateTextField.textProperty());
+                                alternateTextField.getText());
+                    } else {
+                        return "Somatic variant: INCOMPLETE";
+                    }
+                },
+                chromosomeComboBox.valueProperty(), positionTextField.textProperty(), referenceTextField.textProperty(),
+                alternateTextField.textProperty(), snippetTextField.textProperty(), genotypeComboBox.valueProperty());
     }
 }
