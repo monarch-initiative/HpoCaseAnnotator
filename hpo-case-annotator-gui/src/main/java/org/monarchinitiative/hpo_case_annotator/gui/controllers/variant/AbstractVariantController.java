@@ -2,6 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextFormatter;
@@ -72,7 +73,8 @@ public abstract class AbstractVariantController {
 
     /**
      * @param control   {@link Control} wrapped with the text formatter
-     * @param yesRegexp String with regular expression. The <code>control</code> will have green border if the content matches the <code>yesRegexp</code> and red border if it does not
+     * @param yesRegexp String with regular expression. The <code>control</code> will have green border if the content
+     *                  matches the <code>yesRegexp</code> and red border if it does not
      * @param <T>       class of the formatter being returned
      * @return {@link TextFormatter} for the <code>control</code>'s content
      */
@@ -95,7 +97,7 @@ public abstract class AbstractVariantController {
     /**
      * @return {@link BooleanBinding} that evaluates to true if the data regarding the entered variant is complete.
      */
-    public abstract BooleanBinding isCompleteBinding();
+    public abstract ObservableBooleanValue isCompleteBinding();
 
     public abstract Binding<String> variantTitleBinding();
 }

@@ -7,21 +7,27 @@ import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
 import org.monarchinitiative.hpo_case_annotator.core.io.OMIMParser;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembliesSerializer;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataControllerTest;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValuesTest;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SomaticVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SplicingVariantController;
+import org.monarchinitiative.phenol.base.PhenolException;
+import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -46,7 +52,7 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
 
     @Override
     protected void configure() {
-//        bind(DataController.class);
+        bind(DataController.class);
 //        bind(MainController.class);
         bind(MendelianVariantController.class);
         bind(SomaticVariantController.class);
@@ -70,31 +76,40 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
     @Singleton
     public Properties properties() throws IOException {
         Properties properties = new Properties();
-
-        properties.load(TestHpoCaseAnnotatorModule.class.getResourceAsStream("/" + PROPERTIES_FILE_NAME));
+        try (InputStream is = TestHpoCaseAnnotatorModule.class.getResourceAsStream("/" + PROPERTIES_FILE_NAME)) {
+            properties.load(is);
+        }
         return properties;
     }
 
 
     @Provides
     @Singleton
-    public OptionalResources optionalResources(Properties properties, GenomeAssemblies assemblies) throws IOException {
+    public OptionalResources optionalResources() throws IOException, PhenolException, URISyntaxException {
         OptionalResources optionalResources = new OptionalResources();
-        optionalResources.setDiseaseCaseDir(new File(properties.getProperty("test.xml.model.dir")));
-        // Ontology
-        Ontology ontology = OptionalResources.deserializeOntology(
-                new File(properties.getProperty("test.hp.obo.path")));
-        optionalResources.setOntology(ontology);
-        // Entrez genes
-        EntrezParser entrezParser = new EntrezParser(new File(properties.getProperty("test.entrez.file.path")));
+//        final String file = TestHpoCaseAnnotatorModule.class.getResource("models").getFile();
+//        final File diseaseCaseDir = new File(file);
+//        optionalResources.setDiseaseCaseDir(diseaseCaseDir);
+
+        // read Ontology
+        Path ontologyPath = Paths.get(TestHpoCaseAnnotatorModule.class.getResource("/resource_files/HP.obo").toURI());
+        try (InputStream is = Files.newInputStream(ontologyPath)) {
+            optionalResources.setOntology(OptionalResources.deserializeOntology(is));
+        }
+
+        // read Entrez genes
+        EntrezParser entrezParser = new EntrezParser(new File(TestHpoCaseAnnotatorModule.class.getResource("/resource_files/Homo_sapiens.gene_info.gz").getFile()));
         entrezParser.readFile();
         optionalResources.setEntrezId2gene(entrezParser.getEntrezMap());
         optionalResources.setEntrezId2symbol(entrezParser.getEntrezId2symbol());
         optionalResources.setSymbol2entrezId(entrezParser.getSymbol2entrezId());
-        // OMIM file
-        OMIMParser omimParser = new OMIMParser(new File(properties.getProperty("test.omim.file.path")));
-        optionalResources.setCanonicalName2mimid(omimParser.getCanonicalName2mimid());
-        optionalResources.setMimid2canonicalName(omimParser.getMimid2canonicalName());
+
+        // read OMIM file
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(TestHpoCaseAnnotatorModule.class.getResource("/resource_files/omim.tsv").toURI()))) {
+            OMIMParser omimParser = new OMIMParser(reader);
+            optionalResources.setCanonicalName2mimid(omimParser.getCanonicalName2mimid());
+            optionalResources.setMimid2canonicalName(omimParser.getMimid2canonicalName());
+        }
 
         optionalResources.setBiocuratorId("HPO:walterwhite");
         return optionalResources;

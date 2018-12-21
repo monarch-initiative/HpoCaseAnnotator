@@ -14,6 +14,7 @@ import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembly;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblyDownloader;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
+import org.monarchinitiative.phenol.base.PhenolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -201,9 +202,15 @@ public final class SetResourcesController {
                     "location", "Download " +
                     "HPO obo file");
             if (!response) {
-                optionalResources.setOntology(OptionalResources.deserializeOntology(target));
-                optionalResources.setOntologyPath(target);
-                hpOboLabel.setText(target.getAbsolutePath());
+                try {
+                    optionalResources.setOntology(OptionalResources.deserializeOntology(target));
+                    optionalResources.setOntologyPath(target);
+                    hpOboLabel.setText(target.getAbsolutePath());
+                } catch (IOException e) {
+                    LOGGER.warn("Error during opening the ontology file '{}'", target, e);
+                } catch (PhenolException e) {
+                    LOGGER.warn("Error during parsing the ontology file '{}'", target, e);
+                }
                 return;
             }
         }
@@ -221,9 +228,16 @@ public final class SetResourcesController {
         hpoProgressIndicator.progressProperty().unbind();
         hpoProgressIndicator.progressProperty().bind(task.progressProperty());
         task.setOnSucceeded(e -> {
-            optionalResources.setOntology(OptionalResources.deserializeOntology(target));
-            optionalResources.setOntologyPath(target);
-            hpOboLabel.setText(target.getAbsolutePath());
+            try {
+                optionalResources.setOntology(OptionalResources.deserializeOntology(target));
+                optionalResources.setOntologyPath(target);
+                hpOboLabel.setText(target.getAbsolutePath());
+            } catch (IOException ex) {
+                LOGGER.warn("Error occured during opening the ontology file '{}'", target, ex);
+            } catch (PhenolException ex) {
+                LOGGER.warn("Error during parsing the ontology file '{}'", target, ex);
+            }
+
         });
         task.setOnFailed(e -> {
             optionalResources.setOntologyPath(null);

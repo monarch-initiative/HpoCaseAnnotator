@@ -2,6 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
 
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ObservableBooleanValue;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 
 public interface DiseaseCaseController {
@@ -21,5 +22,5 @@ public interface DiseaseCaseController {
     /**
      * @return {@link BooleanBinding} that evaluates to true if the data regarding the entered {@link DiseaseCase} is complete
      */
-    BooleanBinding isCompleteDiseaseCase();
+    BooleanBinding diseaseCaseIsComplete();
 }

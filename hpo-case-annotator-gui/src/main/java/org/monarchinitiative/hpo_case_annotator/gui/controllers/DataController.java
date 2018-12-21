@@ -6,7 +6,13 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,10 +21,11 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.core.io.PubMedParseException;
 import org.monarchinitiative.hpo_case_annotator.core.io.PubMedParser;
-import org.monarchinitiative.hpo_case_annotator.core.io.RetrievePubMedSummary;
+import org.monarchinitiative.hpo_case_annotator.core.io.PubMedSummaryRetriever;
 import org.monarchinitiative.hpo_case_annotator.core.validation.PubMedValidator;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.AbstractVariantController;
+import org.monarchinitiative.hpo_case_annotator.gui.util.AllItemsValidBinding;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.WidthAwareTextFields;
 import org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser;
@@ -58,12 +65,17 @@ public final class DataController implements DiseaseCaseController {
 
     private final List<OntologyClass> phenotypes = new ArrayList<>();
 
-    private final List<AbstractVariantController> variantControllers;
+    private final ObservableList<AbstractVariantController> variantControllers;
+
+    private final ObjectProperty<Publication> publication = new SimpleObjectProperty<>(this, "publication", Publication.getDefaultInstance());
+
+    private BooleanBinding diseaseCaseIsComplete;
 
     @FXML
-    public Button hpoTextMiningButton;
+    public Button inputPubMedDataButton;
 
-    private Publication publication = Publication.getDefaultInstance();
+    @FXML
+    private Button hpoTextMiningButton;
 
     @FXML
     private Label currentModelLabel;
@@ -131,7 +143,7 @@ public final class DataController implements DiseaseCaseController {
         this.elementValues = elementValues;
         this.resourceBundle = resourceBundle;
         this.injector = injector;
-        variantControllers = new ArrayList<>();
+        this.variantControllers = FXCollections.observableArrayList();
     }
 
 
@@ -240,7 +252,7 @@ public final class DataController implements DiseaseCaseController {
      * Ask user to select variant mode and add variant into model & into view.
      */
     @FXML
-    void addVariantButtonAction() {
+    private void addVariantButtonAction() {
         // Which type of variant?
         String conversationTitle = "Add new variant";
 
@@ -270,19 +282,19 @@ public final class DataController implements DiseaseCaseController {
      * Remove variant represented by expanded TitledPane in variant accordion from view & model.
      */
     @FXML
-    void removeVariantAction() {
+    private void removeVariantAction() {
         TitledPane expanded = variantsAccordion.getExpandedPane();
         if (expanded != null) {
             final int idx = variantsAccordion.getPanes().indexOf(expanded);
             variantsAccordion.getPanes().remove(idx); // remove variant from the View
             variantControllers.remove(idx); // and controller from the controller list
         } else {
-            PopUps.showInfoMessage("Expand variant area before removing", "Remove variant");
+            PopUps.showInfoMessage("Expand variant before removing", "Remove variant");
         }
     }
 
     @FXML
-    void hpoTextMiningButtonAction() {
+    private void hpoTextMiningButtonAction() {
         String conversationTitle = "HPO text mining analysis";
         try {
             URL scigraphMiningUrl = injector.getInstance(Key.get(URL.class, Names.named("scigraphMiningUrl")));
@@ -315,7 +327,7 @@ public final class DataController implements DiseaseCaseController {
      * Parse inputted PubMed string and set Publication info to the model.
      */
     @FXML
-    void inputPubMedDataButton() {
+    private void inputPubMedDataButtonAction() {
         String conversationTitle = "PubMed text parse";
         String pubMedText = inputPubMedDataTextField.getText();
 
@@ -342,8 +354,8 @@ public final class DataController implements DiseaseCaseController {
 
         // Ask user if he wants to create a new model after entering the new Publication to prevent
         // accidental overwriting of finished file
-        if (publication.equals(Publication.getDefaultInstance())) { // we're setting the publication for the first time
-            publication = Publication.newBuilder()
+        if (publication.get().equals(Publication.getDefaultInstance())) { // we're setting the publication for the first time
+            publication.set(Publication.newBuilder()
                     .setAuthorList(result.getAuthorList())
                     .setTitle(result.getTitle())
                     .setJournal(result.getJournal())
@@ -351,7 +363,7 @@ public final class DataController implements DiseaseCaseController {
                     .setVolume(result.getVolume())
                     .setPages(result.getPages())
                     .setPmid(result.getPmid())
-                    .build();
+                    .build());
         } else {
             Optional<String> choice = PopUps.getToggleChoiceFromUser(Arrays.asList("UPDATE", "NEW"), "You entered new" +
                             " publication data. Do you wish to UPDATE current data or to start annotating a NEW case?",
@@ -372,15 +384,16 @@ public final class DataController implements DiseaseCaseController {
      * Retrieve PubMed summary for given PMID.
      */
     @FXML
-    void pmidLookupButtonAction() {
+    private void pmidLookupButtonAction() {
         final String pmid = pmidTextField.getText();
         FutureTask<Void> task = new FutureTask<>(() -> {
-            Optional<String> optional = RetrievePubMedSummary.getSummary(pmid);
-            if (optional.isPresent()) {
-                Platform.runLater(() -> inputPubMedDataTextField.setText(optional.get()));
-                return null;
+            try {
+                PubMedSummaryRetriever retriever = new PubMedSummaryRetriever();
+                final String summary = retriever.getSummary(pmid);
+                Platform.runLater(() -> inputPubMedDataTextField.setText(summary));
+            } catch (IOException e) {
+                Platform.runLater(() -> PopUps.showInfoMessage(String.format("Unable to retrieve PubMed summary for PMID %s", pmid), "Sorry"));
             }
-            Platform.runLater(() -> PopUps.showInfoMessage(String.format("Unable to retrieve PubMed summary for PMID %s", pmid), "Sorry"));
             return null;
         });
         executorService.submit(task);
@@ -425,6 +438,52 @@ public final class DataController implements DiseaseCaseController {
         optionalResources.entrezIsMissingProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) enableEntrezAutocompletions();
         });
+
+//        diseaseCaseIsComplete = strictModelCompletnessBinding();
+        diseaseCaseIsComplete = lenientModelCompletnessBinding();
+    }
+
+    private BooleanBinding lenientModelCompletnessBinding() {
+        // true when all the variants are complete
+        BooleanBinding allVariantsValidBinding = new AllItemsValidBinding<>(variantControllers,
+                AbstractVariantController::isCompleteBinding, ObservableBooleanValue::get);
+
+        BooleanBinding dataControllerFieldsBinding = Bindings.createBooleanBinding(
+                () -> genomeBuildComboBox.getValue() != null && !genomeBuildComboBox.getValue().isEmpty() // genome build
+                        && !publication.get().equals(Publication.getDefaultInstance()), // publication
+
+                genomeBuildComboBox.valueProperty(), publication, entrezIDTextField.textProperty(), geneSymbolTextField.textProperty(),
+                diseaseDatabaseComboBox.valueProperty(), diseaseNameTextField.textProperty(), diseaseIDTextField.textProperty(),
+                probandFamilyTextField.textProperty(), sexComboBox.valueProperty(), variantControllers);
+
+        return Bindings.and(allVariantsValidBinding, dataControllerFieldsBinding);
+    }
+
+    /**
+     * Utility function.
+     *
+     * @return {@link BooleanBinding} that evaluates to <code>true</code> if all the data has been set in the controller
+     */
+    private BooleanBinding strictModelCompletnessBinding() {
+        // TODO - continue with completness of the model, if necessary
+        // true when all the variants are complete
+        BooleanBinding allVariantsValidBinding = new AllItemsValidBinding<>(variantControllers,
+                AbstractVariantController::isCompleteBinding, ObservableBooleanValue::get);
+
+        // this binding evaluates to true if all the fields of this controller are complete
+        BooleanBinding completeDataControllerFieldsBinding = Bindings.createBooleanBinding(
+                () -> genomeBuildComboBox.getValue() != null && !genomeBuildComboBox.getValue().isEmpty() // genome build
+                        && !publication.get().equals(Publication.getDefaultInstance()) // publication
+                        && !entrezIDTextField.getText().isEmpty() && !geneSymbolTextField.getText().isEmpty() // gene
+                        && diseaseDatabaseComboBox.getValue() != null && !diseaseDatabaseComboBox.getValue().isEmpty() // disease
+                        && !diseaseNameTextField.getText().isEmpty() && !diseaseIDTextField.getText().isEmpty() // disease
+                        && !probandFamilyTextField.getText().isEmpty() && sexComboBox.getValue() != null && !sexComboBox.getValue().equals(Sex.UNKNOWN) // proband
+                        && !variantControllers.isEmpty(),
+                genomeBuildComboBox.valueProperty(), publication, entrezIDTextField.textProperty(), geneSymbolTextField.textProperty(),
+                diseaseDatabaseComboBox.valueProperty(), diseaseNameTextField.textProperty(), diseaseIDTextField.textProperty(),
+                probandFamilyTextField.textProperty(), sexComboBox.valueProperty(), variantControllers);
+
+        return Bindings.and(allVariantsValidBinding, completeDataControllerFieldsBinding);
     }
 
 
@@ -493,7 +552,7 @@ public final class DataController implements DiseaseCaseController {
         // Genome build
         genomeBuildComboBox.setValue(diseaseCase.getGenomeBuild());
 
-        publication = diseaseCase.getPublication();
+        publication.set(diseaseCase.getPublication());
 
         // Phenotype terms
         phenotypes.clear();
@@ -528,38 +587,53 @@ public final class DataController implements DiseaseCaseController {
 
     @Override
     public DiseaseCase getCase() {
-        return DiseaseCase.newBuilder()
-                .setGenomeBuild(genomeBuildComboBox.getValue())
-                .setPublication(publication)
-                .setMetadata(metadataTextArea.getText())
-                .setGene(Gene.newBuilder()
-                        .setEntrezId(Integer.parseInt(entrezIDTextField.getText())) // TODO - make sure that the field contains parsable integer
-                        .setSymbol(geneSymbolTextField.getText())
-                        .build())
-                .setDisease(Disease.newBuilder()
-                        .setDatabase(diseaseDatabaseComboBox.getValue())
-                        .setDiseaseId(diseaseIDTextField.getText())
-                        .setDiseaseName(diseaseNameTextField.getText())
-                        .build())
-                .addAllPhenotype(phenotypes)
-                // family
-                .setFamilyInfo(FamilyInfo.newBuilder()
-                        .setFamilyOrProbandId(probandFamilyTextField.getText())
-                        .build())
-                .setBiocurator(Biocurator.newBuilder()
-                        .setBiocuratorId(biocuratorIdTextField.getText())
-                        .build())
-                // variants
-                .addAllVariant(variantControllers.stream()
-                        .map(AbstractVariantController::getVariant)
-                        .collect(Collectors.toList()))
-                .build();
+        if (diseaseCaseIsComplete().get()) {
+            // we assume that the GUI elements (e.g. genomeBuildComboBox) contain a non-null value if the disease case is complete
+            return DiseaseCase.newBuilder()
+                    .setGenomeBuild(genomeBuildComboBox.getValue())
+                    .setPublication(publication.get())
+                    .setGene(Gene.newBuilder()
+                            .setEntrezId(Integer.parseInt(entrezIDTextField.getText())) // TODO - make sure that the field contains parsable integer
+                            .setSymbol(geneSymbolTextField.getText())
+                            .build())
+                    // variants
+                    .addAllVariant(variantControllers.stream()
+                            .map(AbstractVariantController::getVariant)
+                            .collect(Collectors.toList()))
+                    .addAllPhenotype(phenotypes)
+                    // family
+                    .setFamilyInfo(FamilyInfo.newBuilder()
+                            .setFamilyOrProbandId(probandFamilyTextField.getText())
+                            .build())
+                    .setDisease(Disease.newBuilder()
+                            .setDatabase(diseaseDatabaseComboBox.getValue() == null ? "" : diseaseDatabaseComboBox.getValue())
+                            .setDiseaseId(diseaseIDTextField.getText())
+                            .setDiseaseName(diseaseNameTextField.getText())
+                            .build())
+                    .setBiocurator(Biocurator.newBuilder()
+                            .setBiocuratorId(biocuratorIdTextField.getText())
+                            .build())
+                    .setMetadata(metadataTextArea.getText())
+                    .build();
+        } else {
+            return DiseaseCase.getDefaultInstance();
+        }
 
     }
 
+    /**
+     * The {@link DiseaseCase} is complete if data regarding following items has been entered:
+     * <ul>
+     * <li>publication</li>
+     * <li>gene</li>
+     * <li>disease</li>
+     * <li>variants</li>
+     * </ul>
+     *
+     * @return {@link BooleanBinding} evaluating to <code>true</code> if conditions above are <code>true</code>
+     */
     @Override
-    public BooleanBinding isCompleteDiseaseCase() {
-        // TODO - implement
-        return null;
+    public BooleanBinding diseaseCaseIsComplete() {
+        return diseaseCaseIsComplete;
     }
 }

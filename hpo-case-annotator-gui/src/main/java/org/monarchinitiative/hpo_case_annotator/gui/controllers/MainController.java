@@ -3,11 +3,15 @@ package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 import com.google.protobuf.InvalidProtocolBufferException;
 import javafx.application.HostServices;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -66,6 +70,9 @@ public final class MainController {
 
     @FXML
     public StackPane contentStackPane;
+
+    @FXML
+    public MenuItem saveMenuItem;
 
 
     @Inject
@@ -471,13 +478,18 @@ public final class MainController {
         StartupTask task = new StartupTask(optionalResources, properties, assemblies);
         executorService.submit(task);
         try {
-            Parent parent = FXMLLoader.load(DataController.class.getResource("DataView.fxml"),
-                    resourceBundle, new JavaFXBuilderFactory(), clazz -> dataController);
+            FXMLLoader loader = new FXMLLoader(DataController.class.getResource("DataView.fxml"));
+            loader.setResources(resourceBundle);
+            loader.setControllerFactory(clazz -> dataController);
+            Parent parent = loader.load();
+
             contentStackPane.getChildren().add(parent);
         } catch (IOException e) {
-            LOGGER.warn(String.format("Error occured during initialization of the data view: %s", e.getMessage()));
-            e.printStackTrace();
+            LOGGER.warn("Error occured during initialization of the data view.", e);
         }
+
+        // disable for now
+//        saveMenuItem.disableProperty().bind(dataController.diseaseCaseIsComplete().not());
     }
 
 

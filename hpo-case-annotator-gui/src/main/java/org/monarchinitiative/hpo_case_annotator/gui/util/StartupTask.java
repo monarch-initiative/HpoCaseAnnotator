@@ -9,7 +9,10 @@ import org.monarchinitiative.hpo_case_annotator.gui.Play;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
@@ -33,6 +36,8 @@ import java.util.Properties;
 public final class StartupTask extends Task<Void> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StartupTask.class);
+
+    private static final String OMIM_FILE_RESOURCE = "/dat/omim.tsv";
 
     private final OptionalResources optionalResources;
 
@@ -101,9 +106,12 @@ public final class StartupTask extends Task<Void> {
         optionalResources.setBiocuratorId(properties.getProperty(OptionalResources.BIOCURATOR_ID_PROPERTY, ""));
         // Finally OMIM tab file. The file is bundled and therefore should be always present
         LOGGER.info("Parsing bundled OMIM file");
-        OMIMParser omimParser = new OMIMParser(getClass().getResourceAsStream("/dat/omim.tsv")); // lil' hack
-        optionalResources.setCanonicalName2mimid(omimParser.getCanonicalName2mimid());
-        optionalResources.setMimid2canonicalName(omimParser.getMimid2canonicalName());
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(StartupTask.class.getResource(OMIM_FILE_RESOURCE).toURI()))) {
+            OMIMParser omimParser = new OMIMParser(reader);
+            optionalResources.setCanonicalName2mimid(omimParser.getCanonicalName2mimid());
+            optionalResources.setMimid2canonicalName(omimParser.getMimid2canonicalName());
+        }
+
         LOGGER.info("Done");
         return null;
     }

@@ -3,6 +3,8 @@ package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -202,7 +204,7 @@ public final class MendelianVariantController extends AbstractVariantController 
     }
 
     @Override
-    public BooleanBinding isCompleteBinding() {
+    public ObservableBooleanValue isCompleteBinding() {
         return isCompleteBinding;
     }
 

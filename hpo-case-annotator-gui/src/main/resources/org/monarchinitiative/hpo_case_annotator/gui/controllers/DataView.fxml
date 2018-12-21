@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController">
+<ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController">
    <content>
       <StackPane alignment="TOP_CENTER" style="-fx-background-color: #ffffff;">
          <children>
@@ -75,7 +75,7 @@
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                 </HBox.margin>
                             </TextField>
-                            <Button mnemonicParsing="false" onAction="#inputPubMedDataButton" prefHeight="30.0" prefWidth="135.0" text="Input PubMed data">
+                            <Button fx:id="inputPubMedDataButton" mnemonicParsing="false" onAction="#inputPubMedDataButtonAction" prefHeight="30.0" prefWidth="135.0" text="Input PubMed data">
                                 <padding>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                 </padding>

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController">
    <center>
       <StackPane fx:id="contentStackPane" alignment="TOP_CENTER" style="-fx-background-color: #ffffff;" BorderPane.alignment="TOP_CENTER" />
    </center>
@@ -26,7 +26,7 @@
                         <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#saveMenuItemAction" text="Save">
+                        <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#saveMenuItemAction" text="Save">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>

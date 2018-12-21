@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -82,16 +84,15 @@ public final class OptionalResources {
     }
 
 
-    public static Ontology deserializeOntology(File ontologyPath) {
-        try {
-            HpOboParser parser = new HpOboParser(ontologyPath);
-            return parser.parse();
-        } catch (FileNotFoundException e) {
-            LOGGER.warn("File not found", e);
-        } catch (PhenolException e) {
-            LOGGER.warn("Error occured during parsing of ontology file '{}'", ontologyPath, e);
+    public static Ontology deserializeOntology(File ontologyPath) throws IOException, PhenolException {
+        try (InputStream is = Files.newInputStream(ontologyPath.toPath())) {
+            return deserializeOntology(is);
         }
-        return null;
+    }
+
+    public static Ontology deserializeOntology(InputStream is) throws PhenolException {
+        HpOboParser parser = new HpOboParser(is);
+        return parser.parse();
     }
 
 
