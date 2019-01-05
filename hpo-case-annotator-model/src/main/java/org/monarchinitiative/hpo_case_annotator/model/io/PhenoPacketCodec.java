@@ -1,13 +1,12 @@
 package org.monarchinitiative.hpo_case_annotator.model.io;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.util.JsonFormat;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Sex;
 import org.phenopackets.schema.v1.PhenoPacket;
 import org.phenopackets.schema.v1.core.*;
+import org.phenopackets.schema.v1.io.PhenoPacketFormat;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -20,8 +19,6 @@ import java.util.stream.Collectors;
  * This class converts {@link DiseaseCase} to {@link org.phenopackets.schema.v1.PhenoPacket} and back.
  */
 public class PhenoPacketCodec {
-
-    private static final JsonFormat.Printer JSON_PRINTER = JsonFormat.printer();
 
     public static final OntologyClass FEMALE = ontologyClass("PATO:0000383", "female");
 
@@ -55,14 +52,15 @@ public class PhenoPacketCodec {
         GenomeAssembly assembly = DiseaseCaseToPhenoPacket.genomeAssembly(diseaseCase.getGenomeBuild());
         String familyOrProbandId = diseaseCase.getFamilyInfo().getFamilyOrProbandId();
         Publication publication = diseaseCase.getPublication();
+        final String metadata = diseaseCase.getMetadata();
         return PhenoPacket.newBuilder()
-                // proband, HPO terms, and the publication data
+                // proband, phenotype (HPO) terms, and the publication data
                 .setSubject(Individual.newBuilder()
                         .setId(familyOrProbandId)
                         .setAgeAtCollection(Age.newBuilder().setAge(diseaseCase.getFamilyInfo().getAge()).build())
                         .setSex(DiseaseCaseToPhenoPacket.sex(diseaseCase.getFamilyInfo().getSex()))
                         .addAllPhenotypes(diseaseCase.getPhenotypeList().stream()
-                                .map(DiseaseCaseToPhenoPacket.phenotype(publication))
+                                .map(DiseaseCaseToPhenoPacket.phenotype(publication, metadata))
                                 .collect(Collectors.toList()))
                         .setTaxonomy(HOMO_SAPIENS)
                         .build())
@@ -89,13 +87,19 @@ public class PhenoPacketCodec {
     }
 
     public static void writeAsPhenopacket(Writer writer, PhenoPacket packet) throws IOException {
-        String jsonForm = JSON_PRINTER.print(packet);
-        writer.write(jsonForm);
+        writer.write(PhenoPacketFormat.toJson(packet));
     }
 
-    public static DiseaseCase phenopacketToDiseaseCase(PhenoPacket phenoPacket) {
-        return null;
-    }
+//    /**
+//     * Convert given <code>phenoPacket</code> into HpoCaseAnnotator's {@link DiseaseCase} format
+//     *
+//     * @param phenoPacket {@link PhenoPacket} to be converted
+//     * @return {@link DiseaseCase} with the data from <code>phenoPacket</code>
+//     */
+//    public static DiseaseCase phenopacketToDiseaseCase(PhenoPacket phenoPacket) {
+//        // TODO - implement phenopacket to diseasecase conversion
+//        return null;
+//    }
 
 
     private static OntologyClass ontologyClass(String id, String label) {
@@ -105,6 +109,20 @@ public class PhenoPacketCodec {
                 .build();
     }
 
+    /**
+     * HpoCaseAnnotator uses following resources:
+     * <ul>
+     * <li>Human Phenotype Ontology</li>
+     * <li>Phenotype And Trait Ontology</li>
+     * <li>Genotype Ontology</li>
+     * <li>NCBI organismal classification</li>
+     * <li>Evidence and Conclusion Ontology</li>
+     * </ul>
+     * <p>
+     * Here the list of {@link Resource} objects representing these resources is generated.
+     *
+     * @return {@link List} of {@link Resource}s
+     */
     private static List<Resource> makeResources() {
         return Arrays.asList(
                 Resource.newBuilder()
@@ -149,8 +167,15 @@ public class PhenoPacketCodec {
         );
     }
 
+    /**
+     * This class contains functions for mapping data from {@link DiseaseCase} into {@link PhenoPacket} format.
+     */
     private static class DiseaseCaseToPhenoPacket {
 
+        /**
+         * @param sex {@link Sex} <code>sex</code>
+         * @return {@link OntologyClass} representation of the <code>sex</code>
+         */
         private static OntologyClass sex(Sex sex) {
             switch (sex) {
                 case MALE:
@@ -163,7 +188,11 @@ public class PhenoPacketCodec {
         }
 
 
-        private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.OntologyClass, Phenotype> phenotype(Publication publication) {
+        /**
+         * @param publication
+         * @return
+         */
+        private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.OntologyClass, Phenotype> phenotype(Publication publication, String metadata) {
             return oc ->
                     Phenotype.newBuilder()
                             .setType(OntologyClass.newBuilder() // the primary HPO term
@@ -177,6 +206,7 @@ public class PhenoPacketCodec {
                                             .setId("PMID:" + publication.getPmid())
                                             // This is perhaps too much information
 //                                            .setDescription(ModelUtils.getPublicationSummary(publication))
+                                            .setDescription(metadata)
                                             .build())
                                     .build())
                             .build();

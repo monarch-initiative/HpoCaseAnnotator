@@ -8,6 +8,7 @@ import org.phenopackets.schema.v1.PhenoPacket;
 import org.phenopackets.schema.v1.core.*;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -18,23 +19,24 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 
-public class PhenoPacketCodecTest {
+public class PhenopacketCodecTest {
 
 
     @Test
     public void diseaseCaseToPhenopacket() {
         // arange
         DiseaseCase diseaseCase = TestResources.benMahmoud2013B3GLCT();
+        String metadata = diseaseCase.getMetadata();
 
         // act
-        final PhenoPacket packet = PhenoPacketCodec.diseaseCaseToPhenopacket(diseaseCase);
+        final PhenoPacket packet = PhenopacketCodec.diseaseCaseToPhenopacket(diseaseCase);
 
         // assert
         assertThat(packet, is(notNullValue()));
         final Individual subject = packet.getSubject();
         assertThat(subject.getId(), is("Tunisian patients"));
         assertThat(subject.getAgeAtCollection(), is(Age.newBuilder().setAge("P25Y").build()));
-        assertThat(subject.getSex(), is(PhenoPacketCodec.MALE));
+        assertThat(subject.getSex(), is(PhenopacketCodec.MALE));
 
         final List<Phenotype> phenotypesList = subject.getPhenotypesList();
         assertThat(phenotypesList.size(), is(6));
@@ -50,6 +52,7 @@ public class PhenoPacketCodecTest {
                                 .build())
                         .setReference(ExternalReference.newBuilder()
                                 .setId("PMID:23954224")
+                                .setDescription(metadata)
                                 .build())
                         .build())
                 .build()));
@@ -65,10 +68,11 @@ public class PhenoPacketCodecTest {
                                 .build())
                         .setReference(ExternalReference.newBuilder()
                                 .setId("PMID:23954224")
+                                .setDescription(metadata)
                                 .build())
                         .build())
                 .build()));
-        assertThat(subject.getTaxonomy(), is(PhenoPacketCodec.HOMO_SAPIENS));
+        assertThat(subject.getTaxonomy(), is(PhenopacketCodec.HOMO_SAPIENS));
 
         final List<Gene> genesList = packet.getGenesList();
         assertThat(genesList.size(), is(1));
@@ -87,7 +91,7 @@ public class PhenoPacketCodecTest {
         assertThat(variant.getDeletion(), is("A"));
         assertThat(variant.getInsertion(), is("G"));
         assertThat(variant.getSampleGenotypesCount(), is(1));
-        assertThat(variant.getSampleGenotypesMap().get("Tunisian patients"), is(PhenoPacketCodec.HET));
+        assertThat(variant.getSampleGenotypesMap().get("Tunisian patients"), is(PhenopacketCodec.HET));
 
         final List<Disease> diseasesList = packet.getDiseasesList();
         assertThat(diseasesList.size(), is(1));
@@ -98,7 +102,7 @@ public class PhenoPacketCodecTest {
 
         final MetaData metaData = packet.getMetaData();
         assertThat(metaData.getCreatedBy(), is("HPO:ahegde"));
-        assertThat(metaData.getResourcesList(), is(PhenoPacketCodec.RESOURCES));
+        assertThat(metaData.getResourcesList(), is(PhenopacketCodec.RESOURCES));
     }
 
     @Test
@@ -107,12 +111,12 @@ public class PhenoPacketCodecTest {
         final PhenoPacket packet = TestResources.rareDiseasePhenoPacket();
         StringWriter writer = new StringWriter();
         String expected;
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(PhenoPacketCodecTest.class.getResource("examplePhenopacket.json").toURI()))) {
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(PhenopacketCodecTest.class.getResource("examplePhenopacket.json").toURI()))) {
             expected = reader.lines().collect(Collectors.joining("\n"));
         }
 
         // act
-        PhenoPacketCodec.writeAsPhenopacket(writer, packet);
+        PhenopacketCodec.writeAsPhenopacket(writer, packet);
 
         // assert
         assertThat(writer.toString(), is(equalTo(expected)));
@@ -122,8 +126,8 @@ public class PhenoPacketCodecTest {
     @Test
     @Ignore // TODO - implement phenopacket to DiseaseCase parsing
     public void phenopacketToDiseaseCase() {
-        PhenoPacket packet = TestResources.rareDiseasePhenoPacket();
-        final DiseaseCase diseaseCase = PhenoPacketCodec.phenopacketToDiseaseCase(packet);
-        assertThat(diseaseCase, is(notNullValue()));
+//        PhenoPacket packet = TestResources.rareDiseasePhenoPacket();
+//        final DiseaseCase diseaseCase = PhenopacketCodec.phenopacketToDiseaseCase(packet);
+//        assertThat(diseaseCase, is(notNullValue()));
     }
 }
