@@ -1,12 +1,15 @@
 package org.monarchinitiative.hpo_case_annotator.model;
 
-import org.monarchinitiative.hpo_case_annotator.model.xml_model.*;
+import com.google.common.collect.ImmutableMap;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
+import org.monarchinitiative.hpo_case_annotator.model.xml_model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -18,11 +21,9 @@ public class Codecs {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Codecs.class);
 
-
     private Codecs() {
         // private no-op
     }
-
 
     public static DiseaseCaseModel diseaseCase2DiseaseCaseModel(DiseaseCase dc) {
         final DiseaseCaseModel model = new DiseaseCaseModel();
@@ -81,7 +82,6 @@ public class Codecs {
 
         return model;
     }
-
 
     private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.Variant, org.monarchinitiative.hpo_case_annotator.model.xml_model.Variant> variantToDCMVariant() {
         return variant -> {
@@ -144,7 +144,6 @@ public class Codecs {
         };
     }
 
-
     /**
      * @return {@link BiFunction} accepting two variants ({@link org.monarchinitiative.hpo_case_annotator.model.proto.Variant},
      * {@link org.monarchinitiative.hpo_case_annotator.model.xml_model.Variant}). The data common to all subclasses of the {@link org.monarchinitiative.hpo_case_annotator.model.xml_model.Variant} class is copied from the {@link
@@ -167,7 +166,6 @@ public class Codecs {
         };
     }
 
-
     private static Function<OntologyClass, HPO> ontologyClassToHpo() {
         return oc -> {
             HPO hpo = new HPO();
@@ -177,7 +175,6 @@ public class Codecs {
             return hpo;
         };
     }
-
 
     public static DiseaseCase diseaseCaseModel2DiseaseCase(DiseaseCaseModel dcm) {
         DiseaseCase.Builder builder = DiseaseCase.newBuilder();
@@ -239,7 +236,6 @@ public class Codecs {
         return builder.build();
     }
 
-
     private static Function<HPO, OntologyClass> hpoToOntologyClass() {
         return hpo -> OntologyClass.newBuilder()
                 .setId(hpo.getHpoId())
@@ -247,7 +243,6 @@ public class Codecs {
                 .setNotObserved(!hpo.getObserved().equals("YES"))
                 .build();
     }
-
 
     private static Function<org.monarchinitiative.hpo_case_annotator.model.xml_model.Variant, org.monarchinitiative.hpo_case_annotator.model.proto.Variant> dcmVariantToVariant() {
         return v -> {
@@ -348,5 +343,41 @@ public class Codecs {
 
             return variantBuilder.build();
         };
+    }
+
+
+    /**
+     * Biocurated data can be represented in file in these formats.
+     */
+    public enum SupportedDiseaseCaseFormat {
+
+        /**
+         * The format represented by {@link DiseaseCaseModel} class and decoded by {@link org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser}.
+         */
+        XML,
+
+        /**
+         * The format represented by {@link DiseaseCase} class (protobuf) and decoded by {@link org.monarchinitiative.hpo_case_annotator.model.io.ProtoJSONModelParser}.
+         */
+        JSON;
+
+
+        private static final Map<SupportedDiseaseCaseFormat, String> REGEX_MAP = initializeRegexMap();
+
+        /**
+         * Immutable map where keys are all possible enum values. The map values are regexp strings. The name of a file
+         * containing {@link DiseaseCase} data must conform to this regex in order to be represented by the
+         * {@link SupportedDiseaseCaseFormat} value.
+         */
+        public static Map<SupportedDiseaseCaseFormat, String> getRegexMap() {
+            return REGEX_MAP;
+        }
+
+        private static Map<SupportedDiseaseCaseFormat, String> initializeRegexMap() {
+            Map<SupportedDiseaseCaseFormat, String> regexMap = new HashMap<>();
+            regexMap.put(SupportedDiseaseCaseFormat.XML, "[\\w\\W]+\\.xml");
+            regexMap.put(SupportedDiseaseCaseFormat.JSON, "[\\w\\W]+\\.json");
+            return ImmutableMap.copyOf(regexMap);
+        }
     }
 }

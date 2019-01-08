@@ -36,14 +36,16 @@ public class GenomicPositionValidatorTest {
      */
     private static DiseaseCase getArs() throws Exception {
         try (InputStream is = GenomicPositionValidatorTest.class.getResourceAsStream("/models/xml/Ars-2000-NF1-95-89.xml")) {
-            return XMLModelParser.loadDiseaseCase(is);
+            return XMLModelParser.loadDiseaseCase(is)
+                    .orElseThrow(() -> new Exception("Unable to read test data from /models/xml/Ars-2000-NF1-95-89.xml"));
         }
     }
 
 
     private static DiseaseCase getHull() throws Exception {
         try (InputStream is = GenomicPositionValidatorTest.class.getResourceAsStream("/models/xml/Hull-1994-CFTR.xml")) {
-            return XMLModelParser.loadDiseaseCase(is);
+            return XMLModelParser.loadDiseaseCase(is)
+                    .orElseThrow(() -> new Exception("Unable to read test data from /models/xml/Hull-1994-CFTR.xml"));
         }
     }
 

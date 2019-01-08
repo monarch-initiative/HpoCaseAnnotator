@@ -8,10 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
@@ -56,10 +53,15 @@ public class ProtoJSONModelParser implements ModelParser {
     }
 
 
-    public static DiseaseCase readDiseaseCase(InputStream is) throws IOException {
-        DiseaseCase.Builder builder = DiseaseCase.newBuilder();
-        JSON_PARSER.merge(new InputStreamReader(is), builder);
-        return builder.build();
+    public static Optional<DiseaseCase> readDiseaseCase(InputStream is){
+        try {
+            DiseaseCase.Builder builder = DiseaseCase.newBuilder();
+            JSON_PARSER.merge(new InputStreamReader(is), builder);
+            return Optional.of(builder.build());
+        } catch (IOException e) {
+            LOGGER.warn("Error reading disease case", e);
+            return Optional.empty();
+        }
     }
 
 
@@ -70,7 +72,7 @@ public class ProtoJSONModelParser implements ModelParser {
 
 
     @Override
-    public DiseaseCase readModel(InputStream inputStream) throws IOException {
+    public Optional<DiseaseCase> readModel(InputStream inputStream) {
         return readDiseaseCase(inputStream);
     }
 

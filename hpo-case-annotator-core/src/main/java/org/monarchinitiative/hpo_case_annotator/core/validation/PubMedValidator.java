@@ -52,7 +52,8 @@ public final class PubMedValidator extends AbstractValidator {
         Set<DiseaseCase> models = new HashSet<>();
         for (File name : modelNames) {
             try (InputStream inputStream = new FileInputStream(name)) {
-                models.add(modelParser.readModel(inputStream));
+                modelParser.readModel(inputStream)
+                        .ifPresent(models::add);
             } catch (IOException e) {
                 // TODO user interaction - add Cancel button to Show Exception dialog which will break the for loop if
                 // selected

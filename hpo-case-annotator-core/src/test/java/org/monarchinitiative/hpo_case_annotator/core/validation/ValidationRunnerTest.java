@@ -61,7 +61,8 @@ public class ValidationRunnerTest {
      */
     private DiseaseCase getArs() throws Exception {
         try (InputStream ARS = getClass().getResourceAsStream("/models/xml/Ars-2000-NF1-95-89.xml")) {
-            return XMLModelParser.loadDiseaseCase(ARS);
+            return XMLModelParser.loadDiseaseCase(ARS)
+                    .orElseThrow(() -> new Exception("Unable to read test data /models/xml/Ars-2000-NF1-95-89.xml"));
         }
     }
 }

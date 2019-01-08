@@ -207,7 +207,7 @@ public class XMLModelParserTest {
     public void readModel() throws Exception {
         DiseaseCase model;
         try (InputStream is = getClass().getResourceAsStream("/models/xml/Aguilar-Ramirez-2009-C5.xml")) {
-            model = parser.readModel(is);
+            model = parser.readModel(is).orElseThrow(() -> new Exception("Unable to decode the test data at /models/xml/Aguilar-Ramirez-2009-C5.xml"));
         }
 
         // Biocurator
@@ -334,7 +334,7 @@ public class XMLModelParserTest {
     public void readFirstModel() throws Exception {
         DiseaseCase davidson;
         try (InputStream is = getClass().getResourceAsStream("/models/xml/Davidson-2010-BEST1.xml")) {
-            davidson = parser.readModel(is);
+            davidson = parser.readModel(is).orElseThrow(() -> new Exception("Unable to decode the test data at /models/xml/Davidson-2010-BEST1.xml"));
         }
 
         assertEquals("OMIM", davidson.getDisease().getDatabase());
@@ -368,7 +368,7 @@ public class XMLModelParserTest {
     public void readSecondModel() throws Exception {
         DiseaseCase ars;
         try (InputStream is = getClass().getResourceAsStream("/models/xml/Ars-2000-NF1-95-89.xml")) {
-            ars = parser.readModel(is);
+            ars = parser.readModel(is).orElseThrow(() -> new Exception("Unable to decode the test data at /models/xml/Ars-2000-NF1-95-89.xml"));
         }
 
         assertEquals("HPO:lccarmody", ars.getBiocurator().getBiocuratorId());

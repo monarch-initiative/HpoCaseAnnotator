@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -50,6 +49,8 @@ public final class OptionalResources {
 
     private final BooleanBinding omimIsMissing;
 
+    private final BooleanBinding diseaseCaseDirIsInitialized;
+
     private final ObjectProperty<File> diseaseCaseDir = new SimpleObjectProperty<>(this, "diseaseCaseDir");
 
     // default value does not harm here
@@ -81,10 +82,13 @@ public final class OptionalResources {
         this.omimIsMissing = Bindings.createBooleanBinding(() -> Stream.of(mimid2canonicalNameProperty(),
                 canonicalName2mimidProperty()).anyMatch(op -> op.get() == null),
                 mimid2canonicalNameProperty(), canonicalName2mimidProperty());
+
+        this.diseaseCaseDirIsInitialized = Bindings.createBooleanBinding(() -> getDiseaseCaseDir() != null && getDiseaseCaseDir().isDirectory(),
+                diseaseCaseDirProperty());
     }
 
-
     public static Ontology deserializeOntology(File ontologyPath) throws IOException, PhenolException {
+        // this might not be the best place for ontology deserialization, but it works for now
         try (InputStream is = Files.newInputStream(ontologyPath.toPath())) {
             return deserializeOntology(is);
         }
@@ -95,6 +99,19 @@ public final class OptionalResources {
         return parser.parse();
     }
 
+    /**
+     * @return <code>true</code> if the diseaseCaseDir is not <code>null</code> and is a directory
+     */
+    public Boolean getDiseaseCaseDirIsInitialized() {
+        return diseaseCaseDirIsInitialized.get();
+    }
+
+    /**
+     * @return {@link BooleanBinding} that evaluates to <code>true</code> if the diseaseCaseDir is not null and is a directory
+     */
+    public BooleanBinding diseaseCaseDirIsInitializedProperty() {
+        return diseaseCaseDirIsInitialized;
+    }
 
     public File getOntologyPath() {
         return ontologyPath;

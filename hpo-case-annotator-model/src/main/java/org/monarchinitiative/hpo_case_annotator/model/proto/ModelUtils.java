@@ -1,6 +1,8 @@
 package org.monarchinitiative.hpo_case_annotator.model.proto;
 
 /**
+ * Utility functions for manipulation with {@link DiseaseCase} instances.
+ *
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
  */
 public class ModelUtils {

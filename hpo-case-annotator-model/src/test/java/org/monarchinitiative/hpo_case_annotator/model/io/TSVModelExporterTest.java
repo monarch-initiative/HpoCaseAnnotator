@@ -34,7 +34,8 @@ public class TSVModelExporterTest {
 
         for (File file : files) {
             try (InputStream is = new FileInputStream(file)) {
-                cases.add(XMLModelParser.loadDiseaseCase(is));
+                XMLModelParser.loadDiseaseCase(is)
+                        .ifPresent(cases::add);
             }
         }
     }

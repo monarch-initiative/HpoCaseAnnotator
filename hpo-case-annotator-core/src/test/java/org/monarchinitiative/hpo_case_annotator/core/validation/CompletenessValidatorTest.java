@@ -33,7 +33,8 @@ public class CompletenessValidatorTest {
     @Test
     public void validateDiseaseCaseHull() throws Exception {
         try (InputStream io = new FileInputStream(new File("target/test-classes/models/xml/Hull-1994-CFTR.xml"))) {
-            DiseaseCase model = XMLModelParser.loadDiseaseCase(io);
+            DiseaseCase model = XMLModelParser.loadDiseaseCase(io)
+                    .orElseThrow(() -> new Exception("Unable to read test data from target/test-classes/models/xml/Hull-1994-CFTR.xml"));
             ValidationResult result = validator.validateDiseaseCase(model);
             assertEquals(ValidationResult.PASSED, result);
             assertEquals(validator.OKAY, result.getMessage());
@@ -181,7 +182,8 @@ public class CompletenessValidatorTest {
      */
     private DiseaseCase getArs() throws Exception {
         try (InputStream is = new FileInputStream(new File("target/test-classes/models/xml/Ars-2000-NF1-95-89.xml"))) {
-            return XMLModelParser.loadDiseaseCase(is);
+            return XMLModelParser.loadDiseaseCase(is)
+                    .orElseThrow(() -> new Exception("Unable to read test data from target/test-classes/models/xml/Ars-2000-NF1-95-89.xml"));
         }
     }
 

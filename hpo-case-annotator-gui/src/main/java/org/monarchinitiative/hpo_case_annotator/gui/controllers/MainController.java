@@ -3,14 +3,11 @@ package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 import com.google.protobuf.InvalidProtocolBufferException;
 import javafx.application.HostServices;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
@@ -23,6 +20,7 @@ import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.StartupTask;
+import org.monarchinitiative.hpo_case_annotator.model.Codecs;
 import org.monarchinitiative.hpo_case_annotator.model.io.*;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
@@ -39,6 +37,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -74,6 +73,9 @@ public final class MainController {
     @FXML
     public MenuItem saveMenuItem;
 
+    @FXML
+    public MenuItem showCuratedPublicationsMenuItem;
+
 
     @Inject
     public MainController(OptionalResources optionalResources, DataController dataController,
@@ -91,13 +93,41 @@ public final class MainController {
         this.hostServices = hostServices;
     }
 
+    /**
+     * @param modelDir a {@link File} representing directory with model files.
+     * @return {@link Codecs.SupportedDiseaseCaseFormat} to be used further or <code>null</code>
+     */
+    private static Codecs.SupportedDiseaseCaseFormat figureOutWhichFormatToUse(File modelDir) {
+        File[] files = modelDir.listFiles();
+        if (files == null) {
+            return null;
+        }
+
+        final List<String> fileNameList = Arrays.stream(files)
+                .map(File::getName)
+                // the file name may consist of combination of whitespace and non-whitespace characters and must end either with .xml or .json suffix
+                .filter(fileName -> Codecs.SupportedDiseaseCaseFormat.getRegexMap().values().stream().anyMatch(fileName::matches))
+                .collect(Collectors.toList());
+
+        boolean useXML, useJSON;
+        useXML = fileNameList.stream().allMatch(fileName -> fileName.matches(Codecs.SupportedDiseaseCaseFormat.getRegexMap().get(Codecs.SupportedDiseaseCaseFormat.XML)));
+        useJSON = fileNameList.stream().allMatch(fileName -> fileName.matches(Codecs.SupportedDiseaseCaseFormat.getRegexMap().get(Codecs.SupportedDiseaseCaseFormat.JSON)));
+
+        if (useXML) { // the directory contains only XML-encoded files
+            return Codecs.SupportedDiseaseCaseFormat.XML;
+        } else if (useJSON) { // the directory contains only JSON-encoded files
+            return Codecs.SupportedDiseaseCaseFormat.JSON;
+        } else { // the directory contains a mixture of XML and JSON-encoded files. Let user choose which to use
+            return PopUps.getToggleChoiceFromUser(Arrays.asList(Codecs.SupportedDiseaseCaseFormat.values()), "Choose which format to use", "Model directory contains models stored in multiple formats")
+                    .orElse(null);
+        }
+    }
 
     @FXML
     void newMenuItemAction() {
         dataController.presentCase(DiseaseCase.getDefaultInstance());
         dataController.setCurrentModelPath(null);
     }
-
 
     @FXML
     void openMenuItemAction() {
@@ -120,15 +150,17 @@ public final class MainController {
             switch (filechooser.getSelectedExtensionFilter().getDescription()) {
                 case SPLICING_XML:
                     try (InputStream is = new BufferedInputStream(new FileInputStream(which))) {
-                        diseaseCase = XMLModelParser.loadDiseaseCase(is);
+                        diseaseCase = XMLModelParser.loadDiseaseCase(is)
+                                .orElseThrow(() -> new IOException("Unable to decode XML file"));
                     } catch (IOException e) {
-                        PopUps.showException("Open XML model", "Unable to decode XML file", "Did you set proper extension?", e);
+                        PopUps.showException("Open XML model", "Sorry", "Unable to decode XML file", e);
                         return;
                     }
                     break;
                 case PROTO_JSON:
                     try (InputStream is = new BufferedInputStream(new FileInputStream(which))) {
-                        diseaseCase = ProtoJSONModelParser.readDiseaseCase(is);
+                        diseaseCase = ProtoJSONModelParser.readDiseaseCase(is)
+                                .orElseThrow(() -> new IOException("Unable to decode JSON file"));
                     } catch (FileNotFoundException e) {
                         PopUps.showException("Open JSON model", String.format("File '%s' not found", which.getAbsolutePath()), "", e);
                         return;
@@ -149,24 +181,20 @@ public final class MainController {
         }
     }
 
-
     @FXML
     void saveMenuItemAction() {
         saveModel(dataController.getCurrentModelPath(), dataController.getCase());
     }
-
 
     @FXML
     void saveAsMenuItemAction() {
         saveModel(null, dataController.getCase());
     }
 
-
     @FXML
     void exitMenuItemAction() {
         Platform.exit();
     }
-
 
     @FXML
     void showEditCurrentPublicationMenuItemAction() {
@@ -183,9 +211,9 @@ public final class MainController {
             stage.showAndWait();
         } catch (IOException e) {
             LOGGER.warn("Unable to show dialog for editing of the current publication", e);
+            PopUps.showException("Edit Metadata of the current publication", "Error", "Unable to show dialog for editing of the current publication", e);
         }
     }
-
 
     @FXML
     void setResourcesMenuItemAction() {
@@ -204,10 +232,9 @@ public final class MainController {
             stage.showAndWait();
         } catch (IOException e) {
             LOGGER.warn("Unable to display dialog for setting resources", e);
-            e.printStackTrace();
+            PopUps.showException("Initialize Hpo Case Annotator resources", "Error", "Unable to display dialog for setting resources", e);
         }
     }
-
 
     @FXML
     void showCuratedPublicationsMenuItemAction() {
@@ -216,17 +243,41 @@ public final class MainController {
             PopUps.showInfoMessage("Set curated files directory first", "Unable to show curated publications");
             return;
         }
-        File[] files = where.listFiles(f -> f.getName().endsWith(".xml"));
+
+        // at this point `where` is a directory (possibly empty)
+        // we will only consider disease cases stored in `formatToUse` (either JSON or XML at this point)
+        Codecs.SupportedDiseaseCaseFormat formatToUse = figureOutWhichFormatToUse(where);
+        if (formatToUse == null) {
+            return;
+        }
+
+        // create decoding function
+        Function<InputStream, Optional<DiseaseCase>> decodingFunction;
+        switch (formatToUse) {
+            case JSON:
+                decodingFunction = ProtoJSONModelParser::readDiseaseCase;
+                break;
+            case XML:
+                decodingFunction = XMLModelParser::loadDiseaseCase;
+                break;
+            default:
+                return;
+        }
+
+        // decode the files
+        File[] files = where.listFiles(f -> f.getName().matches(Codecs.SupportedDiseaseCaseFormat.getRegexMap().get(formatToUse)));
         if (files == null) {
             PopUps.showInfoMessage(String.format("No models in directory %s", where.getPath()), "Show curated publications");
             return;
         }
+
         Collection<DiseaseCase> models = new ArrayList<>();
         for (File path : files) {
-            try {
-                models.add(XMLModelParser.loadDiseaseCase(new FileInputStream(path)));
-            } catch (FileNotFoundException e) {
-                PopUps.showException("Open XML model", "Unable to decode XML file", "Did you set proper extension?", e);
+            try (InputStream is = new FileInputStream(path)) {
+                decodingFunction.apply(is)
+                        .ifPresent(models::add);
+            } catch (IOException e) {
+                LOGGER.warn("Unable to decode file", e);
             }
         }
 
@@ -242,10 +293,9 @@ public final class MainController {
             stage.showAndWait();
         } catch (IOException e) {
             LOGGER.warn("Unable to display dialog for showing curated publications", e);
-            e.printStackTrace();
+            PopUps.showException("Show curated publications", "Error", "Unable to display dialog for showing curated publications", e);
         }
     }
-
 
     @FXML
     void validateCurrentEntryMenuItemAction() {
@@ -274,7 +324,8 @@ public final class MainController {
         List<DiseaseCase> models = new ArrayList<>();
         for (File modelFile : modelParser.getModelNames()) {
             try (FileInputStream fis = new FileInputStream(modelFile)) {
-                models.add(modelParser.readModel(fis));
+                modelParser.readModel(fis)
+                        .ifPresent(models::add);
             } catch (IOException e) {
                 PopUps.showException("Open XML model", "Unable to decode XML file", "Did you set proper extension?", e);
             }
@@ -303,24 +354,24 @@ public final class MainController {
 
     @FXML
     void exportToCSVMenuItemAction() {
-        final Optional<String> toggleChoiceFromUser = PopUps.getToggleChoiceFromUser(Arrays.asList("JSON", "XML"),
+        final Optional<Codecs.SupportedDiseaseCaseFormat> toggleChoiceFromUser = PopUps.getToggleChoiceFromUser(Arrays.asList(Codecs.SupportedDiseaseCaseFormat.values()),
                 String.format("What encoding is used for models in \n'%s'?", optionalResources.getDiseaseCaseDir().getAbsolutePath()),
                 "Export as CSV");
         if (!toggleChoiceFromUser.isPresent()) {
             return;
         }
 
-        String encoding = toggleChoiceFromUser.get();
+
         final ModelParser parser;
-        switch (encoding) {
-            case "JSON":
+        switch (toggleChoiceFromUser.get()) {
+            case JSON:
                 parser = new ProtoJSONModelParser(optionalResources.getDiseaseCaseDir().toPath());
                 break;
-            case "XML":
+            case XML:
                 parser = new XMLModelParser(optionalResources.getDiseaseCaseDir());
                 break;
             default:
-                LOGGER.warn("Invalid choice '{}'", encoding);
+                LOGGER.warn("Unrecognized choice '{}'", toggleChoiceFromUser.get());
                 return;
         }
 
@@ -328,7 +379,8 @@ public final class MainController {
         Set<DiseaseCase> cases = new HashSet<>();
         for (File modelName : parser.getModelNames()) {
             try (InputStream is = new BufferedInputStream(new FileInputStream(modelName))) {
-                cases.add(parser.readModel(is));
+                parser.readModel(is)
+                        .ifPresent(cases::add);
             } catch (FileNotFoundException e) {
                 LOGGER.warn("File '{}' not found", modelName, e);
             } catch (IOException e) {
@@ -392,24 +444,24 @@ public final class MainController {
     @FXML
     void exportPhenoModelsMenuItemAction() {
 
-        final Optional<String> toggleChoiceFromUser = PopUps.getToggleChoiceFromUser(Arrays.asList("JSON", "XML"),
+        final Optional<Codecs.SupportedDiseaseCaseFormat> toggleChoiceFromUser = PopUps.getToggleChoiceFromUser(Arrays.asList(Codecs.SupportedDiseaseCaseFormat.values()),
                 String.format("What encoding is used for models in \n'%s'?", optionalResources.getDiseaseCaseDir().getAbsolutePath()),
                 "Export as CSV");
         if (!toggleChoiceFromUser.isPresent()) {
             return;
         }
 
-        String encoding = toggleChoiceFromUser.get();
+        Codecs.SupportedDiseaseCaseFormat encoding = toggleChoiceFromUser.get();
         final ModelParser parser;
         switch (encoding) {
-            case "JSON":
+            case JSON:
                 parser = new ProtoJSONModelParser(optionalResources.getDiseaseCaseDir().toPath());
                 break;
-            case "XML":
+            case XML:
                 parser = new XMLModelParser(optionalResources.getDiseaseCaseDir());
                 break;
             default:
-                LOGGER.warn("Invalid choice '{}'", encoding);
+                LOGGER.warn("Unrecognized choice '{}'", encoding);
                 return;
         }
 
@@ -417,7 +469,8 @@ public final class MainController {
         Set<DiseaseCase> cases = new HashSet<>();
         for (File modelName : parser.getModelNames()) {
             try (InputStream is = new BufferedInputStream(new FileInputStream(modelName))) {
-                cases.add(parser.readModel(is));
+                parser.readModel(is)
+                        .ifPresent(cases::add);
             } catch (FileNotFoundException e) {
                 LOGGER.warn("File '{}' not found", modelName, e);
             } catch (IOException e) {
@@ -488,8 +541,10 @@ public final class MainController {
             LOGGER.warn("Error occured during initialization of the data view.", e);
         }
 
-        // disable for now
+        // disable for now - TODO - enable saving only if the disease case is complete?
 //        saveMenuItem.disableProperty().bind(dataController.diseaseCaseIsComplete().not());
+        showCuratedPublicationsMenuItem.disableProperty().bind(optionalResources.diseaseCaseDirIsInitializedProperty().not());
+
     }
 
 

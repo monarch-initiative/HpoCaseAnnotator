@@ -51,7 +51,7 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Project">
                     <items>
-                        <MenuItem id="showCuratedPublicationsMenuItem" mnemonicParsing="false" onAction="#showCuratedPublicationsMenuItemAction" text="Show curated publications" />
+                        <MenuItem id="showCuratedPublicationsMenuItem" fx:id="showCuratedPublicationsMenuItem" mnemonicParsing="false" onAction="#showCuratedPublicationsMenuItemAction" text="Show curated publications" />
                     </items>
                 </Menu>
                 <Menu text="Validate">
