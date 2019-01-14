@@ -16,9 +16,9 @@ public class GuiceJUnitRunner extends BlockJUnit4ClassRunner {
     private Injector injector;
 
 
-    public GuiceJUnitRunner(Class<?> klass) throws InitializationError {
-        super(klass);
-        Class<?>[] classes = getModulesFor(klass);
+    public GuiceJUnitRunner(Class<?> clazz) throws InitializationError {
+        super(clazz);
+        Class<?>[] classes = getModulesFor(clazz);
         injector = createInjectorFor(classes);
     }
 
@@ -44,11 +44,11 @@ public class GuiceJUnitRunner extends BlockJUnit4ClassRunner {
     }
 
 
-    private Class<?>[] getModulesFor(Class<?> klass) throws InitializationError {
-        GuiceModules annotation = klass.getAnnotation(GuiceModules.class);
+    private Class<?>[] getModulesFor(Class<?> clazz) throws InitializationError {
+        GuiceModules annotation = clazz.getAnnotation(GuiceModules.class);
         if (annotation == null)
             throw new InitializationError(
-                    "Missing @GuiceModules annotation for unit test '" + klass.getName()
+                    "Missing @GuiceModules annotation for unit test '" + clazz.getName()
                             + "'");
         return annotation.value();
     }

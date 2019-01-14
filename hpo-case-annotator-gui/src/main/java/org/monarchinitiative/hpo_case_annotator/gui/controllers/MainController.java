@@ -15,7 +15,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.validation.CompletenessValidator;
-import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationLine;
+import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
@@ -243,42 +243,10 @@ public final class MainController {
             PopUps.showInfoMessage("Set curated files directory first", "Unable to show curated publications");
             return;
         }
-
-        // at this point `where` is a directory (possibly empty)
-        // we will only consider disease cases stored in `formatToUse` (either JSON or XML at this point)
-        Codecs.SupportedDiseaseCaseFormat formatToUse = figureOutWhichFormatToUse(where);
-        if (formatToUse == null) {
-            return;
-        }
-
-        // create decoding function
-        Function<InputStream, Optional<DiseaseCase>> decodingFunction;
-        switch (formatToUse) {
-            case JSON:
-                decodingFunction = ProtoJSONModelParser::readDiseaseCase;
-                break;
-            case XML:
-                decodingFunction = XMLModelParser::loadDiseaseCase;
-                break;
-            default:
-                return;
-        }
-
-        // decode the files
-        File[] files = where.listFiles(f -> f.getName().matches(Codecs.SupportedDiseaseCaseFormat.getRegexMap().get(formatToUse)));
-        if (files == null) {
+        Collection<DiseaseCase> models = smartDecodingOfDiseaseCasesInDirectory(where);
+        if (models.isEmpty()) {
             PopUps.showInfoMessage(String.format("No models in directory %s", where.getPath()), "Show curated publications");
             return;
-        }
-
-        Collection<DiseaseCase> models = new ArrayList<>();
-        for (File path : files) {
-            try (InputStream is = new FileInputStream(path)) {
-                decodingFunction.apply(is)
-                        .ifPresent(models::add);
-            } catch (IOException e) {
-                LOGGER.warn("Unable to decode file", e);
-            }
         }
 
         try {
@@ -297,16 +265,60 @@ public final class MainController {
         }
     }
 
+    /**
+     * @param where {@link File} representing existing but possibly empty directory with files containing {@link DiseaseCase}
+     *              data. Must <em>not</em> be <code>null</code>
+     * @return {@link Collection} of {@link DiseaseCase}s, empty if the directory was empty
+     */
+    private Collection<DiseaseCase> smartDecodingOfDiseaseCasesInDirectory(File where) {
+        // at this point `where` is a directory (possibly empty)
+        // we will only consider disease cases stored in `formatToUse` (either JSON or XML at this point)
+        Codecs.SupportedDiseaseCaseFormat formatToUse = figureOutWhichFormatToUse(where);
+        if (formatToUse == null) {
+            LOGGER.warn("Unable to choose the proper format to decode data in '{}'", where.getAbsolutePath());
+            return Collections.emptyList();
+        }
+
+        // create decoding function
+        Function<InputStream, Optional<DiseaseCase>> decodingFunction;
+        switch (formatToUse) {
+            case JSON:
+                decodingFunction = ProtoJSONModelParser::readDiseaseCase;
+                break;
+            case XML:
+                decodingFunction = XMLModelParser::loadDiseaseCase;
+                break;
+            default:
+                LOGGER.warn("Unable to create decoder for selected format '{}'", formatToUse);
+                return Collections.emptyList();
+        }
+
+        // decode the files
+        File[] files = where.listFiles(f -> f.getName().matches(Codecs.SupportedDiseaseCaseFormat.getRegexMap().get(formatToUse)));
+
+        Collection<DiseaseCase> models = new ArrayList<>();
+        for (File path : files) { // this should not be null (precondition in javadoc)
+            try (InputStream is = new FileInputStream(path)) {
+                decodingFunction.apply(is)
+                        .ifPresent(models::add);
+            } catch (IOException e) {
+                LOGGER.warn("Unable to decode file '{}'", path.getAbsolutePath(), e);
+            }
+        }
+        return models;
+    }
+
     @FXML
     void validateCurrentEntryMenuItemAction() {
-        // TODO - reject validation of incomplete model
-        List<ValidationLine> lines = new ArrayList<>(ValidationRunner.validateModel(dataController.getCase(), assemblies));
+        DiseaseCase theCase = dataController.getCase();
+        ValidationRunner runner = ValidationRunner.forAllValidations(assemblies);
+        List<ValidationResult> results = runner.validateSingleModel(theCase);
 
         try {
             ShowValidationResultsController controller = new ShowValidationResultsController();
-            Parent parent = FXMLLoader.load(ShowValidationResultsController.class.getResource("ShowValidationResultsView.fxml"),
+            Parent parent = FXMLLoader.load(ShowValidationResultsController.class.getResource("ShowValidationResults.fxml"),
                     resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
-            controller.setValidationLines(lines);
+            controller.setValidationResult(theCase, results);
             Stage stage = new Stage();
             stage.initOwner(primaryStage);
             stage.setScene(new Scene(parent));
@@ -320,29 +332,28 @@ public final class MainController {
     @FXML
     void validateAllFilesMenuItemAction() {
         // read all model files
-        ModelParser modelParser = new XMLModelParser(optionalResources.getDiseaseCaseDir());
-        List<DiseaseCase> models = new ArrayList<>();
-        for (File modelFile : modelParser.getModelNames()) {
-            try (FileInputStream fis = new FileInputStream(modelFile)) {
-                modelParser.readModel(fis)
-                        .ifPresent(models::add);
-            } catch (IOException e) {
-                PopUps.showException("Open XML model", "Unable to decode XML file", "Did you set proper extension?", e);
-            }
+        File where = optionalResources.getDiseaseCaseDir();
+        if (where == null || !where.isDirectory()) {
+            PopUps.showInfoMessage("Set curated files directory first", "Unable to run validation");
+            return;
+        }
+        Collection<DiseaseCase> models = smartDecodingOfDiseaseCasesInDirectory(where);
+        if (models.isEmpty()) {
+            PopUps.showInfoMessage(String.format("No models in directory %s", where.getPath()), "Validate all cases");
+            return;
         }
 
-        List<ValidationLine> lines = models.stream()
-                .map(m -> ValidationRunner.validateModel(m, assemblies))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+
+        ValidationRunner runner = ValidationRunner.forAllValidations(assemblies);
+        Map<DiseaseCase, List<ValidationResult>> validationResults = runner.validateModels(models);
 
         try {
             ShowValidationResultsController controller = new ShowValidationResultsController();
-            Parent parent = FXMLLoader.load(ShowValidationResultsController.class.getResource("ShowValidationResultsView.fxml"),
+            Parent parent = FXMLLoader.load(ShowValidationResultsController.class.getResource("ShowValidationResults.fxml"),
                     resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
-            controller.setValidationLines(lines);
+            controller.setValidationResults(validationResults);
             Stage stage = new Stage();
-            stage.setTitle("Validation results");
+            stage.setTitle("Validate all cases");
             stage.initOwner(primaryStage);
             stage.setScene(new Scene(parent));
             stage.showAndWait();
@@ -560,8 +571,8 @@ public final class MainController {
      * </ul>
      */
     private void saveModel(File currentModelPath, DiseaseCase model) {
-        CompletenessValidator completenessValidator = new CompletenessValidator();
-        completenessValidator.validateDiseaseCase(model);
+//        CompletenessValidator completenessValidator = new CompletenessValidator();
+//        completenessValidator.validateDiseaseCase(model);
         String conversationTitle = "Save data into file";
 
 

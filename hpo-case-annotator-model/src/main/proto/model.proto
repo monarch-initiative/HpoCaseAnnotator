@@ -6,7 +6,7 @@ option java_multiple_files = true;
 // a model object representing information gained from biocuration of a publication
 message DiseaseCase {
 
-    string genome_build = 3;
+    string genome_build = 3 [deprecated=true]; // use VariantPosition instead
 
     Publication publication = 4;
 
@@ -26,17 +26,47 @@ message DiseaseCase {
     repeated Variant variant = 11;
 }
 
+// Human genome reference assembly - major version
+enum GenomeAssembly {
+    option allow_alias = true;
+    //  defaulted to GRCh37 as this is more common than NCBI36?
+    GRCH_37 = 0;
+    HG_19 = 0;
+
+    NCBI_36 = 1;
+    HG_18 = 1;
+
+    GRCH_38 = 2;
+    HG_38 = 2;
+
+    NOT_KNOWN = 3;
+}
+
+message VariantPosition {
+
+    GenomeAssembly genome_assembly = 1;
+
+    // e.g. 1, 2, X, Y, MT
+    string contig = 2;
+
+    // 1-based position of the variant on the contig (VCF-style)
+    int32 pos = 3;
+
+    string ref_allele = 4;
+
+    string alt_allele = 5;
+}
 
 message Variant {
     // e.g. chrX
-    string contig = 1;
+    string contig = 1 [deprecated=true]; // use VariantPosition instead
 
     // position of the variant on the contig (VCF-style)
-    int32 pos = 2;
+    int32 pos = 2 [deprecated=true]; // use VariantPosition instead
 
-    string ref_allele = 3;
+    string ref_allele = 3 [deprecated=true]; // use VariantPosition instead
 
-    string alt_allele = 4;
+    string alt_allele = 4 [deprecated=true]; // use VariantPosition instead
     // a short neighbouring nucleotide sequence with ref & alt alleles, e.g. ACGT[C/A]TATT
     string snippet = 5;
 
@@ -59,6 +89,8 @@ message Variant {
     string cryptic_splice_site_snippet = 12;
 
     VariantValidation variant_validation = 13;
+
+    VariantPosition variant_position = 14;
 }
 
 

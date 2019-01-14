@@ -1,10 +1,11 @@
 package org.monarchinitiative.hpo_case_annotator.core.refgenome;
 
 import org.junit.Test;
+import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -18,24 +19,16 @@ public class GenomeAssembliesSerializerTest {
 
     private static GenomeAssemblies fakeUpGenomeAssemblies() {
         GenomeAssemblies assemblies = new GenomeAssemblies();
-
-        GenomeAssembly hg19 = GenomeAssembly.HG19;
-        hg19.setFastaPath(new File("/path/to/hg19"));
-        assemblies.getAssemblyMap().put(hg19.toString(), hg19);
-
-        GenomeAssembly hg38 = GenomeAssembly.HG38;
-        hg38.setFastaPath(new File("/path/to/hg38"));
-        assemblies.getAssemblyMap().put(hg38.toString(), hg38);
-
+        assemblies.putAssembly(GenomeAssembly.NCBI_36, Paths.get("/path/to/ncbi36.fa")); // hg18
+        assemblies.putAssembly(GenomeAssembly.GRCH_37, Paths.get("/path/to/grch37.fa")); // hg19
         return assemblies;
     }
 
 
     private static Properties fakeUpProperties() {
         Properties properties = new Properties();
-        properties.put("assembly.in.usage", "hg19");
-        properties.put("hg19.fasta.path", "/path/to/hg19");
-        properties.put("hg38.fasta.path", "/path/to/hg38");
+        properties.put("NCBI_36.fasta.path", "/path/to/ncbi36.fa");
+        properties.put("GRCH_37.fasta.path", "/path/to/grch37.fa");
 
         return properties;
     }
@@ -49,8 +42,8 @@ public class GenomeAssembliesSerializerTest {
         GenomeAssemblies assemblies = GenomeAssembliesSerializer.deserialize(is);
 
         assertThat(assemblies.getAssemblyMap().size(), is(2));
-        assertThat(assemblies.getAssemblyMap().get("hg19").getFastaPath().getAbsolutePath(), is("/path/to/hg19"));
-        assertThat(assemblies.getAssemblyMap().get("hg38").getFastaPath().getAbsolutePath(), is("/path/to/hg38"));
+        assertThat(assemblies.getAssemblyMap().get(GenomeAssembly.NCBI_36).toFile().getName(), is("ncbi36.fa"));
+        assertThat(assemblies.getAssemblyMap().get(GenomeAssembly.HG_19).toFile().getName(), is("grch37.fa"));
     }
 
 
@@ -63,10 +56,10 @@ public class GenomeAssembliesSerializerTest {
         Properties properties = new Properties();
         properties.load(is);
 
-        assertTrue(properties.containsKey("hg38.fasta.path"));
-        assertTrue(properties.containsKey("hg19.fasta.path"));
+        assertTrue(properties.containsKey("NCBI_36.fasta.path"));
+        assertThat(properties.getProperty("NCBI_36.fasta.path"), is("/path/to/ncbi36.fa"));
 
-        assertThat(properties.getProperty("hg19.fasta.path"), is("/path/to/hg19"));
-        assertThat(properties.getProperty("hg38.fasta.path"), is("/path/to/hg38"));
+        assertTrue(properties.containsKey("GRCH_37.fasta.path"));
+        assertThat(properties.getProperty("GRCH_37.fasta.path"), is("/path/to/grch37.fa"));
     }
 }

@@ -1,150 +1,142 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
-import org.monarchinitiative.hpo_case_annotator.model.xml_model.SplicingVariant;
-import org.monarchinitiative.hpo_case_annotator.model.proto.CrypticSpliceSiteType;
-import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
+import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.SequenceDao;
-import org.monarchinitiative.hpo_case_annotator.core.refgenome.SingleFastaSequenceDao;
+import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Validator for checking correct entry of variant positions & snippets.
  */
-public final class GenomicPositionValidator extends AbstractValidator {
+public final class GenomicPositionValidator implements Validator<Variant> {
 
-    private final SequenceDao sequenceDao;
+    /**
+     * Sequence snippet must match this regexp - strings like <code>'ACGT[A/CC]ACGTT'</code>
+     */
+    public static final String SNIPPET_REGEXP = "[ACGT]+\\[([ACGT]+)/([ACGT]+)][ACGT]+";
+
+    private final GenomeAssemblies genomeAssemblies;
 
 
-    public GenomicPositionValidator(SequenceDao sequenceDao) {
-        this.sequenceDao = sequenceDao;
+    public GenomicPositionValidator(GenomeAssemblies genomeAssemblies) {
+        this.genomeAssemblies = genomeAssemblies;
+
     }
 
+    /**
+     * @param contig
+     * @param pos
+     * @param snippet     String that has already been matched against {@link #SNIPPET_REGEXP}
+     * @param sequenceDao
+     * @return
+     */
+    private static List<ValidationResult> validateSnippet(String contig, int pos, String snippet, SequenceDao sequenceDao) {
+        List<ValidationResult> results = new ArrayList<>();
 
-    public GenomicPositionValidator(File fastaPath) {
-        this.sequenceDao = new SingleFastaSequenceDao(fastaPath);
-    }
+        // define anchor points and extract snippet subparts
+        int openBracketIdx = snippet.indexOf("[");
+        int closeBracketIdx = snippet.indexOf("]");
+        int slashIdx = snippet.indexOf("/");
 
+        String prefix = snippet.substring(0, openBracketIdx);
+        String suffix = snippet.substring(closeBracketIdx + 1);
+        String snippetRef = snippet.substring(openBracketIdx + 1, slashIdx);
 
-    @Override
-    public ValidationResult validateDiseaseCase(DiseaseCase model) {
-        /* Expecting, that completeness validation was performed before so
-         * there is at least one variant to validate and it contains all
-         * required fields
-         */
+        // SequenceDao operates using 1-based coordinates
+        // 1-based position of the first nucleotide of the snippet's prefix (included)
+        int seqBeginPos = pos - prefix.length() + 1;
+        // 1-based position of the last nucleotide of the snippet's suffix (included)
+        int seqEndPos = pos + snippetRef.length() + suffix.length();
 
-        return model.getVariantList().stream()
-                .map(this::variantValid)
-                .filter(vr -> vr != ValidationResult.PASSED)
-                .findFirst() // find the first variant that failed validation
-                .orElse(makeValidationResult(ValidationResult.PASSED, OKAY)); // or return PASSED if no variant had failed
+        // get the sequence that we will need
+        String actualSnippetSeq = sequenceDao.fetchSequence(contig, seqBeginPos, seqEndPos);
+
+        // Now compare the prefix
+        String actualPrefix = actualSnippetSeq.substring(0, prefix.length());
+        if (!prefix.equals(actualPrefix)) {
+            results.add(ValidationResult.fail(String.format("Prefix in snippet '%s' does not match the actual sequence '%s' observed at interval '%s:%d-%d'",
+                    prefix, actualPrefix, contig, seqBeginPos - 1, seqBeginPos - 1 + prefix.length())));
+        }
+
+        // Now compare the ref allele
+        String actualRefAllele = actualSnippetSeq.substring(prefix.length(), prefix.length() + snippetRef.length());
+        if (!snippetRef.equals(actualRefAllele)) {
+            int refBeginPos = seqBeginPos + prefix.length() - 1;
+            results.add(ValidationResult.fail(String.format("Ref sequence in snippet '%s' does not match the actual sequence '%s' observed at interval '%s:%d-%d'",
+                    snippetRef, actualRefAllele, contig, refBeginPos, refBeginPos + snippetRef.length())));
+        }
+        // Now compare the suffix
+        String actualSuffix = actualSnippetSeq.substring(prefix.length() + snippetRef.length());
+        if (!suffix.equals(actualSuffix)) {
+            int suffixBeginPos = seqBeginPos + prefix.length() + snippetRef.length() - 1;
+            results.add(ValidationResult.fail(String.format("Suffix in snippet '%s' does not match the actual sequence '%s' observed at interval '%s:%d-%d'",
+                    suffix, actualSuffix, contig, suffixBeginPos, suffixBeginPos + suffix.length())));
+        }
+
+        return results;
     }
 
 
     /**
-     * @return true if the variant and the snippet sequence matches the genome reference
+     * @param variant {@link Variant}
+     * @return {@link List} with {@link ValidationResult}s
      */
-    ValidationResult variantValid(Variant variant) {
-        int pos = variant.getPos();
-        String chrom = variant.getContig();
-        String ref = variant.getRefAllele();
-        String alt = variant.getAltAllele();
-        int len = ref.length();
-        int to_pos = pos + len - 1;
-        String expected = sequenceDao.fetchSequence(chrom, pos - 1, to_pos);
+    @Override
+    public List<ValidationResult> validate(Variant variant) {
+        List<ValidationResult> results = new ArrayList<>();
 
-        boolean precondition = ref.equals(expected) && ref.length() > 0 && alt.length() > 0;
+        GenomeAssembly assembly = variant.getVariantPosition().getGenomeAssembly();
 
-        if (!precondition) {
-            if (ref.length() == 0) {
-                return makeValidationResult(ValidationResult.FAILED, "REF sequence not initialized (length=0)");
-            } else if (alt.length() == 0) {
-                return makeValidationResult(ValidationResult.FAILED, "ALT sequence not initialized (length=0)");
-            } else {
-                String dx = String.format("genomic reference=\"%s\" at chr%s:%d-%d; entered ref=%s/alt=%s/len=%d",
-                        expected, chrom, pos, to_pos, ref, alt, len);
-                return makeValidationResult(ValidationResult.FAILED, dx);
+        if (!genomeAssemblies.hasFastaForAssembly(assembly)) { // no validation is possible if the fasta file is not present
+            results.add(ValidationResult.fail("Fasta file for genome assembly " + assembly.name() + " is not present"));
+            return results;
+        }
+
+        Optional<SequenceDao> sequenceDaoOptional = genomeAssemblies.getSequenceDaoForAssembly(assembly);
+        if (!sequenceDaoOptional.isPresent()) { // unknown error
+            results.add(ValidationResult.fail("Unable to open Fasta file "
+                    + genomeAssemblies.getAssemblyMap().get(assembly) + " for genome assembly " + assembly.name()));
+            return results;
+        }
+
+
+        final VariantPosition varPos = variant.getVariantPosition();
+        String chrom = varPos.getContig();
+        int pos = varPos.getPos() - 1; // to 0-based coordinate system
+        String ref = varPos.getRefAllele();
+        String alt = varPos.getAltAllele();
+        int to_pos = pos + ref.length();
+
+        SequenceDao sequenceDao = sequenceDaoOptional.get();
+        if (ref.isEmpty()) {
+            results.add(ValidationResult.fail("Ref sequence not initialized (length=0)"));
+        } else {
+            String expectedRefAllele = sequenceDao.fetchSequence(chrom, pos, to_pos);
+            if (!ref.equals(expectedRefAllele)) {
+                results.add(ValidationResult.fail(String.format("Ref sequence '%s' does not match the sequence '%s' observed at '%s:%d-%d'",
+                        ref, expectedRefAllele, chrom, pos, to_pos)));
             }
         }
+        if (alt.isEmpty()) {
+            results.add(ValidationResult.fail("Alt sequence not initialized (length=0)"));
+        }
+
 
         /* The variant string is OK, and now we can validate the snippet string */
-        ValidationResult result = validateSnippet(chrom, ref, alt, pos, variant.getSnippet());
-        if (result != ValidationResult.PASSED)
-            return result;
-
-
-        // Once again everything looks okay, now perform checks specific for variant subtypes
-        switch (variant.getVariantValidation().getContext()) {
-            case MENDELIAN:
-                return makeValidationResult(ValidationResult.PASSED, OKAY);
-            case SOMATIC:
-                return makeValidationResult(ValidationResult.PASSED, OKAY);
-            case SPLICING:
-                return splicingAspectsOfVariantsAreValid(variant);
-            default:
-                return makeValidationResult(ValidationResult.UNAPPLICABLE, "Unknown variant validation context '" + variant.getVariantValidation().getContext() + "'");
+        String snippet = variant.getSnippet();
+        if (snippet.matches(SNIPPET_REGEXP)) {
+            results.addAll(validateSnippet(chrom, pos, snippet, sequenceDao));
+        } else {
+            results.add(ValidationResult.fail("Snippet sequence " + snippet + " does not have the required format (see help)"));
         }
+
+        return results;
     }
-
-
-    /**
-     * This method should validate all aspects which are different between SplicingVariant and Variant classes. At the
-     * moment it validates CSS position, snippet format & sequence. These attributes must obey these criteria: <ul>
-     * <li>CSS position <em>always</em> indicates the genomic position of nucleotide which is immediate 5' neighbor of
-     * newly created splice site. In case of the following splice site: <em>TTGAGCCAG|gtgtag</em> the position of 9th
-     * nucleotide (G) is indicated. Please note that  VCF (1-based) numbering is used.</li> <li>The snippet sequence is
-     * <b>always</b> the sequence of <b>FWD strand</b> of the reference genome regardless of the gene strand.</li>
-     * <li>Character case is ignored</li> </ul>
-     *
-     * @param variant {@link SplicingVariant} to be validated
-     * @return {@link ValidationResult} with the validation result
-     */
-    private ValidationResult splicingAspectsOfVariantsAreValid(Variant variant) {
-        // indicates position of nt in 5' direction before border (|) in VCF (1-based) numbering
-        // ACGTACGTA|ACGTACGT -> position of 'A' (9th nucleotide, left of border).
-        int pos = variant.getCrypticPosition();
-        CrypticSpliceSiteType type = variant.getCrypticSpliceSiteType();
-        String snippet = variant.getCrypticSpliceSiteSnippet();
-
-        if (pos == 0 && (type.equals(CrypticSpliceSiteType.UNRECOGNIZED) || type.equals(CrypticSpliceSiteType.NO)) && isNullOrEmpty(snippet)) {
-            // CSS data was not set and as it is not mandatory to set CSS data variant is valid.
-            return makeValidationResult(ValidationResult.PASSED, OKAY);
-        }
-
-        if (countOccurence(snippet, '|') != 1) {
-            return makeValidationResult(ValidationResult.FAILED, String.format("Unable to find '|' symbol in CSS snippet %s", snippet));
-        }
-
-        String chrom = variant.getContig();
-        int border = snippet.indexOf('|');
-        int prefixLen, suffixLen;
-        // ACGT|ACGTAC - length -> 11, border -> 4, prefixLen -> 4, suffixLen -> 6
-        prefixLen = border;
-        suffixLen = snippet.length() - border - 1;
-        String refGenomePrefixSeq, refGenomeSuffixSeq, enteredPrefixSeq, enteredSuffixSeq;
-
-
-        // extract sequences from snippet
-        enteredPrefixSeq = snippet.substring(0, border);
-        enteredSuffixSeq = snippet.substring(border + 1, border + suffixLen + 1);
-
-        // get sequences from reference genome
-        refGenomePrefixSeq = sequenceDao.fetchSequence(chrom, pos - prefixLen, pos);
-        refGenomeSuffixSeq = sequenceDao.fetchSequence(chrom, pos, pos + suffixLen);
-
-        if (!enteredPrefixSeq.equalsIgnoreCase(refGenomePrefixSeq)) {
-            return makeValidationResult(ValidationResult.FAILED, String.format("Prefix of CSS snippet: %s, Genomic sequence: %s",
-                    enteredPrefixSeq, refGenomePrefixSeq));
-        }
-
-        if (!enteredSuffixSeq.equalsIgnoreCase(refGenomeSuffixSeq)) {
-            return makeValidationResult(ValidationResult.FAILED, String.format("Suffix of CSS snippet: %ss, Genomic sequence: %s",
-                    enteredSuffixSeq, refGenomeSuffixSeq));
-        }
-        return makeValidationResult(ValidationResult.PASSED, OKAY);
-    }
-
 
     /**
      * Count how many times is character <em>counted</em> present in given <em>string</em>.
@@ -165,55 +157,14 @@ public final class GenomicPositionValidator extends AbstractValidator {
     }
 
 
-    private ValidationResult prefixMatches(String chrom, String snippet, String prefix, int pos) {
-        //System.out.println("pref=" + pref + ", middle=" + middle + ", suff=" + suff + ", for snippet " + snippet);
-        // Now compare the prefix
-        int len = prefix.length();
-        int zero_based_prefix_begin = pos - len - 1;
-        int one_based_prefix_end = pos - 1;
-        String expected = sequenceDao.fetchSequence(chrom, zero_based_prefix_begin, one_based_prefix_end);
-        if (prefix.equals(expected)) {
-            return makeValidationResult(ValidationResult.PASSED, OKAY);
-        } else {
-            return makeValidationResult(ValidationResult.FAILED, String.format("Prefix (%s) did not match with expected (%s) in snippet: %s (pos=%s:%d)",
-                    prefix, expected, snippet, chrom, pos));
-        }
-    }
-
-
-    /**
-     * Compare the suffix part of the snippet with the expected genome sequence.
-     *
-     * @param chrom   the chromosome on which the mutation is located
-     * @param snippet A string such as ACTG[G/T]TTGA showing the mutation (G>T) and the surrounding sequence
-     * @param suffix  The suffix of the snippet
-     * @param pos     The position
-     * @return true if the suffix is correct.
-     */
-    private ValidationResult suffixMatches(String chrom, String snippet, String suffix, int pos) {
-        // Now compare the suffix
-        int zero_based_suffix_begin = pos - 1;
-        int one_based_suffix_end = pos + suffix.length() - 1;
-        String expected = sequenceDao.fetchSequence(chrom, zero_based_suffix_begin, one_based_suffix_end);
-        if (suffix.equals(expected)) {
-            return makeValidationResult(ValidationResult.PASSED, OKAY);
-        } else {
-            //System.out.println("Did not match suffix with expected=\"" + expected + "\"");
-            //String msg = getSurroundingSequence(chrom,pos);
-            return makeValidationResult(ValidationResult.FAILED, String.format("Suffix (%s) did not match with expected (%s: from:%d, to:%d) in snippet: %s. Expected: %s\n",
-                    suffix, chrom, zero_based_suffix_begin, one_based_suffix_end, snippet, expected));
-        }
-    }
-
-
     /**
      * Some variants have snippets (we are trying to add this to all the variants). A snippet string is like this:
      * CTACT[G/A]TCCAA The sequence surrounding the position of the mutation is shown. If the snippet string is null or
      * empty, return true, this means that the biocuration is not yet finished (it is a sanity check for Q/C). The
      * sequence given in the brackets is the actual mutation. TODO--clean up the code (it works but is ugly!)
      */
-    private ValidationResult validateSnippet(String chrom, String ref, String alt, int pos, String snippet) {
-
+//    private ValidationResult validateSnippet(String chrom, String ref, String alt, int pos, String snippet) {
+/*
         if (snippet == null || snippet.length() == 0) {
             return makeValidationResult(ValidationResult.FAILED, "Snippet wasn't entered!");
         }
@@ -242,11 +193,11 @@ public final class GenomicPositionValidator extends AbstractValidator {
         String suff = snippet.substring(x2 + 1);
         String middle = snippet.substring(x1 + 1, x2);
         if (middle.startsWith("-")) {
-            /* This means that the position we gave in the GUI was VCF format, i.e., the
-               position is the first base BEFORE the mutation, and needs to be adjusted because the mutation is an insertion! */
+            *//* This means that the position we gave in the GUI was VCF format, i.e., the
+               position is the first base BEFORE the mutation, and needs to be adjusted because the mutation is an insertion! *//*
             isInDel = true;
         } else if (middle.endsWith("-")) {
-            isInDel = true; /* this means mutation was a deletion */
+            isInDel = true; *//* this means mutation was a deletion *//*
         }
 
 
@@ -259,7 +210,7 @@ public final class GenomicPositionValidator extends AbstractValidator {
         String sAlt = middle.substring(x1 + 1);
 
         if (sRef.length() > 1 && sAlt.length() > 1) {
-            /* We are in a complicated ins-del mutation. */
+            *//* We are in a complicated ins-del mutation. *//*
             isInDel = true;
             combinedIndel = true;
         }
@@ -283,14 +234,14 @@ public final class GenomicPositionValidator extends AbstractValidator {
         if (sAlt.length() == 0) {
             return makeValidationResult(ValidationResult.FAILED, String.format("Malformed (null) string for ALT in snippet: %s", snippet));
         }
-        /* Case of insertion */
+        *//* Case of insertion *//*
         if (sRef.equals("-")) {
             if (sAlt.equals(alt.substring(1))) {
                 return makeValidationResult(ValidationResult.PASSED, OKAY);
             } else {
                 return makeValidationResult(ValidationResult.FAILED, String.format("Mismatching ALT string for insertion mutation: %s", snippet));
             }
-            /* Case of deletion */
+            *//* Case of deletion *//*
         } else if (sAlt.equals("-")) {
             if (sRef.equals(ref.substring(1))) {
                 return makeValidationResult(ValidationResult.PASSED, OKAY);// for instance TAAG -> T in VCF
@@ -299,7 +250,7 @@ public final class GenomicPositionValidator extends AbstractValidator {
                 return makeValidationResult(ValidationResult.FAILED, String.format("Mismatching REF string for deletion mutation ref=\"%s\", alt=\"%s\" in snippet: %s",
                         ref, alt, snippet));
             }
-            /* substitution */
+            *//* substitution *//*
         } else if (combinedIndel) {
             if (sRef.equals(ref)) {
                 ;//System.out.println("Ref matches in deletion case");
@@ -315,15 +266,17 @@ public final class GenomicPositionValidator extends AbstractValidator {
             } else if (!sAlt.equals(alt)) {
                 System.out.println(String.format("ALT sequence (%s) not given correctly in snippet (%s): %s", alt, sAlt, snippet));
                 return makeValidationResult(ValidationResult.FAILED, String.format("ALT sequence (%s) not given correctly in snippet: %s", alt, snippet));
-            } else { /* all is OK */
+            } else { *//* all is OK *//*
                 return makeValidationResult(ValidationResult.PASSED, OKAY);
             }
-        }
+        }*/
 //        String e = String.format("Uncaught situation: snippet: \"%s\", prefix=\"%s\",middle=\"%s\",suff=\"%s\"", snippet, pref, middle, suff);
 
 //        setErrorMessage(e);
 //        return false;
-    }
+//        return null;
+//    }
+
 
 }
 

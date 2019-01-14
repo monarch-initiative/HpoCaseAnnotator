@@ -9,3 +9,5 @@ Issues to be solved in HRMD gui
 - one variant can have more than single consequence
 - one variant can lead to utilization of multiple CS sites
 - window title - window owners, etc..
+
+- add genome build to all variants and their controllers

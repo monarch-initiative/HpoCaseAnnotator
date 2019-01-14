@@ -87,7 +87,8 @@ public final class ShowPublicationsController {
      */
     private static String crunchVariants(DiseaseCase model) {
         return model.getVariantList().stream()
-                .map(v -> String.format("%s:%d%s>%s", v.getContig(), v.getPos(), v.getRefAllele(), v.getAltAllele()))
+                .map(v -> String.format("%s %s:%d%s>%s", v.getVariantPosition().getGenomeAssembly(), v.getVariantPosition().getContig(),
+                        v.getVariantPosition().getPos(), v.getVariantPosition().getRefAllele(), v.getVariantPosition().getAltAllele()))
                 .collect(Collectors.joining(","));
     }
 

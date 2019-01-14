@@ -35,51 +35,57 @@
                                 <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
                             </columnConstraints>
                             <rowConstraints>
+                        <RowConstraints />
                                 <RowConstraints />
                                 <RowConstraints />
                             </rowConstraints>
                             <children>
-                                <ComboBox fx:id="chromosomeComboBox" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="90.0" prefHeight="30.0" prefWidth="90.0" promptText="Chr">
+                        <ComboBox fx:id="genomeBuildComboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="90.0" prefHeight="30.0" prefWidth="90.0" promptText="Genome build" GridPane.columnSpan="2">
+                           <GridPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </GridPane.margin>
+                        </ComboBox>
+                                <ComboBox fx:id="chromosomeComboBox" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="90.0" prefHeight="30.0" prefWidth="90.0" promptText="Chr" GridPane.rowIndex="1">
                                     <GridPane.margin>
                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </ComboBox>
-                                <TextField fx:id="positionTextField" prefHeight="30.0" prefWidth="90.0" promptText="Position" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS">
+                                <TextField fx:id="positionTextField" prefHeight="30.0" prefWidth="90.0" promptText="Position" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
                                     <GridPane.margin>
                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </TextField>
-                                <TextField fx:id="referenceTextField" prefHeight="30.0" promptText="Reference" GridPane.columnIndex="2">
+                                <TextField fx:id="referenceTextField" prefHeight="30.0" promptText="Reference" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                     <GridPane.margin>
                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </TextField>
-                                <TextField fx:id="alternateTextField" prefHeight="30.0" promptText="Alternate" GridPane.columnIndex="3">
+                                <TextField fx:id="alternateTextField" prefHeight="30.0" promptText="Alternate" GridPane.columnIndex="3" GridPane.rowIndex="1">
                                     <GridPane.margin>
                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </TextField>
-                                <TextField fx:id="snippetTextField" prefHeight="30.0" promptText="Snippet" GridPane.columnIndex="4">
+                                <TextField fx:id="snippetTextField" prefHeight="30.0" promptText="Snippet" GridPane.columnIndex="4" GridPane.rowIndex="1">
                                     <GridPane.margin>
                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </TextField>
-                                <ComboBox fx:id="genotypeComboBox" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="120.0" prefHeight="30.0" prefWidth="120.0" promptText="Genotype" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+                                <ComboBox fx:id="genotypeComboBox" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="120.0" prefHeight="30.0" prefWidth="120.0" promptText="Genotype" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
                                     <GridPane.margin>
                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </ComboBox>
-                                <ComboBox fx:id="variantClassComboBox" prefHeight="30.0" prefWidth="250.0" promptText="Variant class" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                <ComboBox fx:id="variantClassComboBox" prefHeight="30.0" prefWidth="250.0" promptText="Variant class" GridPane.columnIndex="2" GridPane.rowIndex="2">
                                     <GridPane.margin>
                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </ComboBox>
-                                <ComboBox fx:id="pathomechanismComboBox" prefHeight="30.0" prefWidth="250.0" promptText="Pathomechanism" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                <ComboBox fx:id="pathomechanismComboBox" prefHeight="30.0" prefWidth="250.0" promptText="Pathomechanism" GridPane.columnIndex="3" GridPane.rowIndex="2">
                                     <GridPane.margin>
                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>
                                 </ComboBox>
-                                <TextField fx:id="regulatorTextField" prefHeight="30.0" prefWidth="276.0" promptText="Regulator" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                                <TextField fx:id="regulatorTextField" prefHeight="30.0" prefWidth="276.0" promptText="Regulator" GridPane.columnIndex="4" GridPane.rowIndex="2">
                                     <GridPane.margin>
                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </GridPane.margin>

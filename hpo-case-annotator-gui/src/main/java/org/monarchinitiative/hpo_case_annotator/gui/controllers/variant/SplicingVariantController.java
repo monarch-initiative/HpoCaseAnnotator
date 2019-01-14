@@ -9,10 +9,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
-import org.monarchinitiative.hpo_case_annotator.model.proto.CrypticSpliceSiteType;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
-import org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation;
+import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -28,8 +25,11 @@ public final class SplicingVariantController extends AbstractVariantController {
 
     private BooleanBinding isCompleteBinding;
 
+
     // ******************** FXML elements, injected by FXMLLoader ********************************** //
     // ************************* Variant *********************************** //
+    @FXML
+    public ComboBox<GenomeAssembly> genomeBuildComboBox;
 
     @FXML
     private ComboBox<String> varChromosomeComboBox;
@@ -117,7 +117,7 @@ public final class SplicingVariantController extends AbstractVariantController {
      */
     public void initialize() {
         //        this.setText(VariantValidation.Context.SPLICING.toString());
-
+        genomeBuildComboBox.getItems().addAll(elementValues.getGenomeBuild());
         varChromosomeComboBox.getItems().addAll(elementValues.getChromosome());
         varPositionTextField.setTextFormatter(makeTextFormatter(varPositionTextField, VARIANT_POSITION_REGEXP));
         varReferenceTextField.setTextFormatter(makeTextFormatter(varReferenceTextField, ALLELE_REGEXP));
@@ -162,10 +162,11 @@ public final class SplicingVariantController extends AbstractVariantController {
     @Override
     public void presentVariant(Variant variant) {
         // Variant related fields
-        varChromosomeComboBox.setValue(variant.getContig());
-        varPositionTextField.setText(String.valueOf(variant.getPos()));
-        varReferenceTextField.setText(variant.getRefAllele());
-        varAlternateTextField.setText(variant.getAltAllele());
+        genomeBuildComboBox.setValue(variant.getVariantPosition().getGenomeAssembly());
+        varChromosomeComboBox.setValue(variant.getVariantPosition().getContig());
+        varPositionTextField.setText(String.valueOf(variant.getVariantPosition().getPos()));
+        varReferenceTextField.setText(variant.getVariantPosition().getRefAllele());
+        varAlternateTextField.setText(variant.getVariantPosition().getAltAllele());
         varSnippetTextField.setText(variant.getSnippet());
         varGenotypeComboBox.setValue(variant.getGenotype());
         varClassComboBox.setValue(variant.getVariantClass());
@@ -198,10 +199,13 @@ public final class SplicingVariantController extends AbstractVariantController {
     public Variant getVariant() {
         if (isCompleteBinding.get()) {
             return Variant.newBuilder()
-                    .setContig(varChromosomeComboBox.getValue())
-                    .setPos(Integer.parseInt(varPositionTextField.getText()))
-                    .setRefAllele(varReferenceTextField.getText())
-                    .setAltAllele(varAlternateTextField.getText())
+                    .setVariantPosition(VariantPosition.newBuilder()
+                            .setGenomeAssembly(genomeBuildComboBox.getValue())
+                            .setContig(varChromosomeComboBox.getValue())
+                            .setPos(Integer.parseInt(varPositionTextField.getText()))
+                            .setRefAllele(varReferenceTextField.getText())
+                            .setAltAllele(varAlternateTextField.getText())
+                            .build())
                     .setSnippet(varSnippetTextField.getText())
                     .setGenotype(varGenotypeComboBox.getValue())
                     .setVariantClass(varClassComboBox.getValue() == null ? "" : varClassComboBox.getValue())
@@ -239,14 +243,15 @@ public final class SplicingVariantController extends AbstractVariantController {
     public Binding<String> variantTitleBinding() {
         return Bindings.createStringBinding(() -> {
                     if (isCompleteBinding.get()) {
-                        return String.format("Splicing variant: %s:%s%s>%s", varChromosomeComboBox.getValue(),
+                        return String.format("Splicing variant: %s_%s:%s%s>%s", genomeBuildComboBox.getValue(), varChromosomeComboBox.getValue(),
                                 varPositionTextField.getText(), varReferenceTextField.getText(),
                                 varAlternateTextField.getText());
                     } else {
                         return "Splicing variant: INCOMPLETE";
                     }
                 },
-                varChromosomeComboBox.valueProperty(), varPositionTextField.textProperty(), varReferenceTextField.textProperty(),
-                varAlternateTextField.textProperty(), varSnippetTextField.textProperty(), varGenotypeComboBox.valueProperty());
+                genomeBuildComboBox.valueProperty(), varChromosomeComboBox.valueProperty(), varPositionTextField.textProperty(),
+                varReferenceTextField.textProperty(), varAlternateTextField.textProperty(), varSnippetTextField.textProperty(),
+                varGenotypeComboBox.valueProperty());
     }
 }

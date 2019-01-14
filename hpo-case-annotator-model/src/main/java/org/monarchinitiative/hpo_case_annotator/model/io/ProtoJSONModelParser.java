@@ -1,7 +1,10 @@
 package org.monarchinitiative.hpo_case_annotator.model.io;
 
 import com.google.protobuf.util.JsonFormat;
+import org.monarchinitiative.hpo_case_annotator.model.Codecs;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +12,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
@@ -49,7 +53,19 @@ public class ProtoJSONModelParser implements ModelParser {
 
 
     public static void saveDiseaseCase(OutputStream os, DiseaseCase model, Charset charset) throws IOException {
-        os.write(JSON_PRINTER.print(model).getBytes(charset));
+        // ----------- clear deprecated fields ---------------
+        // genome build from model
+        DiseaseCase.Builder builder = model.toBuilder().clearGenomeBuild();
+
+        // contig, pos, refAllele, and altAllele from variants
+        final List<Variant> updatedVariants = builder.getVariantBuilderList().stream()
+                .map(vb -> vb.clearContig().clearPos().clearRefAllele().clearAltAllele().build())
+                .collect(Collectors.toList());
+
+        final DiseaseCase updatedModel = builder.clearVariant().addAllVariant(updatedVariants).build();
+
+        // ----------- save the updated model ----------------
+        os.write(JSON_PRINTER.print(updatedModel).getBytes(charset));
     }
 
 
@@ -57,6 +73,20 @@ public class ProtoJSONModelParser implements ModelParser {
         try {
             DiseaseCase.Builder builder = DiseaseCase.newBuilder();
             JSON_PARSER.merge(new InputStreamReader(is), builder);
+
+            // To maintain compatibility with the older data the VariantPosition is populated if it does not exist.
+            for (Variant.Builder varBuilder : builder.getVariantBuilderList()) {
+                if (varBuilder.getVariantPosition().equals(VariantPosition.getDefaultInstance())) {
+                    varBuilder.setVariantPosition(VariantPosition.newBuilder()
+                            .setGenomeAssembly(Codecs.convertGenomeAssemblyString(builder.getGenomeBuild()))
+                            .setContig(varBuilder.getContig())
+                            .setPos(varBuilder.getPos())
+                            .setRefAllele(varBuilder.getRefAllele())
+                            .setAltAllele(varBuilder.getAltAllele())
+                            .build());
+                }
+
+            }
             return Optional.of(builder.build());
         } catch (IOException e) {
             LOGGER.warn("Error reading disease case", e);

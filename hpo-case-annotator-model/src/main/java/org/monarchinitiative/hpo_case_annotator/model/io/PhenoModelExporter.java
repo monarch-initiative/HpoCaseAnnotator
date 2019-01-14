@@ -99,8 +99,10 @@ public class PhenoModelExporter implements ModelExporter {
         StringBuilder sb = new StringBuilder();
         boolean second = false;
         for (Variant v : model.getVariantList()) {
-            String vs = String.format("%s:%s%s>%s[%s,%s%s]", v.getContig(),
-                    v.getPos(), v.getRefAllele(), v.getAltAllele(), v.getGenotype(), v.getVariantClass(), v.getPathomechanism());
+            String vs = String.format("%s:%s%s>%s[%s,%s%s]", v.getVariantPosition().getContig(),
+                    v.getVariantPosition().getPos(), v.getVariantPosition().getRefAllele(),
+                    v.getVariantPosition().getAltAllele(), v.getGenotype(), v.getVariantClass(),
+                    v.getPathomechanism());
             if (second) sb.append(";");
             else second = true;
             sb.append(vs);

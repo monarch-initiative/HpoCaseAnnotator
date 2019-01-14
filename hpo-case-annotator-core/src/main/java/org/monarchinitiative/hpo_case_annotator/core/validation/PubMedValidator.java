@@ -18,7 +18,7 @@ import java.util.Set;
  * model. The purpose of this validator is to check if a publication with given pmid has been already curated within
  * this project and if there exists a corresponding model file in project directory.
  */
-public final class PubMedValidator extends AbstractValidator {
+public final class PubMedValidator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PubMedValidator.class);
 
@@ -27,18 +27,6 @@ public final class PubMedValidator extends AbstractValidator {
 
     public PubMedValidator(ModelParser modelParser) {
         this.modelParser = modelParser;
-    }
-
-
-    /**
-     * This validator always returns {@link ValidationResult#PASSED} as described in class description.
-     *
-     * @param model {@link DiseaseCase} instance about to be validated.
-     * @return {@link ValidationResult#PASSED}.
-     */
-    @Override
-    public ValidationResult validateDiseaseCase(DiseaseCase model) {
-        return makeValidationResult(ValidationResult.PASSED, OKAY);
     }
 
 

@@ -2,11 +2,15 @@ package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Structure of this POJO matches structure of the YAML file <code>gui-element-values.yml</code> (formerly
@@ -17,7 +21,10 @@ import java.util.Objects;
  */
 public class GuiElementValues {
 
-    private List<String> genomeBuild;
+    /**
+     * This is an ugly way of List initialization, but it works for now.
+     */
+    private List<GenomeAssembly> genomeBuild = new ArrayList<>(Arrays.asList(GenomeAssembly.values()));
 
     private List<String> chromosome;
 
@@ -49,12 +56,8 @@ public class GuiElementValues {
         return new ObjectMapper(new YAMLFactory()).readValue(is, GuiElementValues.class);
     }
 
-    public List<String> getGenomeBuild() {
+    public List<GenomeAssembly> getGenomeBuild() {
         return genomeBuild;
-    }
-
-    public void setGenomeBuild(List<String> genomeBuild) {
-        this.genomeBuild = genomeBuild;
     }
 
     public List<String> getChromosome() {

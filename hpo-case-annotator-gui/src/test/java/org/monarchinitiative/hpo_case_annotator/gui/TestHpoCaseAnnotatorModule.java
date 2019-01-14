@@ -7,10 +7,7 @@ import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
 import org.monarchinitiative.hpo_case_annotator.core.io.OMIMParser;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembliesSerializer;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataControllerTest;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValuesTest;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.*;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SomaticVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SplicingVariantController;
@@ -57,6 +54,8 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
         bind(MendelianVariantController.class);
         bind(SomaticVariantController.class);
         bind(SplicingVariantController.class);
+
+        bind(ShowValidationResultsController.class);
 
         bind(ResourceBundle.class)
                 .toInstance(ResourceBundle.getBundle(Play.class.getName()));

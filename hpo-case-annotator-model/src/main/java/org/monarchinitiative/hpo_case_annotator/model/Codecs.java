@@ -28,8 +28,11 @@ public class Codecs {
     public static DiseaseCaseModel diseaseCase2DiseaseCaseModel(DiseaseCase dc) {
         final DiseaseCaseModel model = new DiseaseCaseModel();
 
+
         // genome build
-        model.setGenomeBuild(dc.getGenomeBuild());
+        model.setGenomeBuild(dc.getVariantCount() > 0
+                ? dc.getVariant(0).getVariantPosition().getGenomeAssembly().toString()
+                : GenomeAssembly.UNRECOGNIZED.toString());
 
         // Publication
         final org.monarchinitiative.hpo_case_annotator.model.xml_model.Publication p = new org.monarchinitiative.hpo_case_annotator.model.xml_model.Publication();
@@ -152,10 +155,10 @@ public class Codecs {
      */
     private static BiFunction<org.monarchinitiative.hpo_case_annotator.model.proto.Variant, org.monarchinitiative.hpo_case_annotator.model.xml_model.Variant, org.monarchinitiative.hpo_case_annotator.model.xml_model.Variant> initializeCommonFields() {
         return (proto, older_format) -> {
-            older_format.setChromosome(proto.getContig());
-            older_format.setPosition(String.valueOf(proto.getPos()));
-            older_format.setReferenceAllele(proto.getRefAllele());
-            older_format.setAlternateAllele(proto.getAltAllele());
+            older_format.setChromosome(proto.getVariantPosition().getContig());
+            older_format.setPosition(String.valueOf(proto.getVariantPosition().getPos()));
+            older_format.setReferenceAllele(proto.getVariantPosition().getRefAllele());
+            older_format.setAlternateAllele(proto.getVariantPosition().getAltAllele());
             older_format.setSnippet(proto.getSnippet());
             older_format.setGenotype(proto.getGenotype().toString());
             older_format.setVariantClass(proto.getVariantClass());
@@ -179,10 +182,8 @@ public class Codecs {
     public static DiseaseCase diseaseCaseModel2DiseaseCase(DiseaseCaseModel dcm) {
         DiseaseCase.Builder builder = DiseaseCase.newBuilder();
 
-        // genome build
-        builder = builder.setGenomeBuild(dcm.getGenomeBuild())
-                // Publication
-                .setPublication(org.monarchinitiative.hpo_case_annotator.model.proto.Publication.newBuilder()
+        // Publication
+        builder = builder.setPublication(org.monarchinitiative.hpo_case_annotator.model.proto.Publication.newBuilder()
                         .setAuthorList(dcm.getPublication().getAuthorlist())
                         .setTitle(dcm.getPublication().getTitle())
                         .setJournal(dcm.getPublication().getJournal())
@@ -205,7 +206,9 @@ public class Codecs {
         }
         // Variants
         builder = builder
-                .addAllVariant(dcm.getVariants().stream().map(dcmVariantToVariant()).collect(Collectors.toList()));
+                .addAllVariant(dcm.getVariants().stream()
+                        .map(dcmVariantToVariant(dcm.getGenomeBuild()))
+                        .collect(Collectors.toList()));
         try {
             // FamilyInfo
             builder = builder.setFamilyInfo(org.monarchinitiative.hpo_case_annotator.model.proto.FamilyInfo.newBuilder()
@@ -244,15 +247,19 @@ public class Codecs {
                 .build();
     }
 
-    private static Function<org.monarchinitiative.hpo_case_annotator.model.xml_model.Variant, org.monarchinitiative.hpo_case_annotator.model.proto.Variant> dcmVariantToVariant() {
+    private static Function<org.monarchinitiative.hpo_case_annotator.model.xml_model.Variant, org.monarchinitiative.hpo_case_annotator.model.proto.Variant> dcmVariantToVariant(String genomeAssembly) {
         return v -> {
             org.monarchinitiative.hpo_case_annotator.model.proto.Variant.Builder variantBuilder = org.monarchinitiative.hpo_case_annotator.model.proto.Variant.newBuilder();
             // variant
             try {
-                variantBuilder = variantBuilder.setContig(v.getChromosome())
-                        .setPos(v.getPosition() == null ? 0 : Integer.parseInt(v.getPosition()))
-                        .setRefAllele(v.getReferenceAllele())
-                        .setAltAllele(v.getAlternateAllele())
+                variantBuilder = variantBuilder.setVariantPosition(
+                        VariantPosition.newBuilder()
+                                .setGenomeAssembly(convertGenomeAssemblyString(genomeAssembly))
+                                .setContig(v.getChromosome())
+                                .setPos(v.getPosition() == null ? 0 : Integer.parseInt(v.getPosition()))
+                                .setRefAllele(v.getReferenceAllele())
+                                .setAltAllele(v.getAlternateAllele())
+                                .build())
                         .setSnippet(v.getSnippet())
                         .setGenotype(Genotype.valueOf(v.getGenotype()))
                         .setVariantClass(v.getVariantClass())
@@ -343,6 +350,22 @@ public class Codecs {
 
             return variantBuilder.build();
         };
+    }
+
+    public static GenomeAssembly convertGenomeAssemblyString(String assembly) {
+        switch (assembly.toLowerCase()) {
+            case "grch37":
+            case "hg19":
+                return GenomeAssembly.GRCH_37;
+            case "grch38":
+            case "hg38":
+                return GenomeAssembly.GRCH_38;
+            case "hg18":
+            case "ncbi36":
+                return GenomeAssembly.NCBI_36;
+            default:
+                return GenomeAssembly.UNRECOGNIZED;
+        }
     }
 
 

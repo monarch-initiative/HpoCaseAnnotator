@@ -81,9 +81,6 @@ public final class DataController implements DiseaseCaseController {
     private Label currentModelLabel;
 
     @FXML
-    private ComboBox<String> genomeBuildComboBox;
-
-    @FXML
     private TextField inputPubMedDataTextField;
 
     @FXML
@@ -404,7 +401,6 @@ public final class DataController implements DiseaseCaseController {
      * Populate view elements with choices, create bindings and autocompletions.
      */
     public void initialize() {
-        genomeBuildComboBox.getItems().addAll(elementValues.getGenomeBuild());
         diseaseDatabaseComboBox.getItems().addAll(elementValues.getDiseaseDatabases());
         sexComboBox.getItems().addAll(Arrays.stream(Sex.values()).filter(s -> !s.equals(Sex.UNRECOGNIZED)).collect(Collectors.toList()));
 
@@ -449,10 +445,9 @@ public final class DataController implements DiseaseCaseController {
                 AbstractVariantController::isCompleteBinding, ObservableBooleanValue::get);
 
         BooleanBinding dataControllerFieldsBinding = Bindings.createBooleanBinding(
-                () -> genomeBuildComboBox.getValue() != null && !genomeBuildComboBox.getValue().isEmpty() // genome build
-                        && !publication.get().equals(Publication.getDefaultInstance()), // publication
+                () -> !publication.get().equals(Publication.getDefaultInstance()), // publication
 
-                genomeBuildComboBox.valueProperty(), publication, entrezIDTextField.textProperty(), geneSymbolTextField.textProperty(),
+                publication, entrezIDTextField.textProperty(), geneSymbolTextField.textProperty(),
                 diseaseDatabaseComboBox.valueProperty(), diseaseNameTextField.textProperty(), diseaseIDTextField.textProperty(),
                 probandFamilyTextField.textProperty(), sexComboBox.valueProperty(), variantControllers);
 
@@ -472,14 +467,13 @@ public final class DataController implements DiseaseCaseController {
 
         // this binding evaluates to true if all the fields of this controller are complete
         BooleanBinding completeDataControllerFieldsBinding = Bindings.createBooleanBinding(
-                () -> genomeBuildComboBox.getValue() != null && !genomeBuildComboBox.getValue().isEmpty() // genome build
-                        && !publication.get().equals(Publication.getDefaultInstance()) // publication
+                () -> !publication.get().equals(Publication.getDefaultInstance()) // publication
                         && !entrezIDTextField.getText().isEmpty() && !geneSymbolTextField.getText().isEmpty() // gene
                         && diseaseDatabaseComboBox.getValue() != null && !diseaseDatabaseComboBox.getValue().isEmpty() // disease
                         && !diseaseNameTextField.getText().isEmpty() && !diseaseIDTextField.getText().isEmpty() // disease
                         && !probandFamilyTextField.getText().isEmpty() && sexComboBox.getValue() != null && !sexComboBox.getValue().equals(Sex.UNKNOWN) // proband
                         && !variantControllers.isEmpty(),
-                genomeBuildComboBox.valueProperty(), publication, entrezIDTextField.textProperty(), geneSymbolTextField.textProperty(),
+                publication, entrezIDTextField.textProperty(), geneSymbolTextField.textProperty(),
                 diseaseDatabaseComboBox.valueProperty(), diseaseNameTextField.textProperty(), diseaseIDTextField.textProperty(),
                 probandFamilyTextField.textProperty(), sexComboBox.valueProperty(), variantControllers);
 
@@ -549,9 +543,6 @@ public final class DataController implements DiseaseCaseController {
         // Current model title, this is "readOnly" binding
         currentModelLabel.setText(diseaseCase.getPublication().getTitle());
 
-        // Genome build
-        genomeBuildComboBox.setValue(diseaseCase.getGenomeBuild());
-
         publication.set(diseaseCase.getPublication());
 
         // Phenotype terms
@@ -589,13 +580,25 @@ public final class DataController implements DiseaseCaseController {
     public DiseaseCase getCase() {
         if (diseaseCaseIsComplete().get()) {
             // we assume that the GUI elements (e.g. genomeBuildComboBox) contain a non-null value if the disease case is complete
-            return DiseaseCase.newBuilder()
-                    .setGenomeBuild(genomeBuildComboBox.getValue())
-                    .setPublication(publication.get())
-                    .setGene(Gene.newBuilder()
-                            .setEntrezId(Integer.parseInt(entrezIDTextField.getText())) // TODO - make sure that the field contains parsable integer
+
+            Gene gene;
+            if (entrezIDTextField.getText().isEmpty()) {
+                gene = Gene.getDefaultInstance();
+            } else {
+                try {
+                    gene = Gene.newBuilder()
+                            .setEntrezId(Integer.parseInt(entrezIDTextField.getText()))
                             .setSymbol(geneSymbolTextField.getText())
-                            .build())
+                            .build();
+                } catch (NumberFormatException nfe) {
+                    LOGGER.warn("Not valid integer/entrez id: {}", entrezIDTextField.getText());
+                    gene = Gene.getDefaultInstance();
+                }
+            }
+
+            return DiseaseCase.newBuilder()
+                    .setPublication(publication.get())
+                    .setGene(gene)
                     // variants
                     .addAllVariant(variantControllers.stream()
                             .map(AbstractVariantController::getVariant)

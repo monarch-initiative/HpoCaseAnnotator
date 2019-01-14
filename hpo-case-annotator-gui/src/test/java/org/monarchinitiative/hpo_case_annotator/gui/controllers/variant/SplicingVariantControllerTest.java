@@ -12,8 +12,10 @@ import org.junit.runner.RunWith;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceJUnitRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceModules;
 import org.monarchinitiative.hpo_case_annotator.gui.TestHpoCaseAnnotatorModule;
+import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
 import org.testfx.framework.junit.ApplicationTest;
 
 import javax.inject.Inject;
@@ -60,6 +62,11 @@ public class SplicingVariantControllerTest extends ApplicationTest {
     public void variantIsCompleteBinding() {
         assertThat(controller.isCompleteBinding().get(), is(false));
 
+        clickOn("#genomeBuildComboBox")
+                .moveBy(-10, 30)
+                .clickOn(MouseButton.PRIMARY);
+        assertThat(controller.isCompleteBinding().get(), is(false));
+
         clickOn("#varChromosomeComboBox")
                 .moveBy(0, 30)
                 .clickOn(MouseButton.PRIMARY);
@@ -88,10 +95,12 @@ public class SplicingVariantControllerTest extends ApplicationTest {
 
         // assert
         Variant variant = controller.getVariant();
-        assertThat(variant.getContig(), is("1"));
-        assertThat(variant.getPos(), is(12));
-        assertThat(variant.getRefAllele(), is("C"));
-        assertThat(variant.getAltAllele(), is("A"));
+        final VariantPosition vp = variant.getVariantPosition();
+        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.GRCH_37));
+        assertThat(vp.getContig(), is("1"));
+        assertThat(vp.getPos(), is(12));
+        assertThat(vp.getRefAllele(), is("C"));
+        assertThat(vp.getAltAllele(), is("A"));
         assertThat(variant.getSnippet(), is("CT[C/A]AA"));
         assertThat(variant.getGenotype(), is(Genotype.HETEROZYGOUS));
     }

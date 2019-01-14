@@ -5,6 +5,7 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 /**
  * Base class for all validators for sharing common resources and utility methods.
  */
+@Deprecated // use Validator<T> implementations instead
 public abstract class AbstractValidator {
 
     /**
@@ -23,7 +24,7 @@ public abstract class AbstractValidator {
 
 
     public static ValidationResult makeValidationResult(ValidationResult result, String message) {
-        result.setMessage(message);
+//        result.setMessage(message);
         return result;
     }
 

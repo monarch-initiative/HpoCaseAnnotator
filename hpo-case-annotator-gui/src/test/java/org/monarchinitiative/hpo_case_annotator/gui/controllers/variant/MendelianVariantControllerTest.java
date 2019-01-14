@@ -14,9 +14,7 @@ import org.monarchinitiative.hpo_case_annotator.gui.DiseaseCaseModelExample;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceJUnitRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceModules;
 import org.monarchinitiative.hpo_case_annotator.gui.TestHpoCaseAnnotatorModule;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
-import org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation;
+import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.testfx.framework.junit.ApplicationTest;
 
 import javax.inject.Inject;
@@ -76,6 +74,11 @@ public class MendelianVariantControllerTest extends ApplicationTest {
     public void variantIsCompleteBinding() {
         assertThat(controller.isCompleteBinding().get(), is(false));
 
+        clickOn("#genomeBuildComboBox")
+                .moveBy(-10, 30)
+                .clickOn(MouseButton.PRIMARY);
+        assertThat(controller.isCompleteBinding().get(), is(false));
+
         clickOn("#chromosomeComboBox")
                 .moveBy(0, 30)
                 .clickOn(MouseButton.PRIMARY);
@@ -104,10 +107,12 @@ public class MendelianVariantControllerTest extends ApplicationTest {
 
         // assert
         Variant variant = controller.getVariant();
-        assertThat(variant.getContig(), is("1"));
-        assertThat(variant.getPos(), is(12345345));
-        assertThat(variant.getRefAllele(), is("C"));
-        assertThat(variant.getAltAllele(), is("A"));
+        final VariantPosition vp = variant.getVariantPosition();
+        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.GRCH_37));
+        assertThat(vp.getContig(), is("1"));
+        assertThat(vp.getPos(), is(12345345));
+        assertThat(vp.getRefAllele(), is("C"));
+        assertThat(vp.getAltAllele(), is("A"));
         assertThat(variant.getSnippet(), is("CACT[C/A]AACCG"));
         assertThat(variant.getGenotype(), is(Genotype.HETEROZYGOUS));
     }
@@ -121,7 +126,8 @@ public class MendelianVariantControllerTest extends ApplicationTest {
     @Test
     public void getFullVariant() {
         // arange
-        clickOn("#chromosomeComboBox").moveBy(0, 30).clickOn(MouseButton.PRIMARY)
+        clickOn("#genomeBuildComboBox").moveBy(-10, 30).clickOn(MouseButton.PRIMARY)
+                .clickOn("#chromosomeComboBox").moveBy(0, 30).clickOn(MouseButton.PRIMARY)
                 .clickOn("#positionTextField").write("12345345")
                 .clickOn("#referenceTextField").write("C")
                 .clickOn("#alternateTextField").write("A")
@@ -141,11 +147,13 @@ public class MendelianVariantControllerTest extends ApplicationTest {
                 .clickOn("#otherEffectComboBox").moveBy(0, 25).clickOn(MouseButton.PRIMARY);
         // act
         Variant variant = controller.getVariant();
+        final VariantPosition vp = variant.getVariantPosition();
         // assert
-        assertThat(variant.getContig(), is("1"));
-        assertThat(variant.getPos(), is(12345345));
-        assertThat(variant.getRefAllele(), is("C"));
-        assertThat(variant.getAltAllele(), is("A"));
+        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.GRCH_37));
+        assertThat(vp.getContig(), is("1"));
+        assertThat(vp.getPos(), is(12345345));
+        assertThat(vp.getRefAllele(), is("C"));
+        assertThat(vp.getAltAllele(), is("A"));
         assertThat(variant.getSnippet(), is("CACT[C/A]AACCG"));
         assertThat(variant.getGenotype(), is(Genotype.HETEROZYGOUS));
         assertThat(variant.getVariantClass(), is("coding"));
@@ -177,10 +185,12 @@ public class MendelianVariantControllerTest extends ApplicationTest {
         sleep(30);
 
         final Variant received = controller.getVariant();
-        assertThat(received.getContig(), is("13"));
-        assertThat(received.getPos(), is(31843349));
-        assertThat(received.getRefAllele(), is("A"));
-        assertThat(received.getAltAllele(), is("G"));
+        final VariantPosition vp = received.getVariantPosition();
+        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.GRCH_37));
+        assertThat(vp.getContig(), is("13"));
+        assertThat(vp.getPos(), is(31843349));
+        assertThat(vp.getRefAllele(), is("A"));
+        assertThat(vp.getAltAllele(), is("G"));
         assertThat(received.getSnippet(), is("TTTCT[A/G]GGCTT"));
         assertThat(received.getGenotype(), is(Genotype.HETEROZYGOUS));
         assertThat(received.getVariantClass(), is("splicing"));

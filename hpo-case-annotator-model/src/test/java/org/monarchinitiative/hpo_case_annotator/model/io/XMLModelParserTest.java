@@ -36,8 +36,8 @@ public class XMLModelParserTest {
     private static DiseaseCase prepareModel() {
 
         /* Genome build */
-        return DiseaseCase.newBuilder().
-                setGenomeBuild("GRCh37")
+        return DiseaseCase.newBuilder()
+//                .setGenomeBuild("GRCh37")
 
                 /* Publication data */
                 .setPublication(
@@ -57,10 +57,13 @@ public class XMLModelParserTest {
                         .build())
                 /* Variants which belong to this model */
                 .setVariant(0, Variant.newBuilder()
-                        .setContig("9")
-                        .setPos(123737057)
-                        .setRefAllele("C")
-                        .setAltAllele("T")
+                        .setVariantPosition(VariantPosition.newBuilder()
+                                .setGenomeAssembly(GenomeAssembly.HG_19)
+                                .setContig("9")
+                                .setPos(123737057)
+                                .setRefAllele("C")
+                                .setAltAllele("T")
+                                .build())
                         .setSnippet("TTCATTTAC[C/T]TCTACTGG")
                         .setGenotype(Genotype.HOMOZYGOUS_ALTERNATE)
                         .setVariantClass("splicing")
@@ -80,10 +83,13 @@ public class XMLModelParserTest {
                                 .build())
                         .build())
                 .setVariant(1, Variant.newBuilder()
-                        .setContig("9")
-                        .setPos(123737057)
-                        .setRefAllele("C")
-                        .setAltAllele("G")
+                        .setVariantPosition(VariantPosition.newBuilder()
+                                .setGenomeAssembly(GenomeAssembly.HG_19)
+                                .setContig("9")
+                                .setPos(123737057)
+                                .setRefAllele("C")
+                                .setAltAllele("G")
+                                .build())
                         .setSnippet("TTCATTTAC[C/G]TCTACTGG")
                         .setGenotype(Genotype.HOMOZYGOUS_ALTERNATE)
                         .setVariantClass("promoter")
@@ -102,10 +108,13 @@ public class XMLModelParserTest {
                                 .build())
                         .build())
                 .setVariant(2, Variant.newBuilder()
-                        .setContig("9")
-                        .setPos(123737057)
-                        .setRefAllele("C")
-                        .setAltAllele("A")
+                        .setVariantPosition(VariantPosition.newBuilder()
+                                .setGenomeAssembly(GenomeAssembly.HG_19)
+                                .setContig("9")
+                                .setPos(123737057)
+                                .setRefAllele("C")
+                                .setAltAllele("A")
+                                .build())
                         .setSnippet("TTCATTTAC[C/A]TCTACTGG")
                         .setGenotype(Genotype.HETEROZYGOUS)
                         .setVariantClass("5UTR")
@@ -224,7 +233,7 @@ public class XMLModelParserTest {
         assertEquals(Sex.MALE, model.getFamilyInfo().getSex());
 
         // Genome Build
-        assertEquals("GRCh37", model.getGenomeBuild());
+//        assertEquals("GRCh37", model.getGenomeBuild());
 
         // HPO terms
         List<OntologyClass> hpoList = model.getPhenotypeList();
@@ -252,10 +261,13 @@ public class XMLModelParserTest {
         // Variants:
         // Splicing variant
         assertEquals(Variant.newBuilder()
-                .setContig("9")
-                .setPos(123737057)
-                .setRefAllele("C")
-                .setAltAllele("T")
+                .setVariantPosition(VariantPosition.newBuilder()
+                        .setGenomeAssembly(GenomeAssembly.HG_19)
+                        .setContig("9")
+                        .setPos(123737057)
+                        .setRefAllele("C")
+                        .setAltAllele("T")
+                        .build())
                 .setSnippet("TTCATTTAC[C/T]TCTACTGG")
                 .setGenotype(Genotype.HOMOZYGOUS_ALTERNATE)
                 .setVariantClass("splicing")
@@ -278,10 +290,13 @@ public class XMLModelParserTest {
 
         // Mendelian variant
         assertEquals(Variant.newBuilder()
-                .setContig("9")
-                .setPos(123737057)
-                .setRefAllele("C")
-                .setAltAllele("G")
+                .setVariantPosition(VariantPosition.newBuilder()
+                        .setGenomeAssembly(GenomeAssembly.HG_19)
+                        .setContig("9")
+                        .setPos(123737057)
+                        .setRefAllele("C")
+                        .setAltAllele("G")
+                        .build())
                 .setSnippet("TTCATTTAC[C/G]TCTACTGG")
                 .setGenotype(Genotype.HOMOZYGOUS_ALTERNATE)
                 .setVariantClass("promoter")
@@ -303,10 +318,13 @@ public class XMLModelParserTest {
 
         // Somatic variant
         assertEquals(Variant.newBuilder()
-                .setContig("9")
-                .setPos(123737057)
-                .setRefAllele("C")
-                .setAltAllele("A")
+                .setVariantPosition(VariantPosition.newBuilder()
+                        .setGenomeAssembly(GenomeAssembly.HG_19)
+                        .setContig("9")
+                        .setPos(123737057)
+                        .setRefAllele("C")
+                        .setAltAllele("A")
+                        .build())
                 .setSnippet("TTCATTTAC[C/A]TCTACTGG")
                 .setGenotype(Genotype.HETEROZYGOUS)
                 .setVariantClass("5UTR")
@@ -341,7 +359,7 @@ public class XMLModelParserTest {
         assertEquals("611809", davidson.getDisease().getDiseaseId());
         assertEquals("BESTROPHINOPATHY, AUTOSOMAL RECESSIVE; ARB", davidson.getDisease().getDiseaseName());
         assertEquals("Subject 1", davidson.getFamilyInfo().getFamilyOrProbandId());
-        assertEquals("GRCh37", davidson.getGenomeBuild());
+//        assertEquals("GRCh37", davidson.getGenomeBuild());
         assertEquals(6, davidson.getPhenotypeCount());
 
         assertEquals("Davidson AE, Sergouniotis PI, Burgess-Mullan R, Hart-Holden N, Low S, Foster PJ, Manson FD, " +
@@ -383,15 +401,16 @@ public class XMLModelParserTest {
 
 
         Variant v = ars.getVariant(0);
-        assertEquals("CC", v.getAltAllele());
-        assertEquals("A", v.getRefAllele());
-        assertEquals("7", v.getContig());
+        assertEquals(GenomeAssembly.HG_19, v.getVariantPosition().getGenomeAssembly());
+        assertEquals("7", v.getVariantPosition().getContig());
+        assertEquals(10490, v.getVariantPosition().getPos());
+        assertEquals("A", v.getVariantPosition().getRefAllele());
+        assertEquals("CC", v.getVariantPosition().getAltAllele());
         assertFalse(v.getVariantValidation().getComparability());
         assertEquals("Exon skipping", v.getConsequence());
         assertTrue(v.getVariantValidation().getCosegregation());
         assertEquals(Genotype.HETEROZYGOUS, v.getGenotype());
         assertEquals("coding|missense", v.getPathomechanism());
-        assertEquals(10490, v.getPos());
         assertEquals("TATCTT[A/CC]AGGCTTTT", v.getSnippet());
         assertEquals("coding", v.getVariantClass());
 

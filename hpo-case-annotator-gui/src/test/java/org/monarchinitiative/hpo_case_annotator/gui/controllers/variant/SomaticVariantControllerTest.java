@@ -12,8 +12,10 @@ import org.junit.runner.RunWith;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceJUnitRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceModules;
 import org.monarchinitiative.hpo_case_annotator.gui.TestHpoCaseAnnotatorModule;
+import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
 import org.testfx.framework.junit.ApplicationTest;
 
 import javax.inject.Inject;
@@ -72,6 +74,11 @@ public class SomaticVariantControllerTest extends ApplicationTest {
     public void variantIsCompleteBinding() {
         assertThat(controller.isCompleteBinding().get(), is(false));
 
+        clickOn("#genomeBuildComboBox")
+                .moveBy(0, 30)
+                .clickOn(MouseButton.PRIMARY);
+        assertThat(controller.isCompleteBinding().get(), is(false));
+
         clickOn("#chromosomeComboBox")
                 .moveBy(0, 30)
                 .clickOn(MouseButton.PRIMARY);
@@ -100,10 +107,12 @@ public class SomaticVariantControllerTest extends ApplicationTest {
 
         // assert
         Variant variant = controller.getVariant();
-        assertThat(variant.getContig(), is("1"));
-        assertThat(variant.getPos(), is(12345345));
-        assertThat(variant.getRefAllele(), is("C"));
-        assertThat(variant.getAltAllele(), is("A"));
+        VariantPosition variantPosition = variant.getVariantPosition();
+        assertThat(variantPosition.getGenomeAssembly(), is(GenomeAssembly.HG_19));
+        assertThat(variantPosition.getContig(), is("1"));
+        assertThat(variantPosition.getPos(), is(12345345));
+        assertThat(variantPosition.getRefAllele(), is("C"));
+        assertThat(variantPosition.getAltAllele(), is("A"));
         assertThat(variant.getSnippet(), is("CACT[C/A]AACCG"));
         assertThat(variant.getGenotype(), is(Genotype.HETEROZYGOUS));
     }

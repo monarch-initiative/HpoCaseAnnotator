@@ -39,7 +39,7 @@
                     </HBox>
                     <HBox alignment="CENTER_LEFT" style="-fx-background-color: #00BFFF;" VBox.vgrow="NEVER">
                         <children>
-                            <Label id="genomeLabel" minWidth="135.0" prefWidth="135.0" text="Genome build">
+                            <Label id="genomeLabel" minWidth="135.0" prefWidth="135.0" text="Genome build" textFill="#b5b5b5">
                                 <HBox.margin>
                                     <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
                                 </HBox.margin>
@@ -47,7 +47,7 @@
                                     <Font name="System Bold" size="15.0" />
                                 </font>
                             </Label>
-                            <ComboBox fx:id="genomeBuildComboBox" minWidth="-Infinity" prefHeight="30.0" prefWidth="100.0">
+                            <ComboBox fx:id="genomeBuildComboBox" disable="true" editable="true" minWidth="-Infinity" prefHeight="30.0" prefWidth="100.0">
                                 <HBox.margin>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                 </HBox.margin>

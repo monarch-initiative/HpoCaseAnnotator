@@ -7,6 +7,8 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.Sex;
 import org.phenopackets.schema.v1.PhenoPacket;
 import org.phenopackets.schema.v1.core.*;
 import org.phenopackets.schema.v1.io.PhenoPacketFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -49,7 +51,6 @@ public class PhenoPacketCodec {
      * @return {@link PhenoPacket} with data from <code>diseaseCase</code>
      */
     public static PhenoPacket diseaseCaseToPhenopacket(DiseaseCase diseaseCase) {
-        GenomeAssembly assembly = DiseaseCaseToPhenoPacket.genomeAssembly(diseaseCase.getGenomeBuild());
         String familyOrProbandId = diseaseCase.getFamilyInfo().getFamilyOrProbandId();
         Publication publication = diseaseCase.getPublication();
         final String metadata = diseaseCase.getMetadata();
@@ -66,12 +67,12 @@ public class PhenoPacketCodec {
                         .build())
                 // gene in question
                 .addGenes(Gene.newBuilder()
-                        .setId("ENTREZ:" + String.valueOf(diseaseCase.getGene().getEntrezId()))
+                        .setId("ENTREZ:" + diseaseCase.getGene().getEntrezId())
                         .setSymbol(diseaseCase.getGene().getSymbol())
                         .build())
                 // variants, genome assembly
                 .addAllVariants(diseaseCase.getVariantList().stream()
-                        .map(DiseaseCaseToPhenoPacket.variant(assembly, familyOrProbandId))
+                        .map(DiseaseCaseToPhenoPacket.hcaVariantToPhenoPacketVariant(familyOrProbandId))
                         .collect(Collectors.toList()))
                 // disease
                 .addDiseases(Disease.newBuilder()
@@ -172,6 +173,8 @@ public class PhenoPacketCodec {
      */
     private static class DiseaseCaseToPhenoPacket {
 
+        private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseCaseToPhenoPacket.class);
+
         /**
          * @param sex {@link Sex} <code>sex</code>
          * @return {@link OntologyClass} representation of the <code>sex</code>
@@ -212,30 +215,30 @@ public class PhenoPacketCodec {
                             .build();
         }
 
-        private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.Variant, Variant> variant(GenomeAssembly assembly, String familyOrProbandId) {
+        private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.Variant, Variant> hcaVariantToPhenoPacketVariant(String familyOrProbandId) {
             return v -> Variant.newBuilder()
-                    .setGenomeAssembly(assembly)
-                    .setSequence(v.getContig())
+                    .setGenomeAssembly(hcaGenomeAssemblyToPhenoPacketGenomeAssembly(v.getVariantPosition().getGenomeAssembly()))
+                    .setSequence(v.getVariantPosition().getContig())
                     .setCoordinateSystem(CoordinateSystem.ONE_BASED) // We are using VCF-style numbering in HpoCaseAnnotator
-                    .setPosition(v.getPos())
-                    .setDeletion(v.getRefAllele())
-                    .setInsertion(v.getAltAllele())
+                    .setPosition(v.getVariantPosition().getPos())
+                    .setDeletion(v.getVariantPosition().getRefAllele())
+                    .setInsertion(v.getVariantPosition().getAltAllele())
                     .putSampleGenotypes(familyOrProbandId, genotype(v.getGenotype()))
                     .build();
         }
 
-        private static GenomeAssembly genomeAssembly(String genomeBuild) {
-            switch (genomeBuild.toUpperCase()) {
-                case "HG19":
-                case "GRCH37":
-                    return GenomeAssembly.HG_19;
-                case "HG38":
-                case "GRCH38":
-                    return GenomeAssembly.HG_38;
-                case "HG18":
-                case "NCBI36":
-                    return GenomeAssembly.HG_18;
+        private static GenomeAssembly hcaGenomeAssemblyToPhenoPacketGenomeAssembly(org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly genomeAssembly) {
+            switch (genomeAssembly) {
+                case NCBI_36:
+                    return GenomeAssembly.NCBI_36;
+                case GRCH_37:
+                    return GenomeAssembly.GRCH_37;
+                case GRCH_38:
+                    return GenomeAssembly.GRCH_38;
+                case UNRECOGNIZED:
+                    return GenomeAssembly.UNRECOGNIZED;
                 default:
+                    LOGGER.warn("Unknown genome assembly: {}", genomeAssembly);
                     return GenomeAssembly.UNRECOGNIZED;
             }
         }

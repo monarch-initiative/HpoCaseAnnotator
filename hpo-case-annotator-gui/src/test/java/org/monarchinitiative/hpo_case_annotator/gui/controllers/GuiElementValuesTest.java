@@ -1,7 +1,9 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 
 import java.io.InputStream;
 
@@ -25,8 +27,8 @@ public class GuiElementValuesTest {
         // instance is loaded in setUp method
 
         // assert
-        assertThat(instance.getGenomeBuild().size(), is(2));
-        assertThat(instance.getGenomeBuild(), hasItems("hg19", "hg38"));
+        assertThat(instance.getGenomeBuild().size(), is(5));
+        assertThat(instance.getGenomeBuild(), hasItems(GenomeAssembly.GRCH_37, GenomeAssembly.GRCH_38, GenomeAssembly.NCBI_36, GenomeAssembly.NOT_KNOWN));
 
         assertThat(instance.getChromosome().size(), is(4));
         assertThat(instance.getChromosome(), hasItems("1", "4", "5", "X"));
@@ -62,17 +64,10 @@ public class GuiElementValuesTest {
         assertThat(instance.getOtherEffect(), hasItems("Telomerase", "Nonspecific_EMSA"));
     }
 
-    @Test
-    public void hashCodeIsTested() throws Exception {
-        // act
-        final int hash = instance.hashCode();
-        // assert
-        assertThat(hash, is(933200452));
-    }
 
     @Test
     public void toStringIsTested() {
-        String expected = "GuiElementValues{genomeBuild=[hg19, hg38], chromosome=[1, 4, 5, X], " +
+        String expected = "GuiElementValues{genomeBuild=[GRCH_37, NCBI_36, GRCH_38, NOT_KNOWN, UNRECOGNIZED], chromosome=[1, 4, 5, X], " +
                 "variantClass=[coding, enhancer, promoter], pathomechanism=[unknown, coding|missense, coding|stop-codon], " +
                 "consequence=[Exon skipping, Intron retention], reporter=[no, up, down], " +
                 "emsa=[yes, no], otherChoices=[no], otherEffect=[Telomerase, Nonspecific_EMSA], " +

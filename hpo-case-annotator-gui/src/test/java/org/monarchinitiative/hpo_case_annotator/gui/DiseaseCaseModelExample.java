@@ -12,7 +12,6 @@ public class DiseaseCaseModelExample {
 
     public static DiseaseCase benMahmoud2013B3GLCT() {
         return DiseaseCase.newBuilder()
-                .setGenomeBuild("GRCh37")
                 .setPublication(Publication.newBuilder()
                         .setAuthorList("Ben Mahmoud A, Siala O, Mansour RB, Driss F, Baklouti-Gargouri S, Mkaouar-Rebai E, Belguith N, Fakhfakh F")
                         .setTitle("First functional analysis of a novel splicing mutation in the B3GALTL gene by an ex vivo approach in Tunisian patients with typical Peters plus syndrome")
@@ -29,10 +28,13 @@ public class DiseaseCaseModelExample {
                         .setSymbol("B3GLCT")
                         .build())
                 .addVariant(Variant.newBuilder()
-                        .setContig("13")
-                        .setPos(31843349)
-                        .setRefAllele("A")
-                        .setAltAllele("G")
+                        .setVariantPosition(VariantPosition.newBuilder()
+                                .setGenomeAssembly(GenomeAssembly.GRCH_37)
+                                .setContig("13")
+                                .setPos(31843349)
+                                .setRefAllele("A")
+                                .setAltAllele("G")
+                                .build())
                         .setGenotype(Genotype.HETEROZYGOUS)
                         .setSnippet("TTTCT[A/G]GGCTT")
                         .setVariantClass("splicing")
@@ -93,4 +95,27 @@ public class DiseaseCaseModelExample {
                 .build();
     }
 
+    public static Publication makeExomiserPublication() {
+        return Publication.newBuilder()
+                .setAuthorList("Smedley D, Jacobsen JO, Jäger M, Köhler S, Holtgrewe M, Schubach M, Siragusa E, Zemojtel T, Buske OJ, Washington NL, Bone WP, Haendel MA, Robinson PN")
+                .setTitle("Next-generation diagnostics and disease-gene discovery with the Exomiser")
+                .setJournal("Nat Protoc")
+                .setPages("2004-15")
+                .setPmid("26562621")
+                .setVolume("10(12)")
+                .setYear("2015")
+                .build();
+    }
+
+    public static Publication makeJannovarPublication() {
+        return Publication.newBuilder()
+                .setAuthorList("Jäger M, Wang K, Bauer S, Smedley D, Krawitz P, Robinson PN")
+                .setTitle("Jannovar: a java library for exome annotation")
+                .setJournal("Hum Mutat")
+                .setPages("548-55")
+                .setPmid("24677618")
+                .setVolume("35(5)")
+                .setYear("2014")
+                .build();
+    }
 }
