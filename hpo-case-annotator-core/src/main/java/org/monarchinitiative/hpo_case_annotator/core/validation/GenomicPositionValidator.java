@@ -47,10 +47,10 @@ public final class GenomicPositionValidator implements Validator<Variant> {
         String suffix = snippet.substring(closeBracketIdx + 1);
         String snippetRef = snippet.substring(openBracketIdx + 1, slashIdx);
 
-        // SequenceDao operates using 1-based coordinates
-        // 1-based position of the first nucleotide of the snippet's prefix (included)
-        int seqBeginPos = pos - prefix.length() + 1;
-        // 1-based position of the last nucleotide of the snippet's suffix (included)
+        // SequenceDao operates using 0-based coordinates
+        // 0-based position of the first nucleotide of the snippet's prefix (exclusive)
+        int seqBeginPos = pos - prefix.length();
+        // 0-based position of the last nucleotide of the snippet's suffix (inclusive)
         int seqEndPos = pos + snippetRef.length() + suffix.length();
 
         // get the sequence that we will need
@@ -58,22 +58,22 @@ public final class GenomicPositionValidator implements Validator<Variant> {
 
         // Now compare the prefix
         String actualPrefix = actualSnippetSeq.substring(0, prefix.length());
-        if (!prefix.equals(actualPrefix)) {
+        if (!prefix.equalsIgnoreCase(actualPrefix)) {
             results.add(ValidationResult.fail(String.format("Prefix in snippet '%s' does not match the actual sequence '%s' observed at interval '%s:%d-%d'",
-                    prefix, actualPrefix, contig, seqBeginPos - 1, seqBeginPos - 1 + prefix.length())));
+                    prefix, actualPrefix, contig, seqBeginPos, seqBeginPos + prefix.length())));
         }
 
         // Now compare the ref allele
         String actualRefAllele = actualSnippetSeq.substring(prefix.length(), prefix.length() + snippetRef.length());
-        if (!snippetRef.equals(actualRefAllele)) {
-            int refBeginPos = seqBeginPos + prefix.length() - 1;
+        if (!snippetRef.equalsIgnoreCase(actualRefAllele)) {
+            int refBeginPos = seqBeginPos + prefix.length();
             results.add(ValidationResult.fail(String.format("Ref sequence in snippet '%s' does not match the actual sequence '%s' observed at interval '%s:%d-%d'",
                     snippetRef, actualRefAllele, contig, refBeginPos, refBeginPos + snippetRef.length())));
         }
         // Now compare the suffix
         String actualSuffix = actualSnippetSeq.substring(prefix.length() + snippetRef.length());
-        if (!suffix.equals(actualSuffix)) {
-            int suffixBeginPos = seqBeginPos + prefix.length() + snippetRef.length() - 1;
+        if (!suffix.equalsIgnoreCase(actualSuffix)) {
+            int suffixBeginPos = seqBeginPos + prefix.length() + snippetRef.length();
             results.add(ValidationResult.fail(String.format("Suffix in snippet '%s' does not match the actual sequence '%s' observed at interval '%s:%d-%d'",
                     suffix, actualSuffix, contig, suffixBeginPos, suffixBeginPos + suffix.length())));
         }
@@ -107,7 +107,7 @@ public final class GenomicPositionValidator implements Validator<Variant> {
 
         final VariantPosition varPos = variant.getVariantPosition();
         String chrom = varPos.getContig();
-        int pos = varPos.getPos() - 1; // to 0-based coordinate system
+        int pos = varPos.getPos() -1; // to 0-based
         String ref = varPos.getRefAllele();
         String alt = varPos.getAltAllele();
         int to_pos = pos + ref.length();
@@ -117,7 +117,7 @@ public final class GenomicPositionValidator implements Validator<Variant> {
             results.add(ValidationResult.fail("Ref sequence not initialized (length=0)"));
         } else {
             String expectedRefAllele = sequenceDao.fetchSequence(chrom, pos, to_pos);
-            if (!ref.equals(expectedRefAllele)) {
+            if (!ref.equalsIgnoreCase(expectedRefAllele)) {
                 results.add(ValidationResult.fail(String.format("Ref sequence '%s' does not match the sequence '%s' observed at '%s:%d-%d'",
                         ref, expectedRefAllele, chrom, pos, to_pos)));
             }

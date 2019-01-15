@@ -95,17 +95,17 @@ public class GenomicPositionValidatorTest {
         Mockito.when(assemblies.hasFastaForAssembly(GenomeAssembly.GRCH_37)).thenReturn(true);
         Mockito.when(assemblies.getSequenceDaoForAssembly(GenomeAssembly.GRCH_37)).thenReturn(Optional.of(hg19SequenceDao));
         Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10489, 10490)).thenReturn("A"); // expectedRefAllele
-        Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10484, 10498)).thenReturn("TATCTTAAGGCTTTT");
+        Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10483, 10498)).thenReturn("TATCTTAAGGCTTTT");
 
         Variant variant = Variant.newBuilder()
-                .setVariantPosition(VariantPosition.newBuilder()
+                .setVariantPosition(VariantPosition.newBuilder() // mix of the upper and lower case nucleotides is intentional
                         .setGenomeAssembly(GenomeAssembly.GRCH_37)
                         .setContig("chr7")
                         .setPos(10490)
-                        .setRefAllele("A")
-                        .setAltAllele("CC")
+                        .setRefAllele("a")
+                        .setAltAllele("Cc")
                         .build())
-                .setSnippet("TATCTT[A/CC]AGGCTTTT")
+                .setSnippet("TAtcTT[a/Cc]AGgCtTTT")
                 .build();
 
         final List<ValidationResult> results = validator.validate(variant);
@@ -117,7 +117,7 @@ public class GenomicPositionValidatorTest {
         Mockito.when(assemblies.hasFastaForAssembly(GenomeAssembly.GRCH_37)).thenReturn(true);
         Mockito.when(assemblies.getSequenceDaoForAssembly(GenomeAssembly.GRCH_37)).thenReturn(Optional.of(hg19SequenceDao));
         Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10489, 10490)).thenReturn("A"); // expectedRefAllele
-        Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10484, 10498)).thenReturn("TATCTTAAGGCTTTT");
+        Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10483, 10498)).thenReturn("TATCTTAAGGCTTTT");
 
         Variant variant = Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()
@@ -141,7 +141,7 @@ public class GenomicPositionValidatorTest {
         Mockito.when(assemblies.hasFastaForAssembly(GenomeAssembly.GRCH_37)).thenReturn(true);
         Mockito.when(assemblies.getSequenceDaoForAssembly(GenomeAssembly.GRCH_37)).thenReturn(Optional.of(hg19SequenceDao));
         Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10489, 10490)).thenReturn("A"); // expectedRefAllele
-        Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10484, 10498)).thenReturn("TATCTTAAGGCTTTT");
+        Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10483, 10498)).thenReturn("TATCTTAAGGCTTTT");
 
         Variant variant = Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()
@@ -164,7 +164,7 @@ public class GenomicPositionValidatorTest {
         Mockito.when(assemblies.hasFastaForAssembly(GenomeAssembly.GRCH_37)).thenReturn(true);
         Mockito.when(assemblies.getSequenceDaoForAssembly(GenomeAssembly.GRCH_37)).thenReturn(Optional.of(hg19SequenceDao));
         Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10489, 10490)).thenReturn("A"); // expectedRefAllele
-        Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10484, 10498)).thenReturn("TATCTTAAGGCTTTT");
+        Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10483, 10498)).thenReturn("TATCTTAAGGCTTTT");
 
         Variant variant = Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()
@@ -187,7 +187,7 @@ public class GenomicPositionValidatorTest {
         Mockito.when(assemblies.hasFastaForAssembly(GenomeAssembly.GRCH_37)).thenReturn(true);
         Mockito.when(assemblies.getSequenceDaoForAssembly(GenomeAssembly.GRCH_37)).thenReturn(Optional.of(hg19SequenceDao));
 //        Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10489, 10490)).thenReturn("A"); // expectedRefAllele won't be checked
-        Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10484, 10498)).thenReturn("TATCTTAAGGCTTTT");
+        Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10483, 10498)).thenReturn("TATCTTAAGGCTTTT");
 
         Variant variant = Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()
@@ -212,7 +212,7 @@ public class GenomicPositionValidatorTest {
         Mockito.when(assemblies.hasFastaForAssembly(GenomeAssembly.GRCH_37)).thenReturn(true);
         Mockito.when(assemblies.getSequenceDaoForAssembly(GenomeAssembly.GRCH_37)).thenReturn(Optional.of(hg19SequenceDao));
         Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10489, 10490)).thenReturn("A"); // expectedRefAllele
-        Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10484, 10498)).thenReturn("TATCTTAAGGCTTTT");
+        Mockito.when(hg19SequenceDao.fetchSequence("chr7", 10483, 10498)).thenReturn("TATCTTAAGGCTTTT");
 
         Variant variant = Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()
