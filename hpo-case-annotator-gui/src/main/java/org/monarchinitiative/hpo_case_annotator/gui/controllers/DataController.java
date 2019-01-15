@@ -22,13 +22,13 @@ import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.core.io.PubMedParseException;
 import org.monarchinitiative.hpo_case_annotator.core.io.PubMedParser;
 import org.monarchinitiative.hpo_case_annotator.core.io.PubMedSummaryRetriever;
-import org.monarchinitiative.hpo_case_annotator.core.validation.PubMedValidator;
+import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult;
+import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.AbstractVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.util.AllItemsValidBinding;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.WidthAwareTextFields;
-import org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
@@ -336,13 +336,23 @@ public final class DataController implements DiseaseCaseController {
             return;
         }
 
+        Publication temporary = Publication.newBuilder()
+                .setAuthorList(result.getAuthorList())
+                .setTitle(result.getTitle())
+                .setJournal(result.getJournal())
+                .setYear(result.getYear())
+                .setVolume(result.getVolume())
+                .setPages(result.getPages())
+                .setPmid(result.getPmid())
+                .build();
 
-        PubMedValidator validator = new PubMedValidator(new XMLModelParser(optionalResources.getDiseaseCaseDir()));
-        if (validator.seenThisPMIDBefore(result.getPmid())) {
+        ValidationRunner<Publication> pubMedValidator = ValidationRunner.forPubMedValidation(optionalResources.getDiseaseCaseDir());
+        List<ValidationResult> results = pubMedValidator.validateSingleModel(temporary);
+        if (!results.isEmpty()) {
             boolean choice = PopUps.getBooleanFromUser(
                     "Shall we continue?",
-                    "This publication has been already used in this project.",
-                    conversationTitle);
+                    results.get(0).getMessage(),
+                    "This publication has been already used in this project.");
             if (!choice) {
                 inputPubMedDataTextField.setText(null);
                 return;
@@ -352,15 +362,7 @@ public final class DataController implements DiseaseCaseController {
         // Ask user if he wants to create a new model after entering the new Publication to prevent
         // accidental overwriting of finished file
         if (publication.get().equals(Publication.getDefaultInstance())) { // we're setting the publication for the first time
-            publication.set(Publication.newBuilder()
-                    .setAuthorList(result.getAuthorList())
-                    .setTitle(result.getTitle())
-                    .setJournal(result.getJournal())
-                    .setYear(result.getYear())
-                    .setVolume(result.getVolume())
-                    .setPages(result.getPages())
-                    .setPmid(result.getPmid())
-                    .build());
+            publication.set(temporary);
         } else {
             Optional<String> choice = PopUps.getToggleChoiceFromUser(Arrays.asList("UPDATE", "NEW"), "You entered new" +
                             " publication data. Do you wish to UPDATE current data or to start annotating a NEW case?",

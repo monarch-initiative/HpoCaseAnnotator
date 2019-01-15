@@ -40,11 +40,11 @@ public class VariantSyntaxValidator implements Validator<Variant> {
 
     private final VariantValidationDataSyntaxValidator variantValidationDataValidator;
 
-    public VariantSyntaxValidator(VariantValidationDataSyntaxValidator variantValidationDataValidator) {
+    VariantSyntaxValidator(VariantValidationDataSyntaxValidator variantValidationDataValidator) {
         this.variantValidationDataValidator = variantValidationDataValidator;
     }
 
-    public VariantSyntaxValidator() {
+    VariantSyntaxValidator() {
         this(new VariantValidationDataSyntaxValidator());
     }
 

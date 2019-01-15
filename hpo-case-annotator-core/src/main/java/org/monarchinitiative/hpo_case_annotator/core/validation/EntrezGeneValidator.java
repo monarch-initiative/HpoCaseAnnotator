@@ -30,7 +30,7 @@ public class EntrezGeneValidator implements Validator<Gene> {
      *
      * @param pathToEntrezFile path to Entrez GTF file.
      */
-    public EntrezGeneValidator(File pathToEntrezFile) throws IOException {
+    EntrezGeneValidator(File pathToEntrezFile) throws IOException {
         EntrezParser parser = new EntrezParser(pathToEntrezFile);
         parser.readFile();
         this.entrezId2gene = parser.getEntrezMap();

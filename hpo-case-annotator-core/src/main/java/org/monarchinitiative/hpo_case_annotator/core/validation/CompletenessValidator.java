@@ -26,11 +26,11 @@ public final class CompletenessValidator implements Validator<DiseaseCase> {
 
     private final VariantSyntaxValidator variantValidator;
 
-    public CompletenessValidator() {
+    CompletenessValidator() {
         this(new VariantSyntaxValidator());
     }
 
-    public CompletenessValidator(VariantSyntaxValidator variantValidator) {
+    CompletenessValidator(VariantSyntaxValidator variantValidator) {
         this.variantValidator = variantValidator;
     }
 

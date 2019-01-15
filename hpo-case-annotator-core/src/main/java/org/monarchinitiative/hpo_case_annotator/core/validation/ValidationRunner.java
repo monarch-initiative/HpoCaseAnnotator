@@ -1,11 +1,12 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
 
+import com.google.protobuf.Message;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 
+import java.io.File;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -17,13 +18,13 @@ import java.util.stream.Collectors;
  * @version 0.0.2
  * @since 0.0
  */
-public final class ValidationRunner {
+public final class ValidationRunner<T extends Message> {
 
     // TODO - add validation of gene, disease, and HPO terms
 
-    private final Function<DiseaseCase, List<ValidationResult>> validationFunction;
+    private final Function<T, List<ValidationResult>> validationFunction;
 
-    private ValidationRunner(Function<DiseaseCase, List<ValidationResult>> validationFunction) {
+    private ValidationRunner(Function<T, List<ValidationResult>> validationFunction) {
         this.validationFunction = validationFunction;
     }
 
@@ -31,7 +32,7 @@ public final class ValidationRunner {
      * @param assemblies {@link GenomeAssemblies}
      * @return {@link ValidationRunner} that will be validating models using {@link CompletenessValidator} and {@link GenomicPositionValidator}
      */
-    public static ValidationRunner forAllValidations(final GenomeAssemblies assemblies) {
+    public static ValidationRunner<DiseaseCase> forAllValidations(final GenomeAssemblies assemblies) {
         Function<DiseaseCase, List<ValidationResult>> validationFunction = dc -> {
             CompletenessValidator cv = new CompletenessValidator();
             GenomicPositionValidator gpv = new GenomicPositionValidator(assemblies);
@@ -44,21 +45,36 @@ public final class ValidationRunner {
                     .collect(Collectors.toList()));
             return results;
         };
-        return new ValidationRunner(validationFunction);
+        return new ValidationRunner<>(validationFunction);
     }
 
     /**
      * @return {@link ValidationRunner} that will be validating models using {@link CompletenessValidator}
      */
-    public static ValidationRunner forCompletenessValidation() {
+    public static ValidationRunner<DiseaseCase> forCompletenessValidation() {
         Function<DiseaseCase, List<ValidationResult>> validationFunction = dc -> {
             CompletenessValidator cv = new CompletenessValidator();
             return new ArrayList<>(cv.validate(dc));
         };
-        return new ValidationRunner(validationFunction);
+        return new ValidationRunner<>(validationFunction);
     }
 
-    public List<ValidationResult> validateSingleModel(DiseaseCase diseaseCase) {
+    /**
+     * Create {@link ValidationRunner} that returns an empty list if given {@link org.monarchinitiative.hpo_case_annotator.model.proto.Publication}
+     * has not yet been used in other biocurated file stored within the <code>diseaseCaseDirectory</code>.
+     *
+     * @param diseaseCaseDirectory {@link File} pointing to directory with biocurated data
+     * @return {@link ValidationRunner} for PubMed validation
+     */
+    public static ValidationRunner<Publication> forPubMedValidation(File diseaseCaseDirectory) {
+        Function<Publication, List<ValidationResult>> validationFunction = pub -> {
+            PubMedValidator cv = new PubMedValidator(diseaseCaseDirectory);
+            return new ArrayList<>(cv.validate(pub));
+        };
+        return new ValidationRunner<>(validationFunction);
+    }
+
+    public List<ValidationResult> validateSingleModel(T diseaseCase) {
         return validationFunction.apply(diseaseCase);
     }
 
@@ -70,10 +86,10 @@ public final class ValidationRunner {
      * @return {@link Map} with {@link DiseaseCase} as keys and {@link List} of {@link ValidationResult}s pertaining to
      * the case
      */
-    public Map<DiseaseCase, List<ValidationResult>> validateModels(Collection<DiseaseCase> models) {
-        Map<DiseaseCase, List<ValidationResult>> resultMap = new HashMap<>();
+    public Map<T, List<ValidationResult>> validateModels(Collection<T> models) {
+        Map<T, List<ValidationResult>> resultMap = new HashMap<>();
 
-        for (DiseaseCase model : models) {
+        for (T model : models) {
             final List<ValidationResult> results = validateSingleModel(model);
             resultMap.put(model, results);
         }

@@ -20,7 +20,7 @@ public class HPOValidator implements Validator<OntologyClass> {
     private Map<String, HPO> hpoMap;
 
 
-    public HPOValidator(String pathToHpoFile) {
+    HPOValidator(String pathToHpoFile) {
         // use
 //        HPOParser hpoParser = new HPOParser(this.settings.getHpOBOPath());
 //        this.hpoMap = hpoParser.getHpoMap();

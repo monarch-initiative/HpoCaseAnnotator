@@ -23,7 +23,7 @@ public final class GenomicPositionValidator implements Validator<Variant> {
     private final GenomeAssemblies genomeAssemblies;
 
 
-    public GenomicPositionValidator(GenomeAssemblies genomeAssemblies) {
+    GenomicPositionValidator(GenomeAssemblies genomeAssemblies) {
         this.genomeAssemblies = genomeAssemblies;
 
     }

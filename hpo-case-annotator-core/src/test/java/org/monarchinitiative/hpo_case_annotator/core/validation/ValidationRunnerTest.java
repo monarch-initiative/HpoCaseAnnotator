@@ -32,7 +32,7 @@ public class ValidationRunnerTest {
     /**
      * Tested instance.
      */
-    private ValidationRunner runner;
+    private ValidationRunner<DiseaseCase> runner;
 
 
     @Before
