@@ -1,20 +1,15 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.monarchinitiative.hpo_case_annotator.core.DiseaseCaseModelExample;
-import org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser;
-import org.monarchinitiative.hpo_case_annotator.model.proto.*;
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Gene;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 
@@ -47,7 +42,7 @@ public class CompletenessValidatorTest {
 
         final List<ValidationResult> results = validator.validate(diseaseCase);
 
-        assertThat(results, hasItem(ValidationResult.fail("Gene data is not set")));
+        assertThat(results, hasItem(ValidationResult.fail("Gene data is not complete")));
     }
 
     @Test
@@ -84,18 +79,15 @@ public class CompletenessValidatorTest {
         assertThat(results, not(hasItem(ValidationResult.fail("At least one variant should be present"))));
     }
 
-    /**
-     * Utility method for creating DiseaseCaseModel instance for testing.
-     *
-     * @return {@link DiseaseCase} instance for testing.
-     */
-    private DiseaseCase getArs() throws Exception {
-        try (InputStream is = new FileInputStream(new File("target/test-classes/models/xml/Ars-2000-NF1-95-89.xml"))) {
-            return XMLModelParser.loadDiseaseCase(is)
-                    .orElseThrow(() -> new Exception("Unable to read test data from target/test-classes/models/xml/Ars-2000-NF1-95-89.xml"));
-        }
-    }
+    @Test
+    public void validateCaseWithNoVariantAndNoVariantValidator() {
+        DiseaseCase diseaseCase = DiseaseCase.newBuilder().build();
 
+        CompletenessValidator anotherValidator = new CompletenessValidator(null);
+        final List<ValidationResult> results = anotherValidator.validate(diseaseCase);
+
+        assertThat(results, hasItem(ValidationResult.fail("At least one variant should be present")));
+    }
 }
 
 

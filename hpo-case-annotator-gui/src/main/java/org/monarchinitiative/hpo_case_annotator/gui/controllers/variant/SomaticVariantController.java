@@ -1,18 +1,19 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
+import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 
 import javax.inject.Inject;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -22,10 +23,6 @@ import java.util.stream.Collectors;
  * Created by Daniel Danis.
  */
 public final class SomaticVariantController extends AbstractVariantController {
-
-    // TODO - use completness validator for validation
-
-    private BooleanBinding isCompleteBinding;
 
 
     // ******************** FXML elements, injected by FXMLLoader ********************************** //
@@ -96,7 +93,7 @@ public final class SomaticVariantController extends AbstractVariantController {
 
     /**
      * Create instance of this class which acts as a controller from MVC pattern. Given the fact that this class extends
-     * {@link javafx.scene.control.TitledPane} it can be managed by {@link DataController}.
+     * {@link javafx.scene.control.TitledPane} it can be managed by {@link DiseaseCaseDataController}.
      */
     @Inject
     public SomaticVariantController(GuiElementValues elementValues) {
@@ -125,24 +122,11 @@ public final class SomaticVariantController extends AbstractVariantController {
         decorateWithTooltip(referenceTextField, "Representation of reference allele in VCF style (see help)");
         decorateWithTooltip(alternateTextField, "Representation of alternate allele in VCF style (see help)");
         decorateWithTooltip(snippetTextField, "Snippet of nucleotide sequence near variant, e.g. 'ACGT[A/C]ACTG'");
-
-        // value of the ComboBox is null if user did not click on anything, TextField contains empty string
-        isCompleteBinding = Bindings.createBooleanBinding(() -> genomeBuildComboBox.getValue() != null &&
-                        chromosomeComboBox.getValue() != null &&
-                        positionTextField.getText() != null && positionTextField.getText().matches(VARIANT_POSITION_REGEXP) &&
-                        referenceTextField.getText() != null && referenceTextField.getText().matches(ALLELE_REGEXP) &&
-                        alternateTextField.getText() != null && alternateTextField.getText().matches(ALLELE_REGEXP) &&
-                        snippetTextField.getText() != null && snippetTextField.getText().matches(SNIPPET_REGEXP) &&
-                        genotypeComboBox.getValue() != null,
-                genomeBuildComboBox.valueProperty(), chromosomeComboBox.valueProperty(), positionTextField.textProperty(),
-                referenceTextField.textProperty(), alternateTextField.textProperty(), snippetTextField.textProperty(),
-                genotypeComboBox.valueProperty());
-
     }
 
 
     @Override
-    public void presentVariant(Variant variant) {
+    public void presentData(Variant variant) {
         // Variant
         genomeBuildComboBox.setValue(variant.getVariantPosition().getGenomeAssembly());
         chromosomeComboBox.setValue(variant.getVariantPosition().getContig());
@@ -170,55 +154,59 @@ public final class SomaticVariantController extends AbstractVariantController {
 
 
     @Override
-    public Variant getVariant() {
-        if (isCompleteBinding.get()) {
-            return Variant.newBuilder()
-                    .setVariantPosition(VariantPosition.newBuilder()
-                            .setGenomeAssembly(genomeBuildComboBox.getValue())
-                            .setContig(chromosomeComboBox.getValue())
-                            .setPos(Integer.parseInt(positionTextField.getText()))
-                            .setRefAllele(referenceTextField.getText())
-                            .setAltAllele(alternateTextField.getText())
-                            .build())
-                    .setSnippet(snippetTextField.getText())
-                    .setGenotype(genotypeComboBox.getValue())
-                    .setVariantClass(variantClassComboBox.getValue() == null ? "" : variantClassComboBox.getValue())
-                    .setPathomechanism(pathomechanismComboBox.getValue() == null ? "" : pathomechanismComboBox.getValue())
-                    .setVariantValidation(VariantValidation.newBuilder()
-                            .setContext(VariantValidation.Context.SOMATIC)
-                            .setRegulator(regulatorTextField.getText())
-                            .setReporterRegulation(reporterComboBox.getValue() == null ? "" : reporterComboBox.getValue())
-                            .setEmsaValidationPerformed(emsaComboBox.getValue() != null && emsaComboBox.getValue().equals("yes"))
-                            .setEmsaTfSymbol(emsaTFSymbolTextField.getText())
-                            .setEmsaGeneId(emsaGeneIDTextField.getText())
-                            .setOtherChoices(otherChoicesComboBox.getValue() == null ? "" : otherChoicesComboBox.getValue())
-                            .setOtherEffect(otherEffectComboBox.getValue() == null ? "" : otherEffectComboBox.getValue())
-                            .setMPatients(Integer.parseInt(cancerMTextField.getText().isEmpty() ? "0" : cancerMTextField.getText()))
-                            .setNPatients(Integer.parseInt(cancerNTextField.getText().isEmpty() ? "0" : cancerNTextField.getText()))
-                            .build())
-                    .build();
-        } else {
-            return Variant.getDefaultInstance();
+    public Variant getData() {
+        int pos;
+        try {
+            pos = Integer.parseInt(positionTextField.getText());
+        } catch (NumberFormatException nfe) {
+            pos = 0;
         }
-    }
 
-    @Override
-    public BooleanBinding isCompleteBinding() {
-        return isCompleteBinding;
+        return Variant.newBuilder()
+                .setVariantPosition(VariantPosition.newBuilder()
+                        .setGenomeAssembly(genomeBuildComboBox.getValue() == null ? GenomeAssembly.NOT_KNOWN : genomeBuildComboBox.getValue())
+                        .setContig(chromosomeComboBox.getValue() == null ? "NA" : chromosomeComboBox.getValue())
+                        .setPos(pos)
+                        .setRefAllele(referenceTextField.getText())
+                        .setAltAllele(alternateTextField.getText())
+                        .build())
+                .setSnippet(snippetTextField.getText())
+                .setGenotype(genotypeComboBox.getValue() == null ? Genotype.UNDEFINED : genotypeComboBox.getValue())
+                .setVariantClass(variantClassComboBox.getValue() == null ? "" : variantClassComboBox.getValue())
+                .setPathomechanism(pathomechanismComboBox.getValue() == null ? "" : pathomechanismComboBox.getValue())
+                .setVariantValidation(VariantValidation.newBuilder()
+                        .setContext(VariantValidation.Context.SOMATIC)
+                        .setRegulator(regulatorTextField.getText())
+                        .setReporterRegulation(reporterComboBox.getValue() == null ? "" : reporterComboBox.getValue())
+                        .setEmsaValidationPerformed(emsaComboBox.getValue() != null && emsaComboBox.getValue().equals("yes"))
+                        .setEmsaTfSymbol(emsaTFSymbolTextField.getText())
+                        .setEmsaGeneId(emsaGeneIDTextField.getText())
+                        .setOtherChoices(otherChoicesComboBox.getValue() == null ? "" : otherChoicesComboBox.getValue())
+                        .setOtherEffect(otherEffectComboBox.getValue() == null ? "" : otherEffectComboBox.getValue())
+                        .setMPatients(Integer.parseInt(cancerMTextField.getText().isEmpty() ? "0" : cancerMTextField.getText()))
+                        .setNPatients(Integer.parseInt(cancerNTextField.getText().isEmpty() ? "0" : cancerNTextField.getText()))
+                        .build())
+                .build();
     }
 
     @Override
     public Binding<String> variantTitleBinding() {
         return Bindings.createStringBinding(() -> {
-                    if (isCompleteBinding.get()) {
+                    if (isComplete()) {
                         return String.format("Somatic variant: %s %s:%s%s>%s", genomeBuildComboBox.getValue(),
                                 chromosomeComboBox.getValue(), positionTextField.getText(), referenceTextField.getText(),
                                 alternateTextField.getText());
                     } else {
-                        return "Somatic variant: INCOMPLETE";
+                        return "Somatic variant: INCOMPLETE: " + validationResults.get(0).getMessage();
                     }
                 },
-                genomeBuildComboBox.valueProperty(), chromosomeComboBox.valueProperty(), positionTextField.textProperty(),
+                getObservableVariantDependencies().toArray(new Observable[0])
+        );
+    }
+
+    @Override
+    protected List<? extends Observable> getObservableVariantDependencies() {
+        return Arrays.asList(genomeBuildComboBox.valueProperty(), chromosomeComboBox.valueProperty(), positionTextField.textProperty(),
                 referenceTextField.textProperty(), alternateTextField.textProperty(), snippetTextField.textProperty(),
                 genotypeComboBox.valueProperty());
     }

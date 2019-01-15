@@ -14,7 +14,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
-import org.monarchinitiative.hpo_case_annotator.core.validation.CompletenessValidator;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
@@ -55,7 +54,7 @@ public final class MainController {
 
     private final File appHomeDir;
 
-    private final DataController dataController;
+    private final DiseaseCaseDataController dataController;
 
     private final ResourceBundle resourceBundle;
 
@@ -78,7 +77,7 @@ public final class MainController {
 
 
     @Inject
-    public MainController(OptionalResources optionalResources, DataController dataController,
+    public MainController(OptionalResources optionalResources, DiseaseCaseDataController dataController,
                           ResourceBundle resourceBundle, Stage primaryStage,
                           Properties properties, @Named("appHomeDir") File appHomeDir, ExecutorService executorService,
                           GenomeAssemblies assemblies, HostServices hostServices) {
@@ -125,7 +124,7 @@ public final class MainController {
 
     @FXML
     void newMenuItemAction() {
-        dataController.presentCase(DiseaseCase.getDefaultInstance());
+        dataController.presentData(DiseaseCase.getDefaultInstance());
         dataController.setCurrentModelPath(null);
     }
 
@@ -176,19 +175,19 @@ public final class MainController {
                     throw new RuntimeException("This should not have had happened!");
             }
 
-            dataController.presentCase(diseaseCase);
+            dataController.presentData(diseaseCase);
             dataController.setCurrentModelPath(which);
         }
     }
 
     @FXML
     void saveMenuItemAction() {
-        saveModel(dataController.getCurrentModelPath(), dataController.getCase());
+        saveModel(dataController.getCurrentModelPath(), dataController.getData());
     }
 
     @FXML
     void saveAsMenuItemAction() {
-        saveModel(null, dataController.getCase());
+        saveModel(null, dataController.getData());
     }
 
     @FXML
@@ -199,7 +198,7 @@ public final class MainController {
     @FXML
     void showEditCurrentPublicationMenuItemAction() {
         try {
-            ShowEditPublicationController controller = new ShowEditPublicationController(dataController.getCase().getPublication());
+            ShowEditPublicationController controller = new ShowEditPublicationController(dataController.getData().getPublication());
 
             Parent parent = FXMLLoader.load(
                     ShowEditPublicationController.class.getResource("ShowEditPublicationView.fxml"),
@@ -310,7 +309,7 @@ public final class MainController {
 
     @FXML
     void validateCurrentEntryMenuItemAction() {
-        DiseaseCase theCase = dataController.getCase();
+        DiseaseCase theCase = dataController.getData();
         ValidationRunner runner = ValidationRunner.forAllValidations(assemblies);
         List<ValidationResult> results = runner.validateSingleModel(theCase);
 
@@ -427,7 +426,7 @@ public final class MainController {
 
     @FXML
     void exportPhenopacketMenuItemAction() {
-        DiseaseCase diseaseCase = dataController.getCase();
+        DiseaseCase diseaseCase = dataController.getData();
         String suggestedFileName = ModelUtils.getNameFor(diseaseCase) + ".phenopacket";
         String title = "Save as Phenopacket";
 
@@ -542,7 +541,7 @@ public final class MainController {
         StartupTask task = new StartupTask(optionalResources, properties, assemblies);
         executorService.submit(task);
         try {
-            FXMLLoader loader = new FXMLLoader(DataController.class.getResource("DataView.fxml"));
+            FXMLLoader loader = new FXMLLoader(DiseaseCaseDataController.class.getResource("DiseaseCaseDataView.fxml"));
             loader.setResources(resourceBundle);
             loader.setControllerFactory(clazz -> dataController);
             Parent parent = loader.load();

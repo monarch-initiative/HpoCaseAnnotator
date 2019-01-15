@@ -30,6 +30,10 @@ public final class CompletenessValidator implements Validator<DiseaseCase> {
         this(new VariantSyntaxValidator());
     }
 
+    /**
+     * @param variantValidator {@link VariantSyntaxValidator} to use for variant validation, or <code>null</code>, if the
+     *                         variant validation should be skipped
+     */
     CompletenessValidator(VariantSyntaxValidator variantValidator) {
         this.variantValidator = variantValidator;
     }
@@ -59,29 +63,37 @@ public final class CompletenessValidator implements Validator<DiseaseCase> {
         // check gene
         final Gene gene = diseaseCase.getGene();
         if (Gene.getDefaultInstance().equals(gene)) {
-            results.add(ValidationResult.fail("Gene data is not set"));
+            results.add(ValidationResult.fail("Gene data is not complete"));
         } else {
             if (gene.getEntrezId() <= 0) {
                 results.add(ValidationResult.fail("Entrez ID is smaller than 0"));
             }
         }
 
+        // variants
+        final List<Variant> variantList = diseaseCase.getVariantList();
+        if (!variantList.isEmpty()) {
+            if (variantValidator != null) {
+                // validate all the variants
+                variantList.stream()
+                        .map(variantValidator::validate)
+                        .flatMap(Collection::stream)
+                        .forEach(results::add);
+            }
+        } else {
+            results.add(ValidationResult.fail("At least one variant should be present"));
+        }
+
         // check disease
         final Disease disease = diseaseCase.getDisease();
         if (Disease.getDefaultInstance().equals(disease)) {
-            // TODO - more thorough validation
-            results.add(ValidationResult.fail("Disease data is not set"));
+            results.add(ValidationResult.fail("Disease data is not complete"));
         }
 
-        // validate all the variants
-        final List<Variant> variantList = diseaseCase.getVariantList();
-        if (!variantList.isEmpty()) {
-            variantList.stream()
-                    .map(variantValidator::validate)
-                    .flatMap(Collection::stream)
-                    .forEach(results::add);
-        } else {
-            results.add(ValidationResult.fail("At least one variant should be present"));
+        // check family info
+        final FamilyInfo familyInfo = diseaseCase.getFamilyInfo();
+        if (FamilyInfo.getDefaultInstance().equals(familyInfo)) {
+            results.add(ValidationResult.fail("Family info data is not complete"));
         }
 
         return results;

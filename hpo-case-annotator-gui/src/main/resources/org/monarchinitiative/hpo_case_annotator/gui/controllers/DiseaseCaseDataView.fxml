@@ -1,25 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Accordion?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
-<ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController">
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<ScrollPane xmlns:fx="http://javafx.com/fxml/1" fitToHeight="true" fitToWidth="true" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.172-ea" fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataController">
    <content>
       <StackPane alignment="TOP_CENTER" style="-fx-background-color: #ffffff;">
          <children>
@@ -325,6 +311,26 @@
                             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                         </padding>
                     </HBox>
+                  <HBox alignment="CENTER_LEFT">
+                     <children>
+                        <Label minHeight="25.0" minWidth="135.0" prefHeight="25.0" prefWidth="135.0" text="Status">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Italic" size="15.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="statusLabel" HBox.hgrow="SOMETIMES">
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
                 </children>
                <effect>
                   <DropShadow />

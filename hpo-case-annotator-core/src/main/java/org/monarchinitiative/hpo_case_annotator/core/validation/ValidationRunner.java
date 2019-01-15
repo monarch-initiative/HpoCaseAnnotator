@@ -5,6 +5,7 @@ import com.google.protobuf.Message;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 
 import java.io.File;
 import java.util.*;
@@ -60,6 +61,17 @@ public final class ValidationRunner<T extends Message> {
     }
 
     /**
+     * @return {@link ValidationRunner} that will validate {@link DiseaseCase} fields but not variants.
+     */
+    public static ValidationRunner<DiseaseCase> forDiseaseCaseValidationOmittingVariants() {
+        Function<DiseaseCase, List<ValidationResult>> validationFunction = dc -> {
+            CompletenessValidator cv = new CompletenessValidator(null);
+            return new ArrayList<>(cv.validate(dc));
+        };
+        return new ValidationRunner<>(validationFunction);
+    }
+
+    /**
      * Create {@link ValidationRunner} that returns an empty list if given {@link org.monarchinitiative.hpo_case_annotator.model.proto.Publication}
      * has not yet been used in other biocurated file stored within the <code>diseaseCaseDirectory</code>.
      *
@@ -70,6 +82,17 @@ public final class ValidationRunner<T extends Message> {
         Function<Publication, List<ValidationResult>> validationFunction = pub -> {
             PubMedValidator cv = new PubMedValidator(diseaseCaseDirectory);
             return new ArrayList<>(cv.validate(pub));
+        };
+        return new ValidationRunner<>(validationFunction);
+    }
+
+    /**
+     * @return {@link ValidationRunner} for validation of {@link Variant}s. Only syntax is validated
+     */
+    public static ValidationRunner<Variant> variantValidationRunner() {
+        Function<Variant, List<ValidationResult>> validationFunction = var -> {
+            VariantSyntaxValidator vsv = new VariantSyntaxValidator();
+            return new ArrayList<>(vsv.validate(var));
         };
         return new ValidationRunner<>(validationFunction);
     }

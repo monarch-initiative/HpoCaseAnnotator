@@ -1,22 +1,27 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
+import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.value.ObservableBooleanValue;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Tooltip;
+import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult;
+import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Place for shared content of VariantControllers. Needs to be subclassed by every class that wants to act as a controller
- * of {@link Variant} model class and be placed in {@link DataController}.
+ * of {@link Variant} model class and be placed in {@link DiseaseCaseDataController}.
  * Created by ielis on 5/17/17.
  */
-public abstract class AbstractVariantController {
+public abstract class AbstractVariantController implements DataController<Variant> {
 
     /**
      * Variant position data must match this regexp - any integer except for zero.
@@ -43,9 +48,15 @@ public abstract class AbstractVariantController {
      */
     final GuiElementValues elementValues;
 
+    final List<ValidationResult> validationResults;
+
+    private final ValidationRunner<Variant> variantValidationRunner;
+
 
     AbstractVariantController(GuiElementValues elementValues) {
         this.elementValues = elementValues;
+        this.variantValidationRunner = ValidationRunner.variantValidationRunner();
+        this.validationResults = new ArrayList<>();
     }
 
 
@@ -89,15 +100,14 @@ public abstract class AbstractVariantController {
         });
     }
 
-
-    public abstract void presentVariant(Variant variant);
-
-    public abstract Variant getVariant();
-
-    /**
-     * @return {@link BooleanBinding} that evaluates to true if the data regarding the entered variant is complete.
-     */
-    public abstract ObservableBooleanValue isCompleteBinding();
+    @Override
+    public boolean isComplete() {
+        validationResults.clear();
+        validationResults.addAll(variantValidationRunner.validateSingleModel(getData()));
+        return validationResults.isEmpty();
+    }
 
     public abstract Binding<String> variantTitleBinding();
+
+    abstract List<? extends Observable> getObservableVariantDependencies();
 }

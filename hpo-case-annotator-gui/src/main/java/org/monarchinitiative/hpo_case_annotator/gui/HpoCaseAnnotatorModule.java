@@ -7,7 +7,7 @@ import javafx.application.HostServices;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembliesSerializer;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
@@ -77,7 +77,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
                 .asEagerSingleton();
 
 
-        bind(DataController.class);
+        bind(DiseaseCaseDataController.class);
         bind(MainController.class);
         bind(MendelianVariantController.class);
         bind(SomaticVariantController.class);

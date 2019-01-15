@@ -20,9 +20,8 @@ import org.testfx.framework.junit.ApplicationTest;
 
 import javax.inject.Inject;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 @RunWith(GuiceJUnitRunner.class)
 @GuiceModules({TestHpoCaseAnnotatorModule.class})
@@ -72,41 +71,41 @@ public class SomaticVariantControllerTest extends ApplicationTest {
      */
     @Test
     public void variantIsCompleteBinding() {
-        assertThat(controller.isCompleteBinding().get(), is(false));
+        assertThat(controller.isComplete(), is(false));
 
         clickOn("#genomeBuildComboBox")
                 .moveBy(0, 30)
                 .clickOn(MouseButton.PRIMARY);
-        assertThat(controller.isCompleteBinding().get(), is(false));
+        assertThat(controller.isComplete(), is(false));
 
         clickOn("#chromosomeComboBox")
                 .moveBy(0, 30)
                 .clickOn(MouseButton.PRIMARY);
-        assertThat(controller.isCompleteBinding().get(), is(false));
+        assertThat(controller.isComplete(), is(false));
 
         clickOn("#positionTextField")
                 .write("12345345");
-        assertThat(controller.isCompleteBinding().get(), is(false));
+        assertThat(controller.isComplete(), is(false));
 
         clickOn("#referenceTextField")
                 .write("C");
-        assertThat(controller.isCompleteBinding().get(), is(false));
+        assertThat(controller.isComplete(), is(false));
 
         clickOn("#alternateTextField")
                 .write("A");
-        assertThat(controller.isCompleteBinding().get(), is(false));
+        assertThat(controller.isComplete(), is(false));
 
         clickOn("#snippetTextField")
                 .write("CACT[C/A]AACCG");
-        assertThat(controller.isCompleteBinding().get(), is(false));
+        assertThat(controller.isComplete(), is(false));
 
         clickOn("#genotypeComboBox")
                 .moveBy(0, 60)
                 .clickOn(MouseButton.PRIMARY);
-        assertThat(controller.isCompleteBinding().get(), is(true));
+        assertThat(controller.isComplete(), is(true));
 
         // assert
-        Variant variant = controller.getVariant();
+        Variant variant = controller.getData();
         VariantPosition variantPosition = variant.getVariantPosition();
         assertThat(variantPosition.getGenomeAssembly(), is(GenomeAssembly.HG_19));
         assertThat(variantPosition.getContig(), is("1"));
@@ -121,7 +120,7 @@ public class SomaticVariantControllerTest extends ApplicationTest {
     @Test
     public void getIncompleteVariant() {
         // we did not set any data, hence the variant is incomplete
-        assertThat(controller.getVariant(), is(equalTo(Variant.getDefaultInstance())));
+//        assertThat(controller.getData(), is(equalTo(Variant.getDefaultInstance()))); // TODO - implement
     }
 
 

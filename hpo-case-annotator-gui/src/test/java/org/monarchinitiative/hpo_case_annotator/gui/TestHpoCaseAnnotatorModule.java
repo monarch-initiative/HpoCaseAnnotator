@@ -7,13 +7,14 @@ import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
 import org.monarchinitiative.hpo_case_annotator.core.io.OMIMParser;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembliesSerializer;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.*;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValuesTest;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.ShowValidationResultsController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SomaticVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SplicingVariantController;
 import org.monarchinitiative.phenol.base.PhenolException;
-import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
-import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -49,7 +49,7 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(DataController.class);
+        bind(DiseaseCaseDataController.class);
 //        bind(MainController.class);
         bind(MendelianVariantController.class);
         bind(SomaticVariantController.class);
