@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.monarchinitiative.hpo_case_annotator.model.xml_model.TargetGene;
 import org.monarchinitiative.phenol.base.PhenolException;
-import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
+import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,9 +94,8 @@ public final class OptionalResources {
         }
     }
 
-    public static Ontology deserializeOntology(InputStream is) throws PhenolException {
-        HpOboParser parser = new HpOboParser(is);
-        return parser.parse();
+    public static Ontology deserializeOntology(InputStream is) {
+        return OntologyLoader.loadOntology(is);
     }
 
     /**
