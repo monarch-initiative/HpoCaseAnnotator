@@ -1,5 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
+import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation;
 
@@ -7,6 +9,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * This validator checks that the data has been entered in correct format (e.g. snippet contains upstream, downstream
+ * nucleotides, there are two brackets and one forward slash present, etc.)
+ * <p>
+ * Each <b>variant</b> is considered complete if it contains information regarding:
+ * <ul>
+ * <li>Chromosome - allowed 1-9, 10-19, 20-22, X, Y, and MT</li>
+ * <li>Position - positive integer</li>
+ * <li>Reference allele</li>
+ * <li>Alternate allele</li>
+ * <li>Snippet</li>
+ * <li>Genotype</li>
+ * </ul>
+ * <p>
  * This validator validates syntax only. Use {@link GenomicPositionValidator} if you want to validate that e.g. nucleotide
  * <em>A</em> is located at position 100000 of chromosome <em>1</em> of the reference genome.
  */
@@ -15,20 +30,13 @@ public class VariantSyntaxValidator implements Validator<Variant> {
     /**
      * Matches 1-9, 10-19, 20-22, X, Y, and MT.
      */
-    private static final String CHROMOSOME_REGEXP = "([1-9])|([1][0-9])|([2][0-2])|(X)|(Y)|(MT)";
+    public static final String CHROMOSOME_REGEXP = "([1-9])|([1][0-9])|([2][0-2])|(X)|(Y)|(MT)";
 
     /**
      * Both ref and alt allele must match this regexp.
      */
-    private static final String ALLELE_REGEXP = "[ACGTacgt]+";
+    public static final String ALLELE_REGEXP = "[ACGTacgt]+";
 
-    private static final String INS_SNIPPET = "[ACGTacgt]+\\[[ACGTacgt]/[ACGTacgt]+][ACGTacgt]+";
-    private static final String DEL_SNIPPET = "[ACGTacgt]+\\[[ACGTacgt]/[ACGTacgt]+\\][ACGTacgt]+";
-
-    /**
-     * Sequence snippet must match this regexp - strings like <code>'ACGT[A/CC]ACGTT'</code>
-     */
-    static final String SNIPPET_REGEXP = "[ACGT]+\\[([ACGT]+)/([ACGT]+)][ACGT]+";
 
     private final VariantValidationDataSyntaxValidator variantValidationDataValidator;
 
@@ -43,6 +51,7 @@ public class VariantSyntaxValidator implements Validator<Variant> {
     /**
      * Each <b>variant</b> is considered complete if it contains:
      * <ul>
+     *     <li>Genome assembly</li>
      * <li>Chromosome</li>
      * <li>Position - must not be negative</li>
      * <li>Reference allele</li>
@@ -60,6 +69,13 @@ public class VariantSyntaxValidator implements Validator<Variant> {
     public List<ValidationResult> validate(Variant instance) {
         List<ValidationResult> results = new ArrayList<>();
 
+        // check genome assembly
+        final GenomeAssembly genomeAssembly = instance.getVariantPosition().getGenomeAssembly();
+
+        if (genomeAssembly.equals(GenomeAssembly.NOT_KNOWN)) {
+            results.add(ValidationResult.fail("Unknown genome assembly"));
+        }
+
         // check chromosome
         final String contig = instance.getVariantPosition().getContig();
         if (contig.isEmpty()) {
@@ -70,8 +86,8 @@ public class VariantSyntaxValidator implements Validator<Variant> {
 
         // check position
         final int pos = instance.getVariantPosition().getPos();
-        if (pos < 0) {
-            results.add(ValidationResult.fail("Position cannot be negative"));
+        if (pos <= 0) {
+            results.add(ValidationResult.fail("Position must be positive: " + pos));
         }
 
         // check ref allele
@@ -94,8 +110,14 @@ public class VariantSyntaxValidator implements Validator<Variant> {
         final String snippet = instance.getSnippet();
         if (snippet.isEmpty()) {
             results.add(ValidationResult.fail("Missing snippet"));
-        } else if (snippet.matches(SNIPPET_REGEXP)) {
+        } else if (!snippet.matches(GenomicPositionValidator.SNIPPET_REGEXP)) {
             results.add(ValidationResult.fail("Invalid snippet format: " + snippet));
+        }
+
+        // check genotype
+        final Genotype genotype = instance.getGenotype();
+        if (genotype.equals(Genotype.UNDEFINED)) {
+            results.add(ValidationResult.fail("Undefined genotype"));
         }
 
         final VariantValidation variantValidation = instance.getVariantValidation();

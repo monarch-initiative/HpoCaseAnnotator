@@ -3,6 +3,8 @@ package org.monarchinitiative.hpo_case_annotator.core.validation;
 import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Gene;
 import org.monarchinitiative.hpo_case_annotator.model.xml_model.TargetGene;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +16,8 @@ import java.util.Map;
  * This validator is supposed to check that the entered gene information is correct (e.g. gene id matches gene symbol).
  */
 public class EntrezGeneValidator implements Validator<Gene> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EntrezGeneValidator.class);
 
     /**
      * Key: Entrez ID; value: TargetGene bean
@@ -76,6 +80,7 @@ public class EntrezGeneValidator implements Validator<Gene> {
     @Override
     public List<ValidationResult> validate(Gene instance) {
         // TODO - implement
+        LOGGER.warn("EntrezGeneValidator is not yet implemented");
         return Collections.emptyList();
     }
 }

@@ -35,8 +35,7 @@ public class VariantValidationDataSyntaxValidatorTest {
 
         final List<ValidationResult> results = instance.validate(splicingValidation);
 
-        assertThat(results.size(), is(1));
-        assertThat(results, hasItem(ValidationResult.pass()));
+        assertThat(results.size(), is(0));
     }
 
     @Test
@@ -47,8 +46,7 @@ public class VariantValidationDataSyntaxValidatorTest {
 
         final List<ValidationResult> results = instance.validate(somaticValidation);
 
-        assertThat(results.size(), is(1));
-        assertThat(results, hasItem(ValidationResult.pass()));
+        assertThat(results.size(), is(0));
     }
 
 
@@ -61,8 +59,7 @@ public class VariantValidationDataSyntaxValidatorTest {
 
         final List<ValidationResult> results = instance.validate(mendelianValidation);
 
-        assertThat(results.size(), is(1));
-        assertThat(results, hasItem(ValidationResult.pass()));
+        assertThat(results.size(), is(0));
     }
 
 

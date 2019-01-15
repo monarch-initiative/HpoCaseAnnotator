@@ -1,17 +1,21 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
+import org.monarchinitiative.hpo_case_annotator.model.proto.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.model.xml_model.DiseaseCaseModel;
 import org.monarchinitiative.hpo_case_annotator.model.xml_model.HPO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
  * This validator is supposed to validate HPO terms (e.g. that id & label match together).
  */
-@Deprecated // since it should not be possible to add a corrupted HPO term
-public class HPOValidator
-//        extends AbstractValidator
-{
+public class HPOValidator implements Validator<OntologyClass> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HPOValidator.class);
 
     private Map<String, HPO> hpoMap;
 
@@ -24,7 +28,7 @@ public class HPOValidator
 
 
 //    public HPOValidator(Ontology ontology) {
-        // TODO - implement HPO checking.
+
 //    }
 
 
@@ -58,4 +62,10 @@ public class HPOValidator
 //        return ValidationResult.PASSED;
     }
 
+    @Override
+    public List<ValidationResult> validate(OntologyClass instance) {
+        // TODO - implement HPO checking.
+        LOGGER.warn("HPOValidator is not yet implemented");
+        return Collections.emptyList();
+    }
 }

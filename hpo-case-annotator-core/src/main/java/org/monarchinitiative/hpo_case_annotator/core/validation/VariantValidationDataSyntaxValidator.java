@@ -7,6 +7,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This validator checks aspects of {@link VariantValidation} POJO.
+ */
 public class VariantValidationDataSyntaxValidator implements Validator<VariantValidation> {
 
     @Override
@@ -43,23 +46,23 @@ public class VariantValidationDataSyntaxValidator implements Validator<VariantVa
      * @return Result
      */
     private Collection<? extends ValidationResult> validateSplicingFields(VariantValidation instance) {
-        if (instance.getMinigeneValidation() || instance.getSiteDirectedMutagenesisValidation() || instance.getRtPcrValidation()
-                || instance.getSrProteinOverexpressionValidation() || instance.getSrProteinKnockdownValidation() || instance.getCDnaSequencingValidation()
-                || instance.getPcrValidation() || instance.getMutOfWtSpliceSiteValidation() || instance.getOtherValidation()) {
-            return Collections.singletonList(ValidationResult.pass());
-        } else {
-            return Collections.singletonList(ValidationResult.fail("At least one splicing validation type should be checked"));
-        }
+        List<ValidationResult> results = new ArrayList<>();
+        if (!instance.getMinigeneValidation() && !instance.getSiteDirectedMutagenesisValidation() && !instance.getRtPcrValidation()
+                && !instance.getSrProteinOverexpressionValidation() && !instance.getSrProteinKnockdownValidation() && !instance.getCDnaSequencingValidation()
+                && !instance.getPcrValidation() && !instance.getMutOfWtSpliceSiteValidation() && !instance.getOtherValidation()) {
+                    results.add(ValidationResult.fail("At least one splicing validation type should be checked"));
+                }
+        return results;
 
     }
 
     private Collection<? extends ValidationResult> validateSomaticFields(VariantValidation instance) {
         // TODO - validate data in the somatic validation
-        return Collections.singletonList(ValidationResult.pass());
+        return Collections.emptyList();
     }
 
     private Collection<? extends ValidationResult> validateMendelianFields(VariantValidation instance) {
         // TODO - validate data in the mendelian validation
-        return Collections.singletonList(ValidationResult.pass());
+        return Collections.emptyList();
     }
 }

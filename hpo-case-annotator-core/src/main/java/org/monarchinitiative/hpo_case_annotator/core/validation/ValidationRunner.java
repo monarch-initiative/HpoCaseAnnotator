@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
  */
 public final class ValidationRunner {
 
+    // TODO - add validation of gene, disease, and HPO terms
+
     private final Function<DiseaseCase, List<ValidationResult>> validationFunction;
 
     private ValidationRunner(Function<DiseaseCase, List<ValidationResult>> validationFunction) {
@@ -88,7 +90,6 @@ public final class ValidationRunner {
 //        Set<ValidationLine> lines = new HashSet<>();
 
         /*// validate completness
-        // TODO - implement!
         CompletenessValidator completenessValidator = new CompletenessValidator(variantValidator);
         ValidationResult result = completenessValidator.validateDiseaseCase(model);
         lines.add(new ValidationLine(ModelUtils.getNameFor(model), completenessValidator.getClass().getSimpleName(), result));
@@ -158,7 +159,6 @@ public final class ValidationRunner {
                 genomicPositionValidator.validateDiseaseCase(model)));
 
         return valList;
-//        TODO - implement
         return Collections.emptyList();
     }*/
 

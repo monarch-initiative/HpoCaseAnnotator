@@ -18,7 +18,7 @@ public final class GenomicPositionValidator implements Validator<Variant> {
     /**
      * Sequence snippet must match this regexp - strings like <code>'ACGT[A/CC]ACGTT'</code>
      */
-    public static final String SNIPPET_REGEXP = "[ACGT]+\\[([ACGT]+)/([ACGT]+)][ACGT]+";
+    public static final String SNIPPET_REGEXP = "[ACGTacgt]+\\[([ACGTacgt]+)/([ACGTacgt]+)][ACGTacgt]+";
 
     private final GenomeAssemblies genomeAssemblies;
 
@@ -29,11 +29,11 @@ public final class GenomicPositionValidator implements Validator<Variant> {
     }
 
     /**
-     * @param contig
-     * @param pos
+     * @param contig      String with chromosome contig, such as <code>chr2</code>
+     * @param pos         integer with 1-based position of the first ref nucleotide
      * @param snippet     String that has already been matched against {@link #SNIPPET_REGEXP}
-     * @param sequenceDao
-     * @return
+     * @param sequenceDao {@link SequenceDao} used to fetch nucleotide sequence to validate snippet against
+     * @return results of validation - an empty list if the snippet is valid
      */
     private static List<ValidationResult> validateSnippet(String contig, int pos, String snippet, SequenceDao sequenceDao) {
         List<ValidationResult> results = new ArrayList<>();
@@ -126,7 +126,6 @@ public final class GenomicPositionValidator implements Validator<Variant> {
             results.add(ValidationResult.fail("Alt sequence not initialized (length=0)"));
         }
 
-
         /* The variant string is OK, and now we can validate the snippet string */
         String snippet = variant.getSnippet();
         if (snippet.matches(SNIPPET_REGEXP)) {
@@ -138,30 +137,12 @@ public final class GenomicPositionValidator implements Validator<Variant> {
         return results;
     }
 
-    /**
-     * Count how many times is character <em>counted</em> present in given <em>string</em>.
-     *
-     * @param string  that is being searched
-     * @param counted character that is being counted.
-     * @return number of occurences of <em>counted</em> in <em>string</em>
-     */
-    private int countOccurence(String string, char counted) {
-        int counter = 0;
-        char[] chars = string.toCharArray();
-        for (char t : chars) {
-            if (t == counted) {
-                counter++;
-            }
-        }
-        return counter;
-    }
-
 
     /**
      * Some variants have snippets (we are trying to add this to all the variants). A snippet string is like this:
      * CTACT[G/A]TCCAA The sequence surrounding the position of the mutation is shown. If the snippet string is null or
      * empty, return true, this means that the biocuration is not yet finished (it is a sanity check for Q/C). The
-     * sequence given in the brackets is the actual mutation. TODO--clean up the code (it works but is ugly!)
+     * sequence given in the brackets is the actual mutation.
      */
 //    private ValidationResult validateSnippet(String chrom, String ref, String alt, int pos, String snippet) {
 /*
