@@ -5,7 +5,8 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation;
 
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class VariantValidationDataSyntaxValidatorTest {
@@ -15,15 +16,14 @@ public class VariantValidationDataSyntaxValidatorTest {
 
 
     @Test
-    public void failOnEmptySplicingValidation() {
+    public void validateEmptySplicingValidation() {
         VariantValidation splicingValidation = VariantValidation.newBuilder()
                 .setContext(VariantValidation.Context.SPLICING)
                 .build();
 
         final List<ValidationResult> results = instance.validate(splicingValidation);
 
-        assertThat(results.size(), is(1));
-        assertThat(results, hasItem(ValidationResult.fail("At least one splicing validation type should be checked")));
+        assertThat(results.size(), is(0));
     }
 
     @Test

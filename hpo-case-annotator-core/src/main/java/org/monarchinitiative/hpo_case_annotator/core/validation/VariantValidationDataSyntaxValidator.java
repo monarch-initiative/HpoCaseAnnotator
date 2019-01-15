@@ -46,14 +46,14 @@ public class VariantValidationDataSyntaxValidator implements Validator<VariantVa
      * @return Result
      */
     private Collection<? extends ValidationResult> validateSplicingFields(VariantValidation instance) {
-        List<ValidationResult> results = new ArrayList<>();
-        if (!instance.getMinigeneValidation() && !instance.getSiteDirectedMutagenesisValidation() && !instance.getRtPcrValidation()
-                && !instance.getSrProteinOverexpressionValidation() && !instance.getSrProteinKnockdownValidation() && !instance.getCDnaSequencingValidation()
-                && !instance.getPcrValidation() && !instance.getMutOfWtSpliceSiteValidation() && !instance.getOtherValidation()) {
-                    results.add(ValidationResult.fail("At least one splicing validation type should be checked"));
-                }
-        return results;
-
+//        List<ValidationResult> results = new ArrayList<>();
+//        if (!instance.getMinigeneValidation() && !instance.getSiteDirectedMutagenesisValidation() && !instance.getRtPcrValidation()
+//                && !instance.getSrProteinOverexpressionValidation() && !instance.getSrProteinKnockdownValidation() && !instance.getCDnaSequencingValidation()
+//                && !instance.getPcrValidation() && !instance.getMutOfWtSpliceSiteValidation() && !instance.getOtherValidation()) {
+//                    results.add(ValidationResult.fail("At least one splicing validation type should be checked"));
+//                }
+//        return results;
+        return Collections.emptyList();
     }
 
     private Collection<? extends ValidationResult> validateSomaticFields(VariantValidation instance) {
