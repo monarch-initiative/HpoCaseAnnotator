@@ -151,7 +151,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
      */
     private static Function<Main.PhenotypeTerm, OntologyClass> phenotypeTermToOntologyClass() {
         return pt -> OntologyClass.newBuilder()
-                .setId(pt.getTerm().getId().getIdWithPrefix())
+                .setId(pt.getTerm().getId().getValue())
                 .setLabel(pt.getTerm().getName())
                 .setNotObserved(!pt.isPresent())
                 .build();
@@ -163,7 +163,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
      */
     private static Function<OntologyClass, Main.PhenotypeTerm> ontologyClassToPhenotypeTerm(Ontology ontology) {
         return oc -> {
-            TermId id = TermId.constructWithPrefix(oc.getId());
+            TermId id = TermId.of(oc.getId());
             Term term = ontology.getTermMap().get(id);
             return new Main.PhenotypeTerm(term, !oc.getNotObserved());
         };
