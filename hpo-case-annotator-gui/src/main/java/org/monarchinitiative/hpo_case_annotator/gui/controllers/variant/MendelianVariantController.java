@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
  */
 public final class MendelianVariantController extends AbstractVariantController {
 
+    // TODO - use completness validator for validation
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MendelianVariantController.class);
 
     // ******************** FXML elements, injected by FXMLLoader ********************************** //
@@ -217,7 +219,7 @@ public final class MendelianVariantController extends AbstractVariantController 
     public Binding<String> variantTitleBinding() {
         return Bindings.createStringBinding(() -> {
                     if (isCompleteBinding.get()) {
-                        return String.format("Mendelian variant: %s_%s:%s%s>%s", genomeBuildComboBox.getValue(),
+                        return String.format("Mendelian variant: %s %s:%s%s>%s", genomeBuildComboBox.getValue(),
                                 chromosomeComboBox.getValue(), positionTextField.getText(), referenceTextField.getText(),
                                 alternateTextField.getText());
                     } else {

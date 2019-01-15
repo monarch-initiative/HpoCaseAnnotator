@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
  */
 public final class SomaticVariantController extends AbstractVariantController {
 
+    // TODO - use completness validator for validation
 
     private BooleanBinding isCompleteBinding;
 
@@ -210,7 +211,7 @@ public final class SomaticVariantController extends AbstractVariantController {
     public Binding<String> variantTitleBinding() {
         return Bindings.createStringBinding(() -> {
                     if (isCompleteBinding.get()) {
-                        return String.format("Somatic variant: %s_%s:%s%s>%s", genomeBuildComboBox.getValue(),
+                        return String.format("Somatic variant: %s %s:%s%s>%s", genomeBuildComboBox.getValue(),
                                 chromosomeComboBox.getValue(), positionTextField.getText(), referenceTextField.getText(),
                                 alternateTextField.getText());
                     } else {

@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
  */
 public final class SplicingVariantController extends AbstractVariantController {
 
+    // TODO - use completness validator for validation
+
     private BooleanBinding isCompleteBinding;
 
 
@@ -243,7 +245,7 @@ public final class SplicingVariantController extends AbstractVariantController {
     public Binding<String> variantTitleBinding() {
         return Bindings.createStringBinding(() -> {
                     if (isCompleteBinding.get()) {
-                        return String.format("Splicing variant: %s_%s:%s%s>%s", genomeBuildComboBox.getValue(), varChromosomeComboBox.getValue(),
+                        return String.format("Splicing variant: %s %s:%s%s>%s", genomeBuildComboBox.getValue(), varChromosomeComboBox.getValue(),
                                 varPositionTextField.getText(), varReferenceTextField.getText(),
                                 varAlternateTextField.getText());
                     } else {
