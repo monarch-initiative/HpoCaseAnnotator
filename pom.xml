@@ -39,21 +39,6 @@
     </scm>
 
 
-    <!-- Not using the private Maven repo anymore, since this will be a public code soon. -->
-    <!--<distributionManagement>-->
-        <!--<repository>-->
-            <!--<id>ielis-internal-maven-repository</id>-->
-            <!--<name>Ielis Internal Maven Repository</name>-->
-            <!--<url>https://mvnrepo.ielis.xyz/repository/internal/</url>-->
-        <!--</repository>-->
-        <!--<snapshotRepository>-->
-            <!--<id>ielis-snapshots-maven-repository</id>-->
-            <!--<name>Ielis Snapshots Maven Repository</name>-->
-            <!--<url>https://mvnrepo.ielis.xyz/repository/snapshots/</url>-->
-        <!--</snapshotRepository>-->
-    <!--</distributionManagement>-->
-
-
     <build>
         <plugins>
             <plugin>
