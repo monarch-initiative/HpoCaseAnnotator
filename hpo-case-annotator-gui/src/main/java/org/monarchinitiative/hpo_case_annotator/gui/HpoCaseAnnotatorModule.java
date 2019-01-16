@@ -89,8 +89,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
     @Singleton
     @Named("scigraphMiningUrl")
     public URL scigraphMiningUrl(Properties properties) throws MalformedURLException {
-        //return new URL(Objects.requireNonNull(properties.getProperty("scigraph.mining.url")));
-        return new URL(Objects.requireNonNull(properties.getProperty("text.mining.url")));
+        return new URL(Objects.requireNonNull(properties.getProperty("scigraph.mining.url")));
     }
 
     /**
