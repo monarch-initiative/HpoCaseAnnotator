@@ -136,7 +136,7 @@ public final class SomaticVariantController extends AbstractVariantController {
         genomeBuildComboBox.setValue(variant.getVariantPosition().getGenomeAssembly());
         chromosomeComboBox.setValue(variant.getVariantPosition().getContig());
         // do not set zero, but rather an empty string
-        positionTextField.setText(variant.getVariantPosition().getPos() == 0 ? "" : String.valueOf(variant.getVariantPosition()));
+        positionTextField.setText(variant.getVariantPosition().getPos() == 0 ? "" : String.valueOf(variant.getVariantPosition().getPos()));
         referenceTextField.setText(variant.getVariantPosition().getRefAllele());
         alternateTextField.setText(variant.getVariantPosition().getAltAllele());
         snippetTextField.setText(variant.getSnippet());
@@ -171,14 +171,14 @@ public final class SomaticVariantController extends AbstractVariantController {
 
         return Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()
-                        .setGenomeAssembly(genomeBuildComboBox.getValue() == null ? GenomeAssembly.NOT_KNOWN : genomeBuildComboBox.getValue())
+                        .setGenomeAssembly(genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : genomeBuildComboBox.getValue())
                         .setContig(chromosomeComboBox.getValue() == null ? "NA" : chromosomeComboBox.getValue())
                         .setPos(pos)
                         .setRefAllele(referenceTextField.getText())
                         .setAltAllele(alternateTextField.getText())
                         .build())
                 .setSnippet(snippetTextField.getText())
-                .setGenotype(genotypeComboBox.getValue() == null ? Genotype.UNKNOWN_GENOTYPE : genotypeComboBox.getValue())
+                .setGenotype(genotypeComboBox.getValue() == null ? Genotype.UNDEFINED : genotypeComboBox.getValue())
                 .setVariantClass(variantClassComboBox.getValue() == null ? "" : variantClassComboBox.getValue())
                 .setPathomechanism(pathomechanismComboBox.getValue() == null ? "" : pathomechanismComboBox.getValue())
                 .setVariantValidation(VariantValidation.newBuilder()

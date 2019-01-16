@@ -153,7 +153,7 @@ public final class SplicingVariantController extends AbstractVariantController {
         genomeBuildComboBox.setValue(variant.getVariantPosition().getGenomeAssembly());
         varChromosomeComboBox.setValue(variant.getVariantPosition().getContig());
         // do not set zero, but rather an empty string
-        varPositionTextField.setText(variant.getVariantPosition().getPos() == 0 ? "" : String.valueOf(variant.getVariantPosition()));
+        varPositionTextField.setText(variant.getVariantPosition().getPos() == 0 ? "" : String.valueOf(variant.getVariantPosition().getPos()));
         varReferenceTextField.setText(variant.getVariantPosition().getRefAllele());
         varAlternateTextField.setText(variant.getVariantPosition().getAltAllele());
         varSnippetTextField.setText(variant.getSnippet());
@@ -196,14 +196,14 @@ public final class SplicingVariantController extends AbstractVariantController {
 
         return Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()
-                        .setGenomeAssembly(genomeBuildComboBox.getValue() == null ? GenomeAssembly.NOT_KNOWN : genomeBuildComboBox.getValue())
+                        .setGenomeAssembly(genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : genomeBuildComboBox.getValue())
                         .setContig(varChromosomeComboBox.getValue() == null ? "NA" : varChromosomeComboBox.getValue())
                         .setPos(pos)
                         .setRefAllele(varReferenceTextField.getText())
                         .setAltAllele(varAlternateTextField.getText())
                         .build())
                 .setSnippet(varSnippetTextField.getText())
-                .setGenotype(varGenotypeComboBox.getValue() == null ? Genotype.UNKNOWN_GENOTYPE : varGenotypeComboBox.getValue())
+                .setGenotype(varGenotypeComboBox.getValue() == null ? Genotype.UNDEFINED: varGenotypeComboBox.getValue())
                 .setVariantClass(varClassComboBox.getValue() == null ? "" : varClassComboBox.getValue())
                 .setPathomechanism(varPathomechanismComboBox.getValue() == null ? "" : varPathomechanismComboBox.getValue())
                 .setConsequence(varConsequenceComboBox.getValue() == null ? "" : varConsequenceComboBox.getValue())

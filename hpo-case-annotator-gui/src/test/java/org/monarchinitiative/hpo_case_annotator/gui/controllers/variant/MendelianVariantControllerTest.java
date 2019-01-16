@@ -74,7 +74,7 @@ public class MendelianVariantControllerTest extends ApplicationTest {
         assertThat(controller.isComplete(), is(false));
 
         clickOn("#genomeBuildComboBox")
-                .moveBy(-10, 30)
+                .moveBy(-10, 40)
                 .clickOn(MouseButton.PRIMARY);
         assertThat(controller.isComplete(), is(false));
 
@@ -107,7 +107,7 @@ public class MendelianVariantControllerTest extends ApplicationTest {
         // assert
         Variant variant = controller.getData();
         final VariantPosition vp = variant.getVariantPosition();
-        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.GRCH_37));
+        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.NCBI_36));
         assertThat(vp.getContig(), is("1"));
         assertThat(vp.getPos(), is(12345345));
         assertThat(vp.getRefAllele(), is("C"));
@@ -125,7 +125,7 @@ public class MendelianVariantControllerTest extends ApplicationTest {
     @Test
     public void getFullVariant() {
         // arange
-        clickOn("#genomeBuildComboBox").moveBy(-10, 30).clickOn(MouseButton.PRIMARY)
+        clickOn("#genomeBuildComboBox").moveBy(-10, 40).clickOn(MouseButton.PRIMARY)
                 .clickOn("#chromosomeComboBox").moveBy(0, 30).clickOn(MouseButton.PRIMARY)
                 .clickOn("#positionTextField").write("12345345")
                 .clickOn("#referenceTextField").write("C")
@@ -146,9 +146,9 @@ public class MendelianVariantControllerTest extends ApplicationTest {
                 .clickOn("#otherEffectComboBox").moveBy(0, 25).clickOn(MouseButton.PRIMARY);
         // act
         Variant variant = controller.getData();
-        final VariantPosition vp = variant.getVariantPosition();
+        VariantPosition vp = variant.getVariantPosition();
         // assert
-        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.GRCH_37));
+        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.NCBI_36));
         assertThat(vp.getContig(), is("1"));
         assertThat(vp.getPos(), is(12345345));
         assertThat(vp.getRefAllele(), is("C"));

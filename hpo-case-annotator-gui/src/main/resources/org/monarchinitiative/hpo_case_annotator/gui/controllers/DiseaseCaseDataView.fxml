@@ -175,22 +175,22 @@
                                             <Insets bottom="5.0" left="5.0" right="15.0" top="5.0" />
                                         </GridPane.margin>
                                     </ComboBox>
-                                    <Label minHeight="30.0" text="Disease ID" GridPane.columnIndex="6" GridPane.halignment="RIGHT">
-                                        <GridPane.margin>
-                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                        </GridPane.margin>
-                                    </Label>
-                                    <TextField fx:id="diseaseIDTextField" minHeight="30.0" minWidth="100.0" prefWidth="100.0" GridPane.columnIndex="7">
-                                        <GridPane.margin>
-                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                        </GridPane.margin>
-                                    </TextField>
                                     <Label minHeight="30.0" text="Disease name" GridPane.columnIndex="2">
                                         <GridPane.margin>
                                             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                         </GridPane.margin>
                                     </Label>
                                     <TextField fx:id="diseaseNameTextField" maxWidth="490.0" minHeight="30.0" minWidth="100.0" GridPane.columnIndex="3" GridPane.columnSpan="3">
+                                        <GridPane.margin>
+                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                        </GridPane.margin>
+                                    </TextField>
+                                    <Label minHeight="30.0" text="Disease ID" GridPane.columnIndex="6" GridPane.halignment="RIGHT">
+                                        <GridPane.margin>
+                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                        </GridPane.margin>
+                                    </Label>
+                                    <TextField fx:id="diseaseIDTextField" minHeight="30.0" minWidth="100.0" prefWidth="100.0" GridPane.columnIndex="7">
                                         <GridPane.margin>
                                             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                         </GridPane.margin>

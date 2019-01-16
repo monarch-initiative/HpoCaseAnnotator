@@ -251,7 +251,7 @@ public class PhenoPacketCodec {
                     return HOM_ALT;
                 case HETEROZYGOUS:
                     return HET;
-                case UNKNOWN_GENOTYPE:
+                case UNDEFINED:
                 case HOMOZYGOUS_REFERENCE:
                 case UNRECOGNIZED:
                 default:

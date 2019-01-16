@@ -9,7 +9,7 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItem;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class VariantSyntaxValidatorTest {
 
@@ -25,7 +25,7 @@ public class VariantSyntaxValidatorTest {
     public void variantWithUnknownGenomeAssembly() {
         Variant variant = Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()
-                        .setGenomeAssembly(GenomeAssembly.NOT_KNOWN)
+                        .setGenomeAssembly(GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY)
                         .build())
                 .build();
 

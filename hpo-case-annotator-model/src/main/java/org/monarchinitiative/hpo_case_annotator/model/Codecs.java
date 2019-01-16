@@ -32,7 +32,7 @@ public class Codecs {
         // genome build
         model.setGenomeBuild(dc.getVariantCount() > 0
                 ? dc.getVariant(0).getVariantPosition().getGenomeAssembly().toString()
-                : GenomeAssembly.UNRECOGNIZED.toString());
+                : GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY.toString());
 
         // Publication
         final org.monarchinitiative.hpo_case_annotator.model.xml_model.Publication p = new org.monarchinitiative.hpo_case_annotator.model.xml_model.Publication();
@@ -197,7 +197,7 @@ public class Codecs {
 
         // TargetGene
         try {
-            builder = builder.setGene(Gene.newBuilder()
+            builder.setGene(Gene.newBuilder()
                     .setEntrezId(dcm.getTargetGene().getEntrezID() == null ? -1 : Integer.parseInt(dcm.getTargetGene().getEntrezID()))
                     .setSymbol(dcm.getTargetGene().getGeneName())
                     .build());
@@ -205,13 +205,13 @@ public class Codecs {
             LOGGER.warn("Unable to parse gene Entrez ID integer from '{}'. Not an integer?", dcm.getTargetGene().getEntrezID());
         }
         // Variants
-        builder = builder
+        builder
                 .addAllVariant(dcm.getVariants().stream()
                         .map(dcmVariantToVariant(dcm.getGenomeBuild()))
                         .collect(Collectors.toList()));
         try {
             // FamilyInfo
-            builder = builder.setFamilyInfo(org.monarchinitiative.hpo_case_annotator.model.proto.FamilyInfo.newBuilder()
+            builder.setFamilyInfo(org.monarchinitiative.hpo_case_annotator.model.proto.FamilyInfo.newBuilder()
                     .setFamilyOrProbandId(dcm.getFamilyInfo().getFamilyOrPatientID())
                     .setAge(dcm.getFamilyInfo().getAge() == null ? "" : dcm.getFamilyInfo().getAge())
                     .setSex(dcm.getFamilyInfo().getSex().isEmpty() || dcm.getFamilyInfo().getSex() == null ? Sex.UNKNOWN_SEX : Sex.valueOf(dcm.getFamilyInfo().getSex()))
@@ -223,7 +223,7 @@ public class Codecs {
                     Arrays.stream(Sex.values()).map(Sex::toString).collect(Collectors.joining(",", "{", "}")), iae);
         }
         // HPO info
-        builder = builder
+        builder
                 .addAllPhenotype(dcm.getHpoList().stream().map(hpoToOntologyClass()).collect(Collectors.toList()))
                 // Disease
                 .setDisease(org.monarchinitiative.hpo_case_annotator.model.proto.Disease.newBuilder()
@@ -300,16 +300,16 @@ public class Codecs {
                         .setOtherChoices(sv.getOther() == null ? "" : sv.getOther())
                         .setOtherEffect(sv.getOtherEffect() == null ? "" : sv.getOtherEffect());
                 try {
-                    validationBuilder = validationBuilder.setNPatients(sv.getNPatients() == null ? -1 : Integer.parseInt(sv.getNPatients()));
+                    validationBuilder.setNPatients(sv.getNPatients() == null ? -1 : Integer.parseInt(sv.getNPatients()));
                 } catch (NumberFormatException e) {
                     LOGGER.warn("Unable to parse N patients from value '{}'. Setting to -1", sv.getNPatients(), e);
-                    validationBuilder = validationBuilder.setNPatients(-1);
+                    validationBuilder.setNPatients(-1);
                 }
                 try {
-                    validationBuilder = validationBuilder.setMPatients(sv.getMPatients() == null ? -1 : Integer.parseInt(sv.getMPatients()));
+                    validationBuilder.setMPatients(sv.getMPatients() == null ? -1 : Integer.parseInt(sv.getMPatients()));
                 } catch (NumberFormatException e) {
                     LOGGER.warn("Unable to parse M patients from value '{}'. Setting to -1", sv.getMPatients(), e);
-                    validationBuilder = validationBuilder.setMPatients(-1);
+                    validationBuilder.setMPatients(-1);
                 }
 
                 /// SPLICING VARIANT DETAILS
@@ -343,10 +343,10 @@ public class Codecs {
                         .setOtherValidation(sval.isOtherValidation());
             }
 
-            validationBuilder = validationBuilder
+            validationBuilder
                     .setCosegregation(v.getCosegregation() != null && !v.getCosegregation().isEmpty() && !v.getCosegregation().equals("no"))
                     .setComparability(v.getComparability() != null && !v.getComparability().isEmpty() && !v.getComparability().equals("no"));
-            variantBuilder = variantBuilder.setVariantValidation(validationBuilder.build());
+            variantBuilder.setVariantValidation(validationBuilder.build());
 
             return variantBuilder.build();
         };
@@ -364,7 +364,7 @@ public class Codecs {
             case "ncbi36":
                 return GenomeAssembly.NCBI_36;
             default:
-                return GenomeAssembly.UNRECOGNIZED;
+                return GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY;
         }
     }
 

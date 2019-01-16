@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 
@@ -28,7 +27,7 @@ public class GuiElementValuesTest {
 
         // assert
         assertThat(instance.getGenomeBuild().size(), is(5));
-        assertThat(instance.getGenomeBuild(), hasItems(GenomeAssembly.GRCH_37, GenomeAssembly.GRCH_38, GenomeAssembly.NCBI_36, GenomeAssembly.NOT_KNOWN));
+        assertThat(instance.getGenomeBuild(), hasItems(GenomeAssembly.GRCH_37, GenomeAssembly.GRCH_38, GenomeAssembly.NCBI_36, GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY));
 
         assertThat(instance.getChromosome().size(), is(4));
         assertThat(instance.getChromosome(), hasItems("1", "4", "5", "X"));
@@ -67,7 +66,7 @@ public class GuiElementValuesTest {
 
     @Test
     public void toStringIsTested() {
-        String expected = "GuiElementValues{genomeBuild=[GRCH_37, NCBI_36, GRCH_38, NOT_KNOWN, UNRECOGNIZED], chromosome=[1, 4, 5, X], " +
+        String expected = "GuiElementValues{genomeBuild=[UNKNOWN_GENOME_ASSEMBLY, NCBI_36, GRCH_38, GRCH_37, UNRECOGNIZED], chromosome=[1, 4, 5, X], " +
                 "variantClass=[coding, enhancer, promoter], pathomechanism=[unknown, coding|missense, coding|stop-codon], " +
                 "consequence=[Exon skipping, Intron retention], reporter=[no, up, down], " +
                 "emsa=[yes, no], otherChoices=[no], otherEffect=[Telomerase, Nonspecific_EMSA], " +

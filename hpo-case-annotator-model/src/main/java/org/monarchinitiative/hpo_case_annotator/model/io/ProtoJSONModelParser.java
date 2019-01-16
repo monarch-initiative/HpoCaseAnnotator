@@ -53,7 +53,7 @@ public class ProtoJSONModelParser implements ModelParser {
 
 
     public static void saveDiseaseCase(OutputStream os, DiseaseCase model, Charset charset) throws IOException {
-        // ----------- clear deprecated fields ---------------
+        // ----------- clear deprecated fields when saving data ---------------
         // genome build from model
         DiseaseCase.Builder builder = model.toBuilder().clearGenomeBuild();
 
@@ -64,7 +64,7 @@ public class ProtoJSONModelParser implements ModelParser {
 
         final DiseaseCase updatedModel = builder.clearVariant().addAllVariant(updatedVariants).build();
 
-        // ----------- save the updated model ----------------
+        // ----------- save the updated model ---------------------------------
         os.write(JSON_PRINTER.print(updatedModel).getBytes(charset));
     }
 

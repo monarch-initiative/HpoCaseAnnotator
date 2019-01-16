@@ -6,7 +6,6 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -24,7 +23,7 @@ public class GuiElementValues {
     /**
      * This is an ugly way of List initialization, but it works for now.
      */
-    private List<GenomeAssembly> genomeBuild = new ArrayList<>(Arrays.asList(GenomeAssembly.values()));
+    private List<GenomeAssembly> genomeBuild;
 
     private List<String> chromosome;
 
@@ -49,7 +48,8 @@ public class GuiElementValues {
     private List<String> comparability;
 
     private GuiElementValues() {
-        // private no-op
+        genomeBuild = Arrays.stream(GenomeAssembly.values()).filter(f -> !f.equals(GenomeAssembly.UNRECOGNIZED)).collect(Collectors.toList());
+
     }
 
     public static GuiElementValues guiElementValuesFrom(InputStream is) throws IOException {

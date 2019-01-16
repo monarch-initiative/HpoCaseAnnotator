@@ -30,9 +30,8 @@ message DiseaseCase {
 // Human genome reference assembly - major version
 enum GenomeAssembly {
     option allow_alias = true;
-    //  defaulted to GRCh37 as this is more common than NCBI36?
-    GRCH_37 = 0;
-    HG_19 = 0;
+
+    UNKNOWN_GENOME_ASSEMBLY = 0;
 
     NCBI_36 = 1;
     HG_18 = 1;
@@ -40,7 +39,8 @@ enum GenomeAssembly {
     GRCH_38 = 2;
     HG_38 = 2;
 
-    NOT_KNOWN = 3;
+    GRCH_37 = 4;
+    HG_19 = 4;
 }
 
 message VariantPosition {
@@ -96,7 +96,7 @@ message Variant {
 
 
 enum Genotype {
-    UNKNOWN_GENOTYPE = 0;
+    UNDEFINED = 0;
     HETEROZYGOUS = 1;
     HOMOZYGOUS_ALTERNATE = 2;
     HOMOZYGOUS_REFERENCE = 3;

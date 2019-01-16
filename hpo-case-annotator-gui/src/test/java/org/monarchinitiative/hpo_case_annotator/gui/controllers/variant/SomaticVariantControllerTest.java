@@ -74,7 +74,7 @@ public class SomaticVariantControllerTest extends ApplicationTest {
         assertThat(controller.isComplete(), is(false));
 
         clickOn("#genomeBuildComboBox")
-                .moveBy(0, 30)
+                .moveBy(0, 40)
                 .clickOn(MouseButton.PRIMARY);
         assertThat(controller.isComplete(), is(false));
 
@@ -107,7 +107,7 @@ public class SomaticVariantControllerTest extends ApplicationTest {
         // assert
         Variant variant = controller.getData();
         VariantPosition variantPosition = variant.getVariantPosition();
-        assertThat(variantPosition.getGenomeAssembly(), is(GenomeAssembly.HG_19));
+        assertThat(variantPosition.getGenomeAssembly(), is(GenomeAssembly.NCBI_36));
         assertThat(variantPosition.getContig(), is("1"));
         assertThat(variantPosition.getPos(), is(12345345));
         assertThat(variantPosition.getRefAllele(), is("C"));

@@ -89,7 +89,7 @@ public class VariantSyntaxValidator implements Validator<Variant> {
         // check genome assembly
         final GenomeAssembly genomeAssembly = instance.getVariantPosition().getGenomeAssembly();
 
-        if (genomeAssembly.equals(GenomeAssembly.NOT_KNOWN)) {
+        if (genomeAssembly.equals(GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY)) {
             results.add(ValidationResult.fail("Unknown genome assembly"));
         }
 
@@ -133,7 +133,7 @@ public class VariantSyntaxValidator implements Validator<Variant> {
 
         // check genotype
         final Genotype genotype = instance.getGenotype();
-        if (genotype.equals(Genotype.UNKNOWN_GENOTYPE)) {
+        if (genotype.equals(Genotype.UNDEFINED)) {
             results.add(ValidationResult.fail("Undefined genotype"));
         }
 

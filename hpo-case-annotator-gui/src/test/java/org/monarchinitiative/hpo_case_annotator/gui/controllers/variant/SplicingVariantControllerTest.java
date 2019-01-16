@@ -62,7 +62,7 @@ public class SplicingVariantControllerTest extends ApplicationTest {
         assertThat(controller.isComplete(), is(false));
 
         clickOn("#genomeBuildComboBox")
-                .moveBy(-10, 30)
+                .moveBy(-10, 40)
                 .clickOn(MouseButton.PRIMARY);
         assertThat(controller.isComplete(), is(false));
 
@@ -95,7 +95,7 @@ public class SplicingVariantControllerTest extends ApplicationTest {
         // assert
         Variant variant = controller.getData();
         final VariantPosition vp = variant.getVariantPosition();
-        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.GRCH_37));
+        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.NCBI_36));
         assertThat(vp.getContig(), is("1"));
         assertThat(vp.getPos(), is(12));
         assertThat(vp.getRefAllele(), is("C"));

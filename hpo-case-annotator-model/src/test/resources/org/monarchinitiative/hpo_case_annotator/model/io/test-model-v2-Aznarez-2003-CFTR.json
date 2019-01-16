@@ -37,6 +37,7 @@
       "minigeneValidation": true
     },
     "variantPosition": {
+      "genomeAssembly": "GRCH_37",
       "contig": "7",
       "pos": 117232187,
       "refAllele": "G",
@@ -56,6 +57,7 @@
       "minigeneValidation": true
     },
     "variantPosition": {
+      "genomeAssembly": "GRCH_37",
       "contig": "7",
       "pos": 117232196,
       "refAllele": "AA",
