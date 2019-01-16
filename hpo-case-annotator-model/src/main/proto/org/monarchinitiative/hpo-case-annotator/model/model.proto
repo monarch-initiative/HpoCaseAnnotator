@@ -1,4 +1,5 @@
 syntax = "proto3";
+package org.monarchinitiative.hpo_case_annotator_model.proto;
 
 option java_package = "org.monarchinitiative.hpo_case_annotator.model.proto";
 option java_multiple_files = true;
