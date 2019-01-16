@@ -1,7 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
-import com.github.monarchinitiative.hpotextmining.gui.controller.HpoTextMining;
-import com.github.monarchinitiative.hpotextmining.gui.controller.Main;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
@@ -29,6 +27,8 @@ import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.Abstract
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.WidthAwareTextFields;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
+import org.monarchinitiative.hpotextmining.gui.controller.HpoTextMining;
+import org.monarchinitiative.hpotextmining.gui.controller.Main;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -146,7 +146,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
 
     /**
-     * @return {@link Function} for mapping {@link com.github.monarchinitiative.hpotextmining.gui.controller.Main.PhenotypeTerm} to
+     * @return {@link Function} for mapping {@link org.monarchinitiative.hpotextmining.gui.controller.Main.PhenotypeTerm} to
      * {@link OntologyClass}
      */
     private static Function<Main.PhenotypeTerm, OntologyClass> phenotypeTermToOntologyClass() {
@@ -255,7 +255,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         String conversationTitle = "Add new variant";
 
         List<String> choices = Arrays.stream(VariantValidation.Context.values())
-                .filter(c -> !(c.equals(VariantValidation.Context.NA) || c.equals(VariantValidation.Context.UNRECOGNIZED)))
+                .filter(c -> !(c.equals(VariantValidation.Context.NO_CONTEXT) || c.equals(VariantValidation.Context.UNRECOGNIZED)))
                 .map(Enum::toString)
                 .collect(Collectors.toList());
         Optional<String> modeName = PopUps.getToggleChoiceFromUser(choices, "Select variant type:", conversationTitle);

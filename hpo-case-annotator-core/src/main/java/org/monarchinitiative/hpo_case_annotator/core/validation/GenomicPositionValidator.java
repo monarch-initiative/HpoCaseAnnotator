@@ -10,15 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.SNIPPET_REGEXP;
+
 /**
  * Validator for checking correct entry of variant positions & snippets.
  */
 public final class GenomicPositionValidator implements Validator<Variant> {
 
-    /**
-     * Sequence snippet must match this regexp - strings like <code>'ACGT[A/CC]ACGTT'</code>
-     */
-    public static final String SNIPPET_REGEXP = "[ACGTacgt]+\\[([ACGTacgt]+)/([ACGTacgt]+)][ACGTacgt]+";
+
 
     private final GenomeAssemblies genomeAssemblies;
 
@@ -31,7 +30,7 @@ public final class GenomicPositionValidator implements Validator<Variant> {
     /**
      * @param contig      String with chromosome contig, such as <code>chr2</code>
      * @param pos         integer with 1-based position of the first ref nucleotide
-     * @param snippet     String that has already been matched against {@link #SNIPPET_REGEXP}
+     * @param snippet     String that has already been matched against {@link VariantSyntaxValidator#SNIPPET_REGEXP}
      * @param sequenceDao {@link SequenceDao} used to fetch nucleotide sequence to validate snippet against
      * @return results of validation - an empty list if the snippet is valid
      */

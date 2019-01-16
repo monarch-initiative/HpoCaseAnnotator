@@ -23,25 +23,11 @@ import java.util.List;
  */
 public abstract class AbstractVariantController implements DataController<Variant> {
 
-    /**
-     * Variant position data must match this regexp - any integer except for zero.
-     */
-    static final String VARIANT_POSITION_REGEXP = "(!0|[123456789]+)";
+    private static final String VALID_STYLE = "-fx-border-color: green; -fx-border-width: 1px;";
 
-    /**
-     * Alleles (REF, ALT) must match this regexp - only <code>A,C,G,T,a,c,g,t</code> nucleotides are permitted.
-     */
-    static final String ALLELE_REGEXP = "[ACGTacgt]+";
+    private static final String INVALID_STYLE = "-fx-border-color: red; -fx-border-width: 2px;";
 
-    /**
-     * Sequence snippet must match this regexp - strings like <code>'ACGT[A/CC]ACGTT', 'ACGT[A/-]ACGTT'</code>
-     */
-    static final String SNIPPET_REGEXP = "[ACGT]+\\[([ACGT]+)/([ACGT]+|-)][ACGT]+";
-
-    /**
-     * Sequence snippet for cryptic splice site boundary must match this regexp - string like <code>'AccAC|CaccaT'</code>
-     */
-    static final String CSS_SNIPPET_REGEXP = "[ACGTacgt]+\\|[ACGTacgt]+";
+    private static final String EMPTY_STYLE = "";
 
     /**
      * POJO containing data to be used for populating content of FXML elements such as ComboBoxes.
@@ -69,8 +55,6 @@ public abstract class AbstractVariantController implements DataController<Varian
      */
     static void decorateWithTooltip(Control control, String tooltipText) {
         Tooltip t = new Tooltip(tooltipText);
-        String k = "";
-        k.matches("(!0|[123456789]+)");
         control.setTooltip(t);
         control.focusedProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -90,13 +74,34 @@ public abstract class AbstractVariantController implements DataController<Varian
      * @return {@link TextFormatter} for the <code>control</code>'s content
      */
     static <T> TextFormatter<T> makeTextFormatter(Control control, String yesRegexp) {
-        return new TextFormatter<>(c -> {
-            if (c.getControlNewText().matches(yesRegexp)) {
-                control.setStyle("-fx-border-color: green; -fx-border-width: 1px;");
+        return new TextFormatter<>(change -> {
+            if (change.getControlNewText().matches(yesRegexp)) {
+                control.setStyle(VALID_STYLE);
             } else {
-                control.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+                control.setStyle(INVALID_STYLE);
             }
-            return c;
+            return change;
+        });
+    }
+
+    /**
+     * @param control   {@link Control} wrapped with the text formatter
+     * @param yesRegexp String with regular expression. The <code>control</code> will have green border if the content
+     *                  matches the <code>yesRegexp</code>, red border if it does not, and <em>neutral</em> border, if
+     *                  the content is empty
+     * @param <T>       class of the formatter being returned
+     * @return {@link TextFormatter} for the <code>control</code>'s content
+     */
+    static <T> TextFormatter<T> makeToleratingTextFormatter(Control control, String yesRegexp) {
+        return new TextFormatter<>(change -> {
+            if (change.getControlNewText().isEmpty()) {
+                control.setStyle(EMPTY_STYLE);
+            } else if (change.getControlNewText().matches(yesRegexp)) {
+                control.setStyle(VALID_STYLE);
+            } else {
+                control.setStyle(INVALID_STYLE);
+            }
+            return change;
         });
     }
 
@@ -109,5 +114,10 @@ public abstract class AbstractVariantController implements DataController<Varian
 
     public abstract Binding<String> variantTitleBinding();
 
+    /**
+     * Utility method for keeping track of {@link Observable}s that the {@link Variant} depends on.
+     *
+     * @return {@link List} with observable dependencies
+     */
     abstract List<? extends Observable> getObservableVariantDependencies();
 }

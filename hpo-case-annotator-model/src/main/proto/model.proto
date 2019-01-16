@@ -95,7 +95,7 @@ message Variant {
 
 
 enum Genotype {
-    UNDEFINED = 0;
+    UNKNOWN_GENOTYPE = 0;
     HETEROZYGOUS = 1;
     HOMOZYGOUS_ALTERNATE = 2;
     HOMOZYGOUS_REFERENCE = 3;
@@ -104,7 +104,7 @@ enum Genotype {
 
 
 enum CrypticSpliceSiteType {
-    NO = 0;
+    NO_CSS = 0;
     FIVE_PRIME = 1;
     THREE_PRIME = 2;
 }
@@ -155,7 +155,7 @@ message VariantValidation {
 
     // dictates how the variant is presented to the user in GUI
     enum Context {
-        NA = 0;
+        NO_CONTEXT = 0;
         MENDELIAN = 1;
         SOMATIC = 2;
         SPLICING = 3;
@@ -230,7 +230,7 @@ message FamilyInfo {
 
 
 enum Sex {
-    UNKNOWN = 0;
+    UNKNOWN_SEX = 0;
     MALE = 1;
     FEMALE = 2;
 }

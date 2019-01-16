@@ -160,9 +160,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.monarch-initiative</groupId>
+            <groupId>org.monarchinitiative.hpotextmining</groupId>
             <artifactId>hpotextmining-gui</artifactId>
-            <version>0.2.5-SNAPSHOT</version>
+            <version>0.2.5</version>
         </dependency>
 
         <dependency>

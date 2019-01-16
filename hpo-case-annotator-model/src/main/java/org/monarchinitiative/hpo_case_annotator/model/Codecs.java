@@ -214,7 +214,7 @@ public class Codecs {
             builder = builder.setFamilyInfo(org.monarchinitiative.hpo_case_annotator.model.proto.FamilyInfo.newBuilder()
                     .setFamilyOrProbandId(dcm.getFamilyInfo().getFamilyOrPatientID())
                     .setAge(dcm.getFamilyInfo().getAge() == null ? "" : dcm.getFamilyInfo().getAge())
-                    .setSex(dcm.getFamilyInfo().getSex().isEmpty() || dcm.getFamilyInfo().getSex() == null ? Sex.UNKNOWN : Sex.valueOf(dcm.getFamilyInfo().getSex()))
+                    .setSex(dcm.getFamilyInfo().getSex().isEmpty() || dcm.getFamilyInfo().getSex() == null ? Sex.UNKNOWN_SEX : Sex.valueOf(dcm.getFamilyInfo().getSex()))
                     .build());
         } catch (NumberFormatException nfe) { // problem parsing Age
             LOGGER.warn("Unable to parse proband's age from '{}'. Not an integer?", dcm.getFamilyInfo().getAge(), nfe);
@@ -321,7 +321,7 @@ public class Codecs {
                     variantBuilder = variantBuilder.setConsequence(sv.getConsequence())
                             .setCrypticPosition(sv.getCrypticPosition() == null || sv.getCrypticPosition().isEmpty() ? 0 : Integer.parseInt(sv.getCrypticPosition()))
                             .setCrypticSpliceSiteType(ss == null || ss.isEmpty()
-                                    ? CrypticSpliceSiteType.NO
+                                    ? CrypticSpliceSiteType.NO_CSS
                                     : CrypticSpliceSiteType.valueOf(ss))
                             .setCrypticSpliceSiteSnippet(sv.getCrypticSpliceSiteSnippet());
                 } catch (NumberFormatException nfe) {

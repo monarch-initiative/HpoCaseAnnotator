@@ -33,10 +33,27 @@ public class VariantSyntaxValidator implements Validator<Variant> {
     public static final String CHROMOSOME_REGEXP = "([1-9])|([1][0-9])|([2][0-2])|(X)|(Y)|(MT)";
 
     /**
-     * Both ref and alt allele must match this regexp.
+     * Variant position data must match this regexp - any positive integer.
+     */
+    public static final String POSITIVE_INTEGER_REGEXP = "[^-0]?[123456789]\\d*";
+
+
+    /**
+     * Alleles (REF, ALT) must match this regexp - only <code>A,C,G,T,a,c,g,t</code> nucleotides are permitted.
      */
     public static final String ALLELE_REGEXP = "[ACGTacgt]+";
 
+    /**
+     * Sequence snippet must match this regexp - strings like <code>'ACGT[A/CC]ACGTT'</code>, or <code>''AcgT[A/Cc]ACgtT''</code>
+     * (both upper and lowercase are allowed.
+     */
+    public static final String SNIPPET_REGEXP = "[ACGTacgt]+\\[[ACGTacgt]+/[ACGTacgt]+][ACGTacgt]+";
+
+
+    /**
+     * Sequence snippet for cryptic splice site boundary must match this regexp - string like <code>'AccAC|CaccaT'</code>
+     */
+    public static final String CSS_SNIPPET_REGEXP = "[ACGTacgt]+\\|[ACGTacgt]+";
 
     private final VariantValidationDataSyntaxValidator variantValidationDataValidator;
 
@@ -110,13 +127,13 @@ public class VariantSyntaxValidator implements Validator<Variant> {
         final String snippet = instance.getSnippet();
         if (snippet.isEmpty()) {
             results.add(ValidationResult.fail("Missing snippet"));
-        } else if (!snippet.matches(GenomicPositionValidator.SNIPPET_REGEXP)) {
+        } else if (!snippet.matches(SNIPPET_REGEXP)) {
             results.add(ValidationResult.fail("Invalid snippet format: " + snippet));
         }
 
         // check genotype
         final Genotype genotype = instance.getGenotype();
-        if (genotype.equals(Genotype.UNDEFINED)) {
+        if (genotype.equals(Genotype.UNKNOWN_GENOTYPE)) {
             results.add(ValidationResult.fail("Undefined genotype"));
         }
 

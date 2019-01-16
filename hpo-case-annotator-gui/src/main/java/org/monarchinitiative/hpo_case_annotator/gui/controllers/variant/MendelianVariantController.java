@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.slf4j.Logger;
@@ -17,6 +16,8 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.*;
 
 /**
  * Controller class responsible for presenting {@link org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation.Context#MENDELIAN} variants.
@@ -96,8 +97,7 @@ public final class MendelianVariantController extends AbstractVariantController 
 
 
     /**
-     * Create instance of this class which acts as a controller from MVC pattern. Given the fact that this class extends
-     * {@link javafx.scene.control.TitledPane} it can be managed by {@link DiseaseCaseDataController}.
+     * Create instance of this class which acts as a controller from MVC pattern.
      */
     @Inject
     public MendelianVariantController(GuiElementValues elementValues) {
@@ -108,7 +108,8 @@ public final class MendelianVariantController extends AbstractVariantController 
     public void initialize() {
         genomeBuildComboBox.getItems().addAll(elementValues.getGenomeBuild());
         chromosomeComboBox.getItems().addAll(elementValues.getChromosome());
-        positionTextField.setTextFormatter(makeTextFormatter(positionTextField, VARIANT_POSITION_REGEXP));
+        // add text formatter to impose constraint on the field
+        positionTextField.setTextFormatter(makeTextFormatter(positionTextField, POSITIVE_INTEGER_REGEXP));
         referenceTextField.setTextFormatter(makeTextFormatter(referenceTextField, ALLELE_REGEXP));
         alternateTextField.setTextFormatter(makeTextFormatter(alternateTextField, ALLELE_REGEXP));
         snippetTextField.setTextFormatter(makeTextFormatter(snippetTextField, SNIPPET_REGEXP));
@@ -123,9 +124,9 @@ public final class MendelianVariantController extends AbstractVariantController 
         otherEffectComboBox.getItems().addAll(elementValues.getOtherEffect());
 
         // Create tooltips here
-        decorateWithTooltip(positionTextField, "Genomic position of variant in 1-based (VCF style) numbering");
-        decorateWithTooltip(referenceTextField, "Representation of reference allele in VCF style (see help)");
-        decorateWithTooltip(alternateTextField, "Representation of alternate allele in VCF style (see help)");
+        decorateWithTooltip(positionTextField, "Genomic position of the first nucleotide of REF allele \n(positive integer, 1-based numbering)");
+        decorateWithTooltip(referenceTextField, "Representation of reference allele in VCF style");
+        decorateWithTooltip(alternateTextField, "Representation of alternate allele in VCF style");
         decorateWithTooltip(snippetTextField, "Snippet of nucleotide sequence near variant, e.g. 'ACGT[A/C]ACTG'");
     }
 
@@ -134,8 +135,9 @@ public final class MendelianVariantController extends AbstractVariantController 
         if (variant.getVariantValidation().getContext().equals(VariantValidation.Context.MENDELIAN)) {
             // Variant
             genomeBuildComboBox.setValue(variant.getVariantPosition().getGenomeAssembly());
-            chromosomeComboBox.setValue(variant.getVariantPosition().getContig().isEmpty() ? null : variant.getVariantPosition().getContig());
-            positionTextField.setText(String.valueOf(variant.getVariantPosition().getPos()));
+            chromosomeComboBox.setValue(variant.getVariantPosition().getContig());
+            // do not set zero, but rather an empty string
+            positionTextField.setText(variant.getVariantPosition().getPos() == 0 ? "" : String.valueOf(variant.getVariantPosition()));
             referenceTextField.setText(variant.getVariantPosition().getRefAllele());
             alternateTextField.setText(variant.getVariantPosition().getAltAllele());
             snippetTextField.setText(variant.getSnippet());
@@ -177,7 +179,7 @@ public final class MendelianVariantController extends AbstractVariantController 
                         .setAltAllele(alternateTextField.getText())
                         .build())
                 .setSnippet(snippetTextField.getText())
-                .setGenotype(genotypeComboBox.getValue() == null ? Genotype.UNDEFINED : genotypeComboBox.getValue())
+                .setGenotype(genotypeComboBox.getValue() == null ? Genotype.UNKNOWN_GENOTYPE: genotypeComboBox.getValue())
                 .setVariantClass(variantClassComboBox.getValue() == null ? "" : variantClassComboBox.getValue())
                 .setPathomechanism(pathomechanismComboBox.getValue() == null ? "" : pathomechanismComboBox.getValue())
                 // VALIDATION
@@ -211,6 +213,9 @@ public final class MendelianVariantController extends AbstractVariantController 
                 getObservableVariantDependencies().toArray(new Observable[0]));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<? extends Observable> getObservableVariantDependencies() {
         return Arrays.asList(genomeBuildComboBox.valueProperty(), chromosomeComboBox.valueProperty(), positionTextField.textProperty(),

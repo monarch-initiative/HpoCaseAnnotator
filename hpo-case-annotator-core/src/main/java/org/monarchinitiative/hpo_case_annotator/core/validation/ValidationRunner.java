@@ -16,8 +16,6 @@ import java.util.stream.Collectors;
  * This class performs validation of {@link DiseaseCase} instances.
  *
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
- * @version 0.0.2
- * @since 0.0
  */
 public final class ValidationRunner<T extends Message> {
 
@@ -97,16 +95,21 @@ public final class ValidationRunner<T extends Message> {
         return new ValidationRunner<>(validationFunction);
     }
 
-    public List<ValidationResult> validateSingleModel(T diseaseCase) {
-        return validationFunction.apply(diseaseCase);
+    /**
+     * Run validation of a single
+     * @param model
+     * @return
+     */
+    public List<ValidationResult> validateSingleModel(T model) {
+        return validationFunction.apply(model);
     }
 
 
     /**
      * Run validation on given collection of models and return results as a list of validation lines.
      *
-     * @param models {@link Collection} of {@link DiseaseCase} instances.
-     * @return {@link Map} with {@link DiseaseCase} as keys and {@link List} of {@link ValidationResult}s pertaining to
+     * @param models {@link Collection} of {@link T} instances to be validated
+     * @return {@link Map} with {@link T} as keys and {@link List} of {@link ValidationResult}s pertaining to
      * the case
      */
     public Map<T, List<ValidationResult>> validateModels(Collection<T> models) {
