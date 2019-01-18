@@ -110,7 +110,7 @@ public class PhenoPacketCodecTest {
         final PhenoPacket packet = TestResources.rareDiseasePhenoPacket();
         StringWriter writer = new StringWriter();
         String expected;
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(PhenoPacketCodecTest.class.getResource("examplePhenopacket.json").toURI()))) {
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(PhenoPacketCodecTest.class.getResource("examplePhenoPacket_v0.2.0.json").toURI()))) {
             expected = reader.lines().collect(Collectors.joining("\n"));
         }
 

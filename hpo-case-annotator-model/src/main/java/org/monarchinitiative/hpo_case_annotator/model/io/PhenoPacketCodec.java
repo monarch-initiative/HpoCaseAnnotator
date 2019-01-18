@@ -53,7 +53,7 @@ public class PhenoPacketCodec {
     public static PhenoPacket diseaseCaseToPhenopacket(DiseaseCase diseaseCase) {
         String familyOrProbandId = diseaseCase.getFamilyInfo().getFamilyOrProbandId();
         Publication publication = diseaseCase.getPublication();
-        final String metadata = diseaseCase.getMetadata();
+        String metadata = diseaseCase.getMetadata();
         return PhenoPacket.newBuilder()
                 // proband, phenotype (HPO) terms, and the publication data
                 .setSubject(Individual.newBuilder()
@@ -235,6 +235,7 @@ public class PhenoPacketCodec {
                     return GenomeAssembly.GRCH_37;
                 case GRCH_38:
                     return GenomeAssembly.GRCH_38;
+                case UNKNOWN_GENOME_ASSEMBLY:
                 case UNRECOGNIZED:
                     return GenomeAssembly.UNRECOGNIZED;
                 default:
