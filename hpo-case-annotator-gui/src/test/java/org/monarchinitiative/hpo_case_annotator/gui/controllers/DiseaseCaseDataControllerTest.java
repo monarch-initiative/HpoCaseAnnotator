@@ -79,10 +79,7 @@ public class DiseaseCaseDataControllerTest extends ApplicationTest {
     @Test
     public void addMinimalRequiredInformation() {
         assertThat(controller.isComplete(), is(false));
-        clickOn("#genomeBuildComboBox")
-                .moveBy(0, 25)
-                .clickOn(MouseButton.PRIMARY) // add hg19 build
-                .clickOn("#inputPubMedDataTextField")
+        clickOn("#inputPubMedDataTextField")
                 .write(PUBMED_SUMMARY)
                 .clickOn("#inputPubMedDataButton")
                 .type(KeyCode.ENTER);

@@ -133,15 +133,15 @@ public final class SplicingVariantController extends AbstractVariantController {
 
         //Create tooltips
         // Create tooltips here
-        decorateWithTooltip(varPositionTextField, "Genomic position of the first nucleotide of REF allele \n(positive integer, 1-based numbering)");
-        decorateWithTooltip(varReferenceTextField, "Representation of reference allele in VCF style");
-        decorateWithTooltip(varAlternateTextField, "Representation of alternate allele in VCF style");
-        decorateWithTooltip(varSnippetTextField, "Snippet of nucleotide sequence near variant, e.g. 'ACGT[A/C]ACTG'");
-        decorateWithTooltip(crypticSpliceSitePositionTextField, "Genomic position of the nucleotide left (5' direction)" +
+        decorateWithTooltipOnFocus(varPositionTextField, "Genomic position of the first nucleotide of REF allele \n(positive integer, 1-based numbering)");
+        decorateWithTooltipOnFocus(varReferenceTextField, "Representation of reference allele in VCF style");
+        decorateWithTooltipOnFocus(varAlternateTextField, "Representation of alternate allele in VCF style");
+        decorateWithTooltipOnFocus(varSnippetTextField, "Snippet of nucleotide sequence near variant, e.g. 'ACGT[A/C]ACTG'");
+        decorateWithTooltipOnFocus(crypticSpliceSitePositionTextField, "Genomic position of the nucleotide left (5' direction)" +
                 "from novel exon/intron boundary\n E.g.: atcaG|cacatg <-- position of capital 'G' in ref genome.\n" +
                 "(1-based numbering)");
-        decorateWithTooltip(crypticSpliceSiteTypeComboBox, "What kind of CSS? 3' or 5' splice site?");
-        decorateWithTooltip(crypticSpliceSiteSnippetTextField, "Nucleotide sequence of novel exon/intron boundary." +
+        decorateWithTooltipOnFocus(crypticSpliceSiteTypeComboBox, "What kind of CSS? 3' or 5' splice site?");
+        decorateWithTooltipOnFocus(crypticSpliceSiteSnippetTextField, "Nucleotide sequence of novel exon/intron boundary." +
                 "Indicate the boundary using '|' symbol.\nWrite nucleotide sequence of FWD genomic strand regardless " +
                 "of the gene strand or CSS type.\n" +
                 "E.g: intron|exon, exon|intron");

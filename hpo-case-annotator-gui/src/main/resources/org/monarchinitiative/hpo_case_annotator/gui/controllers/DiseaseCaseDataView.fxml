@@ -25,20 +25,14 @@
                     </HBox>
                     <HBox alignment="CENTER_LEFT" style="-fx-background-color: #00BFFF;" VBox.vgrow="NEVER">
                         <children>
-                            <Label id="genomeLabel" minWidth="135.0" prefWidth="135.0" text="Genome build" textFill="#b5b5b5">
-                                <HBox.margin>
-                                    <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
-                                </HBox.margin>
-                                <font>
-                                    <Font name="System Bold" size="15.0" />
-                                </font>
-                            </Label>
-                            <ComboBox fx:id="genomeBuildComboBox" disable="true" editable="true" minWidth="-Infinity" prefHeight="30.0" prefWidth="100.0">
-                                <HBox.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                </HBox.margin>
-                            </ComboBox>
-                            <Separator layoutX="520.0" layoutY="15.0" orientation="VERTICAL" />
+                        <Label prefHeight="25.0" prefWidth="135.0" text="Publication">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
                             <TextField fx:id="pmidTextField" prefHeight="30.0" prefWidth="100.0" promptText="PMID" HBox.hgrow="NEVER">
                                 <HBox.margin>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -50,7 +44,7 @@
                                 </HBox.margin>
                             </Button>
                             <Separator orientation="VERTICAL" HBox.hgrow="NEVER" />
-                            <TextField fx:id="inputPubMedDataTextField" maxHeight="-Infinity" maxWidth="520.0" prefHeight="30.0" prefWidth="400.0" promptText="Paste PubMed Summary(text) here" HBox.hgrow="SOMETIMES">
+                            <TextField fx:id="inputPubMedDataTextField" maxHeight="-Infinity" prefHeight="30.0" prefWidth="400.0" promptText="Paste PubMed Summary(text) here" HBox.hgrow="SOMETIMES">
                                 <opaqueInsets>
                                     <Insets />
                                 </opaqueInsets>

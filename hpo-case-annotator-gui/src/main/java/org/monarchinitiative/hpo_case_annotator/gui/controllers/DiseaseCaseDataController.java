@@ -614,6 +614,6 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     List<? extends Observable> getObservableDiseaseCaseDependencies() {
         return Arrays.asList(publication, entrezIDTextField.textProperty(), geneSymbolTextField.textProperty(),
                 diseaseDatabaseComboBox.valueProperty(), diseaseNameTextField.textProperty(), diseaseIDTextField.textProperty(),
-                probandFamilyTextField.textProperty(), sexComboBox.valueProperty(), variantControllers);
+                probandFamilyTextField.textProperty(), sexComboBox.valueProperty(), ageTextField.textProperty(), variantControllers);
     }
 }

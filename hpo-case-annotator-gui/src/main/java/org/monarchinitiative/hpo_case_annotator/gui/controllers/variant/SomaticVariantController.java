@@ -121,12 +121,12 @@ public final class SomaticVariantController extends AbstractVariantController {
         cancerNTextField.setTextFormatter(makeToleratingTextFormatter(cancerNTextField, POSITIVE_INTEGER_REGEXP));
 
         // Create tooltips here
-        decorateWithTooltip(positionTextField, "Genomic position of the first nucleotide of REF allele \n(positive integer, 1-based numbering)");
-        decorateWithTooltip(referenceTextField, "Representation of reference allele in VCF style");
-        decorateWithTooltip(alternateTextField, "Representation of alternate allele in VCF style");
-        decorateWithTooltip(snippetTextField, "Snippet of nucleotide sequence near variant, e.g. 'ACGT[A/C]ACTG'");
-        decorateWithTooltip(cancerMTextField, "Positive integer");
-        decorateWithTooltip(cancerNTextField, "Positive integer");
+        decorateWithTooltipOnFocus(positionTextField, "Genomic position of the first nucleotide of REF allele \n(positive integer, 1-based numbering)");
+        decorateWithTooltipOnFocus(referenceTextField, "Representation of reference allele in VCF style");
+        decorateWithTooltipOnFocus(alternateTextField, "Representation of alternate allele in VCF style");
+        decorateWithTooltipOnFocus(snippetTextField, "Snippet of nucleotide sequence near variant, e.g. 'ACGT[A/C]ACTG'");
+        decorateWithTooltipOnFocus(cancerMTextField, "Positive integer");
+        decorateWithTooltipOnFocus(cancerNTextField, "Positive integer");
     }
 
 

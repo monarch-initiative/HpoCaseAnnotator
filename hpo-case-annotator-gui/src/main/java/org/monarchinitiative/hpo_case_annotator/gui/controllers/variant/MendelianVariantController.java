@@ -124,10 +124,10 @@ public final class MendelianVariantController extends AbstractVariantController 
         otherEffectComboBox.getItems().addAll(elementValues.getOtherEffect());
 
         // Create tooltips here
-        decorateWithTooltip(positionTextField, "Genomic position of the first nucleotide of REF allele \n(positive integer, 1-based numbering)");
-        decorateWithTooltip(referenceTextField, "Representation of reference allele in VCF style");
-        decorateWithTooltip(alternateTextField, "Representation of alternate allele in VCF style");
-        decorateWithTooltip(snippetTextField, "Snippet of nucleotide sequence near variant, e.g. 'ACGT[A/C]ACTG'");
+        decorateWithTooltipOnFocus(positionTextField, "Genomic position of the first nucleotide of REF allele \n(positive integer, 1-based numbering)");
+        decorateWithTooltipOnFocus(referenceTextField, "Representation of reference allele in VCF style");
+        decorateWithTooltipOnFocus(alternateTextField, "Representation of alternate allele in VCF style");
+        decorateWithTooltipOnFocus(snippetTextField, "Snippet of nucleotide sequence near variant, e.g. 'ACGT[A/C]ACTG'");
     }
 
     @Override

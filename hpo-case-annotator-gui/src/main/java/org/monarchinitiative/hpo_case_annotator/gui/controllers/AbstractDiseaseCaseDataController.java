@@ -9,7 +9,7 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractDiseaseCaseDataController implements DataController<DiseaseCase> {
+public abstract class AbstractDiseaseCaseDataController extends AbstractDataController<DiseaseCase> {
 
     final List<ValidationResult> validationResults;
 
