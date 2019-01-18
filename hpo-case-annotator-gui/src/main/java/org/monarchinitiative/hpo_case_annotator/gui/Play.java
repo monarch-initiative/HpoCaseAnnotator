@@ -12,9 +12,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembliesSerializer;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The driver class of the Hpo Case Annotator app.
@@ -66,7 +67,6 @@ public class Play extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
-        injector.getInstance(ExecutorService.class).shutdown();
 
         // save properties
         OptionalResources optionalResources = injector.getInstance(OptionalResources.class); // singleton
@@ -98,6 +98,22 @@ public class Play extends Application {
             GenomeAssembliesSerializer.serialize(assemblies, os);
             LOGGER.info("Reference genome data configuration saved to {}", where.getAbsolutePath());
         }
+
+        ExecutorService executor = injector.getInstance(ExecutorService.class);
+        executor.shutdown();
+
+        LOGGER.info("Waiting max 10s for running task pool to finish");
+        try {
+            if (executor.awaitTermination(10, TimeUnit.SECONDS)) {
+                LOGGER.info("Task pool successfully terminated");
+            } else {
+                LOGGER.info("Pool did not finish");
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            LOGGER.info("Exception occurred: ", e);
+        }
+
     }
 
 }
