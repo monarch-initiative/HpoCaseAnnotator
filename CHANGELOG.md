@@ -1,5 +1,13 @@
 # HRMD gui
 
+### v1.0.9
+- add support for GRCh38, GRCh37
+- store models in *JSON* format
+- implement PhenoPacket export
+- use *HpoTextMining* v0.2.5
+- use *Phenol* for ontology parsing
+- actually, many more improvements..
+
 ### v1.0.6
 - add `ID_SUMMARY` column to table exported for GPI project by `PhenoModelExporter`
 - create *uber-JAR*

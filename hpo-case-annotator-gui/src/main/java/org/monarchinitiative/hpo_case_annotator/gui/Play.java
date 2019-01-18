@@ -23,7 +23,6 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * The driver class of the Hpo Case Annotator app.
@@ -115,17 +114,18 @@ public class Play extends Application {
         ExecutorService executor = injector.getInstance(ExecutorService.class);
         executor.shutdown();
 
-        LOGGER.info("Waiting max 10s for running task pool to finish");
-        try {
-            if (executor.awaitTermination(10, TimeUnit.SECONDS)) {
-                LOGGER.info("Task pool successfully terminated");
-            } else {
-                LOGGER.info("Pool did not finish");
-                executor.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            LOGGER.info("Exception occurred: ", e);
-        }
+//        TODO - make executor force the threads to exit
+//        LOGGER.info("Waiting max 10s for running task pool to finish");
+//        try {
+//            if (executor.awaitTermination(10, TimeUnit.SECONDS)) {
+//                LOGGER.info("Task pool successfully terminated");
+//            } else {
+//                LOGGER.info("Pool did not finish");
+//                executor.shutdownNow();
+//            }
+//        } catch (InterruptedException e) {
+//            LOGGER.info("Exception occurred: ", e);
+//        }
 
     }
 
