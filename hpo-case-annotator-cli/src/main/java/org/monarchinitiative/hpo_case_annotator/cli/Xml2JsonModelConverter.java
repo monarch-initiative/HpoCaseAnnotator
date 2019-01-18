@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.Optional;
 
 /**
  * This class is responsible for converting XML files to conform to the most recent data model format.
@@ -34,8 +35,10 @@ public class Xml2JsonModelConverter {
         for (File modelPath : models) {
             File outPath = new File(destDir, modelPath.getName().replace(".xml", ".json"));
             try (InputStream inputStream = new FileInputStream(modelPath); OutputStream outputStream = new FileOutputStream(outPath)) {
-                DiseaseCase model = XMLModelParser.loadDiseaseCase(inputStream);
-                jsonModelParser.saveModel(outputStream, model);
+                final Optional<DiseaseCase> diseaseCase = XMLModelParser.loadDiseaseCase(inputStream);
+                if (diseaseCase.isPresent()) {
+                    jsonModelParser.saveModel(outputStream, diseaseCase.get());
+                }
             } catch (IOException e) {
                 LOGGER.warn("Error parsing file {}", modelPath.getAbsolutePath(), e.getMessage());
             }

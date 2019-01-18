@@ -1,34 +1,43 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
-import org.monarchinitiative.hpo_case_annotator.core.TestResources;
-import org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.monarchinitiative.hpo_case_annotator.core.DiseaseCaseModelExample;
+import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
+import org.monarchinitiative.hpo_case_annotator.core.refgenome.SequenceDao;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 
-import java.io.InputStream;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-@Ignore // TODO - make these tests work
 public class ValidationRunnerTest {
 
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
+
+    @Mock
+    private GenomeAssemblies assemblies;
+
+    @Mock
+    private SequenceDao hg19SequenceDao;
 
     /**
      * Tested instance.
      */
-    private ValidationRunner runner;
+    private ValidationRunner<DiseaseCase> runner;
 
 
     @Before
     public void setUp() throws Exception {
-        CompletenessValidator completenessValidator = new CompletenessValidator();
-        GenomicPositionValidator genomicPositionValidator = new GenomicPositionValidator(TestResources.TEST_REF_GENOME_FASTA);
-//        ModelParser modelParser = new XMLModelParser(TestResources.TEST_MODEL_FILE_DIR);
-        runner = new ValidationRunner(genomicPositionValidator, completenessValidator);
+        runner = ValidationRunner.forAllValidations(assemblies);
     }
 
 
@@ -36,32 +45,22 @@ public class ValidationRunnerTest {
      * Test validation real-life model.
      */
     @Test
-    public void testRunner() throws Exception {
-        List<ValidationLine> validationLines = runner.validateModels(Collections.singleton(getArs()));
-        assertEquals(2, validationLines.size());
+    public void validateSingleModel() throws Exception {
+        Mockito.when(assemblies.hasFastaForAssembly(GenomeAssembly.GRCH_37)).thenReturn(true);
+        Mockito.when(assemblies.getSequenceDaoForAssembly(GenomeAssembly.GRCH_37)).thenReturn(Optional.of(hg19SequenceDao));
+        Mockito.when(hg19SequenceDao.fetchSequence("13", 31843348, 31843349)).thenReturn("A"); // expectedRefAllele
+        Mockito.when(hg19SequenceDao.fetchSequence("13", 31843343, 31843354)).thenReturn("TTTCTAGGCTT"); // 0-based numbering for both begin and end coordinates
 
-        ValidationLine first = validationLines.get(0);
-        assertEquals("Ars-2000-NF1", first.getModelName());
-        assertEquals("CompletenessValidator", first.getValidatorName());
-        assertEquals(ValidationResult.PASSED, first.getValidationResult());
-        assertEquals("All right!", first.getErrorMessage());
+        final DiseaseCase diseaseCase = DiseaseCaseModelExample.benMahmoud2013B3GLCT();
 
-        ValidationLine second = validationLines.get(1);
-        assertEquals("Ars-2000-NF1", second.getModelName());
-        assertEquals("GenomicPositionValidator", second.getValidatorName());
-        assertEquals(ValidationResult.PASSED, second.getValidationResult());
-        assertEquals("All right!", second.getErrorMessage());
+        final List<ValidationResult> results = runner.validateSingleModel(diseaseCase);
+
+        // model valid, no failures are produced
+        assertTrue(results.isEmpty());
     }
 
-
-    /**
-     * Utility method for creating DiseaseCase instance for testing.
-     *
-     * @return {@link DiseaseCase} instance for testing.
-     */
-    private DiseaseCase getArs() throws Exception {
-        try (InputStream ARS = getClass().getResourceAsStream("/models/xml/Ars-2000-NF1-95-89.xml")) {
-            return XMLModelParser.loadDiseaseCase(ARS);
-        }
+    @Test
+    public void validateMultipleModelsAtOnce() {
+        // TODO - test validation of multiple models at once
     }
 }

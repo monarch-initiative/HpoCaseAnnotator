@@ -1,9 +1,12 @@
 package org.monarchinitiative.hpo_case_annotator.core.refgenome;
 
-import java.io.File;
+import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
@@ -14,6 +17,10 @@ import java.util.Properties;
  * @since 0.0
  */
 public class GenomeAssembliesSerializer {
+
+    private GenomeAssembliesSerializer() {
+        // private no-op
+    }
 
     /**
      * @param is {@link InputStream} with data
@@ -27,11 +34,11 @@ public class GenomeAssembliesSerializer {
         GenomeAssemblies assemblies = new GenomeAssemblies();
 
         for (GenomeAssembly assembly : GenomeAssembly.values()) {
-            String key = propFastaKey(assembly);
+            String key = keyFor(assembly);
             String val = properties.getProperty(key);
             if (val != null) {
-                assembly.setFastaPath(new File(val));
-                assemblies.getAssemblyMap().put(assembly.toString(), assembly);
+                final Path fastaPath = Paths.get(val);
+                assemblies.putAssembly(assembly, fastaPath);
             }
         }
         return assemblies;
@@ -39,9 +46,8 @@ public class GenomeAssembliesSerializer {
 
 
     /**
-     *
      * @param assemblies {@link GenomeAssemblies} to be persisted
-     * @param os {@link OutputStream} to be used to persist the data
+     * @param os         {@link OutputStream} to be used to persist the data
      * @throws IOException in case of I/O error
      */
     public static void serialize(GenomeAssemblies assemblies, OutputStream os) throws IOException {
@@ -49,13 +55,13 @@ public class GenomeAssembliesSerializer {
 
         // all defined assemblies
         assemblies.getAssemblyMap()
-                .forEach((s, ga) -> properties.put(propFastaKey(ga), ga.getFastaPath().getAbsolutePath()));
+                .forEach((ga, path) -> properties.put(keyFor(ga), path.toFile().getAbsolutePath()));
 
         properties.store(os, "Genome assemblies definition file for Hpo Case Annotator");
     }
 
 
-    private static String propFastaKey(GenomeAssembly assembly) {
+    private static String keyFor(GenomeAssembly assembly) {
         return assembly.toString() + ".fasta.path";
     }
 }

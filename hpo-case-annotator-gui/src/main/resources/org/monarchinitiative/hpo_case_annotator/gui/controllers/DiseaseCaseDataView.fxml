@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<ScrollPane xmlns:fx="http://javafx.com/fxml/1" fitToHeight="true" fitToWidth="true" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.172-ea" fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataController">
+   <content>
+      <StackPane alignment="TOP_CENTER" style="-fx-background-color: #ffffff;">
+         <children>
+            <VBox alignment="TOP_CENTER" maxWidth="1200.0" minHeight="600.0" minWidth="1200.0" prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: white;" StackPane.alignment="TOP_CENTER">
+                <children>
+                    <HBox alignment="CENTER" style="-fx-background-color: #000000;" VBox.vgrow="NEVER">
+                        <children>
+                            <Label fx:id="currentModelLabel" contentDisplay="CENTER" textFill="WHITE">
+                                <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                </HBox.margin>
+                                <font>
+                                    <Font name="System Bold" size="15.0" />
+                                </font>
+                            </Label>
+                        </children>
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT" style="-fx-background-color: #00BFFF;" VBox.vgrow="NEVER">
+                        <children>
+                        <Label prefHeight="25.0" prefWidth="135.0" text="Publication">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                            <TextField fx:id="pmidTextField" prefHeight="30.0" prefWidth="100.0" promptText="PMID" HBox.hgrow="NEVER">
+                                <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                </HBox.margin>
+                            </TextField>
+                            <Button fx:id="pmidLookupButton" disable="true" minHeight="30.0" minWidth="120.0" mnemonicParsing="false" onAction="#pmidLookupButtonAction" prefHeight="30.0" text="Lookup">
+                                <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                </HBox.margin>
+                            </Button>
+                            <Separator orientation="VERTICAL" HBox.hgrow="NEVER" />
+                            <TextField fx:id="inputPubMedDataTextField" maxHeight="-Infinity" prefHeight="30.0" prefWidth="400.0" promptText="Paste PubMed Summary(text) here" HBox.hgrow="SOMETIMES">
+                                <opaqueInsets>
+                                    <Insets />
+                                </opaqueInsets>
+                                <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                </padding>
+                                <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                </HBox.margin>
+                            </TextField>
+                            <Button fx:id="inputPubMedDataButton" mnemonicParsing="false" onAction="#inputPubMedDataButtonAction" prefHeight="30.0" prefWidth="135.0" text="Input PubMed data">
+                                <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                </padding>
+                                <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                </HBox.margin>
+                            </Button>
+                        </children>
+                        <padding>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </padding>
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT" style="-fx-background-color: #FFFFFF;" VBox.vgrow="NEVER">
+                        <children>
+                            <Label prefHeight="25.0" prefWidth="135.0" text="Gene" HBox.hgrow="NEVER">
+                                <HBox.margin>
+                                    <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
+                                </HBox.margin>
+                                <font>
+                                    <Font name="System Bold" size="15.0" />
+                                </font>
+                            </Label>
+                            <Label minWidth="60.0" prefHeight="30.0" prefWidth="60.0" text="Entrez ID" HBox.hgrow="NEVER">
+                                <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                </HBox.margin>
+                            </Label>
+                            <TextField fx:id="entrezIDTextField" maxHeight="30.0" maxWidth="110.0" minHeight="30.0" minWidth="110.0" prefHeight="30.0" prefWidth="110.0" promptText="3172" HBox.hgrow="SOMETIMES">
+                                <HBox.margin>
+                                    <Insets bottom="5.0" right="15.0" top="5.0" />
+                                </HBox.margin>
+                            </TextField>
+                            <Label minHeight="30.0" minWidth="60.0" prefHeight="30.0" prefWidth="60.0" text="Symbol" HBox.hgrow="NEVER">
+                                <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                </HBox.margin>
+                            </Label>
+                            <TextField fx:id="geneSymbolTextField" layoutX="165.0" layoutY="10.0" maxHeight="30.0" maxWidth="110.0" minHeight="30.0" minWidth="110.0" prefHeight="30.0" prefWidth="110.0" promptText="HNF4A" HBox.hgrow="SOMETIMES">
+                                <HBox.margin>
+                                    <Insets bottom="5.0" right="5.0" top="5.0" />
+                                </HBox.margin>
+                            </TextField>
+                        </children>
+                        <padding>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </padding>
+                    </HBox>
+                    <VBox alignment="CENTER_LEFT" style="-fx-background-color: #FFEFD5;">
+                        <children>
+                            <HBox id="variantsHBox" alignment="CENTER_LEFT" maxWidth="1200.0" style="-fx-background-color: #ffffdd;">
+                                <children>
+                                    <Button id="addVariantButton" minHeight="30.0" minWidth="120.0" mnemonicParsing="false" onAction="#addVariantButtonAction" prefHeight="30.0" text="Add variant">
+                                        <HBox.margin>
+                                            <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
+                                        </HBox.margin>
+                                    </Button>
+                                    <Region maxWidth="460.0" HBox.hgrow="SOMETIMES" />
+                                    <Label id="variantsTitleLabel" alignment="CENTER" text="Variants" textAlignment="CENTER">
+                                        <font>
+                                            <Font size="16.0" />
+                                        </font>
+                                        <HBox.margin>
+                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                        </HBox.margin>
+                                    </Label>
+                                    <Region maxWidth="460.0" HBox.hgrow="SOMETIMES" />
+                                    <Button id="removeVariantButton" minHeight="30.0" minWidth="120.0" mnemonicParsing="false" onAction="#removeVariantAction" text="Remove variant">
+                                        <HBox.margin>
+                                            <Insets bottom="5.0" left="5.0" right="10.0" top="5.0" />
+                                        </HBox.margin>
+                                    </Button>
+                                </children>
+                            </HBox>
+                            <Accordion fx:id="variantsAccordion" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                        </children>
+                    </VBox>
+                    <HBox alignment="CENTER_LEFT" minHeight="100.0" style="-fx-background-color: #F6F79A;" VBox.vgrow="NEVER">
+                        <children>
+                            <Label alignment="CENTER" contentDisplay="CENTER" minWidth="135.0" prefHeight="50.0" prefWidth="135.0" text="Disease and phenotype" wrapText="true">
+                                <HBox.margin>
+                                    <Insets left="15.0" />
+                                </HBox.margin>
+                                <font>
+                                    <Font name="System Bold" size="15.0" />
+                                </font>
+                            </Label>
+                            <GridPane alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1040.0" HBox.hgrow="SOMETIMES">
+                                <columnConstraints>
+                                    <ColumnConstraints halignment="LEFT" minWidth="10.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="10.0" />
+                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
+                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
+                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
+                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="10.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="10.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints minHeight="10.0" valignment="CENTER" />
+                                    <RowConstraints minHeight="10.0" valignment="CENTER" />
+                                    <RowConstraints minHeight="10.0" valignment="CENTER" />
+                                </rowConstraints>
+                                <children>
+                                    <Label alignment="CENTER" minHeight="30.0" text="Database">
+                                        <GridPane.margin>
+                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                        </GridPane.margin>
+                                    </Label>
+                                    <ComboBox fx:id="diseaseDatabaseComboBox" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="90.0" GridPane.columnIndex="1">
+                                        <GridPane.margin>
+                                            <Insets bottom="5.0" left="5.0" right="15.0" top="5.0" />
+                                        </GridPane.margin>
+                                    </ComboBox>
+                                    <Label minHeight="30.0" text="Disease name" GridPane.columnIndex="2">
+                                        <GridPane.margin>
+                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                        </GridPane.margin>
+                                    </Label>
+                                    <TextField fx:id="diseaseNameTextField" maxWidth="490.0" minHeight="30.0" minWidth="100.0" GridPane.columnIndex="3" GridPane.columnSpan="3">
+                                        <GridPane.margin>
+                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                        </GridPane.margin>
+                                    </TextField>
+                                    <Label minHeight="30.0" text="Disease ID" GridPane.columnIndex="6" GridPane.halignment="RIGHT">
+                                        <GridPane.margin>
+                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                        </GridPane.margin>
+                                    </Label>
+                                    <TextField fx:id="diseaseIDTextField" minHeight="30.0" minWidth="100.0" prefWidth="100.0" GridPane.columnIndex="7">
+                                        <GridPane.margin>
+                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                        </GridPane.margin>
+                                    </TextField>
+                                    <Separator GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                                        <GridPane.margin>
+                                            <Insets left="5.0" right="5.0" />
+                                        </GridPane.margin>
+                                    </Separator>
+                                    <Label alignment="CENTER" minHeight="30.0" text="Phenotype" GridPane.rowIndex="2">
+                                        <GridPane.margin>
+                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                        </GridPane.margin>
+                                    </Label>
+                                    <Button fx:id="hpoTextMiningButton" minHeight="30.0" mnemonicParsing="false" onAction="#hpoTextMiningButtonAction" text="Add / remove HPO terms" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                        <GridPane.margin>
+                                            <Insets bottom="5.0" left="5.0" right="15.0" top="5.0" />
+                                        </GridPane.margin>
+                                    </Button>
+                                </children>
+                            </GridPane>
+                        </children>
+                        <padding>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </padding>
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT" minHeight="70.0" style="-fx-background-color: #FFFFDD;" VBox.vgrow="NEVER">
+                        <children>
+                            <Label prefHeight="60.0" prefWidth="135.0" text="Proband &amp; Family Information" wrapText="true">
+                                <HBox.margin>
+                                    <Insets left="15.0" />
+                                </HBox.margin>
+                                <font>
+                                    <Font name="System Bold" size="15.0" />
+                                </font>
+                            </Label>
+                            <GridPane>
+                                <columnConstraints>
+                                    <ColumnConstraints minWidth="10.0" />
+                                    <ColumnConstraints minWidth="10.0" />
+                                    <ColumnConstraints minWidth="10.0" />
+                                    <ColumnConstraints minWidth="10.0" />
+                                    <ColumnConstraints minWidth="10.0" />
+                                    <ColumnConstraints minWidth="10.0" />
+                                    <ColumnConstraints minWidth="10.0" />
+                                    <ColumnConstraints minWidth="10.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                <children>
+                                    <Label alignment="CENTER" prefHeight="30.0" prefWidth="125.0" text="Proband / family ID" GridPane.halignment="CENTER">
+                                        <GridPane.margin>
+                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                        </GridPane.margin>
+                                    </Label>
+                                    <TextField fx:id="probandFamilyTextField" maxWidth="300.0" minHeight="30.0" minWidth="100.0" GridPane.columnIndex="1">
+                                        <GridPane.margin>
+                                            <Insets bottom="5.0" left="5.0" right="15.0" top="5.0" />
+                                        </GridPane.margin>
+                                    </TextField>
+                                    <Label alignment="CENTER" minHeight="30.0" minWidth="30.0" text="Sex" GridPane.columnIndex="2">
+                                        <GridPane.margin>
+                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                        </GridPane.margin>
+                                    </Label>
+                                    <ComboBox fx:id="sexComboBox" maxHeight="30.0" maxWidth="100.0" minHeight="30.0" minWidth="100.0" GridPane.columnIndex="3">
+                                        <GridPane.margin>
+                                            <Insets bottom="5.0" left="5.0" right="15.0" top="5.0" />
+                                        </GridPane.margin>
+                                    </ComboBox>
+                                    <Label alignment="CENTER" minHeight="30.0" minWidth="60.0" text="Age" GridPane.columnIndex="4" />
+                                    <TextField fx:id="ageTextField" maxWidth="50.0" minHeight="30.0" minWidth="50.0" GridPane.columnIndex="5">
+                                        <GridPane.margin>
+                                            <Insets bottom="5.0" left="5.0" right="15.0" top="5.0" />
+                                        </GridPane.margin>
+                                    </TextField>
+                                    <Label minWidth="120.0" text="Last edit made by" GridPane.columnIndex="6">
+                                        <GridPane.margin>
+                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                        </GridPane.margin>
+                                    </Label>
+                                    <TextField fx:id="biocuratorIdTextField" editable="false" maxHeight="30.0" maxWidth="150.0" minHeight="30.0" minWidth="150.0" prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="7" GridPane.halignment="LEFT" GridPane.hgrow="NEVER">
+                                        <GridPane.margin>
+                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                        </GridPane.margin>
+                                    </TextField>
+                                </children>
+                            </GridPane>
+                        </children>
+                        <padding>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </padding>
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT" style="-fx-background-color: #c6e2ff;" VBox.vgrow="SOMETIMES">
+                        <children>
+                            <Label minHeight="25.0" minWidth="135.0" prefHeight="25.0" prefWidth="135.0" text="Metadata">
+                                <HBox.margin>
+                                    <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
+                                </HBox.margin>
+                                <font>
+                                    <Font name="System Bold" size="15.0" />
+                                </font>
+                            </Label>
+                            <TextArea fx:id="metadataTextArea" promptText="Enter metadata here" wrapText="true" HBox.hgrow="SOMETIMES">
+                                <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                </HBox.margin>
+                                <font>
+                                    <Font name="System Italic" size="13.0" />
+                                </font>
+                                <opaqueInsets>
+                                    <Insets />
+                                </opaqueInsets>
+                            </TextArea>
+                        </children>
+                        <padding>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </padding>
+                    </HBox>
+                  <HBox alignment="CENTER_LEFT">
+                     <children>
+                        <Label minHeight="25.0" minWidth="135.0" prefHeight="25.0" prefWidth="135.0" text="Status">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Italic" size="15.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="statusLabel" HBox.hgrow="SOMETIMES">
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                </children>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </VBox>
+         </children>
+      </StackPane>
+   </content>
+</ScrollPane>

@@ -6,7 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,56 +41,51 @@ public final class OMIMParser {
     private final Map<String, String> canonicalName2mimid = new HashMap<>();
 
 
-    public OMIMParser(File file) throws FileNotFoundException {
-        this(new FileInputStream(file));
+    public OMIMParser(File file) throws IOException {
+        this(new FileReader(file));
     }
 
 
-    public OMIMParser(URL url) throws IOException {
-        this(url.openStream());
+    public OMIMParser(URL url) throws IOException, URISyntaxException {
+        this(Files.newBufferedReader(Paths.get(url.toURI())));
     }
 
 
     /**
      * Parse content of omimResourceFile and populate maps with data.
      */
-    public OMIMParser(InputStream inputStream) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-            String line = reader.readLine(); // Very first line is header (starting with '#' character)
-            if (!line.startsWith("#")) {
-                Alert a = new Alert(AlertType.INFORMATION);
-                a.setTitle("Parse of OMIM file");
-                a.setHeaderText("Bad format of OMIM file!");
-                a.setContentText("First line does not start with '#' character");
-                a.showAndWait();
-                reader.close();
-            }
+    public OMIMParser(Reader reader) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(reader);
+        String line = bufferedReader.readLine(); // Very first line is header (starting with '#' character)
+        if (!line.startsWith("#")) {
+            Alert a = new Alert(AlertType.INFORMATION);
+            a.setTitle("Parse of OMIM file");
+            a.setHeaderText("Bad format of OMIM file!");
+            a.setContentText("First line does not start with '#' character");
+            a.showAndWait();
+        }
 
-            /* Here we are interested in populating the OMIM beans within 'mimid2OMIM'
-             * map using only the FIRST occurence of MIMID. Therefore we expect
-             * OMIM.tab to be sorted by MIMID.
-             */
-            String current = "-12548"; // dummy value
-            while ((line = reader.readLine()) != null) {
-                /* We are dealing with tsv file here. We try to split each line into 3 fields:
-                 * 1st -> name; 2nd -> canonical name; 3rd -> mimID */
+        /* Here we are interested in populating the OMIM beans within 'mimid2OMIM'
+         * map using only the FIRST occurence of MIMID. Therefore we expect
+         * OMIM.tab to be sorted by MIMID.
+         */
+        String current = "-12548"; // dummy value
+        while ((line = bufferedReader.readLine()) != null) {
+            /* We are dealing with tsv file here. We try to split each line into 3 fields:
+             * 1st -> name; 2nd -> canonical name; 3rd -> mimID */
 
-                String fields[] = line.split("\t");
+            String[] fields = line.split("\t");
 //                String omimName = fields[0];
-                String omimCanonicalName = fields[1];
-                String mimID = fields[2];
+            String omimCanonicalName = fields[1];
+            String mimID = fields[2];
 
-                if (mimID.equals(current)) {
-                    continue;
-                }
-
-                current = mimID;
-                mimid2canonicalName.put(mimID, omimCanonicalName);
-                canonicalName2mimid.put(omimCanonicalName, mimID);
-
+            if (mimID.equals(current)) {
+                continue;
             }
-        } catch (IOException e) {
-            LOGGER.warn("Error occured during parsing of OMIM file.", e);
+
+            current = mimID;
+            mimid2canonicalName.put(mimID, omimCanonicalName);
+            canonicalName2mimid.put(omimCanonicalName, mimID);
         }
     }
 

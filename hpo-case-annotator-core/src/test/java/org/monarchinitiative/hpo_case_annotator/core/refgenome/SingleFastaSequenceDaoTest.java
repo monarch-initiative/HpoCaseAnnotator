@@ -12,7 +12,7 @@ import static org.hamcrest.CoreMatchers.*;
 
 /**
  * These tests test that we are able to retrieve sequence from an arbitrary genomic region. FASTA file that is used for
- * testing contains truncated chromosomes from UCSC genome build hg19. The file contains the first 1000 lines (~49 950 nt)
+ * testing contains truncated chromosomes from UCSC genome forAllValidations hg19. The file contains the first 1000 lines (~49 950 nt)
  * of all chromosomes.
  */
 public class SingleFastaSequenceDaoTest {

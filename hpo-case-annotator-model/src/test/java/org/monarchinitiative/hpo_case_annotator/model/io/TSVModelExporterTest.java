@@ -34,7 +34,8 @@ public class TSVModelExporterTest {
 
         for (File file : files) {
             try (InputStream is = new FileInputStream(file)) {
-                cases.add(XMLModelParser.loadDiseaseCase(is));
+                XMLModelParser.loadDiseaseCase(is)
+                        .ifPresent(cases::add);
             }
         }
     }
@@ -54,10 +55,10 @@ public class TSVModelExporterTest {
         Set<String> actual = new HashSet<>(Arrays.asList(writer.toString().split(System.lineSeparator())));
         assertThat(actual.size(), is(4));
         assertThat(actual, containsInAnyOrder(
-                "#CHROM\tPOS\tREF\tALT\tGT\tVCLASS\tPATHOM\tCONSQ\tCSSTYPE\tCSSPOS\tSYMBOL\tPMID\tFILE_NAME",
-                "11\t61719380\tC\tT\tHETEROZYGOUS\tsplicing\tsplicing|5ss|disrupted\tAlternative/cryptic 5' splice site\tFIVE_PRIME\t61719378\tBEST1\t21203346\tDavidson-2010-BEST1",
-                "11\t61724406\tT\tC\tHETEROZYGOUS\tcoding\tcoding|missense\tN/A\tNO\tNaN\tBEST1\t21203346\tDavidson-2010-BEST1",
-                "1\t11940\tA\tG\tHETEROZYGOUS\tcoding\tcoding|missense\tExon skipping\tNO\tNaN\tDDX11L1\t7514569\tHull-1994-DDX11L1"
+                "#G_BUILD\tCHROM\tPOS\tREF\tALT\tGT\tVCLASS\tPATHOM\tCONSQ\tCSSTYPE\tCSSPOS\tSYMBOL\tPMID\tFILE_NAME",
+                "GRCH_37\t11\t61719380\tC\tT\tHETEROZYGOUS\tsplicing\tsplicing|5ss|disrupted\tAlternative/cryptic 5' splice site\tFIVE_PRIME\t61719378\tBEST1\t21203346\tDavidson-2010-BEST1",
+                "GRCH_37\t11\t61724406\tT\tC\tHETEROZYGOUS\tcoding\tcoding|missense\tN/A\tNO_CSS\tNaN\tBEST1\t21203346\tDavidson-2010-BEST1",
+                "GRCH_37\t1\t11940\tA\tG\tHETEROZYGOUS\tcoding\tcoding|missense\tExon skipping\tNO_CSS\tNaN\tDDX11L1\t7514569\tHull-1994-DDX11L1"
         ));
     }
 }

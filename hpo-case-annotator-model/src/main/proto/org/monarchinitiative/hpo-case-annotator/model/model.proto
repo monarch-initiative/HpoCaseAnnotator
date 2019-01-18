@@ -1,0 +1,237 @@
+syntax = "proto3";
+package org.monarchinitiative.hpo_case_annotator_model.proto;
+
+option java_package = "org.monarchinitiative.hpo_case_annotator.model.proto";
+option java_multiple_files = true;
+
+// a model object representing information gained from biocuration of a publication
+message DiseaseCase {
+
+    string genome_build = 3 [deprecated=true]; // use VariantPosition instead
+
+    Publication publication = 4;
+
+    // a free text with useful contextual information, e.g. a short case description
+    string metadata = 5;
+
+    Gene gene = 6;
+
+    Disease disease = 7;
+
+    repeated OntologyClass phenotype = 8;
+
+    FamilyInfo family_info = 9;
+
+    Biocurator biocurator = 10;
+
+    repeated Variant variant = 11;
+}
+
+// Human genome reference assembly - major version
+enum GenomeAssembly {
+    option allow_alias = true;
+
+    UNKNOWN_GENOME_ASSEMBLY = 0;
+
+    NCBI_36 = 1;
+    HG_18 = 1;
+
+    GRCH_38 = 2;
+    HG_38 = 2;
+
+    GRCH_37 = 4;
+    HG_19 = 4;
+}
+
+message VariantPosition {
+
+    GenomeAssembly genome_assembly = 1;
+
+    // e.g. 1, 2, X, Y, MT
+    string contig = 2;
+
+    // 1-based position of the variant on the contig (VCF-style)
+    int32 pos = 3;
+
+    string ref_allele = 4;
+
+    string alt_allele = 5;
+}
+
+message Variant {
+    // e.g. chrX
+    string contig = 1 [deprecated=true]; // use VariantPosition instead
+
+    // position of the variant on the contig (VCF-style)
+    int32 pos = 2 [deprecated=true]; // use VariantPosition instead
+
+    string ref_allele = 3 [deprecated=true]; // use VariantPosition instead
+
+    string alt_allele = 4 [deprecated=true]; // use VariantPosition instead
+    // a short neighbouring nucleotide sequence with ref & alt alleles, e.g. ACGT[C/A]TATT
+    string snippet = 5;
+
+    Genotype genotype = 6;
+    // e.g. coding, enhancer, promoter, splicing
+    string variant_class = 7;
+    // e.g. 'coding|missense', 'coding|stop-codon', might be jannovar-based annotation in future
+    string pathomechanism = 8;
+    // Used in SPLICING Context at the moment, e.g. Exon skipping
+    string consequence = 9;
+    // This is 1-based coordinate of novel, variant-induced cryptic splice site.
+    // Either it is the first base of truncated exon due to the novel 3'SS or
+    // last base of truncated exon due to the novel 5'SS.
+    uint32 cryptic_position = 10;
+    // either 5'SS, or 3'SS
+    CrypticSpliceSiteType cryptic_splice_site_type = 11;
+    // Sequence snippet describing new splice site, e.g. CCTCGACGAGC]GTGCGA.
+    // Bracket symbol denotes either end ']' of exonic sequence in case of novel 5'SS,
+    // or start '[' of exonic sequence in case of new 3'SS
+    string cryptic_splice_site_snippet = 12;
+
+    VariantValidation variant_validation = 13;
+
+    VariantPosition variant_position = 14;
+}
+
+
+enum Genotype {
+    UNDEFINED = 0;
+    HETEROZYGOUS = 1;
+    HOMOZYGOUS_ALTERNATE = 2;
+    HOMOZYGOUS_REFERENCE = 3;
+    HEMIZYGOUS = 4;
+}
+
+
+enum CrypticSpliceSiteType {
+    NO_CSS = 0;
+    FIVE_PRIME = 1;
+    THREE_PRIME = 2;
+}
+
+
+message VariantValidation {
+    // dictates how the variant is presented to user in GUI
+    Context context = 1;
+
+    bool cosegregation = 2;
+
+    bool comparability = 3;
+
+    reserved 4, 5, 6, 7, 8, 9, 10;
+
+    // attributes relevant to validation of variants annotated in MENDELIAN and SOMATIC Context
+    // regulator
+    string regulator = 11;
+    // choices {up, down, no}
+    string reporter_regulation = 12;
+    // Reporter residual activity text field
+    string reporter_residual_activity = 13;
+    // EMSA combobox - choices {yes, no}
+    bool emsa_validation_performed = 14;
+    // EMSA TF symbol text field
+    string emsa_tf_symbol = 15;
+    // EMSA Gene ID text field
+    string emsa_gene_id = 16;
+    // no, up, down, demonstrated
+    string other_choices = 17;
+    // more verbose choices
+    string other_effect = 18;
+
+    uint32 n_patients = 19;
+    uint32 m_patients = 20;
+
+    // attributes relevant to validation of variants annotated in SPLICING Context
+    // checkboxes
+    bool minigene_validation = 40;
+    bool site_directed_mutagenesis_validation = 41;
+    bool rt_pcr_validation = 42;
+    bool sr_protein_overexpression_validation = 43;
+    bool sr_protein_knockdown_validation = 44;
+    bool c_dna_sequencing_validation = 45;
+    bool pcr_validation = 46;
+    bool mut_of_wt_splice_site_validation = 47;
+    bool other_validation = 48;
+
+    // dictates how the variant is presented to the user in GUI
+    enum Context {
+        NO_CONTEXT = 0;
+        MENDELIAN = 1;
+        SOMATIC = 2;
+        SPLICING = 3;
+    }
+}
+
+
+message Publication {
+    // e.g. Smedley D, Schubach M, Jacobsen JOB, Köhler S, Zemojtel T, Spielmann M, Jäger M, Hochheiser H, Washington NL, McMurry JA, Haendel MA, Mungall CJ, Lewis SE, Groza T, Valentini G, Robinson PN
+    string author_list = 3;
+    // e.g. A Whole-Genome Analysis Framework for Effective Identification of Pathogenic Regulatory Variants in Mendelian Disease
+    string title = 4;
+    // e.g. Am J Hum Genet
+    string journal = 5;
+    // e.g. 2016
+    string year = 6;
+    // e.g. 99(3)
+    string volume = 7;
+    // e.g. 595-606
+    string pages = 8;
+    // e.g. 27569544
+    string pmid = 9;
+}
+
+
+message Gene {
+    // e.g. 727
+    int32 entrez_id = 1;
+    // e.g. C5
+    string symbol = 2;
+}
+
+
+// A class (aka term, concept) in an ontology (borrowed from phenopackets)
+message OntologyClass {
+    // a CURIE-style identifier e.g. HP:0100024, MP:0001284, UBERON:0001690.
+    // This is the primary key for the ontology class
+    string id = 1;
+    // class label, aka name. E.g. "Abnormality of cardiovascular system"
+    string label = 2;
+    // the phenotype is either observed (false, default) or not (true)
+    bool not_observed = 3;
+}
+
+
+message Disease {
+    // e.g. OMIM, NCI
+    string database = 1;
+    // e.g. 609536
+    string disease_id = 2;
+    // e.g. COMPLEMENT COMPONENT 5 DEFICIENCY; C5D
+    string disease_name = 3;
+}
+
+
+message Biocurator {
+    // e.g. HPO:wwhite
+    string biocurator_id = 1;
+    // maybe in the future
+    // string biocurator_email = 2;
+}
+
+
+message FamilyInfo {
+    // e.g. ID of the proband in the pedigree
+    string family_or_proband_id = 1;
+
+    Sex sex = 2;
+    // e.g. 18, or 10m
+    string age = 3;
+}
+
+
+enum Sex {
+    UNKNOWN_SEX = 0;
+    MALE = 1;
+    FEMALE = 2;
+}

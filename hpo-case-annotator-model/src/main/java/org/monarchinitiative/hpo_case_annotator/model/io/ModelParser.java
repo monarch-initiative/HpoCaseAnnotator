@@ -4,6 +4,7 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 
 import java.io.*;
 import java.util.Collection;
+import java.util.Optional;
 
 public interface ModelParser {
 
@@ -20,10 +21,9 @@ public interface ModelParser {
      * absence of model.
      *
      * @param inputStream with model data
-     * @return {@link DiseaseCase} containing read data
-     * @throws FileNotFoundException if
+     * @return {@link DiseaseCase} containing read data or <code>null</code> if the data could not be read correctly
      */
-    DiseaseCase readModel(InputStream inputStream) throws IOException;
+    Optional<DiseaseCase> readModel(InputStream inputStream);
 
     /**
      * Return a collection with names of model files that are present in the model files directory.

@@ -1,7 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.model.io;
 
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Utils;
+import org.monarchinitiative.hpo_case_annotator.model.proto.ModelUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,10 +54,11 @@ public final class TSVModelExporter implements ModelExporter {
         return model -> model.getVariantList().stream()
                 .map(var -> {
                     List<String> fields = new ArrayList<>();
-                    fields.add(var.getContig());
-                    fields.add(String.valueOf(var.getPos()));
-                    fields.add(var.getRefAllele());
-                    fields.add(var.getAltAllele());
+                    fields.add(var.getVariantPosition().getGenomeAssembly().name());
+                    fields.add(var.getVariantPosition().getContig());
+                    fields.add(String.valueOf(var.getVariantPosition().getPos()));
+                    fields.add(var.getVariantPosition().getRefAllele());
+                    fields.add(var.getVariantPosition().getAltAllele());
                     fields.add(var.getGenotype().toString());
                     fields.add(var.getVariantClass());
                     fields.add(var.getPathomechanism());
@@ -66,7 +67,7 @@ public final class TSVModelExporter implements ModelExporter {
                     fields.add(var.getCrypticPosition() == 0 ? "NaN" : String.valueOf(var.getCrypticPosition()));
                     fields.add(model.getGene().getSymbol());
                     fields.add(model.getPublication().getPmid());
-                    fields.add(Utils.getNameFor(model));
+                    fields.add(ModelUtils.getNameFor(model));
 
                     return String.join(delimiter, fields);
                 })
@@ -83,7 +84,7 @@ public final class TSVModelExporter implements ModelExporter {
     @Override
     public void exportModels(Collection<DiseaseCase> cases, Writer writer) {
 
-        String header = "#CHROM\tPOS\tREF\tALT\tGT\tVCLASS\tPATHOM\tCONSQ\tCSSTYPE\tCSSPOS\tSYMBOL\tPMID\tFILE_NAME";
+        String header = "#G_BUILD\tCHROM\tPOS\tREF\tALT\tGT\tVCLASS\tPATHOM\tCONSQ\tCSSTYPE\tCSSPOS\tSYMBOL\tPMID\tFILE_NAME";
         try {
             writer.write(header + System.lineSeparator());
         } catch (IOException e) {

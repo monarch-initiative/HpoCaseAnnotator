@@ -3,30 +3,28 @@ package org.monarchinitiative.hpo_case_annotator.gui;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import javafx.application.HostServices;
-import ontologizer.ontology.Ontology;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController;
 import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
 import org.monarchinitiative.hpo_case_annotator.core.io.OMIMParser;
-import org.monarchinitiative.hpo_case_annotator.model.io.ModelParser;
-import org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser;
-import org.monarchinitiative.hpo_case_annotator.core.io.ChoiceBasket;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembliesSerializer;
-import org.monarchinitiative.hpo_case_annotator.core.validation.CompletenessValidator;
-import org.monarchinitiative.hpo_case_annotator.core.validation.GenomicPositionValidator;
-import org.monarchinitiative.hpo_case_annotator.core.validation.PubMedValidator;
-import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValuesTest;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.ShowValidationResultsController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SomaticVariantController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SplicingVariantController;
+import org.monarchinitiative.phenol.base.PhenolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -44,8 +42,6 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
 
     private static final String PROPERTIES_FILE_NAME = "test-hca.properties";
 
-    private static final String CHOICE_BASKET_FILE_NAME = "choice-basket.yml";
-
     private static final String GENOME_ASSEMBLIES_FILE_NAME = "test-genome-assemblies.properties";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestHpoCaseAnnotatorModule.class);
@@ -53,8 +49,13 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(DataController.class);
-        bind(MainController.class);
+        bind(DiseaseCaseDataController.class);
+//        bind(MainController.class);
+        bind(MendelianVariantController.class);
+        bind(SomaticVariantController.class);
+        bind(SplicingVariantController.class);
+
+        bind(ShowValidationResultsController.class);
 
         bind(ResourceBundle.class)
                 .toInstance(ResourceBundle.getBundle(Play.class.getName()));
@@ -62,15 +63,11 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
         bind(ExecutorService.class)
                 .toInstance(Executors.newFixedThreadPool(1));
 
-        bind(ModelParser.class)
-                .to(XMLModelParser.class);
 
-
-        bind(ValidationRunner.class);
-        bind(GenomicPositionValidator.class);
-        bind(CompletenessValidator.class);
-        bind(PubMedValidator.class);
-
+//        bind(ValidationRunner.class);
+//        bind(GenomicPositionValidator.class);
+//        bind(CompletenessValidator.class);
+//        bind(PubMedValidator.class);
     }
 
 
@@ -78,31 +75,40 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
     @Singleton
     public Properties properties() throws IOException {
         Properties properties = new Properties();
-
-        properties.load(TestHpoCaseAnnotatorModule.class.getResourceAsStream("/" + PROPERTIES_FILE_NAME));
+        try (InputStream is = TestHpoCaseAnnotatorModule.class.getResourceAsStream("/" + PROPERTIES_FILE_NAME)) {
+            properties.load(is);
+        }
         return properties;
     }
 
 
     @Provides
     @Singleton
-    public OptionalResources optionalResources(Properties properties, GenomeAssemblies assemblies) throws IOException {
+    public OptionalResources optionalResources() throws IOException, PhenolException, URISyntaxException {
         OptionalResources optionalResources = new OptionalResources();
-        optionalResources.setDiseaseCaseDir(new File(properties.getProperty("test.xml.model.dir")));
-        // Ontology
-        Ontology ontology = OptionalResources.deserializeOntology(
-                new File(properties.getProperty("test.hp.obo.path")));
-        optionalResources.setOntology(ontology);
-        // Entrez genes
-        EntrezParser entrezParser = new EntrezParser(new File(properties.getProperty("test.entrez.file.path")));
+//        final String file = TestHpoCaseAnnotatorModule.class.getResource("models").getFile();
+//        final File diseaseCaseDir = new File(file);
+//        optionalResources.setDiseaseCaseDir(diseaseCaseDir);
+
+        // read Ontology
+        Path ontologyPath = Paths.get(TestHpoCaseAnnotatorModule.class.getResource("/resource_files/HP.obo").toURI());
+        try (InputStream is = Files.newInputStream(ontologyPath)) {
+            optionalResources.setOntology(OptionalResources.deserializeOntology(is));
+        }
+
+        // read Entrez genes
+        EntrezParser entrezParser = new EntrezParser(new File(TestHpoCaseAnnotatorModule.class.getResource("/resource_files/Homo_sapiens.gene_info.gz").getFile()));
         entrezParser.readFile();
         optionalResources.setEntrezId2gene(entrezParser.getEntrezMap());
         optionalResources.setEntrezId2symbol(entrezParser.getEntrezId2symbol());
         optionalResources.setSymbol2entrezId(entrezParser.getSymbol2entrezId());
-        // OMIM file
-        OMIMParser omimParser = new OMIMParser(new File(properties.getProperty("test.omim.file.path")));
-        optionalResources.setCanonicalName2mimid(omimParser.getCanonicalName2mimid());
-        optionalResources.setMimid2canonicalName(omimParser.getMimid2canonicalName());
+
+        // read OMIM file
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(TestHpoCaseAnnotatorModule.class.getResource("/resource_files/omim.tsv").toURI()))) {
+            OMIMParser omimParser = new OMIMParser(reader);
+            optionalResources.setCanonicalName2mimid(omimParser.getCanonicalName2mimid());
+            optionalResources.setMimid2canonicalName(omimParser.getMimid2canonicalName());
+        }
 
         optionalResources.setBiocuratorId("HPO:walterwhite");
         return optionalResources;
@@ -111,21 +117,12 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public ChoiceBasket choiceBasket(@Named("codeHomeDir") File codeHomeDir) throws IOException {
-        File target = new File(codeHomeDir, CHOICE_BASKET_FILE_NAME);
-        if (target.exists()) { // load from the file located next to the JAR file
-            LOGGER.info("Loading choice basket from file {}", target.getAbsolutePath());
-            return new ChoiceBasket(target);
-        }
-
-        try { // try to load content from bundled file
-            URL url = getClass().getResource("/" + CHOICE_BASKET_FILE_NAME);
-            return new ChoiceBasket(url);
-        } catch (IOException e) {
-            LOGGER.warn("Tried to load bundled choice basket from but failed", e);
-            throw e;
+    public GuiElementValues guiElementValues() throws IOException {
+        try (InputStream is = GuiElementValuesTest.class.getResourceAsStream("test-gui-elements-values.yml")) {
+            return GuiElementValues.guiElementValuesFrom(is);
         }
     }
+
 
     @Provides
     @Singleton

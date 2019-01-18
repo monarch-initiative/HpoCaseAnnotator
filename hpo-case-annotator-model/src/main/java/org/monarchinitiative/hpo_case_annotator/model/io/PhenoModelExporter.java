@@ -1,8 +1,8 @@
 package org.monarchinitiative.hpo_case_annotator.model.io;
 
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.proto.ModelUtils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.OntologyClass;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Utils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +74,7 @@ public class PhenoModelExporter implements ModelExporter {
     void exportModel(DiseaseCase model, Writer writer) throws IOException {
         // ID_SUMMARY: author;year;gene_symbol;patient_id
         String id_summary = String.join(";",
-                Utils.getFirstAuthorsSurname(model.getPublication()),
+                ModelUtils.getFirstAuthorsSurname(model.getPublication()),
                 model.getPublication().getYear(),
                 model.getGene().getSymbol(),
                 model.getFamilyInfo().getFamilyOrProbandId());
@@ -82,7 +82,7 @@ public class PhenoModelExporter implements ModelExporter {
         String modelLine = String.join(delimiter,
                 model.getGene().getSymbol(),
                 model.getPublication().getPmid(),
-                Utils.getFirstAuthorsSurname(model.getPublication()),
+                ModelUtils.getFirstAuthorsSurname(model.getPublication()),
                 id_summary,
                 getVariantString(model),
                 getPhenoString(model));
@@ -99,8 +99,10 @@ public class PhenoModelExporter implements ModelExporter {
         StringBuilder sb = new StringBuilder();
         boolean second = false;
         for (Variant v : model.getVariantList()) {
-            String vs = String.format("%s:%s%s>%s[%s,%s%s]", v.getContig(),
-                    v.getPos(), v.getRefAllele(), v.getAltAllele(), v.getGenotype(), v.getVariantClass(), v.getPathomechanism());
+            String vs = String.format("%s:%s%s>%s[%s,%s%s]", v.getVariantPosition().getContig(),
+                    v.getVariantPosition().getPos(), v.getVariantPosition().getRefAllele(),
+                    v.getVariantPosition().getAltAllele(), v.getGenotype(), v.getVariantClass(),
+                    v.getPathomechanism());
             if (second) sb.append(";");
             else second = true;
             sb.append(vs);

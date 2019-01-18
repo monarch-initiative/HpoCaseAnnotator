@@ -1,5 +1,39 @@
-# HpoCaseAnnotator
-Next-generation HRMD app
+# Hpo Case Annotator GUI
 
+Hpo Case Annotator (HCA) GUI is Java app created with aim to make the biocuration of published pathogenic human variants easier.
 
-## We are moving the HRMD code into this repository and will use HRMD to store the biocuration files.
+### Building & installation
+Running *HCA* requires *Java 1.8* or higher, the app is built with *Maven*.
+
+- **build** - building a the *distribution ZIP archive* requires running:
+
+```bash
+git clone https://github.com/monarch-initiative/HpoCaseAnnotator.git
+cd HpoCaseAnnotator
+
+mvn package
+```
+> After running these commands, the *distribution ZIP archive* containing JAR file and all resources required to run the app will be created at `hpo-case-annotator-gui/target/HpoCaseAnnotator-Gui-1.0.9-SNAPSHOT-distribution.zip`
+
+- **installation** - the recommended way of using the *HCA* is to copy the distribution file into some other directory (`/home/user/software` or similar). Then, to start the app from command line:
+
+```bash
+cd /home/user/software
+unzip HrmdGuiFX-1.0.4-full-distribution.zip
+cd HrmdGuiFX-1.0.4
+java -jar HrmdGuiFX-1.0.4.jar
+```
+
+### Initial set up
+Some buttons and fields are disabled after the first start of the GUI. You have to download some resources in order to enable all the functions. Click on `Settings | Set resources` menu and:
+
+- download reference genome files
+- download ontology and *Entrez genes* file
+- set the path to *curated files directory* where the data for a project will be stored
+- set your **biocurator ID**
+
+### Content of GUI elements
+The entries in many GUI elements (such as the chromosomes, pathomechanisms, etc.) can be modified by editing the *choice-basket.yml* file. This file is a part of the assembly ZIP file and must be placed in the same directory where the JAR file is. Please follow [YAML syntax](https://en.wikipedia.org/wiki/YAML) when editing the file.
+
+Contact peter.robinson@jax.org or daniel.danis@jax.org for any further details. The project is currently in a preliminary stage.
+
