@@ -24,18 +24,16 @@ cd HrmdGuiFX-1.0.4
 java -jar HrmdGuiFX-1.0.4.jar
 ```
 
-### Initialization
-During the first start of the app the user is asked to:
+### Initial set up
+Some buttons and fields are disabled after the first start of the GUI. You have to download some resources in order to enable all the functions. Click on `Settings | Set resources` menu and:
 
-- provide path to **data directory** - resource files such as **HP.obo** and **Entrez genes** will be downloaded there
-- provide path to directory with **reference genome** *Fasta* files. *Fasta* files are used in Q/C steps, an archive with the files can be downloaded from [here](https://s3-eu-west-1.amazonaws.com/danisd/hg19.tar.gz)
-- click on the *Download* button for **HPO.obo** and **Entrez genes**. Files will be downloaded to the *Data directory*
-- set the path to *curated files directory* where the curated variants will be stored
-- set the **biocurator ID**
+- download reference genome files
+- download ontology and *Entrez genes* file
+- set the path to *curated files directory* where the data for a project will be stored
+- set your **biocurator ID**
 
 ### Content of GUI elements
 The entries in many GUI elements (such as the chromosomes, pathomechanisms, etc.) can be modified by editing the *choice-basket.yml* file. This file is a part of the assembly ZIP file and must be placed in the same directory where the JAR file is. Please follow [YAML syntax](https://en.wikipedia.org/wiki/YAML) when editing the file.
 
 Contact peter.robinson@jax.org or daniel.danis@jax.org for any further details. The project is currently in a preliminary stage.
-
 
