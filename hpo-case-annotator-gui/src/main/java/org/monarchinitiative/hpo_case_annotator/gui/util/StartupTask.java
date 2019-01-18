@@ -9,10 +9,10 @@ import org.monarchinitiative.hpo_case_annotator.gui.Play;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Named;
 import java.io.BufferedReader;
 import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
@@ -45,11 +45,15 @@ public final class StartupTask extends Task<Void> {
 
     private final GenomeAssemblies assemblies;
 
+    private final File omimFilePath;
 
-    public StartupTask(OptionalResources optionalResources, Properties properties, GenomeAssemblies assemblies) {
+
+    public StartupTask(OptionalResources optionalResources, Properties properties, GenomeAssemblies assemblies,
+                       @Named("omimFilePath") File omimFilePath) {
         this.optionalResources = optionalResources;
         this.properties = properties;
         this.assemblies = assemblies;
+        this.omimFilePath = omimFilePath;
     }
 
 
@@ -73,7 +77,7 @@ public final class StartupTask extends Task<Void> {
         String ontologyPath = properties.getProperty(OptionalResources.ONTOLOGY_PATH_PROPERTY);
         if (ontologyPath != null && new File(ontologyPath).isFile()) {
             File ontologyFile = new File(ontologyPath);
-            LOGGER.info("Loading HPO from file {}", ontologyFile.getAbsolutePath());
+            LOGGER.info("Loading HPO from file '{}'", ontologyFile.getAbsolutePath());
             optionalResources.setOntology(OptionalResources.deserializeOntology(ontologyFile));
             optionalResources.setOntologyPath(ontologyFile);
         } else {
@@ -83,7 +87,7 @@ public final class StartupTask extends Task<Void> {
         String entrezPath = properties.getProperty(OptionalResources.ENTREZ_GENE_PATH_PROPERTY);
         if (entrezPath != null && new File(entrezPath).isFile()) {
             File entrezGenesFile = new File(entrezPath);
-            LOGGER.info("Loading Entrez genes from file {}", entrezGenesFile.getAbsolutePath());
+            LOGGER.info("Loading Entrez genes from file '{}'", entrezGenesFile.getAbsolutePath());
             EntrezParser entrezParser = new EntrezParser(entrezGenesFile);
             entrezParser.readFile();
             optionalResources.setEntrezId2symbol(entrezParser.getEntrezId2symbol());
@@ -97,16 +101,17 @@ public final class StartupTask extends Task<Void> {
         String curatedDirPath = properties.getProperty(OptionalResources.DISEASE_CASE_DIR_PROPERTY);
         if (curatedDirPath != null && new File(curatedDirPath).isDirectory()) {
             File curatedDir = new File(curatedDirPath);
-            LOGGER.info("Setting curated files directory to {}", curatedDir.getAbsolutePath());
+            LOGGER.info("Setting curated files directory to '{}'", curatedDir.getAbsolutePath());
             optionalResources.setDiseaseCaseDir(curatedDir);
         } else
-            LOGGER.info("Skipping setting of the curated files dictionary. Path {} does not point to directory",
+            LOGGER.info("Skipping setting of the curated files dictionary. Path '{}' does not point to directory",
                     curatedDirPath);
         // Biocurator ID
         optionalResources.setBiocuratorId(properties.getProperty(OptionalResources.BIOCURATOR_ID_PROPERTY, ""));
-        // Finally OMIM tab file. The file is bundled and therefore should be always present
-        LOGGER.info("Parsing bundled OMIM file");
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(StartupTask.class.getResource(OMIM_FILE_RESOURCE).toURI()))) {
+
+        // Finally OMIM tsv file
+        LOGGER.info("Parsing bundled OMIM file '{}'", omimFilePath);
+        try (BufferedReader reader = Files.newBufferedReader(omimFilePath.toPath())) {
             OMIMParser omimParser = new OMIMParser(reader);
             optionalResources.setCanonicalName2mimid(omimParser.getCanonicalName2mimid());
             optionalResources.setMimid2canonicalName(omimParser.getMimid2canonicalName());

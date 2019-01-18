@@ -66,6 +66,8 @@ public final class MainController {
 
     private final HostServices hostServices;
 
+    private final File omimFilePath;
+
     @FXML
     public StackPane contentStackPane;
 
@@ -80,7 +82,7 @@ public final class MainController {
     public MainController(OptionalResources optionalResources, DiseaseCaseDataController dataController,
                           ResourceBundle resourceBundle, Stage primaryStage,
                           Properties properties, @Named("appHomeDir") File appHomeDir, ExecutorService executorService,
-                          GenomeAssemblies assemblies, HostServices hostServices) {
+                          GenomeAssemblies assemblies, HostServices hostServices, @Named("omimFilePath") File omimFilePath) {
         this.optionalResources = optionalResources;
         this.dataController = dataController;
         this.resourceBundle = resourceBundle;
@@ -90,6 +92,7 @@ public final class MainController {
         this.executorService = executorService;
         this.assemblies = assemblies;
         this.hostServices = hostServices;
+        this.omimFilePath = omimFilePath;
     }
 
     /**
@@ -538,7 +541,7 @@ public final class MainController {
 
 
     public void initialize() {
-        StartupTask task = new StartupTask(optionalResources, properties, assemblies);
+        StartupTask task = new StartupTask(optionalResources, properties, assemblies, omimFilePath);
         executorService.submit(task);
         try {
             FXMLLoader loader = new FXMLLoader(DiseaseCaseDataController.class.getResource("DiseaseCaseDataView.fxml"));
