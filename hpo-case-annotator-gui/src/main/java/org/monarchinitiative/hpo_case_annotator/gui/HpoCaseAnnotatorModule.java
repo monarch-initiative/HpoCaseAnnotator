@@ -131,8 +131,8 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
     /**
      * Figure out where YAML parameters file is localized. There are two possible paths:
      * <ul>
-     *     <li>in the directory where the JAR file is (<code>codeHomeDir</code>)</li>
-     *     <li>inside of the JAR file</li>
+     * <li>in the directory where the JAR file is (<code>codeHomeDir</code>)</li>
+     * <li>inside of the JAR file</li>
      * </ul>
      * File at the first path has a priority.
      * <p>
@@ -177,6 +177,17 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
     // ----------------------------------------- FILES -----------------------------------------------------------------
 
+    /**
+     * @param codeHomeDir {@link File} path to directory where the JAR is
+     * @return path to OMIM tsv file
+     */
+    @Provides
+    @Singleton
+    @Named("omimFilePath")
+    public File omimFilePath(@Named("codeHomeDir") File codeHomeDir) {
+        File datFolder = new File(codeHomeDir, "dat");
+        return new File(datFolder, "omim.tsv");
+    }
 
     /**
      * Get path to parent directory of the JAR file (or classes). Note, this is <em>NOT</em> the path to the JAR file.

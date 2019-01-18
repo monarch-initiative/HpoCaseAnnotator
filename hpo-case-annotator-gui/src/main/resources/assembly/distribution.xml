@@ -31,6 +31,7 @@
                 <include>ref-genomes.properties</include>
                 <include>choice-basket.yml</include>
                 <include>log4j2.xml</include>
+                <include>dat/**</include>
             </includes>
         </fileSet>
     </fileSets>
