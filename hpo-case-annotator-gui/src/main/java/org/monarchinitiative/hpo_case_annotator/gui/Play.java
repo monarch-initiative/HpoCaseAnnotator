@@ -34,12 +34,25 @@ public class Play extends Application {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Play.class);
 
+    static final String HCA_VERSION_PROP_KEY = "hca.version";
+
     private Injector injector;
 
     public static void main(String[] args) {
         launch(args);
     }
 
+    @Override
+    public void init() throws Exception {
+        super.init();
+        // export app's version into System properties
+        try (InputStream is = getClass().getResourceAsStream("/application.properties")) {
+            Properties properties = new Properties();
+            properties.load(is);
+            System.setProperty(HCA_VERSION_PROP_KEY, properties.getProperty(HCA_VERSION_PROP_KEY, ""));
+        }
+
+    }
 
     @Override
     public void start(Stage window) throws Exception {

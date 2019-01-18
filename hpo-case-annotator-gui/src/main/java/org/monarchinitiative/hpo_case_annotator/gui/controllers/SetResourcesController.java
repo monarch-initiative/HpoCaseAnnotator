@@ -88,7 +88,7 @@ public final class SetResourcesController {
 
 
     @Inject
-    SetResourcesController(OptionalResources optionalResources, Properties properties, File appHomeDir,
+    SetResourcesController(OptionalResources optionalResources, Properties properties, @Named("appHomeDir") File appHomeDir,
                            ExecutorService executorService, @Named("primaryStage") Stage primaryStage, GenomeAssemblies assemblies) {
         this.optionalResources = optionalResources;
         this.properties = properties;

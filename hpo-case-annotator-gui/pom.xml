@@ -12,6 +12,12 @@
 
     <build>
         <finalName>HpoCaseAnnotator-Gui-${project.version}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
 
         <plugins>
 
@@ -61,6 +67,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Play</mainClass>
                         </manifest>
                     </archive>

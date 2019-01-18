@@ -10,6 +10,7 @@ import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembliesS
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.SetResourcesController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SomaticVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SplicingVariantController;
@@ -76,7 +77,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
         bind(OptionalResources.class)
                 .asEagerSingleton();
 
-
+        bind(SetResourcesController.class).asEagerSingleton();
         bind(DiseaseCaseDataController.class);
         bind(MainController.class);
         bind(MendelianVariantController.class);
@@ -185,6 +186,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
      */
     @Provides
     @Named("codeHomeDir")
+    @Singleton
     public File codeHomeDir() throws IOException {
         File codeHomeDir = new File(Play.class.getProtectionDomain().getCodeSource().getLocation().getFile())
                 .getParentFile();
@@ -207,6 +209,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
      */
     @Provides
     @Named("propertiesFilePath")
+    @Singleton
     public File propertiesFilePath(@Named("appHomeDir") File appHomeDir) {
         return new File(appHomeDir, PROPERTIES_FILE_NAME);
     }
@@ -214,6 +217,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
     @Provides
     @Named("refGenomePropertiesFilePath")
+    @Singleton
     public File refGenomePropertiesFilePath(@Named("appHomeDir") File appHomeDir) {
         return new File(appHomeDir, GENOME_ASSEMBLIES_FILE_NAME);
     }
@@ -231,18 +235,20 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
      */
     @Provides
     @Named("appHomeDir")
+    @Singleton
     private File appHomeDir() throws IOException {
         String osName = System.getProperty("os.name").toLowerCase();
+        final String appVersion = System.getProperty(Play.HCA_VERSION_PROP_KEY);
 
         File appHomeDir;
         if (osName.contains("nix") || osName.contains("nux") || osName.contains("aix")) { // Unix
-            appHomeDir = new File(System.getProperty("user.home") + File.separator + ".hpo-case-annotator");
+            appHomeDir = new File(System.getProperty("user.home") + File.separator + ".hpo-case-annotator" + (appVersion.isEmpty() ? appVersion : "-" + appVersion));
         } else if (osName.contains("win")) { // Windows
-            appHomeDir = new File(System.getProperty("user.home") + File.separator + "HpoCaseAnnotator");
+            appHomeDir = new File(System.getProperty("user.home") + File.separator + "HpoCaseAnnotator" + (appVersion.isEmpty() ? appVersion : "-" + appVersion));
         } else if (osName.contains("mac")) { // OsX
-            appHomeDir = new File(System.getProperty("user.home") + File.separator + ".hpo-case-annotator");
+            appHomeDir = new File(System.getProperty("user.home") + File.separator + ".hpo-case-annotator" + (appVersion.isEmpty() ? appVersion : "-" + appVersion));
         } else { // unknown platform
-            appHomeDir = new File(System.getProperty("user.home") + File.separator + "HpoCaseAnnotator");
+            appHomeDir = new File(System.getProperty("user.home") + File.separator + "HpoCaseAnnotator" + (appVersion.isEmpty() ? appVersion : "-" + appVersion));
         }
 
         if (!appHomeDir.exists()) {
