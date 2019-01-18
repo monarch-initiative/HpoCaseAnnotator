@@ -50,7 +50,7 @@ public class Mutation {
      * This method will report anything about the data in the current mutation 
      * that looks suspicious and that the user should check. For instance, a null
      ** value. For now, just do this for the biocurator name, but this
-     * needs to be extended to all data elements (TODO)
+     * needs to be extended to all data elements
      */
     public String validityCheck() {
 	boolean OK=true;
@@ -79,7 +79,7 @@ public class Mutation {
      * This method will report anything about the data in the current mutation 
      * that looks suspicious and that the user should check. For instance, a null
      ** value. For now, just do this for the biocurator name, but this
-     * needs to be extended to all data elements (TODO)
+     * needs to be extended to all data elements
      */
     public String validityCheckCancer() {
 	boolean OK=true;

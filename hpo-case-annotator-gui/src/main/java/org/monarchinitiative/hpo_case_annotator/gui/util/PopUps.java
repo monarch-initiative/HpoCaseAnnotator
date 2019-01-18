@@ -15,8 +15,8 @@ import javafx.stage.*;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public final class PopUps {
@@ -124,36 +124,56 @@ public final class PopUps {
 
 
     /**
-     * Present user a window with buttons
+     * Present user a window with buttons to choose from. The buttons are assembled in a line. Use
+     * {@link Objects#toString(Object)} to make a text representation of {@link T} objects that will be used in the
+     * buttons.
      *
      * @param choices     array of Strings, each string will be presented as button
      * @param labelText   text present in body of the popup window
      * @param windowTitle title of the popup window
      * @return {@link Optional} object containing String selected by user or empty if user selected cancel
      */
-    public static Optional<String> getToggleChoiceFromUser(List<String> choices, String labelText, String windowTitle) {
+    public static <T> Optional<T> getToggleChoiceFromUser(Collection<T> choices, String labelText, String windowTitle) {
+        return getToggleChoiceFromUser(choices, labelText, windowTitle, Objects::toString);
+    }
+
+
+    /**
+     * Present user a window with buttons to choose from. The buttons are assembled in a line
+     *
+     * @param choices     array of Strings, each string will be presented as button
+     * @param labelText   text present in body of the popup window
+     * @param windowTitle title of the popup window
+     * @param textMapper  Function to be used to get a text representation of the {@link T} parameter
+     * @return {@link Optional} object containing String selected by user or empty if user selected cancel
+     */
+    public static <T> Optional<T> getToggleChoiceFromUser(Collection<T> choices, String labelText, String windowTitle, Function<T, String> textMapper) {
+        Map<String, T> stringRepresentationsOfChoices = choices.stream()
+                .collect(Collectors.toMap(textMapper, Function.identity()));
+
         Alert al = new Alert(AlertType.CONFIRMATION);
 
         al.setTitle(windowTitle);
         al.setHeaderText(null);
         al.setContentText(labelText);
-        List<ButtonType> buttons = choices.stream().map(ButtonType::new).collect(Collectors.toList());
 
+        List<ButtonType> buttons = stringRepresentationsOfChoices.keySet().stream()
+                .sorted()
+                .map(ButtonType::new)
+                .collect(Collectors.toList());
+        // add cancel button to the end
         buttons.add(new ButtonType("Cancel", ButtonData.CANCEL_CLOSE));
-
         al.getButtonTypes().setAll(buttons);
-
         Optional<ButtonType> result = al.showAndWait();
 
         if (result.isPresent()) {
             ButtonType bt = result.get();
             if (bt.getButtonData() != ButtonData.CANCEL_CLOSE) {
-                return Optional.of(bt.getText());
+                return Optional.of(stringRepresentationsOfChoices.get(bt.getText()));
             }
         }
         return Optional.empty();
     }
-
 
 //    @Deprecated
 //    public static List<HPO> showEditHPOTerms(String windowTitle, List<HPO> knownTerms, Stage ownerWindow) {

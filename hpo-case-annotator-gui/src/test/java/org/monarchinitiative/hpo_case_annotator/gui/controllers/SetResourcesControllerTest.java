@@ -29,6 +29,8 @@ import static org.junit.Assert.assertEquals;
 @GuiceModules({HpoCaseAnnotatorModule.class})
 public class SetResourcesControllerTest extends ApplicationTest {
 
+    // TODO(ielis) - implement
+
     @Inject
     private SetResourcesController controller;
 
@@ -38,23 +40,22 @@ public class SetResourcesControllerTest extends ApplicationTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-//        if (Boolean.getBoolean("headless")) {
+        if (Boolean.getBoolean("headless")) {
         System.setProperty("headless", "true"); // set this to false if you want to see the robot in action.
         System.setProperty("testfx.headless", "true"); // REQUIRED
         System.setProperty("testfx.robot", "glass"); // REQUIRED
         System.setProperty("prism.order", "sw"); // REQUIRED
-//        }
+        }
 
-    }
-
-
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-//        if (Boolean.getBoolean("headless")) {
-        System.clearProperty("headless");
-        System.clearProperty("testfx.robot");
-        System.clearProperty("testfx.headless");
-        System.clearProperty("prism.order");
+        // for headless GUI testing, set the "not.headless" system property to true or comment out if you want to see the
+        // robot in action
+//        if (!Boolean.getBoolean("not.headless")) {
+//            System.setProperty("testfx.robot", "glass");
+//            System.setProperty("testfx.headless", "true");
+//            System.setProperty("prism.order", "sw");
+//            System.setProperty("prism.text", "t2k");
+//            System.setProperty("java.awt.headless", "true");
+//            System.setProperty("headless.geometry", "1200x760-32");
 //        }
     }
 

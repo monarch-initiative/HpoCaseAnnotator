@@ -7,13 +7,14 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.core.io.Downloader;
 import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
-import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembly;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblyDownloader;
+import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
+import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
+import org.monarchinitiative.phenol.base.PhenolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,7 +88,7 @@ public final class SetResourcesController {
 
 
     @Inject
-    SetResourcesController(OptionalResources optionalResources, Properties properties, File appHomeDir,
+    SetResourcesController(OptionalResources optionalResources, Properties properties, @Named("appHomeDir") File appHomeDir,
                            ExecutorService executorService, @Named("primaryStage") Stage primaryStage, GenomeAssemblies assemblies) {
         this.optionalResources = optionalResources;
         this.properties = properties;
@@ -112,8 +113,11 @@ public final class SetResourcesController {
      */
     @FXML
     void setCuratedDirButtonAction() {
-        File curatedDir = PopUps.selectDirectory(primaryStage, new File(System.getProperty("user.home")), "Set " +
-                "directory for curated files.");
+        File initial = optionalResources.getDiseaseCaseDir() != null && optionalResources.getDiseaseCaseDir().isDirectory()
+                ? optionalResources.getDiseaseCaseDir()
+                : new File(System.getProperty("user.home"));
+
+        File curatedDir = PopUps.selectDirectory(primaryStage, initial, "Set directory for curated files.");
         if (curatedDir != null) {
             optionalResources.setDiseaseCaseDir(curatedDir);
             curatedFilesDirLabel.setText(curatedDir.getAbsolutePath());
@@ -201,9 +205,15 @@ public final class SetResourcesController {
                     "location", "Download " +
                     "HPO obo file");
             if (!response) {
-                optionalResources.setOntology(OptionalResources.deserializeOntology(target));
-                optionalResources.setOntologyPath(target);
-                hpOboLabel.setText(target.getAbsolutePath());
+                try {
+                    optionalResources.setOntology(OptionalResources.deserializeOntology(target));
+                    optionalResources.setOntologyPath(target);
+                    hpOboLabel.setText(target.getAbsolutePath());
+                } catch (IOException e) {
+                    LOGGER.warn("Error during opening the ontology file '{}'", target, e);
+                } catch (PhenolException e) {
+                    LOGGER.warn("Error during parsing the ontology file '{}'", target, e);
+                }
                 return;
             }
         }
@@ -221,9 +231,16 @@ public final class SetResourcesController {
         hpoProgressIndicator.progressProperty().unbind();
         hpoProgressIndicator.progressProperty().bind(task.progressProperty());
         task.setOnSucceeded(e -> {
-            optionalResources.setOntology(OptionalResources.deserializeOntology(target));
-            optionalResources.setOntologyPath(target);
-            hpOboLabel.setText(target.getAbsolutePath());
+            try {
+                optionalResources.setOntology(OptionalResources.deserializeOntology(target));
+                optionalResources.setOntologyPath(target);
+                hpOboLabel.setText(target.getAbsolutePath());
+            } catch (IOException ex) {
+                LOGGER.warn("Error occured during opening the ontology file '{}'", target, ex);
+            } catch (PhenolException ex) {
+                LOGGER.warn("Error during parsing the ontology file '{}'", target, ex);
+            }
+
         });
         task.setOnFailed(e -> {
             optionalResources.setOntologyPath(null);
@@ -238,27 +255,27 @@ public final class SetResourcesController {
      * Initialize elements of this controller.
      */
     public void initialize() {
-        if (assemblies.getAssemblyMap().containsKey(GenomeAssembly.HG19.toString())) {
-            File hg19Assembly = assemblies.getAssemblyMap().get(GenomeAssembly.HG19.toString()).getFastaPath();
+        if (assemblies.hasFastaForAssembly(GenomeAssembly.GRCH_37)) {
+            File hg19Assembly = assemblies.getAssemblyMap().get(GenomeAssembly.GRCH_37).toFile();
             if (notNullAndValidFasta(hg19Assembly)) {
-                hg19GenomeLabel.setText(assemblies.getAssemblyMap().get(GenomeAssembly.HG19.toString()).getFastaPath().getAbsolutePath());
+                hg19GenomeLabel.setText(assemblies.getAssemblyMap().get(GenomeAssembly.GRCH_37).toFile().getAbsolutePath());
                 hg19ProgressIndicator.setProgress(1);
             } else {
                 LOGGER.info("Removing invalid path from hg19 build");
-                assemblies.getAssemblyMap().remove(GenomeAssembly.HG19.toString());
+                assemblies.removeAssembly(GenomeAssembly.GRCH_37);
                 hg19GenomeLabel.setText("");
                 hg19ProgressIndicator.setProgress(0);
             }
         }
 
-        if (assemblies.getAssemblyMap().containsKey(GenomeAssembly.HG38.toString())) {
-            File hg38Assembly = assemblies.getAssemblyMap().get(GenomeAssembly.HG38.toString()).getFastaPath();
+        if (assemblies.hasFastaForAssembly(GenomeAssembly.GRCH_38)) {
+            File hg38Assembly = assemblies.getAssemblyMap().get(GenomeAssembly.GRCH_38).toFile();
             if (notNullAndValidFasta(hg38Assembly)) {
-                hg38GenomeLabel.setText(assemblies.getAssemblyMap().get(GenomeAssembly.HG38.toString()).getFastaPath().getAbsolutePath());
+                hg38GenomeLabel.setText(assemblies.getAssemblyMap().get(GenomeAssembly.GRCH_38).toFile().getAbsolutePath());
                 hg38ProgressIndicator.setProgress(1);
             } else {
                 LOGGER.info("Removing invalid path from hg38 build");
-                assemblies.getAssemblyMap().remove(GenomeAssembly.HG38.toString());
+                assemblies.removeAssembly(GenomeAssembly.GRCH_38);
                 hg38GenomeLabel.setText("");
                 hg38ProgressIndicator.setProgress(0);
             }
@@ -294,7 +311,7 @@ public final class SetResourcesController {
             FileChooser chooser = new FileChooser();
             chooser.setInitialDirectory(appHomeDir);
             chooser.setTitle("Save hg19 fasta as");
-            chooser.setInitialFileName(GenomeAssembly.HG19.toString() + ".fa");
+            chooser.setInitialFileName(GenomeAssembly.GRCH_37 + ".fa");
             File target = chooser.showSaveDialog(primaryStage);
             if (target == null) return;
 
@@ -306,17 +323,16 @@ public final class SetResourcesController {
 
             downloader.setOnSucceeded(e -> {
                 hg19GenomeLabel.setText(target.getAbsolutePath());
-                GenomeAssembly hg19 = GenomeAssembly.HG19;
-                hg19.setFastaPath(target);
-                assemblies.getAssemblyMap().put(hg19.toString(), hg19);
+                assemblies.putAssembly(GenomeAssembly.GRCH_37, target.toPath());
+
             });
             downloader.setOnFailed(e -> {
                 hg19GenomeLabel.setText("");
-                assemblies.getAssemblyMap().remove(GenomeAssembly.HG19.toString());
+                assemblies.removeAssembly(GenomeAssembly.GRCH_37);
             });
             downloader.setOnCancelled(e -> {
                 hg19GenomeLabel.setText(e.getSource().getException().getMessage());
-                assemblies.getAssemblyMap().remove(GenomeAssembly.HG19.toString());
+                assemblies.removeAssembly(GenomeAssembly.GRCH_37);
             });
 
             executorService.submit(downloader);
@@ -335,7 +351,7 @@ public final class SetResourcesController {
             FileChooser chooser = new FileChooser();
             chooser.setInitialDirectory(appHomeDir);
             chooser.setTitle("Save hg38 fasta as");
-            chooser.setInitialFileName(GenomeAssembly.HG38.toString() + ".fa");
+            chooser.setInitialFileName(GenomeAssembly.GRCH_38 + ".fa");
             File target = chooser.showSaveDialog(primaryStage);
             if (target == null) return;
 
@@ -348,17 +364,15 @@ public final class SetResourcesController {
 
             downloader.setOnSucceeded(e -> {
                 hg38GenomeLabel.setText(target.getAbsolutePath());
-                GenomeAssembly hg38 = GenomeAssembly.HG38;
-                hg38.setFastaPath(target);
-                assemblies.getAssemblyMap().put(hg38.toString(), hg38);
+                assemblies.putAssembly(GenomeAssembly.GRCH_38, target.toPath());
             });
             downloader.setOnFailed(e -> {
                 hg38GenomeLabel.setText("");
-                assemblies.getAssemblyMap().remove(GenomeAssembly.HG38.toString());
+                assemblies.removeAssembly(GenomeAssembly.GRCH_38);
             });
             downloader.setOnCancelled(e -> {
                 hg38GenomeLabel.setText("");
-                assemblies.getAssemblyMap().remove(GenomeAssembly.HG38.toString());
+                assemblies.removeAssembly(GenomeAssembly.GRCH_38);
             });
 
             executorService.submit(downloader);
@@ -375,7 +389,7 @@ public final class SetResourcesController {
         FileChooser chooser = new FileChooser();
         chooser.setInitialDirectory(appHomeDir);
         chooser.setTitle("Select local hg19 FASTA file");
-        chooser.setInitialFileName(GenomeAssembly.HG19.toString() + ".fa");
+        chooser.setInitialFileName(GenomeAssembly.GRCH_37 + ".fa");
 
         while (true) { // loop until we get proper FASTA file
             File target = chooser.showOpenDialog(primaryStage);
@@ -386,9 +400,7 @@ public final class SetResourcesController {
                 PopUps.showInfoMessage("Provide path to file that has '*.fa' suffix", String.format("'%s' has a bad suffix", target.getName()));
             } else { // all set, set path and break
                 hg19GenomeLabel.setText(target.getAbsolutePath());
-                GenomeAssembly hg19 = GenomeAssembly.HG19;
-                hg19.setFastaPath(target);
-                assemblies.getAssemblyMap().put(hg19.toString(), hg19);
+                assemblies.putAssembly(GenomeAssembly.GRCH_37, target.toPath());
                 hg19ProgressIndicator.setProgress(1);
                 break;
             }
@@ -401,7 +413,7 @@ public final class SetResourcesController {
         FileChooser chooser = new FileChooser();
         chooser.setInitialDirectory(appHomeDir);
         chooser.setTitle("Select local hg38 FASTA file");
-        chooser.setInitialFileName(GenomeAssembly.HG38.toString() + ".fa");
+        chooser.setInitialFileName(GenomeAssembly.GRCH_38.toString() + ".fa");
 
         while (true) { // loop until we get proper FASTA file
             File target = chooser.showOpenDialog(primaryStage);
@@ -412,9 +424,7 @@ public final class SetResourcesController {
                 PopUps.showInfoMessage("Provide path to file that has '*.fa' suffix", String.format("'%s' has a bad suffix", target.getName()));
             } else { // all set, set path and break
                 hg38GenomeLabel.setText(target.getAbsolutePath());
-                GenomeAssembly hg38 = GenomeAssembly.HG38;
-                hg38.setFastaPath(target);
-                assemblies.getAssemblyMap().put(hg38.toString(), hg38);
+                assemblies.putAssembly(GenomeAssembly.GRCH_38, target.toPath());
                 hg38ProgressIndicator.setProgress(1);
                 break;
             }

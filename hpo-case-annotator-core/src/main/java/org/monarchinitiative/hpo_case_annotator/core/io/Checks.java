@@ -22,10 +22,7 @@ public class Checks {
         /* Remove all whitespace characters.
          * http://stackoverflow.com/questions/5455794/removing-whitespace-from-strings-in-java#5455809 */
         String noWhitespace = fileName.replaceAll("\\s+", "");
-        if (noWhitespace.equals("")) {
-            return false;
-        }
-        return true;
+        return !noWhitespace.equals("");
     }
 
 

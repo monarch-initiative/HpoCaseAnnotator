@@ -6,17 +6,17 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import ontologizer.io.obo.OBOParser;
-import ontologizer.io.obo.OBOParserException;
-import ontologizer.io.obo.OBOParserFileInput;
-import ontologizer.ontology.Ontology;
-import ontologizer.ontology.TermContainer;
 import org.monarchinitiative.hpo_case_annotator.model.xml_model.TargetGene;
+import org.monarchinitiative.phenol.base.PhenolException;
+import org.monarchinitiative.phenol.io.OntologyLoader;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -49,6 +49,8 @@ public final class OptionalResources {
 
     private final BooleanBinding omimIsMissing;
 
+    private final BooleanBinding diseaseCaseDirIsInitialized;
+
     private final ObjectProperty<File> diseaseCaseDir = new SimpleObjectProperty<>(this, "diseaseCaseDir");
 
     // default value does not harm here
@@ -80,24 +82,35 @@ public final class OptionalResources {
         this.omimIsMissing = Bindings.createBooleanBinding(() -> Stream.of(mimid2canonicalNameProperty(),
                 canonicalName2mimidProperty()).anyMatch(op -> op.get() == null),
                 mimid2canonicalNameProperty(), canonicalName2mimidProperty());
+
+        this.diseaseCaseDirIsInitialized = Bindings.createBooleanBinding(() -> getDiseaseCaseDir() != null && getDiseaseCaseDir().isDirectory(),
+                diseaseCaseDirProperty());
     }
 
-
-    public static Ontology deserializeOntology(File ontologyPath) {
-        try {
-            OBOParser parser = new OBOParser(new OBOParserFileInput(ontologyPath.getAbsolutePath()), OBOParser
-                    .PARSE_DEFINITIONS);
-            LOGGER.info(parser.doParse());
-            TermContainer termContainer = new TermContainer(parser.getTermMap(), parser.getFormatVersion(), parser
-                    .getDate());
-            return Ontology.create(termContainer);
-        } catch (IOException | OBOParserException e) {
-            LOGGER.warn("Error occured during deserialization of obo file at {}", ontologyPath, e);
-            e.printStackTrace();
+    public static Ontology deserializeOntology(File ontologyPath) throws IOException, PhenolException {
+        // this might not be the best place for ontology deserialization, but it works for now
+        try (InputStream is = Files.newInputStream(ontologyPath.toPath())) {
+            return deserializeOntology(is);
         }
-        return null;
     }
 
+    public static Ontology deserializeOntology(InputStream is) {
+        return OntologyLoader.loadOntology(is);
+    }
+
+    /**
+     * @return <code>true</code> if the diseaseCaseDir is not <code>null</code> and is a directory
+     */
+    public Boolean getDiseaseCaseDirIsInitialized() {
+        return diseaseCaseDirIsInitialized.get();
+    }
+
+    /**
+     * @return {@link BooleanBinding} that evaluates to <code>true</code> if the diseaseCaseDir is not null and is a directory
+     */
+    public BooleanBinding diseaseCaseDirIsInitializedProperty() {
+        return diseaseCaseDirIsInitialized;
+    }
 
     public File getOntologyPath() {
         return ontologyPath;

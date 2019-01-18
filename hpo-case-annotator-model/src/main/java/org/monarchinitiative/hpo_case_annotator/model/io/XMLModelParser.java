@@ -3,8 +3,8 @@ package org.monarchinitiative.hpo_case_annotator.model.io;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.monarchinitiative.hpo_case_annotator.model.Codecs;
-import org.monarchinitiative.hpo_case_annotator.model.xml_model.DiseaseCaseModel;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.xml_model.DiseaseCaseModel;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
@@ -15,6 +15,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 
 /**
  * This class uses {@link XMLEncoder} & {@link XMLDecoder} to load/dump model data into XML file.<p>Note: no alert
@@ -32,7 +33,6 @@ public final class XMLModelParser implements ModelParser {
 
     /**
      * Create parser that will read and save model XML files to provided directory.
-     *
      */
     public XMLModelParser(File modelDir) {
         this.modelDir.set(modelDir);
@@ -60,10 +60,10 @@ public final class XMLModelParser implements ModelParser {
      * @param inputStream pointing to data stored in XML format is stored
      * @return {@link DiseaseCaseModel} with read data
      */
-    public static DiseaseCase loadDiseaseCase(InputStream inputStream) {
+    public static Optional<DiseaseCase> loadDiseaseCase(InputStream inputStream) {
         try (XMLDecoder xmlDecoder = new XMLDecoder(inputStream)) {
             DiseaseCaseModel dcm = (DiseaseCaseModel) xmlDecoder.readObject();
-            return Codecs.diseaseCaseModel2DiseaseCase(dcm);
+            return Optional.of(Codecs.diseaseCaseModel2DiseaseCase(dcm));
         }
     }
 
@@ -96,7 +96,7 @@ public final class XMLModelParser implements ModelParser {
      * {@inheritDoc}
      */
     @Override
-    public DiseaseCase readModel(InputStream inputStream) {
+    public Optional<DiseaseCase> readModel(InputStream inputStream) {
         return loadDiseaseCase(inputStream);
     }
 

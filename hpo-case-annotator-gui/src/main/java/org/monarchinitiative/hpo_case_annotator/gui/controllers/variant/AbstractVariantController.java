@@ -1,59 +1,56 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
-import javafx.geometry.Point2D;
-import javafx.scene.control.Control;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.Tooltip;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
-import org.monarchinitiative.hpo_case_annotator.core.io.ChoiceBasket;
+import javafx.beans.Observable;
+import javafx.beans.binding.Binding;
+import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult;
+import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.AbstractDataController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Place for shared content of VariantControllers. Needs to be subclassed by every class that wants to act as a controller
- * of {@link Variant} model class and be placed in {@link DataController}.
+ * of {@link Variant} model class and be placed in {@link DiseaseCaseDataController}.
+ * <p>
+ * All the variants are validated by the same validator, hence the validator is defined in this class.
  * Created by ielis on 5/17/17.
  */
-public abstract class AbstractVariantController extends TitledPane {
+public abstract class AbstractVariantController extends AbstractDataController<Variant> {
 
     /**
-     * Bean containing data to be used for populating content of FXML elements such as ComboBoxes. Loaded from
-     * choice-basket.yml file.
+     * POJO containing data to be used for populating content of FXML elements such as ComboBoxes.
      */
-    protected final ChoiceBasket choiceBasket;
+    final GuiElementValues elementValues;
+
+    final List<ValidationResult> validationResults;
+
+    private final ValidationRunner<Variant> variantValidationRunner;
 
 
-    protected AbstractVariantController(ChoiceBasket choiceBasket) {
-        this.choiceBasket = choiceBasket;
+    AbstractVariantController(GuiElementValues elementValues) {
+        this.elementValues = elementValues;
+        this.variantValidationRunner = ValidationRunner.variantValidationRunner();
+        this.validationResults = new ArrayList<>();
     }
 
 
+    @Override
+    public boolean isComplete() {
+        validationResults.clear();
+        validationResults.addAll(variantValidationRunner.validateSingleModel(getData()));
+        return validationResults.isEmpty();
+    }
+
+    public abstract Binding<String> variantTitleBinding();
+
     /**
-     * Add {@link Tooltip} to given {@link Control} FXML element.
+     * Utility method for keeping track of {@link Observable}s that the {@link Variant} depends on.
      *
-     * @param control     FXML element to which the tooltip is being added.
-     * @param tooltipText text which will be displayed in a tooltip
+     * @return {@link List} with observable dependencies
      */
-    protected void addTooltip(Control control, String tooltipText) {
-        // Inspiration - https://coderanch.com/t/622070/java/control-Tooltip-visible-time-duration
-        Tooltip tooltip = new Tooltip(tooltipText);
-        control.setTooltip(tooltip);
-
-        // Mouse events which control displaying of the Tooltip
-        control.setOnMouseEntered(e -> {
-            Point2D anchor = control.localToScreen(control.getLayoutBounds().getMaxX(),
-                    control.getLayoutBounds().getMaxY());
-            tooltip.show(control, anchor.getX(), anchor.getY());
-        });
-        control.setOnMouseExited(e -> tooltip.hide());
-    }
-
-
-    /**
-     * Read yaml configuration file and initialize content of fxml view elements.
-     */
-    protected abstract void populateContent();
-
-    public abstract void presentVariant(Variant variant);
-
-    public abstract Variant getVariant();
+    abstract List<? extends Observable> getObservableVariantDependencies();
 }

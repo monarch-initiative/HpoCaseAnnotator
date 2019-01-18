@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>hpo-case-annotator</artifactId>
         <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
-        <version>1.0.8</version>
+        <version>1.0.9</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>hpo-case-annotator-gui</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.9</version>
 
     <build>
         <finalName>HpoCaseAnnotator-Gui-${project.version}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
 
         <plugins>
 
@@ -63,6 +67,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Play</mainClass>
                         </manifest>
                     </archive>
@@ -158,7 +163,13 @@
         <dependency>
             <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
             <artifactId>hpo-case-annotator-core</artifactId>
-            <version>1.0.8</version>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.monarchinitiative.hpotextmining</groupId>
+            <artifactId>hpotextmining-gui</artifactId>
+            <version>0.2.5</version>
         </dependency>
 
         <dependency>
@@ -185,21 +196,23 @@
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-core</artifactId>
-            <version>4.0.13-alpha</version>
+            <version>${testfx.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.testfx/testfx-junit -->
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-junit</artifactId>
-            <version>4.0.13-alpha</version>
+            <version>${testfx.version}</version>
             <scope>test</scope>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.testfx/openjfx-monocle -->
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>openjfx-monocle</artifactId>
             <version>1.8.0_20</version>
+            <scope>test</scope>
         </dependency>
         <!-- End of libraries for GUI testing -->
 

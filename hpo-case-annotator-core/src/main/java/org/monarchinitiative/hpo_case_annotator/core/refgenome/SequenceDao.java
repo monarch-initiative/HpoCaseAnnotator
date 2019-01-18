@@ -14,9 +14,9 @@ public interface SequenceDao extends AutoCloseable {
      *
      * @param chromosome {@link String} denoting chromosome/contig
      * @param begin      {@link Integer} denoting the first base of the sequence on FWD strand of chromosome using
-     *                   1-based (including) coordinates
+     *                   0-based (exclusive) coordinates
      * @param end        {@link Integer} denoting the last base of the sequence on FWD strand of chromosome using
-     *                   1-based (including) coordinates
+     *                   0-based (inclusive) coordinates
      * @return {@link String} containing the nucleotide sequence
      */
     String fetchSequence(String chromosome, int begin, int end);

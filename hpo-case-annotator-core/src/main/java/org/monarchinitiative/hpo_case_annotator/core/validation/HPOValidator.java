@@ -1,32 +1,35 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
-import ontologizer.ontology.Ontology;
+import org.monarchinitiative.hpo_case_annotator.model.proto.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.model.xml_model.DiseaseCaseModel;
 import org.monarchinitiative.hpo_case_annotator.model.xml_model.HPO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
  * This validator is supposed to validate HPO terms (e.g. that id & label match together).
  */
-@Deprecated // since it should not be possible to add a corrupted HPO term
-public class HPOValidator
-//        extends AbstractValidator
-{
+public class HPOValidator implements Validator<OntologyClass> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HPOValidator.class);
 
     private Map<String, HPO> hpoMap;
 
 
-    public HPOValidator(String pathToHpoFile) {
+    HPOValidator(String pathToHpoFile) {
         // use
 //        HPOParser hpoParser = new HPOParser(this.settings.getHpOBOPath());
 //        this.hpoMap = hpoParser.getHpoMap();
     }
 
 
-    public HPOValidator(Ontology ontology) {
-        // TODO - implement HPO checking.
-    }
+//    public HPOValidator(Ontology ontology) {
+
+//    }
 
 
     /**
@@ -59,4 +62,10 @@ public class HPOValidator
 //        return ValidationResult.PASSED;
     }
 
+    @Override
+    public List<ValidationResult> validate(OntologyClass instance) {
+        // TODO - implement HPO checking.
+        LOGGER.warn("HPOValidator is not yet implemented");
+        return Collections.emptyList();
+    }
 }

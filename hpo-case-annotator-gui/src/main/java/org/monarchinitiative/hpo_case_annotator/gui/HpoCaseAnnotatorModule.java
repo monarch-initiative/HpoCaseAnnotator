@@ -5,18 +5,25 @@ import com.google.inject.Provides;
 import com.google.inject.name.Names;
 import javafx.application.HostServices;
 import javafx.stage.Stage;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController;
-import org.monarchinitiative.hpo_case_annotator.core.io.ChoiceBasket;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembliesSerializer;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.SetResourcesController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SomaticVariantController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SplicingVariantController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -35,7 +42,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
     private static final String GENOME_ASSEMBLIES_FILE_NAME = "genome-assemblies.properties";
 
-    private static final String CHOICE_BASKET_FILE_NAME = "choice-basket.yml";
+    private static final String GUI_ELEMENTS_VALUES = "gui-elements-values.yml";
 
     /**
      * This is the {@link Stage} which is provided by JavaFX and registered into the Spring container in the
@@ -70,11 +77,21 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
         bind(OptionalResources.class)
                 .asEagerSingleton();
 
-
-        bind(DataController.class);
+        bind(SetResourcesController.class).asEagerSingleton();
+        bind(DiseaseCaseDataController.class);
         bind(MainController.class);
+        bind(MendelianVariantController.class);
+        bind(SomaticVariantController.class);
+        bind(SplicingVariantController.class);
     }
 
+
+    @Provides
+    @Singleton
+    @Named("scigraphMiningUrl")
+    public URL scigraphMiningUrl(Properties properties) throws MalformedURLException {
+        return new URL(Objects.requireNonNull(properties.getProperty("scigraph.mining.url")));
+    }
 
     /**
      * Return {@link Properties} with paths to resources. At first, {@link File} <code>propertiesFilePath</code>
@@ -112,32 +129,34 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
 
     /**
-     * Figure out where YAML parameters file is localized. There are two possible paths: <ul> <li>in
-     * the directory where the JAR file is (<code>codeHomeDir</code>)</li> <li>inside of the JAR file</li> </ul> The
-     * first has a priority.
+     * Figure out where YAML parameters file is localized. There are two possible paths:
+     * <ul>
+     *     <li>in the directory where the JAR file is (<code>codeHomeDir</code>)</li>
+     *     <li>inside of the JAR file</li>
+     * </ul>
+     * File at the first path has a priority.
+     * <p>
+     * Use the YAML file to populate content of the {@link GuiElementValues}.
      *
-     * Use the YAML file to populate content of the {@link ChoiceBasket}.
-     *
-     * @return {@link ChoiceBasket} populated with content of the YAML file
+     * @return {@link GuiElementValues} populated with content of the YAML file
      */
-
     @Provides
     @Singleton
-    public ChoiceBasket choiceBasket(@Named("codeHomeDir") File codeHomeDir) throws IOException {
-        File target = new File(codeHomeDir, CHOICE_BASKET_FILE_NAME);
+    public GuiElementValues guiElementValues(@Named("codeHomeDir") File codeHomeDir) throws IOException {
+        File target = new File(codeHomeDir, GUI_ELEMENTS_VALUES);
         if (target.isFile()) { // load from the file located next to the JAR file
-            LOGGER.info("Loading choice basket from file {}", target.getAbsolutePath());
-            return new ChoiceBasket(target);
-        }
-        try { // try to load content from bundled file
-            URL url = getClass().getResource("/" + CHOICE_BASKET_FILE_NAME);
-            LOGGER.info("Loading bundled choice basked from {}", url.toString());
-            return new ChoiceBasket(url);
-        } catch (IOException e) {
-            LOGGER.warn("Tried to load bundled choice basket from but failed", e);
-            throw e;
+            try (InputStream is = Files.newInputStream(target.toPath())) {
+                LOGGER.info("Loading gui element values from file {}", target.getAbsolutePath());
+                return GuiElementValues.guiElementValuesFrom(is);
+            }
+        } else { // try to load content from bundled file
+            try (InputStream is = getClass().getResourceAsStream("/" + GUI_ELEMENTS_VALUES)) {
+                LOGGER.info("Loading bundled gui element values file");
+                return GuiElementValues.guiElementValuesFrom(is);
+            }
         }
     }
+
 
     @Provides
     @Singleton
@@ -167,6 +186,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
      */
     @Provides
     @Named("codeHomeDir")
+    @Singleton
     public File codeHomeDir() throws IOException {
         File codeHomeDir = new File(Play.class.getProtectionDomain().getCodeSource().getLocation().getFile())
                 .getParentFile();
@@ -189,6 +209,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
      */
     @Provides
     @Named("propertiesFilePath")
+    @Singleton
     public File propertiesFilePath(@Named("appHomeDir") File appHomeDir) {
         return new File(appHomeDir, PROPERTIES_FILE_NAME);
     }
@@ -196,6 +217,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
     @Provides
     @Named("refGenomePropertiesFilePath")
+    @Singleton
     public File refGenomePropertiesFilePath(@Named("appHomeDir") File appHomeDir) {
         return new File(appHomeDir, GENOME_ASSEMBLIES_FILE_NAME);
     }
@@ -213,18 +235,20 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
      */
     @Provides
     @Named("appHomeDir")
+    @Singleton
     private File appHomeDir() throws IOException {
         String osName = System.getProperty("os.name").toLowerCase();
+        final String appVersion = System.getProperty(Play.HCA_VERSION_PROP_KEY);
 
         File appHomeDir;
         if (osName.contains("nix") || osName.contains("nux") || osName.contains("aix")) { // Unix
-            appHomeDir = new File(System.getProperty("user.home") + File.separator + ".hpo-case-annotator");
+            appHomeDir = new File(System.getProperty("user.home") + File.separator + ".hpo-case-annotator" + (appVersion.isEmpty() ? appVersion : "-" + appVersion));
         } else if (osName.contains("win")) { // Windows
-            appHomeDir = new File(System.getProperty("user.home") + File.separator + "HpoCaseAnnotator");
+            appHomeDir = new File(System.getProperty("user.home") + File.separator + "HpoCaseAnnotator" + (appVersion.isEmpty() ? appVersion : "-" + appVersion));
         } else if (osName.contains("mac")) { // OsX
-            appHomeDir = new File(System.getProperty("user.home") + File.separator + ".hpo-case-annotator");
+            appHomeDir = new File(System.getProperty("user.home") + File.separator + ".hpo-case-annotator" + (appVersion.isEmpty() ? appVersion : "-" + appVersion));
         } else { // unknown platform
-            appHomeDir = new File(System.getProperty("user.home") + File.separator + "HpoCaseAnnotator");
+            appHomeDir = new File(System.getProperty("user.home") + File.separator + "HpoCaseAnnotator" + (appVersion.isEmpty() ? appVersion : "-" + appVersion));
         }
 
         if (!appHomeDir.exists()) {

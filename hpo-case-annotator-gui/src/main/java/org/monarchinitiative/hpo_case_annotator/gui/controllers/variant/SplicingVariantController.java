@@ -1,20 +1,21 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
+import javafx.beans.Observable;
+import javafx.beans.binding.Binding;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.DataController;
-import org.monarchinitiative.hpo_case_annotator.core.io.ChoiceBasket;
-import org.monarchinitiative.hpo_case_annotator.model.proto.CrypticSpliceSiteType;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
-import org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
+import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 
-import java.io.IOException;
+import javax.inject.Inject;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.*;
 
 /**
  * Controller class responsible for presenting {@link org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation.Context#SPLICING} variants.
@@ -26,6 +27,8 @@ public final class SplicingVariantController extends AbstractVariantController {
 
     // ******************** FXML elements, injected by FXMLLoader ********************************** //
     // ************************* Variant *********************************** //
+    @FXML
+    public ComboBox<GenomeAssembly> genomeBuildComboBox;
 
     @FXML
     private ComboBox<String> varChromosomeComboBox;
@@ -99,67 +102,68 @@ public final class SplicingVariantController extends AbstractVariantController {
 
 
     /**
-     * Create instance of this class which acts as a controller from MVC pattern. Given the fact that this class extends
-     * {@link javafx.scene.control.TitledPane} it can be managed by {@link DataController}.
+     * Create instance of this class which acts as a controller from MVC pattern.
      */
-    public SplicingVariantController(ChoiceBasket choiceBasket) throws IOException {
-        super(choiceBasket);
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("SplicingVariantView.fxml"));
-        loader.setController(this);
-        loader.setRoot(this);
-        super.getStylesheets().add(getClass().getResource("VariantView.css").toExternalForm());
-        loader.load();
-
-        populateContent();
+    @Inject
+    public SplicingVariantController(GuiElementValues elementValues) {
+        super(elementValues);
     }
 
 
     /**
-     * Read yaml configuration file and initialize content of fxml view elements. Create tooltips.
+     * Initialize content of fxml view elements, create tooltips.
      */
-    @Override
-    protected void populateContent() {
-        this.setText(VariantValidation.Context.SPLICING.toString());
-
-        varChromosomeComboBox.getItems().addAll(choiceBasket.getChromosome());
+    public void initialize() {
+        genomeBuildComboBox.getItems().addAll(elementValues.getGenomeBuild());
+        varChromosomeComboBox.getItems().addAll(elementValues.getChromosome());
+        // add text formatter to impose constraint on the field
+        varPositionTextField.setTextFormatter(makeTextFormatter(varPositionTextField, POSITIVE_INTEGER_REGEXP));
+        varReferenceTextField.setTextFormatter(makeTextFormatter(varReferenceTextField, ALLELE_REGEXP));
+        varAlternateTextField.setTextFormatter(makeTextFormatter(varAlternateTextField, ALLELE_REGEXP));
+        varSnippetTextField.setTextFormatter(makeTextFormatter(varSnippetTextField, SNIPPET_REGEXP));
         varGenotypeComboBox.getItems().addAll(Arrays.stream(Genotype.values()).filter(g -> !g.equals(Genotype.UNRECOGNIZED)).collect(Collectors.toList()));
-        varClassComboBox.getItems().addAll(choiceBasket.getVariantClass());
-        varPathomechanismComboBox.getItems().addAll(choiceBasket.getPathomechanism());
-        varConsequenceComboBox.getItems().addAll(choiceBasket.getConsequence());
+        varClassComboBox.getItems().addAll(elementValues.getVariantClass());
+        varPathomechanismComboBox.getItems().addAll(elementValues.getPathomechanism());
+        varConsequenceComboBox.getItems().addAll(elementValues.getConsequence());
+        crypticSpliceSitePositionTextField.setTextFormatter(makeToleratingTextFormatter(crypticSpliceSitePositionTextField, POSITIVE_INTEGER_REGEXP));
         crypticSpliceSiteTypeComboBox.getItems().addAll(Arrays.stream(CrypticSpliceSiteType.values()).filter(c -> !c.equals(CrypticSpliceSiteType.UNRECOGNIZED)).collect(Collectors.toList()));
-        cosegregationComboBox.getItems().addAll(choiceBasket.getCosegregation());
-        comparabilityComboBox.getItems().addAll(choiceBasket.getComparability());
+        crypticSpliceSiteSnippetTextField.setTextFormatter(makeToleratingTextFormatter(crypticSpliceSiteSnippetTextField, CSS_SNIPPET_REGEXP));
+        cosegregationComboBox.getItems().addAll(elementValues.getCosegregation());
+        comparabilityComboBox.getItems().addAll(elementValues.getComparability());
 
         //Create tooltips
-        addTooltip(varPositionTextField, "Genomic position of variant in 1-based (VCF style) numbering");
-        addTooltip(varReferenceTextField, "Representation of reference allele in VCF style (see help)");
-        addTooltip(varAlternateTextField, "Representation of alternate allele in VCF style (see help)");
-        addTooltip(crypticSpliceSitePositionTextField, "Genomic position of the nucleotide left (5' direction)" +
+        // Create tooltips here
+        decorateWithTooltipOnFocus(varPositionTextField, "Genomic position of the first nucleotide of REF allele \n(positive integer, 1-based numbering)");
+        decorateWithTooltipOnFocus(varReferenceTextField, "Representation of reference allele in VCF style");
+        decorateWithTooltipOnFocus(varAlternateTextField, "Representation of alternate allele in VCF style");
+        decorateWithTooltipOnFocus(varSnippetTextField, "Snippet of nucleotide sequence near variant, e.g. 'ACGT[A/C]ACTG'");
+        decorateWithTooltipOnFocus(crypticSpliceSitePositionTextField, "Genomic position of the nucleotide left (5' direction)" +
                 "from novel exon/intron boundary\n E.g.: atcaG|cacatg <-- position of capital 'G' in ref genome.\n" +
                 "(1-based numbering)");
-        addTooltip(crypticSpliceSiteTypeComboBox, "What kind of CSS? 3' or 5' splice site?");
-        addTooltip(crypticSpliceSiteSnippetTextField, "Nucleotide sequence of novel exon/intron boundary." +
+        decorateWithTooltipOnFocus(crypticSpliceSiteTypeComboBox, "What kind of CSS? 3' or 5' splice site?");
+        decorateWithTooltipOnFocus(crypticSpliceSiteSnippetTextField, "Nucleotide sequence of novel exon/intron boundary." +
                 "Indicate the boundary using '|' symbol.\nWrite nucleotide sequence of FWD genomic strand regardless " +
                 "of the gene strand or CSS type.\n" +
                 "E.g: intron|exon, exon|intron");
     }
 
-
     @Override
-    public void presentVariant(Variant variant) {
+    public void presentData(Variant variant) {
         // Variant related fields
-        varChromosomeComboBox.setValue(variant.getContig());
-        varPositionTextField.setText(String.valueOf(variant.getPos()));
-        varReferenceTextField.setText(variant.getRefAllele());
-        varAlternateTextField.setText(variant.getAltAllele());
+        genomeBuildComboBox.setValue(variant.getVariantPosition().getGenomeAssembly());
+        varChromosomeComboBox.setValue(variant.getVariantPosition().getContig());
+        // do not set zero, but rather an empty string
+        varPositionTextField.setText(variant.getVariantPosition().getPos() == 0 ? "" : String.valueOf(variant.getVariantPosition().getPos()));
+        varReferenceTextField.setText(variant.getVariantPosition().getRefAllele());
+        varAlternateTextField.setText(variant.getVariantPosition().getAltAllele());
         varSnippetTextField.setText(variant.getSnippet());
         varGenotypeComboBox.setValue(variant.getGenotype());
         varClassComboBox.setValue(variant.getVariantClass());
         varPathomechanismComboBox.setValue(variant.getPathomechanism());
         varConsequenceComboBox.setValue(variant.getConsequence());
 
-        crypticSpliceSitePositionTextField.setText(String.valueOf(variant.getCrypticPosition()));
+        // do not set zero, but rather an empty string
+        crypticSpliceSitePositionTextField.setText(variant.getCrypticPosition() == 0 ? "" : String.valueOf(variant.getCrypticPosition()));
         crypticSpliceSiteTypeComboBox.setValue(variant.getCrypticSpliceSiteType());
         crypticSpliceSiteSnippetTextField.setText(variant.getCrypticSpliceSiteSnippet());
 
@@ -182,19 +186,29 @@ public final class SplicingVariantController extends AbstractVariantController {
 
 
     @Override
-    public Variant getVariant() {
+    public Variant getData() {
+        int pos;
+        try {
+            pos = Integer.parseInt(varPositionTextField.getText());
+        } catch (NumberFormatException nfe) {
+            pos = 0;
+        }
+
         return Variant.newBuilder()
-                .setContig(varChromosomeComboBox.getValue())
-                .setPos(Integer.parseInt(varPositionTextField.getText())) // TODO - make sure that the int is an int here
-                .setRefAllele(varReferenceTextField.getText())
-                .setAltAllele(varAlternateTextField.getText())
+                .setVariantPosition(VariantPosition.newBuilder()
+                        .setGenomeAssembly(genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : genomeBuildComboBox.getValue())
+                        .setContig(varChromosomeComboBox.getValue() == null ? "NA" : varChromosomeComboBox.getValue())
+                        .setPos(pos)
+                        .setRefAllele(varReferenceTextField.getText())
+                        .setAltAllele(varAlternateTextField.getText())
+                        .build())
                 .setSnippet(varSnippetTextField.getText())
-                .setGenotype(varGenotypeComboBox.getValue())
-                .setVariantClass(varClassComboBox.getValue())
-                .setPathomechanism(varPathomechanismComboBox.getValue())
-                .setConsequence(varConsequenceComboBox.getValue())
-                .setCrypticPosition(Integer.parseInt(crypticSpliceSitePositionTextField.getText()))
-                .setCrypticSpliceSiteType(crypticSpliceSiteTypeComboBox.getValue())
+                .setGenotype(varGenotypeComboBox.getValue() == null ? Genotype.UNDEFINED: varGenotypeComboBox.getValue())
+                .setVariantClass(varClassComboBox.getValue() == null ? "" : varClassComboBox.getValue())
+                .setPathomechanism(varPathomechanismComboBox.getValue() == null ? "" : varPathomechanismComboBox.getValue())
+                .setConsequence(varConsequenceComboBox.getValue() == null ? "" : varConsequenceComboBox.getValue())
+                .setCrypticPosition(Integer.parseInt(crypticSpliceSitePositionTextField.getText().isEmpty() ? "0" : crypticSpliceSitePositionTextField.getText()))
+                .setCrypticSpliceSiteType(crypticSpliceSiteTypeComboBox.getValue() == null ? CrypticSpliceSiteType.NO_CSS : crypticSpliceSiteTypeComboBox.getValue())
                 .setCrypticSpliceSiteSnippet(crypticSpliceSitePositionTextField.getText())
                 .setVariantValidation(VariantValidation.newBuilder()
                         .setContext(VariantValidation.Context.SPLICING)
@@ -207,10 +221,33 @@ public final class SplicingVariantController extends AbstractVariantController {
                         .setSrProteinKnockdownValidation(srProteinKnockdownCheckBox.isSelected())
                         .setMutOfWtSpliceSiteValidation(mutationOfWTSpliceSiteCheckBox.isSelected())
                         .setOtherValidation(otherCheckBox.isSelected())
-
-                        .setCosegregation(cosegregationComboBox.getValue().equals("yes"))
-                        .setComparability(comparabilityComboBox.getValue().equals("yes"))
+                        .setCosegregation(cosegregationComboBox.getValue() != null && cosegregationComboBox.getValue().equals("yes"))
+                        .setComparability(comparabilityComboBox.getValue() != null && comparabilityComboBox.getValue().equals("yes"))
                         .build())
                 .build();
+    }
+
+    @Override
+    public Binding<String> variantTitleBinding() {
+        return Bindings.createStringBinding(() -> {
+                    if (isComplete()) {
+                        return String.format("Splicing variant: %s %s:%s%s>%s", genomeBuildComboBox.getValue(), varChromosomeComboBox.getValue(),
+                                varPositionTextField.getText(), varReferenceTextField.getText(),
+                                varAlternateTextField.getText());
+                    } else {
+                        return "Splicing variant: INCOMPLETE: " + validationResults.get(0).getMessage();
+                    }
+                },
+                getObservableVariantDependencies().toArray(new Observable[0]));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected List<? extends Observable> getObservableVariantDependencies() {
+        return Arrays.asList(genomeBuildComboBox.valueProperty(), varChromosomeComboBox.valueProperty(), varPositionTextField.textProperty(),
+                varReferenceTextField.textProperty(), varAlternateTextField.textProperty(), varSnippetTextField.textProperty(),
+                varGenotypeComboBox.valueProperty());
     }
 }
