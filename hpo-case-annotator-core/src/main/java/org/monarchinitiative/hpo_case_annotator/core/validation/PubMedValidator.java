@@ -33,7 +33,7 @@ public final class PubMedValidator implements Validator<Publication> {
      */
     @Override
     public List<ValidationResult> validate(Publication instance) {
-        // TODO implement
+        // TODO implement PubMed validator
         return Collections.emptyList();
     }
 }

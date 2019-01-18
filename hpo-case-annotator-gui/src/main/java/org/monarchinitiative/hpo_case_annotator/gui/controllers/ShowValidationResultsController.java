@@ -1,7 +1,9 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -42,6 +44,9 @@ public final class ShowValidationResultsController {
 
 
     private final Map<DiseaseCase, List<ValidationResult>> resultMapCache;
+
+    @FXML
+    public Label validationResultsSummaryLabel;
 
     @FXML
     private TableView<ValidationLine> validationResultsTableView;
@@ -100,6 +105,12 @@ public final class ShowValidationResultsController {
         for (ValidationResult vr : result) {
             ValidationLine line = new ValidationLine(ModelUtils.getNameFor(diseaseCase), vr);
             validationResultsTableView.getItems().add(line);
+        }
+
+        if (validationResultsTableView.getItems().isEmpty()) {
+            Platform.runLater(() -> validationResultsSummaryLabel.setText("No issues were found"));
+        } else {
+            Platform.runLater(() -> validationResultsSummaryLabel.setText("Following issues were identified"));
         }
     }
 

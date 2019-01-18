@@ -349,11 +349,11 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
         ValidationRunner<Publication> pubMedValidator = ValidationRunner.forPubMedValidation(optionalResources.getDiseaseCaseDir());
         List<ValidationResult> results = pubMedValidator.validateSingleModel(temporary);
-        if (!results.isEmpty()) {
+        if (!results.isEmpty()) { // TODO - this is doing nothing at the moment
             boolean choice = PopUps.getBooleanFromUser(
                     "Shall we continue?",
                     results.get(0).getMessage(),
-                    "This publication has been already used in this project.");
+                    "This publication has been already used in the project");
             if (!choice) {
                 inputPubMedDataTextField.setText(null);
                 return;

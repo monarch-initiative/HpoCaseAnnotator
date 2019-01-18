@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.VBox?>
-
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.ShowValidationResultsController">
     <children>
+      <Label text="Validation results:">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+         <VBox.margin>
+            <Insets bottom="10.0" top="20.0" />
+         </VBox.margin>
+      </Label>
+      <Separator prefWidth="200.0" />
+      <Label fx:id="validationResultsSummaryLabel">
+         <font>
+            <Font size="15.0" />
+         </font>
+         <VBox.margin>
+            <Insets bottom="20.0" top="20.0" />
+         </VBox.margin>
+      </Label>
         <TableView fx:id="validationResultsTableView" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="validationResultStatusImage" maxWidth="-1.0" minWidth="28.0" prefWidth="28.0" resizable="false" />

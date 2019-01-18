@@ -310,7 +310,7 @@ public final class MainController {
     @FXML
     void validateCurrentEntryMenuItemAction() {
         DiseaseCase theCase = dataController.getData();
-        ValidationRunner runner = ValidationRunner.forAllValidations(assemblies);
+        ValidationRunner<DiseaseCase> runner = ValidationRunner.forAllValidations(assemblies);
         List<ValidationResult> results = runner.validateSingleModel(theCase);
 
         try {
@@ -343,7 +343,7 @@ public final class MainController {
         }
 
 
-        ValidationRunner runner = ValidationRunner.forAllValidations(assemblies);
+        ValidationRunner<DiseaseCase> runner = ValidationRunner.forAllValidations(assemblies);
         Map<DiseaseCase, List<ValidationResult>> validationResults = runner.validateModels(models);
 
         try {
