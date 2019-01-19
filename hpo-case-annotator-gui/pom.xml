@@ -75,7 +75,6 @@
                         <!--Won't be in JAR, but still will be accessible during project build -->
                         <exclude>assembly/**</exclude>
                         <exclude>uml_model.dia</exclude>
-                        <exclude>dat/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>

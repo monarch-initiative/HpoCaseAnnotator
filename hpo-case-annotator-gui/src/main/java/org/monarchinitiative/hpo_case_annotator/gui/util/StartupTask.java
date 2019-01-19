@@ -9,10 +9,9 @@ import org.monarchinitiative.hpo_case_annotator.gui.Play;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Named;
-import java.io.BufferedReader;
 import java.io.File;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.Properties;
 
 /**
@@ -45,15 +44,11 @@ public final class StartupTask extends Task<Void> {
 
     private final GenomeAssemblies assemblies;
 
-    private final File omimFilePath;
 
-
-    public StartupTask(OptionalResources optionalResources, Properties properties, GenomeAssemblies assemblies,
-                       @Named("omimFilePath") File omimFilePath) {
+    public StartupTask(OptionalResources optionalResources, Properties properties, GenomeAssemblies assemblies) {
         this.optionalResources = optionalResources;
         this.properties = properties;
         this.assemblies = assemblies;
-        this.omimFilePath = omimFilePath;
     }
 
 
@@ -110,9 +105,9 @@ public final class StartupTask extends Task<Void> {
         optionalResources.setBiocuratorId(properties.getProperty(OptionalResources.BIOCURATOR_ID_PROPERTY, ""));
 
         // Finally OMIM tsv file
-        LOGGER.info("Parsing bundled OMIM file '{}'", omimFilePath);
-        try (BufferedReader reader = Files.newBufferedReader(omimFilePath.toPath())) {
-            OMIMParser omimParser = new OMIMParser(reader);
+        LOGGER.info("Parsing bundled OMIM file '{}'", OMIM_FILE_RESOURCE);
+        try (InputStream is = getClass().getResourceAsStream(OMIM_FILE_RESOURCE)) {
+            OMIMParser omimParser = new OMIMParser(is, Charset.forName("UTF-8"));
             optionalResources.setCanonicalName2mimid(omimParser.getCanonicalName2mimid());
             optionalResources.setMimid2canonicalName(omimParser.getMimid2canonicalName());
         }

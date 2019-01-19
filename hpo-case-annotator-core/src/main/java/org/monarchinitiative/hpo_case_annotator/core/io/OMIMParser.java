@@ -6,10 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,8 +25,6 @@ public final class OMIMParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OMIMParser.class);
 
-    private static final String omimResourceFile = "/dat/omim.tsv";
-
     /**
      * Map containing MIM IDs as keys and canonical names as values.
      */
@@ -40,16 +35,19 @@ public final class OMIMParser {
      */
     private final Map<String, String> canonicalName2mimid = new HashMap<>();
 
+//
+//    public OMIMParser(File file) throws IOException {
+//        this(new FileReader(file));
+//    }
+//
+//
+//    public OMIMParser(URL url) throws IOException, URISyntaxException {
+//        this(Files.newBufferedReader(Paths.get(url.toURI())));
+//    }
 
-    public OMIMParser(File file) throws IOException {
-        this(new FileReader(file));
+    public OMIMParser(InputStream inputStream, Charset charset) throws IOException {
+        this(new InputStreamReader(inputStream, charset));
     }
-
-
-    public OMIMParser(URL url) throws IOException, URISyntaxException {
-        this(Files.newBufferedReader(Paths.get(url.toURI())));
-    }
-
 
     /**
      * Parse content of omimResourceFile and populate maps with data.
@@ -57,6 +55,7 @@ public final class OMIMParser {
     public OMIMParser(Reader reader) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(reader);
         String line = bufferedReader.readLine(); // Very first line is header (starting with '#' character)
+        // TODO - remove gui code from parser
         if (!line.startsWith("#")) {
             Alert a = new Alert(AlertType.INFORMATION);
             a.setTitle("Parse of OMIM file");

@@ -177,17 +177,6 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
     // ----------------------------------------- FILES -----------------------------------------------------------------
 
-    /**
-     * @param codeHomeDir {@link File} path to directory where the JAR is
-     * @return path to OMIM tsv file
-     */
-    @Provides
-    @Singleton
-    @Named("omimFilePath")
-    public File omimFilePath(@Named("codeHomeDir") File codeHomeDir) {
-        File datFolder = new File(codeHomeDir, "dat");
-        return new File(datFolder, "omim.tsv");
-    }
 
     /**
      * Get path to parent directory of the JAR file (or classes). Note, this is <em>NOT</em> the path to the JAR file.
