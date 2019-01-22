@@ -53,4 +53,12 @@ public abstract class AbstractVariantController extends AbstractDataController<V
      * @return {@link List} with observable dependencies
      */
     abstract List<? extends Observable> getObservableVariantDependencies();
+
+    protected void showVariantValidator() {
+        String assembl=this.elementValues.getGenomeBuild().get(0).toString();
+        String chrom =this.elementValues.getChromosome().get(0);
+
+    }
+
+
 }
