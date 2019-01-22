@@ -508,16 +508,13 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
         publication.set(data.getPublication());
 
-        // Phenotype terms
-        phenotypes.clear();
-        phenotypes.addAll(data.getPhenotypeList());
-
         // Gene
         entrezIDTextField.setText(String.valueOf(data.getGene().getEntrezId()));
         geneSymbolTextField.setText(data.getGene().getSymbol());
 
-        // Phenotypes
-        phenotypes.addAll(data.getPhenotypeList());
+        // Phenotype terms
+        phenotypes.clear();
+        phenotypes.addAll(data.getPhenotypeList().stream().distinct().collect(Collectors.toList()));
 
         // Disease
         diseaseDatabaseComboBox.setValue(data.getDisease().getDatabase());
