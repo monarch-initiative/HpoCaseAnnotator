@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
+import javafx.application.HostServices;
 import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
@@ -9,6 +10,7 @@ import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -115,8 +117,8 @@ public final class MendelianVariantController extends AbstractVariantController 
      * Create instance of this class which acts as a controller from MVC pattern.
      */
     @Inject
-    public MendelianVariantController(GuiElementValues elementValues) {
-        super(elementValues);
+    public MendelianVariantController(GuiElementValues elementValues,HostServices hostServices) {
+        super(elementValues,hostServices);
     }
 
 
@@ -277,7 +279,8 @@ public final class MendelianVariantController extends AbstractVariantController 
 
 
     /**
-     * TODO also get ?variant=NM_000088.3:589:G:T
+     * Open up a page on the VariantValidator website that allows the curator to check whether the genomic coordinates
+     * match the entered mutation data.
      */
     @FXML public void showVariantValidator() {
         String assembl=this.elementValues.getGenomeBuild().get(0).toString();
@@ -292,9 +295,7 @@ public final class MendelianVariantController extends AbstractVariantController 
         if (chrom.startsWith("chr")) {
             chrom=chrom.substring(3);
         }
-
-        // TODO -- we need to figure out if this is a plus or minus strand
-
+        // Create a URI for VariantValidator -- it will look like the following.
         //https://variantvalidator.org/variantvalidation/?variant=GRCh37:1:150550916:G:A
         String vvURL =String.format("https://variantvalidator.org/variantvalidation/?variant=%s:%s:%d:%s:%s",
                 genomeAssmblyString,
@@ -302,39 +303,9 @@ public final class MendelianVariantController extends AbstractVariantController 
                 pos,
                 ref,
                 alt);
-        final Clipboard clipboard = Clipboard.getSystemClipboard();
-        final ClipboardContent content = new ClipboardContent();
-        content.putString(vvURL);
-        clipboard.setContent(content);
+        // The following opens the system browser to the corresponding VariantValidator page
+        Hyperlink hyper = new Hyperlink(vvURL);
+        hostServices.showDocument(hyper.getText());
 
-        /*
-
-        Stage stage = new Stage();
-        stage.setResizable(false);
-        stage.centerOnScreen();
-        stage.setTitle("variant validator");
-        stage.initStyle(StageStyle.UTILITY);
-        stage.initModality(Modality.APPLICATION_MODAL);
-        WebView webView = new WebView();
-        final WebEngine webEngine = webView.getEngine();
-        webEngine.load(vvURL);
-        webEngine.getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
-            if (newState == Worker.State.SUCCEEDED) {
-                stage.setTitle(webEngine.getTitle());
-            }
-        });
-        VBox root = new VBox();
-        root.getChildren().add(webView);
-        root.setStyle("-fx-padding: 10;" +
-                "-fx-border-style: solid inside;" +
-                "-fx-border-width: 2;" +
-                "-fx-border-insets: 5;" +
-                "-fx-border-radius: 5;" +
-                "-fx-border-color: blue;");
-        // Create the Scene
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-        */
     }
 }

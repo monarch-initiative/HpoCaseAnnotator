@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
+import javafx.application.HostServices;
 import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult;
@@ -29,12 +30,17 @@ public abstract class AbstractVariantController extends AbstractDataController<V
     final List<ValidationResult> validationResults;
 
     private final ValidationRunner<Variant> variantValidationRunner;
+    /**
+     * Allows to open hyperlink in OS-dependent default web browser.
+     */
+    protected final HostServices hostServices;
 
 
-    AbstractVariantController(GuiElementValues elementValues) {
+    AbstractVariantController(GuiElementValues elementValues,HostServices hostServices) {
         this.elementValues = elementValues;
         this.variantValidationRunner = ValidationRunner.variantValidationRunner();
         this.validationResults = new ArrayList<>();
+        this.hostServices=hostServices;
     }
 
 
@@ -59,6 +65,8 @@ public abstract class AbstractVariantController extends AbstractDataController<V
         String chrom =this.elementValues.getChromosome().get(0);
 
     }
+
+
 
 
 }
