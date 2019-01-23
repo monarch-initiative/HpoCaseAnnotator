@@ -10,6 +10,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
@@ -18,6 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
+import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +28,8 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.*;
@@ -233,19 +238,63 @@ public final class MendelianVariantController extends AbstractVariantController 
                 genotypeComboBox.valueProperty());
     }
 
+    @FXML public void variantValidatorToClipboardTranscript() {
+        String tra=PopUps.getStringFromUser("Enter HGVS-encoded variant for VariantValidator",
+                "HGVS", "Enter variant (e.g., NM_000088.3:c.589G>T):");
+        String a[]=tra.split(":");
+        if (a.length!=2) {
+            PopUps.showWarningDialog("Malformed HGVS String","Could not parse HVGS String",tra);
+            return;
+        }
+        String transcript=a[0];
+        String var=a[1];
+        if (var.startsWith("c.")) {
+            var=var.substring(2);
+        } else {
+            PopUps.showWarningDialog("Malformed HGVS String","Could not find \"c.\"",tra);
+            return;
+        }
+        Pattern pat = Pattern.compile("(\\d+)(\\w+)\\>(\\w+)");
+        Matcher m = pat.matcher(var);
+        if (m.matches()) {
+            String pos = m.group(1);
+            String ref=m.group(2);
+            String alt=m.group(3);
+            String vvURL =String.format("https://variantvalidator.org/variantvalidation/?variant=%s:%s:%s:%s",
+                    transcript,
+                    pos,
+                    ref,
+                    alt);
+            final Clipboard clipboard = Clipboard.getSystemClipboard();
+            final ClipboardContent content = new ClipboardContent();
+            content.putString(vvURL);
+            clipboard.setContent(content);
+        } else {
+            PopUps.showWarningDialog("Malformed HGVS String","Could not parse position",tra);
 
+        }
+    }
+
+
+    /**
+     * TODO also get ?variant=NM_000088.3:589:G:T
+     */
     @FXML public void showVariantValidator() {
         String assembl=this.elementValues.getGenomeBuild().get(0).toString();
         String chrom =this.elementValues.getChromosome().get(0);
         int pos = this.getData().getVariantPosition().getPos();
         String ref = this.referenceTextField.getText();
         String alt = this.alternateTextField.getText();
+
         // Hard-code this for now
         // need to figure out how to code this for VariantValidator
         String genomeAssmblyString="GRCh37";
         if (chrom.startsWith("chr")) {
             chrom=chrom.substring(3);
         }
+
+        // TODO -- we need to figure out if this is a plus or minus strand
+
         //https://variantvalidator.org/variantvalidation/?variant=GRCh37:1:150550916:G:A
         String vvURL =String.format("https://variantvalidator.org/variantvalidation/?variant=%s:%s:%d:%s:%s",
                 genomeAssmblyString,
@@ -253,6 +302,12 @@ public final class MendelianVariantController extends AbstractVariantController 
                 pos,
                 ref,
                 alt);
+        final Clipboard clipboard = Clipboard.getSystemClipboard();
+        final ClipboardContent content = new ClipboardContent();
+        content.putString(vvURL);
+        clipboard.setContent(content);
+
+        /*
 
         Stage stage = new Stage();
         stage.setResizable(false);
@@ -280,5 +335,6 @@ public final class MendelianVariantController extends AbstractVariantController 
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+        */
     }
 }
