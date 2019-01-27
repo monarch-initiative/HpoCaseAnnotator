@@ -508,6 +508,10 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
         publication.set(data.getPublication());
 
+        // Show data on publication in text fields
+        pmidTextField.setText(publication.get().getPmid());
+        inputPubMedDataTextField.setText(publication.get().getTitle());
+
         // Gene
         entrezIDTextField.setText(String.valueOf(data.getGene().getEntrezId()));
         geneSymbolTextField.setText(data.getGene().getSymbol());
