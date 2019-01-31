@@ -285,7 +285,11 @@ public final class MendelianVariantController extends AbstractVariantController 
     @FXML public void showVariantValidator() {
         String assembl=this.elementValues.getGenomeBuild().get(0).toString();
         String chrom =this.elementValues.getChromosome().get(0);
-        int pos = this.getData().getVariantPosition().getPos();
+
+        Variant variant = getData();
+
+        int pos = variant.getVariantPosition().getPos();
+
         String ref = this.referenceTextField.getText();
         String alt = this.alternateTextField.getText();
 
