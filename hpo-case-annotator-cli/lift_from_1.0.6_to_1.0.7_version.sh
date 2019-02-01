@@ -30,6 +30,7 @@ cat $F | sed -e 's/<string>heterozygous</<string>HETEROZYGOUS</' \
 -e 's/<string>3 splice site</<string>THREE_PRIME</' \
 -e 's/<string>5 splice site</<string>FIVE_PRIME</' \
 -e 's/org.monarchinitiative.hrmd_gui.model/org.monarchinitiative.hpo_case_annotator.model.xml_model/' \
+-e 's/org.monarchinitiative.hpo_case_annotator.model/org.monarchinitiative.hpo_case_annotator.model.xml_model/' \
 > $2/$FNAME;
 done
 
