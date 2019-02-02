@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.StackPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -34,6 +35,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
@@ -407,6 +409,67 @@ public final class MainController {
                 LOGGER.info("Exported {} cases", cases.size());
             } catch (IOException e) {
                 LOGGER.warn(String.format("Error occured during variant export: %s", e.getMessage()), e);
+            }
+        }
+    }
+
+
+    @FXML
+    private void exportAllPhenopackets() {
+        System.out.println("Export all phenopackets");
+        final Optional<Codecs.SupportedDiseaseCaseFormat> toggleChoiceFromUser = PopUps.getToggleChoiceFromUser(Arrays.asList(Codecs.SupportedDiseaseCaseFormat.values()),
+                String.format("What encoding is used for models in \n'%s'?", optionalResources.getDiseaseCaseDir().getAbsolutePath()),
+                "Export as CSV");
+        if (!toggleChoiceFromUser.isPresent()) {
+            return;
+        }
+
+        Codecs.SupportedDiseaseCaseFormat encoding = toggleChoiceFromUser.get();
+        final ModelParser parser;
+        switch (encoding) {
+            case JSON:
+                parser = new ProtoJSONModelParser(optionalResources.getDiseaseCaseDir().toPath());
+                break;
+            case XML:
+                parser = new XMLModelParser(optionalResources.getDiseaseCaseDir());
+                break;
+            default:
+                LOGGER.warn("Unrecognized choice '{}'", encoding);
+                return;
+        }
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Choose directory to store all cases as phenopackets");
+        File selectedDirectory = directoryChooser.showDialog(primaryStage);
+
+        if(selectedDirectory == null){
+            LOGGER.warn("Could not get directory to write all phenopackets");
+            PopUps.showInfoMessage("Error","Could not get directory to write all phenopackets");
+            return;
+        }
+        // read all the cases
+        Map<String,DiseaseCase> casemap = new HashMap<>();
+        for (File modelName : parser.getModelNames()) {
+            String basename=modelName.getName(); // this is the base name
+            basename = basename.replace(".json",".phenopacket");
+            String abspath=String.format("%s%s%s",selectedDirectory,File.separator,basename);
+            try (InputStream is = new BufferedInputStream(new FileInputStream(modelName))) {
+                Optional<DiseaseCase> dcase = parser.readModel(is);
+                dcase.ifPresent(diseaseCase -> casemap.put(abspath, diseaseCase));
+            } catch (FileNotFoundException e) {
+                LOGGER.warn("File '{}' not found", modelName, e);
+            } catch (IOException e) {
+                LOGGER.warn("Error reading file '{}'", modelName, e);
+            }
+        }
+
+        for (Map.Entry<String,DiseaseCase> entry : casemap.entrySet()) {
+            try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(entry.getKey()))) {
+                final PhenoPacket packet = PhenoPacketCodec.diseaseCaseToPhenopacket(entry.getValue());
+                PhenoPacketCodec.writeAsPhenopacket(writer, packet);
+                LOGGER.trace("Writing phenopacket to {}",entry.getKey());
+            } catch (IOException e) {
+                LOGGER.warn("Error occured during Phenopacket export", e);
+                PopUps.showException("Error", "Error occured during Phenopacket export", e.getMessage(), e);
             }
         }
     }
