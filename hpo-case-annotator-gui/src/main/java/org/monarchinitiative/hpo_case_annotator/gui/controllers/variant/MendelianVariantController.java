@@ -4,25 +4,11 @@ import javafx.application.HostServices;
 import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
-import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +16,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.*;
@@ -241,75 +225,23 @@ public final class MendelianVariantController extends AbstractVariantController 
     }
 
     @FXML public void variantValidatorToClipboardTranscript() {
-        String tra=PopUps.getStringFromUser("Enter HGVS-encoded variant for VariantValidator",
-                "HGVS", "Enter variant (e.g., NM_000088.3:c.589G>T):");
-        String a[]=tra.split(":");
-        if (a.length!=2) {
-            PopUps.showWarningDialog("Malformed HGVS String","Could not parse HVGS String",tra);
-            return;
-        }
-        String transcript=a[0];
-        String var=a[1];
-        if (var.startsWith("c.")) {
-            var=var.substring(2);
-        } else {
-            PopUps.showWarningDialog("Malformed HGVS String","Could not find \"c.\"",tra);
-            return;
-        }
-        Pattern pat = Pattern.compile("(\\d+)(\\w+)\\>(\\w+)");
-        Matcher m = pat.matcher(var);
-        if (m.matches()) {
-            String pos = m.group(1);
-            String ref=m.group(2);
-            String alt=m.group(3);
-            String vvURL =String.format("https://variantvalidator.org/variantvalidation/?variant=%s:%s:%s:%s",
-                    transcript,
-                    pos,
-                    ref,
-                    alt);
-            final Clipboard clipboard = Clipboard.getSystemClipboard();
-            final ClipboardContent content = new ClipboardContent();
-            content.putString(vvURL);
-            clipboard.setContent(content);
-        } else {
-            PopUps.showWarningDialog("Malformed HGVS String","Could not parse position",tra);
-
-        }
+        getTranscriptDataAndGoToVariantValidatorWebsite();
     }
-
-
     /**
      * Open up a page on the VariantValidator website that allows the curator to check whether the genomic coordinates
-     * match the entered mutation data.
+     * match the entered mutation data. It uses the method
+     * {@link AbstractVariantController#goToVariantValidatorWebsite(GenomeAssembly, String, int, String, String)}
+     * to display the variant on the VariantValidator website.
      */
     @FXML public void showVariantValidator() {
-        String assembl=this.elementValues.getGenomeBuild().get(0).toString();
-        String chrom =this.elementValues.getChromosome().get(0);
-
+        GenomeAssembly assembly=genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY: genomeBuildComboBox.getValue();
+        String chrom =chromosomeComboBox.getValue() == null ? "NA" : chromosomeComboBox.getValue();
         Variant variant = getData();
-
         int pos = variant.getVariantPosition().getPos();
-
         String ref = this.referenceTextField.getText();
         String alt = this.alternateTextField.getText();
-
-        // Hard-code this for now
-        // need to figure out how to code this for VariantValidator
-        String genomeAssmblyString="GRCh37";
-        if (chrom.startsWith("chr")) {
-            chrom=chrom.substring(3);
-        }
-        // Create a URI for VariantValidator -- it will look like the following.
-        //https://variantvalidator.org/variantvalidation/?variant=GRCh37:1:150550916:G:A
-        String vvURL =String.format("https://variantvalidator.org/variantvalidation/?variant=%s:%s:%d:%s:%s",
-                genomeAssmblyString,
-                chrom,
-                pos,
-                ref,
-                alt);
-        // The following opens the system browser to the corresponding VariantValidator page
-        Hyperlink hyper = new Hyperlink(vvURL);
-        hostServices.showDocument(hyper.getText());
-
+        goToVariantValidatorWebsite( assembly,  chrom,  pos,  ref,  alt);
     }
+
+
 }

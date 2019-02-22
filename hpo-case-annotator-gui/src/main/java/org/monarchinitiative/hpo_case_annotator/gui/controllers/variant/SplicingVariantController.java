@@ -251,4 +251,24 @@ public final class SplicingVariantController extends AbstractVariantController {
                 varReferenceTextField.textProperty(), varAlternateTextField.textProperty(), varSnippetTextField.textProperty(),
                 varGenotypeComboBox.valueProperty());
     }
+
+    /**
+     * Open up a page on the VariantValidator website that allows the curator to check whether the genomic coordinates
+     * match the entered mutation data. It uses the method
+     * {@link AbstractVariantController#goToVariantValidatorWebsite(GenomeAssembly, String, int, String, String)}
+     * to display the variant on the VariantValidator website.
+     */
+    @FXML public void showVariantValidator() {
+        GenomeAssembly assembly=genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY: genomeBuildComboBox.getValue();
+        String chrom =varChromosomeComboBox.getValue() == null ? "NA" : varChromosomeComboBox.getValue();
+        Variant variant = getData();
+        int pos = variant.getVariantPosition().getPos();
+        String ref = this.varReferenceTextField.getText();
+        String alt = this.varAlternateTextField.getText();
+        goToVariantValidatorWebsite( assembly,  chrom,  pos,  ref,  alt);
+    }
+
+    @FXML public void variantValidatorToClipboardTranscript() {
+        getTranscriptDataAndGoToVariantValidatorWebsite();
+    }
 }
