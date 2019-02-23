@@ -255,7 +255,7 @@ public final class SplicingVariantController extends AbstractVariantController {
     /**
      * Open up a page on the VariantValidator website that allows the curator to check whether the genomic coordinates
      * match the entered mutation data. It uses the method
-     * {@link AbstractVariantController#goToVariantValidatorWebsite(GenomeAssembly, String, int, String, String)}
+     * {@link VariantUtil#goToVariantValidatorWebsite(GenomeAssembly, String, int, String, String,HostServices)}
      * to display the variant on the VariantValidator website.
      */
     @FXML public void showVariantValidator() {
@@ -265,10 +265,11 @@ public final class SplicingVariantController extends AbstractVariantController {
         int pos = variant.getVariantPosition().getPos();
         String ref = this.varReferenceTextField.getText();
         String alt = this.varAlternateTextField.getText();
-        goToVariantValidatorWebsite( assembly,  chrom,  pos,  ref,  alt);
+        VariantUtil.goToVariantValidatorWebsite( assembly,  chrom,  pos,  ref,  alt, this.hostServices);
     }
 
     @FXML public void variantValidatorToClipboardTranscript() {
-        getTranscriptDataAndGoToVariantValidatorWebsite();
+
+        VariantUtil.getTranscriptDataAndGoToVariantValidatorWebsite();
     }
 }

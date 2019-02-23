@@ -225,12 +225,12 @@ public final class MendelianVariantController extends AbstractVariantController 
     }
 
     @FXML public void variantValidatorToClipboardTranscript() {
-        getTranscriptDataAndGoToVariantValidatorWebsite();
+        VariantUtil.getTranscriptDataAndGoToVariantValidatorWebsite();
     }
     /**
      * Open up a page on the VariantValidator website that allows the curator to check whether the genomic coordinates
      * match the entered mutation data. It uses the method
-     * {@link AbstractVariantController#goToVariantValidatorWebsite(GenomeAssembly, String, int, String, String)}
+     * {@link VariantUtil#goToVariantValidatorWebsite(GenomeAssembly, String, int, String, String,HostServices)}
      * to display the variant on the VariantValidator website.
      */
     @FXML public void showVariantValidator() {
@@ -240,7 +240,7 @@ public final class MendelianVariantController extends AbstractVariantController 
         int pos = variant.getVariantPosition().getPos();
         String ref = this.referenceTextField.getText();
         String alt = this.alternateTextField.getText();
-        goToVariantValidatorWebsite( assembly,  chrom,  pos,  ref,  alt);
+        VariantUtil.goToVariantValidatorWebsite( assembly,  chrom,  pos,  ref,  alt, this.hostServices);
     }
 
 
