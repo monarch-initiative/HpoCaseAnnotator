@@ -2,8 +2,6 @@ package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
 import com.google.common.collect.ImmutableList;
 import javafx.scene.control.Hyperlink;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
@@ -67,7 +65,7 @@ public class VariantUtil {
      * gene symbol.
      * TODO -- use an API to get all relevant accession numbers and offer them to the user as a combo box.
      */
-    static void getTranscriptDataAndGoToVariantValidatorWebsite() {
+    static void getTranscriptDataAndGoToVariantValidatorWebsite(HostServicesWrapper hostServices) {
         Optional<List<String>> opt = PopUps.getPairOfUserStrings(null,
                 "Transcript data for VariantValidator",
                 "enter accession number and variant (e.g., NM_000088.3 and c.589G>T)",
@@ -101,10 +99,12 @@ public class VariantUtil {
                     pos,
                     ref,
                     alt);
-            final Clipboard clipboard = Clipboard.getSystemClipboard();
-            final ClipboardContent content = new ClipboardContent();
-            content.putString(vvURL);
-            clipboard.setContent(content);
+//            final Clipboard clipboard = Clipboard.getSystemClipboard();
+//            final ClipboardContent content = new ClipboardContent();
+//            content.putString(vvURL);
+//            clipboard.setContent(content);
+            Hyperlink hyper = new Hyperlink(vvURL);
+            hostServices.showDocument(hyper.getText());
         } else {
             PopUps.showInfoMessage("Malformed HGVS String", "Could not parse position");
 
