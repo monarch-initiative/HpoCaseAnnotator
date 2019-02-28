@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
 import com.google.inject.Inject;
-import javafx.application.HostServices;
 import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult;
@@ -9,7 +8,7 @@ import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.AbstractDataController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
-
+import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 
 import java.util.ArrayList;
@@ -26,6 +25,11 @@ import java.util.List;
 public abstract class AbstractVariantController extends AbstractDataController<Variant> {
 
     /**
+     * Allows to open hyperlink in OS-dependent default web browser.
+     */
+    protected final HostServicesWrapper hostServices;
+
+    /**
      * POJO containing data to be used for populating content of FXML elements such as ComboBoxes.
      */
     final GuiElementValues elementValues;
@@ -33,17 +37,13 @@ public abstract class AbstractVariantController extends AbstractDataController<V
     final List<ValidationResult> validationResults;
 
     private final ValidationRunner<Variant> variantValidationRunner;
-    /**
-     * Allows to open hyperlink in OS-dependent default web browser.
-     */
-    protected final HostServices hostServices;
 
     @Inject
-    AbstractVariantController(GuiElementValues elementValues,HostServices hostServices) {
+    AbstractVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
         this.elementValues = elementValues;
         this.variantValidationRunner = ValidationRunner.variantValidationRunner();
         this.validationResults = new ArrayList<>();
-        this.hostServices=hostServices;
+        this.hostServices = hostServices;
     }
 
 
@@ -62,7 +62,6 @@ public abstract class AbstractVariantController extends AbstractDataController<V
      * @return {@link List} with observable dependencies
      */
     abstract List<? extends Observable> getObservableVariantDependencies();
-
 
 
 }

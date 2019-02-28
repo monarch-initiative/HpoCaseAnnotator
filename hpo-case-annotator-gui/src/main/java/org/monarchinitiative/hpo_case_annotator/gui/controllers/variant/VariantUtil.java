@@ -1,10 +1,10 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
 import com.google.common.collect.ImmutableList;
-import javafx.application.HostServices;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 
@@ -28,28 +28,29 @@ public class VariantUtil {
     /**
      * This method can be used by any of the variant controllers. Its function is to open a
      * webpage on the VariantValidator website
+     *
      * @param assembly The Genome build (hg37 or hg38)
-     * @param chrom The chromosome as a string (chr1 or 1)
-     * @param pos the position of the variant on the chromosome
-     * @param ref The reference base(s)
-     * @param alt The alternative base(s)
+     * @param chrom    The chromosome as a string (chr1 or 1)
+     * @param pos      the position of the variant on the chromosome
+     * @param ref      The reference base(s)
+     * @param alt      The alternative base(s)
      */
     static void goToVariantValidatorWebsite(GenomeAssembly assembly,
                                             String chrom,
                                             int pos,
                                             String ref,
                                             String alt,
-                                            HostServices hostServices) {
-        String genomeAssmblyString="GRCh37";
+                                            HostServicesWrapper hostServices) {
+        String genomeAssmblyString = "GRCh37";
         if (assembly.equals(GenomeAssembly.GRCH_38)) {
-            genomeAssmblyString="GRCh38";
+            genomeAssmblyString = "GRCh38";
         }
         if (chrom.startsWith("chr")) {
-            chrom=chrom.substring(3);
+            chrom = chrom.substring(3);
         }
         // Create a URI for VariantValidator -- it will look like the following.
         //https://variantvalidator.org/variantvalidation/?variant=GRCh37:1:150550916:G:A
-        String vvURL =String.format("https://variantvalidator.org/variantvalidation/?variant=%s:%s:%d:%s:%s",
+        String vvURL = String.format("https://variantvalidator.org/variantvalidation/?variant=%s:%s:%d:%s:%s",
                 genomeAssmblyString,
                 chrom,
                 pos,
@@ -70,32 +71,32 @@ public class VariantUtil {
         Optional<List<String>> opt = PopUps.getPairOfUserStrings(null,
                 "Transcript data for VariantValidator",
                 "enter accession number and variant (e.g., NM_000088.3 and c.589G>T)",
-                "accession","variant");
+                "accession", "variant");
         if (!opt.isPresent()) {
-            PopUps.showInfoMessage("Error","Could not extract HGVS data for VariantValidator");
+            PopUps.showInfoMessage("Error", "Could not extract HGVS data for VariantValidator");
             return;
         }
 
         List<String> results = opt.get();
-        if (results.size()!=2) {
-            PopUps.showInfoMessage("Malformed HGVS String","Could not parse HVGS String");
+        if (results.size() != 2) {
+            PopUps.showInfoMessage("Malformed HGVS String", "Could not parse HVGS String");
             return;
         }
-        String transcript=results.get(0);
-        String var=results.get(1);
+        String transcript = results.get(0);
+        String var = results.get(1);
         if (var.startsWith("c.")) {
-            var=var.substring(2);
+            var = var.substring(2);
         } else {
-            PopUps.showInfoMessage("Malformed HGVS String","Could not find \"c.\"");
+            PopUps.showInfoMessage("Malformed HGVS String", "Could not find \"c.\"");
             return;
         }
         Pattern pat = Pattern.compile("(\\d+)(\\w+)\\>(\\w+)");
         Matcher m = pat.matcher(var);
         if (m.matches()) {
             String pos = m.group(1);
-            String ref=m.group(2);
-            String alt=m.group(3);
-            String vvURL =String.format("https://variantvalidator.org/variantvalidation/?variant=%s:%s:%s:%s",
+            String ref = m.group(2);
+            String alt = m.group(3);
+            String vvURL = String.format("https://variantvalidator.org/variantvalidation/?variant=%s:%s:%s:%s",
                     transcript,
                     pos,
                     ref,
@@ -107,7 +108,7 @@ public class VariantUtil {
             Hyperlink hyper = new Hyperlink(vvURL);
             hostServices.showDocument(hyper.getText());
         } else {
-            PopUps.showInfoMessage("Malformed HGVS String","Could not parse position");
+            PopUps.showInfoMessage("Malformed HGVS String", "Could not parse position");
 
         }
     }
@@ -117,13 +118,14 @@ public class VariantUtil {
      * We intend to use this to make it easier for the user to enter HGVS string and send this to VariantValidator
      * for quality control. The GUI will present the user with a list of accession numbers and the user has to choose
      * the right one from a drop down list and then enter only the c.123A>G part of the HGVS string
+     *
      * @param entrezGeneId an id such as 2202
      * @return a list of corresponding accession numbers.
      */
     public static List<String> geneAccessionNumberGrabber(String entrezGeneId) {
         ImmutableList.Builder<String> builder = new ImmutableList.Builder<>();
         final String USER_AGENT = "Mozilla/5.0";
-        String url =String.format("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=gene&id=%s&retmode=xml",entrezGeneId);
+        String url = String.format("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=gene&id=%s&retmode=xml", entrezGeneId);
         try {
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -146,7 +148,7 @@ public class VariantUtil {
                 response.append(inputLine);
             }
             in.close();
-            String resp = response.toString().replaceAll("\\s+","");
+            String resp = response.toString().replaceAll("\\s+", "");
             // This is XML but all we need are the NM_12345 accession numbers as follows
             Pattern pat = Pattern.compile("<Gene-commentary_accession>(NM_\\d+)</Gene-commentary_accession>");
             Matcher mat = pat.matcher(resp);

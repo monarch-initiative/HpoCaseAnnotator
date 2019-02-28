@@ -14,6 +14,7 @@ import org.monarchinitiative.hpo_case_annotator.gui.controllers.ShowValidationRe
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SomaticVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SplicingVariantController;
+import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.phenol.base.PhenolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,8 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
         bind(ExecutorService.class)
                 .toInstance(Executors.newFixedThreadPool(1));
 
+        bind(HostServicesWrapper.class)
+                .toInstance(HostServicesWrapper.getInactiveWrapper()); // OK for testing
 
 //        bind(ValidationRunner.class);
 //        bind(GenomicPositionValidator.class);

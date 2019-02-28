@@ -1,12 +1,12 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
-import javafx.application.HostServices;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.ModelUtils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
@@ -32,7 +32,7 @@ public final class ShowPublicationsController {
     /**
      * Allows to open hyperlink in OS-dependent default web browser.
      */
-    private final HostServices hostServices;
+    private final HostServicesWrapper hostServices;
 
     private Set<DiseaseCase> model_cache = new HashSet<>();
 
@@ -73,7 +73,7 @@ public final class ShowPublicationsController {
     private TableColumn<DiseaseCase, Hyperlink> pubMedTableColumn;
 
 
-    ShowPublicationsController(HostServices hostServices) {
+    ShowPublicationsController(HostServicesWrapper hostServices) {
         this.hostServices = hostServices;
     }
 
