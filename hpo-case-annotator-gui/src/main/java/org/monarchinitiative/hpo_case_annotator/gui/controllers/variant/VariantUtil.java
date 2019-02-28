@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
 import com.google.common.collect.ImmutableList;
+import javafx.application.HostServices;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
