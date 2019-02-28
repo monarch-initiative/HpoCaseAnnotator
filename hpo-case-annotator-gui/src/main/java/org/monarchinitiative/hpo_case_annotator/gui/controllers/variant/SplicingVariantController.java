@@ -269,7 +269,6 @@ public final class SplicingVariantController extends AbstractVariantController {
     }
 
     @FXML public void variantValidatorToClipboardTranscript() {
-
-        VariantUtil.getTranscriptDataAndGoToVariantValidatorWebsite();
+        VariantUtil.getTranscriptDataAndGoToVariantValidatorWebsite(this.hostServices);
     }
 }
