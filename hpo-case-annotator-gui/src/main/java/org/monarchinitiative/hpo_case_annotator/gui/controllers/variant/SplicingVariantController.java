@@ -1,6 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
-import javafx.application.HostServices;
 import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
@@ -9,6 +8,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
+import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 
 import javax.inject.Inject;
@@ -106,7 +106,7 @@ public final class SplicingVariantController extends AbstractVariantController {
      * Create instance of this class which acts as a controller from MVC pattern.
      */
     @Inject
-    public SplicingVariantController(GuiElementValues elementValues, HostServices hostServices) {
+    public SplicingVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
         super(elementValues,hostServices);
     }
 
@@ -255,7 +255,7 @@ public final class SplicingVariantController extends AbstractVariantController {
     /**
      * Open up a page on the VariantValidator website that allows the curator to check whether the genomic coordinates
      * match the entered mutation data. It uses the method
-     * {@link VariantUtil#goToVariantValidatorWebsite(GenomeAssembly, String, int, String, String,HostServices)}
+     * {@link VariantUtil#goToVariantValidatorWebsite(GenomeAssembly, String, int, String, String,HostServicesWrapper)}
      * to display the variant on the VariantValidator website.
      */
     @FXML public void showVariantValidator() {

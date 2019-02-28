@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +17,7 @@ import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
+import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.StartupTask;
 import org.monarchinitiative.hpo_case_annotator.model.Codecs;
@@ -66,7 +66,7 @@ public final class MainController {
 
     private final GenomeAssemblies assemblies;
 
-    private final HostServices hostServices;
+    private final HostServicesWrapper hostServices;
 
     @FXML
     public StackPane contentStackPane;
@@ -82,7 +82,7 @@ public final class MainController {
     public MainController(OptionalResources optionalResources, DiseaseCaseDataController dataController,
                           ResourceBundle resourceBundle, Stage primaryStage,
                           Properties properties, @Named("appHomeDir") File appHomeDir, ExecutorService executorService,
-                          GenomeAssemblies assemblies, HostServices hostServices) {
+                          GenomeAssemblies assemblies, HostServicesWrapper hostServices) {
         this.optionalResources = optionalResources;
         this.dataController = dataController;
         this.resourceBundle = resourceBundle;

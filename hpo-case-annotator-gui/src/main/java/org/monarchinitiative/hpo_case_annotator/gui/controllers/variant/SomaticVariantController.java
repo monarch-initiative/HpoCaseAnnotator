@@ -1,6 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
-import javafx.application.HostServices;
 import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
@@ -9,6 +8,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
+import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 
 import javax.inject.Inject;
@@ -97,7 +97,7 @@ public final class SomaticVariantController extends AbstractVariantController {
      * Create instance of this class which acts as a controller from MVC pattern.
      */
     @Inject
-    public SomaticVariantController(GuiElementValues elementValues, HostServices hostServices) {
+    public SomaticVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
         super(elementValues,hostServices);
     }
 
