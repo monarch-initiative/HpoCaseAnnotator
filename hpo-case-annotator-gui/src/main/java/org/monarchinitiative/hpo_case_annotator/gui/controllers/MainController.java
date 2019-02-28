@@ -177,6 +177,7 @@ public final class MainController {
                     throw new RuntimeException("This should not have had happened!");
             }
 
+
             dataController.presentData(diseaseCase);
             dataController.setCurrentModelPath(which);
         }
