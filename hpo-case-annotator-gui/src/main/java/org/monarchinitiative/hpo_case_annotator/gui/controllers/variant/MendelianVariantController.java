@@ -225,7 +225,7 @@ public final class MendelianVariantController extends AbstractVariantController 
     }
 
     @FXML public void variantValidatorToClipboardTranscript() {
-        VariantUtil.getTranscriptDataAndGoToVariantValidatorWebsite();
+        VariantUtil.getTranscriptDataAndGoToVariantValidatorWebsite(this.hostServices);
     }
     /**
      * Open up a page on the VariantValidator website that allows the curator to check whether the genomic coordinates

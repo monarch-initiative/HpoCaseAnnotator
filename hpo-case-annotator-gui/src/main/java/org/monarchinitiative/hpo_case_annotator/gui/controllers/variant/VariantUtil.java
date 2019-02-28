@@ -66,7 +66,7 @@ public class VariantUtil {
      * gene symbol.
      * TODO -- use an API to get all relevant accession numbers and offer them to the user as a combo box.
      */
-    static void getTranscriptDataAndGoToVariantValidatorWebsite() {
+    static void getTranscriptDataAndGoToVariantValidatorWebsite(HostServices hostServices) {
         Optional<List<String>> opt = PopUps.getPairOfUserStrings(null,
                 "Transcript data for VariantValidator",
                 "enter accession number and variant (e.g., NM_000088.3 and c.589G>T)",
@@ -100,10 +100,12 @@ public class VariantUtil {
                     pos,
                     ref,
                     alt);
-            final Clipboard clipboard = Clipboard.getSystemClipboard();
-            final ClipboardContent content = new ClipboardContent();
-            content.putString(vvURL);
-            clipboard.setContent(content);
+//            final Clipboard clipboard = Clipboard.getSystemClipboard();
+//            final ClipboardContent content = new ClipboardContent();
+//            content.putString(vvURL);
+//            clipboard.setContent(content);
+            Hyperlink hyper = new Hyperlink(vvURL);
+            hostServices.showDocument(hyper.getText());
         } else {
             PopUps.showInfoMessage("Malformed HGVS String","Could not parse position");
 
