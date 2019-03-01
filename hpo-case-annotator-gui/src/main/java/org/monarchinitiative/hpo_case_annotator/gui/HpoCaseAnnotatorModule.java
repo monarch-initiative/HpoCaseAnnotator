@@ -14,6 +14,7 @@ import org.monarchinitiative.hpo_case_annotator.gui.controllers.SetResourcesCont
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SomaticVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SplicingVariantController;
+import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,8 +66,8 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
                 .annotatedWith(Names.named("primaryStage"))
                 .toInstance(primaryStage);
 
-        bind(HostServices.class)
-                .toInstance(hostServices);
+        bind(HostServicesWrapper.class)
+                .toInstance(HostServicesWrapper.wrap(hostServices));
 
         bind(ExecutorService.class)
                 .toInstance(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));

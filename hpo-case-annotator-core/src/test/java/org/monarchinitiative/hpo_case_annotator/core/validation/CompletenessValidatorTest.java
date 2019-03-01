@@ -3,8 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.core.validation;
 import org.junit.Before;
 import org.junit.Test;
 import org.monarchinitiative.hpo_case_annotator.core.DiseaseCaseModelExample;
-import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Gene;
+import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 
 import java.util.List;
 
@@ -87,6 +86,22 @@ public class CompletenessValidatorTest {
         final List<ValidationResult> results = anotherValidator.validate(diseaseCase);
 
         assertThat(results, hasItem(ValidationResult.fail("At least one variant should be present")));
+    }
+
+    @Test
+    public void validateCaseWithDuplicateVariants() {
+        final VariantPosition first = VariantPosition.newBuilder().setGenomeAssembly(GenomeAssembly.GRCH_37).setContig("1").setPos(1234).setRefAllele("C").setAltAllele("G").build();
+        final VariantPosition differentPosition = first.toBuilder().setPos(1235).build();
+        final VariantPosition second = first.toBuilder().build();
+        DiseaseCase diseaseCase = DiseaseCase.newBuilder()
+                .addVariant(Variant.newBuilder().setVariantPosition(first).build())
+                .addVariant(Variant.newBuilder().setVariantPosition(differentPosition).build())
+                .addVariant(Variant.newBuilder().setVariantPosition(second).build())
+                .build();
+
+        final List<ValidationResult> results = validator.validate(diseaseCase);
+
+        assertThat(results, hasItem(ValidationResult.fail("Variants 0 and 2 seem to represent the same variant 'GRCH_37:1:1234C>G'")));
     }
 }
 

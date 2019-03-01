@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.gui.util;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -8,6 +9,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.*;
@@ -323,5 +325,35 @@ public final class PopUps {
         childStage.setY(bounds.getHeight() * 0.25);
         return childStage;
     }
+
+
+
+    public static Optional<List<String>> getPairOfUserStrings(Stage primaryStage, String title, String message, String prompt1, String prompt2) {
+        Dialog<List<String>> dialog = new Dialog<>();
+        dialog.setTitle(title);
+        dialog.setHeaderText(message);
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        TextField textField1 = new TextField();
+        textField1.setPromptText(prompt1);
+        TextField textField2 = new TextField();
+        textField2.setPromptText(prompt2);
+
+        dialogPane.setContent(new VBox(8, textField1, textField2));
+        Platform.runLater(textField1::requestFocus);
+        dialog.setResultConverter((ButtonType button) -> {
+            if (button == ButtonType.OK) {
+                String s1 = textField1.getText().trim();
+                String s2 = textField2.getText().trim();
+                List<String> results = new ArrayList<>();
+                results.add(s1);
+                results.add(s2);
+                return results;
+            }
+            return null;
+        });
+        return dialog.showAndWait();
+    }
+
 
 }

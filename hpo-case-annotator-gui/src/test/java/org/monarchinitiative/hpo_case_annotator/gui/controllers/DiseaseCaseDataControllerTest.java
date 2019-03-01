@@ -17,7 +17,10 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.testfx.framework.junit.ApplicationTest;
 
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.List;
 
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -118,6 +121,30 @@ public class DiseaseCaseDataControllerTest extends ApplicationTest {
         clickOn("#metadataTextArea")
                 .write("Meta");
         assertThat(controller.getData().getMetadata(), is("Meta"));
+    }
+
+    /**
+     * There was a bug where the phenotypes were added twice. Absence of the bug is tested here.
+     */
+    @Test
+    public void noDuplicateTermsPhenotypeTermsArePresent() {
+        DiseaseCase data = DiseaseCase.newBuilder()
+                .addAllPhenotype(Arrays.asList(
+                        OntologyClass.newBuilder().setId("HP:0000822").setLabel("Hypertension").setNotObserved(false).build(),
+                        OntologyClass.newBuilder().setId("HP:0000822").setLabel("Hypertension").setNotObserved(false).build(), // duplicate that should be removed
+                        OntologyClass.newBuilder().setId("HP:0002615").setLabel("Hypotension").setNotObserved(true).build(),
+                        OntologyClass.newBuilder().setId("HP:0002615").setLabel("Hypotension").setNotObserved(true).build(),
+                        OntologyClass.newBuilder().setId("HP:0005185").setLabel("Global systolic dysfunction").setNotObserved(false).build()
+                ))
+                .build();
+        controller.presentData(data);
+
+        final DiseaseCase received = controller.getData();
+        final List<OntologyClass> phenotypes = received.getPhenotypeList();
+        assertThat(phenotypes.size(), is(3));
+        assertThat(phenotypes, hasItems(OntologyClass.newBuilder().setId("HP:0000822").setLabel("Hypertension").setNotObserved(false).build(),
+                OntologyClass.newBuilder().setId("HP:0002615").setLabel("Hypotension").setNotObserved(true).build(),
+                OntologyClass.newBuilder().setId("HP:0005185").setLabel("Global systolic dysfunction").setNotObserved(false).build()));
     }
 
     //    TODO - complete tests, improve coverage

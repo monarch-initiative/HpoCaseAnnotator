@@ -52,6 +52,10 @@ public final class DiseaseCaseModel {
     private ObjectProperty<Biocurator> biocurator = new SimpleObjectProperty<>(this, "biocurator", new Biocurator());
 
 
+    public DiseaseCaseModel() {
+
+    }
+
     public String getGenomeBuild() {
         return genomeBuild.get();
     }

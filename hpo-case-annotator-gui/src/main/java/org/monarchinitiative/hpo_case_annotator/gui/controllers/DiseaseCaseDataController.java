@@ -189,12 +189,11 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     }
 
     /**
-     * Load variant data into GUI accordion.
+     * Load given <code>variant</code> collection into GUI accordion.
      *
      * @param variants {@link Collection} of {@link Variant} objects to be loaded.
      */
     private void loadVariants(Collection<Variant> variants) {
-        variantsAccordion.getPanes().clear();
         variants.forEach(variant -> {
             try {
                 loadVariant(variant);
@@ -245,6 +244,25 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         }
     }
 
+    /**
+     * Load a single variant from the model
+     *
+     * <p>
+     * <b>IMPORTANT</b> - this is the only place where the variant should be removed from the {@link DiseaseCaseDataController}!
+     *
+     * @param idx index of the variant to be removed
+     */
+    private void removeVariant(int idx) {
+        final int n_accordions = variantsAccordion.getPanes().size();
+        final int n_controllers = variantControllers.size();
+
+        if (n_accordions == n_controllers && idx < n_accordions) {
+            variantsAccordion.getPanes().remove(idx); // remove variant from the View
+            variantControllers.remove(idx); // and controller from the controller list
+        } else { // refuse to remove variant if there is an inconsistency
+            PopUps.showWarningDialog("Remove variant", "Cannot remove variant", "Inconsistency was detected.\nPlease contact Daniel or Peter");
+        }
+    }
 
     /**
      * Ask user to select variant mode and add variant into model & into view.
@@ -284,8 +302,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         TitledPane expanded = variantsAccordion.getExpandedPane();
         if (expanded != null) {
             final int idx = variantsAccordion.getPanes().indexOf(expanded);
-            variantsAccordion.getPanes().remove(idx); // remove variant from the View
-            variantControllers.remove(idx); // and controller from the controller list
+            removeVariant(idx);
         } else {
             PopUps.showInfoMessage("Expand variant before removing", "Remove variant");
         }
@@ -508,16 +525,17 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
         publication.set(data.getPublication());
 
-        // Phenotype terms
-        phenotypes.clear();
-        phenotypes.addAll(data.getPhenotypeList());
+        // Show data on publication in text fields
+        pmidTextField.setText(publication.get().getPmid());
+        inputPubMedDataTextField.setText(publication.get().getTitle());
 
         // Gene
         entrezIDTextField.setText(String.valueOf(data.getGene().getEntrezId()));
         geneSymbolTextField.setText(data.getGene().getSymbol());
 
-        // Phenotypes
-        phenotypes.addAll(data.getPhenotypeList());
+        // Phenotype terms
+        phenotypes.clear();
+        phenotypes.addAll(data.getPhenotypeList().stream().distinct().collect(Collectors.toList()));
 
         // Disease
         diseaseDatabaseComboBox.setValue(data.getDisease().getDatabase());
@@ -535,6 +553,9 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         // Metadata
         metadataTextArea.setText(data.getMetadata());
 
+        // Delete old variants and present the new ones
+        variantsAccordion.getPanes().clear();
+        variantControllers.clear();
         loadVariants(data.getVariantList());
     }
 

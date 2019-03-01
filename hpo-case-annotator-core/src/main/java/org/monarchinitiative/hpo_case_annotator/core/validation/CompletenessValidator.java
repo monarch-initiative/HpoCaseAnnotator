@@ -16,6 +16,7 @@ import java.util.List;
  * <li>Gene</li>
  * <li>Disease</li>
  * <li>At least one {@link Variant}</li>
+ * <li>No duplicate variants are present (variants with the same assembly, contig, position, ref, and alt</li>
  * </ul>
  * <p>
  * Note that the variant itself is validated using {@link VariantSyntaxValidator}.
@@ -72,7 +73,9 @@ public final class CompletenessValidator implements Validator<DiseaseCase> {
 
         // variants
         final List<Variant> variantList = diseaseCase.getVariantList();
-        if (!variantList.isEmpty()) {
+        if (variantList.isEmpty()) {
+            results.add(ValidationResult.fail("At least one variant should be present"));
+        } else {
             if (variantValidator != null) {
                 // validate all the variants
                 variantList.stream()
@@ -80,8 +83,20 @@ public final class CompletenessValidator implements Validator<DiseaseCase> {
                         .flatMap(Collection::stream)
                         .forEach(results::add);
             }
-        } else {
-            results.add(ValidationResult.fail("At least one variant should be present"));
+            // check if we have two variants with identical position
+            int n = variantList.size();
+            for (int i = 0; i < n; i++) {
+                final VariantPosition first = variantList.get(i).getVariantPosition();
+                int j = i + 1;
+                while (j < n) {
+                    final VariantPosition second = variantList.get(j).getVariantPosition();
+                    if (first.equals(second)) {
+                        results.add(ValidationResult.fail(String.format("Variants %d and %d seem to represent the same variant '%s:%s:%d%s>%s'", i, j,
+                                first.getGenomeAssembly(), first.getContig(), first.getPos(), first.getRefAllele(), first.getAltAllele())));
+                    }
+                    j++;
+                }
+            }
         }
 
         // check disease

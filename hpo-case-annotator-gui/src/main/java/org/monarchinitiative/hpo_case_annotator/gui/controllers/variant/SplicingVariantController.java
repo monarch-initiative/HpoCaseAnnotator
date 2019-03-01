@@ -8,6 +8,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
+import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 
 import javax.inject.Inject;
@@ -105,8 +106,8 @@ public final class SplicingVariantController extends AbstractVariantController {
      * Create instance of this class which acts as a controller from MVC pattern.
      */
     @Inject
-    public SplicingVariantController(GuiElementValues elementValues) {
-        super(elementValues);
+    public SplicingVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
+        super(elementValues,hostServices);
     }
 
 
@@ -249,5 +250,25 @@ public final class SplicingVariantController extends AbstractVariantController {
         return Arrays.asList(genomeBuildComboBox.valueProperty(), varChromosomeComboBox.valueProperty(), varPositionTextField.textProperty(),
                 varReferenceTextField.textProperty(), varAlternateTextField.textProperty(), varSnippetTextField.textProperty(),
                 varGenotypeComboBox.valueProperty());
+    }
+
+    /**
+     * Open up a page on the VariantValidator website that allows the curator to check whether the genomic coordinates
+     * match the entered mutation data. It uses the method
+     * {@link VariantUtil#goToVariantValidatorWebsite(GenomeAssembly, String, int, String, String,HostServicesWrapper)}
+     * to display the variant on the VariantValidator website.
+     */
+    @FXML public void showVariantValidator() {
+        GenomeAssembly assembly=genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY: genomeBuildComboBox.getValue();
+        String chrom =varChromosomeComboBox.getValue() == null ? "NA" : varChromosomeComboBox.getValue();
+        Variant variant = getData();
+        int pos = variant.getVariantPosition().getPos();
+        String ref = this.varReferenceTextField.getText();
+        String alt = this.varAlternateTextField.getText();
+        VariantUtil.goToVariantValidatorWebsite( assembly,  chrom,  pos,  ref,  alt, this.hostServices);
+    }
+
+    @FXML public void variantValidatorToClipboardTranscript() {
+        VariantUtil.getTranscriptDataAndGoToVariantValidatorWebsite(this.hostServices);
     }
 }

@@ -68,16 +68,27 @@ public final class StartupTask extends Task<Void> {
      */
     @Override
     protected Void call() throws Exception {
-        // Then HPO
-        String ontologyPath = properties.getProperty(OptionalResources.ONTOLOGY_PATH_PROPERTY);
-        if (ontologyPath != null && new File(ontologyPath).isFile()) {
-            File ontologyFile = new File(ontologyPath);
-            LOGGER.info("Loading HPO from file '{}'", ontologyFile.getAbsolutePath());
-            optionalResources.setOntology(OptionalResources.deserializeOntology(ontologyFile));
-            optionalResources.setOntologyPath(ontologyFile);
-        } else {
-            LOGGER.info("Skipping loading HPO file since the location is unset");
+        // Curated files directory
+        String curatedDirPath = properties.getProperty(OptionalResources.DISEASE_CASE_DIR_PROPERTY);
+        if (curatedDirPath != null && new File(curatedDirPath).isDirectory()) {
+            File curatedDir = new File(curatedDirPath);
+            LOGGER.info("Setting curated files directory to '{}'", curatedDir.getAbsolutePath());
+            optionalResources.setDiseaseCaseDir(curatedDir);
+        } else
+            LOGGER.info("Skipping setting of the curated files dictionary. Path '{}' does not point to directory",
+                    curatedDirPath);
+
+        // Biocurator ID
+        optionalResources.setBiocuratorId(properties.getProperty(OptionalResources.BIOCURATOR_ID_PROPERTY, ""));
+
+        // Then OMIM tsv file
+        LOGGER.info("Parsing bundled OMIM file '{}'", OMIM_FILE_RESOURCE);
+        try (InputStream is = getClass().getResourceAsStream(OMIM_FILE_RESOURCE)) {
+            OMIMParser omimParser = new OMIMParser(is, Charset.forName("UTF-8"));
+            optionalResources.setCanonicalName2mimid(omimParser.getCanonicalName2mimid());
+            optionalResources.setMimid2canonicalName(omimParser.getMimid2canonicalName());
         }
+
         // Then Entrez file
         String entrezPath = properties.getProperty(OptionalResources.ENTREZ_GENE_PATH_PROPERTY);
         if (entrezPath != null && new File(entrezPath).isFile()) {
@@ -92,24 +103,16 @@ public final class StartupTask extends Task<Void> {
         } else {
             LOGGER.info("Skipping loading Entrez genes since the location is unset");
         }
-        // Curated files directory
-        String curatedDirPath = properties.getProperty(OptionalResources.DISEASE_CASE_DIR_PROPERTY);
-        if (curatedDirPath != null && new File(curatedDirPath).isDirectory()) {
-            File curatedDir = new File(curatedDirPath);
-            LOGGER.info("Setting curated files directory to '{}'", curatedDir.getAbsolutePath());
-            optionalResources.setDiseaseCaseDir(curatedDir);
-        } else
-            LOGGER.info("Skipping setting of the curated files dictionary. Path '{}' does not point to directory",
-                    curatedDirPath);
-        // Biocurator ID
-        optionalResources.setBiocuratorId(properties.getProperty(OptionalResources.BIOCURATOR_ID_PROPERTY, ""));
 
-        // Finally OMIM tsv file
-        LOGGER.info("Parsing bundled OMIM file '{}'", OMIM_FILE_RESOURCE);
-        try (InputStream is = getClass().getResourceAsStream(OMIM_FILE_RESOURCE)) {
-            OMIMParser omimParser = new OMIMParser(is, Charset.forName("UTF-8"));
-            optionalResources.setCanonicalName2mimid(omimParser.getCanonicalName2mimid());
-            optionalResources.setMimid2canonicalName(omimParser.getMimid2canonicalName());
+        // Finally HPO
+        String ontologyPath = properties.getProperty(OptionalResources.ONTOLOGY_PATH_PROPERTY);
+        if (ontologyPath != null && new File(ontologyPath).isFile()) {
+            File ontologyFile = new File(ontologyPath);
+            LOGGER.info("Loading HPO from file '{}'", ontologyFile.getAbsolutePath());
+            optionalResources.setOntology(OptionalResources.deserializeOntology(ontologyFile));
+            optionalResources.setOntologyPath(ontologyFile);
+        } else {
+            LOGGER.info("Skipping loading HPO file since the location is unset");
         }
 
         LOGGER.info("Done");
