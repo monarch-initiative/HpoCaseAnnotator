@@ -65,7 +65,8 @@ public class VariantUtil {
      * gene symbol.
      * TODO -- use an API to get all relevant accession numbers and offer them to the user as a combo box.
      */
-    static void getTranscriptDataAndGoToVariantValidatorWebsite(HostServicesWrapper hostServices) {
+    static void getTranscriptDataAndGoToVariantValidatorWebsite(GenomeAssembly assembly,
+                                                                HostServicesWrapper hostServices) {
         Optional<List<String>> opt = PopUps.getPairOfUserStrings(null,
                 "Transcript data for VariantValidator",
                 "enter accession number and variant (e.g., NM_000088.3 and c.589G>T)",
@@ -88,26 +89,23 @@ public class VariantUtil {
             PopUps.showInfoMessage("Malformed HGVS String", "Could not find \"c.\"");
             return;
         }
+        String assemblyString = assembly.toString();
         Pattern pat = Pattern.compile("(\\d+)(\\w+)\\>(\\w+)");
         Matcher m = pat.matcher(var);
-        if (m.matches()) {
+        if (m.matches() || var.contains("del") || var.contains("ins") || var.contains("dup")) {
             String pos = m.group(1);
             String ref = m.group(2);
             String alt = m.group(3);
-            String vvURL = String.format("https://variantvalidator.org/variantvalidation/?variant=%s:%s:%s:%s",
+            String vvURL = String.format("https://variantvalidator.org/variantvalidation/?variant=%s:%s:%s:%s&primary_assembly=%s",
                     transcript,
                     pos,
                     ref,
-                    alt);
-//            final Clipboard clipboard = Clipboard.getSystemClipboard();
-//            final ClipboardContent content = new ClipboardContent();
-//            content.putString(vvURL);
-//            clipboard.setContent(content);
+                    alt,
+                    assemblyString);
             Hyperlink hyper = new Hyperlink(vvURL);
             hostServices.showDocument(hyper.getText());
         } else {
-            PopUps.showInfoMessage("Malformed HGVS String", "Could not parse position");
-
+            PopUps.showInfoMessage(String.format("Malformed HGVS String \"%s\"",var), "Could not parse position");
         }
     }
 
