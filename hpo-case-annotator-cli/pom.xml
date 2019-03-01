@@ -3,12 +3,12 @@
     <parent>
         <artifactId>hpo-case-annotator</artifactId>
         <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
-        <version>1.0.10-SNAPSHOT</version>
+        <version>1.0.10</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>hpo-case-annotator-cli</artifactId>
-    <version>1.0.10-SNAPSHOT</version>
+    <version>1.0.10</version>
 
     <build>
         <finalName>HpoCaseAnnotator-Cli-${project.version}</finalName>
