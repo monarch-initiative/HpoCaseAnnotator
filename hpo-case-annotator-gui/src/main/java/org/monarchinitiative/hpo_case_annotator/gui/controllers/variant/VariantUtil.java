@@ -67,7 +67,7 @@ public class VariantUtil {
      */
     static void getTranscriptDataAndGoToVariantValidatorWebsite(GenomeAssembly assembly,
                                                                 HostServicesWrapper hostServices) {
-        Optional<List<String>> opt = PopUps.getPairOfUserStrings(null,
+        Optional<List<String>> opt = PopUps.getPairOfUserStringsWithoutWhitespace(null,
                 "Transcript data for VariantValidator",
                 "enter accession number and variant (e.g., NM_000088.3 and c.589G>T)",
                 "accession", "variant");
@@ -89,8 +89,8 @@ public class VariantUtil {
             PopUps.showInfoMessage("Malformed HGVS String", "Could not find \"c.\"");
             return;
         }
-        String assemblyString = assembly.toString();
-        Pattern pat = Pattern.compile("(\\d+)(\\w+)\\>(\\w+)");
+        String assemblyString = assembly.equals(GenomeAssembly.GRCH_37) ? "GRCh37" : "GRCh38";
+        Pattern pat = Pattern.compile("(\\d+)(\\w+)>(\\w+)");
         Matcher m = pat.matcher(var);
         if (m.matches() || var.contains("del") || var.contains("ins") || var.contains("dup")) {
             String pos = m.group(1);
