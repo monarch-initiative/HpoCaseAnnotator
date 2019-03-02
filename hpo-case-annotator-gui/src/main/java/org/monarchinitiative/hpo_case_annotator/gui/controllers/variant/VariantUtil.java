@@ -92,7 +92,7 @@ public class VariantUtil {
         String assemblyString = assembly.equals(GenomeAssembly.GRCH_37) ? "GRCh37" : "GRCh38";
         Pattern pat = Pattern.compile("(\\d+)(\\w+)>(\\w+)");
         Matcher m = pat.matcher(var);
-        if (m.matches() || var.contains("del") || var.contains("ins") || var.contains("dup")) {
+        if (m.matches() ) {
             String pos = m.group(1);
             String ref = m.group(2);
             String alt = m.group(3);
@@ -101,6 +101,13 @@ public class VariantUtil {
                     pos,
                     ref,
                     alt,
+                    assemblyString);
+            Hyperlink hyper = new Hyperlink(vvURL);
+            hostServices.showDocument(hyper.getText());
+        } else if (var.contains("del") || var.contains("ins") || var.contains("dup")) {
+            String vvURL = String.format("https://variantvalidator.org/variantvalidation/?variant=%s:%s&primary_assembly=%s",
+                    transcript,
+                    var,
                     assemblyString);
             Hyperlink hyper = new Hyperlink(vvURL);
             hostServices.showDocument(hyper.getText());
