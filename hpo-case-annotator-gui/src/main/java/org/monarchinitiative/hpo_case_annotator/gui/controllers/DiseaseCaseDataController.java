@@ -334,6 +334,9 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         } catch (IOException e) {
             LOGGER.warn("Error occurred during text mining", e);
             PopUps.showException(conversationTitle, "Error occurred during text mining", e.getMessage(), e);
+        } catch (StringIndexOutOfBoundsException sioe){
+            LOGGER.warn("Error occurred during text mining", sioe);
+            PopUps.showException(conversationTitle, "Error: StringIndexOutOfBoundsException", sioe.getMessage(), sioe);
         }
     }
 
