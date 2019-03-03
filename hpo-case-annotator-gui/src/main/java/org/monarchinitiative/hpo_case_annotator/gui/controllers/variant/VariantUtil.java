@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
 import com.google.common.collect.ImmutableList;
-import javafx.scene.control.Hyperlink;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
@@ -55,8 +54,7 @@ public class VariantUtil {
                 ref,
                 alt);
         // The following opens the system browser to the corresponding VariantValidator page
-        Hyperlink hyper = new Hyperlink(vvURL);
-        hostServices.showDocument(hyper.getText());
+        hostServices.showDocument(vvURL);
     }
 
 
@@ -102,15 +100,13 @@ public class VariantUtil {
                     ref,
                     alt,
                     assemblyString);
-            Hyperlink hyper = new Hyperlink(vvURL);
-            hostServices.showDocument(hyper.getText());
+            hostServices.showDocument(vvURL);
         } else if (var.contains("del") || var.contains("ins") || var.contains("dup")) {
             String vvURL = String.format("https://variantvalidator.org/variantvalidation/?variant=%s:%s&primary_assembly=%s",
                     transcript,
                     var,
                     assemblyString);
-            Hyperlink hyper = new Hyperlink(vvURL);
-            hostServices.showDocument(hyper.getText());
+            hostServices.showDocument(vvURL);
         } else {
             PopUps.showInfoMessage(String.format("Malformed HGVS String \"%s\"",var), "Could not parse position");
         }
@@ -142,15 +138,14 @@ public class VariantUtil {
             System.out.println("\nSending 'GET' request to URL : " + url);
             System.out.println("Response Code : " + responseCode);
 
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
             StringBuilder response = new StringBuilder();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
             }
-            in.close();
+
             String resp = response.toString().replaceAll("\\s+", "");
             // This is XML but all we need are the NM_12345 accession numbers as follows
             Pattern pat = Pattern.compile("<Gene-commentary_accession>(NM_\\d+)</Gene-commentary_accession>");
