@@ -269,6 +269,7 @@ public final class SplicingVariantController extends AbstractVariantController {
     }
 
     @FXML public void variantValidatorToClipboardTranscript() {
-        VariantUtil.getTranscriptDataAndGoToVariantValidatorWebsite(this.hostServices);
+        GenomeAssembly assembly=genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY: genomeBuildComboBox.getValue();
+        VariantUtil.getTranscriptDataAndGoToVariantValidatorWebsite(assembly,this.hostServices);
     }
 }

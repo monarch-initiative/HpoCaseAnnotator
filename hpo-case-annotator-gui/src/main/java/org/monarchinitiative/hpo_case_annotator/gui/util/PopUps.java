@@ -112,7 +112,7 @@ public final class PopUps {
      * Ask user a boolean question and get an answer.
      *
      * @param windowTitle Title of PopUp window
-     * @return
+     * @return true or false according to the user input
      */
     public static boolean getBooleanFromUser(String question, String headerText, String windowTitle) {
         Alert al = new Alert(AlertType.CONFIRMATION);
@@ -149,7 +149,7 @@ public final class PopUps {
      * @param textMapper  Function to be used to get a text representation of the {@link T} parameter
      * @return {@link Optional} object containing String selected by user or empty if user selected cancel
      */
-    public static <T> Optional<T> getToggleChoiceFromUser(Collection<T> choices, String labelText, String windowTitle, Function<T, String> textMapper) {
+    private static <T> Optional<T> getToggleChoiceFromUser(Collection<T> choices, String labelText, String windowTitle, Function<T, String> textMapper) {
         Map<String, T> stringRepresentationsOfChoices = choices.stream()
                 .collect(Collectors.toMap(textMapper, Function.identity()));
 
@@ -310,9 +310,9 @@ public final class PopUps {
     /**
      * Ensure that popup Stage will be displayed on the same monitor as the parent Stage
      *
-     * @param childStage
-     * @param parentStage
-     * @return
+     * @param childStage stage of dialog
+     * @param parentStage stage of main window
+     * @return adjusted child stage with new position
      */
     private static Stage adjustStagePosition(Stage childStage, Stage parentStage) {
         ObservableList<Screen> screensForParentWindow = Screen.getScreensForRectangle(parentStage.getX(), parentStage.getY(),
@@ -328,7 +328,7 @@ public final class PopUps {
 
 
 
-    public static Optional<List<String>> getPairOfUserStrings(Stage primaryStage, String title, String message, String prompt1, String prompt2) {
+    public static Optional<List<String>> getPairOfUserStringsWithoutWhitespace(Stage primaryStage, String title, String message, String prompt1, String prompt2) {
         Dialog<List<String>> dialog = new Dialog<>();
         dialog.setTitle(title);
         dialog.setHeaderText(message);
@@ -338,6 +338,19 @@ public final class PopUps {
         textField1.setPromptText(prompt1);
         TextField textField2 = new TextField();
         textField2.setPromptText(prompt2);
+        // remove Whitespace
+        textField1.textProperty().addListener( // ChangeListener
+                (observable, oldValue, newValue) -> {
+                    String txt = textField1.getText();
+                    txt = txt.replaceAll("\\s", "");
+                    textField1.setText(txt);
+                });
+        textField2.textProperty().addListener( // ChangeListener
+                (observable, oldValue, newValue) -> {
+                    String txt = textField2.getText();
+                    txt = txt.replaceAll("\\s", "");
+                    textField2.setText(txt);
+                });
 
         dialogPane.setContent(new VBox(8, textField1, textField2));
         Platform.runLater(textField1::requestFocus);

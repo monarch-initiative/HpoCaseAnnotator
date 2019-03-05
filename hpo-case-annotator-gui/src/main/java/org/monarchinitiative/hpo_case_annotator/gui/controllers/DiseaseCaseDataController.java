@@ -144,7 +144,6 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         this.variantControllers = FXCollections.observableArrayList();
     }
 
-
     /**
      * @return {@link Function} for mapping {@link org.monarchinitiative.hpotextmining.gui.controller.Main.PhenotypeTerm} to
      * {@link OntologyClass}
@@ -335,6 +334,9 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         } catch (IOException e) {
             LOGGER.warn("Error occurred during text mining", e);
             PopUps.showException(conversationTitle, "Error occurred during text mining", e.getMessage(), e);
+        } catch (StringIndexOutOfBoundsException sioe){
+            LOGGER.warn("Error occurred during text mining", sioe);
+            PopUps.showException(conversationTitle, "Error: StringIndexOutOfBoundsException", sioe.getMessage(), sioe);
         }
     }
 
@@ -444,6 +446,14 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
             }
             pmidTextField.setText(in);
         });
+
+
+        this.diseaseIDTextField.textProperty().addListener( // ChangeListener
+                (observable, oldValue, newValue) -> {
+                    String txt = diseaseIDTextField.getText();
+                    txt = txt.replaceAll("\\s+", "");
+                    diseaseIDTextField.setText(txt);
+                });
 
         if (!optionalResources.getOmimIsMissing()) enableOmimAutocompletions();
         optionalResources.omimIsMissingProperty().addListener((observable, oldValue, newValue) -> {
