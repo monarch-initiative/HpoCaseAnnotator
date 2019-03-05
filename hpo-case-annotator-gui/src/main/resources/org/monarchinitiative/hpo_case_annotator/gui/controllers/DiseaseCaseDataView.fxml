@@ -9,7 +9,8 @@
    <content>
       <StackPane alignment="TOP_CENTER" style="-fx-background-color: #ffffff;">
          <children>
-            <VBox alignment="TOP_CENTER" maxWidth="1200.0" minHeight="600.0" minWidth="1200.0" prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: white;" StackPane.alignment="TOP_CENTER">
+             <VBox alignment="TOP_CENTER" minHeight="600.0" minWidth="1200.0" prefHeight="600.0" prefWidth="1200.0"
+                   style="-fx-background-color: white;" StackPane.alignment="TOP_CENTER">
                 <children>
                     <HBox alignment="CENTER" style="-fx-background-color: #000000;" VBox.vgrow="NEVER">
                         <children>
@@ -105,14 +106,14 @@
                     </HBox>
                     <VBox alignment="CENTER_LEFT" style="-fx-background-color: #FFEFD5;">
                         <children>
-                            <HBox id="variantsHBox" alignment="CENTER_LEFT" maxWidth="1200.0" style="-fx-background-color: #ffffdd;">
+                            <HBox id="variantsHBox" alignment="CENTER_LEFT" style="-fx-background-color: #ffffdd;">
                                 <children>
                                     <Button id="addVariantButton" minHeight="30.0" minWidth="120.0" mnemonicParsing="false" onAction="#addVariantButtonAction" prefHeight="30.0" text="Add variant">
                                         <HBox.margin>
                                             <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                                         </HBox.margin>
                                     </Button>
-                                    <Region maxWidth="460.0" HBox.hgrow="SOMETIMES" />
+                                    <Region HBox.hgrow="SOMETIMES"/>
                                     <Label id="variantsTitleLabel" alignment="CENTER" text="Variants" textAlignment="CENTER">
                                         <font>
                                             <Font size="16.0" />
@@ -121,7 +122,7 @@
                                             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                         </HBox.margin>
                                     </Label>
-                                    <Region maxWidth="460.0" HBox.hgrow="SOMETIMES" />
+                                    <Region HBox.hgrow="SOMETIMES"/>
                                     <Button id="removeVariantButton" minHeight="30.0" minWidth="120.0" mnemonicParsing="false" onAction="#removeVariantAction" text="Remove variant">
                                         <HBox.margin>
                                             <Insets bottom="5.0" left="5.0" right="10.0" top="5.0" />
@@ -142,11 +143,11 @@
                                     <Font name="System Bold" size="15.0" />
                                 </font>
                             </Label>
-                            <GridPane alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1040.0" HBox.hgrow="SOMETIMES">
+                            <GridPane alignment="CENTER_LEFT" HBox.hgrow="SOMETIMES">
                                 <columnConstraints>
                                     <ColumnConstraints halignment="LEFT" minWidth="10.0" />
                                     <ColumnConstraints halignment="LEFT" minWidth="10.0" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
+                                    <ColumnConstraints halignment="LEFT" hgrow="NEVER" minWidth="10.0"/>
                                     <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
                                     <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
                                     <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
@@ -174,7 +175,8 @@
                                             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                         </GridPane.margin>
                                     </Label>
-                                    <TextField fx:id="diseaseNameTextField" maxWidth="490.0" minHeight="30.0" minWidth="100.0" GridPane.columnIndex="3" GridPane.columnSpan="3">
+                                    <TextField fx:id="diseaseNameTextField" minHeight="30.0" minWidth="100.0"
+                                               GridPane.columnIndex="3" GridPane.columnSpan="3">
                                         <GridPane.margin>
                                             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                         </GridPane.margin>
@@ -251,7 +253,8 @@
                                             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                         </GridPane.margin>
                                     </Label>
-                                    <ComboBox fx:id="sexComboBox" maxHeight="30.0" maxWidth="100.0" minHeight="30.0" minWidth="100.0" GridPane.columnIndex="3">
+                                    <ComboBox fx:id="sexComboBox" maxHeight="30.0" maxWidth="120.0" minHeight="30.0"
+                                              minWidth="120.0" GridPane.columnIndex="3">
                                         <GridPane.margin>
                                             <Insets bottom="5.0" left="5.0" right="15.0" top="5.0" />
                                         </GridPane.margin>
