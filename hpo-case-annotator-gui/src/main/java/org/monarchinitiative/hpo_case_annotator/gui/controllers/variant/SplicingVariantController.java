@@ -9,6 +9,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
+import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 
 import javax.inject.Inject;
@@ -258,7 +259,7 @@ public final class SplicingVariantController extends AbstractVariantController {
      * {@link VariantUtil#goToVariantValidatorWebsite(GenomeAssembly, String, int, String, String,HostServicesWrapper)}
      * to display the variant on the VariantValidator website.
      */
-    @FXML public void showVariantValidator() {
+    @FXML private void showVariantValidator() {
         GenomeAssembly assembly=genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY: genomeBuildComboBox.getValue();
         String chrom =varChromosomeComboBox.getValue() == null ? "NA" : varChromosomeComboBox.getValue();
         Variant variant = getData();
@@ -268,8 +269,14 @@ public final class SplicingVariantController extends AbstractVariantController {
         VariantUtil.goToVariantValidatorWebsite( assembly,  chrom,  pos,  ref,  alt, this.hostServices);
     }
 
-    @FXML public void variantValidatorToClipboardTranscript() {
+    @FXML private void variantValidatorToClipboardTranscript() {
         GenomeAssembly assembly=genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY: genomeBuildComboBox.getValue();
         VariantUtil.getTranscriptDataAndGoToVariantValidatorWebsite(assembly,this.hostServices);
+    }
+
+    @FXML private void getAccessionNumbers() {
+        String entrezid=PopUps.getStringFromUser("Enter Entrez ID","Enter Entrez ID of gene","id");
+        GenomeAssembly assembly=genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY: genomeBuildComboBox.getValue();
+        VariantUtil.geneAccessionNumberGrabber(entrezid,assembly,hostServices);
     }
 }

@@ -104,6 +104,12 @@
                     </GridPane.margin>
                 </TextField>
                 <Button mnemonicParsing="false" onAction="#showVariantValidator" text="VariantValidator (genomic)"
+                        GridPane.columnIndex="2">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </GridPane.margin>
+                </Button>
+                <Button mnemonicParsing="false" onAction="#getAccessionNumbers" text="Get accessions"
                         GridPane.columnIndex="3">
                     <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
