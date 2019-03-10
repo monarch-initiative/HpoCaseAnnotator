@@ -1,6 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -122,9 +121,9 @@ public class VariantUtil {
         }
     }
 
-    static void getTranscriptDataAndGoToVariantValidatorWebsite(GenomeAssembly assembly,
-                                                                String transcript,
-                                                                HostServicesWrapper hostServices) {
+    private static void getTranscriptDataAndGoToVariantValidatorWebsite(GenomeAssembly assembly,
+                                                                        String transcript,
+                                                                        HostServicesWrapper hostServices) {
         Optional<List<String>> opt = PopUps.getPairOfUserStringsWithoutWhitespace(null,
                 "Transcript data for VariantValidator",
                 "enter accession number and variant (e.g., NM_000088.3 and c.589G>T)",
@@ -164,7 +163,6 @@ public class VariantUtil {
      * the right one from a drop down list and then enter only the c.123A>G part of the HGVS string
      *
      * @param entrezGeneId an id such as 2202
-     * @return a list of corresponding accession numbers.
      */
     public static void geneAccessionNumberGrabber(String entrezGeneId,GenomeAssembly assembly,HostServicesWrapper hostServices) {
         ImmutableSet.Builder<String> builder = new ImmutableSet.Builder<>();
@@ -221,7 +219,11 @@ public class VariantUtil {
             gpane.add(b,0,i++);
             b.setOnAction((e)->{chosenId.setValue(s);
             stage.close();
-            getTranscriptDataAndGoToVariantValidatorWebsite(assembly,s, hostServices);
+                // we need to use accession+version for VariantValidator but do not get one
+                // This can provoke an error that is easy to fix. Alternatively, fix it in URL
+                // TODO -- can we do better than this?
+            String accessionWithFakeVersion = s +".2";
+            getTranscriptDataAndGoToVariantValidatorWebsite(assembly,accessionWithFakeVersion, hostServices);
             e.consume();});
         }
 
