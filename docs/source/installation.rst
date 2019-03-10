@@ -5,56 +5,52 @@ Getting the app for your operating system & installation
 Getting the app
 ---------------
 
-Windows
-#######
+Prebuilt app
+~~~~~~~~~~~~
 
-There is a prebuilt *exe* file for Windows users available at `Hpo Case Annotator releases <https://github.com/monarch-initiative/HpoCaseAnnotator/releases>`_ page. However, you need to have Java Runtime Environment installed on the machine. Otherwise, you will be prompted to download one.
+Most users (Windows, Mac, Linux) should download the prebuilt ``jar`` file (executable app) available at
+`HpoCaseAnnotator releases <https://github.com/monarch-initiative/HpoCaseAnnotator/releases>`_.
+To run HpoCaseAnnotator, you need to have Java Runtime Environment (Java version 8) installed on the machine.
+To run the app, a double click should work. Alternativel, enter at the command line. ::
+
+  $ java -jar HpoCaseAnnotator.jar
 
 
-Mac OSX
-#######
+Build from sources
+~~~~~~~~~~~~~~~~~~
 
-**Use prebuilt app**
-
-Mac users should use the prebuilt App `HpoCaseAnnotator-1.0.6-uber.jar` available at `Hpo Case Annotator releases <https://github.com/monarch-initiative/HpoCaseAnnotator/releases>`_ page. The `JAR` file is executed by double-clicking with mouse. Another way of launching the app is to use the Terminal::
-
-  $ java -jar HpoCaseAnnotator-1.0.6-uber.jar
-
-**Build from sources**
-
-It is also possible to build the *Hpo Case Annotator* from source code using Maven::
+It is also possible to build the *HpoCaseAnnotator* from source code using Maven::
 
   $ git clone https://github.com/monarch-initiative/HpoCaseAnnotator.git
-  cd HpoCaseAnnotator
-  mvn package
+  $ cd HpoCaseAnnotator
+  $ mvn package
 
-After successful build process the ``HpoCaseAnnotator-Gui-1.0.6-uber.jar`` will be present in ``hpo-case-annotator-gui/target`` directory.
+After successful build process the ``HpoCaseAnnotator.jar`` will be present in ``hpo-case-annotator-gui/target`` directory.
 
-
-Linux
-#####
-Linux users should download the same prebuilt ``HpoCaseAnnotator-Gui-1.0.6-uber.jar`` file as the Mac users or build the app from source code using Maven
 
 
 Initial setup
--------------
+~~~~~~~~~~~~~
 
 After a successful startup the dialog window will be opened:
 
 .. image:: img/hca_welcome.png
 
 
-Note, that *not* all the functionality is enabled after the first startup, since there are some resources that need to be downloaded first. Click on ``Settings | Set resources`` to start setting up the app.
+Note, that *not* all the functionality is enabled after the first startup, since there are some resources that need to
+be downloaded first. Click on ``Settings | Set resources`` to start setting up the app.
 
 A new dialog window will be opened:
 
 .. image:: img/hca_resources_welcome.png
 
 Reference genome
-################
+~~~~~~~~~~~~~~~~
+
 *Hpo Case Annotator* needs access to the sequence of the reference genome in order to e.g. check whether the wildtype sequence entered for each variant matches the corresponding genomic position. *Hpo Case Annotator* is able to download and pre-process the reference genome or you can provide the FASTA file yourself.
 
-Currently, **GRCh37 (hg19)** and **GRCh38 (hg38)** genome assemblies are supported.
+Currently, **GRCh37 (hg19)** and **GRCh38 (hg38)** genome assemblies are supported. For our internal use, we are
+still at hg19, and will use a liftover to move to hg38 coordinates!
 
 - **Download and pre-process the reference genome sequences automatically**
 

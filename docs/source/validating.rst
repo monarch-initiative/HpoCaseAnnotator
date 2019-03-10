@@ -2,12 +2,16 @@
 Validation
 ==========
 
-Various quality checks are being performed here.
+For some of the uses of ``HpoCaseAnnotator``, we enter not only the phenotype and genotype information, but
+also information about the molecular pathomechanism of the variant as well as any experimental methods
+that were used to validate the pathogenicity of the variant.
 
-This text needs to be further refined
-#####################################
+Non-coding variants
+~~~~~~~~~~~~~~~~~~~
 
-We will only include a mutation in the HRMD if there is adequate evidence for
+We have curated many non-coding variants that were used to validate
+the ``Genomiser <https://www.ncbi.nlm.nih.gov/pubmed/27569544>`_. As a rule,
+we  only include a mutation if there is adequate evidence for
 its pathogenicity. As a general rule, there should be some experimental
 evidence for the mutation changing gene regulation of a target gene in some
 way. For some heavily studied genes, we will accept a mutation if it seems
@@ -24,4 +28,11 @@ to each mutation.
 5. other - this is for any other kind of experimental assay that shows an effect of a regulatory or non-coding mutation. Note that for now the categories are hard coded into the Java code, this should be put into some kind of configuration file in the future. The categories are at present:
 
 Telomerase. Telomerase lengthening assay.
+
+
+Splicing variants
+~~~~~~~~~~~~~~~~~
+
+For splicing variants, we include them if there is adequate evidence for missplicing and disease pathogenicity.
+TODO -- describe.
 
