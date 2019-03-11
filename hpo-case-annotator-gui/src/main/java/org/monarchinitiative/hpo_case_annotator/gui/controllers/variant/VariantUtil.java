@@ -124,9 +124,10 @@ public class VariantUtil {
     private static void getTranscriptDataAndGoToVariantValidatorWebsite(GenomeAssembly assembly,
                                                                         String transcript,
                                                                         HostServicesWrapper hostServices) {
-        Optional<List<String>> opt = PopUps.getPairOfUserStringsWithoutWhitespace(null,
+
+       Optional<List<String>> opt = PopUps.getPairOfUserStringsWithoutWhitespace(null,
                 "Transcript data for VariantValidator",
-                "enter accession number and variant (e.g., NM_000088.3 and c.589G>T)",
+                "NOT WORKING CANNOT DELETE",
                 "accession", "variant");
 
 
