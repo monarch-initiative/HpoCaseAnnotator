@@ -275,8 +275,8 @@ public final class SplicingVariantController extends AbstractVariantController {
     }
 
     @FXML private void getAccessionNumbers() {
-        String entrezid=PopUps.getStringFromUser("Enter Entrez ID","Enter Entrez ID of gene","id");
+        String entrezId = getEntrezId(); // This is the gene ID entered by the user.
         GenomeAssembly assembly=genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY: genomeBuildComboBox.getValue();
-        VariantUtil.geneAccessionNumberGrabber(entrezid,assembly,hostServices);
+        VariantUtil.geneAccessionNumberGrabber(entrezId,assembly,hostServices);
     }
 }

@@ -246,10 +246,9 @@ public final class MendelianVariantController extends AbstractVariantController 
     }
 
     @FXML private void getAccessionNumbers() {
-        String entrezId = getEntrezId(); // TODO(pnrobinson) - here we have actual content of the entrez ID text field
-        String entrezid=PopUps.getStringFromUser("Enter Entrez ID","Enter Entrez ID of gene","id");
+        String entrezId = getEntrezId(); // This is the gene ID entered by the user.
         GenomeAssembly assembly=genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY: genomeBuildComboBox.getValue();
-        VariantUtil.geneAccessionNumberGrabber(entrezid,assembly,hostServices);
+        VariantUtil.geneAccessionNumberGrabber(entrezId,assembly,hostServices);
     }
 
 
