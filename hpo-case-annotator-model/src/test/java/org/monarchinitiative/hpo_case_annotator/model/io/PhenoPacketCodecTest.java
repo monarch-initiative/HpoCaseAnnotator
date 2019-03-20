@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.monarchinitiative.hpo_case_annotator.model.io.PhenoPacketTestUtil.ontologyClass;
 
 
 public class PhenoPacketCodecTest {
@@ -23,7 +25,7 @@ public class PhenoPacketCodecTest {
 
     @Test
     public void diseaseCaseToPhenopacket() {
-        // arange
+        // arrange
         DiseaseCase diseaseCase = TestResources.benMahmoud2013B3GLCT();
         String metadata = diseaseCase.getMetadata();
 
@@ -35,9 +37,9 @@ public class PhenoPacketCodecTest {
         final Individual subject = packet.getSubject();
         assertThat(subject.getId(), is("Tunisian patients"));
         assertThat(subject.getAgeAtCollection(), is(Age.newBuilder().setAge("P25Y").build()));
-        assertThat(subject.getSex(), is(PhenoPacketCodec.MALE));
+        assertThat(subject.getSex(), is(Sex.MALE));
 
-        final List<Phenotype> phenotypesList = subject.getPhenotypesList();
+        final List<Phenotype> phenotypesList = packet.getPhenotypesList();
         assertThat(phenotypesList.size(), is(6));
         assertThat(phenotypesList, hasItem(Phenotype.newBuilder()
                 .setType(OntologyClass.newBuilder()
@@ -83,20 +85,20 @@ public class PhenoPacketCodecTest {
         final List<Variant> variantsList = packet.getVariantsList();
         assertThat(variantsList.size(), is(1));
         Variant variant = variantsList.get(0);
-        assertThat(variant.getGenomeAssembly(), is(GenomeAssembly.GRCH_37));
-        assertThat(variant.getCoordinateSystem(), is(CoordinateSystem.ONE_BASED));
-        assertThat(variant.getSequence(), is("13"));
-        assertThat(variant.getPosition(), is(31843349));
-        assertThat(variant.getDeletion(), is("A"));
-        assertThat(variant.getInsertion(), is("G"));
-        assertThat(variant.getSampleGenotypesCount(), is(1));
-        assertThat(variant.getSampleGenotypesMap().get("Tunisian patients"), is(PhenoPacketCodec.HET));
+
+        assertTrue(variant.hasVcfAllele());
+        VcfAllele va = variant.getVcfAllele();
+        assertThat(va.getId(), is(GenomeAssembly.GRCH_37.name()));
+        assertThat(va.getChr(), is("13"));
+        assertThat(va.getPos(), is(31843349));
+        assertThat(va.getRef(), is("A"));
+        assertThat(va.getAlt(), is("G"));
+        assertThat(variant.getGenotype(), is(PhenoPacketCodec.HET));
 
         final List<Disease> diseasesList = packet.getDiseasesList();
         assertThat(diseasesList.size(), is(1));
         assertThat(diseasesList.get(0), is(Disease.newBuilder()
-                .setId("OMIM:261540")
-                .setLabel("PETERS-PLUS SYNDROME")
+                .setTerm(ontologyClass("OMIM:261540", "PETERS-PLUS SYNDROME"))
                 .build()));
 
         final MetaData metaData = packet.getMetaData();
@@ -106,11 +108,11 @@ public class PhenoPacketCodecTest {
 
     @Test
     public void writePhenopacketToWriter() throws Exception {
-        // arange
-        final PhenoPacket packet = TestResources.rareDiseasePhenoPacket();
+        // arrange
+        final PhenoPacket packet = TestResources.mockPhenopacket();
         StringWriter writer = new StringWriter();
         String expected;
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(PhenoPacketCodecTest.class.getResource("examplePhenoPacket_v0.2.0.json").toURI()))) {
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(PhenoPacketCodecTest.class.getResource("examplePhenopacket_v0.3.0.json").toURI()))) {
             expected = reader.lines().collect(Collectors.joining("\n"));
         }
 

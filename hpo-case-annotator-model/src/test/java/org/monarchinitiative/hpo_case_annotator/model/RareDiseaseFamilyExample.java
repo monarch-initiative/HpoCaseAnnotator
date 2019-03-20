@@ -1,15 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.model;
 
-import com.google.common.collect.ImmutableList;
-import com.google.protobuf.Timestamp;
-import org.phenopackets.schema.v1.PhenoPacket;
-import org.phenopackets.schema.v1.core.*;
-
-import java.time.Instant;
-
-import static org.monarchinitiative.hpo_case_annotator.model.io.PhenoPacketTestUtil.FEMALE;
-import static org.monarchinitiative.hpo_case_annotator.model.io.PhenoPacketTestUtil.MALE;
-import static org.monarchinitiative.hpo_case_annotator.model.io.PhenoPacketTestUtil.ontologyClass;
+import org.phenopackets.schema.v1.Family;
 
 /**
  * Phenopacket representation of the rare disease example from the Toronto hackathon. See
@@ -17,7 +8,7 @@ import static org.monarchinitiative.hpo_case_annotator.model.io.PhenoPacketTestU
  *
  * @author Jules Jacobsen <j.jacobsen@qmul.ac.uk>
  */
-class RareDiseasePhenoPacketExample {
+class RareDiseaseFamilyExample {
 
     public static final String PROBAND_ID = "PROBAND#1";
     public static final String SISTER_ID = "PROBAND#2";
@@ -30,7 +21,9 @@ class RareDiseasePhenoPacketExample {
      * homozygous allele, the other by a compound heterozygous genotype. The proband's sister is affected with a
      * single condition caused by the compound heterozygous genotype. Neither parent exhibits an abnormal phenotype.
      */
-    static PhenoPacket rareDiseasePhenoPacket() {
+    static Family rareDiseaseFamily() {
+        // TODO - needs revision and mapping to Family message
+        /*
         Phenotype syndactylyCongenitalOnset = Phenotype.newBuilder()
                 .setType(ontologyClass("HP:0001159", "Syndactyly"))
                 .setClassOfOnset(ontologyClass("HP:0003577", "Congenital onset"))
@@ -202,6 +195,8 @@ class RareDiseasePhenoPacketExample {
                 .addAllVariants(ImmutableList.of(var1, var2, var3))
                 .setMetaData(metaData)
                 .build();
+                */
+        return Family.getDefaultInstance();
     }
 
 }

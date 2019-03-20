@@ -22,10 +22,6 @@ import java.util.stream.Collectors;
  */
 public class PhenoPacketCodec {
 
-    public static final OntologyClass FEMALE = ontologyClass("PATO:0000383", "female");
-
-    public static final OntologyClass MALE = ontologyClass("PATO:0000384", "male");
-
     // source https://bioportal.bioontology.org/ontologies/ECO/?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FECO_0000033&jump_to_nav=true
     public static final OntologyClass TRACEABLE_AUTHOR_STATEMENT = ontologyClass("ECO:0000033", "author statement supported by traceable reference");
 
@@ -55,16 +51,17 @@ public class PhenoPacketCodec {
         Publication publication = diseaseCase.getPublication();
         String metadata = diseaseCase.getMetadata();
         return PhenoPacket.newBuilder()
-                // proband, phenotype (HPO) terms, and the publication data
+                // proband and the publication data
                 .setSubject(Individual.newBuilder()
                         .setId(familyOrProbandId)
                         .setAgeAtCollection(Age.newBuilder().setAge(diseaseCase.getFamilyInfo().getAge()).build())
                         .setSex(DiseaseCaseToPhenoPacket.sex(diseaseCase.getFamilyInfo().getSex()))
-                        .addAllPhenotypes(diseaseCase.getPhenotypeList().stream()
-                                .map(DiseaseCaseToPhenoPacket.phenotype(publication, metadata))
-                                .collect(Collectors.toList()))
                         .setTaxonomy(HOMO_SAPIENS)
                         .build())
+                // phenotype (HPO) terms
+                .addAllPhenotypes(diseaseCase.getPhenotypeList().stream()
+                        .map(DiseaseCaseToPhenoPacket.phenotype(publication, metadata))
+                        .collect(Collectors.toList()))
                 // gene in question
                 .addGenes(Gene.newBuilder()
                         .setId("ENTREZ:" + diseaseCase.getGene().getEntrezId())
@@ -76,8 +73,7 @@ public class PhenoPacketCodec {
                         .collect(Collectors.toList()))
                 // disease
                 .addDiseases(Disease.newBuilder()
-                        .setId(diseaseCase.getDisease().getDatabase() + ":" + diseaseCase.getDisease().getDiseaseId())
-                        .setLabel(diseaseCase.getDisease().getDiseaseName())
+                        .setTerm(ontologyClass(diseaseCase.getDisease().getDatabase() + ":" + diseaseCase.getDisease().getDiseaseId(), diseaseCase.getDisease().getDiseaseName()))
                         .build())
                 // metadata - Biocurator ID, ontologies used
                 .setMetaData(MetaData.newBuilder()
@@ -179,14 +175,14 @@ public class PhenoPacketCodec {
          * @param sex {@link Sex} <code>sex</code>
          * @return {@link OntologyClass} representation of the <code>sex</code>
          */
-        private static OntologyClass sex(Sex sex) {
+        private static org.phenopackets.schema.v1.core.Sex sex(Sex sex) {
             switch (sex) {
                 case MALE:
-                    return MALE;
+                    return org.phenopackets.schema.v1.core.Sex.MALE;
                 case FEMALE:
-                    return FEMALE;
+                    return org.phenopackets.schema.v1.core.Sex.FEMALE;
                 default:
-                    return OntologyClass.getDefaultInstance();
+                    return org.phenopackets.schema.v1.core.Sex.UNKNOWN_SEX;
             }
         }
 
@@ -217,30 +213,31 @@ public class PhenoPacketCodec {
 
         private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.Variant, Variant> hcaVariantToPhenoPacketVariant(String familyOrProbandId) {
             return v -> Variant.newBuilder()
-                    .setGenomeAssembly(hcaGenomeAssemblyToPhenoPacketGenomeAssembly(v.getVariantPosition().getGenomeAssembly()))
-                    .setSequence(v.getVariantPosition().getContig())
-                    .setCoordinateSystem(CoordinateSystem.ONE_BASED) // We are using VCF-style numbering in HpoCaseAnnotator
-                    .setPosition(v.getVariantPosition().getPos())
-                    .setDeletion(v.getVariantPosition().getRefAllele())
-                    .setInsertion(v.getVariantPosition().getAltAllele())
-                    .putSampleGenotypes(familyOrProbandId, genotype(v.getGenotype()))
+                    .setVcfAllele(VcfAllele.newBuilder()
+                            .setId(hcaGenomeAssemblyToPhenoPacketGenomeAssembly(v.getVariantPosition().getGenomeAssembly()))
+                            .setChr(v.getVariantPosition().getContig())
+                            .setPos(v.getVariantPosition().getPos())
+                            .setRef(v.getVariantPosition().getRefAllele())
+                            .setAlt(v.getVariantPosition().getAltAllele())
+                            .build())
+                    .setGenotype(genotype(v.getGenotype()))
                     .build();
         }
 
-        private static GenomeAssembly hcaGenomeAssemblyToPhenoPacketGenomeAssembly(org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly genomeAssembly) {
+        private static String hcaGenomeAssemblyToPhenoPacketGenomeAssembly(org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly genomeAssembly) {
             switch (genomeAssembly) {
                 case NCBI_36:
-                    return GenomeAssembly.NCBI_36;
+                    return GenomeAssembly.NCBI_36.name();
                 case GRCH_37:
-                    return GenomeAssembly.GRCH_37;
+                    return GenomeAssembly.GRCH_37.name();
                 case GRCH_38:
-                    return GenomeAssembly.GRCH_38;
+                    return GenomeAssembly.GRCH_38.name();
                 case UNKNOWN_GENOME_ASSEMBLY:
                 case UNRECOGNIZED:
-                    return GenomeAssembly.UNRECOGNIZED;
+                    return GenomeAssembly.UNKNOWN_ASSEMBLY.name();
                 default:
                     LOGGER.warn("Unknown genome assembly: {}", genomeAssembly);
-                    return GenomeAssembly.UNRECOGNIZED;
+                    return GenomeAssembly.UNKNOWN_ASSEMBLY.name();
             }
         }
 
