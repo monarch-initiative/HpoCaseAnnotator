@@ -252,7 +252,6 @@ public final class PopUps {
     }
 
 
-
     public static void showHtmlContent(String windowTitle, String resourcePath, Stage ownerWindow) {
         Stage window = getPopUpStage(windowTitle);
         Stage adjWindow = adjustStagePosition(window, ownerWindow);
@@ -282,7 +281,7 @@ public final class PopUps {
     /**
      * Ensure that popup Stage will be displayed on the same monitor as the parent Stage
      *
-     * @param childStage stage of dialog
+     * @param childStage  stage of dialog
      * @param parentStage stage of main window
      * @return adjusted child stage with new position
      */
@@ -299,15 +298,19 @@ public final class PopUps {
     }
 
 
-
-    public static Optional<List<String>> getPairOfUserStringsWithoutWhitespace(Stage primaryStage, String title, String message, String prompt1, String prompt2) {
+    public static Optional<List<String>> getPairOfUserStringsWithoutWhitespace(Window primaryStage, String title, String message,
+                                                                               String prompt1, String prompt2, String prompt1content) {
         Dialog<List<String>> dialog = new Dialog<>();
         dialog.setTitle(title);
         dialog.setHeaderText(message);
+        dialog.initOwner(primaryStage);
         DialogPane dialogPane = dialog.getDialogPane();
         dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
         TextField textField1 = new TextField();
         textField1.setPromptText(prompt1);
+        if (!prompt1content.isEmpty()) {
+            textField1.setText(prompt1content);
+        }
         TextField textField2 = new TextField();
         textField2.setPromptText(prompt2);
         // remove Whitespace
