@@ -20,13 +20,14 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class VariantUtil {
+class VariantUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VariantUtil.class);
 /*
@@ -166,10 +167,11 @@ public class VariantUtil {
      *
      * @param entrezGeneId an id such as 2202
      */
-    public static void geneAccessionNumberGrabber(String entrezGeneId, GenomeAssembly assembly, HostServicesWrapper hostServices, Window window) {
+    static void geneAccessionNumberGrabber(String entrezGeneId, GenomeAssembly assembly, HostServicesWrapper hostServices, Window window) {
         ImmutableSet.Builder<String> accessionIdsBuilder = new ImmutableSet.Builder<>();
         final String USER_AGENT = "Mozilla/5.0";
         String url = String.format("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=gene&id=%s&retmode=xml", entrezGeneId);
+
         try {
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -181,41 +183,37 @@ public class VariantUtil {
             con.setRequestProperty("User-Agent", USER_AGENT);
 
             StringBuilder response = new StringBuilder();
+            List<String> lines = new ArrayList<>();
             try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
+                    lines.add(inputLine);
                     response.append(inputLine);
                 }
             }
 
             String resp = response.toString().replaceAll("\\s+", "");
             // This is XML but all we need are the NM_12345 accession numbers as follows
-            Pattern accessionPattern = Pattern.compile("<Gene-commentary_accession>(NM_\\d+)</Gene-commentary_accession>");
-            Matcher accessionMatcher = accessionPattern.matcher(resp);
-            String refseqAccession;
-            if (accessionMatcher.find()) {
-                refseqAccession = accessionMatcher.group(1);
-            } else {
-                LOGGER.warn("Unable to find accession id for gene 'HGNC:{}'", entrezGeneId);
-                return;
-            }
 
-            // Then we extract the accession number version
-            // TODO(pnrobinson) - please figure out how to make this work.
-            // It looks like that the pattern is present in XML more than once and therefore for FBN1 case we will
-            // get accessionVersion = 10, even though it should be 4
+
+            String currentAccession=null;
+            Pattern accessionPattern = Pattern.compile("<Gene-commentary_accession>(NM_\\d+)</Gene-commentary_accession>");
             Pattern versionPattern = Pattern.compile("<Gene-commentary_version>(\\d+)</Gene-commentary_version>");
-            Matcher versionMatcher = versionPattern.matcher(resp);
-            String accessionVersion;
-            if (versionMatcher.find()) {
-                accessionVersion = versionMatcher.group(1);
-            } else {
-                LOGGER.warn("Unable to find version of accession id for gene 'HGNC:{}'", entrezGeneId);
-                return;
+            for (String L : lines) {
+                Matcher accessionMatcher = accessionPattern.matcher(L);
+                Matcher versionMatcher = versionPattern.matcher(L);
+
+                if (accessionMatcher.find()) {
+                    currentAccession = accessionMatcher.group(1);
+                } else if (versionMatcher.find()) {
+                    String version = versionMatcher.group(1);
+                    if (currentAccession!=null) {
+                        String accessionWithVersion=currentAccession + "." + version;
+                        accessionIdsBuilder.add(accessionWithVersion);
+                        currentAccession=null;
+                    }
+                }
             }
-            // full id consists of accession id (NM_004004) and version (4). E.g. NM_004004.4
-            String fullAccessionId = refseqAccession + "." + accessionVersion;
-            accessionIdsBuilder.add(fullAccessionId);
         } catch (Exception e) {
             String err = String.format("Unknown entrez id '%s'", entrezGeneId);
             PopUps.showException("Error", "Unable to fetch accession ID", err, e);
