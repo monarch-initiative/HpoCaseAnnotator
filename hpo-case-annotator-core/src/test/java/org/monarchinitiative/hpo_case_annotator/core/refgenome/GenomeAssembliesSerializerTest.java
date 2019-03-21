@@ -19,7 +19,7 @@ public class GenomeAssembliesSerializerTest {
 
     private static GenomeAssemblies fakeUpGenomeAssemblies() {
         GenomeAssemblies assemblies = new GenomeAssemblies();
-        assemblies.putAssembly(GenomeAssembly.NCBI_36, Paths.get("/path/to/ncbi36.fa")); // hg18
+        assemblies.putAssembly(GenomeAssembly.GRCH_38, Paths.get("/path/to/grch38.fa")); // hg38
         assemblies.putAssembly(GenomeAssembly.GRCH_37, Paths.get("/path/to/grch37.fa")); // hg19
         return assemblies;
     }
@@ -27,7 +27,7 @@ public class GenomeAssembliesSerializerTest {
 
     private static Properties fakeUpProperties() {
         Properties properties = new Properties();
-        properties.put("NCBI_36.fasta.path", "/path/to/ncbi36.fa");
+        properties.put("GRCH_38.fasta.path", "/path/to/grch38.fa");
         properties.put("GRCH_37.fasta.path", "/path/to/grch37.fa");
 
         return properties;
@@ -42,7 +42,7 @@ public class GenomeAssembliesSerializerTest {
         GenomeAssemblies assemblies = GenomeAssembliesSerializer.deserialize(is);
 
         assertThat(assemblies.getAssemblyMap().size(), is(2));
-        assertThat(assemblies.getAssemblyMap().get(GenomeAssembly.NCBI_36).toFile().getName(), is("ncbi36.fa"));
+        assertThat(assemblies.getAssemblyMap().get(GenomeAssembly.GRCH_38).toFile().getName(), is("grch38.fa"));
         assertThat(assemblies.getAssemblyMap().get(GenomeAssembly.HG_19).toFile().getName(), is("grch37.fa"));
     }
 
@@ -56,8 +56,8 @@ public class GenomeAssembliesSerializerTest {
         Properties properties = new Properties();
         properties.load(is);
 
-        assertTrue(properties.containsKey("NCBI_36.fasta.path"));
-        assertThat(properties.getProperty("NCBI_36.fasta.path"), is("/path/to/ncbi36.fa"));
+        assertTrue(properties.containsKey("GRCH_38.fasta.path"));
+        assertThat(properties.getProperty("GRCH_38.fasta.path"), is("/path/to/grch38.fa"));
 
         assertTrue(properties.containsKey("GRCH_37.fasta.path"));
         assertThat(properties.getProperty("GRCH_37.fasta.path"), is("/path/to/grch37.fa"));

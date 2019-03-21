@@ -360,9 +360,6 @@ public class Codecs {
             case "grch38":
             case "hg38":
                 return GenomeAssembly.GRCH_38;
-            case "hg18":
-            case "ncbi36":
-                return GenomeAssembly.NCBI_36;
             default:
                 return GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY;
         }

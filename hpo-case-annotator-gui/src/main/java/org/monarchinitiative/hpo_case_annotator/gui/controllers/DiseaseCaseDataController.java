@@ -284,6 +284,10 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
                     .setVariantValidation(VariantValidation.newBuilder()
                             .setContext(ctx)
                             .build())
+                    .setVariantPosition(VariantPosition.newBuilder()
+                            // we want all variants to have GRCH37 assembly by default
+                            .setGenomeAssembly(GenomeAssembly.GRCH_37)
+                            .build())
                     .build();
 
             try {

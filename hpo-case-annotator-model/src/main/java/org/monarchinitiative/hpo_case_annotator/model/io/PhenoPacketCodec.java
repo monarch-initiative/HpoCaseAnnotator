@@ -226,8 +226,6 @@ public class PhenoPacketCodec {
 
         private static String hcaGenomeAssemblyToPhenoPacketGenomeAssembly(org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly genomeAssembly) {
             switch (genomeAssembly) {
-                case NCBI_36:
-                    return GenomeAssembly.NCBI_36.name();
                 case GRCH_37:
                     return GenomeAssembly.GRCH_37.name();
                 case GRCH_38:
