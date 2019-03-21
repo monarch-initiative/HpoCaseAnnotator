@@ -4,9 +4,11 @@ import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.stage.Window;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
@@ -33,6 +35,9 @@ public final class MendelianVariantController extends AbstractVariantController 
     // ******************** FXML elements, injected by FXMLLoader ********************************** //
     @FXML
     public ComboBox<GenomeAssembly> genomeBuildComboBox;
+
+    @FXML
+    public Button getAccessionsButton;
 
     @FXML
     private HBox variantHBox;
@@ -102,7 +107,7 @@ public final class MendelianVariantController extends AbstractVariantController 
      */
     @Inject
     public MendelianVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
-        super(elementValues,hostServices);
+        super(elementValues, hostServices);
     }
 
 
@@ -173,14 +178,14 @@ public final class MendelianVariantController extends AbstractVariantController 
 
         return Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()
-                        .setGenomeAssembly(genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY: genomeBuildComboBox.getValue())
+                        .setGenomeAssembly(genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : genomeBuildComboBox.getValue())
                         .setContig(chromosomeComboBox.getValue() == null ? "NA" : chromosomeComboBox.getValue())
                         .setPos(pos)
                         .setRefAllele(referenceTextField.getText())
                         .setAltAllele(alternateTextField.getText())
                         .build())
                 .setSnippet(snippetTextField.getText())
-                .setGenotype(genotypeComboBox.getValue() == null ? Genotype.UNDEFINED: genotypeComboBox.getValue())
+                .setGenotype(genotypeComboBox.getValue() == null ? Genotype.UNDEFINED : genotypeComboBox.getValue())
                 .setVariantClass(variantClassComboBox.getValue() == null ? "" : variantClassComboBox.getValue())
                 .setPathomechanism(pathomechanismComboBox.getValue() == null ? "" : pathomechanismComboBox.getValue())
                 // VALIDATION
@@ -224,25 +229,35 @@ public final class MendelianVariantController extends AbstractVariantController 
                 genotypeComboBox.valueProperty());
     }
 
-    @FXML public void variantValidatorToClipboardTranscript() {
-        GenomeAssembly assembly=genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY: genomeBuildComboBox.getValue();
-        VariantUtil.getTranscriptDataAndGoToVariantValidatorWebsite(assembly,hostServices);
+    @FXML
+    private void variantValidatorToClipboardTranscript() {
+        GenomeAssembly assembly = genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : genomeBuildComboBox.getValue();
+        VariantUtil.getTranscriptDataAndGoToVariantValidatorWebsite(assembly, hostServices);
     }
+
     /**
      * Open up a page on the VariantValidator website that allows the curator to check whether the genomic coordinates
      * match the entered mutation data. It uses the method
-     * {@link VariantUtil#goToVariantValidatorWebsite(GenomeAssembly, String, int, String, String,HostServicesWrapper)}
+     * {@link VariantUtil#goToVariantValidatorWebsite(GenomeAssembly, String, int, String, String, HostServicesWrapper)}
      * to display the variant on the VariantValidator website.
      */
-    @FXML public void showVariantValidator() {
-        GenomeAssembly assembly=genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY: genomeBuildComboBox.getValue();
-        String chrom =chromosomeComboBox.getValue() == null ? "NA" : chromosomeComboBox.getValue();
+    @FXML
+    private void showVariantValidator() {
+        GenomeAssembly assembly = genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : genomeBuildComboBox.getValue();
+        String chrom = chromosomeComboBox.getValue() == null ? "NA" : chromosomeComboBox.getValue();
         Variant variant = getData();
         int pos = variant.getVariantPosition().getPos();
         String ref = this.referenceTextField.getText();
         String alt = this.alternateTextField.getText();
-        VariantUtil.goToVariantValidatorWebsite( assembly,  chrom,  pos,  ref,  alt, this.hostServices);
+        VariantUtil.goToVariantValidatorWebsite(assembly, chrom, pos, ref, alt, this.hostServices);
     }
 
 
+    @FXML
+    public void getAccessionsButtonAction() {
+        String entrezId = getEntrezId(); // This is the gene ID entered by the user.
+        GenomeAssembly assembly = genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : genomeBuildComboBox.getValue();
+        Window window = getAccessionsButton.getScene().getWindow();
+        VariantUtil.geneAccessionNumberGrabber(entrezId, assembly, hostServices, window);
+    }
 }

@@ -1,20 +1,35 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.Window;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class VariantUtil {
+class VariantUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(VariantUtil.class);
 /*
     protected void showVariantValidator() {
         String assembl=this.elementValues.getGenomeBuild().get(0).toString();
@@ -68,7 +83,7 @@ public class VariantUtil {
         Optional<List<String>> opt = PopUps.getPairOfUserStringsWithoutWhitespace(null,
                 "Transcript data for VariantValidator",
                 "enter accession number and variant (e.g., NM_000088.3 and c.589G>T)",
-                "accession", "variant");
+                "accession", "variant", "");
         if (!opt.isPresent()) {
             PopUps.showInfoMessage("Error", "Could not extract HGVS data for VariantValidator");
             return;
@@ -90,7 +105,7 @@ public class VariantUtil {
         String assemblyString = assembly.equals(GenomeAssembly.GRCH_37) ? "GRCh37" : "GRCh38";
         Pattern pat = Pattern.compile("(\\d+)(\\w+)>(\\w+)");
         Matcher m = pat.matcher(var);
-        if (m.matches() ) {
+        if (m.matches()) {
             String pos = m.group(1);
             String ref = m.group(2);
             String alt = m.group(3);
@@ -108,9 +123,41 @@ public class VariantUtil {
                     assemblyString);
             hostServices.showDocument(vvURL);
         } else {
-            PopUps.showInfoMessage(String.format("Malformed HGVS String \"%s\"",var), "Could not parse position");
+            PopUps.showInfoMessage(String.format("Malformed HGVS String \"%s\"", var), "Could not parse position");
         }
     }
+
+    private static void getTranscriptDataAndGoToVariantValidatorWebsite(GenomeAssembly assembly,
+                                                                        String accessionId,
+                                                                        HostServicesWrapper hostServices, Window window) {
+
+        Optional<List<String>> opt = PopUps.getPairOfUserStringsWithoutWhitespace(window,
+                "Data for VariantValidator",
+                "",
+                "Tx accesssion ID", "HGVS variant", accessionId);
+        if (!opt.isPresent()) {
+            return;
+        }
+
+        List<String> results = opt.get();
+        String approvedAccessionId = results.get(0);
+        String hgvsVariant = results.get(1);
+
+        if (hgvsVariant.startsWith("c.")) {
+            hgvsVariant = hgvsVariant.substring(2);
+        } else {
+            PopUps.showInfoMessage("Malformed HGVS String", "Could not find \"c.\"");
+            return;
+        }
+        String assemblyString = assembly.equals(GenomeAssembly.GRCH_37) ? "GRCh37" : "GRCh38";
+
+        String vvURL = String.format("https://variantvalidator.org/variantvalidation/?variant=%s:%s&primary_assembly=%s",
+                approvedAccessionId,
+                hgvsVariant,
+                assemblyString);
+        hostServices.showDocument(vvURL);
+    }
+
 
     /**
      * Call NCBI's eUtil to get a list of RefSeq accession numbers that correspond to a certain EntrezGene id
@@ -119,12 +166,12 @@ public class VariantUtil {
      * the right one from a drop down list and then enter only the c.123A>G part of the HGVS string
      *
      * @param entrezGeneId an id such as 2202
-     * @return a list of corresponding accession numbers.
      */
-    public static List<String> geneAccessionNumberGrabber(String entrezGeneId) {
-        ImmutableList.Builder<String> builder = new ImmutableList.Builder<>();
+    static void geneAccessionNumberGrabber(String entrezGeneId, GenomeAssembly assembly, HostServicesWrapper hostServices, Window window) {
+        ImmutableSet.Builder<String> accessionIdsBuilder = new ImmutableSet.Builder<>();
         final String USER_AGENT = "Mozilla/5.0";
         String url = String.format("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=gene&id=%s&retmode=xml", entrezGeneId);
+
         try {
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -134,35 +181,76 @@ public class VariantUtil {
 
             //add request header
             con.setRequestProperty("User-Agent", USER_AGENT);
-            int responseCode = con.getResponseCode();
-            System.out.println("\nSending 'GET' request to URL : " + url);
-            System.out.println("Response Code : " + responseCode);
 
             StringBuilder response = new StringBuilder();
+            List<String> lines = new ArrayList<>();
             try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
+                    lines.add(inputLine);
                     response.append(inputLine);
                 }
             }
 
             String resp = response.toString().replaceAll("\\s+", "");
             // This is XML but all we need are the NM_12345 accession numbers as follows
-            Pattern pat = Pattern.compile("<Gene-commentary_accession>(NM_\\d+)</Gene-commentary_accession>");
-            Matcher mat = pat.matcher(resp);
-            while (mat.find()) {
-                String refseqAccession = mat.group(1);
-                builder.add(refseqAccession);
-                System.out.println(refseqAccession);
+
+
+            String currentAccession=null;
+            Pattern accessionPattern = Pattern.compile("<Gene-commentary_accession>(NM_\\d+)</Gene-commentary_accession>");
+            Pattern versionPattern = Pattern.compile("<Gene-commentary_version>(\\d+)</Gene-commentary_version>");
+            for (String L : lines) {
+                Matcher accessionMatcher = accessionPattern.matcher(L);
+                Matcher versionMatcher = versionPattern.matcher(L);
+
+                if (accessionMatcher.find()) {
+                    currentAccession = accessionMatcher.group(1);
+                } else if (versionMatcher.find()) {
+                    String version = versionMatcher.group(1);
+                    if (currentAccession!=null) {
+                        String accessionWithVersion=currentAccession + "." + version;
+                        accessionIdsBuilder.add(accessionWithVersion);
+                        currentAccession=null;
+                    }
+                }
             }
-
-
         } catch (Exception e) {
-            e.printStackTrace();
+            String err = String.format("Unknown entrez id '%s'", entrezGeneId);
+            PopUps.showException("Error", "Unable to fetch accession ID", err, e);
+            LOGGER.warn(err);
+            return;
+        }
+        Set<String> accessionIds = accessionIdsBuilder.build();
+        GridPane gpane = new GridPane();
+        gpane.setHgap(10);
+        gpane.setVgap(10);
+        int heigt = 40 + accessionIds.size() * 40;
+        final Scene scene = new Scene(gpane, 200, heigt);
+        Stage stage = new Stage();
+        stage.initStyle(StageStyle.UTILITY);
+        stage.initOwner(window);
+        stage.setScene(scene);
+
+        Label label = new Label("Choose accession");
+        gpane.add(label, 0, 0);
+        int i = 1;
+        final StringProperty chosenId = new SimpleStringProperty();
+        for (String s : accessionIds) {
+            Button b = new Button(s);
+            gpane.add(b, 0, i++);
+            b.setOnAction((e) -> {
+                chosenId.setValue(s);
+                stage.close();
+                // we need to use accession+version for VariantValidator but do not get one
+                // This can provoke an error that is easy to fix. Alternatively, fix it in URL
+                // TODO -- can we do better than this?
+                e.consume();
+            });
         }
 
+        stage.showAndWait();
 
-        return builder.build();
+        getTranscriptDataAndGoToVariantValidatorWebsite(assembly, chosenId.get(), hostServices, window);
     }
 
 }

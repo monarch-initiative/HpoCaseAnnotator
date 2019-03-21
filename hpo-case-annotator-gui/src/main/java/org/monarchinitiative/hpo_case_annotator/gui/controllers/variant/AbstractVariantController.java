@@ -3,6 +3,8 @@ package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 import com.google.inject.Inject;
 import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.AbstractDataController;
@@ -38,14 +40,24 @@ public abstract class AbstractVariantController extends AbstractDataController<V
 
     private final ValidationRunner<Variant> variantValidationRunner;
 
+    private final StringProperty entrezId;
+
     @Inject
     AbstractVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
         this.elementValues = elementValues;
         this.variantValidationRunner = ValidationRunner.variantValidationRunner();
         this.validationResults = new ArrayList<>();
         this.hostServices = hostServices;
+        this.entrezId = new SimpleStringProperty(this, "entrezId", null);
     }
 
+    public String getEntrezId() {
+        return entrezId.get();
+    }
+
+    public StringProperty entrezIdProperty() {
+        return entrezId;
+    }
 
     @Override
     public boolean isComplete() {

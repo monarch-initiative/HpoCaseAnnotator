@@ -236,6 +236,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
             variantsAccordion.getPanes().add(tp);
             AbstractVariantController controller = loader.getController();
             tp.textProperty().bind(controller.variantTitleBinding());
+            controller.entrezIdProperty().bind(entrezIDTextField.textProperty());
             controller.presentData(variant);
             variantControllers.add(controller);
         } else {

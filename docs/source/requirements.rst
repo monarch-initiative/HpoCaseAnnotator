@@ -2,7 +2,8 @@
 Requirements
 ============
 
-In order to run, *Hpo Case Annotator* needs **Java 8** to be installed on the computer. This page describes steps required to check which version of Java (if any) is installed on your computer.
+In order to run, *Hpo Case Annotator* needs **Java 8** to be installed on the computer. This page describes steps
+required to check which version of Java (if any) is installed on your computer.
 
 
 Windows
