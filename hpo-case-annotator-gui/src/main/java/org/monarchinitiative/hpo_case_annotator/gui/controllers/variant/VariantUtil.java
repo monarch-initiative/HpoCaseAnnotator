@@ -1,6 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Scene;
@@ -23,9 +23,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 class VariantUtil {
 
@@ -168,7 +168,7 @@ class VariantUtil {
      * @param entrezGeneId an id such as 2202
      */
     static void geneAccessionNumberGrabber(String entrezGeneId, GenomeAssembly assembly, HostServicesWrapper hostServices, Window window) {
-        ImmutableSet.Builder<String> accessionIdsBuilder = new ImmutableSet.Builder<>();
+        ImmutableList.Builder<String> accessionIdsBuilder = new ImmutableList.Builder<>();
         final String USER_AGENT = "Mozilla/5.0";
         String url = String.format("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=gene&id=%s&retmode=xml", entrezGeneId);
 
@@ -196,7 +196,7 @@ class VariantUtil {
             // This is XML but all we need are the NM_12345 accession numbers as follows
 
 
-            String currentAccession=null;
+            String currentAccession = null;
             Pattern accessionPattern = Pattern.compile("<Gene-commentary_accession>(NM_\\d+)</Gene-commentary_accession>");
             Pattern versionPattern = Pattern.compile("<Gene-commentary_version>(\\d+)</Gene-commentary_version>");
             for (String L : lines) {
@@ -207,10 +207,10 @@ class VariantUtil {
                     currentAccession = accessionMatcher.group(1);
                 } else if (versionMatcher.find()) {
                     String version = versionMatcher.group(1);
-                    if (currentAccession!=null) {
-                        String accessionWithVersion=currentAccession + "." + version;
+                    if (currentAccession != null) {
+                        String accessionWithVersion = currentAccession + "." + version;
                         accessionIdsBuilder.add(accessionWithVersion);
-                        currentAccession=null;
+                        currentAccession = null;
                     }
                 }
             }
@@ -220,7 +220,7 @@ class VariantUtil {
             LOGGER.warn(err);
             return;
         }
-        Set<String> accessionIds = accessionIdsBuilder.build();
+        List<String> accessionIds = accessionIdsBuilder.build().stream().sorted().distinct().collect(Collectors.toList());
         GridPane gpane = new GridPane();
         gpane.setHgap(10);
         gpane.setVgap(10);
