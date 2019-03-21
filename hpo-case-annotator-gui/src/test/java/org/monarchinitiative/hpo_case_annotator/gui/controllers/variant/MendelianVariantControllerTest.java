@@ -107,7 +107,7 @@ public class MendelianVariantControllerTest extends ApplicationTest {
         // assert
         Variant variant = controller.getData();
         final VariantPosition vp = variant.getVariantPosition();
-        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.NCBI_36));
+        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.GRCH_38));
         assertThat(vp.getContig(), is("1"));
         assertThat(vp.getPos(), is(12345345));
         assertThat(vp.getRefAllele(), is("C"));
@@ -148,7 +148,7 @@ public class MendelianVariantControllerTest extends ApplicationTest {
         Variant variant = controller.getData();
         VariantPosition vp = variant.getVariantPosition();
         // assert
-        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.NCBI_36));
+        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.GRCH_38));
         assertThat(vp.getContig(), is("1"));
         assertThat(vp.getPos(), is(12345345));
         assertThat(vp.getRefAllele(), is("C"));

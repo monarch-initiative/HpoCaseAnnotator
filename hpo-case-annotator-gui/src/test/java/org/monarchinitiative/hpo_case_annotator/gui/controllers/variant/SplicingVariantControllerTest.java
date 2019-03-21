@@ -36,14 +36,14 @@ public class SplicingVariantControllerTest extends ApplicationTest {
     public static void setUpBefore() throws Exception {
         // for headless GUI testing, set the "not.headless" system property to true or comment out if you want to see the
         // robot in action
-        if (!Boolean.getBoolean("not.headless")) {
-            System.setProperty("testfx.robot", "glass");
-            System.setProperty("testfx.headless", "true");
-            System.setProperty("prism.order", "sw");
-            System.setProperty("prism.text", "t2k");
-            System.setProperty("java.awt.headless", "true");
-            System.setProperty("headless.geometry", "1200x760-32");
-        }
+//        if (!Boolean.getBoolean("not.headless")) {
+//            System.setProperty("testfx.robot", "glass");
+//            System.setProperty("testfx.headless", "true");
+//            System.setProperty("prism.order", "sw");
+//            System.setProperty("prism.text", "t2k");
+//            System.setProperty("java.awt.headless", "true");
+//            System.setProperty("headless.geometry", "1200x760-32");
+//        }
     }
 
     /**
@@ -95,7 +95,7 @@ public class SplicingVariantControllerTest extends ApplicationTest {
         // assert
         Variant variant = controller.getData();
         final VariantPosition vp = variant.getVariantPosition();
-        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.NCBI_36));
+        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.GRCH_38));
         assertThat(vp.getContig(), is("1"));
         assertThat(vp.getPos(), is(12));
         assertThat(vp.getRefAllele(), is("C"));

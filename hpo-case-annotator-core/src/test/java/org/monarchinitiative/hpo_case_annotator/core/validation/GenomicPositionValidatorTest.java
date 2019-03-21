@@ -72,12 +72,12 @@ public class GenomicPositionValidatorTest {
 
     @Test
     public void variantWithUnknownGenomeAssembly() throws Exception {
-        Mockito.when(assemblies.hasFastaForAssembly(GenomeAssembly.HG_18))
+        Mockito.when(assemblies.hasFastaForAssembly(GenomeAssembly.HG_38))
                 .thenReturn(false);
 
         Variant variant = Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()
-                        .setGenomeAssembly(GenomeAssembly.HG_18)
+                        .setGenomeAssembly(GenomeAssembly.HG_38)
                         .setContig("chr1")
                         .setPos(1234)
                         .setRefAllele("C")
@@ -87,7 +87,7 @@ public class GenomicPositionValidatorTest {
 
         final List<ValidationResult> results = validator.validate(variant);
         assertThat(results.size(), is(1));
-        assertThat(results, hasItem(ValidationResult.fail("Fasta file for genome assembly NCBI_36 is not present")));
+        assertThat(results, hasItem(ValidationResult.fail("Fasta file for genome assembly GRCH_38 is not present")));
     }
 
     @Test

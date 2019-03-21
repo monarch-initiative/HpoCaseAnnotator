@@ -107,7 +107,7 @@ public class SomaticVariantControllerTest extends ApplicationTest {
         // assert
         Variant variant = controller.getData();
         VariantPosition variantPosition = variant.getVariantPosition();
-        assertThat(variantPosition.getGenomeAssembly(), is(GenomeAssembly.NCBI_36));
+        assertThat(variantPosition.getGenomeAssembly(), is(GenomeAssembly.GRCH_38));
         assertThat(variantPosition.getContig(), is("1"));
         assertThat(variantPosition.getPos(), is(12345345));
         assertThat(variantPosition.getRefAllele(), is("C"));
