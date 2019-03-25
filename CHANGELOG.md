@@ -1,5 +1,12 @@
 # HRMD gui
 
+### v1.0.11
+- use `GRCH_37` as the default genome assembly
+- remove obsolete `NCBI36 (HG18)` genome assembly
+- use `phenopacket-schema v0.3.0` for export, `phenol v1.3.3` for HPO
+- add support for [Variant validator](https://variantvalidator.org/) API when curating variants either using genome, or transcript coordinates
+- fix bugs, improve user experience
+
 ### v1.0.9
 - add support for GRCh38, GRCh37
 - store models in *JSON* format
