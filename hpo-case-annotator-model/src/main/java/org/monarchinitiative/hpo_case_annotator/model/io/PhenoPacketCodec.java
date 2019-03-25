@@ -4,9 +4,9 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Sex;
-import org.phenopackets.schema.v1.PhenoPacket;
+import org.phenopackets.schema.v1.Phenopacket;
 import org.phenopackets.schema.v1.core.*;
-import org.phenopackets.schema.v1.io.PhenoPacketFormat;
+import org.phenopackets.schema.v1.io.PhenopacketFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +18,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * This class converts {@link DiseaseCase} to {@link org.phenopackets.schema.v1.PhenoPacket} and back.
+ * This class converts {@link DiseaseCase} to {@link org.phenopackets.schema.v1.Phenopacket} and back.
  */
 public class PhenoPacketCodec {
 
@@ -44,13 +44,13 @@ public class PhenoPacketCodec {
 
     /**
      * @param diseaseCase {@link DiseaseCase} to be converted to phenopacket
-     * @return {@link PhenoPacket} with data from <code>diseaseCase</code>
+     * @return {@link Phenopacket} with data from <code>diseaseCase</code>
      */
-    public static PhenoPacket diseaseCaseToPhenopacket(DiseaseCase diseaseCase) {
+    public static Phenopacket diseaseCaseToPhenopacket(DiseaseCase diseaseCase) {
         String familyOrProbandId = diseaseCase.getFamilyInfo().getFamilyOrProbandId();
         Publication publication = diseaseCase.getPublication();
         String metadata = diseaseCase.getMetadata();
-        return PhenoPacket.newBuilder()
+        return Phenopacket.newBuilder()
                 // proband and the publication data
                 .setSubject(Individual.newBuilder()
                         .setId(familyOrProbandId)
@@ -83,8 +83,8 @@ public class PhenoPacketCodec {
                 .build();
     }
 
-    public static void writeAsPhenopacket(Writer writer, PhenoPacket packet) throws IOException {
-        writer.write(PhenoPacketFormat.toJson(packet));
+    public static void writeAsPhenopacket(Writer writer, Phenopacket packet) throws IOException {
+        writer.write(PhenopacketFormat.toJson(packet));
     }
 
 //    /**
@@ -165,7 +165,7 @@ public class PhenoPacketCodec {
     }
 
     /**
-     * This class contains functions for mapping data from {@link DiseaseCase} into {@link PhenoPacket} format.
+     * This class contains functions for mapping data from {@link DiseaseCase} into {@link Phenopacket} format.
      */
     private static class DiseaseCaseToPhenoPacket {
 

@@ -1,7 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.model;
 
 import com.google.protobuf.Timestamp;
-import org.phenopackets.schema.v1.PhenoPacket;
+import org.phenopackets.schema.v1.Phenopacket;
 import org.phenopackets.schema.v1.core.*;
 
 import java.time.Instant;
@@ -11,10 +11,10 @@ import static org.monarchinitiative.hpo_case_annotator.model.io.PhenoPacketTestU
 public class PhenopacketExample {
 
     /**
-     * @return {@link PhenoPacket} populated with some data
+     * @return {@link Phenopacket} populated with some data
      */
-    static PhenoPacket mockPhenopacket() {
-        return PhenoPacket.newBuilder()
+    static Phenopacket mockPhenopacket() {
+        return Phenopacket.newBuilder()
                 .setId("EdPhenopacket")
                 .setSubject(getSubject())
                 .addPhenotypes(getCongenitalSyndactyly())

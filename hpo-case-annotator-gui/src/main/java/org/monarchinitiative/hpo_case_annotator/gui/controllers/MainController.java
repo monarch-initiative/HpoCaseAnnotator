@@ -25,7 +25,7 @@ import org.monarchinitiative.hpo_case_annotator.model.io.*;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.ModelUtils;
-import org.phenopackets.schema.v1.PhenoPacket;
+import org.phenopackets.schema.v1.Phenopacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -465,7 +465,7 @@ public final class MainController {
 
         for (Map.Entry<String,DiseaseCase> entry : casemap.entrySet()) {
             try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(entry.getKey()))) {
-                final PhenoPacket packet = PhenoPacketCodec.diseaseCaseToPhenopacket(entry.getValue());
+                final Phenopacket packet = PhenoPacketCodec.diseaseCaseToPhenopacket(entry.getValue());
                 PhenoPacketCodec.writeAsPhenopacket(writer, packet);
                 LOGGER.trace("Writing phenopacket to {}",entry.getKey());
             } catch (IOException e) {
@@ -505,7 +505,7 @@ public final class MainController {
         File where = filechooser.showSaveDialog(primaryStage);
         if (where != null) {
             try (BufferedWriter writer = Files.newBufferedWriter(where.toPath())) {
-                final PhenoPacket packet = PhenoPacketCodec.diseaseCaseToPhenopacket(diseaseCase);
+                final Phenopacket packet = PhenoPacketCodec.diseaseCaseToPhenopacket(diseaseCase);
                 PhenoPacketCodec.writeAsPhenopacket(writer, packet);
             } catch (IOException e) {
                 LOGGER.warn("Error occured during Phenopacket export", e);

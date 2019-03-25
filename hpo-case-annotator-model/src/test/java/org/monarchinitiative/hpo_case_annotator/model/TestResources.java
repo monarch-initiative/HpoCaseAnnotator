@@ -2,12 +2,12 @@ package org.monarchinitiative.hpo_case_annotator.model;
 
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.phenopackets.schema.v1.Family;
-import org.phenopackets.schema.v1.PhenoPacket;
+import org.phenopackets.schema.v1.Phenopacket;
 
 import java.net.URL;
 
 /**
- * This class exposes data (e.g. {@link PhenoPacket}s, {@link DiseaseCase}s) suitable for testing the
+ * This class exposes data (e.g. {@link Phenopacket}s, {@link DiseaseCase}s) suitable for testing the
  * <code>hpo-case-annotator-model</code> classes.
  */
 public class TestResources {
@@ -22,19 +22,19 @@ public class TestResources {
     }
 
     /**
-     * Utility method for returning a {@link PhenoPacket} rare disease example based on the case defined in
+     * Utility method for returning a {@link Phenopacket} rare disease example based on the case defined in
      * src/test/resources/toronto_rare_disease_example.md
      *
-     * @return a {@link PhenoPacket} containing a rare disease patient and relations.
+     * @return a {@link Phenopacket} containing a rare disease patient and relations.
      */
     public static Family rareDiseaseFamily() {
         return RareDiseaseFamilyExample.rareDiseaseFamily();
     }
 
     /**
-     * @return {@link PhenoPacket} consistent with content of file <em>examplePhenoPacket_v0.3.0.json</em>
+     * @return {@link Phenopacket} consistent with content of file <em>examplePhenoPacket_v0.3.0.json</em>
      */
-    public static PhenoPacket mockPhenopacket() {
+    public static Phenopacket mockPhenopacket() {
         return PhenopacketExample.mockPhenopacket();
     }
 

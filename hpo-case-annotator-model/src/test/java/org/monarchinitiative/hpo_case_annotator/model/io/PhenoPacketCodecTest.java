@@ -4,7 +4,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.monarchinitiative.hpo_case_annotator.model.TestResources;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.phenopackets.schema.v1.PhenoPacket;
+import org.phenopackets.schema.v1.Phenopacket;
 import org.phenopackets.schema.v1.core.*;
 
 import java.io.BufferedReader;
@@ -30,7 +30,7 @@ public class PhenoPacketCodecTest {
         String metadata = diseaseCase.getMetadata();
 
         // act
-        final PhenoPacket packet = PhenoPacketCodec.diseaseCaseToPhenopacket(diseaseCase);
+        final Phenopacket packet = PhenoPacketCodec.diseaseCaseToPhenopacket(diseaseCase);
 
         // assert
         assertThat(packet, is(notNullValue()));
@@ -109,7 +109,7 @@ public class PhenoPacketCodecTest {
     @Test
     public void writePhenopacketToWriter() throws Exception {
         // arrange
-        final PhenoPacket packet = TestResources.mockPhenopacket();
+        final Phenopacket packet = TestResources.mockPhenopacket();
         StringWriter writer = new StringWriter();
         String expected;
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(PhenoPacketCodecTest.class.getResource("examplePhenopacket_v0.3.0.json").toURI()))) {
