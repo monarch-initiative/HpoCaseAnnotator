@@ -4,7 +4,7 @@
 
     <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
     <artifactId>hpo-case-annotator</artifactId>
-    <version>1.0.11-SNAPSHOT</version>
+    <version>1.0.11</version>
     <modules>
         <module>hpo-case-annotator-core</module>
         <module>hpo-case-annotator-cli</module>
