@@ -79,7 +79,8 @@
     "genotype": {
       "id": "GENO:0000135",
       "label": "heterozygous"
-    }
+    },
+    "background": ""
   }],
   "diseases": [{
     "term": {

@@ -416,7 +416,7 @@ public final class MainController {
 
 
     @FXML
-    private void exportAllPhenopackets() {
+    private void exportPhenopacketAllCasesMenuItemAction() {
         System.out.println("Export all phenopackets");
         final Optional<Codecs.SupportedDiseaseCaseFormat> toggleChoiceFromUser = PopUps.getToggleChoiceFromUser(Arrays.asList(Codecs.SupportedDiseaseCaseFormat.values()),
                 String.format("What encoding is used for models in \n'%s'?", optionalResources.getDiseaseCaseDir().getAbsolutePath()),
@@ -442,17 +442,17 @@ public final class MainController {
         directoryChooser.setTitle("Choose directory to store all cases as phenopackets");
         File selectedDirectory = directoryChooser.showDialog(primaryStage);
 
-        if(selectedDirectory == null){
+        if (selectedDirectory == null) {
             LOGGER.warn("Could not get directory to write all phenopackets");
-            PopUps.showInfoMessage("Error","Could not get directory to write all phenopackets");
+            PopUps.showInfoMessage("Error", "Could not get directory to write all phenopackets");
             return;
         }
         // read all the cases
-        Map<String,DiseaseCase> casemap = new HashMap<>();
+        Map<String, DiseaseCase> casemap = new HashMap<>();
         for (File modelName : parser.getModelNames()) {
-            String basename=modelName.getName(); // this is the base name
-            basename = basename.replace(".json",".phenopacket");
-            String abspath=String.format("%s%s%s",selectedDirectory,File.separator,basename);
+            String basename = modelName.getName(); // this is the base name
+            basename = basename.replace(".json", ".phenopacket");
+            String abspath = String.format("%s%s%s", selectedDirectory, File.separator, basename);
             try (InputStream is = new BufferedInputStream(new FileInputStream(modelName))) {
                 Optional<DiseaseCase> dcase = parser.readModel(is);
                 dcase.ifPresent(diseaseCase -> casemap.put(abspath, diseaseCase));
@@ -463,11 +463,11 @@ public final class MainController {
             }
         }
 
-        for (Map.Entry<String,DiseaseCase> entry : casemap.entrySet()) {
+        for (Map.Entry<String, DiseaseCase> entry : casemap.entrySet()) {
             try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(entry.getKey()))) {
                 final Phenopacket packet = PhenoPacketCodec.diseaseCaseToPhenopacket(entry.getValue());
                 PhenoPacketCodec.writeAsPhenopacket(writer, packet);
-                LOGGER.trace("Writing phenopacket to {}",entry.getKey());
+                LOGGER.trace("Writing phenopacket to {}", entry.getKey());
             } catch (IOException e) {
                 LOGGER.warn("Error occured during Phenopacket export", e);
                 PopUps.showException("Error", "Error occured during Phenopacket export", e.getMessage(), e);
@@ -489,7 +489,7 @@ public final class MainController {
 
 
     @FXML
-    void exportPhenopacketMenuItemAction() {
+    public void exportPhenopacketCurrentCaseMenuItemAction() {
         DiseaseCase diseaseCase = dataController.getData();
         String suggestedFileName = ModelUtils.getNameFor(diseaseCase) + ".phenopacket";
         String title = "Save as Phenopacket";
@@ -514,6 +514,16 @@ public final class MainController {
         }
     }
 
+    /**
+     * Encode all cases stored in <em>curated files directory</em> into Phenopacket format and store them in specified
+     * directory.
+     * <p>
+     * Data specific to splicing is encoded into {@link Phenopacket}.
+     */
+    @FXML
+    public void exportPhenopacketAllCasesForBassMenuItemAction() {
+        // TODO - implement
+    }
 
     @FXML
     void exportPhenoModelsMenuItemAction() {
@@ -707,4 +717,6 @@ public final class MainController {
         dataController.setCurrentModelPath(currentModelPath);
         PopUps.showInfoMessage(String.format("Data saved into file %s", currentModelPath.getName()), conversationTitle);
     }
+
+
 }
