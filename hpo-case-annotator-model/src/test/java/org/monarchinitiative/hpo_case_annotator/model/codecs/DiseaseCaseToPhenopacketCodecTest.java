@@ -1,8 +1,9 @@
-package org.monarchinitiative.hpo_case_annotator.model.io;
+package org.monarchinitiative.hpo_case_annotator.model.codecs;
 
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import org.monarchinitiative.hpo_case_annotator.model.TestResources;
+import org.monarchinitiative.hpo_case_annotator.model.io.PhenoPacketCodecTest;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.phenopackets.schema.v1.Phenopacket;
 import org.phenopackets.schema.v1.core.*;
@@ -19,11 +20,14 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.monarchinitiative.hpo_case_annotator.model.io.PhenoPacketTestUtil.ontologyClass;
 
+public class DiseaseCaseToPhenopacketCodecTest {
 
-@Deprecated
-@Ignore
-public class PhenoPacketCodecTest {
+    private DiseaseCaseToPhenopacketCodec instance;
 
+    @Before
+    public void setUp() throws Exception {
+        instance = new DiseaseCaseToPhenopacketCodec();
+    }
 
     @Test
     public void diseaseCaseToPhenopacket() {
@@ -32,7 +36,7 @@ public class PhenoPacketCodecTest {
         String metadata = diseaseCase.getMetadata();
 
         // act
-        final Phenopacket packet = PhenoPacketCodec.diseaseCaseToPhenopacket(diseaseCase);
+        final Phenopacket packet = instance.encode(diseaseCase);
 
         // assert
         assertThat(packet, is(notNullValue()));
@@ -75,7 +79,7 @@ public class PhenoPacketCodecTest {
                                 .build())
                         .build())
                 .build()));
-        assertThat(subject.getTaxonomy(), is(PhenoPacketCodec.HOMO_SAPIENS));
+        assertThat(subject.getTaxonomy(), is(DiseaseCaseToPhenopacketCodec.HOMO_SAPIENS));
 
         final List<Gene> genesList = packet.getGenesList();
         assertThat(genesList.size(), is(1));
@@ -95,7 +99,7 @@ public class PhenoPacketCodecTest {
         assertThat(va.getPos(), is(31843349));
         assertThat(va.getRef(), is("A"));
         assertThat(va.getAlt(), is("G"));
-        assertThat(variant.getGenotype(), is(PhenoPacketCodec.HET));
+        assertThat(variant.getGenotype(), is(DiseaseCaseToPhenopacketCodec.HET));
 
         final List<Disease> diseasesList = packet.getDiseasesList();
         assertThat(diseasesList.size(), is(1));
@@ -105,7 +109,7 @@ public class PhenoPacketCodecTest {
 
         final MetaData metaData = packet.getMetaData();
         assertThat(metaData.getCreatedBy(), is("HPO:ahegde"));
-        assertThat(metaData.getResourcesList(), is(PhenoPacketCodec.RESOURCES));
+        assertThat(metaData.getResourcesList(), is(DiseaseCaseToPhenopacketCodec.RESOURCES));
     }
 
     @Test
@@ -119,18 +123,11 @@ public class PhenoPacketCodecTest {
         }
 
         // act
-        PhenoPacketCodec.writeAsPhenopacket(writer, packet);
+        instance.writeAsPhenopacket(writer, packet);
 
         // assert
         assertThat(writer.toString(), is(equalTo(expected)));
 
     }
 
-    @Test
-    @Ignore // TODO - implement phenopacket to DiseaseCase parsing
-    public void phenopacketToDiseaseCase() {
-//        PhenoPacket packet = TestResources.rareDiseasePhenoPacket();
-//        final DiseaseCase diseaseCase = PhenopacketCodec.phenopacketToDiseaseCase(packet);
-//        assertThat(diseaseCase, is(notNullValue()));
-    }
 }

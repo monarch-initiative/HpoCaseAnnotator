@@ -1,92 +1,34 @@
-package org.monarchinitiative.hpo_case_annotator.model;
+package org.monarchinitiative.hpo_case_annotator.model.codecs;
 
-import com.google.common.collect.ImmutableMap;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
+import org.monarchinitiative.hpo_case_annotator.model.xml_model.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.xml_model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
+ * This codec converts {@link DiseaseCase} into {@link DiseaseCaseModel}. {@link DiseaseCaseModel} is a deprecated format which was
+ * used to store curated data before <em>advent</em> of {@link DiseaseCase}.
+ * <p>
+ * Both conversions are loseless.
+ *
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
  */
-public class Codecs {
+public final class DiseaseCaseToDiseaseCaseModelCodec implements Codec<DiseaseCase, DiseaseCaseModel> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Codecs.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseCaseToDiseaseCaseModelCodec.class);
 
-    private Codecs() {
-        // private no-op
+    DiseaseCaseToDiseaseCaseModelCodec() {
+        // package-private no-op
     }
 
-    public static DiseaseCaseModel diseaseCase2DiseaseCaseModel(DiseaseCase dc) {
-        final DiseaseCaseModel model = new DiseaseCaseModel();
-
-
-        // genome build
-        model.setGenomeBuild(dc.getVariantCount() > 0
-                ? dc.getVariant(0).getVariantPosition().getGenomeAssembly().toString()
-                : GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY.toString());
-
-        // Publication
-        final org.monarchinitiative.hpo_case_annotator.model.xml_model.Publication p = new org.monarchinitiative.hpo_case_annotator.model.xml_model.Publication();
-        p.setAuthorlist(dc.getPublication().getAuthorList());
-        p.setTitle(dc.getPublication().getTitle());
-        p.setJournal(dc.getPublication().getJournal());
-        p.setYear(dc.getPublication().getYear());
-        p.setVolume(dc.getPublication().getVolume());
-        p.setPages(dc.getPublication().getPages());
-        p.setPmid(dc.getPublication().getPmid());
-        model.setPublication(p);
-
-        // Metadata
-        final Metadata m = new Metadata();
-        m.setMetadataText(dc.getMetadata());
-        model.setMetadata(m);
-
-        // TargetGene
-        final TargetGene gene = new TargetGene();
-        gene.setGeneName(dc.getGene().getSymbol());
-        gene.setEntrezID(String.valueOf(dc.getGene().getEntrezId()));
-        model.setTargetGene(gene);
-
-        // Variants
-        final List<org.monarchinitiative.hpo_case_annotator.model.xml_model.Variant> variants = dc.getVariantList().stream().map(variantToDCMVariant()).collect(Collectors.toList());
-        model.setVariants(variants);
-
-        // FamilyInfo
-        final org.monarchinitiative.hpo_case_annotator.model.xml_model.FamilyInfo familyInfo = new org.monarchinitiative.hpo_case_annotator.model.xml_model.FamilyInfo();
-        familyInfo.setFamilyOrPatientID(dc.getFamilyInfo().getFamilyOrProbandId());
-        familyInfo.setAge(String.valueOf(dc.getFamilyInfo().getAge()));
-        familyInfo.setSex(dc.getFamilyInfo().getSex().toString());
-        model.setFamilyInfo(familyInfo);
-
-        // HPO info
-        final List<HPO> hpos = dc.getPhenotypeList().stream().map(ontologyClassToHpo()).collect(Collectors.toList());
-        model.setHpoList(hpos);
-
-        // Disease
-        final org.monarchinitiative.hpo_case_annotator.model.xml_model.Disease disease = new org.monarchinitiative.hpo_case_annotator.model.xml_model.Disease();
-        disease.setDatabase(dc.getDisease().getDatabase());
-        disease.setDiseaseId(dc.getDisease().getDiseaseId());
-        disease.setDiseaseName(dc.getDisease().getDiseaseName());
-        model.setDisease(disease);
-
-        // Biocurator
-        final org.monarchinitiative.hpo_case_annotator.model.xml_model.Biocurator biocurator = new org.monarchinitiative.hpo_case_annotator.model.xml_model.Biocurator();
-        biocurator.setBioCuratorId(dc.getBiocurator().getBiocuratorId());
-        model.setBiocurator(biocurator);
-
-        return model;
-    }
-
-    private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.Variant, org.monarchinitiative.hpo_case_annotator.model.xml_model.Variant> variantToDCMVariant() {
+    private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.Variant, Variant> variantToDCMVariant() {
         return variant -> {
             VariantValidation val = variant.getVariantValidation();
 
@@ -177,66 +119,6 @@ public class Codecs {
             hpo.setObserved(oc.getNotObserved() ? "NOT" : "YES");
             return hpo;
         };
-    }
-
-    public static DiseaseCase diseaseCaseModel2DiseaseCase(DiseaseCaseModel dcm) {
-        DiseaseCase.Builder builder = DiseaseCase.newBuilder();
-
-        // Publication
-        builder = builder.setPublication(org.monarchinitiative.hpo_case_annotator.model.proto.Publication.newBuilder()
-                        .setAuthorList(dcm.getPublication().getAuthorlist())
-                        .setTitle(dcm.getPublication().getTitle())
-                        .setJournal(dcm.getPublication().getJournal())
-                        .setYear(dcm.getPublication().getYear())
-                        .setVolume(dcm.getPublication().getVolume())
-                        .setPages(dcm.getPublication().getPages())
-                        .setPmid(dcm.getPublication().getPmid())
-                        .build())
-                // Metadata
-                .setMetadata(dcm.getMetadata().getMetadataText());
-
-        // TargetGene
-        try {
-            builder.setGene(Gene.newBuilder()
-                    .setEntrezId(dcm.getTargetGene().getEntrezID() == null ? -1 : Integer.parseInt(dcm.getTargetGene().getEntrezID()))
-                    .setSymbol(dcm.getTargetGene().getGeneName())
-                    .build());
-        } catch (NumberFormatException nfe) {
-            LOGGER.warn("Unable to parse gene Entrez ID integer from '{}'. Not an integer?", dcm.getTargetGene().getEntrezID());
-        }
-        // Variants
-        builder
-                .addAllVariant(dcm.getVariants().stream()
-                        .map(dcmVariantToVariant(dcm.getGenomeBuild()))
-                        .collect(Collectors.toList()));
-        try {
-            // FamilyInfo
-            builder.setFamilyInfo(org.monarchinitiative.hpo_case_annotator.model.proto.FamilyInfo.newBuilder()
-                    .setFamilyOrProbandId(dcm.getFamilyInfo().getFamilyOrPatientID())
-                    .setAge(dcm.getFamilyInfo().getAge() == null ? "" : dcm.getFamilyInfo().getAge())
-                    .setSex(dcm.getFamilyInfo().getSex().isEmpty() || dcm.getFamilyInfo().getSex() == null ? Sex.UNKNOWN_SEX : Sex.valueOf(dcm.getFamilyInfo().getSex()))
-                    .build());
-        } catch (NumberFormatException nfe) { // problem parsing Age
-            LOGGER.warn("Unable to parse proband's age from '{}'. Not an integer?", dcm.getFamilyInfo().getAge(), nfe);
-        } catch (IllegalArgumentException iae) { // problem parsing Sex
-            LOGGER.warn("Unable to parse proband's sex from string '{}'. Allowed: {}", dcm.getFamilyInfo().getSex(),
-                    Arrays.stream(Sex.values()).map(Sex::toString).collect(Collectors.joining(",", "{", "}")), iae);
-        }
-        // HPO info
-        builder
-                .addAllPhenotype(dcm.getHpoList().stream().map(hpoToOntologyClass()).collect(Collectors.toList()))
-                // Disease
-                .setDisease(org.monarchinitiative.hpo_case_annotator.model.proto.Disease.newBuilder()
-                        .setDatabase(dcm.getDisease().getDatabase())
-                        .setDiseaseId(dcm.getDisease().getDiseaseId())
-                        .setDiseaseName(dcm.getDisease().getDiseaseName())
-                        .build())
-                // Biocurator
-                .setBiocurator(org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator.newBuilder()
-                        .setBiocuratorId(dcm.getBiocurator().getBioCuratorId() == null ? "" : dcm.getBiocurator().getBioCuratorId())
-                        .build());
-
-        return builder.build();
     }
 
     private static Function<HPO, OntologyClass> hpoToOntologyClass() {
@@ -365,39 +247,127 @@ public class Codecs {
         }
     }
 
-
-    /**
-     * Biocurated data can be represented in file in these formats.
-     */
-    public enum SupportedDiseaseCaseFormat {
-
-        /**
-         * The format represented by {@link DiseaseCaseModel} class and decoded by {@link org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser}.
-         */
-        XML,
-
-        /**
-         * The format represented by {@link DiseaseCase} class (protobuf) and decoded by {@link org.monarchinitiative.hpo_case_annotator.model.io.ProtoJSONModelParser}.
-         */
-        JSON;
+    @Override
+    public DiseaseCaseModel encode(DiseaseCase dc) {
+        final DiseaseCaseModel model = new DiseaseCaseModel();
 
 
-        private static final Map<SupportedDiseaseCaseFormat, String> REGEX_MAP = initializeRegexMap();
+        // genome build
+        model.setGenomeBuild(dc.getVariantCount() > 0
+                ? dc.getVariant(0).getVariantPosition().getGenomeAssembly().toString()
+                : GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY.toString());
 
-        /**
-         * Immutable map where keys are all possible enum values. The map values are regexp strings. The name of a file
-         * containing {@link DiseaseCase} data must conform to this regex in order to be represented by the
-         * {@link SupportedDiseaseCaseFormat} value.
-         */
-        public static Map<SupportedDiseaseCaseFormat, String> getRegexMap() {
-            return REGEX_MAP;
-        }
+        // Publication
+        final org.monarchinitiative.hpo_case_annotator.model.xml_model.Publication p = new org.monarchinitiative.hpo_case_annotator.model.xml_model.Publication();
+        p.setAuthorlist(dc.getPublication().getAuthorList());
+        p.setTitle(dc.getPublication().getTitle());
+        p.setJournal(dc.getPublication().getJournal());
+        p.setYear(dc.getPublication().getYear());
+        p.setVolume(dc.getPublication().getVolume());
+        p.setPages(dc.getPublication().getPages());
+        p.setPmid(dc.getPublication().getPmid());
+        model.setPublication(p);
 
-        private static Map<SupportedDiseaseCaseFormat, String> initializeRegexMap() {
-            Map<SupportedDiseaseCaseFormat, String> regexMap = new HashMap<>();
-            regexMap.put(SupportedDiseaseCaseFormat.XML, "[\\w\\W]+\\.xml");
-            regexMap.put(SupportedDiseaseCaseFormat.JSON, "[\\w\\W]+\\.json");
-            return ImmutableMap.copyOf(regexMap);
-        }
+        // Metadata
+        final Metadata m = new Metadata();
+        m.setMetadataText(dc.getMetadata());
+        model.setMetadata(m);
+
+        // TargetGene
+        final TargetGene gene = new TargetGene();
+        gene.setGeneName(dc.getGene().getSymbol());
+        gene.setEntrezID(String.valueOf(dc.getGene().getEntrezId()));
+        model.setTargetGene(gene);
+
+        // Variants
+        final List<Variant> variants = dc.getVariantList().stream().map(variantToDCMVariant()).collect(Collectors.toList());
+        model.setVariants(variants);
+
+        // FamilyInfo
+        final org.monarchinitiative.hpo_case_annotator.model.xml_model.FamilyInfo familyInfo = new org.monarchinitiative.hpo_case_annotator.model.xml_model.FamilyInfo();
+        familyInfo.setFamilyOrPatientID(dc.getFamilyInfo().getFamilyOrProbandId());
+        familyInfo.setAge(String.valueOf(dc.getFamilyInfo().getAge()));
+        familyInfo.setSex(dc.getFamilyInfo().getSex().toString());
+        model.setFamilyInfo(familyInfo);
+
+        // HPO info
+        final List<HPO> hpos = dc.getPhenotypeList().stream().map(ontologyClassToHpo()).collect(Collectors.toList());
+        model.setHpoList(hpos);
+
+        // Disease
+        final org.monarchinitiative.hpo_case_annotator.model.xml_model.Disease disease = new org.monarchinitiative.hpo_case_annotator.model.xml_model.Disease();
+        disease.setDatabase(dc.getDisease().getDatabase());
+        disease.setDiseaseId(dc.getDisease().getDiseaseId());
+        disease.setDiseaseName(dc.getDisease().getDiseaseName());
+        model.setDisease(disease);
+
+        // Biocurator
+        final org.monarchinitiative.hpo_case_annotator.model.xml_model.Biocurator biocurator = new org.monarchinitiative.hpo_case_annotator.model.xml_model.Biocurator();
+        biocurator.setBioCuratorId(dc.getBiocurator().getBiocuratorId());
+        model.setBiocurator(biocurator);
+
+        return model;
     }
+
+    @Override
+    public DiseaseCase decode(DiseaseCaseModel dcm) {
+        DiseaseCase.Builder builder = DiseaseCase.newBuilder();
+
+        // Publication
+        builder = builder.setPublication(org.monarchinitiative.hpo_case_annotator.model.proto.Publication.newBuilder()
+                .setAuthorList(dcm.getPublication().getAuthorlist())
+                .setTitle(dcm.getPublication().getTitle())
+                .setJournal(dcm.getPublication().getJournal())
+                .setYear(dcm.getPublication().getYear())
+                .setVolume(dcm.getPublication().getVolume())
+                .setPages(dcm.getPublication().getPages())
+                .setPmid(dcm.getPublication().getPmid())
+                .build())
+                // Metadata
+                .setMetadata(dcm.getMetadata().getMetadataText());
+
+        // TargetGene
+        try {
+            builder.setGene(Gene.newBuilder()
+                    .setEntrezId(dcm.getTargetGene().getEntrezID() == null ? -1 : Integer.parseInt(dcm.getTargetGene().getEntrezID()))
+                    .setSymbol(dcm.getTargetGene().getGeneName())
+                    .build());
+        } catch (NumberFormatException nfe) {
+            LOGGER.warn("Unable to parse gene Entrez ID integer from '{}'. Not an integer?", dcm.getTargetGene().getEntrezID());
+        }
+        // Variants
+        builder
+                .addAllVariant(dcm.getVariants().stream()
+                        .map(dcmVariantToVariant(dcm.getGenomeBuild()))
+                        .collect(Collectors.toList()));
+        try {
+            // FamilyInfo
+            builder.setFamilyInfo(org.monarchinitiative.hpo_case_annotator.model.proto.FamilyInfo.newBuilder()
+                    .setFamilyOrProbandId(dcm.getFamilyInfo().getFamilyOrPatientID())
+                    .setAge(dcm.getFamilyInfo().getAge() == null ? "" : dcm.getFamilyInfo().getAge())
+                    .setSex(dcm.getFamilyInfo().getSex().isEmpty() || dcm.getFamilyInfo().getSex() == null ? Sex.UNKNOWN_SEX : Sex.valueOf(dcm.getFamilyInfo().getSex()))
+                    .build());
+        } catch (NumberFormatException nfe) { // problem parsing Age
+            LOGGER.warn("Unable to parse proband's age from '{}'. Not an integer?", dcm.getFamilyInfo().getAge(), nfe);
+        } catch (IllegalArgumentException iae) { // problem parsing Sex
+            LOGGER.warn("Unable to parse proband's sex from string '{}'. Allowed: {}", dcm.getFamilyInfo().getSex(),
+                    Arrays.stream(Sex.values()).map(Sex::toString).collect(Collectors.joining(",", "{", "}")), iae);
+        }
+        // HPO info
+        builder
+                .addAllPhenotype(dcm.getHpoList().stream().map(hpoToOntologyClass()).collect(Collectors.toList()))
+                // Disease
+                .setDisease(org.monarchinitiative.hpo_case_annotator.model.proto.Disease.newBuilder()
+                        .setDatabase(dcm.getDisease().getDatabase())
+                        .setDiseaseId(dcm.getDisease().getDiseaseId())
+                        .setDiseaseName(dcm.getDisease().getDiseaseName())
+                        .build())
+                // Biocurator
+                .setBiocurator(org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator.newBuilder()
+                        .setBiocuratorId(dcm.getBiocurator().getBioCuratorId() == null ? "" : dcm.getBiocurator().getBioCuratorId())
+                        .build());
+
+        return builder.build();
+    }
+
 }

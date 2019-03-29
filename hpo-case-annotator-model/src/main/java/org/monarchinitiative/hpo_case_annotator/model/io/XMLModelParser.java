@@ -2,7 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.model.io;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import org.monarchinitiative.hpo_case_annotator.model.Codecs;
+import org.monarchinitiative.hpo_case_annotator.model.codecs.Codecs;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.xml_model.DiseaseCaseModel;
 
@@ -47,7 +47,7 @@ public final class XMLModelParser implements ModelParser {
      */
     public static void saveDiseaseCase(DiseaseCase model, OutputStream outputStream) {
         try (XMLEncoder xmlEncoder = new XMLEncoder(outputStream)) {
-            DiseaseCaseModel dcm = Codecs.diseaseCase2DiseaseCaseModel(model);
+            DiseaseCaseModel dcm = Codecs.diseaseCaseToDiseaseCaseModelCodec().encode(model);
             xmlEncoder.writeObject(dcm);
         }
     }
@@ -63,7 +63,7 @@ public final class XMLModelParser implements ModelParser {
     public static Optional<DiseaseCase> loadDiseaseCase(InputStream inputStream) {
         try (XMLDecoder xmlDecoder = new XMLDecoder(inputStream)) {
             DiseaseCaseModel dcm = (DiseaseCaseModel) xmlDecoder.readObject();
-            return Optional.of(Codecs.diseaseCaseModel2DiseaseCase(dcm));
+            return Optional.of(Codecs.diseaseCaseToDiseaseCaseModelCodec().decode(dcm));
         }
     }
 

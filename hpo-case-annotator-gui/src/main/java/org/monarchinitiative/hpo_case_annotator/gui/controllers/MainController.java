@@ -20,7 +20,8 @@ import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.StartupTask;
-import org.monarchinitiative.hpo_case_annotator.model.Codecs;
+import org.monarchinitiative.hpo_case_annotator.model.codecs.Codecs;
+import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToPhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.model.io.*;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
@@ -394,6 +395,8 @@ public final class MainController {
         File where = PopUps.selectDirectory(primaryStage, optionalResources.getDiseaseCaseDir(),
                 "Select export directory");
 
+        DiseaseCaseToPhenopacketCodec codec = Codecs.diseaseCasePhenopacketCodec();
+
         if (where != null) {
             int counter = 0;
             for (DiseaseCase model : models.values()) {
@@ -401,9 +404,9 @@ public final class MainController {
                 String fileName = ModelUtils.getFileNameFor(model) + ".json";
                 File target = new File(where, fileName);
                 try (BufferedWriter writer = Files.newBufferedWriter(target.toPath())) {
-                    final Phenopacket packet = PhenoPacketCodec.diseaseCaseToPhenopacket(model);
+                    final Phenopacket packet = codec.encode(model);
                     LOGGER.trace("Writing phenopacket to '{}'", target);
-                    PhenoPacketCodec.writeAsPhenopacket(writer, packet);
+                    codec.writeAsPhenopacket(writer, packet);
                     counter++;
                 } catch (IOException e) {
                     LOGGER.warn("Error occurred during phenopacket export", e);
@@ -442,10 +445,11 @@ public final class MainController {
         filechooser.setSelectedExtensionFilter(jsonFormat);
 
         File where = filechooser.showSaveDialog(primaryStage);
+        DiseaseCaseToPhenopacketCodec codec = Codecs.diseaseCasePhenopacketCodec();
         if (where != null) {
             try (BufferedWriter writer = Files.newBufferedWriter(where.toPath())) {
-                final Phenopacket packet = PhenoPacketCodec.diseaseCaseToPhenopacket(diseaseCase);
-                PhenoPacketCodec.writeAsPhenopacket(writer, packet);
+                final Phenopacket packet = codec.encode(diseaseCase);
+                codec.writeAsPhenopacket(writer, packet);
             } catch (IOException e) {
                 LOGGER.warn("Error occured during Phenopacket export", e);
                 PopUps.showException(title, "Error occured during Phenopacket export", e.getMessage(), e);

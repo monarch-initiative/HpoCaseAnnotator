@@ -1,9 +1,8 @@
-package org.monarchinitiative.hpo_case_annotator.model.io;
+package org.monarchinitiative.hpo_case_annotator.model.codecs;
 
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Sex;
 import org.phenopackets.schema.v1.Phenopacket;
 import org.phenopackets.schema.v1.core.*;
 import org.phenopackets.schema.v1.io.PhenopacketFormat;
@@ -18,9 +17,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * This class converts {@link DiseaseCase} to {@link org.phenopackets.schema.v1.Phenopacket} and back.
+ * This codec converts {@link DiseaseCase} into {@link Phenopacket}. Phenopacket is meant to be used as an interchange
+ * format between various programs.
+ * <p>
+ * Both conversions are lossy since neither format is a superset of the other.
+ *
+ * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
  */
-public class PhenoPacketCodec {
+public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, Phenopacket> {
 
     // source https://bioportal.bioontology.org/ontologies/ECO/?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FECO_0000033&jump_to_nav=true
     public static final OntologyClass TRACEABLE_AUTHOR_STATEMENT = ontologyClass("ECO:0000033", "author statement supported by traceable reference");
@@ -38,66 +42,15 @@ public class PhenoPacketCodec {
 
     public static final List<Resource> RESOURCES = makeResources();
 
-    private PhenoPacketCodec() {
-        // no-op, static utility class
+    private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseCaseToPhenopacketCodec.class);
+
+    DiseaseCaseToPhenopacketCodec() {
+        // package-private no-op
     }
 
-    /**
-     * @param diseaseCase {@link DiseaseCase} to be converted to phenopacket
-     * @return {@link Phenopacket} with data from <code>diseaseCase</code>
-     */
-    public static Phenopacket diseaseCaseToPhenopacket(DiseaseCase diseaseCase) {
-        String familyOrProbandId = diseaseCase.getFamilyInfo().getFamilyOrProbandId();
-        Publication publication = diseaseCase.getPublication();
-        String metadata = diseaseCase.getMetadata();
-        return Phenopacket.newBuilder()
-                // proband and the publication data
-                .setSubject(Individual.newBuilder()
-                        .setId(familyOrProbandId)
-                        .setAgeAtCollection(Age.newBuilder().setAge(diseaseCase.getFamilyInfo().getAge()).build())
-                        .setSex(DiseaseCaseToPhenoPacket.sex(diseaseCase.getFamilyInfo().getSex()))
-                        .setTaxonomy(HOMO_SAPIENS)
-                        .build())
-                // phenotype (HPO) terms
-                .addAllPhenotypes(diseaseCase.getPhenotypeList().stream()
-                        .map(DiseaseCaseToPhenoPacket.phenotype(publication, metadata))
-                        .collect(Collectors.toList()))
-                // gene in question
-                .addGenes(Gene.newBuilder()
-                        .setId("ENTREZ:" + diseaseCase.getGene().getEntrezId())
-                        .setSymbol(diseaseCase.getGene().getSymbol())
-                        .build())
-                // variants, genome assembly
-                .addAllVariants(diseaseCase.getVariantList().stream()
-                        .map(DiseaseCaseToPhenoPacket.hcaVariantToPhenoPacketVariant(familyOrProbandId))
-                        .collect(Collectors.toList()))
-                // disease
-                .addDiseases(Disease.newBuilder()
-                        .setTerm(ontologyClass(diseaseCase.getDisease().getDatabase() + ":" + diseaseCase.getDisease().getDiseaseId(), diseaseCase.getDisease().getDiseaseName()))
-                        .build())
-                // metadata - Biocurator ID, ontologies used
-                .setMetaData(MetaData.newBuilder()
-                        .setCreatedBy(diseaseCase.getBiocurator().getBiocuratorId())
-                        .addAllResources(RESOURCES)
-                        .build())
-                .build();
-    }
-
-    public static void writeAsPhenopacket(Writer writer, Phenopacket packet) throws IOException {
+    public void writeAsPhenopacket(Writer writer, Phenopacket packet) throws IOException {
         writer.write(PhenopacketFormat.toJson(packet));
     }
-
-//    /**
-//     * Convert given <code>phenoPacket</code> into HpoCaseAnnotator's {@link DiseaseCase} format
-//     *
-//     * @param phenoPacket {@link PhenoPacket} to be converted
-//     * @return {@link DiseaseCase} with the data from <code>phenoPacket</code>
-//     */
-//    public static DiseaseCase phenopacketToDiseaseCase(PhenoPacket phenoPacket) {
-//        // TODO - implement phenopacket to diseasecase conversion
-//        return null;
-//    }
-
 
     private static OntologyClass ontologyClass(String id, String label) {
         return OntologyClass.newBuilder()
@@ -165,17 +118,69 @@ public class PhenoPacketCodec {
     }
 
     /**
+     * Encode {@link DiseaseCase} into {@link Phenopacket}.
+     *
+     * @param data {@link DiseaseCase} instance to be encoded
+     * @return {@link Phenopacket}
+     */
+    @Override
+    public Phenopacket encode(DiseaseCase data) {
+        String familyOrProbandId = data.getFamilyInfo().getFamilyOrProbandId();
+        Publication publication = data.getPublication();
+        String metadata = data.getMetadata();
+        return Phenopacket.newBuilder()
+                // proband and the publication data
+                .setSubject(Individual.newBuilder()
+                        .setId(familyOrProbandId)
+                        .setAgeAtCollection(Age.newBuilder().setAge(data.getFamilyInfo().getAge()).build())
+                        .setSex(DiseaseCaseToPhenoPacket.sex(data.getFamilyInfo().getSex()))
+                        .setTaxonomy(HOMO_SAPIENS)
+                        .build())
+                // phenotype (HPO) terms
+                .addAllPhenotypes(data.getPhenotypeList().stream()
+                        .map(DiseaseCaseToPhenoPacket.phenotype(publication, metadata))
+                        .collect(Collectors.toList()))
+                // gene in question
+                .addGenes(Gene.newBuilder()
+                        .setId("ENTREZ:" + data.getGene().getEntrezId())
+                        .setSymbol(data.getGene().getSymbol())
+                        .build())
+                // variants, genome assembly
+                .addAllVariants(data.getVariantList().stream()
+                        .map(DiseaseCaseToPhenoPacket.hcaVariantToPhenoPacketVariant(familyOrProbandId))
+                        .collect(Collectors.toList()))
+                // disease
+                .addDiseases(Disease.newBuilder()
+                        .setTerm(ontologyClass(data.getDisease().getDatabase() + ":" + data.getDisease().getDiseaseId(), data.getDisease().getDiseaseName()))
+                        .build())
+                // metadata - Biocurator ID, ontologies used
+                .setMetaData(MetaData.newBuilder()
+                        .setCreatedBy(data.getBiocurator().getBiocuratorId())
+                        .addAllResources(RESOURCES)
+                        .build())
+                .build();
+    }
+
+
+    @Override
+    public DiseaseCase decode(Phenopacket data) {
+        // TODO - implement phenopacket to diseasecase conversion
+        LOGGER.warn("Not yet supported");
+        return null;
+    }
+
+    /**
      * This class contains functions for mapping data from {@link DiseaseCase} into {@link Phenopacket} format.
      */
     private static class DiseaseCaseToPhenoPacket {
 
-        private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseCaseToPhenoPacket.class);
+        private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseCaseToPhenopacketCodec.class);
 
         /**
-         * @param sex {@link Sex} <code>sex</code>
+         * @param sex {@link org.monarchinitiative.hpo_case_annotator.model.proto.Sex} <code>sex</code>
          * @return {@link OntologyClass} representation of the <code>sex</code>
          */
-        private static org.phenopackets.schema.v1.core.Sex sex(Sex sex) {
+        private static org.phenopackets.schema.v1.core.Sex sex(org.monarchinitiative.hpo_case_annotator.model.proto.Sex sex) {
             switch (sex) {
                 case MALE:
                     return org.phenopackets.schema.v1.core.Sex.MALE;
