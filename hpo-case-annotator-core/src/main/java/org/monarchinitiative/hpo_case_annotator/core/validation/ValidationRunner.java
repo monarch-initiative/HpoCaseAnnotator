@@ -134,7 +134,7 @@ public final class ValidationRunner<T extends Message> {
         /*// validate completness
         CompletenessValidator completenessValidator = new CompletenessValidator(variantValidator);
         ValidationResult result = completenessValidator.validateDiseaseCase(model);
-        lines.add(new ValidationLine(ModelUtils.getNameFor(model), completenessValidator.getClass().getSimpleName(), result));
+        lines.add(new ValidationLine(ModelUtils.getFileNameFor(model), completenessValidator.getClass().getSimpleName(), result));
         if (result != ValidationResult.PASSED)
             return lines; // further validation is a waste of time, since the model is incomplete
 
@@ -150,8 +150,8 @@ public final class ValidationRunner<T extends Message> {
                 assembly = assemblies.getAssemblyMap().get(GenomeAssembly.HG38.toString());
                 break;
             default:
-                LOGGER.warn("Unknown genome forAllValidations '{}' in model '{}'", model.getGenomeBuild(), ModelUtils.getNameFor(model));
-                lines.add(new ValidationLine(ModelUtils.getNameFor(model), "GenomeBuildValidator",
+                LOGGER.warn("Unknown genome forAllValidations '{}' in model '{}'", model.getGenomeBuild(), ModelUtils.getFileNameFor(model));
+                lines.add(new ValidationLine(ModelUtils.getFileNameFor(model), "GenomeBuildValidator",
                         AbstractValidator.makeValidationResult(ValidationResult.FAILED, "Unknown genome forAllValidations '" + model.getGenomeBuild() + "'")));
                 return lines;
         }
@@ -159,16 +159,16 @@ public final class ValidationRunner<T extends Message> {
         // validate genomic coordinates
         File fastaFile = assembly.getFastaPath();
         if (fastaFile == null || !fastaFile.isFile()) {
-            lines.add(new ValidationLine(ModelUtils.getNameFor(model), GenomicPositionValidator.class.getSimpleName(),
+            lines.add(new ValidationLine(ModelUtils.getFileNameFor(model), GenomicPositionValidator.class.getSimpleName(),
                     AbstractValidator.makeValidationResult(ValidationResult.UNAPPLICABLE, "Genome forAllValidations '" + assembly.toString() + "' not available. Download in Set resources dialog")));
         } else {
             try (SequenceDao sequenceDao = new SingleFastaSequenceDao(assembly.getFastaPath())) {
                 GenomicPositionValidator genomicPositionValidator = new GenomicPositionValidator(sequenceDao);
-                lines.add(new ValidationLine(ModelUtils.getNameFor(model), GenomicPositionValidator.class.getSimpleName(),
+                lines.add(new ValidationLine(ModelUtils.getFileNameFor(model), GenomicPositionValidator.class.getSimpleName(),
                         genomicPositionValidator.validateDiseaseCase(model)));
             } catch (Exception e) {
-                LOGGER.warn("Error occured during validation of genomic coordinates of the model '{}' using assembly '{}'", ModelUtils.getNameFor(model), assembly.toString());
-                lines.add(new ValidationLine(ModelUtils.getNameFor(model), GenomicPositionValidator.class.getSimpleName(),
+                LOGGER.warn("Error occured during validation of genomic coordinates of the model '{}' using assembly '{}'", ModelUtils.getFileNameFor(model), assembly.toString());
+                lines.add(new ValidationLine(ModelUtils.getFileNameFor(model), GenomicPositionValidator.class.getSimpleName(),
                         AbstractValidator.makeValidationResult(ValidationResult.UNAPPLICABLE, "Error occured during validation using assembly '" + assembly.toString() + "'")));
             }
         }*/
@@ -184,7 +184,7 @@ public final class ValidationRunner<T extends Message> {
 //     */
     /*private List<ValidationLine> singleValidation(DiseaseCase model) {
         List<ValidationLine> valList = new ArrayList<>();
-        String modelName = ModelUtils.getNameFor(model);
+        String modelName = ModelUtils.getFileNameFor(model);
 
         // Completeness validator
         ValidationResult completenessResult = completenessValidator.validateDiseaseCase(model);

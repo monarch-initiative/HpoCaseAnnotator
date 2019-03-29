@@ -67,7 +67,7 @@ public final class TSVModelExporter implements ModelExporter {
                     fields.add(var.getCrypticPosition() == 0 ? "NaN" : String.valueOf(var.getCrypticPosition()));
                     fields.add(model.getGene().getSymbol());
                     fields.add(model.getPublication().getPmid());
-                    fields.add(ModelUtils.getNameFor(model));
+                    fields.add(ModelUtils.getFileNameFor(model));
 
                     return String.join(delimiter, fields);
                 })

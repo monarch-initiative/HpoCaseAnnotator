@@ -55,7 +55,8 @@
               <items>
                      <MenuItem id="phenopacketMenuItem" mnemonicParsing="false" onAction="#exportPhenopacketCurrentCaseMenuItemAction" text="Current case" />
                      <MenuItem mnemonicParsing="false" onAction="#exportPhenopacketAllCasesMenuItemAction" text="All cases" />
-                  <MenuItem mnemonicParsing="false" onAction="#exportPhenopacketAllCasesForBassMenuItemAction" text="All cases for bass" />
+                  <MenuItem mnemonicParsing="false" onAction="#exportPhenopacketAllCasesForBassMenuItemAction"
+                            text="All cases for BASS"/>
               </items>
             </Menu>
             <SeparatorMenuItem mnemonicParsing="false" />

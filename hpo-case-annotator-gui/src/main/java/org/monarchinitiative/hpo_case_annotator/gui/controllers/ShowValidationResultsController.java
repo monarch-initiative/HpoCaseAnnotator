@@ -103,7 +103,7 @@ public final class ShowValidationResultsController {
 
     void setValidationResult(DiseaseCase diseaseCase, List<ValidationResult> result) {
         for (ValidationResult vr : result) {
-            ValidationLine line = new ValidationLine(ModelUtils.getNameFor(diseaseCase), vr);
+            ValidationLine line = new ValidationLine(ModelUtils.getFileNameFor(diseaseCase), vr);
             validationResultsTableView.getItems().add(line);
         }
 

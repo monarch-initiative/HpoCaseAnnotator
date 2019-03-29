@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.protobuf.InvalidProtocolBufferException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -9,7 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.StackPane;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -35,7 +35,6 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
@@ -122,6 +121,66 @@ public final class MainController {
             return PopUps.getToggleChoiceFromUser(Arrays.asList(Codecs.SupportedDiseaseCaseFormat.values()), "Choose which format to use", "Model directory contains models stored in multiple formats")
                     .orElse(null);
         }
+    }
+
+    /**
+     * Use this method to read all the {@link DiseaseCase} models present in the <code>where</code> directory
+     *
+     * @param where {@link File} representing existing but possibly empty directory with files containing {@link DiseaseCase}
+     *              data.
+     * @return possibly empty {@link Map} of files and corresponding {@link DiseaseCase}s
+     */
+    private static Map<File, DiseaseCase> readDiseaseCasesFromDirectory(File where) {
+        if (where == null || !where.isDirectory()) {
+            PopUps.showInfoMessage("Set curated files directory first", "Unable to show curated publications");
+            return Collections.emptyMap();
+        }
+
+        // at this point `where` is a directory (possibly empty)
+        // we will only consider disease cases stored in `formatToUse` (either JSON or XML at this point)
+
+        LOGGER.debug("Figuring out how to parse data in '{}'", where);
+        Codecs.SupportedDiseaseCaseFormat formatToUse = figureOutWhichFormatToUse(where);
+        if (formatToUse == null) {
+            LOGGER.warn("Unable to choose the proper way to decode the data, asking user");
+            Optional<Codecs.SupportedDiseaseCaseFormat> toggleChoiceFromUser = PopUps.getToggleChoiceFromUser(Arrays.asList(Codecs.SupportedDiseaseCaseFormat.values()),
+                    String.format("What encoding is used for models in \n'%s'?", where),
+                    "Read data");
+            if (toggleChoiceFromUser.isPresent()) {
+                formatToUse = toggleChoiceFromUser.get();
+            } else {
+                return Collections.emptyMap();
+            }
+        }
+        final Codecs.SupportedDiseaseCaseFormat selectedFormat = formatToUse;
+
+        // create decoding function
+        Function<InputStream, Optional<DiseaseCase>> decodingFunction;
+        switch (selectedFormat) {
+            case JSON:
+                decodingFunction = ProtoJSONModelParser::readDiseaseCase;
+                break;
+            case XML:
+                decodingFunction = XMLModelParser::loadDiseaseCase;
+                break;
+            default:
+                LOGGER.warn("Unable to create decoder for selected format '{}'", selectedFormat);
+                return Collections.emptyMap();
+        }
+
+        // decode the files
+        File[] files = where.listFiles(f -> f.getName().matches(Codecs.SupportedDiseaseCaseFormat.getRegexMap().get(selectedFormat)));
+
+        Map<File, DiseaseCase> models = new HashMap<>();
+        for (File path : files) { // this should not be null (precondition in javadoc)
+            try (InputStream is = new FileInputStream(path)) {
+                decodingFunction.apply(is)
+                        .ifPresent(dc -> models.put(path, dc));
+            } catch (IOException e) {
+                LOGGER.warn("Unable to decode file '{}'", path.getAbsolutePath(), e);
+            }
+        }
+        return ImmutableMap.copyOf(models);
     }
 
     @FXML
@@ -241,19 +300,11 @@ public final class MainController {
     @FXML
     void showCuratedPublicationsMenuItemAction() {
         File where = optionalResources.getDiseaseCaseDir();
-        if (where == null || !where.isDirectory()) {
-            PopUps.showInfoMessage("Set curated files directory first", "Unable to show curated publications");
-            return;
-        }
-        Collection<DiseaseCase> models = smartDecodingOfDiseaseCasesInDirectory(where);
-        if (models.isEmpty()) {
-            PopUps.showInfoMessage(String.format("No models in directory %s", where.getPath()), "Show curated publications");
-            return;
-        }
+        Map<File, DiseaseCase> models = readDiseaseCasesFromDirectory(where);
 
         try {
             ShowPublicationsController controller = new ShowPublicationsController(hostServices);
-            controller.setData(models);
+            controller.setData(models.values());
             Parent parent = FXMLLoader.load(ShowPublicationsController.class.getResource("ShowPublicationsView.fxml"),
                     resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
             Stage stage = new Stage();
@@ -265,49 +316,6 @@ public final class MainController {
             LOGGER.warn("Unable to display dialog for showing curated publications", e);
             PopUps.showException("Show curated publications", "Error", "Unable to display dialog for showing curated publications", e);
         }
-    }
-
-    /**
-     * @param where {@link File} representing existing but possibly empty directory with files containing {@link DiseaseCase}
-     *              data. Must <em>not</em> be <code>null</code>
-     * @return {@link Collection} of {@link DiseaseCase}s, empty if the directory was empty
-     */
-    private Collection<DiseaseCase> smartDecodingOfDiseaseCasesInDirectory(File where) {
-        // at this point `where` is a directory (possibly empty)
-        // we will only consider disease cases stored in `formatToUse` (either JSON or XML at this point)
-        Codecs.SupportedDiseaseCaseFormat formatToUse = figureOutWhichFormatToUse(where);
-        if (formatToUse == null) {
-            LOGGER.warn("Unable to choose the proper format to decode data in '{}'", where.getAbsolutePath());
-            return Collections.emptyList();
-        }
-
-        // create decoding function
-        Function<InputStream, Optional<DiseaseCase>> decodingFunction;
-        switch (formatToUse) {
-            case JSON:
-                decodingFunction = ProtoJSONModelParser::readDiseaseCase;
-                break;
-            case XML:
-                decodingFunction = XMLModelParser::loadDiseaseCase;
-                break;
-            default:
-                LOGGER.warn("Unable to create decoder for selected format '{}'", formatToUse);
-                return Collections.emptyList();
-        }
-
-        // decode the files
-        File[] files = where.listFiles(f -> f.getName().matches(Codecs.SupportedDiseaseCaseFormat.getRegexMap().get(formatToUse)));
-
-        Collection<DiseaseCase> models = new ArrayList<>();
-        for (File path : files) { // this should not be null (precondition in javadoc)
-            try (InputStream is = new FileInputStream(path)) {
-                decodingFunction.apply(is)
-                        .ifPresent(models::add);
-            } catch (IOException e) {
-                LOGGER.warn("Unable to decode file '{}'", path.getAbsolutePath(), e);
-            }
-        }
-        return models;
     }
 
     @FXML
@@ -335,19 +343,14 @@ public final class MainController {
     void validateAllFilesMenuItemAction() {
         // read all model files
         File where = optionalResources.getDiseaseCaseDir();
-        if (where == null || !where.isDirectory()) {
-            PopUps.showInfoMessage("Set curated files directory first", "Unable to run validation");
-            return;
-        }
-        Collection<DiseaseCase> models = smartDecodingOfDiseaseCasesInDirectory(where);
+        Map<File, DiseaseCase> models = readDiseaseCasesFromDirectory(where);
         if (models.isEmpty()) {
             PopUps.showInfoMessage(String.format("No models in directory %s", where.getPath()), "Validate all cases");
             return;
         }
 
-
         ValidationRunner<DiseaseCase> runner = ValidationRunner.forAllValidations(assemblies);
-        Map<DiseaseCase, List<ValidationResult>> validationResults = runner.validateModels(models);
+        Map<DiseaseCase, List<ValidationResult>> validationResults = runner.validateModels(models.values());
 
         try {
             ShowValidationResultsController controller = new ShowValidationResultsController();
@@ -367,47 +370,15 @@ public final class MainController {
 
     @FXML
     void exportToCSVMenuItemAction() {
-        final Optional<Codecs.SupportedDiseaseCaseFormat> toggleChoiceFromUser = PopUps.getToggleChoiceFromUser(Arrays.asList(Codecs.SupportedDiseaseCaseFormat.values()),
-                String.format("What encoding is used for models in \n'%s'?", optionalResources.getDiseaseCaseDir().getAbsolutePath()),
-                "Export as CSV");
-        if (!toggleChoiceFromUser.isPresent()) {
-            return;
-        }
-
-
-        final ModelParser parser;
-        switch (toggleChoiceFromUser.get()) {
-            case JSON:
-                parser = new ProtoJSONModelParser(optionalResources.getDiseaseCaseDir().toPath());
-                break;
-            case XML:
-                parser = new XMLModelParser(optionalResources.getDiseaseCaseDir());
-                break;
-            default:
-                LOGGER.warn("Unrecognized choice '{}'", toggleChoiceFromUser.get());
-                return;
-        }
-
-        // read all the cases
-        Set<DiseaseCase> cases = new HashSet<>();
-        for (File modelName : parser.getModelNames()) {
-            try (InputStream is = new BufferedInputStream(new FileInputStream(modelName))) {
-                parser.readModel(is)
-                        .ifPresent(cases::add);
-            } catch (FileNotFoundException e) {
-                LOGGER.warn("File '{}' not found", modelName, e);
-            } catch (IOException e) {
-                LOGGER.warn("Error reading file '{}'", modelName, e);
-            }
-        }
+        Map<File, DiseaseCase> models = readDiseaseCasesFromDirectory(optionalResources.getDiseaseCaseDir().getAbsoluteFile());
 
         ModelExporter exporter = new TSVModelExporter("\t");
         File where = PopUps.selectFileToSave(primaryStage, optionalResources.getDiseaseCaseDir(),
                 "Export variants to CSV file", "variants.tsv");
         if (where != null) {
             try (Writer writer = new FileWriter(where)) {
-                exporter.exportModels(cases, writer);
-                LOGGER.info("Exported {} cases", cases.size());
+                exporter.exportModels(models.values(), writer);
+                LOGGER.info("Exported {} cases", models.size());
             } catch (IOException e) {
                 LOGGER.warn(String.format("Error occured during variant export: %s", e.getMessage()), e);
             }
@@ -417,61 +388,29 @@ public final class MainController {
 
     @FXML
     private void exportPhenopacketAllCasesMenuItemAction() {
-        System.out.println("Export all phenopackets");
-        final Optional<Codecs.SupportedDiseaseCaseFormat> toggleChoiceFromUser = PopUps.getToggleChoiceFromUser(Arrays.asList(Codecs.SupportedDiseaseCaseFormat.values()),
-                String.format("What encoding is used for models in \n'%s'?", optionalResources.getDiseaseCaseDir().getAbsolutePath()),
-                "Export as CSV");
-        if (!toggleChoiceFromUser.isPresent()) {
-            return;
-        }
 
-        Codecs.SupportedDiseaseCaseFormat encoding = toggleChoiceFromUser.get();
-        final ModelParser parser;
-        switch (encoding) {
-            case JSON:
-                parser = new ProtoJSONModelParser(optionalResources.getDiseaseCaseDir().toPath());
-                break;
-            case XML:
-                parser = new XMLModelParser(optionalResources.getDiseaseCaseDir());
-                break;
-            default:
-                LOGGER.warn("Unrecognized choice '{}'", encoding);
-                return;
-        }
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Choose directory to store all cases as phenopackets");
-        File selectedDirectory = directoryChooser.showDialog(primaryStage);
+        Map<File, DiseaseCase> models = readDiseaseCasesFromDirectory(optionalResources.getDiseaseCaseDir());
 
-        if (selectedDirectory == null) {
-            LOGGER.warn("Could not get directory to write all phenopackets");
-            PopUps.showInfoMessage("Error", "Could not get directory to write all phenopackets");
-            return;
-        }
-        // read all the cases
-        Map<String, DiseaseCase> casemap = new HashMap<>();
-        for (File modelName : parser.getModelNames()) {
-            String basename = modelName.getName(); // this is the base name
-            basename = basename.replace(".json", ".phenopacket");
-            String abspath = String.format("%s%s%s", selectedDirectory, File.separator, basename);
-            try (InputStream is = new BufferedInputStream(new FileInputStream(modelName))) {
-                Optional<DiseaseCase> dcase = parser.readModel(is);
-                dcase.ifPresent(diseaseCase -> casemap.put(abspath, diseaseCase));
-            } catch (FileNotFoundException e) {
-                LOGGER.warn("File '{}' not found", modelName, e);
-            } catch (IOException e) {
-                LOGGER.warn("Error reading file '{}'", modelName, e);
+        File where = PopUps.selectDirectory(primaryStage, optionalResources.getDiseaseCaseDir(),
+                "Select export directory");
+
+        if (where != null) {
+            int counter = 0;
+            for (DiseaseCase model : models.values()) {
+                // we're exporting in JSON format
+                String fileName = ModelUtils.getFileNameFor(model) + ".json";
+                File target = new File(where, fileName);
+                try (BufferedWriter writer = Files.newBufferedWriter(target.toPath())) {
+                    final Phenopacket packet = PhenoPacketCodec.diseaseCaseToPhenopacket(model);
+                    LOGGER.trace("Writing phenopacket to '{}'", target);
+                    PhenoPacketCodec.writeAsPhenopacket(writer, packet);
+                    counter++;
+                } catch (IOException e) {
+                    LOGGER.warn("Error occurred during phenopacket export", e);
+                    PopUps.showException("Error", "Error occurred during phenopacket export", e.getMessage(), e);
+                }
             }
-        }
-
-        for (Map.Entry<String, DiseaseCase> entry : casemap.entrySet()) {
-            try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(entry.getKey()))) {
-                final Phenopacket packet = PhenoPacketCodec.diseaseCaseToPhenopacket(entry.getValue());
-                PhenoPacketCodec.writeAsPhenopacket(writer, packet);
-                LOGGER.trace("Writing phenopacket to {}", entry.getKey());
-            } catch (IOException e) {
-                LOGGER.warn("Error occured during Phenopacket export", e);
-                PopUps.showException("Error", "Error occured during Phenopacket export", e.getMessage(), e);
-            }
+            LOGGER.info("Exported {} phenopackets", counter);
         }
     }
 
@@ -491,7 +430,7 @@ public final class MainController {
     @FXML
     public void exportPhenopacketCurrentCaseMenuItemAction() {
         DiseaseCase diseaseCase = dataController.getData();
-        String suggestedFileName = ModelUtils.getNameFor(diseaseCase) + ".phenopacket";
+        String suggestedFileName = ModelUtils.getFileNameFor(diseaseCase) + ".phenopacket";
         String title = "Save as Phenopacket";
 
         final FileChooser filechooser = new FileChooser();
@@ -522,45 +461,13 @@ public final class MainController {
      */
     @FXML
     public void exportPhenopacketAllCasesForBassMenuItemAction() {
+        Map<File, DiseaseCase> models = readDiseaseCasesFromDirectory(optionalResources.getDiseaseCaseDir());
         // TODO - implement
     }
 
     @FXML
     void exportPhenoModelsMenuItemAction() {
-
-        final Optional<Codecs.SupportedDiseaseCaseFormat> toggleChoiceFromUser = PopUps.getToggleChoiceFromUser(Arrays.asList(Codecs.SupportedDiseaseCaseFormat.values()),
-                String.format("What encoding is used for models in \n'%s'?", optionalResources.getDiseaseCaseDir().getAbsolutePath()),
-                "Export as CSV");
-        if (!toggleChoiceFromUser.isPresent()) {
-            return;
-        }
-
-        Codecs.SupportedDiseaseCaseFormat encoding = toggleChoiceFromUser.get();
-        final ModelParser parser;
-        switch (encoding) {
-            case JSON:
-                parser = new ProtoJSONModelParser(optionalResources.getDiseaseCaseDir().toPath());
-                break;
-            case XML:
-                parser = new XMLModelParser(optionalResources.getDiseaseCaseDir());
-                break;
-            default:
-                LOGGER.warn("Unrecognized choice '{}'", encoding);
-                return;
-        }
-
-        // read all the cases
-        Set<DiseaseCase> cases = new HashSet<>();
-        for (File modelName : parser.getModelNames()) {
-            try (InputStream is = new BufferedInputStream(new FileInputStream(modelName))) {
-                parser.readModel(is)
-                        .ifPresent(cases::add);
-            } catch (FileNotFoundException e) {
-                LOGGER.warn("File '{}' not found", modelName, e);
-            } catch (IOException e) {
-                LOGGER.warn("Error reading file '{}'", modelName, e);
-            }
-        }
+        Map<File, DiseaseCase> models = readDiseaseCasesFromDirectory(optionalResources.getDiseaseCaseDir());
 
         // write the cases to selected file
         ModelExporter phenoExporter = new PhenoModelExporter("\t");
@@ -568,7 +475,8 @@ public final class MainController {
                 "Export variants in format required by GPI project", "gpi_variants.tsv");
         if (where != null) {
             try (Writer writer = new FileWriter(where)) {
-                phenoExporter.exportModels(cases, writer);
+                phenoExporter.exportModels(models.values(), writer);
+                LOGGER.info("Exported {} models", models.size());
             } catch (IOException e) {
                 LOGGER.warn(String.format("Error occured during variant export: %s", e.getMessage()), e);
             }
@@ -659,7 +567,7 @@ public final class MainController {
             //        fileChooser.setSelectedExtensionFilter(jsonFileFormat);
 
             fileChooser.setTitle(conversationTitle);
-            String suggestedName = ModelUtils.getNameFor(model) + ".json";
+            String suggestedName = ModelUtils.getFileNameFor(model) + ".json";
             fileChooser.setInitialFileName(suggestedName);
             fileChooser.setInitialDirectory(optionalResources.getDiseaseCaseDir());
             fileChooser.getExtensionFilters().addAll(jsonFileFormat, xmlFileFormat);

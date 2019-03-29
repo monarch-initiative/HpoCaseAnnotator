@@ -11,10 +11,16 @@ public class ModelUtils {
         // private no-op
     }
 
-    public static String getNameFor(DiseaseCase diseaseCase) {
-        Publication publication = diseaseCase.getPublication();
+    /**
+     * Make String that is usable as file name of <code>model</code>. No suffix is added!
+     *
+     * @param model {@link DiseaseCase} to get filename for
+     * @return String suitable to be used as filename of <code>model</code>
+     */
+    public static String getFileNameFor(DiseaseCase model) {
+        Publication publication = model.getPublication();
         String ye = (publication.getYear() == null) ? "year" : publication.getYear();
-        String gn = (diseaseCase.getGene().getSymbol() == null) ? "genesymbol" : diseaseCase.getGene().getSymbol();
+        String gn = (model.getGene().getSymbol() == null) ? "genesymbol" : model.getGene().getSymbol();
         return String.format("%s-%s-%s", getFirstAuthorsSurname(publication), ye, gn);
     }
 
