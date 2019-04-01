@@ -231,15 +231,14 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
         private static String hcaGenomeAssemblyToPhenoPacketGenomeAssembly(org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly genomeAssembly) {
             switch (genomeAssembly) {
                 case GRCH_37:
-                    return GenomeAssembly.GRCH_37.name();
+                    return "GRCh37";
                 case GRCH_38:
-                    return GenomeAssembly.GRCH_38.name();
-                case UNKNOWN_GENOME_ASSEMBLY:
-                case UNRECOGNIZED:
-                    return GenomeAssembly.UNKNOWN_ASSEMBLY.name();
+                    return "GRCh38";
                 default:
                     LOGGER.warn("Unknown genome assembly: {}", genomeAssembly);
-                    return GenomeAssembly.UNKNOWN_ASSEMBLY.name();
+                case UNKNOWN_GENOME_ASSEMBLY:
+                case UNRECOGNIZED:
+                    return "UNKNOWN";
             }
         }
 
