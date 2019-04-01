@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.model;
+package org.monarchinitiative.hpo_case_annotator.model.test_resources;
 
 import org.phenopackets.schema.v1.Family;
 

@@ -21,12 +21,14 @@ import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.StartupTask;
 import org.monarchinitiative.hpo_case_annotator.model.codecs.Codecs;
+import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToBassPhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToPhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.model.io.*;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.ModelUtils;
 import org.phenopackets.schema.v1.Phenopacket;
+import org.phenopackets.schema.v1.io.PhenopacketFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -406,7 +408,7 @@ public final class MainController {
                 try (BufferedWriter writer = Files.newBufferedWriter(target.toPath())) {
                     final Phenopacket packet = codec.encode(model);
                     LOGGER.trace("Writing phenopacket to '{}'", target);
-                    codec.writeAsPhenopacket(writer, packet);
+                    writer.write(PhenopacketFormat.toJson(packet));
                     counter++;
                 } catch (IOException e) {
                     LOGGER.warn("Error occurred during phenopacket export", e);
@@ -449,7 +451,7 @@ public final class MainController {
         if (where != null) {
             try (BufferedWriter writer = Files.newBufferedWriter(where.toPath())) {
                 final Phenopacket packet = codec.encode(diseaseCase);
-                codec.writeAsPhenopacket(writer, packet);
+                writer.write(PhenopacketFormat.toJson(packet));
             } catch (IOException e) {
                 LOGGER.warn("Error occured during Phenopacket export", e);
                 PopUps.showException(title, "Error occured during Phenopacket export", e.getMessage(), e);
@@ -466,7 +468,30 @@ public final class MainController {
     @FXML
     public void exportPhenopacketAllCasesForBassMenuItemAction() {
         Map<File, DiseaseCase> models = readDiseaseCasesFromDirectory(optionalResources.getDiseaseCaseDir());
-        // TODO - implement
+
+        File where = PopUps.selectDirectory(primaryStage, optionalResources.getDiseaseCaseDir(),
+                "Select export directory");
+        DiseaseCaseToBassPhenopacketCodec codec = Codecs.bassPhenopacketCodec();
+
+        if (where != null) {
+            int counter = 0;
+            for (DiseaseCase model : models.values()) {
+                // we're exporting in JSON format
+                String fileName = ModelUtils.getFileNameFor(model) + ".json";
+                File target = new File(where, fileName);
+                try (OutputStream os = Files.newOutputStream(target.toPath())) {
+                    final Phenopacket packet = codec.encode(model);
+                    LOGGER.trace("Writing phenopacket to '{}'", target);
+                    os.write(PhenopacketFormat.toJson(packet).getBytes(Charset.forName("UTF-8")));
+                    counter++;
+                } catch (IOException e) {
+                    LOGGER.warn("Error occurred during phenopacket export", e);
+                    PopUps.showException("Error", "Error occurred during phenopacket export", e.getMessage(), e);
+                }
+            }
+            LOGGER.info("Exported {} phenopackets", counter);
+            PopUps.showInfoMessage(String.format("Exported %d phenopackets", counter), "Export phenopackets");
+        }
     }
 
     @FXML

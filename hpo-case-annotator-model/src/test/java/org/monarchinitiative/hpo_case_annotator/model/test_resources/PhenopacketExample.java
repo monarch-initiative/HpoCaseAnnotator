@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.model;
+package org.monarchinitiative.hpo_case_annotator.model.test_resources;
 
 import com.google.protobuf.Timestamp;
 import org.phenopackets.schema.v1.Phenopacket;
@@ -6,9 +6,9 @@ import org.phenopackets.schema.v1.core.*;
 
 import java.time.Instant;
 
-import static org.monarchinitiative.hpo_case_annotator.model.io.PhenoPacketTestUtil.*;
+import static org.monarchinitiative.hpo_case_annotator.model.test_resources.PhenoPacketTestUtil.*;
 
-public class PhenopacketExample {
+class PhenopacketExample {
 
     /**
      * @return {@link Phenopacket} populated with some data
@@ -26,7 +26,7 @@ public class PhenopacketExample {
                 .build();
     }
 
-    public static Individual getSubject() {
+    private static Individual getSubject() {
         return Individual.newBuilder()
                 .setId("Ed")
                 .setDatasetId("TEST_DATASET")
@@ -40,7 +40,7 @@ public class PhenopacketExample {
                 .build();
     }
 
-    public static Phenotype getCongenitalSyndactyly() {
+    private static Phenotype getCongenitalSyndactyly() {
         return Phenotype.newBuilder() // severe syndactyly with congenital onset on the right side
                 .setType(ontologyClass("HP:0001159", "Syndactyly"))
                 .setNegated(false) // is present
@@ -57,7 +57,7 @@ public class PhenopacketExample {
                 .build();
     }
 
-    public static Phenotype getNotCryptorchidism() {
+    private static Phenotype getNotCryptorchidism() {
         return Phenotype.newBuilder()
                 .setType(ontologyClass("HP:0000028", "Cryptorchidism"))
                 .setNegated(true)
@@ -71,14 +71,14 @@ public class PhenopacketExample {
                 .build();
     }
 
-    public static Gene getAbcc9Gene() {
+    private static Gene getAbcc9Gene() {
         return Gene.newBuilder()
                 .setId("HGNC:10060")
                 .setSymbol("ABCC9")
                 .build();
     }
 
-    public static Variant getAbcc9Variant() {
+    private static Variant getAbcc9Variant() {
         return Variant.newBuilder()
                 .setVcfAllele(VcfAllele.newBuilder()
                         .setId("hg19")
@@ -92,14 +92,14 @@ public class PhenopacketExample {
                 .build();
     }
 
-    public static Disease getHypertrichoticOsteochondrodysplasia() {
+    private static Disease getHypertrichoticOsteochondrodysplasia() {
         return Disease.newBuilder()
                 .setTerm(ontologyClass("OMIM:239850", "Hypertrichotic Osteochondrodysplasia"))
                 .setAgeOfOnset(Age.newBuilder().setAge("P00Y00M01D").build())
                 .build();
     }
 
-    public static MetaData getMetaData() {
+    private static MetaData getMetaData() {
         return MetaData.newBuilder()
                 .setCreated(Timestamp.newBuilder()
                         .setSeconds(Instant.parse("2019-03-20T18:14:54Z").getEpochSecond())
@@ -113,7 +113,7 @@ public class PhenopacketExample {
                 .build();
     }
 
-    public static Resource getNcbiOrganismalClassificationResource() {
+    private static Resource getNcbiOrganismalClassificationResource() {
         return Resource.newBuilder()
                 .setId("ncbitaxon")
                 .setName("NCBI organismal classification")
@@ -124,7 +124,7 @@ public class PhenopacketExample {
                 .build();
     }
 
-    public static Resource getEvidenceOntologyResource() {
+    private static Resource getEvidenceOntologyResource() {
         return Resource.newBuilder()
                 .setId("eco")
                 .setName("Evidence ontology")
@@ -135,7 +135,7 @@ public class PhenopacketExample {
                 .build();
     }
 
-    public static Resource getGenotypeOntologyResource() {
+    private static Resource getGenotypeOntologyResource() {
         return Resource.newBuilder()
                 .setId("geno")
                 .setName("Genotype Ontology")
@@ -146,7 +146,7 @@ public class PhenopacketExample {
                 .build();
     }
 
-    public static Resource getHPOResource() {
+    private static Resource getHPOResource() {
         return Resource.newBuilder()
                 .setId("hp")
                 .setName("human phenotype ontology")

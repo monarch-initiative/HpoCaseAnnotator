@@ -2,23 +2,17 @@ package org.monarchinitiative.hpo_case_annotator.model.codecs;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.monarchinitiative.hpo_case_annotator.model.TestResources;
-import org.monarchinitiative.hpo_case_annotator.model.io.PhenoPacketCodecTest;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.test_resources.TestResources;
 import org.phenopackets.schema.v1.Phenopacket;
 import org.phenopackets.schema.v1.core.*;
 
-import java.io.BufferedReader;
-import java.io.StringWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.monarchinitiative.hpo_case_annotator.model.io.PhenoPacketTestUtil.ontologyClass;
+import static org.monarchinitiative.hpo_case_annotator.model.test_resources.PhenoPacketTestUtil.ontologyClass;
 
 public class DiseaseCaseToPhenopacketCodecTest {
 
@@ -110,24 +104,6 @@ public class DiseaseCaseToPhenopacketCodecTest {
         final MetaData metaData = packet.getMetaData();
         assertThat(metaData.getCreatedBy(), is("HPO:ahegde"));
         assertThat(metaData.getResourcesList(), is(DiseaseCaseToPhenopacketCodec.RESOURCES));
-    }
-
-    @Test
-    public void writePhenopacketToWriter() throws Exception {
-        // arrange
-        final Phenopacket packet = TestResources.mockPhenopacket();
-        StringWriter writer = new StringWriter();
-        String expected;
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(PhenoPacketCodecTest.class.getResource("examplePhenopacket_v0.3.0.json").toURI()))) {
-            expected = reader.lines().collect(Collectors.joining("\n"));
-        }
-
-        // act
-        instance.writeAsPhenopacket(writer, packet);
-
-        // assert
-        assertThat(writer.toString(), is(equalTo(expected)));
-
     }
 
 }

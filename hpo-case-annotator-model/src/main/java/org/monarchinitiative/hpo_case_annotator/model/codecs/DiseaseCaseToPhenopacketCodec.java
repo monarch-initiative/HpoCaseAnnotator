@@ -5,12 +5,9 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 import org.phenopackets.schema.v1.Phenopacket;
 import org.phenopackets.schema.v1.core.*;
-import org.phenopackets.schema.v1.io.PhenopacketFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
@@ -48,10 +45,6 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
         // package-private no-op
     }
 
-    public void writeAsPhenopacket(Writer writer, Phenopacket packet) throws IOException {
-        writer.write(PhenopacketFormat.toJson(packet));
-    }
-
     private static OntologyClass ontologyClass(String id, String label) {
         return OntologyClass.newBuilder()
                 .setId(id)
@@ -73,7 +66,7 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
      *
      * @return {@link List} of {@link Resource}s
      */
-    private static List<Resource> makeResources() {
+    static List<Resource> makeResources() {
         return Arrays.asList(
                 Resource.newBuilder()
                         .setId("hp")
@@ -113,6 +106,12 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
                         .setIriPrefix("http://purl.obolibrary.org/obo/ECO_")
                         .setUrl("http://purl.obolibrary.org/obo/eco.owl")
                         .setVersion("2018-11-10")
+                        .build(),
+                Resource.newBuilder()
+                        .setId("omim")
+                        .setName("Online Mendelian Inheritance in Man")
+                        .setNamespacePrefix("OMIM")
+                        .setUrl("https://www.omim.org")
                         .build()
         );
     }

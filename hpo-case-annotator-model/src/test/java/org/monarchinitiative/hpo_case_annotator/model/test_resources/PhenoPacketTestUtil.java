@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.model.io;
+package org.monarchinitiative.hpo_case_annotator.model.test_resources;
 
 import com.google.protobuf.Timestamp;
 import org.phenopackets.schema.v1.core.OntologyClass;

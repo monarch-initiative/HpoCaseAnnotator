@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.model;
+package org.monarchinitiative.hpo_case_annotator.model.test_resources;
 
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.phenopackets.schema.v1.Family;
@@ -10,7 +10,7 @@ import java.net.URL;
  * This class exposes data (e.g. {@link Phenopacket}s, {@link DiseaseCase}s) suitable for testing the
  * <code>hpo-case-annotator-model</code> classes.
  */
-public class TestResources {
+public final class TestResources {
 
     public static final URL TEST_XML_MODEL_FILE_DIR = TestResources.class.getResource("/models/xml");
 

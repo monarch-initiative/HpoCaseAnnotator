@@ -3,8 +3,8 @@ package org.monarchinitiative.hpo_case_annotator.model.io;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.monarchinitiative.hpo_case_annotator.model.TestResources;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.test_resources.TestResources;
 
 import java.io.InputStream;
 import java.io.StringWriter;

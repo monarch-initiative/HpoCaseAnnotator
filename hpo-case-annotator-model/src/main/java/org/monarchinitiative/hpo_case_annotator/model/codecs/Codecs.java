@@ -26,16 +26,10 @@ public final class Codecs {
         return new DiseaseCaseToDiseaseCaseModelCodec();
     }
 
-    @Deprecated
-    public static DiseaseCaseModel diseaseCase2DiseaseCaseModel(DiseaseCase dc) {
-        return null;
+    public static DiseaseCaseToBassPhenopacketCodec bassPhenopacketCodec() {
+        return new DiseaseCaseToBassPhenopacketCodec();
     }
 
-
-    @Deprecated
-    public static DiseaseCase diseaseCaseModel2DiseaseCase(DiseaseCaseModel dcm) {
-        return null;
-    }
 
     /**
      * Biocurated data can be represented in file in these formats.

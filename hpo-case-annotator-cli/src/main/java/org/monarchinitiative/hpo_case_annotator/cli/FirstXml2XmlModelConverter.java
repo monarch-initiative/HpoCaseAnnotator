@@ -47,7 +47,7 @@ class FirstXml2XmlModelConverter {
         LOGGER.info("Found {} files in directory '{}'", inputParser.getModelNames().size(), sourceDir.getAbsolutePath());
         for (File xmlPath : inputParser.getModelNames()) {
             LOGGER.info("Processing {}", xmlPath);
-            DiseaseCase model = Codecs.diseaseCaseModel2DiseaseCase(inputParser.readModel(new FileInputStream(xmlPath)));
+            DiseaseCase model = Codecs.diseaseCaseToDiseaseCaseModelCodec().decode(inputParser.readModel(new FileInputStream(xmlPath)));
             try (OutputStream os = new FileOutputStream(new File(destDir, xmlPath.getName()))) {
                 outputParser.saveModel(os, model);
             }

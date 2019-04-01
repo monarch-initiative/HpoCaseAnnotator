@@ -1,11 +1,11 @@
-package org.monarchinitiative.hpo_case_annotator.model;
+package org.monarchinitiative.hpo_case_annotator.model.test_resources;
 
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 
 /**
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
  */
-public class DiseaseCaseModelExample {
+class DiseaseCaseModelExample {
 
     // TODO - add other models for testing here
 
