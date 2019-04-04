@@ -239,17 +239,19 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
     @Singleton
     private File appHomeDir() throws IOException {
         String osName = System.getProperty("os.name").toLowerCase();
-        final String appVersion = System.getProperty(Play.HCA_VERSION_PROP_KEY);
+        String appVersion = System.getProperty(Play.HCA_VERSION_PROP_KEY);
+        // we want to have one resource directory for release version and another for snapshots
+        String suffix = appVersion.endsWith("-SNAPSHOT") ? "-SNAPSHOT" : "";
 
         File appHomeDir;
         if (osName.contains("nix") || osName.contains("nux") || osName.contains("aix")) { // Unix
-            appHomeDir = new File(System.getProperty("user.home") + File.separator + ".hpo-case-annotator" + (appVersion.isEmpty() ? appVersion : "-" + appVersion));
+            appHomeDir = new File(System.getProperty("user.home") + File.separator + ".hpo-case-annotator" + suffix);
         } else if (osName.contains("win")) { // Windows
-            appHomeDir = new File(System.getProperty("user.home") + File.separator + "HpoCaseAnnotator" + (appVersion.isEmpty() ? appVersion : "-" + appVersion));
+            appHomeDir = new File(System.getProperty("user.home") + File.separator + "HpoCaseAnnotator" + suffix);
         } else if (osName.contains("mac")) { // OsX
-            appHomeDir = new File(System.getProperty("user.home") + File.separator + ".hpo-case-annotator" + (appVersion.isEmpty() ? appVersion : "-" + appVersion));
+            appHomeDir = new File(System.getProperty("user.home") + File.separator + ".hpo-case-annotator" + suffix);
         } else { // unknown platform
-            appHomeDir = new File(System.getProperty("user.home") + File.separator + "HpoCaseAnnotator" + (appVersion.isEmpty() ? appVersion : "-" + appVersion));
+            appHomeDir = new File(System.getProperty("user.home") + File.separator + "HpoCaseAnnotator" + suffix);
         }
 
         if (!appHomeDir.exists()) {

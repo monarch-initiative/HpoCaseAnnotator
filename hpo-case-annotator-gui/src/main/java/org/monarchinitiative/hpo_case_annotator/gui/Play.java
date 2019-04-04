@@ -66,7 +66,7 @@ public class Play extends Application {
 
         Parent rootNode = FXMLLoader.load(MainController.class.getResource("MainView.fxml"), resourceBundle,
                 new JavaFXBuilderFactory(), injector::getInstance);
-        window.setTitle(WINDOW_TITLE);
+        window.setTitle(String.format("%s : %s", WINDOW_TITLE, System.getProperty(HCA_VERSION_PROP_KEY)));
         window.getIcons().add(new Image(getClass().getResourceAsStream("/img/app-icon.png")));
         window.setScene(new Scene(rootNode));
         window.show();
