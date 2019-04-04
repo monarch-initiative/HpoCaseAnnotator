@@ -44,14 +44,28 @@ public class DiseaseCaseToBassPhenopacketCodec implements Codec<DiseaseCase, Phe
     private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.Variant, Variant> hcaVariantToPhenopacketVariant() {
         return v -> Variant.newBuilder()
                 .setVcfAllele(VcfAllele.newBuilder()
+                        .setGenomeAssembly(hcaGenomeAssemblyToPhenopacketGenomeAssembly(v.getVariantPosition().getGenomeAssembly()))
                         .setChr(v.getVariantPosition().getContig())
                         .setPos(v.getVariantPosition().getPos())
                         .setRef(v.getVariantPosition().getRefAllele())
                         .setAlt(v.getVariantPosition().getAltAllele())
                         .setInfo(encodeInfoData(v))
                         .build())
-                .setGenotype(hcaGenotypeToPhenopacketGenotype(v.getGenotype()))
+                .setZygosity(hcaGenotypeToPhenopacketZygosity(v.getGenotype()))
                 .build();
+    }
+
+    private static String hcaGenomeAssemblyToPhenopacketGenomeAssembly(GenomeAssembly assembly) {
+        switch (assembly) {
+            case GRCH_37:
+                return "GRCh37";
+            case GRCH_38:
+                return "GRCh38";
+            case UNKNOWN_GENOME_ASSEMBLY:
+            case UNRECOGNIZED:
+            default:
+                return "UNKNOWN";
+        }
     }
 
     /**
@@ -63,7 +77,7 @@ public class DiseaseCaseToBassPhenopacketCodec implements Codec<DiseaseCase, Phe
                 "CONSEQUENCE=" + v.getConsequence());
     }
 
-    private static org.phenopackets.schema.v1.core.OntologyClass hcaGenotypeToPhenopacketGenotype(Genotype genotype) {
+    private static org.phenopackets.schema.v1.core.OntologyClass hcaGenotypeToPhenopacketZygosity(Genotype genotype) {
         switch (genotype) {
             case HETEROZYGOUS:
                 return DiseaseCaseToPhenopacketCodec.HET;
@@ -73,15 +87,15 @@ public class DiseaseCaseToBassPhenopacketCodec implements Codec<DiseaseCase, Phe
                 return DiseaseCaseToPhenopacketCodec.HEMIZYGOUS;
             case HOMOZYGOUS_REFERENCE:
             case UNDEFINED:
+            default:
                 return org.phenopackets.schema.v1.core.OntologyClass.getDefaultInstance();
         }
-        return null;
     }
 
     private static Function<OntologyClass, Phenotype> hcaPhenotypeToPhenopacketPhenotype(Publication publication) {
         return oc -> Phenotype.newBuilder()
                 .setType(org.phenopackets.schema.v1.core.OntologyClass.newBuilder().setId(oc.getId()).setLabel(oc.getLabel()).build())
-                .setNegated(oc.getNotObserved())
+                .setAbsent(oc.getNotObserved())
                 .addEvidence(Evidence.newBuilder()
                         .setEvidenceCode(DiseaseCaseToPhenopacketCodec.TRACEABLE_AUTHOR_STATEMENT)
                         .setReference(ExternalReference.newBuilder()

@@ -2,6 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.util.JsonFormat;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,7 +29,6 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.ModelUtils;
 import org.phenopackets.schema.v1.Phenopacket;
-import org.phenopackets.schema.v1.io.PhenopacketFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +51,8 @@ import java.util.stream.Collectors;
 public final class MainController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
+
+    private static final JsonFormat.Printer PRINTER = JsonFormat.printer();
 
     private final Stage primaryStage;
 
@@ -408,7 +410,8 @@ public final class MainController {
                 try (BufferedWriter writer = Files.newBufferedWriter(target.toPath())) {
                     final Phenopacket packet = codec.encode(model);
                     LOGGER.trace("Writing phenopacket to '{}'", target);
-                    writer.write(PhenopacketFormat.toJson(packet));
+                    String jsonString = PRINTER.print(packet);
+                    writer.write(jsonString);
                     counter++;
                 } catch (IOException e) {
                     LOGGER.warn("Error occurred during phenopacket export", e);
@@ -451,7 +454,8 @@ public final class MainController {
         if (where != null) {
             try (BufferedWriter writer = Files.newBufferedWriter(where.toPath())) {
                 final Phenopacket packet = codec.encode(diseaseCase);
-                writer.write(PhenopacketFormat.toJson(packet));
+                String jsonString = PRINTER.print(packet);
+                writer.write(jsonString);
             } catch (IOException e) {
                 LOGGER.warn("Error occured during Phenopacket export", e);
                 PopUps.showException(title, "Error occured during Phenopacket export", e.getMessage(), e);
@@ -479,10 +483,11 @@ public final class MainController {
                 // we're exporting in JSON format
                 String fileName = ModelUtils.getFileNameFor(model) + ".json";
                 File target = new File(where, fileName);
-                try (OutputStream os = Files.newOutputStream(target.toPath())) {
+                try (BufferedWriter writer = Files.newBufferedWriter(target.toPath())) {
                     final Phenopacket packet = codec.encode(model);
                     LOGGER.trace("Writing phenopacket to '{}'", target);
-                    os.write(PhenopacketFormat.toJson(packet).getBytes(Charset.forName("UTF-8")));
+                    String jsonString = PRINTER.print(packet);
+                    writer.write(jsonString);
                     counter++;
                 } catch (IOException e) {
                     LOGGER.warn("Error occurred during phenopacket export", e);

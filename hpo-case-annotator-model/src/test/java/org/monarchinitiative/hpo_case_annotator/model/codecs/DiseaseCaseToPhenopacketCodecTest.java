@@ -93,7 +93,7 @@ public class DiseaseCaseToPhenopacketCodecTest {
         assertThat(va.getPos(), is(31843349));
         assertThat(va.getRef(), is("A"));
         assertThat(va.getAlt(), is("G"));
-        assertThat(variant.getGenotype(), is(DiseaseCaseToPhenopacketCodec.HET));
+        assertThat(variant.getZygosity(), is(DiseaseCaseToPhenopacketCodec.HET));
 
         final List<Disease> diseasesList = packet.getDiseasesList();
         assertThat(diseasesList.size(), is(1));

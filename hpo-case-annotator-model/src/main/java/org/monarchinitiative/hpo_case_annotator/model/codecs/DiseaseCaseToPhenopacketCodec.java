@@ -132,12 +132,12 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
                 .setSubject(Individual.newBuilder()
                         .setId(familyOrProbandId)
                         .setAgeAtCollection(Age.newBuilder().setAge(data.getFamilyInfo().getAge()).build())
-                        .setSex(DiseaseCaseToPhenoPacket.sex(data.getFamilyInfo().getSex()))
+                        .setSex(DiseaseCaseToPhenopacket.sex(data.getFamilyInfo().getSex()))
                         .setTaxonomy(HOMO_SAPIENS)
                         .build())
                 // phenotype (HPO) terms
                 .addAllPhenotypes(data.getPhenotypeList().stream()
-                        .map(DiseaseCaseToPhenoPacket.phenotype(publication, metadata))
+                        .map(DiseaseCaseToPhenopacket.phenotype(publication, metadata))
                         .collect(Collectors.toList()))
                 // gene in question
                 .addGenes(Gene.newBuilder()
@@ -146,7 +146,7 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
                         .build())
                 // variants, genome assembly
                 .addAllVariants(data.getVariantList().stream()
-                        .map(DiseaseCaseToPhenoPacket.hcaVariantToPhenoPacketVariant(familyOrProbandId))
+                        .map(DiseaseCaseToPhenopacket.hcaVariantToPhenopacketVariant(familyOrProbandId))
                         .collect(Collectors.toList()))
                 // disease
                 .addDiseases(Disease.newBuilder()
@@ -171,7 +171,7 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
     /**
      * This class contains functions for mapping data from {@link DiseaseCase} into {@link Phenopacket} format.
      */
-    private static class DiseaseCaseToPhenoPacket {
+    private static class DiseaseCaseToPhenopacket {
 
         private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseCaseToPhenopacketCodec.class);
 
@@ -202,7 +202,7 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
                                     .setId(oc.getId())
                                     .setLabel(oc.getLabel())
                                     .build())
-                            .setNegated(oc.getNotObserved())
+                            .setAbsent(oc.getNotObserved())
                             .addEvidence(Evidence.newBuilder()
                                     .setEvidenceCode(TRACEABLE_AUTHOR_STATEMENT)
                                     .setReference(ExternalReference.newBuilder()
@@ -215,20 +215,20 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
                             .build();
         }
 
-        private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.Variant, Variant> hcaVariantToPhenoPacketVariant(String familyOrProbandId) {
+        private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.Variant, Variant> hcaVariantToPhenopacketVariant(String familyOrProbandId) {
             return v -> Variant.newBuilder()
                     .setVcfAllele(VcfAllele.newBuilder()
-                            .setId(hcaGenomeAssemblyToPhenoPacketGenomeAssembly(v.getVariantPosition().getGenomeAssembly()))
+                            .setId(hcaGenomeAssemblyToPhenopacketGenomeAssembly(v.getVariantPosition().getGenomeAssembly()))
                             .setChr(v.getVariantPosition().getContig())
                             .setPos(v.getVariantPosition().getPos())
                             .setRef(v.getVariantPosition().getRefAllele())
                             .setAlt(v.getVariantPosition().getAltAllele())
                             .build())
-                    .setGenotype(genotype(v.getGenotype()))
+                    .setZygosity(genotype(v.getGenotype()))
                     .build();
         }
 
-        private static String hcaGenomeAssemblyToPhenoPacketGenomeAssembly(org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly genomeAssembly) {
+        private static String hcaGenomeAssemblyToPhenopacketGenomeAssembly(org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly genomeAssembly) {
             switch (genomeAssembly) {
                 case GRCH_37:
                     return "GRCh37";

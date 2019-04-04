@@ -93,8 +93,8 @@ public class DiseaseCaseToBassPhenopacketCodecTest {
 
         // VARIANTS
         assertThat(pp.getVariantsList(), is(Collections.singletonList(Variant.newBuilder()
-                .setVcfAllele(VcfAllele.newBuilder().setChr("13").setPos(31843349).setRef("A").setAlt("G").setInfo("VCLASS=splicing;PATHOMECHANISM=splicing|3ss|disrupted;CONSEQUENCE=Exon skipping").build())
-                .setGenotype(ontologyClass("GENO:0000135", "heterozygous"))
+                .setVcfAllele(VcfAllele.newBuilder().setGenomeAssembly("GRCh37").setChr("13").setPos(31843349).setRef("A").setAlt("G").setInfo("VCLASS=splicing;PATHOMECHANISM=splicing|3ss|disrupted;CONSEQUENCE=Exon skipping").build())
+                .setZygosity(ontologyClass("GENO:0000135", "heterozygous"))
                 .build())));
 
         // DISEASES
