@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
 import com.google.inject.Injector;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -9,6 +10,7 @@ import javafx.stage.Stage;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.monarchinitiative.hpo_case_annotator.gui.DiseaseCaseModelExample;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceJUnitRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceModules;
 import org.monarchinitiative.hpo_case_annotator.gui.TestHpoCaseAnnotatorModule;
@@ -19,7 +21,9 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
 import org.testfx.framework.junit.ApplicationTest;
 
 import javax.inject.Inject;
+import java.util.concurrent.TimeUnit;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -121,6 +125,17 @@ public class SomaticVariantControllerTest extends ApplicationTest {
     public void getIncompleteVariant() {
         // we did not set any data, hence the variant is incomplete
 //        assertThat(controller.getData(), is(equalTo(Variant.getDefaultInstance()))); // TODO - implement
+    }
+
+    @Test
+    public void presentAndGetTheSameData() {
+        final Variant presented = DiseaseCaseModelExample.makeSomaticVariant();
+
+        Platform.runLater(() -> controller.presentData(presented));
+        sleep(50, TimeUnit.MILLISECONDS);
+        final Variant received = controller.getData();
+
+        assertThat(received, is(equalTo(presented)));
     }
 
 

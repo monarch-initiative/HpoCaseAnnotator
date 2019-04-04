@@ -149,6 +149,7 @@ public final class SomaticVariantController extends AbstractVariantController {
         VariantValidation validation = variant.getVariantValidation();
         regulatorTextField.setText(validation.getRegulator());
         reporterComboBox.setValue(validation.getReporterRegulation());
+        reporterResidualActivityTextField.setText(validation.getReporterResidualActivity());
         emsaComboBox.setValue(validation.getEmsaValidationPerformed() ? "yes" : "no");
         emsaTFSymbolTextField.setText(validation.getEmsaTfSymbol());
         emsaGeneIDTextField.setText(validation.getEmsaGeneId());
@@ -186,6 +187,7 @@ public final class SomaticVariantController extends AbstractVariantController {
                         .setContext(VariantValidation.Context.SOMATIC)
                         .setRegulator(regulatorTextField.getText())
                         .setReporterRegulation(reporterComboBox.getValue() == null ? "" : reporterComboBox.getValue())
+                        .setReporterResidualActivity(reporterResidualActivityTextField.getText())
                         .setEmsaValidationPerformed(emsaComboBox.getValue() != null && emsaComboBox.getValue().equals("yes"))
                         .setEmsaTfSymbol(emsaTFSymbolTextField.getText())
                         .setEmsaGeneId(emsaGeneIDTextField.getText())

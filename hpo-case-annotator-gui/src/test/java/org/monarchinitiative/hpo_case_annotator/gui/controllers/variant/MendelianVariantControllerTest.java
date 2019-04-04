@@ -18,7 +18,9 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.testfx.framework.junit.ApplicationTest;
 
 import javax.inject.Inject;
+import java.util.concurrent.TimeUnit;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -122,8 +124,11 @@ public class MendelianVariantControllerTest extends ApplicationTest {
 //        assertThat(controller.getVariant(), is(equalTo(Variant.getDefaultInstance()))); // TODO - implement
     }
 
+    /**
+     * Use all the field to get mendelian variant data.
+     */
     @Test
-    public void getFullVariant() {
+    public void enterFullVariantData() {
         // arange
         clickOn("#genomeBuildComboBox").moveBy(-10, 40).clickOn(MouseButton.PRIMARY)
                 .clickOn("#chromosomeComboBox").moveBy(0, 30).clickOn(MouseButton.PRIMARY)
@@ -173,32 +178,14 @@ public class MendelianVariantControllerTest extends ApplicationTest {
     }
 
     @Test
-    public void presentVariant() {
-        final Variant variant = DiseaseCaseModelExample.benMahmoud2013B3GLCT().getVariant(0);
-        final Variant hacked = variant.toBuilder()
-                .setVariantValidation(variant.getVariantValidation().toBuilder()
-                        .setContext(VariantValidation.Context.MENDELIAN)
-                        .build())
-                .build();
-        Platform.runLater(() -> controller.presentData(hacked));
-        sleep(30);
+    public void presentAndGetTheSameData() {
+        final Variant presented = DiseaseCaseModelExample.makeMendelianVariant();
 
+        Platform.runLater(() -> controller.presentData(presented));
+        sleep(30, TimeUnit.MILLISECONDS);
         final Variant received = controller.getData();
-        final VariantPosition vp = received.getVariantPosition();
-        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.GRCH_37));
-        assertThat(vp.getContig(), is("13"));
-        assertThat(vp.getPos(), is(31843349));
-        assertThat(vp.getRefAllele(), is("A"));
-        assertThat(vp.getAltAllele(), is("G"));
-        assertThat(received.getSnippet(), is("TTTCT[A/G]GGCTT"));
-        assertThat(received.getGenotype(), is(Genotype.HETEROZYGOUS));
-        assertThat(received.getVariantClass(), is("splicing"));
-        assertThat(received.getPathomechanism(), is("splicing|3ss|disrupted"));
 
-        VariantValidation validation = received.getVariantValidation();
-        assertThat(validation.getContext(), is(VariantValidation.Context.MENDELIAN));
-        assertThat(validation.getComparability(), is(true));
-
+        assertThat(received, is(equalTo(presented)));
     }
 
 }
