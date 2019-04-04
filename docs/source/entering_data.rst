@@ -140,8 +140,6 @@ To enter or to modify the HPO data, you want and click on the *Add / remove HPO 
 
 A new window will be opened with *HPO tree browser* on the left side, *Text-mining analysis* on the right side and with table of *Approved terms* on the bottom-right side.
 
-  **Note:** Unfortunately, the *text-mining analysis* does not work at the moment (version ``1.0.6``).
-
 You should start typing name of the phenotypic trait into the text field above from the ontology tree. The text field has an autocompletion feature and helps you to identify the correct *HPO term label*. After completion of the label, click on the *Go* button to navigate to the term's position in the ontology tree.
 
 Then, you may want to look around the term in the ontology tree a bit and then approve the term's presence by hitting *Add* button at the bottom. The term will appear in the *Approved terms* table.
@@ -163,5 +161,3 @@ Many of the individual papers about disease-causing variants have a lot of inter
 
 
 -----------------------------
-
-Remember that at least one of the mutations should be regulatory in order to "qualify" for this database!

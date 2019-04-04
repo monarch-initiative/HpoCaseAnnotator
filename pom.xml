@@ -42,24 +42,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>kr.motd.maven</groupId>
-                <artifactId>sphinx-maven-plugin</artifactId>
-                <version>2.2.2</version>
-                <configuration>
-                    <sourceDirectory>${project.basedir}/docs/source</sourceDirectory>
-                    <outputDirectory>${project.basedir}/docs/build</outputDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-docs</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.0.1</version>

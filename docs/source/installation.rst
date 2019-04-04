@@ -11,7 +11,7 @@ Prebuilt app
 Most users (Windows, Mac, Linux) should download the prebuilt ``jar`` file (executable app) available at
 `HpoCaseAnnotator releases <https://github.com/monarch-initiative/HpoCaseAnnotator/releases>`_.
 To run HpoCaseAnnotator, you need to have Java Runtime Environment (Java version 8) installed on the machine.
-To run the app, a double click should work. Alternativel, enter at the command line. ::
+To run the app, a double click should work. Alternatively, enter following at the command line. ::
 
   $ java -jar HpoCaseAnnotator.jar
 
@@ -54,7 +54,7 @@ still at hg19, and will use a liftover to move to hg38 coordinates!
 
 - **Download and pre-process the reference genome sequences automatically**
 
-In order to download the reference genome click on the *Download* buttons of individual genome assemblies. Each assembly file has roughly 1 GB and the download process may take up to 20 minutes depending on the speed of your internet connection. After successful download, sequences of all the chromosomes will be concatenated into a single FASTA file and index will be created automatically using ``HTS-JDK`` library.
+In order to download the reference genome click on the *Download* buttons of individual genome assemblies. Each assembly file has roughly 1 GB and the download process may take up to 20 minutes depending on the speed of your internet connection. Do not close before the download & pre-processing is completed. After successful download, sequences of all the chromosomes will be concatenated into a single FASTA file and index will be created automatically using ``HTS-JDK`` library.
 
 - **Provide FASTA file**
 
@@ -69,11 +69,11 @@ The app will automatically download the newest version of *Human Phenotype Ontol
 
 Entrez genes
 ############
-The app will also download information regarding genes. This also a one-time operation and after the download autocompletion of gene symbols and IDs will be available.
+The app will also download information regarding genes. This is also a one-time operation and after the download autocompletion of gene symbols and IDs will be available.
 
 Curated files directory
 #######################
-Each curated case is stored as a file in ``XML`` format. Here we set path to a directory where the XML files created in a single project are stored.
+Each curated case is stored as a file in ``JSON`` format. Here we set path to a directory where the JSON files created in a single project are stored.
 
 Biocurator ID
 #############
