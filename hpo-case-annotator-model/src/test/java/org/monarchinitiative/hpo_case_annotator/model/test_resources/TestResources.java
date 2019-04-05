@@ -41,4 +41,8 @@ public final class TestResources {
     public static DiseaseCase benMahmoud2013B3GLCT() {
         return DiseaseCaseModelExample.benMahmoud2013B3GLCT();
     }
+
+    public static DiseaseCase v2Aznarez2003CFTR() {
+        return DiseaseCaseModelExample.v2Aznarez2003CFTR();
+    }
 }
