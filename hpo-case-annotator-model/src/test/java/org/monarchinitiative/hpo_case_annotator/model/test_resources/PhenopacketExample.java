@@ -43,7 +43,7 @@ class PhenopacketExample {
     private static Phenotype getCongenitalSyndactyly() {
         return Phenotype.newBuilder() // severe syndactyly with congenital onset on the right side
                 .setType(ontologyClass("HP:0001159", "Syndactyly"))
-                .setAbsent(false) // is present
+                .setNegated(false) // is present
                 .setSeverity(ontologyClass("HP:0012828", "Severe"))
                 .addModifiers(ontologyClass("HP:0012834", "Right"))
                 .setClassOfOnset(ontologyClass("HP:0003577", "Congenital onset"))
@@ -60,7 +60,7 @@ class PhenopacketExample {
     private static Phenotype getNotCryptorchidism() {
         return Phenotype.newBuilder()
                 .setType(ontologyClass("HP:0000028", "Cryptorchidism"))
-                .setAbsent(true)
+                .setNegated(true)
                 .addEvidence(Evidence.newBuilder()
                         .setEvidenceCode(TAS)
                         .setReference(ExternalReference.newBuilder()
