@@ -2,6 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.model.io;
 
 import org.junit.Test;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
+import org.monarchinitiative.hpo_case_annotator.model.test_resources.TestResources;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -13,8 +14,7 @@ import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -130,7 +130,6 @@ public class ProtoJSONModelParserTest {
      * <em>v2</em> model format is the format where no information is stored in the deprecated fields.
      * This is the same test as {@link #v1ModelFormatIsParsedCorrectly()}, however no deprecated field is tested
      *
-     * @throws Exception blabla
      */
     @Test
     public void v2ModelFormatIsParsedCorrectly() throws Exception {
@@ -140,81 +139,10 @@ public class ProtoJSONModelParserTest {
         }
 
         assertTrue(diseaseCaseOptional.isPresent());
-        final DiseaseCase diseaseCase = diseaseCaseOptional.get();
+        final DiseaseCase actual = diseaseCaseOptional.get();
 
-        // publication
-        Publication expectedPublication = Publication.newBuilder()
-                .setAuthorList("Aznarez I, Chan EM, Zielenski J, Blencowe BJ, Tsui LC").setTitle("Characterization of disease-associated mutations affecting an exonic splicing enhancer and two cryptic splice sites in exon 13 of the cystic fibrosis transmembrane conductance regulator gene")
-                .setJournal("Hum Mol Genet").setYear("2003")
-                .setVolume("12(16)").setPages("2031-40")
-                .setPmid("12913074").build();
-        assertThat(diseaseCase.getPublication(), is(expectedPublication));
-        // metadata
-        assertThat(diseaseCase.getMetadata(), is("Authors are describing a mutations in CFTR exon 13 that appears to contain two 3'CSS utilization of which is increased when there is a mutation in ESE element present in exon 13 (Figure 2.).\n\nThe 3'CSS whose coordinates are recorded in variants is the dominant one (Figure 2. D, D248). However, there exists also another (D195) which has coordinates: 117232182, 3 splice site, CAATTTAG|TGCAGAAA ."));
-        // gene
-        Gene expectedGene = Gene.newBuilder()
-                .setEntrezId(1080)
-                .setSymbol("CFTR")
-                .build();
-        assertThat(diseaseCase.getGene(), is(expectedGene));
-        // disease
-        Disease expectedDisease = Disease.newBuilder()
-                .setDatabase("OMIM")
-                .setDiseaseId("219700")
-                .setDiseaseName("CYSTIC FIBROSIS; CF")
-                .build();
-        assertThat(diseaseCase.getDisease(), is(expectedDisease));
-        // phenotype
-        assertThat(diseaseCase.getPhenotypeCount(), is(0));
-        // family_info
-        assertThat(diseaseCase.getFamilyInfo(), is(FamilyInfo.getDefaultInstance()));
-        // biocurator
-        assertThat(diseaseCase.getBiocurator(), is(Biocurator.newBuilder().setBiocuratorId("HPO:ddanis").build()));
-        // variants
-        // the first variant
-        assertThat(diseaseCase.getVariantList(), hasItem(Variant.newBuilder()
-                .setVariantPosition(VariantPosition.newBuilder()
-                        .setGenomeAssembly(GenomeAssembly.GRCH_37)
-                        .setContig("7")
-                        .setPos(117232187)
-                        .setRefAllele("G")
-                        .setAltAllele("T")
-                        .build())
-                .setSnippet("TTTAGTGCA[G/T]AAAGAAGAA")
-                .setGenotype(Genotype.HOMOZYGOUS_ALTERNATE)
-                .setVariantClass("splicing")
-                .setPathomechanism("splicing|SRE|ESE|binding|decreased")
-                .setConsequence("Alternative/cryptic 3' splice site")
-                .setCrypticPosition(117232235)
-                .setCrypticSpliceSiteSnippet("TTCTCATTAG|AAGGAG")
-                .setCrypticSpliceSiteType(CrypticSpliceSiteType.THREE_PRIME)
-                .setVariantValidation(VariantValidation.newBuilder()
-                        .setContext(VariantValidation.Context.SPLICING)
-                        .setMinigeneValidation(true)
-                        .build())
-                .build()));
-        // the second variant
-        assertThat(diseaseCase.getVariantList(), hasItem(Variant.newBuilder()
-                .setVariantPosition(VariantPosition.newBuilder()
-                        .setGenomeAssembly(GenomeAssembly.GRCH_37)
-                        .setContig("7")
-                        .setPos(117232196)
-                        .setRefAllele("AA")
-                        .setAltAllele("A")
-                        .build())
-                .setSnippet("GAAAGAAGA[AA/A]TTCAAT")
-                .setGenotype(Genotype.HOMOZYGOUS_ALTERNATE)
-                .setVariantClass("splicing")
-                .setPathomechanism("splicing|SRE|ESE|binding|decreased")
-                .setConsequence("Alternative/cryptic 3' splice site")
-                .setCrypticPosition(117232235)
-                .setCrypticSpliceSiteSnippet("TTCTCATTAG|AAGGAG")
-                .setCrypticSpliceSiteType(CrypticSpliceSiteType.THREE_PRIME)
-                .setVariantValidation(VariantValidation.newBuilder()
-                        .setContext(VariantValidation.Context.SPLICING)
-                        .setMinigeneValidation(true)
-                        .build())
-                .build()));
+        DiseaseCase expected = TestResources.v2Aznarez2003CFTR();
+        assertThat(actual, is(equalTo(expected)));
     }
 
     /**
@@ -223,7 +151,6 @@ public class ProtoJSONModelParserTest {
      * <p>
      * The file <code>expected-v2-Aznarez-2003-CFTR.json</code> contains expected JSON content.
      *
-     * @throws Exception bla
      */
     @Test
     public void modelIsSavedCorrectlyAsV2() throws Exception {

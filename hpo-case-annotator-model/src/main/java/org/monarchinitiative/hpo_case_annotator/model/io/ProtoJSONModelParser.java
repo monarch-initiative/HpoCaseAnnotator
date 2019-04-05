@@ -70,9 +70,18 @@ public class ProtoJSONModelParser implements ModelParser {
 
 
     public static Optional<DiseaseCase> readDiseaseCase(InputStream is) {
+        try (Reader reader = new InputStreamReader(is)) {
+            return readDiseaseCase(reader);
+        } catch (IOException e) {
+            LOGGER.warn("Unable to read the data", e);
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<DiseaseCase> readDiseaseCase(Reader reader) {
         try {
             DiseaseCase.Builder builder = DiseaseCase.newBuilder();
-            JSON_PARSER.merge(new InputStreamReader(is), builder);
+            JSON_PARSER.merge(reader, builder);
 
             // To maintain compatibility with the older data the VariantPosition is populated if it does not exist.
             for (Variant.Builder varBuilder : builder.getVariantBuilderList()) {
@@ -85,11 +94,10 @@ public class ProtoJSONModelParser implements ModelParser {
                             .setAltAllele(varBuilder.getAltAllele())
                             .build());
                 }
-
             }
             return Optional.of(builder.build());
         } catch (IOException e) {
-            LOGGER.warn("Error reading disease case", e);
+            LOGGER.warn("Unable to decode the data", e);
             return Optional.empty();
         }
     }
