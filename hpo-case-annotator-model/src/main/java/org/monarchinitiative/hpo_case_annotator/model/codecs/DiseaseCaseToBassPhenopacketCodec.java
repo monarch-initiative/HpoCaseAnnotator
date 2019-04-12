@@ -93,7 +93,7 @@ public class DiseaseCaseToBassPhenopacketCodec implements Codec<DiseaseCase, Phe
     private static Function<OntologyClass, Phenotype> hcaPhenotypeToPhenopacketPhenotype(Publication publication) {
         return oc -> Phenotype.newBuilder()
                 .setType(org.phenopackets.schema.v1.core.OntologyClass.newBuilder().setId(oc.getId()).setLabel(oc.getLabel()).build())
-                .setAbsent(oc.getNotObserved())
+                .setNegated(oc.getNotObserved())
                 .addEvidence(Evidence.newBuilder()
                         .setEvidenceCode(DiseaseCaseToPhenopacketCodec.TRACEABLE_AUTHOR_STATEMENT)
                         .setReference(ExternalReference.newBuilder()

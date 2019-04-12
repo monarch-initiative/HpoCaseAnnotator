@@ -154,23 +154,25 @@ public class ProtoJSONModelParserTest {
      */
     @Test
     public void modelIsSavedCorrectlyAsV2() throws Exception {
-        String expected;
+        String v2ExpectedString;
         Path expectedContentPath = Paths.get(getClass().getResource("test-model-v2-Aznarez-2003-CFTR.json").toURI());
         try (BufferedReader reader = Files.newBufferedReader(expectedContentPath)) {
-            expected = reader.lines().collect(Collectors.joining("\n"));
+            v2ExpectedString = reader.lines().collect(Collectors.joining("\n"));
         }
 
-        Optional<DiseaseCase> diseaseCaseOptional;
+        Optional<DiseaseCase> v1InstanceOptional;
         try (InputStream is = getClass().getResourceAsStream("test-model-v1-Aznarez-2003-CFTR.json")) {
-            diseaseCaseOptional = ProtoJSONModelParser.readDiseaseCase(is);
+            v1InstanceOptional = ProtoJSONModelParser.readDiseaseCase(is);
         }
+
+        assertTrue(v1InstanceOptional.isPresent());
+        DiseaseCase v1Data = v1InstanceOptional.get();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DiseaseCase diseaseCase = diseaseCaseOptional.get();
         // this would be set in the app
-        diseaseCase = diseaseCase.toBuilder().setSoftwareVersion("Hpo Case Annotator v1.0.12-SNAPSHOT").build();
-        ProtoJSONModelParser.saveDiseaseCase(baos, diseaseCase, Charset.forName("UTF-8"));
+        v1Data = v1Data.toBuilder().setSoftwareVersion("Hpo Case Annotator v1.0.12-SNAPSHOT").build();
+        ProtoJSONModelParser.saveDiseaseCase(baos, v1Data, Charset.forName("UTF-8"));
 
-        assertThat(baos.toString(), is(expected));
+        assertThat(baos.toString(), is(v2ExpectedString));
     }
 }

@@ -8,7 +8,7 @@
     "pages": "2031-40",
     "pmid": "12913074"
   },
-  "metadata": "Authors are describing a mutations in CFTR exon 13 that appears to contain two 3'CSS utilization of which is increased when there is a mutation in ESE element present in exon 13 (Figure 2.).\n\nThe 3'CSS whose coordinates are recorded in variants is the dominant one (Figure 2. D, D248). However, there exists also another (D195) which has coordinates: 117232182, 3 splice site, CAATTTAG|TGCAGAAA .",
+  "metadata": "Authors are describing a mutations in CFTR exon 13 that appears to contain two 3\u0027CSS utilization of which is increased when there is a mutation in ESE element present in exon 13 (Figure 2.).\n\nThe 3\u0027CSS whose coordinates are recorded in variants is the dominant one (Figure 2. D, D248). However, there exists also another (D195) which has coordinates: 117232182, 3 splice site, CAATTTAG|TGCAGAAA .",
   "gene": {
     "entrezId": 1080,
     "symbol": "CFTR"
@@ -28,7 +28,7 @@
     "genotype": "HOMOZYGOUS_ALTERNATE",
     "variantClass": "splicing",
     "pathomechanism": "splicing|SRE|ESE|binding|decreased",
-    "consequence": "Alternative/cryptic 3' splice site",
+    "consequence": "Alternative/cryptic 3\u0027 splice site",
     "crypticPosition": 117232235,
     "crypticSpliceSiteType": "THREE_PRIME",
     "crypticSpliceSiteSnippet": "TTCTCATTAG|AAGGAG",
@@ -48,7 +48,7 @@
     "genotype": "HOMOZYGOUS_ALTERNATE",
     "variantClass": "splicing",
     "pathomechanism": "splicing|SRE|ESE|binding|decreased",
-    "consequence": "Alternative/cryptic 3' splice site",
+    "consequence": "Alternative/cryptic 3\u0027 splice site",
     "crypticPosition": 117232235,
     "crypticSpliceSiteType": "THREE_PRIME",
     "crypticSpliceSiteSnippet": "TTCTCATTAG|AAGGAG",
