@@ -203,7 +203,7 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
                                     .setId(oc.getId())
                                     .setLabel(oc.getLabel())
                                     .build())
-                            .setAbsent(oc.getNotObserved())
+                            .setNegated(oc.getNotObserved())
                             .addEvidence(Evidence.newBuilder()
                                     .setEvidenceCode(TRACEABLE_AUTHOR_STATEMENT)
                                     .setReference(ExternalReference.newBuilder()
