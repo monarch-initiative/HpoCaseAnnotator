@@ -1,5 +1,9 @@
 # HRMD gui
 
+### v1.0.12
+- add `software_version` attribute to data model for storing name and version of software used to create data
+- store app's data in a version-indepenedent location that makes upgrading the app easier (`.hpo-case-annotator` instead of `.hpo-case-annotator-${project.version}`)
+
 ### v1.0.11
 - use `GRCH_37` as the default genome assembly
 - remove obsolete `NCBI36 (HG18)` genome assembly

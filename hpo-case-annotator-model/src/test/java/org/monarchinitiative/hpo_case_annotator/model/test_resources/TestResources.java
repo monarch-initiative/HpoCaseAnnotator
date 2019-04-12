@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.model.test_resources;
 
+import org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.phenopackets.schema.v1.Family;
 import org.phenopackets.schema.v1.Phenopacket;
@@ -12,7 +13,7 @@ import java.net.URL;
  */
 public final class TestResources {
 
-    public static final URL TEST_XML_MODEL_FILE_DIR = TestResources.class.getResource("/models/xml");
+    public static final URL TEST_XML_MODEL_FILE_DIR = XMLModelParser.class.getResource("");
 
     public static final URL TEST_GPI_MODEL_FILE_DIR = TestResources.class.getResource("/gpi_model");
 
@@ -44,5 +45,9 @@ public final class TestResources {
 
     public static DiseaseCase v2Aznarez2003CFTR() {
         return DiseaseCaseModelExample.v2Aznarez2003CFTR();
+    }
+
+    public static DiseaseCase aguilar_Ramirez_2009_C5() {
+        return DiseaseCaseModelExample.aguilar_Ramirez_2009_C5();
     }
 }

@@ -25,6 +25,9 @@ message DiseaseCase {
     Biocurator biocurator = 10;
 
     repeated Variant variant = 11;
+
+    // name and version of the software that created this message (e.g. Hpo Case Annotator : v1.0.12)
+    string software_version = 12;
 }
 
 // Human genome reference assembly - major version

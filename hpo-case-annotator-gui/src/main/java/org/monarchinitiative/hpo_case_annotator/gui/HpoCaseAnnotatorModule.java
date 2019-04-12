@@ -237,9 +237,8 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
     @Provides
     @Named("appHomeDir")
     @Singleton
-    private File appHomeDir() throws IOException {
+    private File appHomeDir(@Named("appVersion") String appVersion) throws IOException {
         String osName = System.getProperty("os.name").toLowerCase();
-        String appVersion = System.getProperty(Play.HCA_VERSION_PROP_KEY);
         // we want to have one resource directory for release version and another for snapshots
         String suffix = appVersion.endsWith("-SNAPSHOT") ? "-SNAPSHOT" : "";
 
@@ -271,5 +270,26 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
             }
         }
         return appHomeDir;
+    }
+
+    @Provides
+    @Named("appNameVersion")
+    private String appNameVersion(@Named("appVersion") String appVersion, @Named("appName") String appName) {
+        return String.format("%s : %s", appName, appVersion);
+    }
+
+
+    @Provides
+    @Named("appVersion")
+    private String appVersion() {
+        // this property is set in Play#init()
+        return System.getProperty(Play.HCA_VERSION_PROP_KEY);
+    }
+
+    @Provides
+    @Named("appName")
+    private String appName() {
+        // this property is set in Play#init()
+        return System.getProperty(Play.HCA_NAME_KEY);
     }
 }

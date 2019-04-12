@@ -27,146 +27,6 @@ public class XMLModelParserTest {
 
 
     /**
-     * This method programmatically creates complete model instance for testing. The model contains three variants: one
-     * Splicing variant, one Mendelian variant and one Somatic variant with all fields initialized. <p>The data of model
-     * are the same as those in XML file <em>src/test/resources/models/xml/Aguilar-Ramirez-2009-C5.xml</em>
-     *
-     * @return {@link DiseaseCase} instance for testing.
-     */
-    private static DiseaseCase prepareModel() {
-
-        /* Genome build */
-        return DiseaseCase.newBuilder()
-//                .setGenomeBuild("GRCh37")
-
-                /* Publication data */
-                .setPublication(
-                        Publication.newBuilder().setAuthorList("Aguilar-Ramirez P, Reis ES, Florido MP, Barbosa AS, Farah CS, Costa-Carvalho BT, Isaac L")
-                                .setTitle("Skipping of exon 30 in C5 gene results in complete human C5 deficiency and demonstrates the importance of C5d and CUB domains for stability")
-                                .setJournal("Mol Immunol")
-                                .setYear("2009")
-                                .setVolume("46(10)")
-                                .setPages("2116-23")
-                                .setPmid("19375167")
-                                .build())
-                .setMetadata("Authors describe proband coming from large family with history of consanguinity carrying " +
-                        "primary complete C5 deficiency. Blah, blah...")
-                .setGene(Gene.newBuilder()
-                        .setSymbol("C5")
-                        .setEntrezId(727)
-                        .build())
-                /* Variants which belong to this model */
-                .setVariant(0, Variant.newBuilder()
-                        .setVariantPosition(VariantPosition.newBuilder()
-                                .setGenomeAssembly(GenomeAssembly.HG_19)
-                                .setContig("9")
-                                .setPos(123737057)
-                                .setRefAllele("C")
-                                .setAltAllele("T")
-                                .build())
-                        .setSnippet("TTCATTTAC[C/T]TCTACTGG")
-                        .setGenotype(Genotype.HOMOZYGOUS_ALTERNATE)
-                        .setVariantClass("splicing")
-                        .setPathomechanism("splicing|3css|activated")
-                        .setConsequence("Exon skipping")
-                        .setCrypticPosition(123737090)
-                        .setCrypticSpliceSiteType(CrypticSpliceSiteType.FIVE_PRIME)
-                        .setCrypticSpliceSiteSnippet("ATATG|GCGAGTTCTT")
-                        .setVariantValidation(VariantValidation.newBuilder()
-                                .setCosegregation(true)
-                                .setComparability(false)
-                                .setMinigeneValidation(true)
-                                .setRtPcrValidation(true)
-                                .setSrProteinKnockdownValidation(true)
-                                .setCDnaSequencingValidation(true)
-                                .setOtherValidation(true)
-                                .build())
-                        .build())
-                .setVariant(1, Variant.newBuilder()
-                        .setVariantPosition(VariantPosition.newBuilder()
-                                .setGenomeAssembly(GenomeAssembly.HG_19)
-                                .setContig("9")
-                                .setPos(123737057)
-                                .setRefAllele("C")
-                                .setAltAllele("G")
-                                .build())
-                        .setSnippet("TTCATTTAC[C/G]TCTACTGG")
-                        .setGenotype(Genotype.HOMOZYGOUS_ALTERNATE)
-                        .setVariantClass("promoter")
-                        .setPathomechanism("promoter|reduced-transcription")
-                        .setVariantValidation(VariantValidation.newBuilder()
-                                .setComparability(false)
-                                .setCosegregation(false)
-                                .setEmsaValidationPerformed(true)
-                                .setEmsaGeneId("TF_GENEID_TEST")
-                                .setEmsaTfSymbol("TF_SYMBOL_TEST")
-                                .setOtherChoices("down")
-                                .setOtherEffect("in vitro mRNA expression assay")
-                                .setRegulator("TEST_REGULATOR")
-                                .setReporterRegulation("no")
-                                .setReporterResidualActivity("RES_ACT")
-                                .build())
-                        .build())
-                .setVariant(2, Variant.newBuilder()
-                        .setVariantPosition(VariantPosition.newBuilder()
-                                .setGenomeAssembly(GenomeAssembly.HG_19)
-                                .setContig("9")
-                                .setPos(123737057)
-                                .setRefAllele("C")
-                                .setAltAllele("A")
-                                .build())
-                        .setSnippet("TTCATTTAC[C/A]TCTACTGG")
-                        .setGenotype(Genotype.HETEROZYGOUS)
-                        .setVariantClass("5UTR")
-                        .setPathomechanism("5UTR|transcription")
-                        .setVariantValidation(VariantValidation.newBuilder()
-                                .setEmsaGeneId("TF_GENE_SYMBOL_TEST")
-                                .setEmsaTfSymbol("TF_EMSA_SOM_TEST")
-                                .setMPatients(100)
-                                .setNPatients(78)
-                                .setOtherChoices("up")
-                                .setOtherEffect("Transgenic model")
-                                .setRegulator("SOMATIC_REGULATOR")
-                                .setReporterRegulation("up")
-                                .setReporterResidualActivity("SOMATIC_RP_PERC")
-                                .build())
-                        .build())
-                /* Family/proband information */
-                .setFamilyInfo(FamilyInfo.newBuilder()
-                        .setFamilyOrProbandId("II:9")
-                        .setSex(Sex.MALE)
-                        .setAge("19")
-                        .build())
-                /* HPO terms */
-                .addPhenotype(OntologyClass.newBuilder()
-                        .setId("HP:0001287")
-                        .setLabel("Meningitis")
-                        .setNotObserved(false)
-                        .build())
-                .addPhenotype(OntologyClass.newBuilder()
-                        .setId("HP:0030955")
-                        .setLabel("Alcoholism")
-                        .setNotObserved(true)
-                        .build())
-                .addPhenotype(OntologyClass.newBuilder()
-                        .setId("HP:0002721")
-                        .setLabel("Immunodeficiency")
-                        .setNotObserved(false)
-                        .build())
-                .setDisease(Disease.newBuilder()
-                        .setDatabase("OMIM")
-                        .setDiseaseId("609536")
-                        .setDiseaseName("COMPLEMENT COMPONENT 5 DEFICIENCY; C5D")
-                        .build())
-                /* Biocurator */
-                .setBiocurator(Biocurator.newBuilder()
-                        .setBiocuratorId("HPO:walterwhite")
-                        .build())
-                .build();
-    }
-
-
-    /**
      * Utility method for reading of whole file into the String.
      *
      * @param filepath path to file about to be read.
@@ -185,11 +45,10 @@ public class XMLModelParserTest {
 
 
     /**
-     * Test that parser identifies 4 model files in test model dir.
+     * Test parser suffix
      */
     @Test
     public void testInitialization() throws Exception {
-        assertEquals(4, parser.getModelNames().size());
         assertEquals(".xml", XMLModelParser.MODEL_SUFFIX);
     }
 
@@ -215,8 +74,8 @@ public class XMLModelParserTest {
     @Test
     public void readModel() throws Exception {
         DiseaseCase model;
-        try (InputStream is = getClass().getResourceAsStream("/models/xml/Aguilar-Ramirez-2009-C5.xml")) {
-            model = parser.readModel(is).orElseThrow(() -> new Exception("Unable to decode the test data at /models/xml/Aguilar-Ramirez-2009-C5.xml"));
+        try (InputStream is = getClass().getResourceAsStream("Aguilar-Ramirez-2009-C5.xml")) {
+            model = parser.readModel(is).orElseThrow(() -> new Exception("Unable to decode the test data 'Aguilar-Ramirez-2009-C5.xml'"));
         }
 
         // Biocurator
@@ -351,7 +210,7 @@ public class XMLModelParserTest {
     @Test
     public void readFirstModel() throws Exception {
         DiseaseCase davidson;
-        try (InputStream is = getClass().getResourceAsStream("/models/xml/Davidson-2010-BEST1.xml")) {
+        try (InputStream is = getClass().getResourceAsStream("Davidson-2010-BEST1.xml")) {
             davidson = parser.readModel(is).orElseThrow(() -> new Exception("Unable to decode the test data at /models/xml/Davidson-2010-BEST1.xml"));
         }
 
@@ -385,7 +244,7 @@ public class XMLModelParserTest {
     @Test
     public void readSecondModel() throws Exception {
         DiseaseCase ars;
-        try (InputStream is = getClass().getResourceAsStream("/models/xml/Ars-2000-NF1-95-89.xml")) {
+        try (InputStream is = getClass().getResourceAsStream("Ars-2000-NF1-95-89.xml")) {
             ars = parser.readModel(is).orElseThrow(() -> new Exception("Unable to decode the test data at /models/xml/Ars-2000-NF1-95-89.xml"));
         }
 

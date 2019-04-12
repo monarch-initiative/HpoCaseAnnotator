@@ -154,7 +154,8 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
                         .build())
                 // metadata - Biocurator ID, ontologies used
                 .setMetaData(MetaData.newBuilder()
-                        .setCreatedBy(data.getBiocurator().getBiocuratorId())
+                        .setCreatedBy(data.getSoftwareVersion())
+                        .setSubmittedBy(data.getBiocurator().getBiocuratorId())
                         .addAllResources(RESOURCES)
                         .build())
                 .build();

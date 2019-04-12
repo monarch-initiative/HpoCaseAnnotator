@@ -68,6 +68,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
     private final ObjectProperty<Publication> publication = new SimpleObjectProperty<>(this, "publication", Publication.getDefaultInstance());
 
+    private final String appNameVersion;
 
     @FXML
     public Button inputPubMedDataButton;
@@ -142,6 +143,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         this.resourceBundle = resourceBundle;
         this.injector = injector;
         this.variantControllers = FXCollections.observableArrayList();
+        this.appNameVersion = injector.getInstance(Key.get(String.class, Names.named("appNameVersion")));
     }
 
     /**
@@ -339,7 +341,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         } catch (IOException e) {
             LOGGER.warn("Error occurred during text mining", e);
             PopUps.showException(conversationTitle, "Error occurred during text mining", e.getMessage(), e);
-        } catch (StringIndexOutOfBoundsException sioe){
+        } catch (StringIndexOutOfBoundsException sioe) {
             LOGGER.warn("Error occurred during text mining", sioe);
             PopUps.showException(conversationTitle, "Error: StringIndexOutOfBoundsException", sioe.getMessage(), sioe);
         }
@@ -629,6 +631,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
                         .setBiocuratorId(optionalResources.getBiocuratorId())
                         .build())
                 .setMetadata(metadataTextArea.getText())
+                .setSoftwareVersion(appNameVersion)
                 .build();
     }
 

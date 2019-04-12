@@ -102,7 +102,8 @@ public class DiseaseCaseToPhenopacketCodecTest {
                 .build()));
 
         final MetaData metaData = packet.getMetaData();
-        assertThat(metaData.getCreatedBy(), is("HPO:ahegde"));
+        assertThat(metaData.getSubmittedBy(), is("HPO:ahegde"));
+        assertThat(metaData.getCreatedBy(), is("Hpo Case Annotator v1.0.12-SNAPSHOT"));
         assertThat(metaData.getResourcesList(), is(DiseaseCaseToPhenopacketCodec.RESOURCES));
     }
 

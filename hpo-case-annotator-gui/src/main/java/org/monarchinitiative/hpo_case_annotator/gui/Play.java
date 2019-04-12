@@ -29,11 +29,11 @@ import java.util.concurrent.ExecutorService;
  */
 public class Play extends Application {
 
-    private static final String WINDOW_TITLE = "Hpo Case Annotator";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Play.class);
+    static final String HCA_NAME_KEY = "hca.name";
 
     static final String HCA_VERSION_PROP_KEY = "hca.version";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Play.class);
 
     private Injector injector;
 
@@ -48,7 +48,10 @@ public class Play extends Application {
         try (InputStream is = getClass().getResourceAsStream("/application.properties")) {
             Properties properties = new Properties();
             properties.load(is);
-            System.setProperty(HCA_VERSION_PROP_KEY, properties.getProperty(HCA_VERSION_PROP_KEY, ""));
+            String version = properties.getProperty(HCA_VERSION_PROP_KEY, "unknown version");
+            System.setProperty(HCA_VERSION_PROP_KEY, version);
+            String name = properties.getProperty(HCA_NAME_KEY, "Hpo Case Annotator");
+            System.setProperty(HCA_NAME_KEY, name);
         }
 
     }
@@ -66,7 +69,8 @@ public class Play extends Application {
 
         Parent rootNode = FXMLLoader.load(MainController.class.getResource("MainView.fxml"), resourceBundle,
                 new JavaFXBuilderFactory(), injector::getInstance);
-        window.setTitle(String.format("%s : %s", WINDOW_TITLE, System.getProperty(HCA_VERSION_PROP_KEY)));
+        String windowTitle = injector.getInstance(Key.get(String.class, Names.named("appNameVersion")));
+        window.setTitle(windowTitle);
         window.getIcons().add(new Image(getClass().getResourceAsStream("/img/app-icon.png")));
         window.setScene(new Scene(rootNode));
         window.show();

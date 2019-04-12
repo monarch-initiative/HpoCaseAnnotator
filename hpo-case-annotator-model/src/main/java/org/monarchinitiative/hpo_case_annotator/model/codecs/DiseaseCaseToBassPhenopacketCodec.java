@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 
 public class DiseaseCaseToBassPhenopacketCodec implements Codec<DiseaseCase, Phenopacket> {
 
-    static final String SUBMITTER_NAME = "Hpo Case Annotator";
-
     static final String DATASET_ID = "BASS";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseCaseToBassPhenopacketCodec.class);
@@ -136,7 +134,7 @@ public class DiseaseCaseToBassPhenopacketCodec implements Codec<DiseaseCase, Phe
                                 .setSeconds(Instant.now().getEpochSecond())
                                 .build())
                         .setCreatedBy(data.getBiocurator().getBiocuratorId())
-                        .setSubmittedBy(SUBMITTER_NAME)
+                        .setSubmittedBy(data.getSoftwareVersion())
                         .addAllResources(DiseaseCaseToPhenopacketCodec.makeResources())
                         .addExternalReferences(ExternalReference.newBuilder()
                                 .setId(String.format("PMID:%s", data.getPublication().getPmid()))

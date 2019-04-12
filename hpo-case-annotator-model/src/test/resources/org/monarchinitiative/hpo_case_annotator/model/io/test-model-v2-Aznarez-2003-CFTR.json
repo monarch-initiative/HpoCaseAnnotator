@@ -63,5 +63,7 @@
       "refAllele": "AA",
       "altAllele": "A"
     }
-  }]
+  }
+  ],
+  "softwareVersion": "Hpo Case Annotator v1.0.12-SNAPSHOT"
 }

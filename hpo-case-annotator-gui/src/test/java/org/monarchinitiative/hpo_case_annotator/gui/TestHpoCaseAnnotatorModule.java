@@ -234,4 +234,24 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
         return appHomeDir;
     }
 
+
+    @Provides
+    @Named("appNameVersion")
+    private String appNameVersion(@Named("appName") String appName, @Named("appVersion") String appVersion) {
+        return String.format("%s : %s", appName, appVersion);
+    }
+
+
+    @Provides
+    @Named("appVersion")
+    private String appVersion() {
+        return "TEST";
+    }
+
+
+    @Provides
+    @Named("appName")
+    private String appName() {
+        return "Hpo Case Annotator";
+    }
 }

@@ -166,9 +166,11 @@ public class ProtoJSONModelParserTest {
         }
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final DiseaseCase diseaseCase = diseaseCaseOptional.get();
+        DiseaseCase diseaseCase = diseaseCaseOptional.get();
+        // this would be set in the app
+        diseaseCase = diseaseCase.toBuilder().setSoftwareVersion("Hpo Case Annotator v1.0.12-SNAPSHOT").build();
         ProtoJSONModelParser.saveDiseaseCase(baos, diseaseCase, Charset.forName("UTF-8"));
 
-        assertThat(expected, is(baos.toString()));
+        assertThat(baos.toString(), is(expected));
     }
 }
