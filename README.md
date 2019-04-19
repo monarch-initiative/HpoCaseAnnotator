@@ -13,15 +13,15 @@ cd HpoCaseAnnotator
 
 mvn package
 ```
-> After running these commands, the *distribution ZIP archive* containing JAR file and all resources required to run the app will be created at `hpo-case-annotator-gui/target/HpoCaseAnnotator-Gui-1.0.11-distribution.zip`
+> After running these commands, the *distribution ZIP archive* containing JAR file and all resources required to run the app will be created at `hpo-case-annotator-gui/target/HpoCaseAnnotator-Gui-1.0.12-distribution.zip`
 
 - **installation** - the recommended way of using the *HCA* is to copy the distribution file into some other directory (`/home/user/software` or similar). Then, to start the app from command line:
 
 ```bash
 cd /home/user/software
-unzip HpoCaseAnnotator-Gui-1.0.11-distribution.zip
-cd HpoCaseAnnotator-Gui-1.0.11-distribution
-java -jar HpoCaseAnnotator-Gui-1.0.11.jar
+unzip HpoCaseAnnotator-Gui-1.0.12-distribution.zip
+cd HpoCaseAnnotator-Gui-1.0.12-distribution
+java -jar HpoCaseAnnotator-Gui-1.0.12.jar
 ```
 
 ### Initial set up
