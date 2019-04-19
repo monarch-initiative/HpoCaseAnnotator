@@ -3,7 +3,7 @@
 ### v1.0.12
 - add `software_version` attribute to data model for storing name and version of software used to create data
 - store app's data in a version-indepenedent location that makes upgrading the app easier (`.hpo-case-annotator` instead of `.hpo-case-annotator-${project.version}`)
-- use `phenopacket-schema v0.4.0`, `protobuf 3.7.0` 
+- use `phenopacket-schema v0.4.0`, `protobuf 3.7.0`, `hpotextmining-gui 0.2.6`
 
 ### v1.0.11
 - use `GRCH_37` as the default genome assembly
