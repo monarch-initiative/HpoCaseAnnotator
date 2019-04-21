@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.model.codecs;
 import com.google.protobuf.Timestamp;
 import org.monarchinitiative.hpo_case_annotator.model.proto.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
+import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
 import org.phenopackets.schema.v1.Phenopacket;
 import org.phenopackets.schema.v1.core.Disease;
 import org.phenopackets.schema.v1.core.Gene;

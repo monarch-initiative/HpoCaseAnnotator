@@ -1,7 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.model.io;
 
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.monarchinitiative.hpo_case_annotator.model.proto.ModelUtils;
+import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.slf4j.Logger;

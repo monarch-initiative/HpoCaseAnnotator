@@ -1,4 +1,7 @@
-package org.monarchinitiative.hpo_case_annotator.model.proto;
+package org.monarchinitiative.hpo_case_annotator.model.utils;
+
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 
 /**
  * Utility functions for manipulation with {@link DiseaseCase} instances.
@@ -21,7 +24,29 @@ public class ModelUtils {
         Publication publication = model.getPublication();
         String ye = (publication.getYear() == null) ? "year" : publication.getYear();
         String gn = (model.getGene().getSymbol() == null) ? "genesymbol" : model.getGene().getSymbol();
-        return String.format("%s-%s-%s", getFirstAuthorsSurname(publication), ye, gn);
+        String candidate = String.format("%s-%s-%s", getFirstAuthorsSurname(publication), ye, gn);
+        return Checks.makeLegalFileNameWithNoWhitespace(candidate);
+    }
+
+    /**
+     * Make string that includes:
+     * <ul>
+     * <li>the first author surname</li>
+     * <li>publication year</li>
+     * <li>affected gene symbol</li>
+     * <li>id of proband/family within the publication</li>
+     * </ul>
+     *
+     * @param model {@link DiseaseCase} to get filename for
+     * @return String suitable for using as <code>model</code> filename
+     */
+    public static String getFileNameWithSampleId(DiseaseCase model) {
+        Publication publication = model.getPublication();
+        String ye = (publication.getYear() == null) ? "year" : publication.getYear();
+        String gn = (model.getGene().getSymbol() == null) ? "genesymbol" : model.getGene().getSymbol();
+        String sid = model.getFamilyInfo().getFamilyOrProbandId();
+        String candidate = String.format("%s-%s-%s-%s", getFirstAuthorsSurname(publication), ye, gn, sid);
+        return Checks.makeLegalFileNameWithNoWhitespace(candidate);
     }
 
     public static String getFirstAuthorsSurname(Publication publication) {

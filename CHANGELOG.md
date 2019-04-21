@@ -1,5 +1,8 @@
 # HRMD gui
 
+### v1.0.13
+- add value from *proband/family info* into file name when saving data
+
 ### v1.0.12
 - add `software_version` attribute to data model for storing name and version of software used to create data
 - store app's data in a version-indepenedent location that makes upgrading the app easier (`.hpo-case-annotator` instead of `.hpo-case-annotator-${project.version}`)
