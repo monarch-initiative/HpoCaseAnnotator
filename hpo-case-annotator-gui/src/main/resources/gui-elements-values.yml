@@ -20,7 +20,7 @@ variantClass: ['coding', 'enhancer', 'promoter', 'splicing', '5UTR',
   'unknown']
 
 # Pathomechanism
-pathomechanism: ['unknown', 'coding|missense', 'coding|stop-codon', 
+pathomechanism: ['unknown', 'coding|missense', 'coding|stop-codon', 'coding|frameshift',
   'coding|unknown', 'enhancer|unknown',
   'enhancer|reduced-transcription','enhancer|inappropriate-transcription',
   'enhancer|increased-transcription','enhancer|protein-binding','enhancer|protein-binding|disrupted',
