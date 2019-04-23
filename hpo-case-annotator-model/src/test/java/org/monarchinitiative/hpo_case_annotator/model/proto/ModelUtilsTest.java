@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.model.proto;
 import org.junit.Before;
 import org.junit.Test;
 import org.monarchinitiative.hpo_case_annotator.model.test_resources.TestResources;
+import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -27,6 +28,11 @@ public class ModelUtilsTest {
         assertThat(ModelUtils.getFileNameFor(diseaseCase), is("Ben_Mahmoud-2013-B3GLCT"));
     }
 
+
+    @Test
+    public void getFileNameWithSampleId() {
+        assertThat(ModelUtils.getFileNameWithSampleId(diseaseCase), is("Ben_Mahmoud-2013-B3GLCT-Tunisian_patients"));
+    }
 
     @Test
     public void getFirstAuthorsSurname() {

@@ -27,6 +27,7 @@ import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.Abstract
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.WidthAwareTextFields;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
+import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
 import org.monarchinitiative.hpotextmining.gui.controller.HpoTextMining;
 import org.monarchinitiative.hpotextmining.gui.controller.Main;
 import org.monarchinitiative.phenol.ontology.data.Ontology;

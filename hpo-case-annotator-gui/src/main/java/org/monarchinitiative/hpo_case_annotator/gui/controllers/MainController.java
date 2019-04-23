@@ -27,7 +27,7 @@ import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToPhenop
 import org.monarchinitiative.hpo_case_annotator.model.io.*;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.monarchinitiative.hpo_case_annotator.model.proto.ModelUtils;
+import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
 import org.phenopackets.schema.v1.Phenopacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -405,7 +405,7 @@ public final class MainController {
             int counter = 0;
             for (DiseaseCase model : models.values()) {
                 // we're exporting in JSON format
-                String fileName = ModelUtils.getFileNameFor(model) + ".json";
+                String fileName = ModelUtils.getFileNameWithSampleId(model) + ".json";
                 File target = new File(where, fileName);
                 try (BufferedWriter writer = Files.newBufferedWriter(target.toPath())) {
                     final Phenopacket packet = codec.encode(model);
@@ -438,7 +438,7 @@ public final class MainController {
     @FXML
     public void exportPhenopacketCurrentCaseMenuItemAction() {
         DiseaseCase diseaseCase = dataController.getData();
-        String suggestedFileName = ModelUtils.getFileNameFor(diseaseCase) + ".phenopacket";
+        String suggestedFileName = ModelUtils.getFileNameWithSampleId(diseaseCase) + ".json";
         String title = "Save as Phenopacket";
 
         final FileChooser filechooser = new FileChooser();
@@ -481,7 +481,7 @@ public final class MainController {
             int counter = 0;
             for (DiseaseCase model : models.values()) {
                 // we're exporting in JSON format
-                String fileName = ModelUtils.getFileNameFor(model) + ".json";
+                String fileName = ModelUtils.getFileNameWithSampleId(model) + ".json";
                 File target = new File(where, fileName);
                 try (BufferedWriter writer = Files.newBufferedWriter(target.toPath())) {
                     final Phenopacket packet = codec.encode(model);
@@ -601,7 +601,7 @@ public final class MainController {
             //        fileChooser.setSelectedExtensionFilter(jsonFileFormat);
 
             fileChooser.setTitle(conversationTitle);
-            String suggestedName = ModelUtils.getFileNameFor(model) + ".json";
+            String suggestedName = ModelUtils.getFileNameWithSampleId(model) + ".json";
             fileChooser.setInitialFileName(suggestedName);
             fileChooser.setInitialDirectory(optionalResources.getDiseaseCaseDir());
             fileChooser.getExtensionFilters().addAll(jsonFileFormat, xmlFileFormat);
