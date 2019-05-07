@@ -99,7 +99,10 @@ public class PubMedParser {
                 errorString = String.format("Could not volume/pages in String %s", data);
                 throw new PubMedParseException(errorString);
             }
-            String[] volumeAndPages = parseVolumeAndPages(currentString.substring(0, x));
+            String[] volumeAndPages = parsePiiVolume(currentString);
+            if (volumeAndPages==null) {
+                volumeAndPages = parseVolumeAndPages(currentString.substring(0, x));
+            }
             if (volumeAndPages[0] == null && volumeAndPages[1] == null) {
                 errorString = String.format("Could not volume/pages in String %s", data);
                 throw new PubMedParseException(errorString);
@@ -122,6 +125,20 @@ public class PubMedParser {
         return new Result(authorlist, title, journal, publicationYear,
                 publicationVolume, publicationPages, pmid);
     }
+
+    private static String[] parsePiiVolume(String s){
+        Pattern pattern = Pattern.compile("pii: ([-\\w]+)\\.");
+        Matcher matcher = pattern.matcher(s);
+        int x=s.indexOf(".");
+        if (matcher.find()) {
+            String  volume = "pii: ";
+            String pages = matcher.group(1);
+            return new String[]{volume,pages};
+        } else {
+            return null;
+        }
+    }
+
 
 
     /**
@@ -171,6 +188,9 @@ public class PubMedParser {
      * Look for this:10(11):e1004578.#
      */
     private static String[] parseVolumeAndPages(String s) {
+        // look for 15(10). pii: E2072.
+
+
         String a[] = s.split(":");
         if (a.length == 2) {
             return a;
