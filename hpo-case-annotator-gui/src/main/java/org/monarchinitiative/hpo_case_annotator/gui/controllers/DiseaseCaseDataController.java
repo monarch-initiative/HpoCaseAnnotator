@@ -475,7 +475,13 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
         statusLabel.textProperty().bind(diseaseCaseTitleBinding());
 
-        presentData(DiseaseCase.newBuilder().build()); // the last statement
+        // Set default values to GUI fields
+        presentData(DiseaseCase.newBuilder()
+                // Default disease database is OMIM
+                .setDisease(Disease.newBuilder()
+                        .setDatabase("OMIM")
+                        .build())
+                .build()); // the last statement
     }
 
 
