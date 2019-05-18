@@ -55,4 +55,25 @@ public class PubMedParserTest {
         assertEquals("16054339", result.getPmid());
     }
 
+
+    @Test
+    public void testParsePubMedThree() throws Exception {
+        // The following string has an unusual format with pii:
+        final String sampleThree = "1: Sandal S, Kaur A, Panigrahi I. Novel mutation in the CHST14 gene causing\n" +
+                "musculocontractural type of Ehlers-Danlos syndrome. BMJ Case Rep. 2018 Sep\n" +
+                "23;2018. pii: bcr-2018-226165. doi: 10.1136/bcr-2018-226165. PubMed PMID:\n" +
+                "30249733.";
+        PubMedParser.Result result = PubMedParser.parsePubMed(sampleThree);
+        assertEquals("Sandal S, Kaur A, Panigrahi I", result.getAuthorList());
+//        assertEquals("Wessagowit", publication.getFirstAuthorSurname());
+        assertEquals("Novel mutation in the CHST14 gene causing musculocontractural type of Ehlers-Danlos syndrome", result.getTitle());
+        assertEquals("BMJ Case Rep", result.getJournal());
+        assertEquals("2018", result.getYear());
+        assertEquals("pii: ", result.getVolume());
+        assertEquals("bcr-2018-226165", result.getPages());
+        assertEquals("30249733", result.getPmid());
+
+
+    }
+
 }
