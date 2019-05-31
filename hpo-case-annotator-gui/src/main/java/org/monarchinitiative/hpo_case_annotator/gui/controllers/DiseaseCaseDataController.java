@@ -226,6 +226,12 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
             case SPLICING:
                 location = AbstractVariantController.class.getResource("SplicingVariant.fxml");
                 break;
+            case CNV:
+                location = AbstractVariantController.class.getResource("CnvVariant.fxml");
+                break;
+            case BKPT:
+                location = AbstractVariantController.class.getResource("BreakpointVariant.fxml");
+                break;
             default:
                 LOGGER.warn("Unknown variant validation context '{}'", variant.getVariantValidation().getContext());
                 return;

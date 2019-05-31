@@ -11,9 +11,7 @@ import org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataC
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValuesTest;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.ShowValidationResultsController;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SomaticVariantController;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SplicingVariantController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.*;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.phenol.base.PhenolException;
 import org.slf4j.Logger;
@@ -55,6 +53,7 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
         bind(MendelianVariantController.class);
         bind(SomaticVariantController.class);
         bind(SplicingVariantController.class);
+        bind(CnvVariantController.class);
 
         bind(ShowValidationResultsController.class);
 

@@ -15,7 +15,7 @@ chromosome: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
   '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', 'X', 'Y', 'MT']
 
 # Variant class - the root term of pathomechanism.
-variantClass: ['coding', 'enhancer', 'promoter', 'splicing', '5UTR',
+variantClass: ['coding', 'enhancer', 'promoter', 'splicing', 'structural', '5UTR',
   '3UTR', 'ICR', 'microRNAgene', 'RNP_RNAcomponent', 'LINC_RNA',
   'unknown']
 

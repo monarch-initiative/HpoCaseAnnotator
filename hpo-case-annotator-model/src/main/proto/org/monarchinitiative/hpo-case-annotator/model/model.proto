@@ -36,7 +36,7 @@ enum GenomeAssembly {
 
     UNKNOWN_GENOME_ASSEMBLY = 0;
 
-//    Commenting out only and not deleting so that we know that it was here
+//    Commenting out only and not deleting so that we know it was here
 //    NCBI_36 = 1;
 //    HG_18 = 1;
 
@@ -60,6 +60,39 @@ message VariantPosition {
     string ref_allele = 4;
 
     string alt_allele = 5;
+
+    // e.g. 1, 2, X, Y, MT
+    string contig2 = 6;
+
+    // 1-based end position of the variant, used for structural variants
+    int32 pos2 = 7;
+
+    // Used only to describe breakend.
+    // FWD if 5'->3' direction on contig2 would be as if it was on FWD strand of contig2
+    // REV if 5'->3' direction on contig2 would be as if it was on REV strand of contig2
+    Direction contig_direction = 8;
+
+    // Used only to describe breakend.
+    // FWD if 3'->5' direction of the second contig in case of breakend
+    // true if FWD, false if REV
+    Direction contig2_direction = 9;
+
+    // See VCF specs 4.3. | Section 5.4. | Figure 2
+    // The Direction enum would describe pictured breakends in this way
+    //
+    // W <--> Y            FWD REV
+    // U <--> V            FWD FWD
+    // Y <--> W            FWD REV
+    // ---------------------------
+    // V <--> U            REV REV
+    // X <--> Z            REV FWD
+    // Z <--> X            REV FWD
+    enum Direction {
+        UNDEFINED = 0;
+        FWD = 1;
+        REV = 2;
+    }
+
 }
 
 message Variant {
@@ -164,6 +197,8 @@ message VariantValidation {
         MENDELIAN = 1;
         SOMATIC = 2;
         SPLICING = 3;
+        CNV = 4;
+        BKPT = 5;
     }
 }
 

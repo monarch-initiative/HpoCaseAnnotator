@@ -35,8 +35,10 @@ public class VariantSyntaxValidator implements Validator<Variant> {
     /**
      * Variant position data must match this regexp - any positive integer.
      */
-    public static final String POSITIVE_INTEGER_REGEXP = "[^-0]?[123456789]\\d*";
+    public static final String POSITIVE_INTEGER_REGEXP = "^[^-]?[1-9][0-9]*$";
 
+
+    public static final String NON_NEGATIVE_INTEGER_REGEXP = "^[1-9][0-9]*$";
 
     /**
      * Alleles (REF, ALT) must match this regexp - only <code>A,C,G,T,a,c,g,t</code> nucleotides are permitted.
