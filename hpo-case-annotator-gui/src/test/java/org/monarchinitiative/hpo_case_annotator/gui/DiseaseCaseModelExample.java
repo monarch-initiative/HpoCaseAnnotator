@@ -178,6 +178,46 @@ public class DiseaseCaseModelExample {
                 .build();
     }
 
+    public static Variant makeCnvDeletionVariant() {
+        return Variant.newBuilder()
+                .setVariantPosition(VariantPosition.newBuilder()
+                        .setGenomeAssembly(GenomeAssembly.GRCH_37)
+                        .setContig("9")
+                        .setPos(10_000_000)
+                        .setPos2(10_001_000)
+                        .setCiBeginOne(-50)
+                        .setCiBeginTwo(50)
+                        .setCiEndOne(-100)
+                        .setCiEndTwo(100)
+                        .build())
+                .setCnvPloidy(1) // deletion
+                .setVariantClass("structural")
+                .setVariantValidation(VariantValidation.newBuilder()
+                        .setContext(VariantValidation.Context.CNV)
+                        .build())
+                .build();
+    }
+
+    public static Variant makeCnvDuplicationVariant() {
+        return Variant.newBuilder()
+                .setVariantPosition(VariantPosition.newBuilder()
+                        .setGenomeAssembly(GenomeAssembly.GRCH_37)
+                        .setContig("9")
+                        .setPos(10_000_000)
+                        .setPos2(10_001_000)
+                        .setCiBeginOne(-50)
+                        .setCiBeginTwo(50)
+                        .setCiEndOne(-100)
+                        .setCiEndTwo(100)
+                        .build())
+                .setCnvPloidy(3) // duplication
+                .setVariantClass("structural")
+                .setVariantValidation(VariantValidation.newBuilder()
+                        .setContext(VariantValidation.Context.CNV)
+                        .build())
+                .build();
+    }
+
     public static Publication makeExomiserPublication() {
         return Publication.newBuilder()
                 .setAuthorList("Smedley D, Jacobsen JO, Jäger M, Köhler S, Holtgrewe M, Schubach M, Siragusa E, Zemojtel T, Buske OJ, Washington NL, Bone WP, Haendel MA, Robinson PN")

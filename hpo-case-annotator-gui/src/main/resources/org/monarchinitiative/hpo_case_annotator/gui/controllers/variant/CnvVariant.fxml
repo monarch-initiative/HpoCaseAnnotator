@@ -17,29 +17,36 @@
    <content>
       <VBox>
          <children>
-            <GridPane style="-fx-background-color: #C3CA99;">
+            <GridPane minHeight="200.0" style="-fx-background-color: #C3CA99;">
               <columnConstraints>
                 <ColumnConstraints minWidth="165.0" prefWidth="165.0" />
                 <ColumnConstraints minWidth="10.0" />
                   <ColumnConstraints minWidth="10.0" />
                   <ColumnConstraints halignment="CENTER" />
-                  <ColumnConstraints />
-                  <ColumnConstraints minWidth="10.0" />
+                  <ColumnConstraints halignment="CENTER" />
+                  <ColumnConstraints halignment="CENTER" />
+                  <ColumnConstraints halignment="CENTER" />
+                  <ColumnConstraints halignment="CENTER" />
+                  <ColumnConstraints halignment="CENTER" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints />
+                  <RowConstraints minHeight="10.0" vgrow="NEVER" />
                 <RowConstraints />
                 <RowConstraints />
                   <RowConstraints />
-                  <RowConstraints minHeight="10.0" />
+                  <RowConstraints />
               </rowConstraints>
                <children>
                   <Label text="Variant" GridPane.rowSpan="2">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
                   </Label>
-                  <Label text="Coordinates" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER">
+                  <Label text="Coordinates" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER">
                      <font>
                         <Font name="System Italic" size="15.0" />
                      </font>
@@ -47,17 +54,18 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </Label>
-                  <ComboBox fx:id="genomeBuildComboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="90.0" prefHeight="30.0" prefWidth="90.0" promptText="Genome build" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                  <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="genomeBuildComboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="90.0" prefHeight="30.0" prefWidth="90.0" promptText="Genome build" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </ComboBox>
-                  <ComboBox fx:id="chromosomeComboBox" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="90.0" prefHeight="30.0" prefWidth="90.0" promptText="Chr" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <ComboBox fx:id="chromosomeComboBox" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="90.0" prefHeight="30.0" prefWidth="90.0" promptText="Chr" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </ComboBox>
-                  <TextField fx:id="beginTextField" minHeight="30.0" minWidth="120.0" prefHeight="30.0" prefWidth="120.0" promptText="begin" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                  <TextField fx:id="beginTextField" minHeight="30.0" minWidth="120.0" prefHeight="30.0" prefWidth="120.0" promptText="begin" GridPane.columnIndex="2" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
@@ -65,7 +73,7 @@
                         <Tooltip maxWidth="200.0" text="begin position of the CNV (0-based, exclusive)" wrapText="true" />
                      </tooltip>
                   </TextField>
-                  <TextField fx:id="endTextField" minHeight="30.0" minWidth="120.0" prefHeight="30.0" prefWidth="120.0" promptText="end" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                  <TextField fx:id="endTextField" minHeight="30.0" minWidth="120.0" prefHeight="30.0" prefWidth="120.0" promptText="end" GridPane.columnIndex="2" GridPane.rowIndex="4">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
@@ -73,17 +81,17 @@
                         <Tooltip maxWidth="200.0" text="end position of the CNV (0-based, inclusive)" wrapText="true" />
                      </tooltip>
                   </TextField>
-                  <ComboBox fx:id="variantClassComboBox" maxWidth="1.7976931348623157E308" promptText="Variant class" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                  <ComboBox fx:id="variantClassComboBox" maxWidth="1.7976931348623157E308" minHeight="30.0" promptText="Variant class" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </ComboBox>
-                  <Separator orientation="VERTICAL" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.rowSpan="2147483647">
+                  <Separator orientation="VERTICAL" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.rowSpan="2147483647">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </Separator>
-                  <Label text="Ploidy" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                  <Label text="Ploidy" textAlignment="CENTER" GridPane.columnIndex="4" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
@@ -91,7 +99,7 @@
                         <Font name="System Italic" size="13.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="cnvPloidyTextField" minHeight="30.0" minWidth="100.0" prefHeight="30.0" prefWidth="100.0" promptText="e.g. 2" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                  <TextField fx:id="cnvPloidyTextField" minHeight="30.0" minWidth="60.0" prefHeight="30.0" prefWidth="60.0" promptText="e.g. 2" GridPane.columnIndex="4" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
@@ -99,6 +107,70 @@
                         <Tooltip maxWidth="200.0" text="Ploidy of the CNV. Ploidy is 1 in case of deletion, 3 in case of duplication, 4 in case of triplication, etc.." wrapText="true" />
                      </tooltip>
                   </TextField>
+                  <Separator orientation="VERTICAL" GridPane.columnIndex="5" GridPane.rowIndex="2" GridPane.rowSpan="4">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Separator>
+                  <Label text="Confidence interval" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="6" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font name="System Italic" size="13.0" />
+                     </font>
+                  </Label>
+                  <Label text="begin" GridPane.columnIndex="6" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <TextField fx:id="ciBeginFirstTextField" prefWidth="80.0" promptText="e.g. -50" GridPane.columnIndex="7" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <TextField fx:id="ciBeginSecondTextField" prefWidth="80.0" promptText="e.g. 50" GridPane.columnIndex="8" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin></TextField>
+                  <Label text="end" GridPane.columnIndex="6" GridPane.rowIndex="4">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <TextField fx:id="ciEndFirstTextField" prefWidth="80.0" promptText="e.g. -50" GridPane.columnIndex="7" GridPane.rowIndex="4">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <TextField fx:id="ciEndSecondTextField" prefWidth="80.0" promptText="e.g. 50" GridPane.columnIndex="8" GridPane.rowIndex="4">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </TextField>
+               </children>
+            </GridPane>
+            <GridPane minHeight="100.0" style="-fx-background-color: #ffcc5c;">
+              <columnConstraints>
+                <ColumnConstraints minWidth="165.0" prefWidth="165.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Validation">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Label>
                </children>
             </GridPane>
          </children>

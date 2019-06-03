@@ -10,10 +10,15 @@ import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
+import org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.NON_NEGATIVE_INTEGER_REGEXP;
 import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.POSITIVE_INTEGER_REGEXP;
@@ -22,6 +27,8 @@ import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSy
  *
  */
 public final class CnvVariantController extends AbstractVariantController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CnvVariantController.class);
 
     @FXML
     public ComboBox<GenomeAssembly> genomeBuildComboBox;
@@ -41,9 +48,30 @@ public final class CnvVariantController extends AbstractVariantController {
     @FXML
     public TextField cnvPloidyTextField;
 
+    @FXML
+    public TextField ciBeginFirstTextField;
+
+    @FXML
+    public TextField ciBeginSecondTextField;
+
+    @FXML
+    public TextField ciEndFirstTextField;
+
+    @FXML
+    public TextField ciEndSecondTextField;
+
     @Inject
     public CnvVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
         super(elementValues, hostServices);
+    }
+
+    private static int parseIntOrGetDefaultValue(Supplier<String> stringSupplier, int defaultValue) {
+        try {
+            return Integer.parseInt(stringSupplier.get());
+        } catch (NumberFormatException e) {
+            LOGGER.debug("Unable to convert string {} to integer, returning {}", stringSupplier.get(), defaultValue);
+            return defaultValue;
+        }
     }
 
     @Override
@@ -68,13 +96,44 @@ public final class CnvVariantController extends AbstractVariantController {
     }
 
     @Override
-    public void presentData(Variant data) {
+    public void presentData(Variant variant) {
+        VariantPosition vp = variant.getVariantPosition();
+        genomeBuildComboBox.setValue(vp.getGenomeAssembly());
+        chromosomeComboBox.setValue(vp.getContig());
+        beginTextField.setText(String.valueOf(vp.getPos() - 1)); // convert to 0-based
+        endTextField.setText(String.valueOf(vp.getPos2()));
+        ciBeginFirstTextField.setText(String.valueOf(vp.getCiBeginOne()));
+        ciBeginSecondTextField.setText(String.valueOf(vp.getCiBeginTwo()));
+        ciEndFirstTextField.setText(String.valueOf(vp.getCiEndOne()));
+        ciEndSecondTextField.setText(String.valueOf(vp.getCiEndTwo()));
+        cnvPloidyTextField.setText(String.valueOf(variant.getCnvPloidy()));
 
+        variantClassComboBox.setValue(variant.getVariantClass());
+        VariantValidation vv = variant.getVariantValidation();
+        // TODO - elaborate
     }
 
     @Override
     public Variant getData() {
-        return Variant.getDefaultInstance();
+        return Variant.newBuilder()
+                .setVariantPosition(VariantPosition.newBuilder()
+                        .setGenomeAssembly(genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : genomeBuildComboBox.getValue())
+                        .setContig(chromosomeComboBox.getValue() == null ? "NA" : chromosomeComboBox.getValue())
+                        // we need to save 1-based coordinate in the VariantPosition, hence +1
+                        .setPos(parseIntOrGetDefaultValue(beginTextField::getText, 0) + 1) // convert to 1-based
+                        .setPos2(parseIntOrGetDefaultValue(endTextField::getText, 0))
+                        .setCiBeginOne(parseIntOrGetDefaultValue(ciBeginFirstTextField::getText, 0))
+                        .setCiBeginTwo(parseIntOrGetDefaultValue(ciBeginSecondTextField::getText, 0))
+                        .setCiEndOne(parseIntOrGetDefaultValue(ciEndFirstTextField::getText, 0))
+                        .setCiEndTwo(parseIntOrGetDefaultValue(ciEndSecondTextField::getText, 0))
+                        .build())
+                .setCnvPloidy(parseIntOrGetDefaultValue(cnvPloidyTextField::getText, 0))
+                .setVariantClass(variantClassComboBox.getValue() == null ? "" : variantClassComboBox.getValue())
+                .setVariantValidation(VariantValidation.newBuilder()
+                        .setContext(VariantValidation.Context.CNV)
+                        // TODO - elaborate
+                        .build())
+                .build();
     }
 
     public void initialize() {
@@ -82,6 +141,7 @@ public final class CnvVariantController extends AbstractVariantController {
         chromosomeComboBox.getItems().addAll(elementValues.getChromosome());
         beginTextField.setTextFormatter(makeTextFormatter(beginTextField, NON_NEGATIVE_INTEGER_REGEXP));
         endTextField.setTextFormatter(makeTextFormatter(endTextField, POSITIVE_INTEGER_REGEXP));
+        variantClassComboBox.getItems().addAll(elementValues.getVariantClass());
 
         cnvPloidyTextField.setTextFormatter(makeTextFormatter(cnvPloidyTextField, NON_NEGATIVE_INTEGER_REGEXP));
     }

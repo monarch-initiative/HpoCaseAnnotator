@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
 import com.google.inject.Injector;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -8,14 +9,19 @@ import javafx.stage.Stage;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.monarchinitiative.hpo_case_annotator.gui.DiseaseCaseModelExample;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceJUnitRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceModules;
 import org.monarchinitiative.hpo_case_annotator.gui.TestHpoCaseAnnotatorModule;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.testfx.framework.junit.ApplicationTest;
 
 import javax.inject.Inject;
+import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 @RunWith(GuiceJUnitRunner.class)
 @GuiceModules({TestHpoCaseAnnotatorModule.class})
@@ -41,8 +47,14 @@ public class CnvVariantControllerTest extends ApplicationTest {
     }
 
     @Test
-    public void basic() {
-        sleep(5);
+    public void presentAndGetTheSameData() {
+        final Variant presented = DiseaseCaseModelExample.makeCnvDeletionVariant();
+
+        Platform.runLater(() -> controller.presentData(presented));
+        sleep(30, TimeUnit.MILLISECONDS);
+        final Variant received = controller.getData();
+
+        assertThat(received, is(equalTo(presented)));
     }
 
     @Override

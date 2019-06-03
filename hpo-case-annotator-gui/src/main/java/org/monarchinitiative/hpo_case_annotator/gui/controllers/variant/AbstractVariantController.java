@@ -38,14 +38,11 @@ public abstract class AbstractVariantController extends AbstractDataController<V
 
     final List<ValidationResult> validationResults;
 
-    private final ValidationRunner<Variant> variantValidationRunner;
-
     private final StringProperty entrezId;
 
     @Inject
     AbstractVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
         this.elementValues = elementValues;
-        this.variantValidationRunner = ValidationRunner.variantValidationRunner();
         this.validationResults = new ArrayList<>();
         this.hostServices = hostServices;
         this.entrezId = new SimpleStringProperty(this, "entrezId", null);
@@ -61,8 +58,10 @@ public abstract class AbstractVariantController extends AbstractDataController<V
 
     @Override
     public boolean isComplete() {
+        Variant variant = getData();
+        ValidationRunner<Variant> runner = ValidationRunner.variantValidationRunner(variant.getVariantValidation().getContext());
         validationResults.clear();
-        validationResults.addAll(variantValidationRunner.validateSingleModel(getData()));
+        validationResults.addAll(runner.validateSingleModel(variant));
         return validationResults.isEmpty();
     }
 

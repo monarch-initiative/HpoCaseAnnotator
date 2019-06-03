@@ -88,11 +88,20 @@ message VariantPosition {
     // X <--> Z            REV FWD
     // Z <--> X            REV FWD
     enum Direction {
-        UNDEFINED = 0;
+        UNDEFINED = 0; // default value for non-SV variants
         FWD = 1;
         REV = 2;
     }
 
+    // Confidence intervals around begin and end positions of CNV/Breakpoint
+    //
+    int32 ci_begin_one = 10;
+
+    int32 ci_begin_two = 11;
+
+    int32 ci_end_one = 12;
+
+    int32 ci_end_two = 13;
 }
 
 message Variant {
@@ -129,6 +138,19 @@ message Variant {
     VariantValidation variant_validation = 13;
 
     VariantPosition variant_position = 14;
+
+    // CNV fields --------------------------
+
+    // Alteration in copy number (gain/loss) of a locus resulting in deviation from the normal diploid state is denoted
+    // here as a number different from '2'
+    uint32 cnv_ploidy = 20;
+
+    // reserved for CNV fields
+    reserved 21 to 29;
+
+    // Breakpoint fields
+    // reserved for Breakpoint fields
+    reserved 30 to 39;
 }
 
 

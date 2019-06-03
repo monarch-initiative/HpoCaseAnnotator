@@ -129,7 +129,7 @@ public class MendelianVariantControllerTest extends ApplicationTest {
      */
     @Test
     public void enterFullVariantData() {
-        // arange
+        // arrange
         clickOn("#genomeBuildComboBox").moveBy(-10, 40).clickOn(MouseButton.PRIMARY)
                 .clickOn("#chromosomeComboBox").moveBy(0, 30).clickOn(MouseButton.PRIMARY)
                 .clickOn("#positionTextField").write("12345345")
