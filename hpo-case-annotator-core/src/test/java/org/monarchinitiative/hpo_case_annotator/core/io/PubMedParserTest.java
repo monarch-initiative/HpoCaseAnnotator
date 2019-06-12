@@ -3,7 +3,6 @@ package org.monarchinitiative.hpo_case_annotator.core.io;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * These tests test {@link PubMedParser} and its parsing of PubMed summary (text) string. The parser doesn't perform

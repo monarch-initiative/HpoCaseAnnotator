@@ -136,7 +136,7 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
                         .setTaxonomy(HOMO_SAPIENS)
                         .build())
                 // phenotype (HPO) terms
-                .addAllPhenotypes(data.getPhenotypeList().stream()
+                .addAllPhenotypicFeatures(data.getPhenotypeList().stream()
                         .map(DiseaseCaseToPhenopacket.phenotype(publication, metadata))
                         .collect(Collectors.toList()))
                 // gene in question
@@ -196,9 +196,9 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
          * @param publication
          * @return
          */
-        private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.OntologyClass, Phenotype> phenotype(Publication publication, String metadata) {
+        private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.OntologyClass, PhenotypicFeature> phenotype(Publication publication, String metadata) {
             return oc ->
-                    Phenotype.newBuilder()
+                    PhenotypicFeature.newBuilder()
                             .setType(OntologyClass.newBuilder() // the primary HPO term
                                     .setId(oc.getId())
                                     .setLabel(oc.getLabel())

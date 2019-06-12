@@ -102,6 +102,8 @@ class VariantUtil {
             PopUps.showInfoMessage("Malformed HGVS String", "Could not find \"c.\"");
             return;
         }
+        // replace '+' with '%2B', which will be a valid URL
+        var = var.replaceAll("\\+","%2B");
         String assemblyString = assembly.equals(GenomeAssembly.GRCH_37) ? "GRCh37" : "GRCh38";
         Pattern pat = Pattern.compile("(\\d+)(\\w+)>(\\w+)");
         Matcher m = pat.matcher(var);
@@ -149,6 +151,8 @@ class VariantUtil {
             PopUps.showInfoMessage("Malformed HGVS String", "Could not find \"c.\"");
             return;
         }
+        // The following replaces '+' with %2B, which works in a URL
+        hgvsVariant = hgvsVariant.replaceAll("\\+","%2B");
         String assemblyString = assembly.equals(GenomeAssembly.GRCH_37) ? "GRCh37" : "GRCh38";
 
         String vvURL = String.format("https://variantvalidator.org/variantvalidation/?variant=%s:%s&primary_assembly=%s",

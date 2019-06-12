@@ -17,8 +17,8 @@ class PhenopacketExample {
         return Phenopacket.newBuilder()
                 .setId("EdPhenopacket")
                 .setSubject(getSubject())
-                .addPhenotypes(getCongenitalSyndactyly())
-                .addPhenotypes(getNotCryptorchidism())
+                .addPhenotypicFeatures(getCongenitalSyndactyly())
+                .addPhenotypicFeatures(getNotCryptorchidism())
                 .addGenes(getAbcc9Gene())
                 .addVariants(getAbcc9Variant())
                 .addDiseases(getHypertrichoticOsteochondrodysplasia())
@@ -40,8 +40,8 @@ class PhenopacketExample {
                 .build();
     }
 
-    private static Phenotype getCongenitalSyndactyly() {
-        return Phenotype.newBuilder() // severe syndactyly with congenital onset on the right side
+    private static PhenotypicFeature getCongenitalSyndactyly() {
+        return PhenotypicFeature.newBuilder() // severe syndactyly with congenital onset on the right side
                 .setType(ontologyClass("HP:0001159", "Syndactyly"))
                 .setNegated(false) // is present
                 .setSeverity(ontologyClass("HP:0012828", "Severe"))
@@ -57,8 +57,8 @@ class PhenopacketExample {
                 .build();
     }
 
-    private static Phenotype getNotCryptorchidism() {
-        return Phenotype.newBuilder()
+    private static PhenotypicFeature getNotCryptorchidism() {
+        return PhenotypicFeature.newBuilder()
                 .setType(ontologyClass("HP:0000028", "Cryptorchidism"))
                 .setNegated(true)
                 .addEvidence(Evidence.newBuilder()
