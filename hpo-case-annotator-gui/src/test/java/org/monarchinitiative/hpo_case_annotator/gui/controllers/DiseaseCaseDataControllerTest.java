@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
 import com.google.inject.Injector;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -137,7 +138,8 @@ public class DiseaseCaseDataControllerTest extends ApplicationTest {
                         OntologyClass.newBuilder().setId("HP:0005185").setLabel("Global systolic dysfunction").setNotObserved(false).build()
                 ))
                 .build();
-        controller.presentData(data);
+        Platform.runLater(() -> controller.presentData(data));
+        sleep(50);
 
         final DiseaseCase received = controller.getData();
         final List<OntologyClass> phenotypes = received.getPhenotypeList();
