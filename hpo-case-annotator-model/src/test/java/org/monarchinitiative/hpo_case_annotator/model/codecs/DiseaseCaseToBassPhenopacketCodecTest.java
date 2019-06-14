@@ -42,43 +42,43 @@ public class DiseaseCaseToBassPhenopacketCodecTest {
                 .build()));
 
         // PHENOTYPES
-        List<Phenotype> expectedPhenotypes = Arrays.asList(
-                Phenotype.newBuilder()
+        List<PhenotypicFeature> expectedPhenotypes = Arrays.asList(
+                PhenotypicFeature.newBuilder()
                         .setType(ontologyClass("HP:0003498", "Disproportionate short stature"))
                         .addEvidence(Evidence.newBuilder()
                                 .setEvidenceCode(ontologyClass("ECO:0000033", "author statement supported by traceable reference"))
                                 .setReference(ExternalReference.newBuilder().setId("PMID:23954224").setDescription("First functional analysis of a novel splicing mutation in the B3GALTL gene by an ex vivo approach in Tunisian patients with typical Peters plus syndrome").build())
                                 .build())
                         .build(),
-                Phenotype.newBuilder()
+                PhenotypicFeature.newBuilder()
                         .setType(ontologyClass("HP:0007957", "Corneal opacity"))
                         .addEvidence(Evidence.newBuilder()
                                 .setEvidenceCode(ontologyClass("ECO:0000033", "author statement supported by traceable reference"))
                                 .setReference(ExternalReference.newBuilder().setId("PMID:23954224").setDescription("First functional analysis of a novel splicing mutation in the B3GALTL gene by an ex vivo approach in Tunisian patients with typical Peters plus syndrome").build())
                                 .build())
                         .build(),
-                Phenotype.newBuilder()
+                PhenotypicFeature.newBuilder()
                         .setType(ontologyClass("HP:0000268", "Dolichocephaly"))
                         .addEvidence(Evidence.newBuilder()
                                 .setEvidenceCode(ontologyClass("ECO:0000033", "author statement supported by traceable reference"))
                                 .setReference(ExternalReference.newBuilder().setId("PMID:23954224").setDescription("First functional analysis of a novel splicing mutation in the B3GALTL gene by an ex vivo approach in Tunisian patients with typical Peters plus syndrome").build())
                                 .build())
                         .build(),
-                Phenotype.newBuilder()
+                PhenotypicFeature.newBuilder()
                         .setType(ontologyClass("HP:0000311", "Round face"))
                         .addEvidence(Evidence.newBuilder()
                                 .setEvidenceCode(ontologyClass("ECO:0000033", "author statement supported by traceable reference"))
                                 .setReference(ExternalReference.newBuilder().setId("PMID:23954224").setDescription("First functional analysis of a novel splicing mutation in the B3GALTL gene by an ex vivo approach in Tunisian patients with typical Peters plus syndrome").build())
                                 .build())
                         .build(),
-                Phenotype.newBuilder()
+                PhenotypicFeature.newBuilder()
                         .setType(ontologyClass("HP:0011451", "Congenital microcephaly"))
                         .addEvidence(Evidence.newBuilder()
                                 .setEvidenceCode(ontologyClass("ECO:0000033", "author statement supported by traceable reference"))
                                 .setReference(ExternalReference.newBuilder().setId("PMID:23954224").setDescription("First functional analysis of a novel splicing mutation in the B3GALTL gene by an ex vivo approach in Tunisian patients with typical Peters plus syndrome").build())
                                 .build())
                         .build(),
-                Phenotype.newBuilder()
+                PhenotypicFeature.newBuilder()
                         .setType(ontologyClass("HP:0004325", "Decreased body weight"))
                         .addEvidence(Evidence.newBuilder()
                                 .setEvidenceCode(ontologyClass("ECO:0000033", "author statement supported by traceable reference"))
@@ -86,7 +86,7 @@ public class DiseaseCaseToBassPhenopacketCodecTest {
                                 .build())
                         .build()
         );
-        assertThat(pp.getPhenotypesList(), is(expectedPhenotypes));
+        assertThat(pp.getPhenotypicFeaturesList(), is(expectedPhenotypes));
 
         // GENES
         assertThat(pp.getGenesList(), is(Collections.singletonList(Gene.newBuilder().setId("ENTREZ:145173").setSymbol("B3GLCT").build())));

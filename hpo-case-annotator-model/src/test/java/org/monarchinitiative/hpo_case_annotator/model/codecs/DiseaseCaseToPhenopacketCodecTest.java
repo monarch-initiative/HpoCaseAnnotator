@@ -39,9 +39,9 @@ public class DiseaseCaseToPhenopacketCodecTest {
         assertThat(subject.getAgeAtCollection(), is(Age.newBuilder().setAge("P25Y").build()));
         assertThat(subject.getSex(), is(Sex.MALE));
 
-        final List<Phenotype> phenotypesList = packet.getPhenotypesList();
+        final List<PhenotypicFeature> phenotypesList = packet.getPhenotypicFeaturesList();
         assertThat(phenotypesList.size(), is(6));
-        assertThat(phenotypesList, hasItem(Phenotype.newBuilder()
+        assertThat(phenotypesList, hasItem(PhenotypicFeature.newBuilder()
                 .setType(OntologyClass.newBuilder()
                         .setId("HP:0003498")
                         .setLabel("Disproportionate short stature")
@@ -57,7 +57,7 @@ public class DiseaseCaseToPhenopacketCodecTest {
                                 .build())
                         .build())
                 .build()));
-        assertThat(phenotypesList, hasItem(Phenotype.newBuilder()
+        assertThat(phenotypesList, hasItem(PhenotypicFeature.newBuilder()
                 .setType(OntologyClass.newBuilder()
                         .setId("HP:0000268")
                         .setLabel("Dolichocephaly")

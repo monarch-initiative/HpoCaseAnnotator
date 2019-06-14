@@ -91,8 +91,8 @@ public class DiseaseCaseToBassPhenopacketCodec implements Codec<DiseaseCase, Phe
         }
     }
 
-    private static Function<OntologyClass, Phenotype> hcaPhenotypeToPhenopacketPhenotype(Publication publication) {
-        return oc -> Phenotype.newBuilder()
+    private static Function<OntologyClass, PhenotypicFeature> hcaPhenotypeToPhenopacketPhenotype(Publication publication) {
+        return oc -> PhenotypicFeature.newBuilder()
                 .setType(org.phenopackets.schema.v1.core.OntologyClass.newBuilder().setId(oc.getId()).setLabel(oc.getLabel()).build())
                 .setNegated(oc.getNotObserved())
                 .addEvidence(Evidence.newBuilder()
@@ -116,7 +116,7 @@ public class DiseaseCaseToBassPhenopacketCodec implements Codec<DiseaseCase, Phe
                         // .setAgeAtCollection() // cannot do this, we would have to enforce age in proper format in HCA first
                         .setTaxonomy(DiseaseCaseToPhenopacketCodec.HOMO_SAPIENS)
                         .build())
-                .addAllPhenotypes(data.getPhenotypeList().stream()
+                .addAllPhenotypicFeatures(data.getPhenotypeList().stream()
                         .map(hcaPhenotypeToPhenopacketPhenotype(data.getPublication()))
                         .collect(Collectors.toList()))
                 .addGenes(Gene.newBuilder()

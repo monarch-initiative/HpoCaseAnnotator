@@ -20,7 +20,6 @@ import org.testfx.framework.junit.ApplicationTest;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
@@ -130,16 +129,17 @@ public class DiseaseCaseDataControllerTest extends ApplicationTest {
      */
     @Test
     public void noDuplicateTermsPhenotypeTermsArePresent() {
-        final DiseaseCase data = DiseaseCase.newBuilder()
+        DiseaseCase data = DiseaseCase.newBuilder()
                 .addAllPhenotype(Arrays.asList(
                         OntologyClass.newBuilder().setId("HP:0000822").setLabel("Hypertension").setNotObserved(false).build(),
                         OntologyClass.newBuilder().setId("HP:0000822").setLabel("Hypertension").setNotObserved(false).build(), // duplicate that should be removed
                         OntologyClass.newBuilder().setId("HP:0002615").setLabel("Hypotension").setNotObserved(true).build(),
                         OntologyClass.newBuilder().setId("HP:0002615").setLabel("Hypotension").setNotObserved(true).build(),
                         OntologyClass.newBuilder().setId("HP:0005185").setLabel("Global systolic dysfunction").setNotObserved(false).build()
-                )).build();
+                ))
+                .build();
         Platform.runLater(() -> controller.presentData(data));
-        sleep(30, TimeUnit.MILLISECONDS);
+        sleep(50);
 
         final DiseaseCase received = controller.getData();
         final List<OntologyClass> phenotypes = received.getPhenotypeList();
