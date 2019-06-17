@@ -88,7 +88,7 @@ public class DiseaseCaseToPhenopacketCodecTest {
 
         assertTrue(variant.hasVcfAllele());
         VcfAllele va = variant.getVcfAllele();
-        assertThat(va.getId(), is("GRCh37"));
+        assertThat(va.getGenomeAssembly(), is("GRCh37"));
         assertThat(va.getChr(), is("13"));
         assertThat(va.getPos(), is(31843349));
         assertThat(va.getRef(), is("A"));
