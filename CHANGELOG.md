@@ -2,6 +2,10 @@
 
 ### v1.0.13
 - add value from *proband/family info* into file name when saving data
+- use `phenopacket-schema v1.0.0-RC1`
+- update versions of Maven plugins and dependencies
+- improve parsing of publication data from PubMed
+- set *OMIM* as the default disease database  
 
 ### v1.0.12
 - add `software_version` attribute to data model for storing name and version of software used to create data
