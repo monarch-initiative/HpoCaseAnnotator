@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.StackPane?>
+
 <BorderPane xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController">
    <center>
-      <StackPane fx:id="contentStackPane" alignment="TOP_CENTER" style="-fx-background-color: #ffffff;" BorderPane.alignment="TOP_CENTER" />
+      <TabPane fx:id="contentTabPane" prefHeight="600.0" prefWidth="1000.0" BorderPane.alignment="TOP_CENTER" />
    </center>
    <top>
        <MenuBar BorderPane.alignment="TOP_CENTER">
@@ -27,6 +31,7 @@
                    </accelerator>
                </MenuItem>
                <MenuItem mnemonicParsing="false" onAction="#saveAsMenuItemAction" text="Save as" />
+            <MenuItem fx:id="saveAllMenuItem" mnemonicParsing="false" onAction="#saveAllMenuItemAction" text="Save all" />
                <MenuItem mnemonicParsing="false" onAction="#exitMenuItemAction" text="Exit">
                    <accelerator>
                        <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -55,8 +60,7 @@
               <items>
                      <MenuItem id="phenopacketMenuItem" mnemonicParsing="false" onAction="#exportPhenopacketCurrentCaseMenuItemAction" text="Current case" />
                      <MenuItem mnemonicParsing="false" onAction="#exportPhenopacketAllCasesMenuItemAction" text="All cases" />
-                  <MenuItem mnemonicParsing="false" onAction="#exportPhenopacketAllCasesForBassMenuItemAction"
-                            text="All cases for BASS"/>
+                  <MenuItem mnemonicParsing="false" onAction="#exportPhenopacketAllCasesForBassMenuItemAction" text="All cases for BASS" />
               </items>
             </Menu>
             <SeparatorMenuItem mnemonicParsing="false" />
