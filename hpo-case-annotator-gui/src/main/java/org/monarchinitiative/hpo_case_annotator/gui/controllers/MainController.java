@@ -85,10 +85,19 @@ public final class MainController {
     public MenuItem showCuratedPublicationsMenuItem;
 
     @FXML
+    public MenuItem saveAsMenuItem;
+
+    @FXML
     public MenuItem saveAllMenuItem;
 
     @FXML
     public TabPane contentTabPane;
+
+    @FXML
+    public MenuItem validateCurrentEntryMenuItem;
+
+    @FXML
+    public MenuItem exportPhenopacketMenuItem;
 
     /**
      * This list contains controllers of the tabs in the same order as they are present in the {@link #contentTabPane#getTabs} method.
@@ -625,7 +634,12 @@ public final class MainController {
         StartupTask task = new StartupTask(optionalResources, properties, assemblies);
         executorService.submit(task);
 
-        contentTabPane.getTabs().addListener(saveAllMenuItemDisabler());
+        contentTabPane.getTabs().addListener(menuItemDisablerFor(saveMenuItem));
+        contentTabPane.getTabs().addListener(menuItemDisablerFor(saveAsMenuItem));
+        contentTabPane.getTabs().addListener(menuItemDisablerFor(saveAllMenuItem));
+        contentTabPane.getTabs().addListener(menuItemDisablerFor(validateCurrentEntryMenuItem));
+        contentTabPane.getTabs().addListener(menuItemDisablerFor(exportPhenopacketMenuItem));
+
         // disable for now - TODO - enable saving only if the disease case is complete?
 //        saveMenuItem.disableProperty().bind(dataController.diseaseCaseIsComplete().not());
         showCuratedPublicationsMenuItem.disableProperty().bind(optionalResources.diseaseCaseDirIsInitializedProperty().not());
@@ -635,12 +649,12 @@ public final class MainController {
     /**
      * @return {@link ListChangeListener} for tab list that disables the {@link #saveAllMenuItem} if the tab list is empty.
      */
-    private ListChangeListener<Tab> saveAllMenuItemDisabler() {
+    private ListChangeListener<Tab> menuItemDisablerFor(final MenuItem menuItem) {
         return c -> {
             if (c.getList().isEmpty()) {
-                saveAllMenuItem.setDisable(true);
+                menuItem.setDisable(true);
             } else {
-                saveAllMenuItem.setDisable(false);
+                menuItem.setDisable(false);
             }
         };
     }
