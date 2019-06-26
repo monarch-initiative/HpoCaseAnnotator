@@ -31,7 +31,10 @@
                    </accelerator>
                </MenuItem>
                <MenuItem mnemonicParsing="false" onAction="#saveAsMenuItemAction" text="Save as" />
-            <MenuItem fx:id="saveAllMenuItem" mnemonicParsing="false" onAction="#saveAllMenuItemAction" text="Save all" />
+            <MenuItem fx:id="saveAllMenuItem" disable="true" mnemonicParsing="false" onAction="#saveAllMenuItemAction" text="Save all">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+               </accelerator></MenuItem>
                <MenuItem mnemonicParsing="false" onAction="#exitMenuItemAction" text="Exit">
                    <accelerator>
                        <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />

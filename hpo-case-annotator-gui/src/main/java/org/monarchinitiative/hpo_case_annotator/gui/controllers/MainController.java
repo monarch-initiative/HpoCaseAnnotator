@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
 import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
@@ -624,10 +625,24 @@ public final class MainController {
         StartupTask task = new StartupTask(optionalResources, properties, assemblies);
         executorService.submit(task);
 
+        contentTabPane.getTabs().addListener(saveAllMenuItemDisabler());
         // disable for now - TODO - enable saving only if the disease case is complete?
 //        saveMenuItem.disableProperty().bind(dataController.diseaseCaseIsComplete().not());
         showCuratedPublicationsMenuItem.disableProperty().bind(optionalResources.diseaseCaseDirIsInitializedProperty().not());
 
+    }
+
+    /**
+     * @return {@link ListChangeListener} for tab list that disables the {@link #saveAllMenuItem} if the tab list is empty.
+     */
+    private ListChangeListener<Tab> saveAllMenuItemDisabler() {
+        return c -> {
+            if (c.getList().isEmpty()) {
+                saveAllMenuItem.setDisable(true);
+            } else {
+                saveAllMenuItem.setDisable(false);
+            }
+        };
     }
 
 
@@ -697,8 +712,7 @@ public final class MainController {
         } else {
             // update the Biocurator ID
             model = model.toBuilder()
-                    .setBiocurator(Biocurator.newBuilder().setBiocuratorId(optionalResources.getBiocuratorId())
-                            .build())
+                    .setBiocurator(Biocurator.newBuilder().setBiocuratorId(optionalResources.getBiocuratorId()).build())
                     .build();
             try (OutputStream os = Files.newOutputStream(currentModelPath)) {
                 // save in the same format the model was saved
@@ -722,6 +736,6 @@ public final class MainController {
 
     @FXML
     public void saveAllMenuItemAction() {
-
+        controllers.forEach(c -> saveModel(c.getCurrentModelPath(), c.getData()));
     }
 }
