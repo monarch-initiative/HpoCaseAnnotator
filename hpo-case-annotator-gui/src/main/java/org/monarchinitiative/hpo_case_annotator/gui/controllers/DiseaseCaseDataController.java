@@ -75,9 +75,6 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     public Button inputPubMedDataButton;
 
     @FXML
-    public Label statusLabel;
-
-    @FXML
     private Button hpoTextMiningButton;
 
     @FXML
@@ -128,12 +125,6 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     @FXML
     private TextArea metadataTextArea;
 
-    /**
-     * Keep track to path of file containing data of current model so we don't need to ask user where to save a model
-     * everytime a change has been made.
-     */
-    private File currentModelPath;
-
 
     @Inject
     public DiseaseCaseDataController(OptionalResources optionalResources, ExecutorService executorService, GuiElementValues elementValues,
@@ -171,24 +162,6 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         };
     }
 
-
-    /**
-     * Get path to XML file corresponding to current model.
-     *
-     * @return {@link File} containing the path.
-     */
-    public File getCurrentModelPath() {
-        return currentModelPath;
-    }
-
-    /**
-     * Set path to XML file corresponding to current model.
-     *
-     * @param currentModelPath {@link File} containing the path.
-     */
-    public void setCurrentModelPath(File currentModelPath) {
-        this.currentModelPath = currentModelPath;
-    }
 
     /**
      * Load given <code>variant</code> collection into GUI accordion.
@@ -473,8 +446,6 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
             if (!newValue) enableEntrezAutocompletions();
         });
 
-        statusLabel.textProperty().bind(diseaseCaseTitleBinding());
-
         // Set default values to GUI fields
         presentData(DiseaseCase.newBuilder()
                 // Default disease database is OMIM
@@ -647,7 +618,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     Binding<String> diseaseCaseTitleBinding() {
         return Bindings.createStringBinding(() -> {
                     if (isComplete()) {
-                        return String.format("%s et al., %d variant(s)", ModelUtils.getFirstAuthorsSurname(publication.get()), variantControllers.size());
+                        return ModelUtils.getFileNameWithSampleId(getData());
                     } else {
                         return String.format("Data INCOMPLETE: %s", validationResults.get(0).getMessage());
                     }
