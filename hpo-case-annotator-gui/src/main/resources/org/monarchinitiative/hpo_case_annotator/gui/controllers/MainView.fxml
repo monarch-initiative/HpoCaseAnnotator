@@ -35,7 +35,7 @@
                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                    </accelerator>
                </MenuItem>
-            <MenuItem fx:id="saveAllMenuItem" disable="true" mnemonicParsing="false" onAction="#saveAllMenuItemAction" text="Save all"/>
+            <MenuItem fx:id="saveAllMenuItem" disable="true" mnemonicParsing="false" onAction="#saveAllMenuItemAction" text="Save all" />
                <MenuItem mnemonicParsing="false" onAction="#exitMenuItemAction" text="Exit">
                    <accelerator>
                        <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -52,7 +52,10 @@
                <MenuItem id="showCuratedPublicationsMenuItem" fx:id="showCuratedPublicationsMenuItem" mnemonicParsing="false" onAction="#showCuratedPublicationsMenuItemAction" text="Show curated publications" />
            </Menu>
            <Menu text="Validate">
-               <MenuItem id="validateCurrentEntryMenuItem" fx:id="validateCurrentEntryMenuItem" disable="true" mnemonicParsing="false" onAction="#validateCurrentEntryMenuItemAction" text="Validate current case" />
+               <MenuItem id="validateCurrentEntryMenuItem" fx:id="validateCurrentEntryMenuItem" disable="true" mnemonicParsing="false" onAction="#validateCurrentEntryMenuItemAction" text="Validate current case">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+               </accelerator></MenuItem>
                <MenuItem id="validateAllXMLFilesMenuItem" mnemonicParsing="false" onAction="#validateAllFilesMenuItemAction" text="Validate all cases" />
            </Menu>
            <Menu text="Export">
