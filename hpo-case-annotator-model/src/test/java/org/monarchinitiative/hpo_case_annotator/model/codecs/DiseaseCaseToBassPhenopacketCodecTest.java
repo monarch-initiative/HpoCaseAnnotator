@@ -31,7 +31,7 @@ public class DiseaseCaseToBassPhenopacketCodecTest {
 
         Phenopacket pp = instance.encode(dc);
         // ID
-        assertThat(pp.getId(), is("Ben_Mahmoud-2013-B3GLCT"));
+        assertThat(pp.getId(), is("PMID:23954224-Ben_Mahmoud-2013-B3GLCT-Tunisian_patients"));
 
         // SUBJECT
         assertThat(pp.getSubject(), is(Individual.newBuilder()

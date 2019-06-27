@@ -3,7 +3,6 @@ package org.monarchinitiative.hpo_case_annotator.model.codecs;
 import com.google.protobuf.Timestamp;
 import org.monarchinitiative.hpo_case_annotator.model.proto.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
-import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
 import org.phenopackets.schema.v1.Phenopacket;
 import org.phenopackets.schema.v1.core.Disease;
 import org.phenopackets.schema.v1.core.Gene;
@@ -108,7 +107,7 @@ public class DiseaseCaseToBassPhenopacketCodec implements Codec<DiseaseCase, Phe
     @Override
     public Phenopacket encode(DiseaseCase data) {
         return Phenopacket.newBuilder()
-                .setId(ModelUtils.getFileNameFor(data))
+                .setId(Codecs.getPhenopacketIdFor(data))
                 .setSubject(Individual.newBuilder()
                         .setId(data.getFamilyInfo().getFamilyOrProbandId())
                         .setDatasetId(DATASET_ID)
@@ -150,4 +149,5 @@ public class DiseaseCaseToBassPhenopacketCodec implements Codec<DiseaseCase, Phe
         LOGGER.warn("Decoding BASS Phenopacket to DiseaseCase is not supported at the moment");
         return null;
     }
+
 }

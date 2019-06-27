@@ -2,6 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.model.codecs;
 
 import com.google.common.collect.ImmutableMap;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
 import org.monarchinitiative.hpo_case_annotator.model.xml_model.DiseaseCaseModel;
 
 import java.util.HashMap;
@@ -30,6 +31,12 @@ public final class Codecs {
         return new DiseaseCaseToBassPhenopacketCodec();
     }
 
+    static String getPhenopacketIdFor(DiseaseCase model) {
+        String fn = ModelUtils.getFileNameFor(model);
+        return String.format("PMID:%s-%s-%s", model.getPublication().getPmid(),
+                fn,
+                model.getFamilyInfo().getFamilyOrProbandId().replaceAll("\\s+", "_"));
+    }
 
     /**
      * Biocurated data can be represented in file in these formats.
