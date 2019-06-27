@@ -267,40 +267,43 @@ public final class MainController {
 
         List<File> files = filechooser.showOpenMultipleDialog(primaryStage);
 
+        if (files == null) {
+            // no file was selected
+            return;
+        }
+
+
         for (File file : files) {
             DiseaseCase diseaseCase;
-            if (file != null) {
-                switch (filechooser.getSelectedExtensionFilter().getDescription()) {
-                    case SPLICING_XML:
-                        try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
-                            diseaseCase = XMLModelParser.loadDiseaseCase(is)
-                                    .orElseThrow(() -> new IOException("Unable to decode XML file"));
-                        } catch (IOException e) {
-                            PopUps.showException("Open XML model", "Sorry", "Unable to decode XML file", e);
-                            return;
-                        }
-                        break;
-                    case PROTO_JSON:
-                        try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
-                            diseaseCase = ProtoJSONModelParser.readDiseaseCase(is)
-                                    .orElseThrow(() -> new IOException("Unable to decode JSON file"));
-                        } catch (FileNotFoundException e) {
-                            PopUps.showException("Open JSON model", String.format("File '%s' not found", file.getAbsolutePath()), "", e);
-                            return;
-                        } catch (InvalidProtocolBufferException e) {
-                            PopUps.showException("Open JSON model", String.format("Error parsing file content '%s'", file.getAbsolutePath()), "", e);
-                            return;
-                        } catch (IOException e) {
-                            PopUps.showException("Open JSON model", String.format("Error while reading file '%s'", file.getAbsolutePath()), "", e);
-                            return;
-                        }
-                        break;
-                    default:
-                        throw new RuntimeException("This should not have had happened!");
-                }
-
-                addTab(diseaseCase, file.toPath());
+            switch (filechooser.getSelectedExtensionFilter().getDescription()) {
+                case SPLICING_XML:
+                    try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
+                        diseaseCase = XMLModelParser.loadDiseaseCase(is)
+                                .orElseThrow(() -> new IOException("Unable to decode XML file"));
+                    } catch (IOException e) {
+                        PopUps.showException("Open XML model", "Sorry", "Unable to decode XML file", e);
+                        return;
+                    }
+                    break;
+                case PROTO_JSON:
+                    try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
+                        diseaseCase = ProtoJSONModelParser.readDiseaseCase(is)
+                                .orElseThrow(() -> new IOException("Unable to decode JSON file"));
+                    } catch (FileNotFoundException e) {
+                        PopUps.showException("Open JSON model", String.format("File '%s' not found", file.getAbsolutePath()), "", e);
+                        return;
+                    } catch (InvalidProtocolBufferException e) {
+                        PopUps.showException("Open JSON model", String.format("Error parsing file content '%s'", file.getAbsolutePath()), "", e);
+                        return;
+                    } catch (IOException e) {
+                        PopUps.showException("Open JSON model", String.format("Error while reading file '%s'", file.getAbsolutePath()), "", e);
+                        return;
+                    }
+                    break;
+                default:
+                    throw new RuntimeException("This should not have had happened!");
             }
+            addTab(diseaseCase, file.toPath());
         }
     }
 
