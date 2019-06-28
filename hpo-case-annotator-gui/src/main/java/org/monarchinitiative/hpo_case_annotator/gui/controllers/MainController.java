@@ -25,7 +25,7 @@ import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.StartupTask;
 import org.monarchinitiative.hpo_case_annotator.model.codecs.Codecs;
-import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToBassPhenopacketCodec;
+import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToThreesPhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToPhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.model.io.*;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
@@ -553,12 +553,12 @@ public final class MainController {
      * Data specific to splicing is encoded into {@link Phenopacket}.
      */
     @FXML
-    public void exportPhenopacketAllCasesForBassMenuItemAction() {
+    public void exportPhenopacketAllCasesForThreesMenuItemAction() {
         Map<File, DiseaseCase> models = readDiseaseCasesFromDirectory(optionalResources.getDiseaseCaseDir());
 
         File where = PopUps.selectDirectory(primaryStage, optionalResources.getDiseaseCaseDir(),
                 "Select export directory");
-        DiseaseCaseToBassPhenopacketCodec codec = Codecs.bassPhenopacketCodec();
+        DiseaseCaseToThreesPhenopacketCodec codec = Codecs.threesPhenopacketCodec();
 
         if (where != null) {
             int counter = 0;
