@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -25,6 +26,7 @@ import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.AbstractVariantController;
+import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.WidthAwareTextFields;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
@@ -53,6 +55,11 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseCaseDataController.class);
 
+    /**
+     * Template for hyperlink pointing to PubMed entry of the publication.
+     */
+    private static final String PUBMED_BASE_LINK = "https://www.ncbi.nlm.nih.gov/pubmed/%s";
+
     private final OptionalResources optionalResources;
 
     private final ExecutorService executorService;
@@ -76,6 +83,9 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
     @FXML
     public Label phenotypeSummaryLabel;
+
+    @FXML
+    public Button seeOnPubmedButton;
 
     @FXML
     private Button hpoTextMiningButton;
@@ -165,6 +175,26 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         };
     }
 
+    /**
+     * @return change listener for Phenotypes observable list that updates the {@code phenotypeSummaryLabel} with observed/excluded
+     * phenotype term count
+     */
+    private static ListChangeListener<OntologyClass> makePhenotypeSummaryLabel(List<OntologyClass> phenotypes, Label phenotypeSummaryLabel) {
+        return c -> {
+            int nObserved = 0, nExcluded = 0;
+            for (OntologyClass phenotype : phenotypes) {
+                if (phenotype.getNotObserved()) {
+                    nExcluded++;
+                } else {
+                    nObserved++;
+                }
+            }
+            String observedSummary = (nObserved == 1) ? "1 observed term" : String.format("%d observed terms", nObserved);
+            String excludedSummary = (nExcluded == 1) ? "1 excluded term" : String.format("%d excluded terms", nExcluded);
+
+            phenotypeSummaryLabel.setText(String.join("\n", observedSummary, excludedSummary));
+        };
+    }
 
     /**
      * Load given <code>variant</code> collection into GUI accordion.
@@ -382,7 +412,6 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         PopUps.showInfoMessage("PubMed parse OK", conversationTitle);
     }
 
-
     /**
      * Retrieve PubMed summary for given PMID.
      */
@@ -401,7 +430,6 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         });
         executorService.submit(task);
     }
-
 
     /**
      * Populate view elements with choices, create bindings and autocompletions.
@@ -458,26 +486,12 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
                 .build()); // the last statement
 
         // generate phenotype summary text
-        phenotypes.addListener(makePhenotypeSummaryLabel());
+        phenotypes.addListener(makePhenotypeSummaryLabel(phenotypes, phenotypeSummaryLabel));
+
+        // Enable the `See on PubMed` button when publication is set
+        BooleanBinding pmidIsNotSet = Bindings.createBooleanBinding(() -> publication.get().getPmid().isEmpty(), publication);
+        seeOnPubmedButton.disableProperty().bind(pmidIsNotSet);
     }
-
-    public ListChangeListener<OntologyClass> makePhenotypeSummaryLabel() {
-        return c -> {
-            int nObserved = 0, nExcluded = 0;
-            for (OntologyClass phenotype : phenotypes) {
-                if (phenotype.getNotObserved()) {
-                    nExcluded++;
-                } else {
-                    nObserved++;
-                }
-            }
-            String observedSummary = (nObserved == 1) ? "1 observed term" : String.format("%d observed terms", nObserved);
-            String excludedSummary = (nExcluded == 1) ? "1 excluded term" : String.format("%d excluded terms", nExcluded);
-
-            phenotypeSummaryLabel.setText(String.join("\n", observedSummary, excludedSummary));
-        };
-    }
-
 
     /**
      * Create autocompletions on GUI elements - allow completion of gene symbol after entering gene id and vice-versa
@@ -655,5 +669,12 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         return Arrays.asList(publication, entrezIDTextField.textProperty(), geneSymbolTextField.textProperty(),
                 diseaseDatabaseComboBox.valueProperty(), diseaseNameTextField.textProperty(), diseaseIDTextField.textProperty(),
                 probandFamilyTextField.textProperty(), sexComboBox.valueProperty(), ageTextField.textProperty(), variantControllers);
+    }
+
+    @FXML
+    public void seeOnPubmedButtonAction() {
+        HostServicesWrapper hsw = injector.getInstance(HostServicesWrapper.class);
+        final String publicationUrl = String.format(PUBMED_BASE_LINK, publication.get().getPmid());
+        hsw.showDocument(publicationUrl);
     }
 }

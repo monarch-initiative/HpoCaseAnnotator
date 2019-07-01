@@ -25,8 +25,8 @@ import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.StartupTask;
 import org.monarchinitiative.hpo_case_annotator.model.codecs.Codecs;
-import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToThreesPhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToPhenopacketCodec;
+import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToThreesPhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.model.io.*;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
@@ -98,6 +98,9 @@ public final class MainController {
 
     @FXML
     public MenuItem exportPhenopacketMenuItem;
+
+    @FXML
+    public MenuItem cloneCaseMenuItem;
 
     /**
      * This list contains controllers of the tabs in the same order as they are present in the {@link #contentTabPane#getTabs} method.
@@ -218,7 +221,8 @@ public final class MainController {
      * <b>!! IMPORTANT !!</b> - this method is the only place where a new case should added into the screen.
      *
      * @param diseaseCase      {@link DiseaseCase} to be presented
-     * @param currentModelPath {@link Path} to file where the case was read from
+     * @param currentModelPath {@link Path} to file where the case was read from, might be {@code null} if the case was
+     *                         just generated
      */
     private void addTab(DiseaseCase diseaseCase, Path currentModelPath) {
         try {
@@ -640,11 +644,13 @@ public final class MainController {
         StartupTask task = new StartupTask(optionalResources, properties, assemblies);
         executorService.submit(task);
 
-        contentTabPane.getTabs().addListener(menuItemDisablerFor(saveMenuItem));
-        contentTabPane.getTabs().addListener(menuItemDisablerFor(saveAsMenuItem));
-        contentTabPane.getTabs().addListener(menuItemDisablerFor(saveAllMenuItem));
-        contentTabPane.getTabs().addListener(menuItemDisablerFor(validateCurrentEntryMenuItem));
-        contentTabPane.getTabs().addListener(menuItemDisablerFor(exportPhenopacketMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(saveMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(saveAsMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(saveAllMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(validateCurrentEntryMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(exportPhenopacketMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(cloneCaseMenuItem));
+
 
         // disable for now - TODO - enable saving only if the disease case is complete?
 //        saveMenuItem.disableProperty().bind(dataController.diseaseCaseIsComplete().not());
@@ -655,7 +661,7 @@ public final class MainController {
     /**
      * @return {@link ListChangeListener} for tab list that disables the {@link #saveAllMenuItem} if the tab list is empty.
      */
-    private ListChangeListener<Tab> menuItemDisablerFor(final MenuItem menuItem) {
+    private ListChangeListener<Tab> disableMenuItemIfCaseListIsEmpty(final MenuItem menuItem) {
         return c -> {
             if (c.getList().isEmpty()) {
                 menuItem.setDisable(true);
@@ -757,5 +763,15 @@ public final class MainController {
     @FXML
     public void saveAllMenuItemAction() {
         controllers.forEach(c -> saveModel(c.getCurrentModelPath(), c.getData()));
+    }
+
+    /**
+     * Create a new tab and populate fields with data from the currently selected case.
+     */
+    @FXML
+    public void cloneCaseMenuItemAction() {
+        int selectedIndex = contentTabPane.getSelectionModel().getSelectedIndex();
+        DiseaseCase currentlySelectedCase = controllers.get(selectedIndex).getData();
+        addTab(currentlySelectedCase, null);
     }
 }

@@ -44,6 +44,7 @@
            </Menu>
            <Menu mnemonicParsing="false" text="View">
                <MenuItem mnemonicParsing="false" onAction="#showEditCurrentPublicationMenuItemAction" text="Show / edit current publication" />
+            <MenuItem fx:id="cloneCaseMenuItem" disable="true" mnemonicParsing="false" onAction="#cloneCaseMenuItemAction" text="Clone case to new tab" />
            </Menu>
            <Menu mnemonicParsing="false" text="Settings">
                <MenuItem mnemonicParsing="false" onAction="#setResourcesMenuItemAction" text="Set resources" />
