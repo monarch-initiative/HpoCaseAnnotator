@@ -10,6 +10,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,7 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -63,7 +63,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
     private final Injector injector;
 
-    private final List<OntologyClass> phenotypes = new ArrayList<>();
+    private final ObservableList<OntologyClass> phenotypes = FXCollections.observableList(new ArrayList<>());
 
     private final ObservableList<AbstractVariantController> variantControllers;
 
@@ -73,6 +73,9 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
     @FXML
     public Button inputPubMedDataButton;
+
+    @FXML
+    public Label phenotypeSummaryLabel;
 
     @FXML
     private Button hpoTextMiningButton;
@@ -453,6 +456,26 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
                         .setDatabase("OMIM")
                         .build())
                 .build()); // the last statement
+
+        // generate phenotype summary text
+        phenotypes.addListener(makePhenotypeSummaryLabel());
+    }
+
+    public ListChangeListener<OntologyClass> makePhenotypeSummaryLabel() {
+        return c -> {
+            int nObserved = 0, nExcluded = 0;
+            for (OntologyClass phenotype : phenotypes) {
+                if (phenotype.getNotObserved()) {
+                    nExcluded++;
+                } else {
+                    nObserved++;
+                }
+            }
+            String observedSummary = (nObserved == 1) ? "1 observed term" : String.format("%d observed terms", nObserved);
+            String excludedSummary = (nExcluded == 1) ? "1 excluded term" : String.format("%d excluded terms", nExcluded);
+
+            phenotypeSummaryLabel.setText(String.join("\n", observedSummary, excludedSummary));
+        };
     }
 
 
