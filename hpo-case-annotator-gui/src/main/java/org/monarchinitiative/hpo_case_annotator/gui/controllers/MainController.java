@@ -102,6 +102,9 @@ public final class MainController {
     @FXML
     public MenuItem cloneCaseMenuItem;
 
+    @FXML
+    public MenuItem showEditCurrentPublicationMenuItem;
+
     /**
      * This list contains controllers of the tabs in the same order as they are present in the {@link #contentTabPane#getTabs} method.
      * <p>
@@ -650,6 +653,7 @@ public final class MainController {
         contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(validateCurrentEntryMenuItem));
         contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(exportPhenopacketMenuItem));
         contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(cloneCaseMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(showEditCurrentPublicationMenuItem));
 
 
         // disable for now - TODO - enable saving only if the disease case is complete?

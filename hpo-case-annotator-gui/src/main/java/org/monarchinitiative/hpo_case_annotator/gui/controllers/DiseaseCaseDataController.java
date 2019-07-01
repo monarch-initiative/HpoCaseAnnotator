@@ -85,7 +85,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     public Label phenotypeSummaryLabel;
 
     @FXML
-    public Button seeOnPubmedButton;
+    public Button viewOnPubmedButton;
 
     @FXML
     private Button hpoTextMiningButton;
@@ -490,7 +490,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
         // Enable the `See on PubMed` button when publication is set
         BooleanBinding pmidIsNotSet = Bindings.createBooleanBinding(() -> publication.get().getPmid().isEmpty(), publication);
-        seeOnPubmedButton.disableProperty().bind(pmidIsNotSet);
+        viewOnPubmedButton.disableProperty().bind(pmidIsNotSet);
     }
 
     /**
@@ -672,7 +672,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     }
 
     @FXML
-    public void seeOnPubmedButtonAction() {
+    public void viewOnPubmedButtonAction() {
         HostServicesWrapper hsw = injector.getInstance(HostServicesWrapper.class);
         final String publicationUrl = String.format(PUBMED_BASE_LINK, publication.get().getPmid());
         hsw.showDocument(publicationUrl);
