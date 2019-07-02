@@ -47,4 +47,13 @@ public class ModelUtilsTest {
                 "approach in Tunisian patients with typical Peters plus syndrome. Gene. 2013 532(1):13-7. PMID:23954224";
         assertThat(summary, equalTo(expected));
     }
+
+    @Test
+    public void firstAuthorDoesNotHaveFirstNameInitial() {
+        Publication publication = Publication.newBuilder()
+                .setAuthorList("Irfanullah, Umair M, Khan S, Ahmad W")
+                .build();
+        String surname = ModelUtils.getFirstAuthorsSurname(publication);
+        assertThat(surname, is(equalTo("Irfanullah")));
+    }
 }
