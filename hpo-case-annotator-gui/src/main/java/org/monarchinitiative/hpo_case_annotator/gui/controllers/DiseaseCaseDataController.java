@@ -55,10 +55,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseCaseDataController.class);
 
-    /**
-     * Template for hyperlink pointing to PubMed entry of the publication.
-     */
-    private static final String PUBMED_BASE_LINK = "https://www.ncbi.nlm.nih.gov/pubmed/%s";
+
 
     private final OptionalResources optionalResources;
 
@@ -83,9 +80,6 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
     @FXML
     public Label phenotypeSummaryLabel;
-
-    @FXML
-    public Button viewOnPubmedButton;
 
     @FXML
     private Button hpoTextMiningButton;
@@ -488,9 +482,6 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         // generate phenotype summary text
         phenotypes.addListener(makePhenotypeSummaryLabel(phenotypes, phenotypeSummaryLabel));
 
-        // Enable the `See on PubMed` button when publication is set
-        BooleanBinding pmidIsNotSet = Bindings.createBooleanBinding(() -> publication.get().getPmid().isEmpty(), publication);
-        viewOnPubmedButton.disableProperty().bind(pmidIsNotSet);
     }
 
     /**
@@ -671,10 +662,4 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
                 probandFamilyTextField.textProperty(), sexComboBox.valueProperty(), ageTextField.textProperty(), variantControllers);
     }
 
-    @FXML
-    public void viewOnPubmedButtonAction() {
-        HostServicesWrapper hsw = injector.getInstance(HostServicesWrapper.class);
-        final String publicationUrl = String.format(PUBMED_BASE_LINK, publication.get().getPmid());
-        hsw.showDocument(publicationUrl);
-    }
 }

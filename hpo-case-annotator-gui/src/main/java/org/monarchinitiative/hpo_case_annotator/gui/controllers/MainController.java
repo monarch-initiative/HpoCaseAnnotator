@@ -5,7 +5,10 @@ import com.google.inject.Injector;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
@@ -60,6 +63,11 @@ public final class MainController {
 
     private static final JsonFormat.Printer PRINTER = JsonFormat.printer();
 
+    /**
+     * Template for hyperlink pointing to PubMed entry of the publication.
+     */
+    private static final String PUBMED_BASE_LINK = "https://www.ncbi.nlm.nih.gov/pubmed/%s";
+
     private final OptionalResources optionalResources;
 
     private final ResourceBundle resourceBundle;
@@ -104,6 +112,9 @@ public final class MainController {
 
     @FXML
     public MenuItem showEditCurrentPublicationMenuItem;
+
+    @FXML
+    public MenuItem viewOnPubmedMenuItem;
 
     /**
      * This list contains controllers of the tabs in the same order as they are present in the {@link #contentTabPane#getTabs} method.
@@ -654,7 +665,7 @@ public final class MainController {
         contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(exportPhenopacketMenuItem));
         contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(cloneCaseMenuItem));
         contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(showEditCurrentPublicationMenuItem));
-
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(viewOnPubmedMenuItem));
 
         // disable for now - TODO - enable saving only if the disease case is complete?
 //        saveMenuItem.disableProperty().bind(dataController.diseaseCaseIsComplete().not());
@@ -777,5 +788,18 @@ public final class MainController {
         int selectedIndex = contentTabPane.getSelectionModel().getSelectedIndex();
         DiseaseCase currentlySelectedCase = controllers.get(selectedIndex).getData();
         addTab(currentlySelectedCase, null);
+    }
+
+    /**
+     * View PubMed page of the publication of the currently selected case.
+     */
+    @FXML
+    public void viewOnPubmedMenuItemAction() {
+        int selectedIndex = contentTabPane.getSelectionModel().getSelectedIndex();
+        DiseaseCase currentlySelectedCase = controllers.get(selectedIndex).getData();
+
+        String pmid = currentlySelectedCase.getPublication().getPmid();
+        String publicationUrl = String.format(PUBMED_BASE_LINK, pmid);
+        hostServices.showDocument(publicationUrl);
     }
 }

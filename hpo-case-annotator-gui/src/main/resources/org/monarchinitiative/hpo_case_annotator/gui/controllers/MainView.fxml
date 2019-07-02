@@ -45,6 +45,7 @@
            <Menu mnemonicParsing="false" text="View">
                <MenuItem fx:id="showEditCurrentPublicationMenuItem" disable="true" mnemonicParsing="false" onAction="#showEditCurrentPublicationMenuItemAction" text="Show / edit current publication" />
             <MenuItem fx:id="cloneCaseMenuItem" disable="true" mnemonicParsing="false" onAction="#cloneCaseMenuItemAction" text="Clone case to new tab" />
+            <MenuItem fx:id="viewOnPubmedMenuItem" disable="true" mnemonicParsing="false" onAction="#viewOnPubmedMenuItemAction" text="View on Pubmed" />
            </Menu>
            <Menu mnemonicParsing="false" text="Settings">
                <MenuItem mnemonicParsing="false" onAction="#setResourcesMenuItemAction" text="Set resources" />
