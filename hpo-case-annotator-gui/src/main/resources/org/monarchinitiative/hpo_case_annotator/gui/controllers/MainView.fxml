@@ -35,7 +35,7 @@
                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                    </accelerator>
                </MenuItem>
-            <MenuItem fx:id="saveAllMenuItem" disable="true" mnemonicParsing="false" onAction="#saveAllMenuItemAction" text="Save all"/>
+            <MenuItem fx:id="saveAllMenuItem" disable="true" mnemonicParsing="false" onAction="#saveAllMenuItemAction" text="Save all" />
                <MenuItem mnemonicParsing="false" onAction="#exitMenuItemAction" text="Exit">
                    <accelerator>
                        <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -43,7 +43,8 @@
                </MenuItem>
            </Menu>
            <Menu mnemonicParsing="false" text="View">
-               <MenuItem mnemonicParsing="false" onAction="#showEditCurrentPublicationMenuItemAction" text="Show / edit current publication" />
+               <MenuItem fx:id="showEditCurrentPublicationMenuItem" disable="true" mnemonicParsing="false" onAction="#showEditCurrentPublicationMenuItemAction" text="Show / edit current publication" />
+            <MenuItem fx:id="cloneCaseMenuItem" disable="true" mnemonicParsing="false" onAction="#cloneCaseMenuItemAction" text="Clone case to new tab" />
            </Menu>
            <Menu mnemonicParsing="false" text="Settings">
                <MenuItem mnemonicParsing="false" onAction="#setResourcesMenuItemAction" text="Set resources" />
@@ -52,7 +53,10 @@
                <MenuItem id="showCuratedPublicationsMenuItem" fx:id="showCuratedPublicationsMenuItem" mnemonicParsing="false" onAction="#showCuratedPublicationsMenuItemAction" text="Show curated publications" />
            </Menu>
            <Menu text="Validate">
-               <MenuItem id="validateCurrentEntryMenuItem" fx:id="validateCurrentEntryMenuItem" disable="true" mnemonicParsing="false" onAction="#validateCurrentEntryMenuItemAction" text="Validate current case" />
+               <MenuItem id="validateCurrentEntryMenuItem" fx:id="validateCurrentEntryMenuItem" disable="true" mnemonicParsing="false" onAction="#validateCurrentEntryMenuItemAction" text="Validate current case">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+               </accelerator></MenuItem>
                <MenuItem id="validateAllXMLFilesMenuItem" mnemonicParsing="false" onAction="#validateAllFilesMenuItemAction" text="Validate all cases" />
            </Menu>
            <Menu text="Export">
@@ -64,7 +68,7 @@
               <items>
                      <MenuItem id="phenopacketMenuItem" fx:id="exportPhenopacketMenuItem" disable="true" mnemonicParsing="false" onAction="#exportPhenopacketCurrentCaseMenuItemAction" text="Current case" />
                      <MenuItem mnemonicParsing="false" onAction="#exportPhenopacketAllCasesMenuItemAction" text="All cases" />
-                  <MenuItem mnemonicParsing="false" onAction="#exportPhenopacketAllCasesForBassMenuItemAction" text="All cases for BASS" />
+                  <MenuItem mnemonicParsing="false" onAction="#exportPhenopacketAllCasesForThreesMenuItemAction" text="All cases for 3S" />
               </items>
             </Menu>
             <SeparatorMenuItem mnemonicParsing="false" />

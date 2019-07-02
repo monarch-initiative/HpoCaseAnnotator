@@ -77,6 +77,14 @@
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                 </HBox.margin>
                             </Button>
+                        <Button fx:id="viewOnPubmedButton" disable="true" mnemonicParsing="false" onAction="#viewOnPubmedButtonAction" prefHeight="30.0" text="View on PubMed">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </Button>
                         </children>
                         <padding>
                             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -218,6 +226,17 @@
                                             <Insets bottom="5.0" left="5.0" right="15.0" top="5.0" />
                                         </GridPane.margin>
                                     </Button>
+                              <Label fx:id="phenotypeSummaryLabel" text="0 terms" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets />
+                                 </GridPane.margin>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                                 <font>
+                                    <Font name="System Italic" size="12.0" />
+                                 </font>
+                              </Label>
                                 </children>
                             </GridPane>
                         </children>

@@ -16,13 +16,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.monarchinitiative.hpo_case_annotator.model.test_resources.PhenoPacketTestUtil.ontologyClass;
 
-public class DiseaseCaseToBassPhenopacketCodecTest {
+public class DiseaseCaseToThreesPhenopacketCodecTest {
 
-    private DiseaseCaseToBassPhenopacketCodec instance;
+    private DiseaseCaseToThreesPhenopacketCodec instance;
 
     @Before
     public void setUp() throws Exception {
-        instance = new DiseaseCaseToBassPhenopacketCodec();
+        instance = new DiseaseCaseToThreesPhenopacketCodec();
     }
 
     @Test
@@ -36,7 +36,7 @@ public class DiseaseCaseToBassPhenopacketCodecTest {
         // SUBJECT
         assertThat(pp.getSubject(), is(Individual.newBuilder()
                 .setId("Tunisian patients")
-                .setDatasetId("BASS")
+                .setDatasetId("3S")
                 .setSex(Sex.MALE)
                 .setTaxonomy(ontologyClass("NCBITaxon:9606", "Homo sapiens"))
                 .build()));

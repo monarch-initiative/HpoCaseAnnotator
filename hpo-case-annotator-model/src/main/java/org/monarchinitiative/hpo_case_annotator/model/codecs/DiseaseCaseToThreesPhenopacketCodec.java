@@ -16,13 +16,13 @@ import java.time.Instant;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class DiseaseCaseToBassPhenopacketCodec implements Codec<DiseaseCase, Phenopacket> {
+public class DiseaseCaseToThreesPhenopacketCodec implements Codec<DiseaseCase, Phenopacket> {
 
-    static final String DATASET_ID = "BASS";
+    private static final String DATASET_ID = "3S";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseCaseToBassPhenopacketCodec.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseCaseToThreesPhenopacketCodec.class);
 
-    DiseaseCaseToBassPhenopacketCodec() {
+    DiseaseCaseToThreesPhenopacketCodec() {
         // package-private no-op
     }
 
@@ -146,7 +146,7 @@ public class DiseaseCaseToBassPhenopacketCodec implements Codec<DiseaseCase, Phe
 
     @Override
     public DiseaseCase decode(Phenopacket data) {
-        LOGGER.warn("Decoding BASS Phenopacket to DiseaseCase is not supported at the moment");
+        LOGGER.warn("Decoding 3S Phenopacket to DiseaseCase is not supported at the moment");
         return null;
     }
 

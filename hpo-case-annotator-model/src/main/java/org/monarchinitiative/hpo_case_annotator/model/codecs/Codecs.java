@@ -27,8 +27,8 @@ public final class Codecs {
         return new DiseaseCaseToDiseaseCaseModelCodec();
     }
 
-    public static DiseaseCaseToBassPhenopacketCodec bassPhenopacketCodec() {
-        return new DiseaseCaseToBassPhenopacketCodec();
+    public static DiseaseCaseToThreesPhenopacketCodec threesPhenopacketCodec() {
+        return new DiseaseCaseToThreesPhenopacketCodec();
     }
 
     static String getPhenopacketIdFor(DiseaseCase model) {

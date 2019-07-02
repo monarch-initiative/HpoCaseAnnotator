@@ -25,8 +25,8 @@ import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.StartupTask;
 import org.monarchinitiative.hpo_case_annotator.model.codecs.Codecs;
-import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToBassPhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToPhenopacketCodec;
+import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToThreesPhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.model.io.*;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
@@ -98,6 +98,12 @@ public final class MainController {
 
     @FXML
     public MenuItem exportPhenopacketMenuItem;
+
+    @FXML
+    public MenuItem cloneCaseMenuItem;
+
+    @FXML
+    public MenuItem showEditCurrentPublicationMenuItem;
 
     /**
      * This list contains controllers of the tabs in the same order as they are present in the {@link #contentTabPane#getTabs} method.
@@ -218,7 +224,8 @@ public final class MainController {
      * <b>!! IMPORTANT !!</b> - this method is the only place where a new case should added into the screen.
      *
      * @param diseaseCase      {@link DiseaseCase} to be presented
-     * @param currentModelPath {@link Path} to file where the case was read from
+     * @param currentModelPath {@link Path} to file where the case was read from, might be {@code null} if the case was
+     *                         just generated
      */
     private void addTab(DiseaseCase diseaseCase, Path currentModelPath) {
         try {
@@ -267,40 +274,43 @@ public final class MainController {
 
         List<File> files = filechooser.showOpenMultipleDialog(primaryStage);
 
+        if (files == null) {
+            // no file was selected
+            return;
+        }
+
+
         for (File file : files) {
             DiseaseCase diseaseCase;
-            if (file != null) {
-                switch (filechooser.getSelectedExtensionFilter().getDescription()) {
-                    case SPLICING_XML:
-                        try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
-                            diseaseCase = XMLModelParser.loadDiseaseCase(is)
-                                    .orElseThrow(() -> new IOException("Unable to decode XML file"));
-                        } catch (IOException e) {
-                            PopUps.showException("Open XML model", "Sorry", "Unable to decode XML file", e);
-                            return;
-                        }
-                        break;
-                    case PROTO_JSON:
-                        try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
-                            diseaseCase = ProtoJSONModelParser.readDiseaseCase(is)
-                                    .orElseThrow(() -> new IOException("Unable to decode JSON file"));
-                        } catch (FileNotFoundException e) {
-                            PopUps.showException("Open JSON model", String.format("File '%s' not found", file.getAbsolutePath()), "", e);
-                            return;
-                        } catch (InvalidProtocolBufferException e) {
-                            PopUps.showException("Open JSON model", String.format("Error parsing file content '%s'", file.getAbsolutePath()), "", e);
-                            return;
-                        } catch (IOException e) {
-                            PopUps.showException("Open JSON model", String.format("Error while reading file '%s'", file.getAbsolutePath()), "", e);
-                            return;
-                        }
-                        break;
-                    default:
-                        throw new RuntimeException("This should not have had happened!");
-                }
-
-                addTab(diseaseCase, file.toPath());
+            switch (filechooser.getSelectedExtensionFilter().getDescription()) {
+                case SPLICING_XML:
+                    try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
+                        diseaseCase = XMLModelParser.loadDiseaseCase(is)
+                                .orElseThrow(() -> new IOException("Unable to decode XML file"));
+                    } catch (IOException e) {
+                        PopUps.showException("Open XML model", "Sorry", "Unable to decode XML file", e);
+                        return;
+                    }
+                    break;
+                case PROTO_JSON:
+                    try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
+                        diseaseCase = ProtoJSONModelParser.readDiseaseCase(is)
+                                .orElseThrow(() -> new IOException("Unable to decode JSON file"));
+                    } catch (FileNotFoundException e) {
+                        PopUps.showException("Open JSON model", String.format("File '%s' not found", file.getAbsolutePath()), "", e);
+                        return;
+                    } catch (InvalidProtocolBufferException e) {
+                        PopUps.showException("Open JSON model", String.format("Error parsing file content '%s'", file.getAbsolutePath()), "", e);
+                        return;
+                    } catch (IOException e) {
+                        PopUps.showException("Open JSON model", String.format("Error while reading file '%s'", file.getAbsolutePath()), "", e);
+                        return;
+                    }
+                    break;
+                default:
+                    throw new RuntimeException("This should not have had happened!");
             }
+            addTab(diseaseCase, file.toPath());
         }
     }
 
@@ -550,12 +560,12 @@ public final class MainController {
      * Data specific to splicing is encoded into {@link Phenopacket}.
      */
     @FXML
-    public void exportPhenopacketAllCasesForBassMenuItemAction() {
+    public void exportPhenopacketAllCasesForThreesMenuItemAction() {
         Map<File, DiseaseCase> models = readDiseaseCasesFromDirectory(optionalResources.getDiseaseCaseDir());
 
         File where = PopUps.selectDirectory(primaryStage, optionalResources.getDiseaseCaseDir(),
                 "Select export directory");
-        DiseaseCaseToBassPhenopacketCodec codec = Codecs.bassPhenopacketCodec();
+        DiseaseCaseToThreesPhenopacketCodec codec = Codecs.threesPhenopacketCodec();
 
         if (where != null) {
             int counter = 0;
@@ -637,11 +647,14 @@ public final class MainController {
         StartupTask task = new StartupTask(optionalResources, properties, assemblies);
         executorService.submit(task);
 
-        contentTabPane.getTabs().addListener(menuItemDisablerFor(saveMenuItem));
-        contentTabPane.getTabs().addListener(menuItemDisablerFor(saveAsMenuItem));
-        contentTabPane.getTabs().addListener(menuItemDisablerFor(saveAllMenuItem));
-        contentTabPane.getTabs().addListener(menuItemDisablerFor(validateCurrentEntryMenuItem));
-        contentTabPane.getTabs().addListener(menuItemDisablerFor(exportPhenopacketMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(saveMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(saveAsMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(saveAllMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(validateCurrentEntryMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(exportPhenopacketMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(cloneCaseMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(showEditCurrentPublicationMenuItem));
+
 
         // disable for now - TODO - enable saving only if the disease case is complete?
 //        saveMenuItem.disableProperty().bind(dataController.diseaseCaseIsComplete().not());
@@ -652,7 +665,7 @@ public final class MainController {
     /**
      * @return {@link ListChangeListener} for tab list that disables the {@link #saveAllMenuItem} if the tab list is empty.
      */
-    private ListChangeListener<Tab> menuItemDisablerFor(final MenuItem menuItem) {
+    private ListChangeListener<Tab> disableMenuItemIfCaseListIsEmpty(final MenuItem menuItem) {
         return c -> {
             if (c.getList().isEmpty()) {
                 menuItem.setDisable(true);
@@ -754,5 +767,15 @@ public final class MainController {
     @FXML
     public void saveAllMenuItemAction() {
         controllers.forEach(c -> saveModel(c.getCurrentModelPath(), c.getData()));
+    }
+
+    /**
+     * Create a new tab and populate fields with data from the currently selected case.
+     */
+    @FXML
+    public void cloneCaseMenuItemAction() {
+        int selectedIndex = contentTabPane.getSelectionModel().getSelectedIndex();
+        DiseaseCase currentlySelectedCase = controllers.get(selectedIndex).getData();
+        addTab(currentlySelectedCase, null);
     }
 }
