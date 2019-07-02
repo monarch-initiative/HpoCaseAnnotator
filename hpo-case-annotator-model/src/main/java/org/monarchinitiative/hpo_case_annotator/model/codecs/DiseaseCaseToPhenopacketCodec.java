@@ -128,6 +128,7 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
         Publication publication = data.getPublication();
         String metadata = data.getMetadata();
         return Phenopacket.newBuilder()
+                .setId(Codecs.getPhenopacketIdFor(data))
                 // proband and the publication data
                 .setSubject(Individual.newBuilder()
                         .setId(familyOrProbandId)
