@@ -59,7 +59,7 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
         bind(ShowValidationResultsController.class);
 
         bind(ResourceBundle.class)
-                .toInstance(ResourceBundle.getBundle(Play.class.getName()));
+                .toInstance(ResourceBundle.getBundle(Main.class.getName()));
 
         bind(ExecutorService.class)
                 .toInstance(Executors.newFixedThreadPool(1));
@@ -157,7 +157,7 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
     @Provides
     @Named("codeHomeDir")
     public File codeHomeDir() throws IOException {
-        File codeHomeDir = new File(Play.class.getProtectionDomain().getCodeSource().getLocation().getFile())
+        File codeHomeDir = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getFile())
                 .getParentFile();
         if (codeHomeDir.exists() || codeHomeDir.mkdirs()) {// ensure that the home dir exists
             LOGGER.trace("Code home directory is {}", codeHomeDir.getAbsolutePath());

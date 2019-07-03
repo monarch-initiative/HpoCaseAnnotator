@@ -47,7 +47,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
     /**
      * This is the {@link Stage} which is provided by JavaFX and registered into the Spring container in the
-     * {@link Play#start(Stage)} method.
+     * {@link Main#start(Stage)} method.
      */
     private final Stage primaryStage;
 
@@ -73,7 +73,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
                 .toInstance(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
 
         bind(ResourceBundle.class)
-                .toInstance(ResourceBundle.getBundle(Play.class.getName()));
+                .toInstance(ResourceBundle.getBundle(Main.class.getName()));
 
         bind(OptionalResources.class)
                 .asEagerSingleton();
@@ -117,9 +117,9 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
             }
         } else {
             try {
-                URL propertiesUrl = Play.class.getResource("/" + PROPERTIES_FILE_NAME);
+                URL propertiesUrl = Main.class.getResource("/" + PROPERTIES_FILE_NAME);
                 LOGGER.info("Loading bundled app properties {}", propertiesUrl.getPath());
-                properties.load(Play.class.getResourceAsStream("/" + PROPERTIES_FILE_NAME));
+                properties.load(Main.class.getResourceAsStream("/" + PROPERTIES_FILE_NAME));
             } catch (IOException e) {
                 LOGGER.warn("Cannot load app properties", e);
                 throw e;
@@ -189,7 +189,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
     @Named("codeHomeDir")
     @Singleton
     public File codeHomeDir() throws IOException {
-        File codeHomeDir = new File(Play.class.getProtectionDomain().getCodeSource().getLocation().getFile())
+        File codeHomeDir = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getFile())
                 .getParentFile();
         if (codeHomeDir.exists() || codeHomeDir.mkdirs()) {// ensure that the home dir exists
             LOGGER.trace("Code home directory is {}", codeHomeDir.getAbsolutePath());
@@ -283,13 +283,13 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
     @Named("appVersion")
     private String appVersion() {
         // this property is set in Play#init()
-        return System.getProperty(Play.HCA_VERSION_PROP_KEY);
+        return System.getProperty(Main.HCA_VERSION_PROP_KEY);
     }
 
     @Provides
     @Named("appName")
     private String appName() {
         // this property is set in Play#init()
-        return System.getProperty(Play.HCA_NAME_KEY);
+        return System.getProperty(Main.HCA_NAME_KEY);
     }
 }

@@ -27,13 +27,13 @@ import java.util.concurrent.ExecutorService;
 /**
  * The driver class of the Hpo Case Annotator app.
  */
-public class Play extends Application {
+public class Main extends Application {
 
     static final String HCA_NAME_KEY = "hca.name";
 
     static final String HCA_VERSION_PROP_KEY = "hca.version";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Play.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     private Injector injector;
 

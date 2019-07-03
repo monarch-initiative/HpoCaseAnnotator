@@ -5,7 +5,7 @@ import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
 import org.monarchinitiative.hpo_case_annotator.core.io.OMIMParser;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
-import org.monarchinitiative.hpo_case_annotator.gui.Play;
+import org.monarchinitiative.hpo_case_annotator.gui.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +26,7 @@ import java.util.Properties;
  * <li>OMIM tab file</li>
  * </ul>
  * <p>
- * Changes made by user are stored for the next run in {@link Play#stop()} method.
+ * Changes made by user are stored for the next run in {@link Main#stop()} method.
  *
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
  * @version 0.0.1
