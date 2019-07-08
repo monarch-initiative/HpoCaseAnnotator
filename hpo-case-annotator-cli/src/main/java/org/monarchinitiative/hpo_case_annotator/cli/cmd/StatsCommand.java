@@ -3,9 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.cli.cmd;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import org.monarchinitiative.hpo_case_annotator.model.io.ProtoJSONModelParser;
-import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
-import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
+import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,6 +89,9 @@ public class StatsCommand extends AbstractNamedCommand {
         try (BufferedWriter writer = Files.newBufferedWriter(outputPath)) {
             String header = new StringBuilder()
                     .append("FILE_NAME").append(delimiter)
+                    .append("PROBAND").append(delimiter)
+                    .append("SEX").append(delimiter)
+                    .append("PHENOTYPE_COUNT").append(delimiter)
                     .append("SYMBOL").append(delimiter)
                     .append("ASSEMBLY").append(delimiter)
                     .append("CONTIG").append(delimiter)
@@ -116,12 +117,21 @@ public class StatsCommand extends AbstractNamedCommand {
                 }
                 String fileName = ModelUtils.getFileNameFor(dc);
                 String symbol = dc.getGene().getSymbol();
+                FamilyInfo fi = dc.getFamilyInfo();
+                String probandId = fi.getFamilyOrProbandId();
+                Sex sex = fi.getSex();
+
+                int phenotypeCount = dc.getPhenotypeCount();
+
                 for (Variant variant : dc.getVariantList()) {
                     StringBuilder builder = new StringBuilder();
                     VariantPosition vp = variant.getVariantPosition();
 
                     // make the line
                     builder.append(fileName).append(delimiter)
+                            .append(probandId).append(delimiter)
+                            .append(sex).append(delimiter)
+                            .append(phenotypeCount).append(delimiter)
                             .append(symbol).append(delimiter)
                             .append(vp.getGenomeAssembly()).append(delimiter)
                             .append(vp.getContig()).append(delimiter)
