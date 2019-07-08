@@ -142,7 +142,7 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
                         .collect(Collectors.toList()))
                 // gene in question
                 .addGenes(Gene.newBuilder()
-                        .setId("ENTREZ:" + data.getGene().getEntrezId())
+                        .setId("NCBIGene:" + data.getGene().getEntrezId())
                         .setSymbol(data.getGene().getSymbol())
                         .build())
                 // variants, genome assembly
