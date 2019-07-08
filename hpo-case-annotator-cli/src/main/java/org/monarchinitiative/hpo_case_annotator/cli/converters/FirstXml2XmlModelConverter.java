@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.cli;
+package org.monarchinitiative.hpo_case_annotator.cli.converters;
 
 import org.monarchinitiative.hpo_case_annotator.model.codecs.Codecs;
 import org.monarchinitiative.hpo_case_annotator.model.io.FirstModelXMLParser;
@@ -19,7 +19,7 @@ import java.io.*;
  * @version 0.0.1
  * @since 0.0
  */
-class FirstXml2XmlModelConverter {
+public class FirstXml2XmlModelConverter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FirstXml2XmlModelConverter.class);
 
@@ -30,7 +30,7 @@ class FirstXml2XmlModelConverter {
     private final File destDir, sourceDir;
 
 
-    FirstXml2XmlModelConverter(File sourceDir, File destDir) throws IOException {
+    public FirstXml2XmlModelConverter(File sourceDir, File destDir) throws IOException {
         if (!sourceDir.isDirectory()) {
             throw new IOException("Not a directory: " + sourceDir.getAbsolutePath());
         } else if (!destDir.isDirectory()) {
@@ -43,7 +43,7 @@ class FirstXml2XmlModelConverter {
     }
 
 
-    void run() throws Exception {
+    public void run() throws Exception {
         LOGGER.info("Found {} files in directory '{}'", inputParser.getModelNames().size(), sourceDir.getAbsolutePath());
         for (File xmlPath : inputParser.getModelNames()) {
             LOGGER.info("Processing {}", xmlPath);
