@@ -83,7 +83,7 @@ public class DiseaseCaseToPhenopacketCodecTest {
         final List<Gene> genesList = packet.getGenesList();
         assertThat(genesList.size(), is(1));
         assertThat(genesList, hasItem(Gene.newBuilder()
-                .setId("ENTREZ:145173")
+                .setId("NCBIGene:145173")
                 .setSymbol("B3GLCT")
                 .build()));
 
