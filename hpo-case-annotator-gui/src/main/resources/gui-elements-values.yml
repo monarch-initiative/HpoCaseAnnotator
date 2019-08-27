@@ -49,6 +49,7 @@ pathomechanism: ['unknown', 'coding|missense', 'coding|stop-codon', 'coding|fram
   '5UTR|secondary-structure|base-pairing|disrupted','5UTR|secondary-structure|base-pairing|novel',
   '5UTR|start-codon','5UTR|start-codon|disrupted','5UTR|kozak','5UTR|kozak|disrupted','5UTR|IRE',
   '5UTR|IRE|disrupted','3UTR|unknown','3UTR|increased-expression','3UTR|reduced-expression',
+  '5UTR|constitutional-epimutation',
   '3UTR|microRNA-binding-site','3UTR|microRNA-binding-site|disrupted','3UTR|microRNA-binding-site|created',
   '3UTR|polyadenylation-signal','3UTR|polyadenylation-signal|disrupted','3UTR|secondary-structure',
   '3UTR|secondary-structure|base-pairing','3UTR|secondary-structure|base-pairing|disrupted',
@@ -63,6 +64,7 @@ consequence: ["Exon skipping", "Intron retention",
   "Multiple exons skipped", "Alternative promoter/splicing",
   "Alternative polyadenylation/splicing",
   "Increased inclusion of alternatively spliced exon",
+  "epigenetic silencing",
   "Is there any other consequence?", "Not investigated", "None"]
 
 # Set the database (please use the OMIM id if at all possible). For
