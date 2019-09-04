@@ -143,10 +143,13 @@ message Variant {
 
     // Alteration in copy number (gain/loss) of a locus resulting in deviation from the normal diploid state is denoted
     // here as a number different from '2'
-    uint32 cnv_ploidy = 20;
+    uint32 cnv_ploidy = 20 [deprecated=true]; // use genotype and sv_type to indicate ploidy instead
+
+    // Structural
+    StructuralType sv_type = 21;
 
     // reserved for CNV fields
-    reserved 21 to 29;
+    reserved 22 to 29;
 
     // Breakpoint fields
     // reserved for Breakpoint fields
@@ -167,6 +170,20 @@ enum CrypticSpliceSiteType {
     NO_CSS = 0;
     FIVE_PRIME = 1;
     THREE_PRIME = 2;
+}
+
+
+enum StructuralType {
+    NON_STURCTURAL = 0;
+    UNKNOWN = 1;
+    DEL = 2;
+    INS = 3;
+    DUP = 4;
+    INV = 5;
+    CNV = 6;
+    BND = 7;
+    STR = 8;
+    TRA = 9;
 }
 
 

@@ -190,10 +190,13 @@ public class DiseaseCaseModelExample {
                         .setCiEndOne(-100)
                         .setCiEndTwo(100)
                         .build())
-                .setCnvPloidy(1) // deletion
+
                 .setVariantClass("structural")
+                .setGenotype(Genotype.HETEROZYGOUS)
+                .setSvType(StructuralType.DEL)
                 .setVariantValidation(VariantValidation.newBuilder()
                         .setContext(VariantValidation.Context.CNV)
+                        .setCosegregation(true)
                         .build())
                 .build();
     }
@@ -210,10 +213,13 @@ public class DiseaseCaseModelExample {
                         .setCiEndOne(-100)
                         .setCiEndTwo(100)
                         .build())
-                .setCnvPloidy(3) // duplication
+
                 .setVariantClass("structural")
+                .setGenotype(Genotype.HETEROZYGOUS)
+                .setSvType(StructuralType.DUP)
                 .setVariantValidation(VariantValidation.newBuilder()
                         .setContext(VariantValidation.Context.CNV)
+                        .setCosegregation(true)
                         .build())
                 .build();
     }

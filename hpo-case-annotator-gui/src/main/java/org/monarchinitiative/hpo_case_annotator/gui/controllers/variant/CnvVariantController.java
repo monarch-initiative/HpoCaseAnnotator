@@ -4,14 +4,12 @@ import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
-import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
-import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
-import org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation;
+import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,9 +17,9 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
-import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.NON_NEGATIVE_INTEGER_REGEXP;
-import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.POSITIVE_INTEGER_REGEXP;
+import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.*;
 
 /**
  *
@@ -46,9 +44,6 @@ public final class CnvVariantController extends AbstractVariantController {
     public ComboBox<String> variantClassComboBox;
 
     @FXML
-    public TextField cnvPloidyTextField;
-
-    @FXML
     public TextField ciBeginFirstTextField;
 
     @FXML
@@ -59,6 +54,15 @@ public final class CnvVariantController extends AbstractVariantController {
 
     @FXML
     public TextField ciEndSecondTextField;
+
+    @FXML
+    public ComboBox<Genotype> genotypeComboBox;
+
+    @FXML
+    public ComboBox<StructuralType> svTypeComboBox;
+
+    @FXML
+    public CheckBox cosegregationCheckBox;
 
     @Inject
     public CnvVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
@@ -78,9 +82,9 @@ public final class CnvVariantController extends AbstractVariantController {
     public Binding<String> variantTitleBinding() {
         return Bindings.createStringBinding(() -> {
                     if (isComplete()) {
-                        return String.format("CNV: %s %s:%s-%s [*%s]", genomeBuildComboBox.getValue(),
+                        return String.format("CNV: %s %s:%s-%s [%s]", genomeBuildComboBox.getValue(),
                                 chromosomeComboBox.getValue(), beginTextField.getText(),
-                                endTextField.getText(), cnvPloidyTextField.getText());
+                                endTextField.getText(), genotypeComboBox.getValue());
                     } else {
                         return "CNV: INCOMPLETE: " + validationResults.get(0).getMessage();
                     }
@@ -92,7 +96,7 @@ public final class CnvVariantController extends AbstractVariantController {
     List<? extends Observable> getObservableVariantDependencies() {
         return Arrays.asList(genomeBuildComboBox.valueProperty(),
                 chromosomeComboBox.valueProperty(), beginTextField.textProperty(),
-                endTextField.textProperty(), cnvPloidyTextField.textProperty());
+                endTextField.textProperty(), genotypeComboBox.valueProperty());
     }
 
     @Override
@@ -106,11 +110,13 @@ public final class CnvVariantController extends AbstractVariantController {
         ciBeginSecondTextField.setText(String.valueOf(vp.getCiBeginTwo()));
         ciEndFirstTextField.setText(String.valueOf(vp.getCiEndOne()));
         ciEndSecondTextField.setText(String.valueOf(vp.getCiEndTwo()));
-        cnvPloidyTextField.setText(String.valueOf(variant.getCnvPloidy()));
 
         variantClassComboBox.setValue(variant.getVariantClass());
+        genotypeComboBox.setValue(variant.getGenotype());
+        svTypeComboBox.setValue(variant.getSvType());
+
         VariantValidation vv = variant.getVariantValidation();
-        // TODO - elaborate
+        cosegregationCheckBox.setSelected(vv.getCosegregation());
     }
 
     @Override
@@ -127,11 +133,13 @@ public final class CnvVariantController extends AbstractVariantController {
                         .setCiEndOne(parseIntOrGetDefaultValue(ciEndFirstTextField::getText, 0))
                         .setCiEndTwo(parseIntOrGetDefaultValue(ciEndSecondTextField::getText, 0))
                         .build())
-                .setCnvPloidy(parseIntOrGetDefaultValue(cnvPloidyTextField::getText, 0))
+
                 .setVariantClass(variantClassComboBox.getValue() == null ? "" : variantClassComboBox.getValue())
+                .setGenotype(genotypeComboBox.getValue() == null ? Genotype.UNDEFINED : genotypeComboBox.getValue())
+                .setSvType(svTypeComboBox.getValue() == null ? StructuralType.UNKNOWN : svTypeComboBox.getValue())
                 .setVariantValidation(VariantValidation.newBuilder()
                         .setContext(VariantValidation.Context.CNV)
-                        // TODO - elaborate
+                        .setCosegregation(cosegregationCheckBox.isSelected())
                         .build())
                 .build();
     }
@@ -142,7 +150,12 @@ public final class CnvVariantController extends AbstractVariantController {
         beginTextField.setTextFormatter(makeTextFormatter(beginTextField, NON_NEGATIVE_INTEGER_REGEXP));
         endTextField.setTextFormatter(makeTextFormatter(endTextField, POSITIVE_INTEGER_REGEXP));
         variantClassComboBox.getItems().addAll(elementValues.getVariantClass());
+        genotypeComboBox.getItems().addAll(Arrays.stream(Genotype.values()).filter(g -> !g.equals(Genotype.UNRECOGNIZED)).collect(Collectors.toList()));
+        svTypeComboBox.getItems().addAll(Arrays.stream(StructuralType.values()).filter(g -> !g.equals(StructuralType.UNRECOGNIZED)).collect(Collectors.toList()));
 
-        cnvPloidyTextField.setTextFormatter(makeTextFormatter(cnvPloidyTextField, NON_NEGATIVE_INTEGER_REGEXP));
+        ciBeginFirstTextField.setTextFormatter(makeTextFormatter(ciBeginFirstTextField, INTEGER_REGEXP));
+        ciBeginSecondTextField.setTextFormatter(makeTextFormatter(ciBeginSecondTextField, INTEGER_REGEXP));
+        ciEndFirstTextField.setTextFormatter(makeTextFormatter(ciEndFirstTextField, INTEGER_REGEXP));
+        ciEndSecondTextField.setTextFormatter(makeTextFormatter(ciEndSecondTextField, INTEGER_REGEXP));
     }
 }

@@ -41,6 +41,11 @@ public class VariantSyntaxValidator implements Validator<Variant> {
     public static final String NON_NEGATIVE_INTEGER_REGEXP = "^[1-9][0-9]*$";
 
     /**
+     * Matches negative integers, positive integers and <code>0</code>. Does not match <code>-0</code>
+     */
+    public static final String INTEGER_REGEXP = "0|(-?[1-9]\\d*)";
+
+    /**
      * Alleles (REF, ALT) must match this regexp - only <code>A,C,G,T,a,c,g,t</code> nucleotides are permitted.
      */
     public static final String ALLELE_REGEXP = "[ACGTacgt]+";

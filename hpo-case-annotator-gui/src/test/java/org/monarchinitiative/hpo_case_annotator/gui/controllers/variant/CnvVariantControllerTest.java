@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -13,7 +14,7 @@ import org.monarchinitiative.hpo_case_annotator.gui.DiseaseCaseModelExample;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceJUnitRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceModules;
 import org.monarchinitiative.hpo_case_annotator.gui.TestHpoCaseAnnotatorModule;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.testfx.framework.junit.ApplicationTest;
 
 import javax.inject.Inject;
@@ -55,6 +56,56 @@ public class CnvVariantControllerTest extends ApplicationTest {
         final Variant received = controller.getData();
 
         assertThat(received, is(equalTo(presented)));
+    }
+
+    @Test
+    public void enterData() {
+        // genome build
+        clickOn("#genomeBuildComboBox").moveBy(0, 80).clickOn(MouseButton.PRIMARY)
+                // chromosome
+                .clickOn("#chromosomeComboBox").moveBy(0, 60).clickOn(MouseButton.PRIMARY)
+                // begin
+                .clickOn("#beginTextField").write("100")
+                // end
+                .clickOn("#endTextField").write("200")
+                // variant class
+                .clickOn("#variantClassComboBox").moveBy(0, 30).clickOn(MouseButton.PRIMARY)
+                // genotype
+                .clickOn("#genotypeComboBox").moveBy(0, 70).clickOn(MouseButton.PRIMARY)
+                // sv type
+                .clickOn("#svTypeComboBox").moveBy(0, 90).clickOn(MouseButton.PRIMARY)
+                // ci begin first
+                .clickOn("#ciBeginFirstTextField").write("-5")
+                // ci begin second
+                .clickOn("#ciBeginSecondTextField").write("10")
+                // ci end first
+                .clickOn("#ciEndFirstTextField").write("-15")
+                // ci end second
+                .clickOn("#ciEndSecondTextField").write("20")
+                // cosegregation
+                .clickOn("#cosegregationCheckBox");
+
+        final Variant received = controller.getData();
+
+        assertThat(received, is(equalTo(Variant.newBuilder()
+                .setVariantPosition(VariantPosition.newBuilder()
+                        .setGenomeAssembly(GenomeAssembly.GRCH_37)
+                        .setContig("4")
+                        .setPos(101)
+                        .setPos2(200)
+                        .setCiBeginOne(-5)
+                        .setCiBeginTwo(10)
+                        .setCiEndOne(-15)
+                        .setCiEndTwo(20)
+                        .build())
+                .setVariantClass("coding")
+                .setGenotype(Genotype.HOMOZYGOUS_ALTERNATE)
+                .setSvType(StructuralType.INS)
+                .setVariantValidation(VariantValidation.newBuilder()
+                        .setContext(VariantValidation.Context.CNV)
+                        .setCosegregation(true)
+                        .build())
+                .build())));
     }
 
     @Override
