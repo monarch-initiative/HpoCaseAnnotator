@@ -128,6 +128,7 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
         Publication publication = data.getPublication();
         String metadata = data.getMetadata();
         return Phenopacket.newBuilder()
+                .setId(Codecs.getPhenopacketIdFor(data))
                 // proband and the publication data
                 .setSubject(Individual.newBuilder()
                         .setId(familyOrProbandId)
@@ -141,7 +142,7 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
                         .collect(Collectors.toList()))
                 // gene in question
                 .addGenes(Gene.newBuilder()
-                        .setId("ENTREZ:" + data.getGene().getEntrezId())
+                        .setId("NCBIGene:" + data.getGene().getEntrezId())
                         .setSymbol(data.getGene().getSymbol())
                         .build())
                 // variants, genome assembly
@@ -219,11 +220,13 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
         private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.Variant, Variant> hcaVariantToPhenopacketVariant(String familyOrProbandId) {
             return v -> Variant.newBuilder()
                     .setVcfAllele(VcfAllele.newBuilder()
-                            .setId(hcaGenomeAssemblyToPhenopacketGenomeAssembly(v.getVariantPosition().getGenomeAssembly()))
+                            .setGenomeAssembly(hcaGenomeAssemblyToPhenopacketGenomeAssembly(v.getVariantPosition().getGenomeAssembly()))
+                            //.setId()
                             .setChr(v.getVariantPosition().getContig())
                             .setPos(v.getVariantPosition().getPos())
                             .setRef(v.getVariantPosition().getRefAllele())
                             .setAlt(v.getVariantPosition().getAltAllele())
+
                             .build())
                     .setZygosity(genotype(v.getGenotype()))
                     .build();

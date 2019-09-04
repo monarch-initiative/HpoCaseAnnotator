@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.cli;
+package org.monarchinitiative.hpo_case_annotator.cli.converters;
 
 import org.monarchinitiative.hpo_case_annotator.model.io.ProtoJSONModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser;
@@ -23,14 +23,14 @@ public class Xml2JsonModelConverter {
     private final File destDir;
 
 
-    Xml2JsonModelConverter(File sourceDir, File destDir) {
+    public Xml2JsonModelConverter(File sourceDir, File destDir) {
         this.sourceDir = sourceDir;
         this.jsonModelParser = new ProtoJSONModelParser(destDir.toPath());
         this.destDir = destDir;
     }
 
 
-    void run() {
+    public void run() {
         File[] models = sourceDir.listFiles(f -> f.getName().endsWith(XMLModelParser.MODEL_SUFFIX));
         for (File modelPath : models) {
             File outPath = new File(destDir, modelPath.getName().replace(".xml", ".json"));

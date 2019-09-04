@@ -59,7 +59,7 @@ public class ModelUtils {
             if (lastindex >= 0)
                 author = firstAuthor.substring(0, lastindex).replaceAll("\\s", "_");
             else
-                author = "author";
+                author = firstAuthor;
         }
         return author;
     }

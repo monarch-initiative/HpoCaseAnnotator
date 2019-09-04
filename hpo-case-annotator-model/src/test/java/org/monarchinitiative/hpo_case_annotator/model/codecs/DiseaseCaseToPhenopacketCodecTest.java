@@ -10,6 +10,7 @@ import org.phenopackets.schema.v1.core.*;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.monarchinitiative.hpo_case_annotator.model.test_resources.PhenoPacketTestUtil.ontologyClass;
@@ -34,14 +35,17 @@ public class DiseaseCaseToPhenopacketCodecTest {
 
         // assert
         assertThat(packet, is(notNullValue()));
-        final Individual subject = packet.getSubject();
-        assertThat(subject.getId(), is("Tunisian patients"));
-        assertThat(subject.getAgeAtCollection(), is(Age.newBuilder().setAge("P25Y").build()));
-        assertThat(subject.getSex(), is(Sex.MALE));
+        assertThat(packet.getId(), is("PMID:23954224-Ben_Mahmoud-2013-B3GLCT-Tunisian_patients"));
+        assertThat(packet.getSubject(), is(Individual.newBuilder()
+                .setId("Tunisian patients")
+                .setAgeAtCollection(Age.newBuilder().setAge("P25Y").build())
+                .setSex(Sex.MALE)
+                .setTaxonomy(DiseaseCaseToPhenopacketCodec.HOMO_SAPIENS)
+                .build()));
 
         final List<PhenotypicFeature> phenotypesList = packet.getPhenotypicFeaturesList();
-        assertThat(phenotypesList.size(), is(6));
-        assertThat(phenotypesList, hasItem(PhenotypicFeature.newBuilder()
+        assertThat(phenotypesList, hasSize(6));
+        assertThat(phenotypesList, hasItems(PhenotypicFeature.newBuilder()
                 .setType(OntologyClass.newBuilder()
                         .setId("HP:0003498")
                         .setLabel("Disproportionate short stature")
@@ -56,55 +60,59 @@ public class DiseaseCaseToPhenopacketCodecTest {
                                 .setDescription(metadata)
                                 .build())
                         .build())
-                .build()));
-        assertThat(phenotypesList, hasItem(PhenotypicFeature.newBuilder()
-                .setType(OntologyClass.newBuilder()
-                        .setId("HP:0000268")
-                        .setLabel("Dolichocephaly")
-                        .build())
-                .addEvidence(Evidence.newBuilder()
-                        .setEvidenceCode(OntologyClass.newBuilder()
-                                .setId("ECO:0000033")
-                                .setLabel("author statement supported by traceable reference")
+                .build(),
+                PhenotypicFeature.newBuilder()
+                        .setType(OntologyClass.newBuilder()
+                                .setId("HP:0000268")
+                                .setLabel("Dolichocephaly")
                                 .build())
-                        .setReference(ExternalReference.newBuilder()
-                                .setId("PMID:23954224")
-                                .setDescription(metadata)
+                        .addEvidence(Evidence.newBuilder()
+                                .setEvidenceCode(OntologyClass.newBuilder()
+                                        .setId("ECO:0000033")
+                                        .setLabel("author statement supported by traceable reference")
+                                        .build())
+                                .setReference(ExternalReference.newBuilder()
+                                        .setId("PMID:23954224")
+                                        .setDescription(metadata)
+                                        .build())
                                 .build())
-                        .build())
-                .build()));
-        assertThat(subject.getTaxonomy(), is(DiseaseCaseToPhenopacketCodec.HOMO_SAPIENS));
+                        .build()
+                ));
+
 
         final List<Gene> genesList = packet.getGenesList();
         assertThat(genesList.size(), is(1));
-        assertThat(genesList.get(0), is(Gene.newBuilder()
-                .setId("ENTREZ:145173")
+        assertThat(genesList, hasItem(Gene.newBuilder()
+                .setId("NCBIGene:145173")
                 .setSymbol("B3GLCT")
                 .build()));
 
         final List<Variant> variantsList = packet.getVariantsList();
-        assertThat(variantsList.size(), is(1));
-        Variant variant = variantsList.get(0);
+        assertThat(variantsList, hasSize(1));
+        assertThat(variantsList, hasItem(Variant.newBuilder()
+                .setVcfAllele(VcfAllele.newBuilder()
+                        .setGenomeAssembly("GRCh37")
+                        .setChr("13")
+                        .setPos(31843349)
+                        .setRef("A")
+                        .setAlt("G")
+                        .build())
+                .setZygosity(DiseaseCaseToPhenopacketCodec.HET)
+                .build()));
 
-        assertTrue(variant.hasVcfAllele());
-        VcfAllele va = variant.getVcfAllele();
-        assertThat(va.getId(), is("GRCh37"));
-        assertThat(va.getChr(), is("13"));
-        assertThat(va.getPos(), is(31843349));
-        assertThat(va.getRef(), is("A"));
-        assertThat(va.getAlt(), is("G"));
-        assertThat(variant.getZygosity(), is(DiseaseCaseToPhenopacketCodec.HET));
 
         final List<Disease> diseasesList = packet.getDiseasesList();
-        assertThat(diseasesList.size(), is(1));
-        assertThat(diseasesList.get(0), is(Disease.newBuilder()
+        assertThat(diseasesList, hasSize(1));
+        assertThat(diseasesList, hasItem(Disease.newBuilder()
                 .setTerm(ontologyClass("OMIM:261540", "PETERS-PLUS SYNDROME"))
                 .build()));
 
         final MetaData metaData = packet.getMetaData();
-        assertThat(metaData.getSubmittedBy(), is("HPO:ahegde"));
-        assertThat(metaData.getCreatedBy(), is("Hpo Case Annotator v1.0.12-SNAPSHOT"));
-        assertThat(metaData.getResourcesList(), is(DiseaseCaseToPhenopacketCodec.RESOURCES));
+        assertThat(metaData, is(MetaData.newBuilder()
+                .setSubmittedBy("HPO:ahegde")
+                .setCreatedBy("Hpo Case Annotator v1.0.12-SNAPSHOT")
+                .addAllResources(DiseaseCaseToPhenopacketCodec.RESOURCES)
+        .build()));
     }
 
 }

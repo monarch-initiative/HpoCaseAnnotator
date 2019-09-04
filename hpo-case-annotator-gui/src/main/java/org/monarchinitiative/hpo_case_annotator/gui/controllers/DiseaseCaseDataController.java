@@ -7,9 +7,11 @@ import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +26,7 @@ import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.AbstractVariantController;
+import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.WidthAwareTextFields;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
@@ -37,7 +40,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -53,6 +55,8 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseCaseDataController.class);
 
+
+
     private final OptionalResources optionalResources;
 
     private final ExecutorService executorService;
@@ -63,7 +67,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
     private final Injector injector;
 
-    private final List<OntologyClass> phenotypes = new ArrayList<>();
+    private final ObservableList<OntologyClass> phenotypes = FXCollections.observableList(new ArrayList<>());
 
     private final ObservableList<AbstractVariantController> variantControllers;
 
@@ -75,7 +79,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     public Button inputPubMedDataButton;
 
     @FXML
-    public Label statusLabel;
+    public Label phenotypeSummaryLabel;
 
     @FXML
     private Button hpoTextMiningButton;
@@ -128,12 +132,6 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     @FXML
     private TextArea metadataTextArea;
 
-    /**
-     * Keep track to path of file containing data of current model so we don't need to ask user where to save a model
-     * everytime a change has been made.
-     */
-    private File currentModelPath;
-
 
     @Inject
     public DiseaseCaseDataController(OptionalResources optionalResources, ExecutorService executorService, GuiElementValues elementValues,
@@ -171,23 +169,25 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         };
     }
 
-
     /**
-     * Get path to XML file corresponding to current model.
-     *
-     * @return {@link File} containing the path.
+     * @return change listener for Phenotypes observable list that updates the {@code phenotypeSummaryLabel} with observed/excluded
+     * phenotype term count
      */
-    public File getCurrentModelPath() {
-        return currentModelPath;
-    }
+    private static ListChangeListener<OntologyClass> makePhenotypeSummaryLabel(List<OntologyClass> phenotypes, Label phenotypeSummaryLabel) {
+        return c -> {
+            int nObserved = 0, nExcluded = 0;
+            for (OntologyClass phenotype : phenotypes) {
+                if (phenotype.getNotObserved()) {
+                    nExcluded++;
+                } else {
+                    nObserved++;
+                }
+            }
+            String observedSummary = (nObserved == 1) ? "1 observed term" : String.format("%d observed terms", nObserved);
+            String excludedSummary = (nExcluded == 1) ? "1 excluded term" : String.format("%d excluded terms", nExcluded);
 
-    /**
-     * Set path to XML file corresponding to current model.
-     *
-     * @param currentModelPath {@link File} containing the path.
-     */
-    public void setCurrentModelPath(File currentModelPath) {
-        this.currentModelPath = currentModelPath;
+            phenotypeSummaryLabel.setText(String.join("\n", observedSummary, excludedSummary));
+        };
     }
 
     /**
@@ -412,7 +412,6 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         PopUps.showInfoMessage("PubMed parse OK", conversationTitle);
     }
 
-
     /**
      * Retrieve PubMed summary for given PMID.
      */
@@ -431,7 +430,6 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         });
         executorService.submit(task);
     }
-
 
     /**
      * Populate view elements with choices, create bindings and autocompletions.
@@ -479,8 +477,6 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
             if (!newValue) enableEntrezAutocompletions();
         });
 
-        statusLabel.textProperty().bind(diseaseCaseTitleBinding());
-
         // Set default values to GUI fields
         presentData(DiseaseCase.newBuilder()
                 // Default disease database is OMIM
@@ -488,8 +484,11 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
                         .setDatabase("OMIM")
                         .build())
                 .build()); // the last statement
-    }
 
+        // generate phenotype summary text
+        phenotypes.addListener(makePhenotypeSummaryLabel(phenotypes, phenotypeSummaryLabel));
+
+    }
 
     /**
      * Create autocompletions on GUI elements - allow completion of gene symbol after entering gene id and vice-versa
@@ -653,7 +652,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     Binding<String> diseaseCaseTitleBinding() {
         return Bindings.createStringBinding(() -> {
                     if (isComplete()) {
-                        return String.format("%s et al., %d variant(s)", ModelUtils.getFirstAuthorsSurname(publication.get()), variantControllers.size());
+                        return ModelUtils.getFileNameWithSampleId(getData());
                     } else {
                         return String.format("Data INCOMPLETE: %s", validationResults.get(0).getMessage());
                     }
@@ -668,4 +667,5 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
                 diseaseDatabaseComboBox.valueProperty(), diseaseNameTextField.textProperty(), diseaseIDTextField.textProperty(),
                 probandFamilyTextField.textProperty(), sexComboBox.valueProperty(), ageTextField.textProperty(), variantControllers);
     }
+
 }

@@ -3,7 +3,7 @@
     <parent>
         <artifactId>hpo-case-annotator</artifactId>
         <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
-        <version>1.0.13-SNAPSHOT</version>
+        <version>1.0.14-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -26,7 +26,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
@@ -36,13 +36,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19.1</version>
+                <version>3.0.0-M3</version>
             </plugin>
             <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% DEPENDENCIES %%%%%%%%% DEPENDENCIES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.8</version>
+                <version>3.1.1</version>
                 <executions>
                     <execution>
                         <id>copy-dependencies</id>
@@ -60,14 +60,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.1.2</version>
                 <configuration>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Play</mainClass>
+                            <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Main</mainClass>
                         </manifest>
                     </archive>
                     <excludes>
@@ -81,7 +81,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.5.3</version>
+                <version>3.1.1</version>
                 <configuration>
                     <descriptors>
                         <descriptor>hpo-case-annotator-gui/src/main/resources/assembly/distribution.xml</descriptor>
@@ -89,7 +89,7 @@
                     </descriptors>
                     <archive>
                         <manifest>
-                            <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Play</mainClass>
+                            <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -107,7 +107,7 @@
             <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
                 <artifactId>launch4j-maven-plugin</artifactId>
-                <version>1.7.22</version>
+                <version>1.7.25</version>
                 <executions>
                     <execution>
                         <id>l4j-clui</id>
@@ -121,7 +121,7 @@
                             <outfile>target/${project.build.finalName}.exe</outfile>
                             <downloadUrl>http://java.com/download</downloadUrl>
                             <classPath>
-                                <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Play</mainClass>
+                                <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Main</mainClass>
                             </classPath>
                             <jre>
                                 <bundledJre64Bit>false</bundledJre64Bit>
@@ -149,7 +149,7 @@
             <plugin>
                 <groupId>kr.motd.maven</groupId>
                 <artifactId>sphinx-maven-plugin</artifactId>
-                <version>2.2.2</version>
+                <version>2.4.0</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
@@ -167,13 +167,13 @@
         <dependency>
             <groupId>org.monarchinitiative.hpotextmining</groupId>
             <artifactId>hpotextmining-gui</artifactId>
-            <version>0.2.6</version>
+            <version>0.2.7</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
-            <version>4.0</version>
+            <version>4.2.2</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.controlsfx/controlsfx -->
