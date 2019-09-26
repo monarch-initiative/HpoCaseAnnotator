@@ -182,7 +182,7 @@ public class DiseaseCaseToPhenopacketCodecTest {
                         .setPos(149741531)
                         .setRef("N")
                         .setAlt("<DEL>")
-                        .setInfo("SVTYPE=DEL;SVEND=149744897;CIPOS=-5,5;CIEND=-15,10")
+                        .setInfo("SVTYPE=DEL;END=149744897;CIPOS=-5,5;CIEND=-15,10")
                         .build())
                 .setZygosity(ontologyClass("GENO:0000135", "heterozygous"))
                 .build()));

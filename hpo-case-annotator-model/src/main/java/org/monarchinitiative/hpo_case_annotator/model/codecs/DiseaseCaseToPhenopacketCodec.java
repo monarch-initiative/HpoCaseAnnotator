@@ -226,11 +226,11 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
                 if (v.getVariantClass().equals("structural")) {
                     // populate the info field if the variant class is structural
                     String svtype = String.format("SVTYPE=%s", v.getSvType().name());
-                    String svend = String.format("SVEND=%d", vp.getPos2());
+                    String end = String.format("END=%d", vp.getPos2());
 
                     String cipos = String.format("CIPOS=%d,%d", vp.getCiBeginOne(), vp.getCiBeginTwo());
                     String ciend = String.format("CIEND=%d,%d", vp.getCiEndOne(), vp.getCiEndTwo());
-                    info = String.join(";", svtype, svend, cipos, ciend);
+                    info = String.join(";", svtype, end, cipos, ciend);
                 }
                 return Variant.newBuilder()
                         .setVcfAllele(VcfAllele.newBuilder()
