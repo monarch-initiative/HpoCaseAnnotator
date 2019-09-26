@@ -13,6 +13,8 @@ import java.net.URL;
  */
 public final class TestResources {
 
+    public static final String SOFTWARE_VERSION = "Hpo Case Annotator";
+
     public static final URL TEST_XML_MODEL_FILE_DIR = XMLModelParser.class.getResource("");
 
     public static final URL TEST_GPI_MODEL_FILE_DIR = TestResources.class.getResource("/gpi_model");
@@ -49,5 +51,13 @@ public final class TestResources {
 
     public static DiseaseCase aguilar_Ramirez_2009_C5() {
         return DiseaseCaseModelExample.aguilar_Ramirez_2009_C5();
+    }
+
+    /**
+     * @return {@link DiseaseCase} representing a heterozygous single exon deletion causing TCS1 (autosomal dominant
+     * disorder).
+     */
+    public static DiseaseCase structural_beygo_2012_TCOF1_M18662() {
+        return DiseaseCaseModelExample.structural_beygo_2012_TCOF1_M18662();
     }
 }

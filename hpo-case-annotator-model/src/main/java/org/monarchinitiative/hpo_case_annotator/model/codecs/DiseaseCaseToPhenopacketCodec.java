@@ -128,8 +128,9 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
         Publication publication = data.getPublication();
         String metadata = data.getMetadata();
         return Phenopacket.newBuilder()
+                // id
                 .setId(Codecs.getPhenopacketIdFor(data))
-                // proband and the publication data
+                // subject/individual and the publication data
                 .setSubject(Individual.newBuilder()
                         .setId(familyOrProbandId)
                         .setAgeAtCollection(Age.newBuilder().setAge(data.getFamilyInfo().getAge()).build())
@@ -218,18 +219,26 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
         }
 
         private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.Variant, Variant> hcaVariantToPhenopacketVariant(String familyOrProbandId) {
-            return v -> Variant.newBuilder()
-                    .setVcfAllele(VcfAllele.newBuilder()
-                            .setGenomeAssembly(hcaGenomeAssemblyToPhenopacketGenomeAssembly(v.getVariantPosition().getGenomeAssembly()))
-                            //.setId()
-                            .setChr(v.getVariantPosition().getContig())
-                            .setPos(v.getVariantPosition().getPos())
-                            .setRef(v.getVariantPosition().getRefAllele())
-                            .setAlt(v.getVariantPosition().getAltAllele())
-
-                            .build())
-                    .setZygosity(genotype(v.getGenotype()))
-                    .build();
+            return v -> {
+                String info = "";
+                if (v.getVariantClass().equals("structural")) {
+                    // populate the info field if the variant class is structural
+                    int pos2 = v.getVariantPosition().getPos2();
+                    info = String.format("SVTYPE=%s;SVEND=%d", v.getSvType().name(), pos2);
+                }
+                return Variant.newBuilder()
+                        .setVcfAllele(VcfAllele.newBuilder()
+                                .setGenomeAssembly(hcaGenomeAssemblyToPhenopacketGenomeAssembly(v.getVariantPosition().getGenomeAssembly()))
+                                //.setId()
+                                .setChr(v.getVariantPosition().getContig())
+                                .setPos(v.getVariantPosition().getPos())
+                                .setRef(v.getVariantPosition().getRefAllele())
+                                .setAlt(v.getVariantPosition().getAltAllele())
+                                .setInfo(info)
+                                .build())
+                        .setZygosity(genotype(v.getGenotype()))
+                        .build();
+            };
         }
 
         private static String hcaGenomeAssemblyToPhenopacketGenomeAssembly(org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly genomeAssembly) {

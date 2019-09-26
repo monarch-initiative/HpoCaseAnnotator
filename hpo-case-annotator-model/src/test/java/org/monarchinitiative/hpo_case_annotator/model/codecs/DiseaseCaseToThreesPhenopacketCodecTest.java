@@ -104,7 +104,7 @@ public class DiseaseCaseToThreesPhenopacketCodecTest {
         MetaData md = pp.getMetaData();
         // cannot test md.getCreated(), because Timestamp is updated all the time
         assertThat(md.getCreatedBy(), is("HPO:ahegde"));
-        assertThat(md.getSubmittedBy(), is("Hpo Case Annotator v1.0.12-SNAPSHOT"));
+        assertThat(md.getSubmittedBy(), is("Hpo Case Annotator"));
         assertThat(md.getResourcesList(), is(DiseaseCaseToPhenopacketCodec.makeResources()));
         assertThat(md.getExternalReferencesList(), is(Collections.singletonList(ExternalReference.newBuilder().setId("PMID:23954224").setDescription("First functional analysis of a novel splicing mutation in the B3GALTL gene by an ex vivo approach in Tunisian patients with typical Peters plus syndrome").build())));
 

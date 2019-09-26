@@ -2,14 +2,14 @@ package org.monarchinitiative.hpo_case_annotator.model.test_resources;
 
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 
+import static org.monarchinitiative.hpo_case_annotator.model.test_resources.TestResources.SOFTWARE_VERSION;
+
 /**
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
  */
 class DiseaseCaseModelExample {
 
     // TODO - add other models for testing here
-
-    private static final String SOFTWARE_VERSION = "Hpo Case Annotator v1.0.12-SNAPSHOT";
 
 
     static DiseaseCase benMahmoud2013B3GLCT() {
@@ -333,4 +333,81 @@ class DiseaseCaseModelExample {
                 .build();
     }
 
+    /**
+     * @return {@link DiseaseCase} representing a heterozygous single exon deletion causing TCS1 (autosomal dominant
+     * disorder).
+     */
+    static DiseaseCase structural_beygo_2012_TCOF1_M18662() {
+        /* Genome build */
+        return DiseaseCase.newBuilder()
+
+                /* Publication data */
+                .setPublication(
+                        Publication.newBuilder().setAuthorList("Beygo J, Buiting K, Seland S, Lüdecke HJ, Hehr U, Lich C, Prager B, Lohmann DR, Wieczorek D")
+                                .setTitle("First Report of a Single Exon Deletion in TCOF1 Causing Treacher Collins Syndrome")
+                                .setJournal("Mol Syndromol")
+                                .setYear("2012")
+                                .setVolume("2(2)")
+                                .setPages("53-59")
+                                .setPmid("22712005")
+                                .build())
+                .setMetadata("Authors describe a proband M18662 with presence of TCS1")
+                .setGene(Gene.newBuilder()
+                        .setSymbol("TCOF1")
+                        .setEntrezId(6949)
+                        .build())
+                /* Variants which belong to this model */
+                .addVariant(Variant.newBuilder()
+                        .setVariantPosition(VariantPosition.newBuilder()
+                                .setGenomeAssembly(GenomeAssembly.GRCH_37)
+                                .setContig("5")
+                                .setPos(149741531)
+                                .setPos2(149744897)
+                                .build())
+                        .setVariantClass("structural")
+                        .setSvType(StructuralType.DEL)
+                        .setGenotype(Genotype.HETEROZYGOUS)
+                        .setVariantValidation(VariantValidation.newBuilder()
+                                .setContext(VariantValidation.Context.CNV)
+                                .build())
+                        .build())
+                /* Family/proband information */
+                .setFamilyInfo(FamilyInfo.newBuilder()
+                        .setFamilyOrProbandId("M18662")
+                        .setSex(Sex.FEMALE)
+                        .setAge("P26Y")
+                        .build())
+                /* HPO terms */
+                .addPhenotype(OntologyClass.newBuilder()
+                        .setId("HP:0011453")
+                        .setLabel("Abnormality of the incus")
+                        .setNotObserved(false)
+                        .build())
+                .addPhenotype(OntologyClass.newBuilder()
+                        .setId("HP:0000405")
+                        .setLabel("Conductive hearing impairment")
+                        .setNotObserved(false)
+                        .build())
+                .addPhenotype(OntologyClass.newBuilder()
+                        .setId("HP:0025336")
+                        .setLabel("Delayed ability to sit")
+                        .setNotObserved(true)
+                        .build())
+                .addPhenotype(OntologyClass.newBuilder()
+                        .setId("HP:0000750")
+                        .setLabel("Delayed speech and language development")
+                        .setNotObserved(true)
+                        .build())
+                .setDisease(Disease.newBuilder()
+                        .setDatabase("OMIM")
+                        .setDiseaseId("154500")
+                        .setDiseaseName("TREACHER COLLINS SYNDROME 1; TCS1")
+                        .build())
+                /* Biocurator */
+                .setBiocurator(Biocurator.newBuilder()
+                        .setBiocuratorId("HPO:walterwhite")
+                        .build())
+                .setSoftwareVersion(SOFTWARE_VERSION)
+                .build();
+    }
 }
