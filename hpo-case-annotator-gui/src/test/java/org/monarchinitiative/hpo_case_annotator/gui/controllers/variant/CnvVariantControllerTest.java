@@ -93,6 +93,8 @@ public class CnvVariantControllerTest extends ApplicationTest {
                         .setContig("4")
                         .setPos(101)
                         .setPos2(200)
+                        .setRefAllele("N")
+                        .setAltAllele("<INS>")
                         .setCiBeginOne(-5)
                         .setCiBeginTwo(10)
                         .setCiEndOne(-15)

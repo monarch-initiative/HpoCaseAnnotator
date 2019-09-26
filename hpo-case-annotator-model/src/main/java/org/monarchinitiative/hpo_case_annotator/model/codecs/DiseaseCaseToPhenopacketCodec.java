@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.model.codecs;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
+import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
 import org.phenopackets.schema.v1.Phenopacket;
 import org.phenopackets.schema.v1.core.*;
 import org.slf4j.Logger;
@@ -221,19 +222,24 @@ public final class DiseaseCaseToPhenopacketCodec implements Codec<DiseaseCase, P
         private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.Variant, Variant> hcaVariantToPhenopacketVariant(String familyOrProbandId) {
             return v -> {
                 String info = "";
+                VariantPosition vp = v.getVariantPosition();
                 if (v.getVariantClass().equals("structural")) {
                     // populate the info field if the variant class is structural
-                    int pos2 = v.getVariantPosition().getPos2();
-                    info = String.format("SVTYPE=%s;SVEND=%d", v.getSvType().name(), pos2);
+                    String svtype = String.format("SVTYPE=%s", v.getSvType().name());
+                    String svend = String.format("SVEND=%d", vp.getPos2());
+
+                    String cipos = String.format("CIPOS=%d,%d", vp.getCiBeginOne(), vp.getCiBeginTwo());
+                    String ciend = String.format("CIEND=%d,%d", vp.getCiEndOne(), vp.getCiEndTwo());
+                    info = String.join(";", svtype, svend, cipos, ciend);
                 }
                 return Variant.newBuilder()
                         .setVcfAllele(VcfAllele.newBuilder()
-                                .setGenomeAssembly(hcaGenomeAssemblyToPhenopacketGenomeAssembly(v.getVariantPosition().getGenomeAssembly()))
+                                .setGenomeAssembly(hcaGenomeAssemblyToPhenopacketGenomeAssembly(vp.getGenomeAssembly()))
                                 //.setId()
-                                .setChr(v.getVariantPosition().getContig())
-                                .setPos(v.getVariantPosition().getPos())
-                                .setRef(v.getVariantPosition().getRefAllele())
-                                .setAlt(v.getVariantPosition().getAltAllele())
+                                .setChr(vp.getContig())
+                                .setPos(vp.getPos())
+                                .setRef(vp.getRefAllele())
+                                .setAlt(vp.getAltAllele())
                                 .setInfo(info)
                                 .build())
                         .setZygosity(genotype(v.getGenotype()))

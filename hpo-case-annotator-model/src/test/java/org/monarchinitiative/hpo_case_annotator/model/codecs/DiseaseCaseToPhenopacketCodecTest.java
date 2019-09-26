@@ -180,7 +180,9 @@ public class DiseaseCaseToPhenopacketCodecTest {
                         .setGenomeAssembly("GRCh37")
                         .setChr("5")
                         .setPos(149741531)
-                        .setInfo("SVTYPE=DEL;SVEND=149744897")
+                        .setRef("N")
+                        .setAlt("<DEL>")
+                        .setInfo("SVTYPE=DEL;SVEND=149744897;CIPOS=-5,5;CIEND=-15,10")
                         .build())
                 .setZygosity(ontologyClass("GENO:0000135", "heterozygous"))
                 .build()));

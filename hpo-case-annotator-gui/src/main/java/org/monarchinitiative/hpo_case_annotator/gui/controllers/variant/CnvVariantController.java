@@ -64,6 +64,8 @@ public final class CnvVariantController extends AbstractVariantController {
     @FXML
     public CheckBox cosegregationCheckBox;
 
+    private final String defaultRefAllele = "N";
+
     @Inject
     public CnvVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
         super(elementValues, hostServices);
@@ -121,6 +123,7 @@ public final class CnvVariantController extends AbstractVariantController {
 
     @Override
     public Variant getData() {
+        StructuralType svType = svTypeComboBox.getValue() == null ? StructuralType.UNKNOWN : svTypeComboBox.getValue();
         return Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()
                         .setGenomeAssembly(genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : genomeBuildComboBox.getValue())
@@ -128,6 +131,8 @@ public final class CnvVariantController extends AbstractVariantController {
                         // we need to save 1-based coordinate in the VariantPosition, hence +1
                         .setPos(parseIntOrGetDefaultValue(beginTextField::getText, 0) + 1) // convert to 1-based
                         .setPos2(parseIntOrGetDefaultValue(endTextField::getText, 0))
+                        .setRefAllele(defaultRefAllele)
+                        .setAltAllele(String.format("<%s>", svType.name()))
                         .setCiBeginOne(parseIntOrGetDefaultValue(ciBeginFirstTextField::getText, 0))
                         .setCiBeginTwo(parseIntOrGetDefaultValue(ciBeginSecondTextField::getText, 0))
                         .setCiEndOne(parseIntOrGetDefaultValue(ciEndFirstTextField::getText, 0))
@@ -136,7 +141,7 @@ public final class CnvVariantController extends AbstractVariantController {
 
                 .setVariantClass(variantClassComboBox.getValue() == null ? "" : variantClassComboBox.getValue())
                 .setGenotype(genotypeComboBox.getValue() == null ? Genotype.UNDEFINED : genotypeComboBox.getValue())
-                .setSvType(svTypeComboBox.getValue() == null ? StructuralType.UNKNOWN : svTypeComboBox.getValue())
+                .setSvType(svType)
                 .setVariantValidation(VariantValidation.newBuilder()
                         .setContext(VariantValidation.Context.CNV)
                         .setCosegregation(cosegregationCheckBox.isSelected())
