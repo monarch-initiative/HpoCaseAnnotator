@@ -1,5 +1,10 @@
 # HRMD gui
 
+### v1.0.14
+- use `phenopacket-schema v1.0.0-RC3`
+- during export, store phenopacket-schema version within phenopacket
+
+
 ### v1.0.13
 - add value from *proband/family info* into file name when saving data
 - use `phenopacket-schema v1.0.0-RC1`
