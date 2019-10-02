@@ -21,7 +21,7 @@ public class DiseaseCaseToThreesPhenopacketCodecTest {
     private DiseaseCaseToThreesPhenopacketCodec instance;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         instance = new DiseaseCaseToThreesPhenopacketCodec();
     }
 
@@ -36,7 +36,6 @@ public class DiseaseCaseToThreesPhenopacketCodecTest {
         // SUBJECT
         assertThat(pp.getSubject(), is(Individual.newBuilder()
                 .setId("Tunisian patients")
-                .setDatasetId("3S")
                 .setSex(Sex.MALE)
                 .setTaxonomy(ontologyClass("NCBITaxon:9606", "Homo sapiens"))
                 .build()));
@@ -105,6 +104,7 @@ public class DiseaseCaseToThreesPhenopacketCodecTest {
         // cannot test md.getCreated(), because Timestamp is updated all the time
         assertThat(md.getCreatedBy(), is("HPO:ahegde"));
         assertThat(md.getSubmittedBy(), is("Hpo Case Annotator v1.0.12-SNAPSHOT"));
+        assertThat(md.getPhenopacketSchemaVersion(), is("1.0.0-RC3"));
         assertThat(md.getResourcesList(), is(DiseaseCaseToPhenopacketCodec.makeResources()));
         assertThat(md.getExternalReferencesList(), is(Collections.singletonList(ExternalReference.newBuilder().setId("PMID:23954224").setDescription("First functional analysis of a novel splicing mutation in the B3GALTL gene by an ex vivo approach in Tunisian patients with typical Peters plus syndrome").build())));
 

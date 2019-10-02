@@ -12,18 +12,28 @@ import org.phenopackets.schema.v1.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.Instant;
+import java.util.Properties;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class DiseaseCaseToThreesPhenopacketCodec implements Codec<DiseaseCase, Phenopacket> {
 
-    private static final String DATASET_ID = "3S";
-
     private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseCaseToThreesPhenopacketCodec.class);
 
+    private final String phenopacketVersion;
+
     DiseaseCaseToThreesPhenopacketCodec() {
-        // package-private no-op
+        Properties properties = new Properties();
+        try (InputStream is = DiseaseCaseToThreesPhenopacketCodec.class.getResourceAsStream("phenopacket_version.properties")) {
+            properties.load(is);
+        } catch (IOException e) {
+            LOGGER.warn("Unable to read Phenopacket version, using 'N/A'");
+        }
+
+        phenopacketVersion = properties.getProperty("phenopacket.version", "N/A");
     }
 
     private static Sex hcaSexToPhenopacketSex(org.monarchinitiative.hpo_case_annotator.model.proto.Sex sex) {
@@ -110,7 +120,6 @@ public class DiseaseCaseToThreesPhenopacketCodec implements Codec<DiseaseCase, P
                 .setId(Codecs.getPhenopacketIdFor(data))
                 .setSubject(Individual.newBuilder()
                         .setId(data.getFamilyInfo().getFamilyOrProbandId())
-                        .setDatasetId(DATASET_ID)
                         .setSex(hcaSexToPhenopacketSex(data.getFamilyInfo().getSex()))
                         // .setAgeAtCollection() // cannot do this, we would have to enforce age in proper format in HCA first
                         .setTaxonomy(DiseaseCaseToPhenopacketCodec.HOMO_SAPIENS)
@@ -136,6 +145,7 @@ public class DiseaseCaseToThreesPhenopacketCodec implements Codec<DiseaseCase, P
                         .setCreatedBy(data.getBiocurator().getBiocuratorId())
                         .setSubmittedBy(data.getSoftwareVersion())
                         .addAllResources(DiseaseCaseToPhenopacketCodec.makeResources())
+                        .setPhenopacketSchemaVersion(phenopacketVersion)
                         .addExternalReferences(ExternalReference.newBuilder()
                                 .setId(String.format("PMID:%s", data.getPublication().getPmid()))
                                 .setDescription(data.getPublication().getTitle())
