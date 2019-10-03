@@ -5,10 +5,7 @@ import com.google.inject.Injector;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.collections.ListChangeListener;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
@@ -27,9 +24,8 @@ import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.StartupTask;
+import org.monarchinitiative.hpo_case_annotator.model.codecs.AbstractDiseaseCaseToPhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.model.codecs.Codecs;
-import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToPhenopacketCodec;
-import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToThreesPhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.model.io.*;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
@@ -43,7 +39,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.*;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -496,7 +492,7 @@ public final class MainController {
         File where = PopUps.selectDirectory(primaryStage, optionalResources.getDiseaseCaseDir(),
                 "Select export directory");
 
-        DiseaseCaseToPhenopacketCodec codec = Codecs.diseaseCasePhenopacketCodec();
+        AbstractDiseaseCaseToPhenopacketCodec codec = Codecs.diseaseCasePhenopacketCodec();
 
         if (where != null) {
             int counter = 0;
@@ -550,7 +546,7 @@ public final class MainController {
         filechooser.setSelectedExtensionFilter(jsonFormat);
 
         File where = filechooser.showSaveDialog(primaryStage);
-        DiseaseCaseToPhenopacketCodec codec = Codecs.diseaseCasePhenopacketCodec();
+        AbstractDiseaseCaseToPhenopacketCodec codec = Codecs.diseaseCasePhenopacketCodec();
         if (where != null) {
             try (BufferedWriter writer = Files.newBufferedWriter(where.toPath())) {
                 final Phenopacket packet = codec.encode(diseaseCase);
@@ -576,7 +572,7 @@ public final class MainController {
 
         File where = PopUps.selectDirectory(primaryStage, optionalResources.getDiseaseCaseDir(),
                 "Select export directory");
-        DiseaseCaseToThreesPhenopacketCodec codec = Codecs.threesPhenopacketCodec();
+        AbstractDiseaseCaseToPhenopacketCodec codec = Codecs.threesPhenopacketCodec();
 
         if (where != null) {
             int counter = 0;
@@ -735,7 +731,7 @@ public final class MainController {
 
             if (fileChooser.getSelectedExtensionFilter().getDescription().equals(jsonFileFormat.getDescription())) {
                 try (OutputStream os = Files.newOutputStream(currentModelPath)) {
-                    ProtoJSONModelParser.saveDiseaseCase(os, model, Charset.forName("UTF-8")); // TODO - charset is hardcoded
+                    ProtoJSONModelParser.saveDiseaseCase(os, model, StandardCharsets.UTF_8); // TODO - charset is hardcoded
                 } catch (IOException e) {
                     PopUps.showException(conversationTitle, "Unable to store data into file", "", e);
                     LOGGER.warn("Unable to store data into file {}", currentModelPath, e);
@@ -760,7 +756,7 @@ public final class MainController {
                 if (currentModelPath.toFile().getName().endsWith(".xml")) {
                     XMLModelParser.saveDiseaseCase(model, os);
                 } else if (currentModelPath.toFile().getName().endsWith(".json")) {
-                    ProtoJSONModelParser.saveDiseaseCase(os, model, Charset.forName("UTF-8")); // TODO - charset is hardcoded
+                    ProtoJSONModelParser.saveDiseaseCase(os, model, StandardCharsets.UTF_8); // TODO - charset is hardcoded
                 }
             } catch (IOException e) {
                 PopUps.showException(conversationTitle, "Unable to store data into file", "", e);
