@@ -19,7 +19,7 @@ public final class Codecs {
         // private no-op
     }
 
-    public static DiseaseCaseToPhenopacketCodec diseaseCasePhenopacketCodec() {
+    public static AbstractDiseaseCaseToPhenopacketCodec diseaseCasePhenopacketCodec() {
         return new DiseaseCaseToPhenopacketCodec();
     }
 
@@ -27,7 +27,7 @@ public final class Codecs {
         return new DiseaseCaseToDiseaseCaseModelCodec();
     }
 
-    public static DiseaseCaseToThreesPhenopacketCodec threesPhenopacketCodec() {
+    public static AbstractDiseaseCaseToPhenopacketCodec threesPhenopacketCodec() {
         return new DiseaseCaseToThreesPhenopacketCodec();
     }
 

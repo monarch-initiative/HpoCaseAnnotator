@@ -1,55 +1,25 @@
 package org.monarchinitiative.hpo_case_annotator.model.codecs;
 
 import com.google.protobuf.Timestamp;
-import org.monarchinitiative.hpo_case_annotator.model.proto.OntologyClass;
-import org.monarchinitiative.hpo_case_annotator.model.proto.*;
+import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.phenopackets.schema.v1.Phenopacket;
-import org.phenopackets.schema.v1.core.Disease;
-import org.phenopackets.schema.v1.core.Gene;
-import org.phenopackets.schema.v1.core.Sex;
-import org.phenopackets.schema.v1.core.Variant;
 import org.phenopackets.schema.v1.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.Instant;
-import java.util.Properties;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class DiseaseCaseToThreesPhenopacketCodec implements Codec<DiseaseCase, Phenopacket> {
+public class DiseaseCaseToThreesPhenopacketCodec extends AbstractDiseaseCaseToPhenopacketCodec {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseCaseToThreesPhenopacketCodec.class);
 
-    private final String phenopacketVersion;
-
     DiseaseCaseToThreesPhenopacketCodec() {
-        Properties properties = new Properties();
-        try (InputStream is = DiseaseCaseToThreesPhenopacketCodec.class.getResourceAsStream("phenopacket_version.properties")) {
-            properties.load(is);
-        } catch (IOException e) {
-            LOGGER.warn("Unable to read Phenopacket version, using 'N/A'");
-        }
-
-        phenopacketVersion = properties.getProperty("phenopacket.version", "N/A");
+        // protected no-op
     }
 
-    private static Sex hcaSexToPhenopacketSex(org.monarchinitiative.hpo_case_annotator.model.proto.Sex sex) {
-        switch (sex) {
-            case MALE:
-                return Sex.MALE;
-            case FEMALE:
-                return Sex.FEMALE;
-            case UNKNOWN_SEX:
-            default:
-                return Sex.UNKNOWN_SEX;
-
-        }
-    }
-
-    private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.Variant, Variant> hcaVariantToPhenopacketVariant() {
+    private static Function<org.monarchinitiative.hpo_case_annotator.model.proto.Variant, Variant> mapVariantWithSplicingData() {
         return v -> Variant.newBuilder()
                 .setVcfAllele(VcfAllele.newBuilder()
                         .setGenomeAssembly(hcaGenomeAssemblyToPhenopacketGenomeAssembly(v.getVariantPosition().getGenomeAssembly()))
@@ -63,19 +33,6 @@ public class DiseaseCaseToThreesPhenopacketCodec implements Codec<DiseaseCase, P
                 .build();
     }
 
-    private static String hcaGenomeAssemblyToPhenopacketGenomeAssembly(GenomeAssembly assembly) {
-        switch (assembly) {
-            case GRCH_37:
-                return "GRCh37";
-            case GRCH_38:
-                return "GRCh38";
-            case UNKNOWN_GENOME_ASSEMBLY:
-            case UNRECOGNIZED:
-            default:
-                return "UNKNOWN";
-        }
-    }
-
     /**
      *
      */
@@ -83,35 +40,6 @@ public class DiseaseCaseToThreesPhenopacketCodec implements Codec<DiseaseCase, P
         return String.join(";", "VCLASS=" + v.getVariantClass(),
                 "PATHOMECHANISM=" + v.getPathomechanism(),
                 "CONSEQUENCE=" + v.getConsequence());
-    }
-
-    private static org.phenopackets.schema.v1.core.OntologyClass hcaGenotypeToPhenopacketZygosity(Genotype genotype) {
-        switch (genotype) {
-            case HETEROZYGOUS:
-                return DiseaseCaseToPhenopacketCodec.HET;
-            case HOMOZYGOUS_ALTERNATE:
-                return DiseaseCaseToPhenopacketCodec.HOM_ALT;
-            case HEMIZYGOUS:
-                return DiseaseCaseToPhenopacketCodec.HEMIZYGOUS;
-            case HOMOZYGOUS_REFERENCE:
-            case UNDEFINED:
-            default:
-                return org.phenopackets.schema.v1.core.OntologyClass.getDefaultInstance();
-        }
-    }
-
-    private static Function<OntologyClass, PhenotypicFeature> hcaPhenotypeToPhenopacketPhenotype(Publication publication) {
-        return oc -> PhenotypicFeature.newBuilder()
-                .setType(org.phenopackets.schema.v1.core.OntologyClass.newBuilder().setId(oc.getId()).setLabel(oc.getLabel()).build())
-                .setNegated(oc.getNotObserved())
-                .addEvidence(Evidence.newBuilder()
-                        .setEvidenceCode(DiseaseCaseToPhenopacketCodec.TRACEABLE_AUTHOR_STATEMENT)
-                        .setReference(ExternalReference.newBuilder()
-                                .setId(String.format("PMID:%s", publication.getPmid()))
-                                .setDescription(publication.getTitle())
-                                .build())
-                        .build())
-                .build();
     }
 
     @Override
@@ -122,7 +50,7 @@ public class DiseaseCaseToThreesPhenopacketCodec implements Codec<DiseaseCase, P
                         .setId(data.getFamilyInfo().getFamilyOrProbandId())
                         .setSex(hcaSexToPhenopacketSex(data.getFamilyInfo().getSex()))
                         // .setAgeAtCollection() // cannot do this, we would have to enforce age in proper format in HCA first
-                        .setTaxonomy(DiseaseCaseToPhenopacketCodec.HOMO_SAPIENS)
+                        .setTaxonomy(AbstractDiseaseCaseToPhenopacketCodec.HOMO_SAPIENS)
                         .build())
                 .addAllPhenotypicFeatures(data.getPhenotypeList().stream()
                         .map(hcaPhenotypeToPhenopacketPhenotype(data.getPublication()))
@@ -131,12 +59,9 @@ public class DiseaseCaseToThreesPhenopacketCodec implements Codec<DiseaseCase, P
                         .setId(String.format("ENTREZ:%d", data.getGene().getEntrezId()))
                         .setSymbol(data.getGene().getSymbol())
                         .build())
-                .addAllVariants(data.getVariantList().stream().map(hcaVariantToPhenopacketVariant()).collect(Collectors.toList()))
+                .addAllVariants(data.getVariantList().stream().map(mapVariantWithSplicingData()).collect(Collectors.toList()))
                 .addDiseases(Disease.newBuilder()
-                        .setTerm(org.phenopackets.schema.v1.core.OntologyClass.newBuilder()
-                                .setId(String.format("%s:%s", data.getDisease().getDatabase(), data.getDisease().getDiseaseId()))
-                                .setLabel(data.getDisease().getDiseaseName())
-                                .build())
+                        .setTerm(ontologyClass(String.format("%s:%s", data.getDisease().getDatabase(), data.getDisease().getDiseaseId()), data.getDisease().getDiseaseName()))
                         .build())
                 .setMetaData(MetaData.newBuilder()
                         .setCreated(Timestamp.newBuilder()
@@ -144,7 +69,7 @@ public class DiseaseCaseToThreesPhenopacketCodec implements Codec<DiseaseCase, P
                                 .build())
                         .setCreatedBy(data.getBiocurator().getBiocuratorId())
                         .setSubmittedBy(data.getSoftwareVersion())
-                        .addAllResources(DiseaseCaseToPhenopacketCodec.makeResources())
+                        .addAllResources(AbstractDiseaseCaseToPhenopacketCodec.makeResources())
                         .setPhenopacketSchemaVersion(phenopacketVersion)
                         .addExternalReferences(ExternalReference.newBuilder()
                                 .setId(String.format("PMID:%s", data.getPublication().getPmid()))
