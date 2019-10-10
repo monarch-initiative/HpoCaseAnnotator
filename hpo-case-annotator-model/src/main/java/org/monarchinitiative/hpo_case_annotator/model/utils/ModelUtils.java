@@ -46,6 +46,7 @@ public class ModelUtils {
         String gn = (model.getGene().getSymbol() == null) ? "genesymbol" : model.getGene().getSymbol();
         String sid = model.getFamilyInfo().getFamilyOrProbandId();
         String candidate = String.format("%s-%s-%s-%s", getFirstAuthorsSurname(publication), ye, gn, sid);
+        candidate = candidate.replaceAll("\\P{InBasic_Latin}", ""); // replaces non ASCII characters
         return Checks.makeLegalFileNameWithNoWhitespace(candidate);
     }
 
