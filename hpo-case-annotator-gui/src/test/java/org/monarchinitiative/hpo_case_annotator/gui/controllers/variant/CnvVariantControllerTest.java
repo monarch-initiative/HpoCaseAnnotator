@@ -83,7 +83,9 @@ public class CnvVariantControllerTest extends ApplicationTest {
                 // ci end second
                 .clickOn("#ciEndSecondTextField").write("20")
                 // cosegregation
-                .clickOn("#cosegregationCheckBox");
+                .clickOn("#cosegregationCheckBox")
+                // imprecise
+                .clickOn("#impreciseCheckBox");
 
         final Variant received = controller.getData();
 
@@ -107,6 +109,7 @@ public class CnvVariantControllerTest extends ApplicationTest {
                         .setContext(VariantValidation.Context.CNV)
                         .setCosegregation(true)
                         .build())
+                .setImprecise(true)
                 .build())));
     }
 

@@ -210,7 +210,7 @@ public class DiseaseCaseToPhenopacketCodecTest {
                         .setPos(149741531)
                         .setRef("N")
                         .setAlt("<DEL>")
-                        .setInfo("SVTYPE=DEL;END=149744897;CIPOS=-5,5;CIEND=-15,10")
+                        .setInfo("SVTYPE=DEL;END=149744897;CIPOS=-5,5;CIEND=-15,10;IMPRECISE")
                         .build())
                 .setZygosity(AbstractDiseaseCaseToPhenopacketCodec.HET)
                 .build()));

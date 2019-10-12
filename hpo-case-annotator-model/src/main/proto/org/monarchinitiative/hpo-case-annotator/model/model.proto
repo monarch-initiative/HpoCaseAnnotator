@@ -148,8 +148,11 @@ message Variant {
     // Structural
     StructuralType sv_type = 21;
 
+    // Flag for imprecise CNV variant
+    bool imprecise = 22;
+
     // reserved for CNV fields
-    reserved 22 to 29;
+    reserved 23 to 29;
 
     // Breakpoint fields
     // reserved for Breakpoint fields

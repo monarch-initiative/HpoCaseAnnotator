@@ -64,6 +64,9 @@ public final class CnvVariantController extends AbstractVariantController {
     @FXML
     public CheckBox cosegregationCheckBox;
 
+    @FXML
+    public CheckBox impreciseCheckBox;
+
     private final String defaultRefAllele = "N";
 
     @Inject
@@ -119,6 +122,7 @@ public final class CnvVariantController extends AbstractVariantController {
 
         VariantValidation vv = variant.getVariantValidation();
         cosegregationCheckBox.setSelected(vv.getCosegregation());
+        impreciseCheckBox.setSelected(variant.getImprecise());
     }
 
     @Override
@@ -146,6 +150,7 @@ public final class CnvVariantController extends AbstractVariantController {
                         .setContext(VariantValidation.Context.CNV)
                         .setCosegregation(cosegregationCheckBox.isSelected())
                         .build())
+                .setImprecise(impreciseCheckBox.isSelected())
                 .build();
     }
 

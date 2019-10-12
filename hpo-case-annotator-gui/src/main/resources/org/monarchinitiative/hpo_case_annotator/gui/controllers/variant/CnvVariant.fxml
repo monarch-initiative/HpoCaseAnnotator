@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <TitledPane xmlns="http://javafx.com/javafx/8.0.999-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.CnvVariantController">
    <content>
       <VBox>
@@ -26,6 +16,7 @@
                   <ColumnConstraints halignment="CENTER" minWidth="10.0" />
                   <ColumnConstraints halignment="CENTER" minWidth="10.0" />
                   <ColumnConstraints halignment="CENTER" minWidth="10.0" />
+                  <ColumnConstraints halignment="CENTER"/>
                   <ColumnConstraints halignment="CENTER" />
                   <ColumnConstraints halignment="CENTER" />
                   <ColumnConstraints halignment="CENTER" />
@@ -160,6 +151,12 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
+                   <CheckBox fx:id="impreciseCheckBox" mnemonicParsing="false" text="imprecise" GridPane.columnIndex="9"
+                             GridPane.rowIndex="3">
+                       <GridPane.margin>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                       </GridPane.margin>
+                   </CheckBox>
                </children>
             </GridPane>
             <GridPane style="-fx-background-color: #ffcc5c;">

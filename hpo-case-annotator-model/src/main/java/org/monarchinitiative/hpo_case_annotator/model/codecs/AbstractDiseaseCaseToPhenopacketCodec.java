@@ -197,6 +197,9 @@ public abstract class AbstractDiseaseCaseToPhenopacketCodec implements Codec<Dis
                 String cipos = String.format("CIPOS=%d,%d", vp.getCiBeginOne(), vp.getCiBeginTwo());
                 String ciend = String.format("CIEND=%d,%d", vp.getCiEndOne(), vp.getCiEndTwo());
                 info = String.join(";", svtype, svend, cipos, ciend);
+                if (v.getImprecise()) {
+                    info += ";IMPRECISE";
+                }
             }
             return Variant.newBuilder()
                     .setVcfAllele(VcfAllele.newBuilder()
