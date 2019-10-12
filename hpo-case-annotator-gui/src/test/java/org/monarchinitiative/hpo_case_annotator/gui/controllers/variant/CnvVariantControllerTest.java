@@ -93,7 +93,7 @@ public class CnvVariantControllerTest extends ApplicationTest {
                 .setVariantPosition(VariantPosition.newBuilder()
                         .setGenomeAssembly(GenomeAssembly.GRCH_37)
                         .setContig("4")
-                        .setPos(101)
+                        .setPos(100)
                         .setPos2(200)
                         .setRefAllele("N")
                         .setAltAllele("<INS>")
