@@ -21,6 +21,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -93,8 +94,7 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
 //        optionalResources.setDiseaseCaseDir(diseaseCaseDir);
 
         // read Ontology
-        Path ontologyPath = Paths.get(TestHpoCaseAnnotatorModule.class.getResource("/resource_files/HP.obo").toURI());
-        try (InputStream is = Files.newInputStream(ontologyPath)) {
+        try (InputStream is = TestHpoCaseAnnotatorModule.class.getResourceAsStream("/resource_files/HP.obo")) {
             optionalResources.setOntology(OptionalResources.deserializeOntology(is));
         }
 
@@ -106,8 +106,8 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
         optionalResources.setSymbol2entrezId(entrezParser.getSymbol2entrezId());
 
         // read OMIM file
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(TestHpoCaseAnnotatorModule.class.getResource("/resource_files/omim.tsv").toURI()))) {
-            OMIMParser omimParser = new OMIMParser(reader);
+        try (InputStream is = TestHpoCaseAnnotatorModule.class.getResourceAsStream("/resource_files/omim.tsv")) {
+            OMIMParser omimParser = new OMIMParser(is, Charset.forName("UTF-8"));
             optionalResources.setCanonicalName2mimid(omimParser.getCanonicalName2mimid());
             optionalResources.setMimid2canonicalName(omimParser.getMimid2canonicalName());
         }

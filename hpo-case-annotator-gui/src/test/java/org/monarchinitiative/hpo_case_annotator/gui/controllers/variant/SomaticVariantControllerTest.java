@@ -54,7 +54,7 @@ public class SomaticVariantControllerTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(MendelianVariantController.class.getResource("SomaticVariant.fxml"));
+        FXMLLoader loader = new FXMLLoader(SomaticVariantController.class.getResource("SomaticVariant.fxml"));
         loader.setControllerFactory(injector::getInstance);
         Parent root = loader.load();
         controller = loader.getController();
@@ -65,6 +65,7 @@ public class SomaticVariantControllerTest extends ApplicationTest {
     /**
      * The minimal information for variant to be valid is
      * <ul>
+     * <li>genome build</li>
      * <li>chromosome</li>
      * <li>position</li>
      * <li>reference</li>
