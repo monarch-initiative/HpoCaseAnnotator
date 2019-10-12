@@ -48,7 +48,17 @@ public class VariantSyntaxValidator implements Validator<Variant> {
     /**
      * Alleles (REF, ALT) must match this regexp - only <code>A,C,G,T,a,c,g,t</code> nucleotides are permitted.
      */
-    public static final String ALLELE_REGEXP = "[ACGTacgt]+";
+    public static final String ALLELE_REGEXP = "[ACGTNacgtn]+";
+
+    /**
+     * Ref alleleof structural variant must match this regexp - only <code>A,C,G,T,N,a,c,g,t,n</code> nucleotides are permitted.
+     */
+    public static final String STRUCTURAL_REF_ALLELE_REGEXP = "[ACGTNacgtn]+";
+
+    /**
+     * Alt allele of structural variant must match this regexp
+     */
+    public static final String STRUCTURAL_ALT_ALLELE_REGEXP = "<[A-Z]+>";
 
     /**
      * Sequence snippet must match this regexp - strings like <code>'ACGT[A/CC]ACGTT'</code>, or <code>''AcgT[A/Cc]ACgtT''</code>
@@ -86,22 +96,22 @@ public class VariantSyntaxValidator implements Validator<Variant> {
      * <li>Pathomechanism</li>
      * </ul>
      *
-     * @param instance
+     * @param variant
      * @return
      */
     @Override
-    public List<ValidationResult> validate(Variant instance) {
+    public List<ValidationResult> validate(Variant variant) {
         List<ValidationResult> results = new ArrayList<>();
 
         // check genome assembly
-        final GenomeAssembly genomeAssembly = instance.getVariantPosition().getGenomeAssembly();
+        final GenomeAssembly genomeAssembly = variant.getVariantPosition().getGenomeAssembly();
 
         if (genomeAssembly.equals(GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY)) {
             results.add(ValidationResult.fail("Unknown genome assembly"));
         }
 
         // check chromosome
-        final String contig = instance.getVariantPosition().getContig();
+        final String contig = variant.getVariantPosition().getContig();
         if (contig.isEmpty()) {
             results.add(ValidationResult.fail("Missing chromosome"));
         } else if (!contig.matches(CHROMOSOME_REGEXP)) {
@@ -109,42 +119,52 @@ public class VariantSyntaxValidator implements Validator<Variant> {
         }
 
         // check position
-        final int pos = instance.getVariantPosition().getPos();
+        final int pos = variant.getVariantPosition().getPos();
         if (pos <= 0) {
             results.add(ValidationResult.fail("Position must be positive: " + pos));
         }
 
         // check ref allele
-        final String refAllele = instance.getVariantPosition().getRefAllele();
+        final String refAllele = variant.getVariantPosition().getRefAllele();
         if (refAllele.isEmpty()) {
             results.add(ValidationResult.fail("Missing reference allele"));
+        } else if (variant.getVariantClass().equals("structural")) {
+            if (!refAllele.matches(STRUCTURAL_REF_ALLELE_REGEXP)) {
+                results.add(ValidationResult.fail("Invalid reference allele format: " + refAllele));
+            }
         } else if (!refAllele.matches(ALLELE_REGEXP)) {
             results.add(ValidationResult.fail("Invalid reference allele format: " + refAllele));
         }
 
         // check alt allele
-        final String altAllele = instance.getVariantPosition().getAltAllele();
+        final String altAllele = variant.getVariantPosition().getAltAllele();
         if (altAllele.isEmpty()) {
             results.add(ValidationResult.fail("Missing alternate allele"));
+        } else if (variant.getVariantClass().equals("structural")) {
+            if (!altAllele.matches(STRUCTURAL_ALT_ALLELE_REGEXP)) {
+                results.add(ValidationResult.fail("Invalid alternate allele format: " + altAllele));
+            }
         } else if (!altAllele.matches(ALLELE_REGEXP)) {
             results.add(ValidationResult.fail("Invalid alternate allele format: " + altAllele));
         }
 
-        // check snippet
-        final String snippet = instance.getSnippet();
-        if (snippet.isEmpty()) {
-            results.add(ValidationResult.fail("Missing snippet"));
-        } else if (!snippet.matches(SNIPPET_REGEXP)) {
-            results.add(ValidationResult.fail("Invalid snippet format: " + snippet));
+        // check snippet if the variant class is not structural
+        if (!variant.getVariantClass().equals("structural")) {
+            final String snippet = variant.getSnippet();
+            if (snippet.isEmpty()) {
+                results.add(ValidationResult.fail("Missing snippet"));
+            } else if (!snippet.matches(SNIPPET_REGEXP)) {
+                results.add(ValidationResult.fail("Invalid snippet format: " + snippet));
+            }
         }
 
         // check genotype
-        final Genotype genotype = instance.getGenotype();
+        final Genotype genotype = variant.getGenotype();
         if (genotype.equals(Genotype.UNDEFINED)) {
             results.add(ValidationResult.fail("Undefined genotype"));
         }
 
-        final VariantValidation variantValidation = instance.getVariantValidation();
+        final VariantValidation variantValidation = variant.getVariantValidation();
         results.addAll(variantValidationDataValidator.validate(variantValidation));
 
         return results;
