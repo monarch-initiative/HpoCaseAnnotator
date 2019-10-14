@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.monarchinitiative.hpo_case_annotator.core.DiseaseCaseModelExample;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 public class ValidationRunnerTest {
 
@@ -46,10 +46,10 @@ public class ValidationRunnerTest {
      */
     @Test
     public void validateSingleModel() throws Exception {
-        Mockito.when(assemblies.hasFastaForAssembly(GenomeAssembly.GRCH_37)).thenReturn(true);
-        Mockito.when(assemblies.getSequenceDaoForAssembly(GenomeAssembly.GRCH_37)).thenReturn(Optional.of(hg19SequenceDao));
-        Mockito.when(hg19SequenceDao.fetchSequence("13", 31843348, 31843349)).thenReturn("A"); // expectedRefAllele
-        Mockito.when(hg19SequenceDao.fetchSequence("13", 31843343, 31843354)).thenReturn("TTTCTAGGCTT"); // 0-based numbering for both begin and end coordinates
+        when(assemblies.hasFastaForAssembly(GenomeAssembly.GRCH_37)).thenReturn(true);
+        when(assemblies.getSequenceDaoForAssembly(GenomeAssembly.GRCH_37)).thenReturn(Optional.of(hg19SequenceDao));
+        when(hg19SequenceDao.fetchSequence("13", 31843348, 31843349)).thenReturn("A"); // expectedRefAllele
+        when(hg19SequenceDao.fetchSequence("13", 31843343, 31843354)).thenReturn("TTTCTAGGCTT"); // 0-based numbering for both begin and end coordinates
 
         final DiseaseCase diseaseCase = DiseaseCaseModelExample.benMahmoud2013B3GLCT();
 
@@ -57,6 +57,21 @@ public class ValidationRunnerTest {
 
         // model valid, no failures are produced
         assertTrue(results.isEmpty());
+    }
+
+    @Test
+    public void validateModelWithStructuralVariant() {
+        when(assemblies.hasFastaForAssembly(GenomeAssembly.GRCH_37)).thenReturn(true);
+        when(assemblies.getSequenceDaoForAssembly(GenomeAssembly.GRCH_37)).thenReturn(Optional.of(hg19SequenceDao));
+
+        when(hg19SequenceDao.fetchSequence("13", 31843348, 31843349)).thenReturn("A"); // expectedRefAllele
+        when(hg19SequenceDao.fetchSequence("13", 31843343, 31843354)).thenReturn("TTTCTAGGCTT"); // 0-based numbering for both begin and end coordinates
+
+        DiseaseCase diseaseCase = DiseaseCaseModelExample.structural_beygo_2012_TCOF1_M18662();
+
+        List<ValidationResult> results = runner.validateSingleModel(diseaseCase);
+
+        System.out.println(results);
     }
 
     @Test

@@ -19,7 +19,7 @@ import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSy
 import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.POSITIVE_INTEGER_REGEXP;
 
 /**
- *
+ * !!WARNING - not yet implemented!!
  */
 public final class BreakpointVariantController extends AbstractVariantController {
 

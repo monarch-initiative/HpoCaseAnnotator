@@ -2,6 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.core.validation;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.monarchinitiative.hpo_case_annotator.core.DiseaseCaseModelExample;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
@@ -9,6 +10,7 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class VariantSyntaxValidatorTest {
@@ -142,5 +144,12 @@ public class VariantSyntaxValidatorTest {
         assertThat(results, hasItem(ValidationResult.fail("Invalid snippet format: INVALID[X/Z]SNIPPET")));
     }
 
+    @Test
+    public void structuralVariant() {
+        Variant variant = DiseaseCaseModelExample.exampleStructuralVariant();
 
+        List<ValidationResult> results = validator.validate(variant);
+
+        assertThat(results.size(), is(0));
+    }
 }

@@ -24,7 +24,6 @@ public final class GenomicPositionValidator implements Validator<Variant> {
 
     GenomicPositionValidator(GenomeAssemblies genomeAssemblies) {
         this.genomeAssemblies = genomeAssemblies;
-
     }
 
     /**
@@ -89,6 +88,11 @@ public final class GenomicPositionValidator implements Validator<Variant> {
     public List<ValidationResult> validate(Variant variant) {
         List<ValidationResult> results = new ArrayList<>();
 
+        if (variant.getVariantClass().equals("structural")) {
+            // we do not validate genomic position of structural variants, since we do not enter
+            // ref, alt, and snippet
+            return results;
+        }
         GenomeAssembly assembly = variant.getVariantPosition().getGenomeAssembly();
 
         if (!genomeAssemblies.hasFastaForAssembly(assembly)) { // no validation is possible if the fasta file is not present

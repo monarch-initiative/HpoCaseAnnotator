@@ -83,7 +83,9 @@ public class CnvVariantControllerTest extends ApplicationTest {
                 // ci end second
                 .clickOn("#ciEndSecondTextField").write("20")
                 // cosegregation
-                .clickOn("#cosegregationCheckBox");
+                .clickOn("#cosegregationCheckBox")
+                // imprecise
+                .clickOn("#impreciseCheckBox");
 
         final Variant received = controller.getData();
 
@@ -91,7 +93,7 @@ public class CnvVariantControllerTest extends ApplicationTest {
                 .setVariantPosition(VariantPosition.newBuilder()
                         .setGenomeAssembly(GenomeAssembly.GRCH_37)
                         .setContig("4")
-                        .setPos(101)
+                        .setPos(100)
                         .setPos2(200)
                         .setRefAllele("N")
                         .setAltAllele("<INS>")
@@ -107,6 +109,7 @@ public class CnvVariantControllerTest extends ApplicationTest {
                         .setContext(VariantValidation.Context.CNV)
                         .setCosegregation(true)
                         .build())
+                .setImprecise(true)
                 .build())));
     }
 

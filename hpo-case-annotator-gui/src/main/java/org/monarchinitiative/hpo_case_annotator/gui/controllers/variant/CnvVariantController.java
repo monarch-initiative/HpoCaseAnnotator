@@ -34,9 +34,15 @@ public final class CnvVariantController extends AbstractVariantController {
     @FXML
     public ComboBox<String> chromosomeComboBox;
 
+    /**
+     * Text field for 1-based begin position of the Cnv
+     */
     @FXML
     public TextField beginTextField;
 
+    /**
+     * Text field for 1-based end position of the Cnv
+     */
     @FXML
     public TextField endTextField;
 
@@ -63,6 +69,9 @@ public final class CnvVariantController extends AbstractVariantController {
 
     @FXML
     public CheckBox cosegregationCheckBox;
+
+    @FXML
+    public CheckBox impreciseCheckBox;
 
     private final String defaultRefAllele = "N";
 
@@ -106,7 +115,7 @@ public final class CnvVariantController extends AbstractVariantController {
         VariantPosition vp = variant.getVariantPosition();
         genomeBuildComboBox.setValue(vp.getGenomeAssembly());
         chromosomeComboBox.setValue(vp.getContig());
-        beginTextField.setText(String.valueOf(vp.getPos() - 1)); // convert to 0-based
+        beginTextField.setText(String.valueOf(vp.getPos()));
         endTextField.setText(String.valueOf(vp.getPos2()));
         ciBeginFirstTextField.setText(String.valueOf(vp.getCiBeginOne()));
         ciBeginSecondTextField.setText(String.valueOf(vp.getCiBeginTwo()));
@@ -119,6 +128,7 @@ public final class CnvVariantController extends AbstractVariantController {
 
         VariantValidation vv = variant.getVariantValidation();
         cosegregationCheckBox.setSelected(vv.getCosegregation());
+        impreciseCheckBox.setSelected(variant.getImprecise());
     }
 
     @Override
@@ -128,9 +138,8 @@ public final class CnvVariantController extends AbstractVariantController {
                 .setVariantPosition(VariantPosition.newBuilder()
                         .setGenomeAssembly(genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : genomeBuildComboBox.getValue())
                         .setContig(chromosomeComboBox.getValue() == null ? "NA" : chromosomeComboBox.getValue())
-                        // we need to save 1-based coordinate in the VariantPosition, hence +1
-                        .setPos(parseIntOrGetDefaultValue(beginTextField::getText, 0) + 1) // convert to 1-based
-                        .setPos2(parseIntOrGetDefaultValue(endTextField::getText, 0))
+                        .setPos(parseIntOrGetDefaultValue(beginTextField::getText, 0)) // begin is 1-based
+                        .setPos2(parseIntOrGetDefaultValue(endTextField::getText, 0)) // end is also 1-based
                         .setRefAllele(defaultRefAllele)
                         .setAltAllele(String.format("<%s>", svType.name()))
                         .setCiBeginOne(parseIntOrGetDefaultValue(ciBeginFirstTextField::getText, 0))
@@ -146,6 +155,7 @@ public final class CnvVariantController extends AbstractVariantController {
                         .setContext(VariantValidation.Context.CNV)
                         .setCosegregation(cosegregationCheckBox.isSelected())
                         .build())
+                .setImprecise(impreciseCheckBox.isSelected())
                 .build();
     }
 
@@ -153,7 +163,9 @@ public final class CnvVariantController extends AbstractVariantController {
         genomeBuildComboBox.getItems().addAll(elementValues.getGenomeBuild());
         chromosomeComboBox.getItems().addAll(elementValues.getChromosome());
         beginTextField.setTextFormatter(makeTextFormatter(beginTextField, NON_NEGATIVE_INTEGER_REGEXP));
+        decorateWithTooltipOnFocus(beginTextField, "1-based begin position");
         endTextField.setTextFormatter(makeTextFormatter(endTextField, POSITIVE_INTEGER_REGEXP));
+        decorateWithTooltipOnFocus(endTextField, "1-based end position");
         variantClassComboBox.getItems().addAll(elementValues.getVariantClass());
         genotypeComboBox.getItems().addAll(Arrays.stream(Genotype.values()).filter(g -> !g.equals(Genotype.UNRECOGNIZED)).collect(Collectors.toList()));
         svTypeComboBox.getItems().addAll(Arrays.stream(StructuralType.values()).filter(g -> !g.equals(StructuralType.UNRECOGNIZED)).collect(Collectors.toList()));

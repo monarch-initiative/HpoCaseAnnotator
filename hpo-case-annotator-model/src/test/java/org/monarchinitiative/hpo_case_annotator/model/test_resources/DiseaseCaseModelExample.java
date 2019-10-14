@@ -376,6 +376,7 @@ class DiseaseCaseModelExample {
                         .setVariantValidation(VariantValidation.newBuilder()
                                 .setContext(VariantValidation.Context.CNV)
                                 .build())
+                        .setImprecise(true)
                         .build())
                 /* Family/proband information */
                 .setFamilyInfo(FamilyInfo.newBuilder()
