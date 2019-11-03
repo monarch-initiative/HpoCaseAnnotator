@@ -5,7 +5,7 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 /**
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
  */
-public class DiseaseCaseModelExample {
+public class PojosForTesting {
 
     // TODO - add other models for testing here
 

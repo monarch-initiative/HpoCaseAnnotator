@@ -10,9 +10,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult;
-import org.monarchinitiative.hpo_case_annotator.gui.DiseaseCaseModelExample;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceJUnitRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceModules;
+import org.monarchinitiative.hpo_case_annotator.gui.PojosForTesting;
 import org.monarchinitiative.hpo_case_annotator.gui.TestHpoCaseAnnotatorModule;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Gene;
@@ -52,14 +52,14 @@ public class ShowValidationResultsControllerTest extends ApplicationTest {
         Map<DiseaseCase, List<ValidationResult>> cases = new HashMap<>();
         // first
         DiseaseCase first = DiseaseCase.newBuilder()
-                .setPublication(DiseaseCaseModelExample.makeExomiserPublication())
+                .setPublication(PojosForTesting.makeExomiserPublication())
                 .setGene(Gene.newBuilder().setEntrezId(2200).setSymbol("FBN1").build())
                 .build();
         final List<ValidationResult> firstResults = Collections.singletonList(ValidationResult.fail("Missing something"));
         cases.put(first, firstResults);
 
         final DiseaseCase second = DiseaseCase.newBuilder()
-                .setPublication(DiseaseCaseModelExample.makeJannovarPublication())
+                .setPublication(PojosForTesting.makeJannovarPublication())
                 .setGene(Gene.newBuilder().setEntrezId(3172).setSymbol("HNF4A").build())
                 .build();
         final List<ValidationResult> secondResults = Collections.singletonList(ValidationResult.pass());
@@ -71,7 +71,7 @@ public class ShowValidationResultsControllerTest extends ApplicationTest {
     @Test
     public void displayValidationResultsForASingleCase() throws Exception {
         DiseaseCase simpleCase = DiseaseCase.newBuilder()
-                .setPublication(DiseaseCaseModelExample.makeExomiserPublication())
+                .setPublication(PojosForTesting.makeExomiserPublication())
                 .setGene(Gene.newBuilder().setEntrezId(2200).setSymbol("FBN1").build())
                 .build();
         List<ValidationResult> results = Arrays.asList(ValidationResult.fail("An error"), ValidationResult.pass());
