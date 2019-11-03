@@ -112,6 +112,9 @@ public final class MainController {
     @FXML
     public MenuItem viewOnPubmedMenuItem;
 
+    @FXML
+    public MenuItem showCuratedVariantsMenuItem;
+
     /**
      * This list contains controllers of the tabs in the same order as they are present in the {@link #contentTabPane#getTabs} method.
      * <p>
@@ -413,6 +416,28 @@ public final class MainController {
     }
 
     @FXML
+    public void showCuratedVariantsMenuItemAction() {
+        File where = optionalResources.getDiseaseCaseDir();
+
+        Map<File, DiseaseCase> models = readDiseaseCasesFromDirectory(where);
+        try {
+            ShowVariantsController controller = new ShowVariantsController(hostServices);
+            controller.setData(models.values());
+            Parent parent = FXMLLoader.load(ShowVariantsController.class.getResource("ShowVariantsView.fxml"),
+                    resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
+            Stage stage = new Stage();
+            stage.setTitle("Variants within curated cases in '" + where.getAbsolutePath() + "'");
+            stage.initOwner(primaryStage);
+            stage.setScene(new Scene(parent));
+            stage.showAndWait();
+        } catch (IOException e) {
+            LOGGER.warn("Unable to display dialog for showing curated variants", e);
+            PopUps.showException("Show curated variants", "Error", "Unable to display dialog for showing curated variants", e);
+        }
+
+    }
+
+    @FXML
     void validateCurrentEntryMenuItemAction() {
 
         int selectedTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
@@ -666,7 +691,7 @@ public final class MainController {
         // disable for now - TODO - enable saving only if the disease case is complete?
 //        saveMenuItem.disableProperty().bind(dataController.diseaseCaseIsComplete().not());
         showCuratedPublicationsMenuItem.disableProperty().bind(optionalResources.diseaseCaseDirIsInitializedProperty().not());
-
+        showCuratedVariantsMenuItem.disableProperty().bind(optionalResources.diseaseCaseDirIsInitializedProperty().not());
     }
 
     /**

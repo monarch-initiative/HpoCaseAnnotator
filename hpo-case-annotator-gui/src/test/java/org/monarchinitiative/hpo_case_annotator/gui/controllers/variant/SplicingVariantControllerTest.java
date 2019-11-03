@@ -10,9 +10,9 @@ import javafx.stage.Stage;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.monarchinitiative.hpo_case_annotator.gui.DiseaseCaseModelExample;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceJUnitRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceModules;
+import org.monarchinitiative.hpo_case_annotator.gui.PojosForTesting;
 import org.monarchinitiative.hpo_case_annotator.gui.TestHpoCaseAnnotatorModule;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
@@ -117,7 +117,7 @@ public class SplicingVariantControllerTest extends ApplicationTest {
 
     @Test
     public void presentAndGetData() {
-        final Variant presented = DiseaseCaseModelExample.makeSplicingVariant();
+        final Variant presented = PojosForTesting.makeSplicingVariant();
         Platform.runLater(() -> controller.presentData(presented));
         sleep(30, TimeUnit.MILLISECONDS);
         Variant returned = controller.getData();

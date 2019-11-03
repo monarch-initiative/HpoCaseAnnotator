@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.input.*?>
 <?import javafx.scene.layout.BorderPane?>
-
-<BorderPane xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.2-internal"
+            fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController">
    <center>
       <TabPane fx:id="contentTabPane" prefHeight="600.0" prefWidth="1000.0" BorderPane.alignment="TOP_CENTER" />
    </center>
@@ -52,6 +48,8 @@
            </Menu>
            <Menu mnemonicParsing="false" text="Project">
                <MenuItem id="showCuratedPublicationsMenuItem" fx:id="showCuratedPublicationsMenuItem" mnemonicParsing="false" onAction="#showCuratedPublicationsMenuItemAction" text="Show curated publications" />
+               <MenuItem fx:id="showCuratedVariantsMenuItem" mnemonicParsing="false"
+                         onAction="#showCuratedVariantsMenuItemAction" text="Show curated variants"/>
            </Menu>
            <Menu text="Validate">
                <MenuItem id="validateCurrentEntryMenuItem" fx:id="validateCurrentEntryMenuItem" disable="true" mnemonicParsing="false" onAction="#validateCurrentEntryMenuItemAction" text="Validate current case">
