@@ -10,9 +10,9 @@ import javafx.stage.Stage;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.monarchinitiative.hpo_case_annotator.gui.DiseaseCaseModelExample;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceJUnitRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceModules;
+import org.monarchinitiative.hpo_case_annotator.gui.PojosForTesting;
 import org.monarchinitiative.hpo_case_annotator.gui.TestHpoCaseAnnotatorModule;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.testfx.framework.junit.ApplicationTest;
@@ -49,7 +49,7 @@ public class CnvVariantControllerTest extends ApplicationTest {
 
     @Test
     public void presentAndGetTheSameData() {
-        final Variant presented = DiseaseCaseModelExample.makeCnvDeletionVariant();
+        final Variant presented = PojosForTesting.makeCnvDeletionVariant();
 
         Platform.runLater(() -> controller.presentData(presented));
         sleep(30, TimeUnit.MILLISECONDS);
@@ -96,7 +96,7 @@ public class CnvVariantControllerTest extends ApplicationTest {
                         .setPos(100)
                         .setPos2(200)
                         .setRefAllele("N")
-                        .setAltAllele("<INS>")
+                        .setAltAllele("<DEL>")
                         .setCiBeginOne(-5)
                         .setCiBeginTwo(10)
                         .setCiEndOne(-15)
@@ -104,7 +104,7 @@ public class CnvVariantControllerTest extends ApplicationTest {
                         .build())
                 .setVariantClass("coding")
                 .setGenotype(Genotype.HOMOZYGOUS_ALTERNATE)
-                .setSvType(StructuralType.INS)
+                .setSvType(StructuralType.DEL)
                 .setVariantValidation(VariantValidation.newBuilder()
                         .setContext(VariantValidation.Context.CNV)
                         .setCosegregation(true)
