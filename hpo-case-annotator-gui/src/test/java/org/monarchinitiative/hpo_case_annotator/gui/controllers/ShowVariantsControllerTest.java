@@ -20,13 +20,13 @@ public class ShowVariantsControllerTest extends BaseControllerTest {
     private ShowVariantsController controller;
 
     @Test
-    public void basic() {
+    public void setData() {
         controller.setData(Collections.singleton(PojosForTesting.benMahmoud2013B3GLCT()));
         sleep(10);
         Collection<ShowVariantsController.VariantData> vd = controller.getVariantData();
         assertThat(vd.size(), is(1));
         assertThat(vd, hasItem(new ShowVariantsController.VariantData("GRCH_37 13:31843349A>G",
-                "First functional analysis of a novel splicing mutation in the B3GALTL gene by an ex vivo approach in Tunisian patients with typical Peters plus syndrome",
+                "Ben_Mahmoud-2013-B3GLCT-Tunisian_patients",
                 "23954224", "B3GLCT", "splicing",
                 "splicing|3ss|disrupted", "Exon skipping")));
     }
