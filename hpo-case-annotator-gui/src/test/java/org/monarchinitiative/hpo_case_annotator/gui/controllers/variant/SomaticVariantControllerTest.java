@@ -79,7 +79,7 @@ public class SomaticVariantControllerTest extends ApplicationTest {
         assertThat(controller.isComplete(), is(false));
 
         clickOn("#genomeBuildComboBox")
-                .moveBy(0, 40)
+                .moveBy(0, 70)
                 .clickOn(MouseButton.PRIMARY);
         assertThat(controller.isComplete(), is(false));
 

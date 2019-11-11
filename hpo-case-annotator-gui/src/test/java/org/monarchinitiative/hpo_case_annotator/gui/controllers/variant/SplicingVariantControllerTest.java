@@ -66,7 +66,7 @@ public class SplicingVariantControllerTest extends ApplicationTest {
         assertThat(controller.isComplete(), is(false));
 
         clickOn("#genomeBuildComboBox")
-                .moveBy(-10, 40)
+                .moveBy(-10, 70)
                 .clickOn(MouseButton.PRIMARY);
         assertThat(controller.isComplete(), is(false));
 

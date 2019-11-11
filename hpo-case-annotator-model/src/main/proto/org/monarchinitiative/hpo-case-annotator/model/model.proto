@@ -36,9 +36,8 @@ enum GenomeAssembly {
 
     UNKNOWN_GENOME_ASSEMBLY = 0;
 
-//    Commenting out only and not deleting so that we know that it was here
-//    NCBI_36 = 1;
-//    HG_18 = 1;
+    NCBI_36 = 1;
+    HG_18 = 1;
 
     GRCH_38 = 2;
     HG_38 = 2;
