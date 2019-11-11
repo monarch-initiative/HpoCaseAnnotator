@@ -1,7 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.core.io;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,16 +33,6 @@ public final class OMIMParser {
      */
     private final Map<String, String> canonicalName2mimid = new HashMap<>();
 
-//
-//    public OMIMParser(File file) throws IOException {
-//        this(new FileReader(file));
-//    }
-//
-//
-//    public OMIMParser(URL url) throws IOException, URISyntaxException {
-//        this(Files.newBufferedReader(Paths.get(url.toURI())));
-//    }
-
     public OMIMParser(InputStream inputStream, Charset charset) throws IOException {
         this(new InputStreamReader(inputStream, charset));
     }
@@ -57,11 +45,7 @@ public final class OMIMParser {
         String line = bufferedReader.readLine(); // Very first line is header (starting with '#' character)
         // TODO - remove gui code from parser
         if (!line.startsWith("#")) {
-            Alert a = new Alert(AlertType.INFORMATION);
-            a.setTitle("Parse of OMIM file");
-            a.setHeaderText("Bad format of OMIM file!");
-            a.setContentText("First line does not start with '#' character");
-            a.showAndWait();
+            LOGGER.warn("Did not see header line in OMIM file");
         }
 
         /* Here we are interested in populating the OMIM beans within 'mimid2OMIM'
