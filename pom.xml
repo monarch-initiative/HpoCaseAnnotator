@@ -19,7 +19,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <jdk.version>1.8</jdk.version>
+        <java.version>1.8</java.version>
         <jannovar.version>0.27</jannovar.version>
         <phenopacket.version>1.0.0-RC3</phenopacket.version>
         <jackson.fasterxml.version>2.8.8</jackson.fasterxml.version>
