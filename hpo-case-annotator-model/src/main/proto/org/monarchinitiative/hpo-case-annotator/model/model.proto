@@ -166,6 +166,7 @@ enum Genotype {
     HOMOZYGOUS_ALTERNATE = 2;
     HOMOZYGOUS_REFERENCE = 3;
     HEMIZYGOUS = 4;
+    UNKNOWN_GENOTYPE = 5;
 }
 
 
@@ -177,7 +178,7 @@ enum CrypticSpliceSiteType {
 
 
 enum StructuralType {
-    NON_STURCTURAL = 0;
+    NON_STRUCTURAL = 0;
     UNKNOWN = 1;
     DEL = 2;
     INS = 3;
@@ -239,8 +240,9 @@ message VariantValidation {
         MENDELIAN = 1;
         SOMATIC = 2;
         SPLICING = 3;
-        CNV = 4;
-        BKPT = 5;
+
+        INTRACHROMOSOMAL = 7;
+        TRANSLOCATION = 8;
     }
 }
 

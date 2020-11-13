@@ -158,7 +158,7 @@ public class DiseaseCaseModelExample {
                 .setSvType(StructuralType.DEL)
                 .setGenotype(Genotype.HETEROZYGOUS)
                 .setVariantValidation(VariantValidation.newBuilder()
-                        .setContext(VariantValidation.Context.CNV)
+                        .setContext(VariantValidation.Context.INTRACHROMOSOMAL)
                         .build())
                 .setImprecise(true)
                 .build();

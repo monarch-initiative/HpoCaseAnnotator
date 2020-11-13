@@ -16,20 +16,20 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.*;
+import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.NON_NEGATIVE_INTEGER_REGEXP;
+import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.POSITIVE_INTEGER_REGEXP;
 
 /**
  *
  */
-public final class CnvVariantController extends AbstractVariantController {
+public class IntrachromosomalVariantController extends AbstractVariantController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CnvVariantController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IntrachromosomalVariantController.class);
 
     @FXML
-    public ComboBox<GenomeAssembly> genomeBuildComboBox;
+    public ComboBox<GenomeAssembly> assemblyComboBox;
 
     @FXML
     public ComboBox<String> chromosomeComboBox;
@@ -45,9 +45,6 @@ public final class CnvVariantController extends AbstractVariantController {
      */
     @FXML
     public TextField endTextField;
-
-    @FXML
-    public ComboBox<String> variantClassComboBox;
 
     @FXML
     public TextField ciBeginFirstTextField;
@@ -71,33 +68,26 @@ public final class CnvVariantController extends AbstractVariantController {
     public CheckBox cosegregationCheckBox;
 
     @FXML
-    public CheckBox impreciseCheckBox;
+    public CheckBox preciseCheckBox;
 
     private final String defaultRefAllele = "N";
 
     @Inject
-    public CnvVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
+    public IntrachromosomalVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
         super(elementValues, hostServices);
-    }
-
-    private static int parseIntOrGetDefaultValue(Supplier<String> stringSupplier, int defaultValue) {
-        try {
-            return Integer.parseInt(stringSupplier.get());
-        } catch (NumberFormatException e) {
-            LOGGER.debug("Unable to convert string {} to integer, returning {}", stringSupplier.get(), defaultValue);
-            return defaultValue;
-        }
     }
 
     @Override
     public Binding<String> variantTitleBinding() {
         return Bindings.createStringBinding(() -> {
                     if (isComplete()) {
-                        return String.format("CNV: %s %s:%s-%s [%s]", genomeBuildComboBox.getValue(),
+                        return String.format("%s: %s %s:%s-%s [%s]",
+                                svTypeComboBox.getValue() == null ? "" : svTypeComboBox.getValue(),
+                                assemblyComboBox.getValue(),
                                 chromosomeComboBox.getValue(), beginTextField.getText(),
                                 endTextField.getText(), genotypeComboBox.getValue());
                     } else {
-                        return "CNV: INCOMPLETE: " + validationResults.get(0).getMessage();
+                        return "SV: INCOMPLETE: " + validationResults.get(0).getMessage();
                     }
                 },
                 getObservableVariantDependencies().toArray(new Observable[0]));
@@ -105,15 +95,18 @@ public final class CnvVariantController extends AbstractVariantController {
 
     @Override
     List<? extends Observable> getObservableVariantDependencies() {
-        return Arrays.asList(genomeBuildComboBox.valueProperty(),
-                chromosomeComboBox.valueProperty(), beginTextField.textProperty(),
-                endTextField.textProperty(), genotypeComboBox.valueProperty());
+        return Arrays.asList(assemblyComboBox.valueProperty(),
+                chromosomeComboBox.valueProperty(),
+                beginTextField.textProperty(),
+                endTextField.textProperty(),
+                svTypeComboBox.valueProperty(),
+                genotypeComboBox.valueProperty());
     }
 
     @Override
     public void presentData(Variant variant) {
         VariantPosition vp = variant.getVariantPosition();
-        genomeBuildComboBox.setValue(vp.getGenomeAssembly());
+        assemblyComboBox.setValue(vp.getGenomeAssembly());
         chromosomeComboBox.setValue(vp.getContig());
         beginTextField.setText(String.valueOf(vp.getPos()));
         endTextField.setText(String.valueOf(vp.getPos2()));
@@ -122,13 +115,12 @@ public final class CnvVariantController extends AbstractVariantController {
         ciEndFirstTextField.setText(String.valueOf(vp.getCiEndOne()));
         ciEndSecondTextField.setText(String.valueOf(vp.getCiEndTwo()));
 
-        variantClassComboBox.setValue(variant.getVariantClass());
         genotypeComboBox.setValue(variant.getGenotype());
         svTypeComboBox.setValue(variant.getSvType());
 
         VariantValidation vv = variant.getVariantValidation();
         cosegregationCheckBox.setSelected(vv.getCosegregation());
-        impreciseCheckBox.setSelected(variant.getImprecise());
+        preciseCheckBox.setSelected(!variant.getImprecise());
     }
 
     @Override
@@ -136,7 +128,7 @@ public final class CnvVariantController extends AbstractVariantController {
         StructuralType svType = svTypeComboBox.getValue() == null ? StructuralType.UNKNOWN : svTypeComboBox.getValue();
         return Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()
-                        .setGenomeAssembly(genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : genomeBuildComboBox.getValue())
+                        .setGenomeAssembly(assemblyComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : assemblyComboBox.getValue())
                         .setContig(chromosomeComboBox.getValue() == null ? "NA" : chromosomeComboBox.getValue())
                         .setPos(parseIntOrGetDefaultValue(beginTextField::getText, 0)) // begin is 1-based
                         .setPos2(parseIntOrGetDefaultValue(endTextField::getText, 0)) // end is also 1-based
@@ -148,31 +140,46 @@ public final class CnvVariantController extends AbstractVariantController {
                         .setCiEndTwo(parseIntOrGetDefaultValue(ciEndSecondTextField::getText, 0))
                         .build())
 
-                .setVariantClass(variantClassComboBox.getValue() == null ? "" : variantClassComboBox.getValue())
+                .setVariantClass("structural")
                 .setGenotype(genotypeComboBox.getValue() == null ? Genotype.UNDEFINED : genotypeComboBox.getValue())
                 .setSvType(svType)
                 .setVariantValidation(VariantValidation.newBuilder()
-                        .setContext(VariantValidation.Context.CNV)
+                        .setContext(VariantValidation.Context.INTRACHROMOSOMAL)
                         .setCosegregation(cosegregationCheckBox.isSelected())
                         .build())
-                .setImprecise(impreciseCheckBox.isSelected())
+                .setImprecise(!preciseCheckBox.isSelected())
                 .build();
     }
 
     public void initialize() {
-        genomeBuildComboBox.getItems().addAll(elementValues.getGenomeBuild());
+        assemblyComboBox.getItems().addAll(elementValues.getGenomeBuild());
         chromosomeComboBox.getItems().addAll(elementValues.getChromosome());
         beginTextField.setTextFormatter(makeTextFormatter(beginTextField, NON_NEGATIVE_INTEGER_REGEXP));
         decorateWithTooltipOnFocus(beginTextField, "1-based begin position");
         endTextField.setTextFormatter(makeTextFormatter(endTextField, POSITIVE_INTEGER_REGEXP));
         decorateWithTooltipOnFocus(endTextField, "1-based end position");
-        variantClassComboBox.getItems().addAll(elementValues.getVariantClass());
         genotypeComboBox.getItems().addAll(Arrays.stream(Genotype.values()).filter(g -> !g.equals(Genotype.UNRECOGNIZED)).collect(Collectors.toList()));
         svTypeComboBox.getItems().addAll(Arrays.stream(StructuralType.values()).filter(g -> !g.equals(StructuralType.UNRECOGNIZED)).collect(Collectors.toList()));
 
-        ciBeginFirstTextField.setTextFormatter(makeTextFormatter(ciBeginFirstTextField, INTEGER_REGEXP));
-        ciBeginSecondTextField.setTextFormatter(makeTextFormatter(ciBeginSecondTextField, INTEGER_REGEXP));
-        ciEndFirstTextField.setTextFormatter(makeTextFormatter(ciEndFirstTextField, INTEGER_REGEXP));
-        ciEndSecondTextField.setTextFormatter(makeTextFormatter(ciEndSecondTextField, INTEGER_REGEXP));
+        preciseCheckBox.selectedProperty().addListener((obs, old, current) -> {
+            if (current) {
+//                 precise variant, disable CI fields
+                ciBeginFirstTextField.setDisable(true);
+                ciBeginFirstTextField.clear();
+                ciBeginSecondTextField.setDisable(true);
+                ciBeginSecondTextField.clear();
+                ciEndFirstTextField.setDisable(true);
+                ciEndFirstTextField.clear();
+                ciEndSecondTextField.setDisable(true);
+                ciEndSecondTextField.clear();
+            } else {
+//                 imprecise variant, enable CI fields
+                ciBeginFirstTextField.setDisable(false);
+                ciBeginSecondTextField.setDisable(false);
+                ciEndFirstTextField.setDisable(false);
+                ciEndSecondTextField.setDisable(false);
+            }
+        });
+        preciseCheckBox.setSelected(true);
     }
 }

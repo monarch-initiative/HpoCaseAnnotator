@@ -26,12 +26,12 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(GuiceJUnitRunner.class)
 @GuiceModules({TestHpoCaseAnnotatorModule.class})
-public class CnvVariantControllerTest extends ApplicationTest {
+public class IntrachromosomalVariantControllerTest extends ApplicationTest {
 
     @Inject
     private Injector injector;
 
-    private CnvVariantController controller;
+    private IntrachromosomalVariantController controller;
 
     @BeforeClass
     public static void setUpBefore() throws Exception {
@@ -49,7 +49,7 @@ public class CnvVariantControllerTest extends ApplicationTest {
 
     @Test
     public void presentAndGetTheSameData() {
-        final Variant presented = PojosForTesting.makeCnvDeletionVariant();
+        final Variant presented = PojosForTesting.makeStructuralDeletionVariant();
 
         Platform.runLater(() -> controller.presentData(presented));
         sleep(30, TimeUnit.MILLISECONDS);
@@ -61,19 +61,19 @@ public class CnvVariantControllerTest extends ApplicationTest {
     @Test
     public void enterData() {
         // genome build
-        clickOn("#genomeBuildComboBox").moveBy(0, 80).clickOn(MouseButton.PRIMARY)
+        clickOn("#assemblyComboBox").moveBy(0, 80).clickOn(MouseButton.PRIMARY)
                 // chromosome
                 .clickOn("#chromosomeComboBox").moveBy(0, 60).clickOn(MouseButton.PRIMARY)
                 // begin
                 .clickOn("#beginTextField").write("100")
                 // end
                 .clickOn("#endTextField").write("200")
-                // variant class
-                .clickOn("#variantClassComboBox").moveBy(0, 30).clickOn(MouseButton.PRIMARY)
                 // genotype
                 .clickOn("#genotypeComboBox").moveBy(0, 70).clickOn(MouseButton.PRIMARY)
                 // sv type
                 .clickOn("#svTypeComboBox").moveBy(0, 90).clickOn(MouseButton.PRIMARY)
+                // imprecise
+                .clickOn("#preciseCheckBox")
                 // ci begin first
                 .clickOn("#ciBeginFirstTextField").write("-5")
                 // ci begin second
@@ -83,39 +83,35 @@ public class CnvVariantControllerTest extends ApplicationTest {
                 // ci end second
                 .clickOn("#ciEndSecondTextField").write("20")
                 // cosegregation
-                .clickOn("#cosegregationCheckBox")
-                // imprecise
-                .clickOn("#impreciseCheckBox");
+                .clickOn("#cosegregationCheckBox");
 
-        final Variant received = controller.getData();
+        Variant actual = controller.getData();
 
-        assertThat(received, is(equalTo(Variant.newBuilder()
-                .setVariantPosition(VariantPosition.newBuilder()
-                        .setGenomeAssembly(GenomeAssembly.GRCH_37)
-                        .setContig("4")
-                        .setPos(100)
-                        .setPos2(200)
-                        .setRefAllele("N")
-                        .setAltAllele("<DEL>")
-                        .setCiBeginOne(-5)
-                        .setCiBeginTwo(10)
-                        .setCiEndOne(-15)
-                        .setCiEndTwo(20)
-                        .build())
-                .setVariantClass("coding")
-                .setGenotype(Genotype.HOMOZYGOUS_ALTERNATE)
-                .setSvType(StructuralType.DEL)
-                .setVariantValidation(VariantValidation.newBuilder()
-                        .setContext(VariantValidation.Context.CNV)
-                        .setCosegregation(true)
-                        .build())
-                .setImprecise(true)
-                .build())));
+        assertThat(actual.getVariantPosition(), is(VariantPosition.newBuilder()
+                .setGenomeAssembly(GenomeAssembly.GRCH_37)
+                .setContig("4")
+                .setPos(100)
+                .setPos2(200)
+                .setRefAllele("N")
+                .setAltAllele("<INS>")
+                .setCiBeginOne(-5)
+                .setCiBeginTwo(10)
+                .setCiEndOne(-15)
+                .setCiEndTwo(20)
+                .build()));
+        assertThat(actual.getVariantClass(), is("structural"));
+        assertThat(actual.getGenotype(), is(Genotype.HOMOZYGOUS_ALTERNATE));
+        assertThat(actual.getSvType(), is(StructuralType.INS));
+        assertThat(actual.getVariantValidation(), is(VariantValidation.newBuilder()
+                .setContext(VariantValidation.Context.INTRACHROMOSOMAL)
+                .setCosegregation(true)
+                .build()));
+        assertThat(actual.getImprecise(), is(true));
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(MendelianVariantController.class.getResource("CnvVariant.fxml"));
+        FXMLLoader loader = new FXMLLoader(MendelianVariantController.class.getResource("IntrachromosomalVariant.fxml"));
         loader.setControllerFactory(injector::getInstance);
         Parent root = loader.load();
         controller = loader.getController();

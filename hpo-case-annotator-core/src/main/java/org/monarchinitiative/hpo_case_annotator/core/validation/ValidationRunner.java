@@ -94,9 +94,9 @@ public final class ValidationRunner<T extends Message> {
      */
     public static ValidationRunner<Variant> variantValidationRunner(VariantValidation.Context context) {
         switch (context) {
-            case CNV:
-                return makeCnvValidationRunner();
-            case BKPT:
+            case INTRACHROMOSOMAL:
+                return makeIntrachromosomalVariantValidationRunner();
+            case TRANSLOCATION:
                 return makeBkptValidationRunner();
             case SOMATIC:
             case SPLICING:
@@ -122,14 +122,16 @@ public final class ValidationRunner<T extends Message> {
     }
 
     private static ValidationRunner<Variant> makeBkptValidationRunner() {
-        // TODO - implement breakpoint validation runner
-        // this is no-op at the moment
-        return new ValidationRunner<>(v -> Collections.emptyList());
+        Function<Variant, List<ValidationResult>> validationFunction = var -> {
+            BreakendVariantValidator bknd = new BreakendVariantValidator();
+            return new ArrayList<>(bknd.validate(var));
+        };
+        return new ValidationRunner<>(validationFunction);
     }
 
-    private static ValidationRunner<Variant> makeCnvValidationRunner() {
+    private static ValidationRunner<Variant> makeIntrachromosomalVariantValidationRunner() {
         Function<Variant, List<ValidationResult>> validationFunction = var -> {
-            CnvVariantValidator cnv = new CnvVariantValidator();
+            IntrachromosomalStructuralVariantValidator cnv = new IntrachromosomalStructuralVariantValidator();
             return new ArrayList<>(cnv.validate(var));
         };
         return new ValidationRunner<>(validationFunction);

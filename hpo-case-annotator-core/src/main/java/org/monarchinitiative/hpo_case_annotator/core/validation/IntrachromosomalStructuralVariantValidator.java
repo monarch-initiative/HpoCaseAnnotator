@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
 
@@ -8,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * For intrachromosomal structural variant, we require only the basic coordinates to be present.
  */
-public class CnvVariantValidator implements Validator<Variant> {
+public class IntrachromosomalStructuralVariantValidator implements Validator<Variant> {
 
     @Override
     public List<ValidationResult> validate(Variant variant) {
@@ -32,12 +33,12 @@ public class CnvVariantValidator implements Validator<Variant> {
         }
 
         // begin
-        if (begin < 0) {
+        if (begin <= 0) {
             results.add(ValidationResult.fail("Begin position cannot be negative"));
         }
 
         // end
-        if (end < 0) {
+        if (end <= 0) {
             results.add(ValidationResult.fail("End position cannot be negative"));
         }
 
@@ -45,12 +46,8 @@ public class CnvVariantValidator implements Validator<Variant> {
             results.add(ValidationResult.fail("End position is before begin"));
         }
 
-        if (variant.getCnvPloidy() < 0) {
-            results.add(ValidationResult.fail("Ploidy cannot be negative"));
-        }
-
-        if (variant.getCnvPloidy() == 2) {
-            results.add(ValidationResult.warn("CNV with ploidy 2 is not a CNV"));
+        if (variant.getGenotype() == null || variant.getGenotype().equals(Genotype.UNRECOGNIZED)) {
+            results.add(ValidationResult.fail("Missing genotype"));
         }
 
         return results;

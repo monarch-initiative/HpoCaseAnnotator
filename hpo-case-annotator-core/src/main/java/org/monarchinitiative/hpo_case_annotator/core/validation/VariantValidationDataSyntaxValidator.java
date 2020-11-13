@@ -31,8 +31,8 @@ public class VariantValidationDataSyntaxValidator implements Validator<VariantVa
             case SPLICING:
                 results.addAll(validateSplicingFields(instance));
                 break;
-            case CNV:
-            case BKPT:
+            case TRANSLOCATION:
+            case INTRACHROMOSOMAL:
                 results.addAll(validateStructuralFields(instance));
                 break;
             default:

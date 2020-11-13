@@ -7,7 +7,6 @@ import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -26,7 +25,6 @@ import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.AbstractVariantController;
-import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.WidthAwareTextFields;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
@@ -226,10 +224,10 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
             case SPLICING:
                 location = AbstractVariantController.class.getResource("SplicingVariant.fxml");
                 break;
-            case CNV:
-                location = AbstractVariantController.class.getResource("CnvVariant.fxml");
+            case INTRACHROMOSOMAL:
+                location = AbstractVariantController.class.getResource("IntrachromosomalVariant.fxml");
                 break;
-            case BKPT:
+            case TRANSLOCATION:
                 location = AbstractVariantController.class.getResource("BreakpointVariant.fxml");
                 break;
             default:

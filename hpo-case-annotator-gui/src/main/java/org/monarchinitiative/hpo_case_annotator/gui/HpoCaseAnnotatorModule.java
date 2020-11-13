@@ -82,7 +82,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
         bind(MendelianVariantController.class);
         bind(SomaticVariantController.class);
         bind(SplicingVariantController.class);
-        bind(CnvVariantController.class);
+        bind(IntrachromosomalVariantController.class);
         bind(BreakpointVariantController.class);
     }
 
