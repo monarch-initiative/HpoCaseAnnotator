@@ -63,9 +63,6 @@ public class VariantPositionLiftOver {
             case "HG19":
             case "GRCH37":
                 return GenomeAssembly.GRCH_37;
-            case "HG18":
-            case "NCBI36":
-                return GenomeAssembly.HG_18;
             case "HG38":
             case "GRCH38":
                 return GenomeAssembly.GRCH_38;

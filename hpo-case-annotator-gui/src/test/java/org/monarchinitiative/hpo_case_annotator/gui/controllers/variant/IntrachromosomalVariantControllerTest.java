@@ -88,7 +88,7 @@ public class IntrachromosomalVariantControllerTest extends ApplicationTest {
         Variant actual = controller.getData();
 
         assertThat(actual.getVariantPosition(), is(VariantPosition.newBuilder()
-                .setGenomeAssembly(GenomeAssembly.GRCH_37)
+                .setGenomeAssembly(GenomeAssembly.GRCH_38)
                 .setContig("4")
                 .setPos(100)
                 .setPos2(200)

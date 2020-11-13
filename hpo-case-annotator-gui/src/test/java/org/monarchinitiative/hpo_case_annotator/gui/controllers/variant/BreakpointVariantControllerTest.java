@@ -87,7 +87,7 @@ public class BreakpointVariantControllerTest extends ApplicationTest {
         Variant actual = controller.getData();
 
         assertThat(actual.getVariantPosition(), is(VariantPosition.newBuilder()
-                .setGenomeAssembly(GenomeAssembly.GRCH_37)
+                .setGenomeAssembly(GenomeAssembly.GRCH_38)
                 .setContig("4")
                 .setPos(101)
                 .setContigDirection(VariantPosition.Direction.FWD)
