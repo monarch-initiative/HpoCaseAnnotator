@@ -190,7 +190,6 @@ enum StructuralType {
     TRA = 9;
 }
 
-
 message VariantValidation {
     // dictates how the variant is presented to user in GUI
     Context context = 1;

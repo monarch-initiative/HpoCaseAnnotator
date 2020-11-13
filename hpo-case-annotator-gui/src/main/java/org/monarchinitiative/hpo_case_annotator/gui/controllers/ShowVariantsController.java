@@ -10,6 +10,7 @@ import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
+import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
 
 import java.util.*;
 
@@ -55,7 +56,7 @@ public class ShowVariantsController {
                 VariantPosition vp = variant.getVariantPosition();
                 variantData.add(new VariantData(
                         String.format("%s %s:%d%s>%s", vp.getGenomeAssembly(), vp.getContig(), vp.getPos(), vp.getRefAllele(), vp.getAltAllele()),
-                        diseaseCase.getPublication().getTitle(),
+                        ModelUtils.getFileNameWithSampleId(diseaseCase),
                         diseaseCase.getPublication().getPmid(),
                         diseaseCase.getGene().getSymbol(),
                         variant.getVariantClass(),
