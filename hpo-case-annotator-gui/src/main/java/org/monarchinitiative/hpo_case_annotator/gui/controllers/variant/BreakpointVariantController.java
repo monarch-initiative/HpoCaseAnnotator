@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.POSITIVE_INTEGER_REGEXP;
+import static org.monarchinitiative.hpo_case_annotator.model.utils.BreakendAltComposer.composeBreakendAltAllele;
 
 /**
  *
@@ -70,23 +71,6 @@ public class BreakpointVariantController extends AbstractVariantController {
         super(elementValues, hostServices);
     }
 
-    private static String makeAltAllele(String contig, String pos, String ref, boolean leftPositive, boolean rightPositive, String inserted) {
-        // with breakends, we refer to Section 5.4 | Figure 2 in VCF 4.3
-        if (leftPositive) {
-            // left breakend is on POSITIVE strand
-            return rightPositive
-                    // U-V breakends
-                    ? String.format("%s%s[%s:%s[", ref, inserted, contig, pos)
-                    // W-Y breakends
-                    : String.format("%s%s]%s:%s]", ref, inserted, contig, pos);
-        } else {
-            // left breakend is on NEGATIVE strand
-            return rightPositive
-                    ? String.format("[%s:%s[%s%s", contig, pos, inserted, ref)
-                    : String.format("]%s:%s]%s%s", contig, pos, inserted, ref);
-        }
-    }
-
     @Override
     public Binding<String> variantTitleBinding() {
         return Bindings.createStringBinding(() -> {
@@ -95,7 +79,7 @@ public class BreakpointVariantController extends AbstractVariantController {
                                 assemblyComboBox.getValue(),
                                 leftChrComboBox.getValue(),
                                 leftPosTextField.getText(),
-                                makeAltAllele(rightChrComboBox.getValue(),
+                                composeBreakendAltAllele(rightChrComboBox.getValue(),
                                         rightPosTextField.getText(),
                                         refTextField.getText(),
                                         !leftStrandCheckBox.isSelected(),
@@ -197,7 +181,7 @@ public class BreakpointVariantController extends AbstractVariantController {
 
                         .setContig2Direction(rightStrandCheckBox.isSelected() ? VariantPosition.Direction.REV : VariantPosition.Direction.FWD)
                         .setRefAllele(refTextField.getText())
-                        .setAltAllele(makeAltAllele(rightContig, String.valueOf(rightPos), refTextField.getText(), !leftStrandCheckBox.isSelected(), !rightStrandCheckBox.isSelected(), insertedSequenceTextField.getText()))
+                        .setAltAllele(insertedSequenceTextField.getText())
                         .setCiBeginOne(parseIntOrGetDefaultValue(ciBeginLeftTextField::getText, 0))
                         .setCiBeginTwo(parseIntOrGetDefaultValue(ciEndLeftTextField::getText, 0))
                         .setCiEndOne(parseIntOrGetDefaultValue(ciBeginRightTextField::getText, 0))

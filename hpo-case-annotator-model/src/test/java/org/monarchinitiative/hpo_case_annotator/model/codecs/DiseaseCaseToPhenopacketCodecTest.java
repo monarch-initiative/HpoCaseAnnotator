@@ -12,6 +12,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
+import static org.monarchinitiative.hpo_case_annotator.model.test_resources.PhenoPacketTestUtil.HET;
 import static org.monarchinitiative.hpo_case_annotator.model.test_resources.PhenoPacketTestUtil.ontologyClass;
 
 public class DiseaseCaseToPhenopacketCodecTest {
@@ -234,5 +235,33 @@ public class DiseaseCaseToPhenopacketCodecTest {
                         .setDescription("First Report of a Single Exon Deletion in TCOF1 Causing Treacher Collins Syndrome")
                         .build())
                 .build()));
+    }
+
+    @Test
+    public void diseaseCaseWithBreakendVariantToPhenopacket() {
+        // -- arrange
+        DiseaseCase diseaseCase = TestResources.structuralFictionalBreakend();
+
+        // -- act
+        Phenopacket pp = instance.encode(diseaseCase);
+
+        // -- assert
+        // id
+        assertThat(pp.getId(), is("PMID:22712005-Beygo-2012-TCOF1-M18662"));
+
+        // here we mainly need to test the variant
+        assertThat(pp.getVariantsCount(), is(1));
+        Variant variant = pp.getVariants(0);
+
+        assertThat(variant.getAlleleCase(), is(Variant.AlleleCase.VCF_ALLELE));
+        VcfAllele vcfAllele = variant.getVcfAllele();
+        assertThat(vcfAllele.getGenomeAssembly(), is("GRCh37"));
+        assertThat(vcfAllele.getChr(), is("9"));
+        assertThat(vcfAllele.getPos(), is(133_359_000));
+        assertThat(vcfAllele.getRef(), is("G"));
+        assertThat(vcfAllele.getAlt(), is("G[13:32300000["));
+        assertThat(vcfAllele.getInfo(), is("SVTYPE=BND;CIPOS=-5,-15;CIEND=10,20;IMPRECISE"));
+
+        assertThat(variant.getZygosity(), is(HET));
     }
 }

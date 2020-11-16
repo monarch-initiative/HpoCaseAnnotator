@@ -58,6 +58,10 @@ public final class TestResources {
      * disorder).
      */
     public static DiseaseCase structural_beygo_2012_TCOF1_M18662() {
-        return DiseaseCaseModelExample.structural_beygo_2012_TCOF1_M18662();
+        return DiseaseCaseModelExample.beygo2012TCOF1_M18662_Deletion();
+    }
+
+    public static DiseaseCase structuralFictionalBreakend() {
+        return DiseaseCaseModelExample.beygo2012TCOF1_M18662_Translocation();
     }
 }
