@@ -83,8 +83,10 @@ public abstract class AbstractVariantController extends AbstractDataController<V
 
     /**
      * Utility method for keeping track of {@link Observable}s that the {@link Variant} depends on.
+     * <p>
+     * Validity of the variant is checked after each change to observables.
      *
-     * @return {@link List} with observable dependencies
+     * @return {@link List} with observables
      */
     abstract List<? extends Observable> getObservableVariantDependencies();
 
