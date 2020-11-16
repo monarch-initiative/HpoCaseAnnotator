@@ -70,6 +70,9 @@ public class IntrachromosomalVariantController extends AbstractVariantController
     @FXML
     public CheckBox preciseCheckBox;
 
+    @FXML
+    public TextField insertionLengthTextField;
+
     private final String defaultRefAllele = "N";
 
     @Inject
@@ -100,7 +103,8 @@ public class IntrachromosomalVariantController extends AbstractVariantController
                 beginTextField.textProperty(),
                 endTextField.textProperty(),
                 svTypeComboBox.valueProperty(),
-                genotypeComboBox.valueProperty());
+                genotypeComboBox.valueProperty(),
+                insertionLengthTextField.textProperty());
     }
 
     @Override
@@ -117,6 +121,9 @@ public class IntrachromosomalVariantController extends AbstractVariantController
 
         genotypeComboBox.setValue(variant.getGenotype());
         svTypeComboBox.setValue(variant.getSvType());
+        if (variant.getSvType().equals(StructuralType.INS)) {
+            insertionLengthTextField.setText(String.valueOf(variant.getNInserted()));
+        }
 
         VariantValidation vv = variant.getVariantValidation();
         cosegregationCheckBox.setSelected(vv.getCosegregation());
@@ -148,6 +155,9 @@ public class IntrachromosomalVariantController extends AbstractVariantController
                         .setCosegregation(cosegregationCheckBox.isSelected())
                         .build())
                 .setImprecise(!preciseCheckBox.isSelected())
+                .setNInserted(svType.equals(StructuralType.INS)
+                        ? parseIntOrGetDefaultValue(insertionLengthTextField::getText, 0)
+                        : 0)
                 .build();
     }
 
@@ -160,6 +170,8 @@ public class IntrachromosomalVariantController extends AbstractVariantController
         decorateWithTooltipOnFocus(endTextField, "1-based end position");
         genotypeComboBox.getItems().addAll(Arrays.stream(Genotype.values()).filter(g -> !g.equals(Genotype.UNRECOGNIZED)).collect(Collectors.toList()));
         svTypeComboBox.getItems().addAll(Arrays.stream(StructuralType.values()).filter(g -> !g.equals(StructuralType.UNRECOGNIZED)).collect(Collectors.toList()));
+        decorateWithTooltipOnFocus(insertionLengthTextField, "N of inserted bases");
+        insertionLengthTextField.setTextFormatter(makeToleratingTextFormatter(insertionLengthTextField, NON_NEGATIVE_INTEGER_REGEXP));
 
         preciseCheckBox.selectedProperty().addListener((obs, old, current) -> {
             if (current) {
@@ -181,5 +193,14 @@ public class IntrachromosomalVariantController extends AbstractVariantController
             }
         });
         preciseCheckBox.setSelected(true);
+
+        svTypeComboBox.valueProperty().addListener((o, old, novel) -> {
+            if (novel.equals(StructuralType.INS)) {
+                insertionLengthTextField.setDisable(false);
+            } else {
+                insertionLengthTextField.clear();
+                insertionLengthTextField.setDisable(true);
+            }
+        });
     }
 }

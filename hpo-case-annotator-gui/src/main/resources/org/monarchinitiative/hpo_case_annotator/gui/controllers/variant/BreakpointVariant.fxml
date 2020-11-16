@@ -20,15 +20,14 @@
                   <ColumnConstraints halignment="CENTER"/>
                   <ColumnConstraints halignment="CENTER"/>
                </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" />
-                 <RowConstraints minHeight="40.0" prefHeight="40.0"/>
-                <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints minHeight="10.0" />
-              </rowConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="40.0" prefHeight="40.0"/>
+                  <RowConstraints minHeight="40.0" prefHeight="40.0"/>
+                  <RowConstraints minHeight="40.0" prefHeight="40.0"/>
+                  <RowConstraints minHeight="40.0" prefHeight="40.0"/>
+               </rowConstraints>
                <children>
-                  <Label text="Breakpoint" GridPane.rowIndex="1">
+                  <Label text="Breakpoint">
                      <font>
                         <Font name="System Bold" size="15.0"/>
                      </font>
@@ -36,7 +35,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                      </GridPane.margin>
                   </Label>
-                  <Label text="Coordinates" GridPane.rowIndex="2" GridPane.rowSpan="3">
+                  <Label text="Coordinates" GridPane.rowIndex="1" GridPane.rowSpan="3">
                      <font>
                         <Font name="System Italic" size="15.0"/>
                      </font>
@@ -46,102 +45,99 @@
                   </Label>
                   <ComboBox fx:id="assemblyComboBox" maxHeight="1.7976931348623157E308"
                             maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="90.0" prefHeight="30.0"
-                            prefWidth="90.0" promptText="Assembly" GridPane.columnIndex="2" GridPane.columnSpan="2"
-                            GridPane.rowIndex="1">
+                            prefWidth="90.0" promptText="Assembly" GridPane.columnIndex="2" GridPane.columnSpan="2">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                      </GridPane.margin>
                   </ComboBox>
-                  <Label text="Strand" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
-                  <Label text="Left" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <Label text="Strand" GridPane.columnIndex="4"/>
+                  <Label text="Left" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                      </GridPane.margin>
                   </Label>
                   <ComboBox fx:id="leftChrComboBox" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="90.0"
                             prefHeight="30.0" prefWidth="90.0" promptText="chr" GridPane.columnIndex="2"
-                            GridPane.rowIndex="2">
+                            GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                      </GridPane.margin>
                   </ComboBox>
                   <TextField fx:id="leftPosTextField" minHeight="30.0" minWidth="120.0" prefHeight="30.0"
-                             prefWidth="120.0" promptText="pos" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                             prefWidth="120.0" promptText="pos" GridPane.columnIndex="3" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                      </GridPane.margin>
                   </TextField>
                   <CheckBox fx:id="leftStrandCheckBox" mnemonicParsing="false" text="NEGATIVE" GridPane.columnIndex="4"
-                            GridPane.rowIndex="2">
+                            GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                      </GridPane.margin>
                   </CheckBox>
-                  <Label text="Right" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <Label text="Right" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                      </GridPane.margin>
                   </Label>
                   <ComboBox fx:id="rightChrComboBox" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="90.0"
                             prefHeight="30.0" prefWidth="90.0" promptText="chr" GridPane.columnIndex="2"
-                            GridPane.rowIndex="3">
+                            GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                      </GridPane.margin>
                   </ComboBox>
                   <TextField fx:id="rightPosTextField" minHeight="30.0" minWidth="120.0" prefHeight="30.0"
-                             prefWidth="120.0" promptText="pos" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                             prefWidth="120.0" promptText="pos" GridPane.columnIndex="3" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                      </GridPane.margin>
                   </TextField>
                   <CheckBox fx:id="rightStrandCheckBox" layoutX="455.0" layoutY="71.0" mnemonicParsing="false"
-                            text="NEGATIVE" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                            text="NEGATIVE" GridPane.columnIndex="4" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                      </GridPane.margin>
                   </CheckBox>
-                  <Label text="Inserted seq" GridPane.columnIndex="2" GridPane.rowIndex="4">
-                     <GridPane.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-                     </GridPane.margin>
-                  </Label>
-                  <TextField fx:id="insertedSequenceTextField" minHeight="30.0" minWidth="120.0" prefHeight="30.0"
-                             prefWidth="120.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                  <TextField fx:id="refTextField" minHeight="30.0" minWidth="120.0" prefHeight="30.0" prefWidth="120.0"
+                             promptText="ref" GridPane.columnIndex="2" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                      </GridPane.margin>
                   </TextField>
-                  <Separator orientation="VERTICAL" GridPane.columnIndex="5" GridPane.halignment="CENTER"
-                             GridPane.rowSpan="2147483647"/>
-                  <Label text="confidence interval" GridPane.columnIndex="6" GridPane.columnSpan="3"
-                         GridPane.rowIndex="1"/>
+                  <TextField fx:id="insertedSequenceTextField" minHeight="30.0" minWidth="120.0" prefHeight="30.0"
+                             prefWidth="120.0" promptText="inserted" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </TextField>
+                  <Label text="confidence interval" GridPane.columnIndex="6" GridPane.columnSpan="3"/>
                   <CheckBox fx:id="preciseCheckBox" mnemonicParsing="false" text="precise" GridPane.columnIndex="8"
-                            GridPane.rowIndex="2">
+                            GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                      </GridPane.margin>
                   </CheckBox>
                   <TextField fx:id="ciBeginLeftTextField" minHeight="30.0" prefHeight="30.0" prefWidth="80.0"
-                             promptText="e.g. -50" GridPane.columnIndex="6" GridPane.rowIndex="2">
+                             promptText="e.g. -50" GridPane.columnIndex="6" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                      </GridPane.margin>
                   </TextField>
                   <TextField fx:id="ciEndLeftTextField" minHeight="30.0" prefHeight="30.0" prefWidth="80.0"
-                             promptText="e.g. 50" GridPane.columnIndex="7" GridPane.rowIndex="2">
+                             promptText="e.g. 50" GridPane.columnIndex="7" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                      </GridPane.margin>
                   </TextField>
                   <TextField fx:id="ciBeginRightTextField" minHeight="30.0" prefHeight="30.0" prefWidth="80.0"
-                             promptText="e.g. -50" GridPane.columnIndex="6" GridPane.rowIndex="3">
+                             promptText="e.g. -50" GridPane.columnIndex="6" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                      </GridPane.margin>
                   </TextField>
                   <TextField fx:id="ciEndRightTextField" minHeight="30.0" prefHeight="30.0" prefWidth="80.0"
-                             promptText="e.g. 50" GridPane.columnIndex="7" GridPane.rowIndex="3">
+                             promptText="e.g. 50" GridPane.columnIndex="7" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                      </GridPane.margin>

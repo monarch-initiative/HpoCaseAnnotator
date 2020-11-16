@@ -44,6 +44,9 @@ public class BreakpointVariantController extends AbstractVariantController {
     public CheckBox rightStrandCheckBox;
 
     @FXML
+    public TextField refTextField;
+
+    @FXML
     public TextField insertedSequenceTextField;
 
     @FXML
@@ -67,14 +70,37 @@ public class BreakpointVariantController extends AbstractVariantController {
         super(elementValues, hostServices);
     }
 
+    private static String makeAltAllele(String contig, String pos, String ref, boolean leftPositive, boolean rightPositive, String inserted) {
+        // with breakends, we refer to Section 5.4 | Figure 2 in VCF 4.3
+        if (leftPositive) {
+            // left breakend is on POSITIVE strand
+            return rightPositive
+                    // U-V breakends
+                    ? String.format("%s%s[%s:%s[", ref, inserted, contig, pos)
+                    // W-Y breakends
+                    : String.format("%s%s]%s:%s]", ref, inserted, contig, pos);
+        } else {
+            // left breakend is on NEGATIVE strand
+            return rightPositive
+                    ? String.format("[%s:%s[%s%s", contig, pos, inserted, ref)
+                    : String.format("]%s:%s]%s%s", contig, pos, inserted, ref);
+        }
+    }
+
     @Override
     public Binding<String> variantTitleBinding() {
         return Bindings.createStringBinding(() -> {
                     if (isComplete()) {
-                        return String.format("Breakpoint: %s [%s:%s(%s);%s:%s(%s)]",
+                        return String.format("Breakpoint: %s %s:%s %s",
                                 assemblyComboBox.getValue(),
-                                leftChrComboBox.getValue(), leftPosTextField.getText(), leftStrandCheckBox.isSelected() ? '-' : '+',
-                                rightChrComboBox.getValue(), rightPosTextField.getText(), rightStrandCheckBox.isSelected() ? '-' : '+'
+                                leftChrComboBox.getValue(),
+                                leftPosTextField.getText(),
+                                makeAltAllele(rightChrComboBox.getValue(),
+                                        rightPosTextField.getText(),
+                                        refTextField.getText(),
+                                        !leftStrandCheckBox.isSelected(),
+                                        !rightStrandCheckBox.isSelected(),
+                                        insertedSequenceTextField.getText())
                         );
                     } else {
                         return "Breakpoint: INCOMPLETE: " + validationResults.get(0).getMessage();
@@ -89,8 +115,14 @@ public class BreakpointVariantController extends AbstractVariantController {
                 assemblyComboBox.valueProperty(),
                 leftChrComboBox.valueProperty(),
                 leftPosTextField.textProperty(),
+                leftStrandCheckBox.selectedProperty(),
+
                 rightChrComboBox.valueProperty(),
-                rightPosTextField.textProperty()
+                rightPosTextField.textProperty(),
+                rightStrandCheckBox.selectedProperty(),
+
+                refTextField.textProperty(),
+                insertedSequenceTextField.textProperty()
         );
     }
 
@@ -112,37 +144,10 @@ public class BreakpointVariantController extends AbstractVariantController {
         ciBeginRightTextField.setText(String.valueOf(vp.getCiEndOne()));
         ciEndRightTextField.setText(String.valueOf(vp.getCiEndTwo()));
 
+        refTextField.setText(vp.getRefAllele());
         insertedSequenceTextField.setText(vp.getAltAllele());
 
         preciseCheckBox.setSelected(!variant.getImprecise());
-    }
-
-    @Override
-    public Variant getData() {
-        return Variant.newBuilder()
-                .setVariantPosition(VariantPosition.newBuilder()
-                        .setGenomeAssembly(assemblyComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : assemblyComboBox.getValue())
-                        .setContig(leftChrComboBox.getValue() == null ? "NA" : leftChrComboBox.getValue())
-                        .setPos(parseIntOrGetDefaultValue(leftPosTextField::getText, 0)) // left is 1-based
-                        .setContigDirection(leftStrandCheckBox.isSelected() ? VariantPosition.Direction.REV : VariantPosition.Direction.FWD)
-                        .setContig2(rightChrComboBox.getValue() == null ? "NA" : rightChrComboBox.getValue())
-                        .setPos2(parseIntOrGetDefaultValue(rightPosTextField::getText, 0)) // right is also 1-based
-
-                        .setContig2Direction(rightStrandCheckBox.isSelected() ? VariantPosition.Direction.REV : VariantPosition.Direction.FWD)
-                        .setAltAllele(insertedSequenceTextField.getText())
-                        .setCiBeginOne(parseIntOrGetDefaultValue(ciBeginLeftTextField::getText, 0))
-                        .setCiBeginTwo(parseIntOrGetDefaultValue(ciEndLeftTextField::getText, 0))
-                        .setCiEndOne(parseIntOrGetDefaultValue(ciBeginRightTextField::getText, 0))
-                        .setCiEndTwo(parseIntOrGetDefaultValue(ciEndRightTextField::getText, 0))
-                        .build())
-                .setVariantClass("structural")
-                .setGenotype(Genotype.HETEROZYGOUS)
-                .setSvType(StructuralType.BND)
-                .setVariantValidation(VariantValidation.newBuilder()
-                        .setContext(VariantValidation.Context.TRANSLOCATION)
-                        .build())
-                .setImprecise(!preciseCheckBox.isSelected())
-                .build();
     }
 
     public void initialize() {
@@ -174,5 +179,37 @@ public class BreakpointVariantController extends AbstractVariantController {
             }
         });
         preciseCheckBox.setSelected(true);
+    }
+
+    @Override
+    public Variant getData() {
+        String rightContig = rightChrComboBox.getValue() == null ? "NA" : rightChrComboBox.getValue();
+        int leftPos = parseIntOrGetDefaultValue(leftPosTextField::getText, 0);
+        int rightPos = parseIntOrGetDefaultValue(rightPosTextField::getText, 0);
+        return Variant.newBuilder()
+                .setVariantPosition(VariantPosition.newBuilder()
+                        .setGenomeAssembly(assemblyComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : assemblyComboBox.getValue())
+                        .setContig(leftChrComboBox.getValue() == null ? "NA" : leftChrComboBox.getValue())
+                        .setPos(leftPos) // left is 1-based
+                        .setContigDirection(leftStrandCheckBox.isSelected() ? VariantPosition.Direction.REV : VariantPosition.Direction.FWD)
+                        .setContig2(rightContig)
+                        .setPos2(rightPos) // right is also 1-based
+
+                        .setContig2Direction(rightStrandCheckBox.isSelected() ? VariantPosition.Direction.REV : VariantPosition.Direction.FWD)
+                        .setRefAllele(refTextField.getText())
+                        .setAltAllele(makeAltAllele(rightContig, String.valueOf(rightPos), refTextField.getText(), !leftStrandCheckBox.isSelected(), !rightStrandCheckBox.isSelected(), insertedSequenceTextField.getText()))
+                        .setCiBeginOne(parseIntOrGetDefaultValue(ciBeginLeftTextField::getText, 0))
+                        .setCiBeginTwo(parseIntOrGetDefaultValue(ciEndLeftTextField::getText, 0))
+                        .setCiEndOne(parseIntOrGetDefaultValue(ciBeginRightTextField::getText, 0))
+                        .setCiEndTwo(parseIntOrGetDefaultValue(ciEndRightTextField::getText, 0))
+                        .build())
+                .setVariantClass("structural")
+                .setGenotype(Genotype.HETEROZYGOUS)
+                .setSvType(StructuralType.BND)
+                .setVariantValidation(VariantValidation.newBuilder()
+                        .setContext(VariantValidation.Context.TRANSLOCATION)
+                        .build())
+                .setImprecise(!preciseCheckBox.isSelected())
+                .build();
     }
 }

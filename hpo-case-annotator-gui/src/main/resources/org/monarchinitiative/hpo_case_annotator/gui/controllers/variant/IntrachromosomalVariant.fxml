@@ -16,20 +16,20 @@
                         <ColumnConstraints halignment="CENTER" minWidth="10.0"/>
                         <ColumnConstraints halignment="CENTER" minWidth="10.0"/>
                         <ColumnConstraints halignment="CENTER" minWidth="10.0"/>
-                  <ColumnConstraints halignment="CENTER" minWidth="10.0" />
+                        <ColumnConstraints halignment="CENTER" minWidth="10.0"/>
                         <ColumnConstraints halignment="RIGHT" minWidth="50.0" prefWidth="50.0"/>
-                  <ColumnConstraints halignment="CENTER" />
-                  <ColumnConstraints halignment="CENTER" />
-                  <ColumnConstraints halignment="CENTER" />
-                  <ColumnConstraints halignment="CENTER" />
-              </columnConstraints>
-              <rowConstraints>
-                  <RowConstraints minHeight="50.0" prefHeight="50.0"/>
-                <RowConstraints />
-                <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-              </rowConstraints>
+                        <ColumnConstraints halignment="CENTER"/>
+                        <ColumnConstraints halignment="CENTER"/>
+                        <ColumnConstraints halignment="CENTER"/>
+                        <ColumnConstraints halignment="CENTER"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="50.0" prefHeight="50.0"/>
+                        <RowConstraints minHeight="40.0" prefHeight="40.0"/>
+                        <RowConstraints minHeight="40.0" prefHeight="40.0"/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                    </rowConstraints>
                <children>
                    <Label text="Intrachromosomal variant" textAlignment="CENTER" wrapText="true"
                           GridPane.halignment="CENTER">
@@ -168,6 +168,13 @@
                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                        </GridPane.margin>
                    </CheckBox>
+                   <TextField fx:id="insertionLengthTextField" disable="true" minHeight="30.0" minWidth="120.0"
+                              prefHeight="30.0" prefWidth="120.0" promptText="insertion length" GridPane.columnIndex="3"
+                              GridPane.rowIndex="2">
+                       <GridPane.margin>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                       </GridPane.margin>
+                   </TextField>
                </children>
             </GridPane>
             <GridPane style="-fx-background-color: #ffcc5c;">

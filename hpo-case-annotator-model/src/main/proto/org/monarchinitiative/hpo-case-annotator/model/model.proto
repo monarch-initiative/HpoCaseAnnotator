@@ -142,7 +142,7 @@ message Variant {
 
     // Alteration in copy number (gain/loss) of a locus resulting in deviation from the normal diploid state is denoted
     // here as a number different from '2'
-    uint32 cnv_ploidy = 20 [deprecated=true]; // use genotype and sv_type to indicate ploidy instead
+    uint32 cnv_ploidy = 20 [deprecated = true]; // use genotype and sv_type to indicate ploidy instead
 
     // Structural
     StructuralType sv_type = 21;
@@ -150,8 +150,11 @@ message Variant {
     // Flag for imprecise CNV variant
     bool imprecise = 22;
 
+    // use with StructuralType.INS to store length of the inserted sequence
+    int32 n_inserted = 23;
+
     // reserved for CNV fields
-    reserved 23 to 29;
+    reserved 24 to 29;
 
     // Breakpoint fields
     // reserved for Breakpoint fields
