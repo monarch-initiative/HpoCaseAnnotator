@@ -234,7 +234,7 @@ public final class SplicingValidation {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("SplicingValidation{");
+        final StringBuilder sb = new StringBuilder("SplicingValidation{");
         sb.append("minigeneValidation=").append(minigeneValidation.get());
         sb.append(", siteDirectedMutagenesisValidation=").append(siteDirectedMutagenesisValidation.get());
         sb.append(", rtPCRValidation=").append(rtPCRValidation.get());

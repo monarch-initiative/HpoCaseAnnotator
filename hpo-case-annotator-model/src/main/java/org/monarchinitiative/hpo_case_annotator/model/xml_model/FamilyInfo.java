@@ -57,7 +57,7 @@ public final class FamilyInfo {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("FamilyInfo{");
+        final StringBuilder sb = new StringBuilder("FamilyInfo{");
         sb.append("familyOrPatientID=").append(familyOrPatientID.get());
         sb.append(", sex=").append(sex.get());
         sb.append(", age=").append(age.get());

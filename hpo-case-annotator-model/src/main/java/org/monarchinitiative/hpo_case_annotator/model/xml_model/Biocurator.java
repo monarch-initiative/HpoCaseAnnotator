@@ -44,7 +44,7 @@ public final class Biocurator {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Biocurator{");
+        final StringBuilder sb = new StringBuilder("Biocurator{");
         sb.append("bioCuratorId=").append(bioCuratorId.get());
         sb.append('}');
         return sb.toString();

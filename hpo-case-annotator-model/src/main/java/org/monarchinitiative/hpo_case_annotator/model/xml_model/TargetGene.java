@@ -59,7 +59,7 @@ public final class TargetGene {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("TargetGene{");
+        final StringBuilder sb = new StringBuilder("TargetGene{");
         sb.append("geneName=").append(geneName.get());
         sb.append(", entrezID=").append(entrezID.get());
         sb.append(", chromosome=").append(chromosome.get());

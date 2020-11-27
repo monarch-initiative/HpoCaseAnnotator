@@ -215,7 +215,7 @@ public class Mutation {
     }
     /* End of inner class for Hpoterm*/
     public class Phenotype {
-	List<Hpoterm> termlist = new ArrayList<Hpoterm>();
+	List<Hpoterm> termlist = new ArrayList<>();
 	public void addTerm(String name, String id) {
 	    termlist.add(new Hpoterm(name,id));
 	}
@@ -521,7 +521,7 @@ public class Mutation {
     
     public Map<String,String> getHPOterms() {
     	List<Hpoterm> lst = this.phen.getTerms();
-    	Map<String,String> mp = new HashMap<String,String>();
+    	Map<String,String> mp = new HashMap<>();
     	for (Hpoterm h: lst) {
     		String id = h.getID();
     		String name = h.getName();
