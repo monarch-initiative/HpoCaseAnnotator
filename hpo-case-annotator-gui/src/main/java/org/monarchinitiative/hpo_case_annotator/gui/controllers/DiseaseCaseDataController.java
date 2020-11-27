@@ -417,18 +417,19 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
      */
     @FXML
     private void pmidLookupButtonAction() {
-        final String pmid = pmidTextField.getText();
-        FutureTask<Void> task = new FutureTask<>(() -> {
-            try {
-                PubMedSummaryRetriever retriever = new PubMedSummaryRetriever();
-                final String summary = retriever.getSummary(pmid);
-                Platform.runLater(() -> inputPubMedDataTextField.setText(summary));
-            } catch (IOException e) {
-                Platform.runLater(() -> PopUps.showInfoMessage(String.format("Unable to retrieve PubMed summary for PMID %s", pmid), "Sorry"));
-            }
-            return null;
-        });
-        executorService.submit(task);
+//        final String pmid = pmidTextField.getText();
+//        FutureTask<Void> task = new FutureTask<>(() -> {
+//            try {
+//                PubMedSummaryRetriever retriever = new PubMedSummaryRetriever();
+//                final String summary = retriever.getSummary(pmid);
+//                Platform.runLater(() -> inputPubMedDataTextField.setText(summary));
+//            } catch (IOException e) {
+//                Platform.runLater(() -> PopUps.showInfoMessage(String.format("Unable to retrieve PubMed summary for PMID %s", pmid), "Sorry"));
+//            }
+//            return null;
+//        });
+//        executorService.submit(task);
+        LOGGER.warn("PMID Lookup not functional");
     }
 
     /**
