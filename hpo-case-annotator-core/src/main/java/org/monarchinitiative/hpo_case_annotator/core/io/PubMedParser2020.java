@@ -1,23 +1,29 @@
 package org.monarchinitiative.hpo_case_annotator.core.io;
 
-
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 /**
- * This class is intended to parse the PubMed abstract short form entered via the GUI such as
- * <pre>
- * 1: Nanji MS, Nguyen VT, Kawasoe JH, Inui K, Endo F, Nakajima T, Anezaki T, Cox DW.
- * Haplotype and mutation analysis in Japanese patients with Wilson disease.
- * Am  J Hum Genet. 1997 Jun;60(6):1423-9. PubMed PMID: 9199563; PubMed Central PMCID: PMC1716137.
- * </pre>
- *
- * @author Peter Robinson
- * @version 0.0.3 (16 June, 2016)
+ * Superclass for parsers of PubMed abstracts for the 2020 update of PubMed.
  */
-public class PubMedParser {
+public class PubMedParser2020 {
+
+    protected final String pmid;
+
+    protected final String originalAbstractSummary;
+
+
+    /**
+     * The constructor cleans the text by removing new lines/redundant white space
+     * @param pmAbstract
+     */
+    public PubMedParser2020(String pmAbstract, String pmid) {
+        String data = pmAbstract.replaceAll("\n", " ");
+        data = data.replaceAll("  ", " ");
+        originalAbstractSummary = data;
+        this.pmid = pmid.trim();
+    }
 
 
     /**
@@ -27,16 +33,14 @@ public class PubMedParser {
      * analysis in Japanese patients with Wilson disease. Am  J Hum Genet. 1997 Jun;60(6):1423-9. PubMed PMID: 9199563;
      * PubMed Central PMCID: PMC1716137.</code>
      *
-     * @param data String with PubMed summary text
-     * @return {@link Result} object.
+     * @return {@link PubMedParser.Result} object.
      */
-    public static Optional<Result> parsePubMed(String data) throws PubMedParseException {
+    public Optional<PubMedParser2020.Result> parsePubMed() throws PubMedParseException {
         String errorString = null;
         String authorlist, title, journal, publicationYear, publicationVolume,
                 publicationPages, pmid;
 
-        data = data.replaceAll("\n", " ");
-        data = data.replaceAll("  ", " ");
+        String data = this.originalAbstractSummary;
         String currentString;
         /* First element: The authors list, goes up to the first period */
         int x = data.indexOf(".");
@@ -124,7 +128,7 @@ public class PubMedParser {
         while (Character.isDigit(data.charAt(pos)))
             pos++;
         pmid = data.substring(0, pos);
-        return Optional.of(new Result(authorlist, title, journal, publicationYear,
+        return Optional.of(new PubMedParser2020.Result(authorlist, title, journal, publicationYear,
                 publicationVolume, publicationPages, pmid));
     }
 
@@ -159,7 +163,7 @@ public class PubMedParser {
      *
      * @param s A string like  1: Nanji MS, Nguyen VT, Kawasoe JH, Inui K, Endo F, Nakajima T, Anezaki T, Cox DW.
      */
-    private static String parseAuthors(String s) {
+    protected static String parseAuthors(String s) {
         int pos = 0;
         if (s.length() == 0) {
             return "??";
@@ -173,7 +177,6 @@ public class PubMedParser {
         } else {
             return s;
         }
-
     }
 
 
@@ -233,9 +236,6 @@ public class PubMedParser {
     }
 
 
-    protected PubMedParser() {
-        // no-op -- but allow subclassing for specific PubMed formats
-    }
 
 
     public static class Result {
@@ -255,7 +255,7 @@ public class PubMedParser {
         private final String pmid;
 
 
-        private Result(String authorList, String title, String journal, String year, String volume, String pages, String pmid) {
+        protected Result(String authorList, String title, String journal, String year, String volume, String pages, String pmid) {
             this.authorList = authorList;
             this.title = title;
             this.journal = journal;
@@ -300,6 +300,5 @@ public class PubMedParser {
             return pmid;
         }
     }
-}
 
-/* eof */
+}

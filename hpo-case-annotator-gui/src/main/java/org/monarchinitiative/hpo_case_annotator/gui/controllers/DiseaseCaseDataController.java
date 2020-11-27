@@ -362,7 +362,13 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
         PubMedParser.Result result;
         try {
-            result = PubMedParser.parsePubMed(pubMedText);
+            Optional<PubMedParser.Result> opt = PubMedParser.parsePubMed(pubMedText);
+            if (opt.isPresent()) {
+                result = opt.get();
+            } else {
+                PopUps.showWarningDialog("Could not parse pubmed", pubMedText, "Parse error");
+                return;
+            }
         } catch (PubMedParseException e) {
             PopUps.showInfoMessage(e.getMessage(), conversationTitle);
             return;
