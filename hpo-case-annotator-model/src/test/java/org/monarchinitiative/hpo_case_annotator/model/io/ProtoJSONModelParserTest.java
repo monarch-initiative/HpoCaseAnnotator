@@ -170,7 +170,7 @@ public class ProtoJSONModelParserTest {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // this would be set in the app
-        v1Data = v1Data.toBuilder().setSoftwareVersion("Hpo Case Annotator v1.0.12-SNAPSHOT").build();
+        v1Data = v1Data.toBuilder().setSoftwareVersion("Hpo Case Annotator").build();
         ProtoJSONModelParser.saveDiseaseCase(baos, v1Data, Charset.forName("UTF-8"));
 
         assertThat(baos.toString(), is(v2ExpectedString));

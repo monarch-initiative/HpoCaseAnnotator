@@ -1,10 +1,10 @@
 package org.monarchinitiative.hpo_case_annotator.model.codecs;
 
-import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
+import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.phenopackets.schema.v1.Phenopacket;
+import org.phenopackets.schema.v1.core.OntologyClass;
+import org.phenopackets.schema.v1.core.Sex;
+import org.phenopackets.schema.v1.core.Variant;
 import org.phenopackets.schema.v1.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.function.Function;
+
+import static org.monarchinitiative.hpo_case_annotator.model.utils.BreakendAltComposer.composeBreakendAltAllele;
 
 /**
  * <p>
@@ -186,18 +188,44 @@ public abstract class AbstractDiseaseCaseToPhenopacketCodec implements Codec<Dis
     }
 
     static Function<org.monarchinitiative.hpo_case_annotator.model.proto.Variant, Variant> hcaVariantToPhenopacketVariant() {
-        return v -> Variant.newBuilder()
-                .setVcfAllele(VcfAllele.newBuilder()
-                        .setGenomeAssembly(hcaGenomeAssemblyToPhenopacketGenomeAssembly(v.getVariantPosition().getGenomeAssembly()))
-                        //.setId()
-                        .setChr(v.getVariantPosition().getContig())
-                        .setPos(v.getVariantPosition().getPos())
-                        .setRef(v.getVariantPosition().getRefAllele())
-                        .setAlt(v.getVariantPosition().getAltAllele())
+        return v -> {
+            VariantPosition vp = v.getVariantPosition();
+            String info = "";
+            String alt = vp.getAltAllele();
+            if (v.getVariantClass().equals("structural")) {
+                String svtype = String.format("SVTYPE=%s", v.getSvType().name());
+                String cipos = String.format("CIPOS=%d,%d", vp.getCiBeginOne(), vp.getCiBeginTwo());
+                String ciend = String.format("CIEND=%d,%d", vp.getCiEndOne(), vp.getCiEndTwo());
+                if (v.getSvType().equals(StructuralType.BND)) {
+                    // breakend is a special animal in the yard
+                    alt = composeBreakendAltAllele(vp.getContig2(), String.valueOf(vp.getPos2()), vp.getRefAllele(),
+                            vp.getContigDirection().equals(VariantPosition.Direction.FWD),
+                            vp.getContig2Direction().equals(VariantPosition.Direction.FWD),
+                            vp.getAltAllele());
+                    info = String.join(";", svtype, cipos, ciend);
+                } else {
+                    // populate the info field if the variant class is structural
+                    String svend = String.format("END=%d", vp.getPos2());
 
-                        .build())
-                .setZygosity(hcaGenotypeToPhenopacketZygosity(v.getGenotype()))
-                .build();
+                    info = String.join(";", svtype, svend, cipos, ciend);
+                }
+                if (v.getImprecise()) {
+                    info += ";IMPRECISE";
+                }
+            }
+            return Variant.newBuilder()
+                    .setVcfAllele(VcfAllele.newBuilder()
+                            .setGenomeAssembly(hcaGenomeAssemblyToPhenopacketGenomeAssembly(vp.getGenomeAssembly()))
+                            //.setId()
+                            .setChr(vp.getContig())
+                            .setPos(vp.getPos())
+                            .setRef(vp.getRefAllele())
+                            .setAlt(alt)
+                            .setInfo(info)
+                            .build())
+                    .setZygosity(hcaGenotypeToPhenopacketZygosity(v.getGenotype()))
+                    .build();
+        };
     }
 
 }

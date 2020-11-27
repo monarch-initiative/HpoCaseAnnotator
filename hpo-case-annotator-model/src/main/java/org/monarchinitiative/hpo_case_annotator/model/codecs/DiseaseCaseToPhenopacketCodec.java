@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.model.codecs;
 
+import com.google.protobuf.Timestamp;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 import org.phenopackets.schema.v1.Phenopacket;
@@ -7,6 +8,7 @@ import org.phenopackets.schema.v1.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
 import java.util.stream.Collectors;
 
 /**
@@ -35,10 +37,10 @@ public class DiseaseCaseToPhenopacketCodec extends AbstractDiseaseCaseToPhenopac
     public Phenopacket encode(DiseaseCase data) {
         String familyOrProbandId = data.getFamilyInfo().getFamilyOrProbandId();
         Publication publication = data.getPublication();
-        String metadata = data.getMetadata();
         return Phenopacket.newBuilder()
+                // id
                 .setId(Codecs.getPhenopacketIdFor(data))
-                // proband and the publication data
+                // subject/individual and the publication data
                 .setSubject(Individual.newBuilder()
                         .setId(familyOrProbandId)
                         .setAgeAtCollection(Age.newBuilder().setAge(data.getFamilyInfo().getAge()).build())
@@ -64,6 +66,7 @@ public class DiseaseCaseToPhenopacketCodec extends AbstractDiseaseCaseToPhenopac
                         .build())
                 // metadata - Biocurator ID, ontologies used
                 .setMetaData(MetaData.newBuilder()
+                        .setCreated(Timestamp.newBuilder().setSeconds(Instant.now().getEpochSecond()).build())
                         .setCreatedBy(data.getSoftwareVersion())
                         .setSubmittedBy(data.getBiocurator().getBiocuratorId())
                         .setPhenopacketSchemaVersion(phenopacketVersion)

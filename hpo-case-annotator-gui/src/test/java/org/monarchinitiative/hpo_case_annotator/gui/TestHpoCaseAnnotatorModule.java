@@ -11,6 +11,7 @@ import org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataC
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValuesTest;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.ShowValidationResultsController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.IntrachromosomalVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SomaticVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SplicingVariantController;
@@ -21,12 +22,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -56,6 +57,7 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
         bind(MendelianVariantController.class);
         bind(SomaticVariantController.class);
         bind(SplicingVariantController.class);
+        bind(IntrachromosomalVariantController.class);
 
         bind(ShowValidationResultsController.class);
 

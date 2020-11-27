@@ -59,6 +59,48 @@ message VariantPosition {
     string ref_allele = 4;
 
     string alt_allele = 5;
+
+    // e.g. 1, 2, X, Y, MT
+    string contig2 = 6;
+
+    // 1-based end position of the variant, used for structural variants
+    int32 pos2 = 7;
+
+    // Used only to describe breakend.
+    // FWD if 5'->3' direction on contig2 would be as if it was on FWD strand of contig2
+    // REV if 5'->3' direction on contig2 would be as if it was on REV strand of contig2
+    Direction contig_direction = 8;
+
+    // Used only to describe breakend.
+    // FWD if 3'->5' direction of the second contig in case of breakend
+    // true if FWD, false if REV
+    Direction contig2_direction = 9;
+
+    // See VCF specs 4.3. | Section 5.4. | Figure 2
+    // The Direction enum would describe pictured breakends in this way
+    //
+    // W <--> Y            FWD REV
+    // U <--> V            FWD FWD
+    // Y <--> W            FWD REV
+    // ---------------------------
+    // V <--> U            REV REV
+    // X <--> Z            REV FWD
+    // Z <--> X            REV FWD
+    enum Direction {
+        UNDEFINED = 0; // default value for non-SV variants
+        FWD = 1;
+        REV = 2;
+    }
+
+    // Confidence intervals around begin and end positions of CNV/Breakpoint
+    //
+    int32 ci_begin_one = 10;
+
+    int32 ci_begin_two = 11;
+
+    int32 ci_end_one = 12;
+
+    int32 ci_end_two = 13;
 }
 
 message Variant {
@@ -95,6 +137,28 @@ message Variant {
     VariantValidation variant_validation = 13;
 
     VariantPosition variant_position = 14;
+
+    // CNV fields --------------------------
+
+    // Alteration in copy number (gain/loss) of a locus resulting in deviation from the normal diploid state is denoted
+    // here as a number different from '2'
+    uint32 cnv_ploidy = 20 [deprecated = true]; // use genotype and sv_type to indicate ploidy instead
+
+    // Structural
+    StructuralType sv_type = 21;
+
+    // Flag for imprecise CNV variant
+    bool imprecise = 22;
+
+    // use with StructuralType.INS to store length of the inserted sequence
+    int32 n_inserted = 23;
+
+    // reserved for CNV fields
+    reserved 24 to 29;
+
+    // Breakpoint fields
+    // reserved for Breakpoint fields
+    reserved 30 to 39;
 }
 
 
@@ -104,6 +168,7 @@ enum Genotype {
     HOMOZYGOUS_ALTERNATE = 2;
     HOMOZYGOUS_REFERENCE = 3;
     HEMIZYGOUS = 4;
+    UNKNOWN_GENOTYPE = 5;
 }
 
 
@@ -113,6 +178,19 @@ enum CrypticSpliceSiteType {
     THREE_PRIME = 2;
 }
 
+
+enum StructuralType {
+    NON_STRUCTURAL = 0;
+    UNKNOWN = 1;
+    DEL = 2;
+    INS = 3;
+    DUP = 4;
+    INV = 5;
+    CNV = 6;
+    BND = 7;
+    STR = 8;
+    TRA = 9;
+}
 
 message VariantValidation {
     // dictates how the variant is presented to user in GUI
@@ -163,6 +241,9 @@ message VariantValidation {
         MENDELIAN = 1;
         SOMATIC = 2;
         SPLICING = 3;
+
+        INTRACHROMOSOMAL = 7;
+        TRANSLOCATION = 8;
     }
 }
 

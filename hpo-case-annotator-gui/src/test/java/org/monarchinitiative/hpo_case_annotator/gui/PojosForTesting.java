@@ -178,6 +178,86 @@ public class PojosForTesting {
                 .build();
     }
 
+    public static Variant makeStructuralDeletionVariant() {
+        return Variant.newBuilder()
+                .setVariantPosition(VariantPosition.newBuilder()
+                        .setGenomeAssembly(GenomeAssembly.GRCH_37)
+                        .setContig("9")
+                        .setPos(10_000_000)
+                        .setPos2(10_001_000)
+                        .setRefAllele("N")
+                        .setAltAllele("<DEL>")
+                        .setCiBeginOne(-50)
+                        .setCiBeginTwo(50)
+                        .setCiEndOne(-100)
+                        .setCiEndTwo(100)
+                        .build())
+
+                .setVariantClass("structural")
+                .setGenotype(Genotype.HETEROZYGOUS)
+                .setSvType(StructuralType.DEL)
+                .setVariantValidation(VariantValidation.newBuilder()
+                        .setContext(VariantValidation.Context.INTRACHROMOSOMAL)
+                        .setCosegregation(true)
+                        .build())
+                .build();
+    }
+
+    /**
+     * @return example variant that represents an imprecise reciprocal translocation occuring at
+     */
+    public static Variant makeBreakendVariant() {
+        return Variant.newBuilder()
+                .setVariantPosition(VariantPosition.newBuilder()
+                        .setGenomeAssembly(GenomeAssembly.GRCH_37)
+                        .setContig("9")
+                        .setPos(10_000_001)
+                        .setContigDirection(VariantPosition.Direction.FWD)
+                        .setContig2("11")
+                        .setPos2(20_000_001)
+                        .setContig2Direction(VariantPosition.Direction.REV)
+                        .setAltAllele("ACGT")
+                        .setCiBeginOne(-50)
+                        .setCiBeginTwo(50)
+                        .setCiEndOne(-100)
+                        .setCiEndTwo(100)
+                        .build())
+                .setVariantClass("structural")
+                .setGenotype(Genotype.HETEROZYGOUS)
+                .setSvType(StructuralType.BND)
+                .setVariantValidation(VariantValidation.newBuilder()
+                        .setContext(VariantValidation.Context.TRANSLOCATION)
+                        .build())
+                .setImprecise(true)
+                .build();
+
+    }
+
+    public static Variant makeCnvDuplicationVariant() {
+        return Variant.newBuilder()
+                .setVariantPosition(VariantPosition.newBuilder()
+                        .setGenomeAssembly(GenomeAssembly.GRCH_37)
+                        .setContig("9")
+                        .setPos(10_000_000)
+                        .setPos2(10_001_000)
+                        .setRefAllele("N")
+                        .setAltAllele("<DUP>")
+                        .setCiBeginOne(-50)
+                        .setCiBeginTwo(50)
+                        .setCiEndOne(-100)
+                        .setCiEndTwo(100)
+                        .build())
+
+                .setVariantClass("structural")
+                .setGenotype(Genotype.HETEROZYGOUS)
+                .setSvType(StructuralType.DUP)
+                .setVariantValidation(VariantValidation.newBuilder()
+                        .setContext(VariantValidation.Context.INTRACHROMOSOMAL)
+                        .setCosegregation(true)
+                        .build())
+                .build();
+    }
+
     public static Publication makeExomiserPublication() {
         return Publication.newBuilder()
                 .setAuthorList("Smedley D, Jacobsen JO, Jäger M, Köhler S, Holtgrewe M, Schubach M, Siragusa E, Zemojtel T, Buske OJ, Washington NL, Bone WP, Haendel MA, Robinson PN")

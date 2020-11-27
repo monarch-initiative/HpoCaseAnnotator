@@ -132,14 +132,15 @@ public class DiseaseCaseDataControllerTest extends ApplicationTest {
         DiseaseCase data = DiseaseCase.newBuilder()
                 .addAllPhenotype(Arrays.asList(
                         OntologyClass.newBuilder().setId("HP:0000822").setLabel("Hypertension").setNotObserved(false).build(),
-                        OntologyClass.newBuilder().setId("HP:0000822").setLabel("Hypertension").setNotObserved(false).build(), // duplicate that should be removed
+                        // duplicate that should be removed
+                        OntologyClass.newBuilder().setId("HP:0000822").setLabel("Hypertension").setNotObserved(false).build(),
                         OntologyClass.newBuilder().setId("HP:0002615").setLabel("Hypotension").setNotObserved(true).build(),
                         OntologyClass.newBuilder().setId("HP:0002615").setLabel("Hypotension").setNotObserved(true).build(),
                         OntologyClass.newBuilder().setId("HP:0005185").setLabel("Global systolic dysfunction").setNotObserved(false).build()
                 ))
                 .build();
         Platform.runLater(() -> controller.presentData(data));
-        sleep(50);
+        sleep(100);
 
         final DiseaseCase received = controller.getData();
         final List<OntologyClass> phenotypes = received.getPhenotypeList();
