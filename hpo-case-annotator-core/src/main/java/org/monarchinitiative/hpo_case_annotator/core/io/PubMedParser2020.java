@@ -13,6 +13,8 @@ public class PubMedParser2020 {
 
     protected final String originalAbstractSummary;
 
+    protected String currentError = null;
+
 
     /**
      * The constructor cleans the text by removing new lines/redundant white space
@@ -35,8 +37,7 @@ public class PubMedParser2020 {
      *
      * @return {@link PubMedParser.Result} object.
      */
-    public Optional<PubMedParser2020.Result> parsePubMed() throws PubMedParseException {
-        String errorString = null;
+    public Optional<PubMedParser2020.Result> parsePubMed() {
         String authorlist, title, journal, publicationYear, publicationVolume,
                 publicationPages, pmid;
 
@@ -48,7 +49,8 @@ public class PubMedParser2020 {
         if (x > 0) {
             authorlist = parseAuthors(data.substring(0, x).trim());
         } else {
-            throw new PubMedParseException(String.format("Error parsing author list '%s'", data.substring(0, x).trim()));
+            System.err.printf("Error parsing author list '%s'\n", data.substring(0, x).trim());
+            return Optional.empty();
         }
 
         /* Second element: The title */
@@ -61,16 +63,16 @@ public class PubMedParser2020 {
             title = currentString.substring(0, y + 1).trim();
             x = y;
         } else {
-            errorString = String.format("Unable to parse the title from the PubMed data (I attempted to find the title after the first and prior to the second period but failed): %s", data);
-            throw new PubMedParseException(errorString);
+            System.err.printf("Unable to parse the title from the PubMed data (I attempted to find the title after the first and prior to the second period but failed): %s", data);
+            return Optional.empty();
         }
         currentString = currentString.substring(x + 1);
         x = currentString.indexOf(".");
         if (x > 0) {
             journal = currentString.substring(0, x).trim();
         } else {
-            errorString = String.format("Unable to parse the journal from the PubMed data: %s", data);
-            throw new PubMedParseException(errorString);
+            System.err.printf("Unable to parse the journal from the PubMed data: %s", data);
+            return Optional.empty();
         }
         /* Now get the year. Note there is a difference for newer entries with Epub ahead of print */
         currentString = currentString.substring(x + 1).trim();
@@ -80,8 +82,8 @@ public class PubMedParser2020 {
             //PubMed PMID: 25546334.
             publicationYear = getYear(currentString);
             if (publicationYear == null) {
-                errorString = String.format("Unable to parse the year from the PubMed data (I attempted to find a String like [12]\\d+{3} but failed): %s", data);
-                throw new PubMedParseException(errorString);
+                System.err.printf("Unable to parse the year from the PubMed data (I attempted to find a String like [12]\\d+{3} but failed): %s", data);
+                return Optional.empty();
             }
             String doi = getDoi(currentString);
             publicationVolume = "[Epub ahead of print]";
@@ -89,29 +91,29 @@ public class PubMedParser2020 {
         } else {
             x = currentString.indexOf(";");
             if (x < 0) {
-                errorString = String.format("Unable to parse the date substring (%s) in the pubmed entry %s (did not find \";\")", currentString, data);
-                throw new PubMedParseException(errorString);
+                System.err.printf("Unable to parse the date substring (%s) in the pubmed entry %s (did not find \";\")", currentString, data);
+                return Optional.empty();
             }
             String datestring = currentString.substring(0, x);
             String year = getYear(datestring);
             if (year == null) {
-                throw new PubMedParseException(errorString);
+                return Optional.empty();
             } else {
                 publicationYear = year;
             }
             currentString = currentString.substring(x + 1).trim();
             x = currentString.indexOf(".");
             if (x < 0) {
-                errorString = String.format("Could not volume/pages in String %s", data);
-                throw new PubMedParseException(errorString);
+                System.err.printf("Could not volume/pages in String %s", data);
+                return Optional.empty();
             }
             String[] volumeAndPages = parsePiiVolume(currentString);
             if (volumeAndPages==null) {
                 volumeAndPages = parseVolumeAndPages(currentString.substring(0, x));
             }
             if (volumeAndPages[0] == null && volumeAndPages[1] == null) {
-                errorString = String.format("Could not volume/pages in String %s", data);
-                throw new PubMedParseException(errorString);
+                System.err.printf("Could not volume/pages in String %s", data);
+                return Optional.empty();
             } else {
                 publicationVolume = volumeAndPages[0];
                 publicationPages = volumeAndPages[1];
@@ -120,8 +122,8 @@ public class PubMedParser2020 {
         // We should now have something like this: PubMed PMID: 9199563; PubMed Central PMCID: PMC1716137.
         x = data.indexOf("PMID:");
         if (x < 0) {
-            errorString = String.format("Could not identify PMID: substring in PubMed input %s", data);
-            throw new PubMedParseException(errorString);
+            System.err.printf("Could not identify PMID: substring in PubMed input %s", data);
+            return Optional.empty();
         }
         data = data.substring(x + 5).trim();
         pos = 0;
@@ -235,6 +237,10 @@ public class PubMedParser2020 {
         }
     }
 
+
+    public String getCurrentError() {
+        return this.currentError != null ? currentError : "";
+    }
 
 
 

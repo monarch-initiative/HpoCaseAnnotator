@@ -16,7 +16,10 @@ import java.util.regex.Pattern;
  *
  * @author Peter Robinson
  * @version 0.0.3 (16 June, 2016)
+ *
+ * Replacecd with PubMedParser2020 -- this class can be deleted after dust settling
  */
+@Deprecated
 public class PubMedParser {
 
 

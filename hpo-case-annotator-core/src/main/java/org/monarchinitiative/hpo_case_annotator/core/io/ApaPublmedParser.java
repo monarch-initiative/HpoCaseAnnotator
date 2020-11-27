@@ -10,12 +10,15 @@ import java.util.Optional;
  */
 public class ApaPublmedParser extends PubMedParser2020 {
 
+
+
+
     public ApaPublmedParser(String pubmedText, String pmid){
         super(pubmedText, pmid);
     }
 
     @Override
-    public Optional<Result> parsePubMed() throws PubMedParseException {
+    public Optional<Result> parsePubMed() {
        // Try to split the string into the authors, the year and the rest
         // we expect ....(2012)....
         // Try to split the string into the authors, the year and the rest
@@ -29,13 +32,17 @@ public class ApaPublmedParser extends PubMedParser2020 {
         String remaining = this.originalAbstractSummary.substring(j+2).trim();
         String [] fields = remaining.split("\\.");
         if (fields.length < 2) {
-            System.err.println("Splitting on period did not yield two fields");
+            this.currentError = String.format("Splitting \"%s\" yielded %d fields but we need at least 2",
+                    remaining,
+                    fields.length);
             return Optional.empty();
         }
         String title = fields[0];
         String []journalFields = fields[1].split(",");
         if (journalFields.length < 3) {
-            System.err.println("Splitting on comma did not yield three fields");
+            this.currentError = String.format("Splitting \"%s\" on comma yielded %d fields but we need at least 3",
+                    fields[1],
+                    journalFields.length);
             return Optional.empty();
         }
         String journal = journalFields[0].trim();

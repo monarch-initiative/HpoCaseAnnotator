@@ -14,7 +14,9 @@ import java.util.stream.Collectors;
 /**
  * This class contains methods which can be used to retrieve PubMed summary text of publication which corresponds to
  * provided PMID. Use {@link #getSummary(String)} method to get the summary text.
+ * NO LONGER WORKS FOLLOWING 2020 PubMed changes!
  */
+@Deprecated
 public class PubMedSummaryRetriever {
 
     /**

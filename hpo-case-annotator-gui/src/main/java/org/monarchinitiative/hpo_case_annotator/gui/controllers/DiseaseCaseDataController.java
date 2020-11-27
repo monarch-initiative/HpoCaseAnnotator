@@ -18,9 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.monarchinitiative.hpo_case_annotator.core.io.PubMedParseException;
-import org.monarchinitiative.hpo_case_annotator.core.io.PubMedParser;
-import org.monarchinitiative.hpo_case_annotator.core.io.PubMedSummaryRetriever;
+import org.monarchinitiative.hpo_case_annotator.core.io.*;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
@@ -359,20 +357,18 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     private void inputPubMedDataButtonAction() {
         String conversationTitle = "PubMed text parse";
         String pubMedText = inputPubMedDataTextField.getText();
+        PubMedParser2020 parser2020 = new ApaPublmedParser(inputPubMedDataTextField.getText(),
+                pmidTextField.getText());
+        PubMedParser2020.Result result;
 
-        PubMedParser.Result result;
-        try {
-            Optional<PubMedParser.Result> opt = PubMedParser.parsePubMed(pubMedText);
-            if (opt.isPresent()) {
-                result = opt.get();
-            } else {
-                PopUps.showWarningDialog("Could not parse pubmed", pubMedText, "Parse error");
-                return;
-            }
-        } catch (PubMedParseException e) {
-            PopUps.showInfoMessage(e.getMessage(), conversationTitle);
+        Optional<PubMedParser2020.Result> opt = parser2020.parsePubMed();
+        if (opt.isPresent()) {
+            result = opt.get();
+        } else {
+            PopUps.showWarningDialog("Could not parse pubmed", pubMedText, parser2020.getCurrentError());
             return;
         }
+
 
         Publication temporary = Publication.newBuilder()
                 .setAuthorList(result.getAuthorList())
