@@ -3,17 +3,19 @@ package org.monarchinitiative.hpo_case_annotator.core.io;
 import java.util.Optional;
 
 /**
+ * Parse the 2020 and onwards PubMed summary format. There are options, and this parser is for the APA citation
+ * obtained if the user presses the CITE button and sets it to APA
  * Format is like this
  * "Burns, S. O., Zenner, H. L., Plagnol, V., Curtis, J., Mok, K., Eisenhut, M., Kumararatne, D., Doffinger, R., Thrasher, A. J., & Nejentsev, S. (2012). LRBA gene deletion in a patient presenting with autoimmunity without hypogammaglobulinemia. The Journal of allergy and clinical immunology, 130(6), 1428–1432. https://doi.org/10.1016/j.jaci.2012.07.035";
  * i.e.,
  * Authors (year). Title. Journal, vol(issue),pages. Otherstuff
  */
-public class ApaPublmedParser extends PubMedParser2020 {
+public class ApaPubMedParser extends PubMedParser {
 
 
 
 
-    public ApaPublmedParser(String pubmedText, String pmid){
+    public ApaPubMedParser(String pubmedText, String pmid){
         super(pubmedText, pmid);
     }
 

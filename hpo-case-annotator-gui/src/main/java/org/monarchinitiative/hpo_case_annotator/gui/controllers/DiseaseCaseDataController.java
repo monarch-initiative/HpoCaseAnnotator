@@ -3,7 +3,6 @@ package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
-import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
@@ -40,7 +39,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.FutureTask;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -357,18 +355,30 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     private void inputPubMedDataButtonAction() {
         String conversationTitle = "PubMed text parse";
         String pubMedText = inputPubMedDataTextField.getText();
-        PubMedParser2020 parser2020 = new ApaPublmedParser(inputPubMedDataTextField.getText(),
-                pmidTextField.getText());
-        PubMedParser2020.Result result;
-
-        Optional<PubMedParser2020.Result> opt = parser2020.parsePubMed();
-        if (opt.isPresent()) {
-            result = opt.get();
-        } else {
-            PopUps.showWarningDialog("Could not parse pubmed", pubMedText, parser2020.getCurrentError());
+        String pmid = pmidTextField.getText();
+        try {
+            Integer i = Integer.parseInt(pmid);
+        } catch (NumberFormatException e) {
+            PopUps.showWarningDialog("Need PMID", "You need to enter the PMID (only the integer)", e.getLocalizedMessage());
             return;
         }
+        PubMedParser parser = new NlmPubMedParser(inputPubMedDataTextField.getText(),
+                pmidTextField.getText());
+        PubMedParser.Result result;
 
+        Optional<PubMedParser.Result> opt = parser.parsePubMed();
+        if (opt.isPresent()) {
+            result = opt.get();
+        }  else {
+            // try to parse a second format
+            parser = new ApaPubMedParser(inputPubMedDataTextField.getText(), pmid);
+            opt = parser.parsePubMed();
+            if (! opt.isPresent()) {
+                PopUps.showWarningDialog("Could not parse pubmed", pubMedText, parser.getCurrentError());
+                return;
+            }
+            result = opt.get();
+        }
 
         Publication temporary = Publication.newBuilder()
                 .setAuthorList(result.getAuthorList())
@@ -414,6 +424,8 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
     /**
      * Retrieve PubMed summary for given PMID.
+     * This does not work after the 2020 format change at PubMed.
+     * Inactivate for now, possibly refactor the GUI later TODO
      */
     @FXML
     private void pmidLookupButtonAction() {

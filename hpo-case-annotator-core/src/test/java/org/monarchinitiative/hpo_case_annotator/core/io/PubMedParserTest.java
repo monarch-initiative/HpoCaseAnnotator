@@ -26,8 +26,9 @@ public class PubMedParserTest {
                 "Aradhya S, Stankiewicz P, Brunner HG, Zuffardi O, Selleck SB, Lupski JR, de Vries BB. The phenotype of " +
                 "recurrent 10q22q23 deletions and duplications. Eur J Hum Genet. 2011 Apr;19(4):400-8. doi: " +
                 "10.1038/ejhg.2010.211. Epub 2011 Jan 19. PubMed PMID: 21248748; PubMed Central PMCID: PMC3060324.";
-
-        Optional<PubMedParser.Result> opt = PubMedParser.parsePubMed(sampleOne);
+        String pmid = "21248748";
+        PubMedParser parser = new PubMedParser(sampleOne, pmid);
+        Optional<PubMedParser.Result> opt = parser.parsePubMed();
         assertTrue(opt.isPresent());
         PubMedParser.Result result = opt.get();
 
@@ -47,7 +48,9 @@ public class PubMedParserTest {
         final String sampleTwo = "1: Wessagowit V, Nalla VK, Rogan PK, McGrath JA. Normal and abnormal " +
                 "mechanisms of gene splicing and relevance to inherited skin diseases. J Dermatol Sci. 2005 Nov;40(2):73" +
                 "-84. Epub 2005 Jul 27. Review. PubMed PMID: 16054339; PubMed Central PMCID: PMC1351063.";
-        Optional<PubMedParser.Result> opt = PubMedParser.parsePubMed(sampleTwo);
+        String pmid = "16054339";
+        PubMedParser parser = new PubMedParser(sampleTwo, pmid);
+        Optional<PubMedParser.Result> opt = parser.parsePubMed();
         assertTrue(opt.isPresent());
         PubMedParser.Result result = opt.get();
 
@@ -69,7 +72,9 @@ public class PubMedParserTest {
                 "musculocontractural type of Ehlers-Danlos syndrome. BMJ Case Rep. 2018 Sep\n" +
                 "23;2018. pii: bcr-2018-226165. doi: 10.1136/bcr-2018-226165. PubMed PMID:\n" +
                 "30249733.";
-        Optional<PubMedParser.Result> opt = PubMedParser.parsePubMed(sampleThree);
+        String pmid = "30249733";
+        PubMedParser parser = new PubMedParser(sampleThree, pmid);
+        Optional<PubMedParser.Result> opt = parser.parsePubMed();
         assertTrue(opt.isPresent());
         PubMedParser.Result result = opt.get();
         assertEquals("Sandal S, Kaur A, Panigrahi I", result.getAuthorList());
