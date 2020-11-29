@@ -1,5 +1,8 @@
 package org.monarchinitiative.hpo_case_annotator.core.io;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,6 +11,7 @@ import java.util.regex.Pattern;
  * Superclass for parsers of PubMed abstracts for the 2020 update of PubMed.
  */
 public class PubMedParser {
+    Logger LOGGER = LoggerFactory.getLogger(PubMedParser.class);
 
     protected final String pmid;
 
@@ -49,7 +53,7 @@ public class PubMedParser {
         if (x > 0) {
             authorlist = parseAuthors(data.substring(0, x).trim());
         } else {
-            System.err.printf("Error parsing author list '%s'\n", data.substring(0, x).trim());
+            LOGGER.error("Error parsing author list '{}'\n", data.substring(0, x).trim());
             return Optional.empty();
         }
 
@@ -63,7 +67,7 @@ public class PubMedParser {
             title = currentString.substring(0, y + 1).trim();
             x = y;
         } else {
-            System.err.printf("Unable to parse the title from the PubMed data (I attempted to find the title after the first and prior to the second period but failed): %s", data);
+            LOGGER.error("Unable to parse the title from the PubMed data (I attempted to find the title after the first and prior to the second period but failed): {}", data);
             return Optional.empty();
         }
         currentString = currentString.substring(x + 1);
@@ -71,7 +75,7 @@ public class PubMedParser {
         if (x > 0) {
             journal = currentString.substring(0, x).trim();
         } else {
-            System.err.printf("Unable to parse the journal from the PubMed data: %s", data);
+            LOGGER.error("Unable to parse the journal from the PubMed data: {}", data);
             return Optional.empty();
         }
         /* Now get the year. Note there is a difference for newer entries with Epub ahead of print */
@@ -82,7 +86,7 @@ public class PubMedParser {
             //PubMed PMID: 25546334.
             publicationYear = getYear(currentString);
             if (publicationYear == null) {
-                System.err.printf("Unable to parse the year from the PubMed data (I attempted to find a String like [12]\\d+{3} but failed): %s", data);
+                LOGGER.error("Unable to parse the year from the PubMed data (I attempted to find a String like [12]\\d+{3} but failed): {}", data);
                 return Optional.empty();
             }
             String doi = getDoi(currentString);
@@ -91,7 +95,7 @@ public class PubMedParser {
         } else {
             x = currentString.indexOf(";");
             if (x < 0) {
-                System.err.printf("Unable to parse the date substring (%s) in the pubmed entry %s (did not find \";\")", currentString, data);
+                LOGGER.error("Unable to parse the date substring ({}) in the pubmed entry {} (did not find \";\")", currentString, data);
                 return Optional.empty();
             }
             String datestring = currentString.substring(0, x);
@@ -104,7 +108,7 @@ public class PubMedParser {
             currentString = currentString.substring(x + 1).trim();
             x = currentString.indexOf(".");
             if (x < 0) {
-                System.err.printf("Could not volume/pages in String %s", data);
+                LOGGER.error("Could not volume/pages in String {}", data);
                 return Optional.empty();
             }
             String[] volumeAndPages = parsePiiVolume(currentString);
@@ -112,7 +116,7 @@ public class PubMedParser {
                 volumeAndPages = parseVolumeAndPages(currentString.substring(0, x));
             }
             if (volumeAndPages[0] == null && volumeAndPages[1] == null) {
-                System.err.printf("Could not volume/pages in String %s", data);
+                LOGGER.error("Could not volume/pages in String {}", data);
                 return Optional.empty();
             } else {
                 publicationVolume = volumeAndPages[0];
@@ -122,7 +126,7 @@ public class PubMedParser {
         // We should now have something like this: PubMed PMID: 9199563; PubMed Central PMCID: PMC1716137.
         x = data.indexOf("PMID:");
         if (x < 0) {
-            System.err.printf("Could not identify PMID: substring in PubMed input %s", data);
+            LOGGER.error("Could not identify PMID: substring in PubMed input {}", data);
             return Optional.empty();
         }
         data = data.substring(x + 5).trim();

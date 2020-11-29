@@ -34,7 +34,7 @@ import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
 import org.phenopackets.schema.v1.Phenopacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -545,14 +545,14 @@ public final class MainController {
     @FXML
     void exportToSummaryFileMenuItemAction() {
         // TODO -- export to summary menuitem - implement me
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
 
     @FXML
     void exportListOfComHetCasesWithOneCodingVariantMenuItemAction() {
         // TODO "export list of comphets menuitem not implemented yet" implement me
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
 
