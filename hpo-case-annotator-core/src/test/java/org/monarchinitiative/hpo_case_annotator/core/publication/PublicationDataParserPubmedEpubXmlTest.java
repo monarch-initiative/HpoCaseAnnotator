@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.core.io;
+package org.monarchinitiative.hpo_case_annotator.core.publication;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ public class PublicationDataParserPubmedEpubXmlTest {
 
     @Test
     public void parse() throws Exception {
-        String payload = Utils.readFile(Paths.get("src/test/resources/org/monarchinitiative/hpo_case_annotator/core/io/pubmed_eutils_summary.xml"));
+        String payload = Utils.readFile(Paths.get("src/test/resources/org/monarchinitiative/hpo_case_annotator/core/publication/pubmed_eutils_summary.xml"));
         Publication publication = parser.parse(payload);
 
         assertThat(publication, hasProperty("authorList", equalTo("Niiranen TJ, Vasan RS")));

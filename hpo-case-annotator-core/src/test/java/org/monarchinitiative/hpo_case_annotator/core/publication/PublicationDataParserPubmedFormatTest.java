@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.core.io;
+package org.monarchinitiative.hpo_case_annotator.core.publication;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ public class PublicationDataParserPubmedFormatTest {
 
     @Test
     public void parse_epubAheadOfPrint() throws Exception {
-        String payload = Utils.readFile(Paths.get("src/test/resources/org/monarchinitiative/hpo_case_annotator/core/io/pubmed_fmt_epub.txt"));
+        String payload = Utils.readFile(Paths.get("src/test/resources/org/monarchinitiative/hpo_case_annotator/core/publication/pubmed_fmt_epub.txt"));
         Publication publication = parser.parse(payload);
 
         assertThat(publication, hasProperty("authorList", equalTo("Pauper M, Kucuk E, Wenger AM, Chakraborty S, Baybayan P, Kwint M, van der Sanden B, Nelen MR, Derks R, Brunner HG, Hoischen A, Vissers LELM, Gilissen C")));
@@ -37,7 +37,7 @@ public class PublicationDataParserPubmedFormatTest {
 
     @Test
     public void parse_fullPublicationRecord() throws Exception {
-        String payload = Utils.readFile(Paths.get("src/test/resources/org/monarchinitiative/hpo_case_annotator/core/io/pubmed_fmt_full.txt"));
+        String payload = Utils.readFile(Paths.get("src/test/resources/org/monarchinitiative/hpo_case_annotator/core/publication/pubmed_fmt_full.txt"));
         Publication publication = parser.parse(payload);
 
         assertThat(publication, hasProperty("authorList", equalTo("Niiranen TJ, Vasan RS")));

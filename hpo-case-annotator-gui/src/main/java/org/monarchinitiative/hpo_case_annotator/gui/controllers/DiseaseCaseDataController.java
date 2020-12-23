@@ -19,7 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.monarchinitiative.hpo_case_annotator.core.io.PubMedSummaryRetriever;
+import org.monarchinitiative.hpo_case_annotator.core.publication.PubMedSummaryRetriever;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.AbstractVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;

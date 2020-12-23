@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.core.io;
+package org.monarchinitiative.hpo_case_annotator.core.publication;
 
 public enum PublicationDataFormat {
 
