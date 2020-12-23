@@ -1,24 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Accordion?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataController">
    <content>
       <StackPane alignment="TOP_CENTER" style="-fx-background-color: #ffffff;">
@@ -37,44 +23,34 @@
                             </Label>
                         </children>
                     </HBox>
-                    <HBox alignment="CENTER_LEFT" style="-fx-background-color: #00BFFF;" VBox.vgrow="NEVER">
+                    <HBox alignment="CENTER_LEFT" style="-fx-background-color: #00BFFF;">
                         <children>
-                        <Label prefHeight="25.0" prefWidth="135.0" text="Publication">
-                           <font>
-                              <Font name="System Bold" size="15.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
-                           </HBox.margin>
-                        </Label>
-                            <TextField fx:id="pmidTextField" prefHeight="30.0" prefWidth="100.0" promptText="PMID" HBox.hgrow="NEVER">
+                            <Label prefHeight="25.0" prefWidth="135.0" text="Publication">
+                                <font>
+                                    <Font name="System Bold" size="15.0"/>
+                                </font>
                                 <HBox.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    <Insets bottom="5.0" left="15.0" right="5.0" top="5.0"/>
+                                </HBox.margin>
+                            </Label>
+                            <TextField fx:id="pmidTextField" prefHeight="30.0" prefWidth="100.0" promptText="PMID"
+                                       HBox.hgrow="NEVER">
+                                <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                                 </HBox.margin>
                             </TextField>
-                            <Button fx:id="pmidLookupButton" disable="true" minHeight="30.0" minWidth="120.0" mnemonicParsing="false" onAction="#pmidLookupButtonAction" prefHeight="30.0" text="Lookup">
+                            <Button fx:id="pmidLookupButton" disable="true" minHeight="30.0" minWidth="120.0"
+                                    mnemonicParsing="false" onAction="#pmidLookupButtonAction" prefHeight="30.0"
+                                    prefWidth="120.0" text="Lookup">
                                 <HBox.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                                 </HBox.margin>
                             </Button>
-                            <Separator orientation="VERTICAL" HBox.hgrow="NEVER" />
-                            <TextField fx:id="inputPubMedDataTextField" maxHeight="-Infinity" prefHeight="30.0" prefWidth="400.0" promptText="Paste PubMed Summary(text) here" HBox.hgrow="SOMETIMES">
-                                <opaqueInsets>
-                                    <Insets />
-                                </opaqueInsets>
-                                <padding>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                </padding>
+                            <Button fx:id="insertPublicationManuallyButton" minHeight="30.0" minWidth="120.0"
+                                    mnemonicParsing="false" onAction="#insertPublicationManuallyAction"
+                                    prefWidth="120.0" text="Insert manually">
                                 <HBox.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                </HBox.margin>
-                            </TextField>
-                            <Button fx:id="inputPubMedDataButton" mnemonicParsing="false" onAction="#inputPubMedDataButtonAction" prefHeight="30.0" prefWidth="135.0" text="Input PubMed data">
-                                <padding>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                </padding>
-                                <HBox.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                                 </HBox.margin>
                             </Button>
                         </children>

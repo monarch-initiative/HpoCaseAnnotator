@@ -35,7 +35,7 @@ public class PubMed {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("PubMed{");
+        final StringBuilder sb = new StringBuilder("PubMed{");
         sb.append("pubMedText=").append(pubMedText.get());
         sb.append('}');
         return sb.toString();

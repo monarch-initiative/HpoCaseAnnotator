@@ -105,7 +105,7 @@ public final class SomaticVariant extends Variant {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("SomaticVariant{");
+        final StringBuilder sb = new StringBuilder("SomaticVariant{");
         sb.append("variantMode=").append(variantMode);
         sb.append(", regulator=").append(regulator.get());
         sb.append(", reporterRegulation=").append(reporterRegulation.get());

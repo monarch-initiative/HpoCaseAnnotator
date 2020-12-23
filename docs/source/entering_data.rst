@@ -8,20 +8,15 @@ Publication
 ###########
 There are two ways of entering the data regarding the publication which describes the curated case:
 
-1.  Go to PubMed and find the article you are curating. Mark the checkbox *Format: Abstract* on the top left side and click on the *Summary (text)* to display results in summary format. After that, you will get a summary version of the publication data that looks something like the following: ::
-
-     1: Robinson PN. Genomic data sharing for translational research and diagnostics.
-     Genome Med. 2014 Sep 26;6(9):78. doi: 10.1186/s13073-014-0078-2. eCollection 2014.
-     PubMed PMID: 25473437; PubMed Central PMCID: PMC4254431.
-
-
-    Copy the entire text and paste it into the first text field of the app. Check the validity/parse using the *Input PubMed data* button.
-
-.. image:: img/hca_set_publication_full.png
-
-2.  Enter the *PMID* number of the publication and hit the *Lookup* button. Summary version of the publication data will be fetched from PubMed and inserted into the text field after a while. Then, check the validity/parse using the *Input PubMed data* button, as above.
+1.  *Using PMID* - enter the *PMID* number of the publication and hit the *Lookup* button. Publication details will be fetched from
+    PubMed API, resulting in showing PMID and publication title.
 
 .. image:: img/hca_set_publication_pmid.png
+
+2.  *Entering the details manually* - click on the *Insert manually* button and enter all the details into the window
+    that appears on the screen.
+
+.. image:: img/hca_set_publication_full.png
 
 After setting the publication data, you can modify the data using ``View | Show / edit current publication`` menu item.
 
@@ -43,7 +38,8 @@ Note that the autocompletion is available for both fields, so usually entering j
 
 Variants
 ########
-Click to *Add variant* button in order to create a new box for variant data. There are 3 variant types, for each type different set of variant validation metadata is stored.
+Click to *Add variant* button in order to create a new box for variant data. There are several variant types, where we
+store different set of variant validation metadata for each type.
 
 
 Mendelian
@@ -53,12 +49,21 @@ Validation metadata important for the *Regulatory mendelian mutations (REMM)* pr
 
 Somatic
 -------
-Blah blah blah
+Validation metadata for somatic variants.
 
 
 Splicing
 --------
-Another amazing facts
+Data regarding splicing for the variants curated in the *Squirls* project.
+
+
+Structural (Intrachromosomal/Translocation)
+-------------------------------------------
+The way how we store data for variants stored in format denoted as *symbolic* in the VCF specs. These variants are
+usually longer (>100bp) deletions, duplications, inversions, etc.
+
+We store the variants that affect a single chromosome using ``INTRACHROMOSOMAL`` variant type. The variants that affect
+multiple chromosomes (translocations/breakends) are stored as ``TRANSCLOCATION`` type.
 
 
 Chromosome and position
@@ -136,14 +141,41 @@ Set the database (please use the OMIM id if at all possible). For OMIM, use the 
 
 Phenotype data (HPO)
 ####################
-To enter or to modify the HPO data, you want and click on the *Add / remove HPO terms* button. Note that if you find you do not have enough, you can add additional terms with this button too.
+To enter or to modify the HPO data, you want and click on the *Add / remove HPO terms* button. Note that if you find
+you do not have enough, you can add additional terms with this button too.
 
-A new window will be opened with *HPO tree browser* on the left side, *Text-mining analysis* on the right side and with table of *Approved terms* on the bottom-right side.
+A new window will be opened with *HPO tree browser* on the left side, *Text-mining analysis* on the right side and with
+table of *Approved terms* on the bottom-right side.
 
-You should start typing name of the phenotypic trait into the text field above from the ontology tree. The text field has an autocompletion feature and helps you to identify the correct *HPO term label*. After completion of the label, click on the *Go* button to navigate to the term's position in the ontology tree.
+You should start typing name of the phenotypic trait into the text field above from the ontology tree. The text field
+has an autocompletion feature and helps you to identify the correct *HPO term label*. After completion of the label,
+click on the *Go* button to navigate to the term's position in the ontology tree.
 
-Then, you may want to look around the term in the ontology tree a bit and then approve the term's presence by hitting *Add* button at the bottom. The term will appear in the *Approved terms* table.
+Then, you may want to look around the term in the ontology tree a bit and then approve the term's presence by hitting
+*Add* button at the bottom. The term will appear in the *Approved terms* table.
 
+Text mining
+-----------
+
+In case you're curating variants from a publication that contains a clinical description of the proband's condition,
+*text mining* comes to help. To identify candidate HPO terms in a clinical description text, paste the text into the
+*Text-mining analysis* field.
+
+Try the text-mining using e.g. the following toy example::
+
+  A 60-year-old man presented with bilateral hearing loss, hypertension, and lost appetite.
+  An ultrasound revealed splenomegaly but no hepatomegaly.
+
+.. image:: img/hca_text_mining.png
+
+Five HPO terms are picked up from the toy example. HPO term definition appears upon hovering with mouse upon the
+highlighted text. Clicking on the text will navigate you to the term definition within the ontology hierarchy (left panel).
+We recommend to read the text, approve the relevant terms on the right panel, and approving the mined terms by clicking
+on *Add selected terms* button.
+
+.. note::
+  The previously used text-mining service was also able to identify *not* terms (e.g. no hepatomegaly). Unfortunately,
+  the current service does not support this feature.
 
 Proband & Family Information
 ############################

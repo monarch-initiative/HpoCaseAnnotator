@@ -83,14 +83,14 @@ public class DiseaseCaseDataControllerTest extends ApplicationTest {
     @Test
     public void addMinimalRequiredInformation() {
         assertThat(controller.isComplete(), is(false));
-        clickOn("#inputPubMedDataTextField")
-                .write(PUBMED_SUMMARY)
-                .clickOn("#inputPubMedDataButton")
-                .type(KeyCode.ENTER);
-        assertThat(controller.getData().getPublication(), is(Publication.newBuilder().setAuthorList("H MA, C CG, R PN")
-                .setTitle("Classification").setJournal("N Engl J Med").setYear("2018")
-                .setVolume("379(15)").setPages("1452-1462").setPmid("30304648").build()));
-        assertThat(controller.isComplete(), is(false));
+//        clickOn("#inputPubMedDataTextField")
+//                .write(PUBMED_SUMMARY)
+//                .clickOn("#inputPubMedDataButton")
+//                .type(KeyCode.ENTER);
+//        assertThat(controller.getData().getPublication(), is(Publication.newBuilder().setAuthorList("H MA, C CG, R PN")
+//                .setTitle("Classification").setJournal("N Engl J Med").setYear("2018")
+//                .setVolume("379(15)").setPages("1452-1462").setPmid("30304648").build()));
+//        assertThat(controller.isComplete(), is(false));
 
         // gene
         doubleClickOn("#entrezIDTextField")

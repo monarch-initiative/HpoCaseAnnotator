@@ -35,6 +35,7 @@ import org.phenopackets.schema.v1.Phenopacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.*;
@@ -544,12 +545,14 @@ public final class MainController {
     @FXML
     void exportToSummaryFileMenuItemAction() {
         // TODO -- export to summary menuitem - implement me
+        throw new UnsupportedOperationException();
     }
 
 
     @FXML
     void exportListOfComHetCasesWithOneCodingVariantMenuItemAction() {
-        // TODO -- export list of comphets menuitem - implement me
+        // TODO "export list of comphets menuitem not implemented yet" implement me
+        throw new UnsupportedOperationException();
     }
 
 

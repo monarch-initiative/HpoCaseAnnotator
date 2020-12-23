@@ -227,7 +227,7 @@ public final class DiseaseCaseModel {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("DiseaseCaseModel{");
+        final StringBuilder sb = new StringBuilder("DiseaseCaseModel{");
         sb.append("genomeBuild=").append(genomeBuild.get());
         sb.append(", publication=").append(publication.get());
         sb.append(", metadata=").append(metadata.get());

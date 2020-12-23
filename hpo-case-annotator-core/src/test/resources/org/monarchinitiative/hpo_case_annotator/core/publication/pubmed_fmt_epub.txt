@@ -1,0 +1,121 @@
+
+
+PMID- 33257779
+OWN - NLM
+STAT- Publisher
+LR  - 20201201
+IS  - 1476-5438 (Electronic)
+IS  - 1018-4813 (Linking)
+DP  - 2020 Nov 30
+TI  - Long-read trio sequencing of individuals with unsolved intellectual disability.
+LID - 10.1038/s41431-020-00770-0 [doi]
+AB  - Long-read sequencing (LRS) has the potential to comprehensively identify all
+      medically relevant genome variation, including variation commonly missed by
+      short-read sequencing (SRS) approaches. To determine this potential, we performed
+      LRS around 15×-40× genome coverage using the Pacific Biosciences Sequel I System for
+      five trios. The respective probands were diagnosed with intellectual disability (ID)
+      whose etiology remained unresolved after SRS exomes and genomes. Systematic
+      assessment of LRS coverage showed that ~35 Mb of the human reference genome was only
+      accessible by LRS and not SRS. Genome-wide structural variant (SV) calling yielded
+      on average 28,292 SV calls per individual, totaling 12.9 Mb of sequence. Trio-based
+      analyses which allowed to study segregation, showed concordance for up to 95% of
+      these SV calls across the genome, and 80% of the LRS SV calls were not identified by
+      SRS. De novo mutation analysis did not identify any de novo SVs, confirming that
+      these are rare events. Because of high sequence coverage, we were also able to call
+      single nucleotide substitutions. On average, we identified 3 million substitutions
+      per genome, with a Mendelian inheritance concordance of up to 97%. Of these,
+      ~100,000 were located in the ~35 Mb of the genome that was only captured by LRS.
+      Moreover, these variants affected the coding sequence of 64 genes, including 32
+      known Mendelian disease genes. Our data show the potential added value of LRS
+      compared to SRS for identifying medically relevant genome variation.
+FAU - Pauper, Marc
+AU  - Pauper M
+AD  - Department of Human Genetics, Radboud University Medical Center, Nijmegen, The
+      Netherlands.
+FAU - Kucuk, Erdi
+AU  - Kucuk E
+AUID- ORCID: 0000-0002-3970-7068
+AD  - Department of Human Genetics, Radboud University Medical Center, Nijmegen, The
+      Netherlands.
+AD  - Radboud Institute for Molecular Life Sciences, Radboud University, Nijmegen, The
+      Netherlands.
+FAU - Wenger, Aaron M
+AU  - Wenger AM
+AD  - Pacific Biosciences, Menlo Park, CA, USA.
+FAU - Chakraborty, Shreyasee
+AU  - Chakraborty S
+AD  - Pacific Biosciences, Menlo Park, CA, USA.
+FAU - Baybayan, Primo
+AU  - Baybayan P
+AD  - Pacific Biosciences, Menlo Park, CA, USA.
+FAU - Kwint, Michael
+AU  - Kwint M
+AD  - Department of Human Genetics, Radboud University Medical Center, Nijmegen, The
+      Netherlands.
+FAU - van der Sanden, Bart
+AU  - van der Sanden B
+AUID- ORCID: 0000-0003-0546-1351
+AD  - Department of Human Genetics, Radboud University Medical Center, Nijmegen, The
+      Netherlands.
+AD  - Donders Institute for Brain, Cognition and Behaviour, Radboud University, 6525 HR,
+      Nijmegen, The Netherlands.
+FAU - Nelen, Marcel R
+AU  - Nelen MR
+AD  - Department of Human Genetics, Radboud University Medical Center, Nijmegen, The
+      Netherlands.
+FAU - Derks, Ronny
+AU  - Derks R
+AD  - Department of Human Genetics, Radboud University Medical Center, Nijmegen, The
+      Netherlands.
+FAU - Brunner, Han G
+AU  - Brunner HG
+AD  - Department of Human Genetics, Radboud University Medical Center, Nijmegen, The
+      Netherlands.
+AD  - Radboud Institute for Molecular Life Sciences, Radboud University, Nijmegen, The
+      Netherlands.
+AD  - Department of Clinical Genetics, Maastricht University Medical Center, Maastricht,
+      The Netherlands.
+FAU - Hoischen, Alexander
+AU  - Hoischen A
+AD  - Department of Human Genetics, Radboud University Medical Center, Nijmegen, The
+      Netherlands.
+AD  - Radboud Institute for Molecular Life Sciences, Radboud University, Nijmegen, The
+      Netherlands.
+AD  - Department of Internal Medicine, Center for Infectious Diseases (RCI), Radboud
+      University Medical Center, Nijmegen, The Netherlands.
+FAU - Vissers, Lisenka E L M
+AU  - Vissers LELM
+AUID- ORCID: 0000-0001-6470-5497
+AD  - Department of Human Genetics, Radboud University Medical Center, Nijmegen, The
+      Netherlands.
+AD  - Donders Institute for Brain, Cognition and Behaviour, Radboud University, 6525 HR,
+      Nijmegen, The Netherlands.
+FAU - Gilissen, Christian
+AU  - Gilissen C
+AUID- ORCID: 0000-0003-1693-9699
+AD  - Department of Human Genetics, Radboud University Medical Center, Nijmegen, The
+      Netherlands. christian.gilissen@radboudumc.nl.
+AD  - Radboud Institute for Molecular Life Sciences, Radboud University, Nijmegen, The
+      Netherlands. christian.gilissen@radboudumc.nl.
+LA  - eng
+GR  - 917-17-353/ZonMw (Netherlands Organisation for Health Research and Development)/
+PT  - Journal Article
+DEP - 20201130
+PL  - England
+TA  - Eur J Hum Genet
+JT  - European journal of human genetics : EJHG
+JID - 9302235
+SB  - IM
+EDAT- 2020/12/02 06:00
+MHDA- 2020/12/02 06:00
+CRDT- 2020/12/01 05:59
+PHST- 2020/07/15 00:00 [received]
+PHST- 2020/10/27 00:00 [accepted]
+PHST- 2020/12/01 05:59 [entrez]
+PHST- 2020/12/02 06:00 [pubmed]
+PHST- 2020/12/02 06:00 [medline]
+AID - 10.1038/s41431-020-00770-0 [pii]
+AID - 10.1038/s41431-020-00770-0 [doi]
+PST - aheadofprint
+SO  - Eur J Hum Genet. 2020 Nov 30. doi: 10.1038/s41431-020-00770-0.
+

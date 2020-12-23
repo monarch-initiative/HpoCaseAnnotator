@@ -42,7 +42,7 @@ public final class Metadata {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Metadata{");
+        final StringBuilder sb = new StringBuilder("Metadata{");
         sb.append("metadataText=").append(metadataText.get());
         sb.append('}');
         return sb.toString();
