@@ -12,7 +12,7 @@ class PublicationDataParserPubmedEpubXml implements PublicationDataParser {
 
     private static final Pattern AUTHORS = Pattern.compile("<Author>(?<payload>\\p{all}*?)</Author>");
     private static final Pattern AUTHOR_NAME = Pattern.compile("<Name>(?<payload>\\p{all}*)</Name>");
-    private static final Pattern TITLE = Pattern.compile("<Title>(?<payload>.*)</Title>");
+    private static final Pattern TITLE = Pattern.compile("<Title>(?<payload>\\p{all}*?)</Title>");
     private static final Pattern JOURNAL = Pattern.compile("<Source>(?<payload>.*)</Source>");
     private static final Pattern PAGES = Pattern.compile("<Pages>(?<payload>.*)</Pages>");
     private static final Pattern ARTICLE_ID = Pattern.compile("<ArticleId>[\\p{all}]*</ArticleId>");
@@ -39,7 +39,7 @@ class PublicationDataParserPubmedEpubXml implements PublicationDataParser {
         // title
         Matcher titleMatcher = TITLE.matcher(payload);
         if (titleMatcher.find()) {
-            builder.setTitle(titleMatcher.group("payload"));
+            builder.setTitle(titleMatcher.group("payload").replace('\n', ' ').replaceAll("\\s{2,}", " ").trim());
         }
 
         // journal

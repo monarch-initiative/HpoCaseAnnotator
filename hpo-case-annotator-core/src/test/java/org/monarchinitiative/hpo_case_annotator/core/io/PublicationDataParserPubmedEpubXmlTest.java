@@ -21,7 +21,7 @@ public class PublicationDataParserPubmedEpubXmlTest {
     }
 
     @Test
-    public void name() throws Exception {
+    public void parse() throws Exception {
         String payload = Utils.readFile(Paths.get("src/test/resources/org/monarchinitiative/hpo_case_annotator/core/io/pubmed_eutils_summary.xml"));
         Publication publication = parser.parse(payload);
 
