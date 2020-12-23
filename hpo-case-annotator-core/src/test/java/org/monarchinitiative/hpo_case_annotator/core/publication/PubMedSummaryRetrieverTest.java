@@ -53,15 +53,20 @@ public class PubMedSummaryRetrieverTest {
      */
     @Test(expected = IOException.class)
     public void getSummaryForUnexistingPmid() throws Exception {
-        String unfoundResponse = "" +
-                "<main class=\"usa-grid error-page\">" +
-                "<h2 class=\"title\">Not found</h2>" +
-                "<p>Sorry, can't find the page or item you're requesting.</p>" +
-                "<p class=\"error-message-footer\">Go to <a class=\"home-link\" href=\"/\">PubMed Home</a>.</p>" +
-                "</main>";
+        String unfoundResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
+                "<!DOCTYPE eSummaryResult PUBLIC \"-//NLM//DTD esummary pubmed 20160808//EN\" \"https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20160808/esummary_pubmed.dtd\">\n" +
+                "<eSummaryResult>\n" +
+                "<DocumentSummarySet status=\"OK\">\n" +
+                "<DbBuild>Build201222-2212m.3</DbBuild>\n" +
+                "<DocumentSummary uid=\"12346643234253432\">\n" +
+                "<error>cannot get document summary</error>\n" +
+                "</DocumentSummary>\n" +
+                "\n" +
+                "</DocumentSummarySet>\n" +
+                "</eSummaryResult>\n";
         PubMedSummaryRetriever retriever = PubMedSummaryRetriever.builder()
                 .connectionFactory(p -> new ByteArrayInputStream(unfoundResponse.getBytes()))
                 .build();
-        retriever.getPublication("1234567890123456");
+        retriever.getPublication("12346643234253432");
     }
 }

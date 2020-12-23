@@ -28,7 +28,7 @@ public class PubMedSummaryRetriever {
     /**
      * PubMed returns a response containing this String, if there is no record associated with given PMID.
      */
-    private static final String NON_EXISTING_PMID = "Sorry, can't find the page or item you're requesting.";
+    private static final String NON_EXISTING_PMID = "cannot get document summary";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PubMedSummaryRetriever.class);
 
@@ -49,21 +49,6 @@ public class PubMedSummaryRetriever {
 
     public static Builder builder() {
         return new Builder();
-    }
-
-    /**
-     * PubMed API returns whole HTML page in response to the query. This method extracts the relevant part of the response.
-     *
-     * @param payload String with HTML content
-     * @return String with the relevant content
-     */
-    private static String extractContent(String payload) {
-        // extract the visible content enclosed in tags:
-        // <pre class="article-details" id="article-details">ARTICLE_TEXT_HERE</pre>
-        int start, stop;
-        start = payload.indexOf("<pre class=\"article-details\" id=\"article-details\">") + 50;
-        stop = payload.indexOf("</pre>");
-        return payload.substring(start, stop);
     }
 
 
