@@ -17,6 +17,7 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
 
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -228,6 +229,17 @@ public class GenomicPositionValidatorTest {
         final List<ValidationResult> results = validator.validate(variant);
         assertThat(results.size(), is(1));
         assertThat(results, hasItem(ValidationResult.fail("Ref sequence 'G' does not match the sequence 'A' observed at 'chr7:10489-10490'")));
+    }
+
+
+    @Test
+    public void validateStructuralVariant() {
+        // this validator does not validate structural variants, since they do not contain neither ref, alt, nor snippet
+        List<ValidationResult> results = validator.validate(Variant.newBuilder()
+                .setVariantClass("structural")
+                .build());
+
+        assertThat(results, is(Collections.emptyList()));
     }
 
     /**

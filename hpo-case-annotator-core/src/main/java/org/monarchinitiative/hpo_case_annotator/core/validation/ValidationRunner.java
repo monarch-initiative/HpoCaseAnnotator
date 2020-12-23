@@ -6,6 +6,7 @@ import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation;
 
 import java.io.File;
 import java.util.*;
@@ -84,10 +85,35 @@ public final class ValidationRunner<T extends Message> {
         return new ValidationRunner<>(validationFunction);
     }
 
+
+    /**
+     * Get {@link ValidationRunner} for running validation of {@link Variant} with given <code>context</code>.
+     *
+     * @param context {@link org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation.Context}
+     * @return validation runner
+     */
+    public static ValidationRunner<Variant> variantValidationRunner(VariantValidation.Context context) {
+        switch (context) {
+            case INTRACHROMOSOMAL:
+                return makeIntrachromosomalVariantValidationRunner();
+            case TRANSLOCATION:
+                return makeBkptValidationRunner();
+            case SOMATIC:
+            case SPLICING:
+            case MENDELIAN:
+                return makeDefaultValidationRunner();
+            case UNRECOGNIZED:
+            case NO_CONTEXT:
+            default:
+                // no-op runner
+                return new ValidationRunner<>(var -> Collections.singletonList(ValidationResult.warn("No validation was run")));
+        }
+    }
+
     /**
      * @return {@link ValidationRunner} for validation of {@link Variant}s. Only syntax is validated
      */
-    public static ValidationRunner<Variant> variantValidationRunner() {
+    private static ValidationRunner<Variant> makeDefaultValidationRunner() {
         Function<Variant, List<ValidationResult>> validationFunction = var -> {
             VariantSyntaxValidator vsv = new VariantSyntaxValidator();
             return new ArrayList<>(vsv.validate(var));
@@ -95,8 +121,25 @@ public final class ValidationRunner<T extends Message> {
         return new ValidationRunner<>(validationFunction);
     }
 
+    private static ValidationRunner<Variant> makeBkptValidationRunner() {
+        Function<Variant, List<ValidationResult>> validationFunction = var -> {
+            BreakendVariantValidator bknd = new BreakendVariantValidator();
+            return new ArrayList<>(bknd.validate(var));
+        };
+        return new ValidationRunner<>(validationFunction);
+    }
+
+    private static ValidationRunner<Variant> makeIntrachromosomalVariantValidationRunner() {
+        Function<Variant, List<ValidationResult>> validationFunction = var -> {
+            IntrachromosomalStructuralVariantValidator cnv = new IntrachromosomalStructuralVariantValidator();
+            return new ArrayList<>(cnv.validate(var));
+        };
+        return new ValidationRunner<>(validationFunction);
+    }
+
     /**
-     * Run validation of a single
+     * Run validation of a single model
+     *
      * @param model
      * @return
      */

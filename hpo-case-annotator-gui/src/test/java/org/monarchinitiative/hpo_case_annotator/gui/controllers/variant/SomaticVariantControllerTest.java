@@ -10,9 +10,9 @@ import javafx.stage.Stage;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.monarchinitiative.hpo_case_annotator.gui.DiseaseCaseModelExample;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceJUnitRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceModules;
+import org.monarchinitiative.hpo_case_annotator.gui.PojosForTesting;
 import org.monarchinitiative.hpo_case_annotator.gui.TestHpoCaseAnnotatorModule;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Genotype;
@@ -54,7 +54,7 @@ public class SomaticVariantControllerTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(MendelianVariantController.class.getResource("SomaticVariant.fxml"));
+        FXMLLoader loader = new FXMLLoader(SomaticVariantController.class.getResource("SomaticVariant.fxml"));
         loader.setControllerFactory(injector::getInstance);
         Parent root = loader.load();
         controller = loader.getController();
@@ -65,6 +65,7 @@ public class SomaticVariantControllerTest extends ApplicationTest {
     /**
      * The minimal information for variant to be valid is
      * <ul>
+     * <li>genome build</li>
      * <li>chromosome</li>
      * <li>position</li>
      * <li>reference</li>
@@ -78,7 +79,7 @@ public class SomaticVariantControllerTest extends ApplicationTest {
         assertThat(controller.isComplete(), is(false));
 
         clickOn("#genomeBuildComboBox")
-                .moveBy(0, 40)
+                .moveBy(0, 70)
                 .clickOn(MouseButton.PRIMARY);
         assertThat(controller.isComplete(), is(false));
 
@@ -129,7 +130,7 @@ public class SomaticVariantControllerTest extends ApplicationTest {
 
     @Test
     public void presentAndGetTheSameData() {
-        final Variant presented = DiseaseCaseModelExample.makeSomaticVariant();
+        final Variant presented = PojosForTesting.makeSomaticVariant();
 
         Platform.runLater(() -> controller.presentData(presented));
         sleep(50, TimeUnit.MILLISECONDS);

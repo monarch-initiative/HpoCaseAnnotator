@@ -1,6 +1,16 @@
 # HRMD gui
 
+### latest
+
+### v1.0.14
+
+- fix PMID-based fetching of publication metadata from Pubmed that was broken due to changes in PubMed design
+- use `phenopacket-schema v1.0.0-RC3`
+- during export, store phenopacket-schema version within phenopacket
+- add better support for structural variants
+
 ### v1.0.13
+
 - add value from *proband/family info* into file name when saving data
 - use `phenopacket-schema v1.0.0-RC1`
 - update versions of Maven plugins and dependencies

@@ -3,7 +3,7 @@
     <parent>
         <artifactId>hpo-case-annotator</artifactId>
         <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
-        <version>1.0.13</version>
+        <version>1.0.14</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -28,8 +28,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
             <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TESTS %%%%%%%%%%%%%%%% TESTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
@@ -67,7 +67,7 @@
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Play</mainClass>
+                            <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Main</mainClass>
                         </manifest>
                     </archive>
                     <excludes>
@@ -89,7 +89,7 @@
                     </descriptors>
                     <archive>
                         <manifest>
-                            <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Play</mainClass>
+                            <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -121,7 +121,7 @@
                             <outfile>target/${project.build.finalName}.exe</outfile>
                             <downloadUrl>http://java.com/download</downloadUrl>
                             <classPath>
-                                <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Play</mainClass>
+                                <mainClass>org.monarchinitiative.hpo_case_annotator.gui.Main</mainClass>
                             </classPath>
                             <jre>
                                 <bundledJre64Bit>false</bundledJre64Bit>

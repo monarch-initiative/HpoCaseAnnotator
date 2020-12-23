@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<TitledPane xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.BreakpointVariantController">
+   <content>
+      <VBox style="-fx-background-color: #ffd3d3;">
+         <children>
+            <GridPane>
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" minWidth="165.0" prefWidth="165.0"/>
+                  <ColumnConstraints halignment="RIGHT" minWidth="10.0"/>
+                  <ColumnConstraints halignment="CENTER" minWidth="10.0"/>
+                  <ColumnConstraints minWidth="10.0"/>
+                  <ColumnConstraints halignment="CENTER" minWidth="10.0"/>
+                  <ColumnConstraints minWidth="10.0"/>
+                  <ColumnConstraints halignment="CENTER"/>
+                  <ColumnConstraints halignment="CENTER"/>
+                  <ColumnConstraints halignment="CENTER"/>
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="40.0" prefHeight="40.0"/>
+                  <RowConstraints minHeight="40.0" prefHeight="40.0"/>
+                  <RowConstraints minHeight="40.0" prefHeight="40.0"/>
+                  <RowConstraints minHeight="40.0" prefHeight="40.0"/>
+               </rowConstraints>
+               <children>
+                  <Label text="Breakpoint">
+                     <font>
+                        <Font name="System Bold" size="15.0"/>
+                     </font>
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Coordinates" GridPane.rowIndex="1" GridPane.rowSpan="3">
+                     <font>
+                        <Font name="System Italic" size="15.0"/>
+                     </font>
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </Label>
+                  <ComboBox fx:id="assemblyComboBox" maxHeight="1.7976931348623157E308"
+                            maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="90.0" prefHeight="30.0"
+                            prefWidth="90.0" promptText="Assembly" GridPane.columnIndex="2" GridPane.columnSpan="2">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </ComboBox>
+                  <Label text="Strand" GridPane.columnIndex="4"/>
+                  <Label text="Left" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </Label>
+                  <ComboBox fx:id="leftChrComboBox" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="90.0"
+                            prefHeight="30.0" prefWidth="90.0" promptText="chr" GridPane.columnIndex="2"
+                            GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </ComboBox>
+                  <TextField fx:id="leftPosTextField" minHeight="30.0" minWidth="120.0" prefHeight="30.0"
+                             prefWidth="120.0" promptText="pos" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </TextField>
+                  <CheckBox fx:id="leftStrandCheckBox" mnemonicParsing="false" text="NEGATIVE" GridPane.columnIndex="4"
+                            GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </CheckBox>
+                  <Label text="Right" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </Label>
+                  <ComboBox fx:id="rightChrComboBox" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="90.0"
+                            prefHeight="30.0" prefWidth="90.0" promptText="chr" GridPane.columnIndex="2"
+                            GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </ComboBox>
+                  <TextField fx:id="rightPosTextField" minHeight="30.0" minWidth="120.0" prefHeight="30.0"
+                             prefWidth="120.0" promptText="pos" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </TextField>
+                  <CheckBox fx:id="rightStrandCheckBox" layoutX="455.0" layoutY="71.0" mnemonicParsing="false"
+                            text="NEGATIVE" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </CheckBox>
+                  <TextField fx:id="refTextField" minHeight="30.0" minWidth="120.0" prefHeight="30.0" prefWidth="120.0"
+                             promptText="ref" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </TextField>
+                  <TextField fx:id="insertedSequenceTextField" minHeight="30.0" minWidth="120.0" prefHeight="30.0"
+                             prefWidth="120.0" promptText="inserted" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </TextField>
+                  <Label text="confidence interval" GridPane.columnIndex="6" GridPane.columnSpan="3"/>
+                  <CheckBox fx:id="preciseCheckBox" mnemonicParsing="false" text="precise" GridPane.columnIndex="8"
+                            GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </CheckBox>
+                  <TextField fx:id="ciBeginLeftTextField" minHeight="30.0" prefHeight="30.0" prefWidth="80.0"
+                             promptText="e.g. -50" GridPane.columnIndex="6" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </TextField>
+                  <TextField fx:id="ciEndLeftTextField" minHeight="30.0" prefHeight="30.0" prefWidth="80.0"
+                             promptText="e.g. 50" GridPane.columnIndex="7" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </TextField>
+                  <TextField fx:id="ciBeginRightTextField" minHeight="30.0" prefHeight="30.0" prefWidth="80.0"
+                             promptText="e.g. -50" GridPane.columnIndex="6" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </TextField>
+                  <TextField fx:id="ciEndRightTextField" minHeight="30.0" prefHeight="30.0" prefWidth="80.0"
+                             promptText="e.g. 50" GridPane.columnIndex="7" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </GridPane.margin>
+                  </TextField>
+               </children>
+            </GridPane>
+         </children>
+      </VBox>
+   </content>
+</TitledPane>

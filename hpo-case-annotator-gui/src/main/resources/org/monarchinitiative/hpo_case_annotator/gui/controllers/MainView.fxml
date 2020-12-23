@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.input.*?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.StackPane?>
-<BorderPane xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.2-internal"
+            fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController">
    <center>
-      <StackPane fx:id="contentStackPane" alignment="TOP_CENTER" style="-fx-background-color: #ffffff;" BorderPane.alignment="TOP_CENTER" />
+      <TabPane fx:id="contentTabPane" prefHeight="600.0" prefWidth="1000.0" BorderPane.alignment="TOP_CENTER" />
    </center>
    <top>
        <MenuBar BorderPane.alignment="TOP_CENTER">
@@ -21,12 +21,17 @@
                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                    </accelerator>
                </MenuItem>
-               <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#saveMenuItemAction" text="Save">
+               <MenuItem fx:id="saveMenuItem" disable="true" mnemonicParsing="false" onAction="#saveMenuItemAction" text="Save">
                    <accelerator>
                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                    </accelerator>
                </MenuItem>
-               <MenuItem mnemonicParsing="false" onAction="#saveAsMenuItemAction" text="Save as" />
+               <MenuItem fx:id="saveAsMenuItem" disable="true" mnemonicParsing="false" onAction="#saveAsMenuItemAction" text="Save as">
+                   <accelerator>
+                       <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                   </accelerator>
+               </MenuItem>
+            <MenuItem fx:id="saveAllMenuItem" disable="true" mnemonicParsing="false" onAction="#saveAllMenuItemAction" text="Save all" />
                <MenuItem mnemonicParsing="false" onAction="#exitMenuItemAction" text="Exit">
                    <accelerator>
                        <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -34,16 +39,23 @@
                </MenuItem>
            </Menu>
            <Menu mnemonicParsing="false" text="View">
-               <MenuItem mnemonicParsing="false" onAction="#showEditCurrentPublicationMenuItemAction" text="Show / edit current publication" />
+               <MenuItem fx:id="showEditCurrentPublicationMenuItem" disable="true" mnemonicParsing="false" onAction="#showEditCurrentPublicationMenuItemAction" text="Show / edit current publication" />
+            <MenuItem fx:id="cloneCaseMenuItem" disable="true" mnemonicParsing="false" onAction="#cloneCaseMenuItemAction" text="Clone case to new tab" />
+            <MenuItem fx:id="viewOnPubmedMenuItem" disable="true" mnemonicParsing="false" onAction="#viewOnPubmedMenuItemAction" text="View on Pubmed" />
            </Menu>
            <Menu mnemonicParsing="false" text="Settings">
                <MenuItem mnemonicParsing="false" onAction="#setResourcesMenuItemAction" text="Set resources" />
            </Menu>
            <Menu mnemonicParsing="false" text="Project">
                <MenuItem id="showCuratedPublicationsMenuItem" fx:id="showCuratedPublicationsMenuItem" mnemonicParsing="false" onAction="#showCuratedPublicationsMenuItemAction" text="Show curated publications" />
+               <MenuItem fx:id="showCuratedVariantsMenuItem" mnemonicParsing="false"
+                         onAction="#showCuratedVariantsMenuItemAction" text="Show curated variants"/>
            </Menu>
            <Menu text="Validate">
-               <MenuItem id="validateCurrentEntryMenuItem" mnemonicParsing="false" onAction="#validateCurrentEntryMenuItemAction" text="Validate current case" />
+               <MenuItem id="validateCurrentEntryMenuItem" fx:id="validateCurrentEntryMenuItem" disable="true" mnemonicParsing="false" onAction="#validateCurrentEntryMenuItemAction" text="Validate current case">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+               </accelerator></MenuItem>
                <MenuItem id="validateAllXMLFilesMenuItem" mnemonicParsing="false" onAction="#validateAllFilesMenuItemAction" text="Validate all cases" />
            </Menu>
            <Menu text="Export">
@@ -53,10 +65,9 @@
             <SeparatorMenuItem mnemonicParsing="false" />
             <Menu mnemonicParsing="false" text="Export phenopacket(s)">
               <items>
-                     <MenuItem id="phenopacketMenuItem" mnemonicParsing="false" onAction="#exportPhenopacketCurrentCaseMenuItemAction" text="Current case" />
+                     <MenuItem id="phenopacketMenuItem" fx:id="exportPhenopacketMenuItem" disable="true" mnemonicParsing="false" onAction="#exportPhenopacketCurrentCaseMenuItemAction" text="Current case" />
                      <MenuItem mnemonicParsing="false" onAction="#exportPhenopacketAllCasesMenuItemAction" text="All cases" />
-                  <MenuItem mnemonicParsing="false" onAction="#exportPhenopacketAllCasesForBassMenuItemAction"
-                            text="All cases for BASS"/>
+                  <MenuItem mnemonicParsing="false" onAction="#exportPhenopacketAllCasesForThreesMenuItemAction" text="All cases for 3S" />
               </items>
             </Menu>
             <SeparatorMenuItem mnemonicParsing="false" />

@@ -4,12 +4,16 @@ import java.util.Objects;
 
 public class ValidationResult {
 
-    private enum Status {PASS, FAIL}
-
     private static final ValidationResult PASS = new ValidationResult(Status.PASS, "");
 
     private final Status status;
+
     private final String message;
+
+    private ValidationResult(Status status, String message) {
+        this.status = status;
+        this.message = message;
+    }
 
     public static ValidationResult pass() {
         return PASS;
@@ -23,9 +27,12 @@ public class ValidationResult {
         return new ValidationResult(Status.FAIL, message);
     }
 
-    private ValidationResult(Status status, String message) {
-        this.status = status;
-        this.message = message;
+    public static ValidationResult warn(String message) {
+        Objects.requireNonNull(message);
+        if (message.isEmpty()) {
+            throw new IllegalArgumentException("Warning validation result message cannot be empty");
+        }
+        return new ValidationResult(Status.WARN, message);
     }
 
     public String getMessage() {
@@ -34,6 +41,10 @@ public class ValidationResult {
 
     public boolean isValid() {
         return status == Status.PASS;
+    }
+
+    public boolean isWarning() {
+        return status == Status.WARN;
     }
 
     public boolean notValid() {
@@ -61,4 +72,6 @@ public class ValidationResult {
                 ", message='" + message + '\'' +
                 '}';
     }
+
+    private enum Status {PASS, WARN, FAIL}
 }

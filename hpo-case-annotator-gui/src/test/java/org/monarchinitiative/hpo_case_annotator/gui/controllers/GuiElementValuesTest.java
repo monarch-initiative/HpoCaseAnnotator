@@ -26,7 +26,7 @@ public class GuiElementValuesTest {
         // instance is loaded in setUp method
 
         // assert
-        assertThat(instance.getGenomeBuild().size(), is(3));
+        assertThat(instance.getGenomeBuild().size(), is(4));
         assertThat(instance.getGenomeBuild(), hasItems(GenomeAssembly.GRCH_37, GenomeAssembly.GRCH_38, GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY));
 
         assertThat(instance.getChromosome().size(), is(4));
@@ -66,7 +66,7 @@ public class GuiElementValuesTest {
 
     @Test
     public void toStringIsTested() {
-        String expected = "GuiElementValues{genomeBuild=[UNKNOWN_GENOME_ASSEMBLY, GRCH_38, GRCH_37], chromosome=[1, 4, 5, X], " +
+        String expected = "GuiElementValues{genomeBuild=[UNKNOWN_GENOME_ASSEMBLY, NCBI_36, GRCH_38, GRCH_37], chromosome=[1, 4, 5, X], " +
                 "variantClass=[coding, enhancer, promoter], pathomechanism=[unknown, coding|missense, coding|stop-codon], " +
                 "consequence=[Exon skipping, Intron retention], reporter=[no, up, down], " +
                 "emsa=[yes, no], otherChoices=[no], otherEffect=[Telomerase, Nonspecific_EMSA], " +

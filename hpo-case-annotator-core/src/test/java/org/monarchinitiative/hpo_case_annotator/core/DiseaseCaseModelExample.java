@@ -8,7 +8,7 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 public class DiseaseCaseModelExample {
 
     // TODO - add other models for testing here
-
+    static final String SOFTWARE_VERSION = "Hpo Case Annotator";
 
     public static DiseaseCase benMahmoud2013B3GLCT() {
         return DiseaseCase.newBuilder()
@@ -71,6 +71,96 @@ public class DiseaseCaseModelExample {
                 .setBiocurator(Biocurator.newBuilder()
                         .setBiocuratorId("HPO:ahegde")
                         .build())
+                .setSoftwareVersion(SOFTWARE_VERSION)
+                .build();
+    }
+
+    /**
+     * @return {@link DiseaseCase} representing a heterozygous single exon deletion causing TCS1 (autosomal dominant
+     * disorder).
+     */
+    public static DiseaseCase structural_beygo_2012_TCOF1_M18662() {
+        /* Genome build */
+        return DiseaseCase.newBuilder()
+
+                /* Publication data */
+                .setPublication(
+                        Publication.newBuilder().setAuthorList("Beygo J, Buiting K, Seland S, Lüdecke HJ, Hehr U, Lich C, Prager B, Lohmann DR, Wieczorek D")
+                                .setTitle("First Report of a Single Exon Deletion in TCOF1 Causing Treacher Collins Syndrome")
+                                .setJournal("Mol Syndromol")
+                                .setYear("2012")
+                                .setVolume("2(2)")
+                                .setPages("53-59")
+                                .setPmid("22712005")
+                                .build())
+                .setMetadata("Authors describe a proband M18662 with presence of TCS1")
+                .setGene(Gene.newBuilder()
+                        .setSymbol("TCOF1")
+                        .setEntrezId(6949)
+                        .build())
+                /* Variants which belong to this model */
+                .addVariant(exampleStructuralVariant())
+                /* Family/proband information */
+                .setFamilyInfo(FamilyInfo.newBuilder()
+                        .setFamilyOrProbandId("M18662")
+                        .setSex(Sex.FEMALE)
+                        .setAge("P26Y")
+                        .build())
+                /* HPO terms */
+                .addPhenotype(OntologyClass.newBuilder()
+                        .setId("HP:0011453")
+                        .setLabel("Abnormality of the incus")
+                        .setNotObserved(false)
+                        .build())
+                .addPhenotype(OntologyClass.newBuilder()
+                        .setId("HP:0000405")
+                        .setLabel("Conductive hearing impairment")
+                        .setNotObserved(false)
+                        .build())
+                .addPhenotype(OntologyClass.newBuilder()
+                        .setId("HP:0025336")
+                        .setLabel("Delayed ability to sit")
+                        .setNotObserved(true)
+                        .build())
+                .addPhenotype(OntologyClass.newBuilder()
+                        .setId("HP:0000750")
+                        .setLabel("Delayed speech and language development")
+                        .setNotObserved(true)
+                        .build())
+                .setDisease(Disease.newBuilder()
+                        .setDatabase("OMIM")
+                        .setDiseaseId("154500")
+                        .setDiseaseName("TREACHER COLLINS SYNDROME 1; TCS1")
+                        .build())
+                /* Biocurator */
+                .setBiocurator(Biocurator.newBuilder()
+                        .setBiocuratorId("HPO:walterwhite")
+                        .build())
+                .setSoftwareVersion(SOFTWARE_VERSION)
+                .build();
+    }
+
+    public static Variant exampleStructuralVariant() {
+        return Variant.newBuilder()
+                .setVariantPosition(VariantPosition.newBuilder()
+                        .setGenomeAssembly(GenomeAssembly.GRCH_37)
+                        .setContig("5")
+                        .setPos(149741531)
+                        .setPos2(149744897)
+                        .setRefAllele("N")
+                        .setAltAllele("<DEL>")
+                        .setCiBeginOne(-5)
+                        .setCiBeginTwo(5)
+                        .setCiEndOne(-15)
+                        .setCiEndTwo(10)
+                        .build())
+                .setVariantClass("structural")
+                .setSvType(StructuralType.DEL)
+                .setGenotype(Genotype.HETEROZYGOUS)
+                .setVariantValidation(VariantValidation.newBuilder()
+                        .setContext(VariantValidation.Context.INTRACHROMOSOMAL)
+                        .build())
+                .setImprecise(true)
                 .build();
     }
 
@@ -122,4 +212,6 @@ public class DiseaseCaseModelExample {
                         .build())
                 .build();
     }
+
+
 }

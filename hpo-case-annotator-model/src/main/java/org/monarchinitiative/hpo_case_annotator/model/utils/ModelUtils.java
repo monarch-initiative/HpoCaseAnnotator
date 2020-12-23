@@ -3,12 +3,17 @@ package org.monarchinitiative.hpo_case_annotator.model.utils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 
+import java.text.Normalizer;
+import java.util.regex.Pattern;
+
 /**
  * Utility functions for manipulation with {@link DiseaseCase} instances.
  *
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
  */
 public class ModelUtils {
+
+    private static final Pattern DIACRITICS_AND_FRIENDS = Pattern.compile("[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+");
 
     private ModelUtils() {
         // private no-op
@@ -46,6 +51,11 @@ public class ModelUtils {
         String gn = (model.getGene().getSymbol() == null) ? "genesymbol" : model.getGene().getSymbol();
         String sid = model.getFamilyInfo().getFamilyOrProbandId();
         String candidate = String.format("%s-%s-%s-%s", getFirstAuthorsSurname(publication), ye, gn, sid);
+
+        // replaces non ASCII characters like `í` with `i`, etc..
+        candidate = Normalizer.normalize(candidate, Normalizer.Form.NFD);
+        candidate = DIACRITICS_AND_FRIENDS.matcher(candidate).replaceAll("");
+
         return Checks.makeLegalFileNameWithNoWhitespace(candidate);
     }
 
@@ -59,7 +69,7 @@ public class ModelUtils {
             if (lastindex >= 0)
                 author = firstAuthor.substring(0, lastindex).replaceAll("\\s", "_");
             else
-                author = "author";
+                author = firstAuthor;
         }
         return author;
     }

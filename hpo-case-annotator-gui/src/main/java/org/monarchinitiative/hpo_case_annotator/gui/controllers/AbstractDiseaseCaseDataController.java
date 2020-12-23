@@ -6,6 +6,7 @@ import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +16,23 @@ public abstract class AbstractDiseaseCaseDataController extends AbstractDataCont
 
     private final ValidationRunner<DiseaseCase> diseaseCaseValidationRunner;
 
+    /**
+     * Keep track to path of file containing data of current model so we don't need to ask user where to save a model
+     * everytime a change has been made.
+     */
+    private Path currentModelPath;
+
     public AbstractDiseaseCaseDataController() {
         this.diseaseCaseValidationRunner = ValidationRunner.forDiseaseCaseValidationOmittingVariants();
         this.validationResults = new ArrayList<>();
+    }
+
+    public Path getCurrentModelPath() {
+        return currentModelPath;
+    }
+
+    public void setCurrentModelPath(Path currentModelPath) {
+        this.currentModelPath = currentModelPath;
     }
 
     @Override
@@ -35,5 +50,4 @@ public abstract class AbstractDiseaseCaseDataController extends AbstractDataCont
      * @return {@link List} with observable dependencies
      */
     abstract List<? extends Observable> getObservableDiseaseCaseDependencies();
-
 }

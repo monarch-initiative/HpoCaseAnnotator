@@ -152,7 +152,7 @@ public class Variant implements Comparable<Variant> {
     public void setPosition(String p) {
         try {
             Integer i = Integer.parseInt(p);
-            this.pos = i.intValue();
+            this.pos = i;
         } catch (NumberFormatException e) {
             System.err.println("Error parsing position of variant: " + p + "\n" + e.getMessage());
             this.pos = BAD_VARIANT; // Flag

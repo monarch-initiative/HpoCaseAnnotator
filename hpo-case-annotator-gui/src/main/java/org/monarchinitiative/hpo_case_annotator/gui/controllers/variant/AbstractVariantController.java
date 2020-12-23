@@ -12,9 +12,12 @@ import org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataC
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 
 /**
@@ -25,6 +28,8 @@ import java.util.List;
  * Created by ielis on 5/17/17.
  */
 public abstract class AbstractVariantController extends AbstractDataController<Variant> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractVariantController.class);
 
     /**
      * Allows to open hyperlink in OS-dependent default web browser.
@@ -38,14 +43,11 @@ public abstract class AbstractVariantController extends AbstractDataController<V
 
     final List<ValidationResult> validationResults;
 
-    private final ValidationRunner<Variant> variantValidationRunner;
-
     private final StringProperty entrezId;
 
     @Inject
     AbstractVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
         this.elementValues = elementValues;
-        this.variantValidationRunner = ValidationRunner.variantValidationRunner();
         this.validationResults = new ArrayList<>();
         this.hostServices = hostServices;
         this.entrezId = new SimpleStringProperty(this, "entrezId", null);
@@ -61,17 +63,30 @@ public abstract class AbstractVariantController extends AbstractDataController<V
 
     @Override
     public boolean isComplete() {
+        Variant variant = getData();
+        ValidationRunner<Variant> runner = ValidationRunner.variantValidationRunner(variant.getVariantValidation().getContext());
         validationResults.clear();
-        validationResults.addAll(variantValidationRunner.validateSingleModel(getData()));
+        validationResults.addAll(runner.validateSingleModel(variant));
         return validationResults.isEmpty();
+    }
+
+    protected static int parseIntOrGetDefaultValue(Supplier<String> stringSupplier, int defaultValue) {
+        try {
+            return Integer.parseInt(stringSupplier.get());
+        } catch (NumberFormatException e) {
+            LOGGER.debug("Unable to convert string {} to integer, returning {}", stringSupplier.get(), defaultValue);
+            return defaultValue;
+        }
     }
 
     public abstract Binding<String> variantTitleBinding();
 
     /**
      * Utility method for keeping track of {@link Observable}s that the {@link Variant} depends on.
+     * <p>
+     * Validity of the variant is checked after each change to observables.
      *
-     * @return {@link List} with observable dependencies
+     * @return {@link List} with observables
      */
     abstract List<? extends Observable> getObservableVariantDependencies();
 

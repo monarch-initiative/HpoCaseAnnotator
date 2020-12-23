@@ -11,6 +11,7 @@ import org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataC
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValuesTest;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.ShowValidationResultsController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.IntrachromosomalVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SomaticVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SplicingVariantController;
@@ -21,11 +22,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.charset.Charset;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -55,11 +57,12 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
         bind(MendelianVariantController.class);
         bind(SomaticVariantController.class);
         bind(SplicingVariantController.class);
+        bind(IntrachromosomalVariantController.class);
 
         bind(ShowValidationResultsController.class);
 
         bind(ResourceBundle.class)
-                .toInstance(ResourceBundle.getBundle(Play.class.getName()));
+                .toInstance(ResourceBundle.getBundle(Main.class.getName()));
 
         bind(ExecutorService.class)
                 .toInstance(Executors.newFixedThreadPool(1));
@@ -94,8 +97,7 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
 //        optionalResources.setDiseaseCaseDir(diseaseCaseDir);
 
         // read Ontology
-        Path ontologyPath = Paths.get(TestHpoCaseAnnotatorModule.class.getResource("/resource_files/HP.obo").toURI());
-        try (InputStream is = Files.newInputStream(ontologyPath)) {
+        try (InputStream is = TestHpoCaseAnnotatorModule.class.getResourceAsStream("/resource_files/HP.obo")) {
             optionalResources.setOntology(OptionalResources.deserializeOntology(is));
         }
 
@@ -107,8 +109,8 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
         optionalResources.setSymbol2entrezId(entrezParser.getSymbol2entrezId());
 
         // read OMIM file
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(TestHpoCaseAnnotatorModule.class.getResource("/resource_files/omim.tsv").toURI()))) {
-            OMIMParser omimParser = new OMIMParser(reader);
+        try (InputStream is = TestHpoCaseAnnotatorModule.class.getResourceAsStream("/resource_files/omim.tsv")) {
+            OMIMParser omimParser = new OMIMParser(is, Charset.forName("UTF-8"));
             optionalResources.setCanonicalName2mimid(omimParser.getCanonicalName2mimid());
             optionalResources.setMimid2canonicalName(omimParser.getMimid2canonicalName());
         }
@@ -157,7 +159,7 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
     @Provides
     @Named("codeHomeDir")
     public File codeHomeDir() throws IOException {
-        File codeHomeDir = new File(Play.class.getProtectionDomain().getCodeSource().getLocation().getFile())
+        File codeHomeDir = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getFile())
                 .getParentFile();
         if (codeHomeDir.exists() || codeHomeDir.mkdirs()) {// ensure that the home dir exists
             LOGGER.trace("Code home directory is {}", codeHomeDir.getAbsolutePath());

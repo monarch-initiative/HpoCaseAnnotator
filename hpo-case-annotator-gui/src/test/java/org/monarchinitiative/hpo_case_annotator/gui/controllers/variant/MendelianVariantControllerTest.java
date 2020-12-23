@@ -10,9 +10,9 @@ import javafx.stage.Stage;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.monarchinitiative.hpo_case_annotator.gui.DiseaseCaseModelExample;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceJUnitRunner;
 import org.monarchinitiative.hpo_case_annotator.gui.GuiceModules;
+import org.monarchinitiative.hpo_case_annotator.gui.PojosForTesting;
 import org.monarchinitiative.hpo_case_annotator.gui.TestHpoCaseAnnotatorModule;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.testfx.framework.junit.ApplicationTest;
@@ -109,7 +109,7 @@ public class MendelianVariantControllerTest extends ApplicationTest {
         // assert
         Variant variant = controller.getData();
         final VariantPosition vp = variant.getVariantPosition();
-        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.GRCH_38));
+        assertThat(vp.getGenomeAssembly(), is(GenomeAssembly.NCBI_36));
         assertThat(vp.getContig(), is("1"));
         assertThat(vp.getPos(), is(12345345));
         assertThat(vp.getRefAllele(), is("C"));
@@ -129,8 +129,8 @@ public class MendelianVariantControllerTest extends ApplicationTest {
      */
     @Test
     public void enterFullVariantData() {
-        // arange
-        clickOn("#genomeBuildComboBox").moveBy(-10, 40).clickOn(MouseButton.PRIMARY)
+        // arrange
+        clickOn("#genomeBuildComboBox").moveBy(-10, 70).clickOn(MouseButton.PRIMARY)
                 .clickOn("#chromosomeComboBox").moveBy(0, 30).clickOn(MouseButton.PRIMARY)
                 .clickOn("#positionTextField").write("12345345")
                 .clickOn("#referenceTextField").write("C")
@@ -179,7 +179,7 @@ public class MendelianVariantControllerTest extends ApplicationTest {
 
     @Test
     public void presentAndGetTheSameData() {
-        final Variant presented = DiseaseCaseModelExample.makeMendelianVariant();
+        final Variant presented = PojosForTesting.makeMendelianVariant();
 
         Platform.runLater(() -> controller.presentData(presented));
         sleep(30, TimeUnit.MILLISECONDS);

@@ -103,7 +103,7 @@ public final class HPO {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("HPO{");
+        final StringBuilder sb = new StringBuilder("HPO{");
         sb.append("hpoId=").append(hpoId.get());
         sb.append(", hpoName=").append(hpoName.get());
         sb.append(", observed=").append(observed.get());

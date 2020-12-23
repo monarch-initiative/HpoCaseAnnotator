@@ -1,0 +1,82 @@
+
+
+PMID- 27057779
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20170130
+LR  - 20181202
+IS  - 1744-8344 (Electronic)
+IS  - 1477-9072 (Print)
+IS  - 1477-9072 (Linking)
+VI  - 14
+IP  - 7
+DP  - 2016 Jul
+TI  - Epidemiology of cardiovascular disease: recent novel outlooks on risk factors and
+      clinical approaches.
+PG  - 855-69
+LID - 10.1080/14779072.2016.1176528 [doi]
+AB  - INTRODUCTION: Cardiovascular (CVD) risk assessment with traditional risk factors
+      (age, sex, blood pressure, lipids, smoking and diabetes) has remained relatively
+      invariant over the past decades despite some inaccuracies associated with this
+      approach. However, the search for novel, robust and cost-effective risk markers of
+      CVD risk is ongoing. AREAS COVERED: A large share of the major developments in CVD
+      risk prediction during the past five years has been made in large-scale biomarker
+      discovery and the so called 'omics' - the rapidly growing fields of genomics,
+      transcriptomics, epigenetics and metabolomics. This review focuses on how these new
+      technologies are helping drive primary CVD risk estimation forward in recent years,
+      and speculates on how they could be utilized more effectively for discovering novel
+      risk factors in the future. Expert commentary: The search for new CVD risk factors
+      is currently undergoing a significant revolution as the simple relationship between
+      single risk factors and disease will have to be replaced by models that strive to
+      integrate the whole field of omics into medicine.
+FAU - Niiranen, Teemu J
+AU  - Niiranen TJ
+AD  - a National Heart, Blood and Lung Institute's and Boston University's Framingham
+      Heart Study , Framingham , MA , USA.
+FAU - Vasan, Ramachandran S
+AU  - Vasan RS
+AD  - a National Heart, Blood and Lung Institute's and Boston University's Framingham
+      Heart Study , Framingham , MA , USA.
+LA  - eng
+GR  - HHSN268201500001C/HL/NHLBI NIH HHS/United States
+GR  - HHSN268201500001I/HL/NHLBI NIH HHS/United States
+GR  - N01HC25195/HL/NHLBI NIH HHS/United States
+PT  - Journal Article
+PT  - Review
+DEP - 20160425
+TA  - Expert Rev Cardiovasc Ther
+JT  - Expert review of cardiovascular therapy
+JID - 101182328
+RN  - 0 (Biomarkers)
+SB  - IM
+MH  - Biomarkers
+MH  - Biomedical Research
+MH  - Cardiovascular Diseases/*epidemiology
+MH  - Epigenesis, Genetic
+MH  - Genomics
+MH  - Humans
+MH  - Metabolomics
+MH  - Risk Assessment/*methods
+MH  - Risk Factors
+PMC - PMC4961207
+MID - NIHMS802763
+OTO - NOTNLM
+OT  - Cardiovascular risk
+OT  - biomarkers
+OT  - cardiovascular disease
+OT  - epigenetics
+OT  - genomics
+OT  - metabolomics
+OT  - risk factors
+OT  - transcriptomics
+EDAT- 2016/04/09 06:00
+MHDA- 2017/01/31 06:00
+CRDT- 2016/04/09 06:00
+PHST- 2016/04/09 06:00 [entrez]
+PHST- 2016/04/09 06:00 [pubmed]
+PHST- 2017/01/31 06:00 [medline]
+AID - 10.1080/14779072.2016.1176528 [doi]
+PST - ppublish
+SO  - Expert Rev Cardiovasc Ther. 2016 Jul;14(7):855-69. doi:
+      10.1080/14779072.2016.1176528. Epub 2016 Apr 25.
+

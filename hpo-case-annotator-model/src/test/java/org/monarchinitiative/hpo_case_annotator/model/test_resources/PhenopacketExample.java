@@ -29,7 +29,6 @@ class PhenopacketExample {
     private static Individual getSubject() {
         return Individual.newBuilder()
                 .setId("Ed")
-                .setDatasetId("TEST_DATASET")
                 .setDateOfBirth(Timestamp.newBuilder()
                         .setSeconds(Instant.parse("1996-01-03T00:00:00Z").getEpochSecond())
                         .build())
@@ -106,6 +105,7 @@ class PhenopacketExample {
                         .build())
                 .setCreatedBy("Mr Fantastic")
                 .setSubmittedBy("Test corp.")
+                .setPhenopacketSchemaVersion("1.0.0-RC3")
                 .addResources(getHPOResource())
                 .addResources(getGenotypeOntologyResource())
                 .addResources(getNcbiOrganismalClassificationResource())

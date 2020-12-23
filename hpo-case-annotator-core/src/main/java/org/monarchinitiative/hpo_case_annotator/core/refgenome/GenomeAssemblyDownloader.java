@@ -18,10 +18,10 @@ import java.nio.file.Paths;
  * This class downloads big
  *
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
- * @version 0.0.1
- * @since 0.0
  */
 public final class GenomeAssemblyDownloader extends Task<Void> {
+
+//    TODO - create generic downloader located in GUI module
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenomeAssemblyDownloader.class);
 

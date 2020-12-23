@@ -31,6 +31,10 @@ public class VariantValidationDataSyntaxValidator implements Validator<VariantVa
             case SPLICING:
                 results.addAll(validateSplicingFields(instance));
                 break;
+            case TRANSLOCATION:
+            case INTRACHROMOSOMAL:
+                results.addAll(validateStructuralFields(instance));
+                break;
             default:
                 results.add(ValidationResult.fail("Unknown variant validation context " + context));
                 break;
@@ -63,6 +67,10 @@ public class VariantValidationDataSyntaxValidator implements Validator<VariantVa
 
     private Collection<? extends ValidationResult> validateMendelianFields(VariantValidation instance) {
         // TODO - validate data in the mendelian validation
+        return Collections.emptyList();
+    }
+
+    private Collection<? extends ValidationResult> validateStructuralFields(VariantValidation instance) {
         return Collections.emptyList();
     }
 }

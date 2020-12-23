@@ -10,18 +10,16 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.monarchinitiative.hpo_case_annotator.core.io.PubMedParseException;
-import org.monarchinitiative.hpo_case_annotator.core.io.PubMedParser;
-import org.monarchinitiative.hpo_case_annotator.core.io.PubMedSummaryRetriever;
-import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult;
-import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
+import org.monarchinitiative.hpo_case_annotator.core.publication.PubMedSummaryRetriever;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.AbstractVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
@@ -37,7 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -53,6 +50,8 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseCaseDataController.class);
 
+
+
     private final OptionalResources optionalResources;
 
     private final ExecutorService executorService;
@@ -63,7 +62,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
     private final Injector injector;
 
-    private final List<OntologyClass> phenotypes = new ArrayList<>();
+    private final ObservableList<OntologyClass> phenotypes = FXCollections.observableList(new ArrayList<>());
 
     private final ObservableList<AbstractVariantController> variantControllers;
 
@@ -72,19 +71,19 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     private final String appNameVersion;
 
     @FXML
-    public Button inputPubMedDataButton;
+    public Label phenotypeSummaryLabel;
 
     @FXML
-    public Label statusLabel;
+    public Label publicationSummaryLabel;
+
+    @FXML
+    public Button insertPublicationManuallyButton;
 
     @FXML
     private Button hpoTextMiningButton;
 
     @FXML
     private Label currentModelLabel;
-
-    @FXML
-    private TextField inputPubMedDataTextField;
 
     @FXML
     private TextField pmidTextField;
@@ -128,12 +127,6 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     @FXML
     private TextArea metadataTextArea;
 
-    /**
-     * Keep track to path of file containing data of current model so we don't need to ask user where to save a model
-     * everytime a change has been made.
-     */
-    private File currentModelPath;
-
 
     @Inject
     public DiseaseCaseDataController(OptionalResources optionalResources, ExecutorService executorService, GuiElementValues elementValues,
@@ -171,23 +164,25 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         };
     }
 
-
     /**
-     * Get path to XML file corresponding to current model.
-     *
-     * @return {@link File} containing the path.
+     * @return change listener for Phenotypes observable list that updates the {@code phenotypeSummaryLabel} with observed/excluded
+     * phenotype term count
      */
-    public File getCurrentModelPath() {
-        return currentModelPath;
-    }
+    private static ListChangeListener<OntologyClass> makePhenotypeSummaryLabel(List<OntologyClass> phenotypes, Label phenotypeSummaryLabel) {
+        return c -> {
+            int nObserved = 0, nExcluded = 0;
+            for (OntologyClass phenotype : phenotypes) {
+                if (phenotype.getNotObserved()) {
+                    nExcluded++;
+                } else {
+                    nObserved++;
+                }
+            }
+            String observedSummary = (nObserved == 1) ? "1 observed term" : String.format("%d observed terms", nObserved);
+            String excludedSummary = (nExcluded == 1) ? "1 excluded term" : String.format("%d excluded terms", nExcluded);
 
-    /**
-     * Set path to XML file corresponding to current model.
-     *
-     * @param currentModelPath {@link File} containing the path.
-     */
-    public void setCurrentModelPath(File currentModelPath) {
-        this.currentModelPath = currentModelPath;
+            phenotypeSummaryLabel.setText(String.join("\n", observedSummary, excludedSummary));
+        };
     }
 
     /**
@@ -225,6 +220,12 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
                 break;
             case SPLICING:
                 location = AbstractVariantController.class.getResource("SplicingVariant.fxml");
+                break;
+            case INTRACHROMOSOMAL:
+                location = AbstractVariantController.class.getResource("IntrachromosomalVariant.fxml");
+                break;
+            case TRANSLOCATION:
+                location = AbstractVariantController.class.getResource("BreakpointVariant.fxml");
                 break;
             default:
                 LOGGER.warn("Unknown variant validation context '{}'", variant.getVariantValidation().getContext());
@@ -349,75 +350,16 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     }
 
     /**
-     * Parse inputted PubMed string and set Publication info to the model.
-     */
-    @FXML
-    private void inputPubMedDataButtonAction() {
-        String conversationTitle = "PubMed text parse";
-        String pubMedText = inputPubMedDataTextField.getText();
-
-        PubMedParser.Result result;
-        try {
-            result = PubMedParser.parsePubMed(pubMedText);
-        } catch (PubMedParseException e) {
-            PopUps.showInfoMessage(e.getMessage(), conversationTitle);
-            return;
-        }
-
-        Publication temporary = Publication.newBuilder()
-                .setAuthorList(result.getAuthorList())
-                .setTitle(result.getTitle())
-                .setJournal(result.getJournal())
-                .setYear(result.getYear())
-                .setVolume(result.getVolume())
-                .setPages(result.getPages())
-                .setPmid(result.getPmid())
-                .build();
-
-        ValidationRunner<Publication> pubMedValidator = ValidationRunner.forPubMedValidation(optionalResources.getDiseaseCaseDir());
-        List<ValidationResult> results = pubMedValidator.validateSingleModel(temporary);
-        if (!results.isEmpty()) { // TODO - this is doing nothing at the moment
-            boolean choice = PopUps.getBooleanFromUser(
-                    "Shall we continue?",
-                    results.get(0).getMessage(),
-                    "This publication has been already used in the project");
-            if (!choice) {
-                inputPubMedDataTextField.setText(null);
-                return;
-            }
-        }
-
-        // Ask user if he wants to create a new model after entering the new Publication to prevent
-        // accidental overwriting of finished file
-        if (publication.get().equals(Publication.getDefaultInstance())) { // we're setting the publication for the first time
-            publication.set(temporary);
-        } else {
-            Optional<String> choice = PopUps.getToggleChoiceFromUser(Arrays.asList("UPDATE", "NEW"), "You entered new" +
-                            " publication data. Do you wish to UPDATE current data or to start annotating a NEW case?",
-                    conversationTitle);
-            if (!choice.isPresent())
-                return;
-
-            if (choice.get().equals("NEW")) {
-                setCurrentModelPath(null);
-                presentData(DiseaseCase.getDefaultInstance());
-            }
-        }
-        PopUps.showInfoMessage("PubMed parse OK", conversationTitle);
-    }
-
-
-    /**
-     * Retrieve PubMed summary for given PMID.
+     * Retrieve the publication from PubMed for given PMID.
      */
     @FXML
     private void pmidLookupButtonAction() {
-        final String pmid = pmidTextField.getText();
         FutureTask<Void> task = new FutureTask<>(() -> {
+            String pmid = pmidTextField.getText();
             try {
-                PubMedSummaryRetriever retriever = new PubMedSummaryRetriever();
-                final String summary = retriever.getSummary(pmid);
-                Platform.runLater(() -> inputPubMedDataTextField.setText(summary));
+                PubMedSummaryRetriever retriever = PubMedSummaryRetriever.defaultInstance();
+                Publication publication = retriever.getPublication(pmid);
+                Platform.runLater(() -> this.publication.set(publication));
             } catch (IOException e) {
                 Platform.runLater(() -> PopUps.showInfoMessage(String.format("Unable to retrieve PubMed summary for PMID %s", pmid), "Sorry"));
             }
@@ -426,6 +368,25 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         executorService.submit(task);
     }
 
+    @FXML
+    public void insertPublicationManuallyAction() {
+        try {
+            ShowEditPublicationController controller = new ShowEditPublicationController(publication.get());
+
+            Parent parent = FXMLLoader.load(
+                    ShowEditPublicationController.class.getResource("ShowEditPublicationView.fxml"),
+                    resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
+            Stage stage = new Stage();
+            stage.initOwner(insertPublicationManuallyButton.getScene().getWindow());
+            stage.setTitle("Add/edit the current publication");
+            stage.setScene(new Scene(parent));
+            stage.showAndWait();
+            publication.set(controller.getPublication());
+        } catch (IOException e) {
+            LOGGER.warn("Unable to show dialog for editing of the current publication", e);
+            PopUps.showException("Edit Metadata of the current publication", "Error", "Unable to show dialog for editing of the current publication", e);
+        }
+    }
 
     /**
      * Populate view elements with choices, create bindings and autocompletions.
@@ -473,8 +434,6 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
             if (!newValue) enableEntrezAutocompletions();
         });
 
-        statusLabel.textProperty().bind(diseaseCaseTitleBinding());
-
         // Set default values to GUI fields
         presentData(DiseaseCase.newBuilder()
                 // Default disease database is OMIM
@@ -482,8 +441,11 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
                         .setDatabase("OMIM")
                         .build())
                 .build()); // the last statement
-    }
 
+        // generate phenotype summary text
+        phenotypes.addListener(makePhenotypeSummaryLabel(phenotypes, phenotypeSummaryLabel));
+        publication.addListener((obs, o, n) -> currentModelLabel.setText(String.format("%s: %s", n.getPmid(), n.getTitle())));
+    }
 
     /**
      * Create autocompletions on GUI elements - allow completion of gene symbol after entering gene id and vice-versa
@@ -544,14 +506,10 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
      */
     @Override
     public void presentData(DiseaseCase data) {
-        // Current model title, this is "readOnly" binding
-        currentModelLabel.setText(data.getPublication().getTitle());
-
         publication.set(data.getPublication());
 
         // Show data on publication in text fields
         pmidTextField.setText(publication.get().getPmid());
-        inputPubMedDataTextField.setText(publication.get().getTitle());
 
         // Gene
         entrezIDTextField.setText(String.valueOf(data.getGene().getEntrezId()));
@@ -647,7 +605,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     Binding<String> diseaseCaseTitleBinding() {
         return Bindings.createStringBinding(() -> {
                     if (isComplete()) {
-                        return String.format("%s et al., %d variant(s)", ModelUtils.getFirstAuthorsSurname(publication.get()), variantControllers.size());
+                        return ModelUtils.getFileNameWithSampleId(getData());
                     } else {
                         return String.format("Data INCOMPLETE: %s", validationResults.get(0).getMessage());
                     }
@@ -662,4 +620,5 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
                 diseaseDatabaseComboBox.valueProperty(), diseaseNameTextField.textProperty(), diseaseIDTextField.textProperty(),
                 probandFamilyTextField.textProperty(), sexComboBox.valueProperty(), ageTextField.textProperty(), variantControllers);
     }
+
 }

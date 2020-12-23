@@ -1,16 +1,19 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.Injector;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
 import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -21,30 +24,33 @@ import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.StartupTask;
+import org.monarchinitiative.hpo_case_annotator.model.codecs.AbstractDiseaseCaseToPhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.model.codecs.Codecs;
-import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToBassPhenopacketCodec;
-import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToPhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.model.io.*;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
 import org.phenopackets.schema.v1.Phenopacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.*;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * This class is the controller of the main dialog of the HRMD app. <p>
+ * This class is the controller of the main dialog of the HpoCaseAnnotator app. <p>
+ * The main dialog displays menu and a tab pane. Each case is presented in a separate tab.
  *
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
  */
@@ -54,17 +60,22 @@ public final class MainController {
 
     private static final JsonFormat.Printer PRINTER = JsonFormat.printer();
 
+    /**
+     * Template for hyperlink pointing to PubMed entry of the publication.
+     */
+    private static final String PUBMED_BASE_LINK = "https://www.ncbi.nlm.nih.gov/pubmed/%s";
+
+    private final OptionalResources optionalResources;
+
+    private final ResourceBundle resourceBundle;
+
+    private final Injector injector;
+
     private final Stage primaryStage;
 
     private final Properties properties;
 
     private final File appHomeDir;
-
-    private final DiseaseCaseDataController dataController;
-
-    private final ResourceBundle resourceBundle;
-
-    private final OptionalResources optionalResources;
 
     private final ExecutorService executorService;
 
@@ -73,23 +84,53 @@ public final class MainController {
     private final HostServicesWrapper hostServices;
 
     @FXML
-    public StackPane contentStackPane;
-
-    @FXML
     public MenuItem saveMenuItem;
 
     @FXML
     public MenuItem showCuratedPublicationsMenuItem;
 
+    @FXML
+    public MenuItem saveAsMenuItem;
+
+    @FXML
+    public MenuItem saveAllMenuItem;
+
+    @FXML
+    public TabPane contentTabPane;
+
+    @FXML
+    public MenuItem validateCurrentEntryMenuItem;
+
+    @FXML
+    public MenuItem exportPhenopacketMenuItem;
+
+    @FXML
+    public MenuItem cloneCaseMenuItem;
+
+    @FXML
+    public MenuItem showEditCurrentPublicationMenuItem;
+
+    @FXML
+    public MenuItem viewOnPubmedMenuItem;
+
+    @FXML
+    public MenuItem showCuratedVariantsMenuItem;
+
+    /**
+     * This list contains controllers of the tabs in the same order as they are present in the {@link #contentTabPane#getTabs} method.
+     * <p>
+     * The only place where items are added into this list is the {@link #addTab(DiseaseCase, Path)} method.
+     */
+    private List<DiseaseCaseDataController> controllers = new ArrayList<>();
+
 
     @Inject
-    public MainController(OptionalResources optionalResources, DiseaseCaseDataController dataController,
-                          ResourceBundle resourceBundle, Stage primaryStage,
+    public MainController(OptionalResources optionalResources, ResourceBundle resourceBundle, Injector injector, Stage primaryStage,
                           Properties properties, @Named("appHomeDir") File appHomeDir, ExecutorService executorService,
                           GenomeAssemblies assemblies, HostServicesWrapper hostServices) {
         this.optionalResources = optionalResources;
-        this.dataController = dataController;
         this.resourceBundle = resourceBundle;
+        this.injector = injector;
         this.primaryStage = primaryStage;
         this.properties = properties;
         this.appHomeDir = appHomeDir;
@@ -188,10 +229,43 @@ public final class MainController {
         return ImmutableMap.copyOf(models);
     }
 
+    /**
+     * Present a new case in this controller. The case is presented as a new Tab.
+     * <p>
+     * <b>!! IMPORTANT !!</b> - this method is the only place where a new case should added into the screen.
+     *
+     * @param diseaseCase      {@link DiseaseCase} to be presented
+     * @param currentModelPath {@link Path} to file where the case was read from, might be {@code null} if the case was
+     *                         just generated
+     */
+    private void addTab(DiseaseCase diseaseCase, Path currentModelPath) {
+        try {
+            final Tab tab = new Tab();
+            final FXMLLoader loader = new FXMLLoader(DiseaseCaseDataController.class.getResource("DiseaseCaseDataView.fxml"));
+            loader.setResources(resourceBundle);
+            loader.setControllerFactory(injector::getInstance);
+            tab.setContent(loader.load());
+
+            final DiseaseCaseDataController controller = loader.getController();
+            controller.presentData(diseaseCase);
+            controller.setCurrentModelPath(currentModelPath);
+            tab.textProperty().bind(controller.diseaseCaseTitleBinding());
+            tab.setOnCloseRequest(e -> {
+                int tabIdx = contentTabPane.getTabs().indexOf(tab);
+                contentTabPane.getTabs().remove(tabIdx);
+                controllers.remove(tabIdx);
+            });
+            contentTabPane.getTabs().add(tab);
+            controllers.add(controller);
+        } catch (IOException e) {
+            LOGGER.warn("Error occured during initialization of the data view.", e);
+        }
+    }
+
+
     @FXML
     void newMenuItemAction() {
-        dataController.presentData(DiseaseCase.getDefaultInstance());
-        dataController.setCurrentModelPath(null);
+        addTab(DiseaseCase.getDefaultInstance(), null);
     }
 
     @FXML
@@ -208,13 +282,20 @@ public final class MainController {
         FileChooser.ExtensionFilter jsonFileFormat = new FileChooser.ExtensionFilter(PROTO_JSON, "*.json");
         filechooser.getExtensionFilters().addAll(xmlFileFormat, jsonFileFormat);
         filechooser.setSelectedExtensionFilter(jsonFileFormat);
-        File which = filechooser.showOpenDialog(primaryStage);
 
-        DiseaseCase diseaseCase;
-        if (which != null) {
+        List<File> files = filechooser.showOpenMultipleDialog(primaryStage);
+
+        if (files == null) {
+            // no file was selected
+            return;
+        }
+
+
+        for (File file : files) {
+            DiseaseCase diseaseCase;
             switch (filechooser.getSelectedExtensionFilter().getDescription()) {
                 case SPLICING_XML:
-                    try (InputStream is = new BufferedInputStream(new FileInputStream(which))) {
+                    try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
                         diseaseCase = XMLModelParser.loadDiseaseCase(is)
                                 .orElseThrow(() -> new IOException("Unable to decode XML file"));
                     } catch (IOException e) {
@@ -223,38 +304,46 @@ public final class MainController {
                     }
                     break;
                 case PROTO_JSON:
-                    try (InputStream is = new BufferedInputStream(new FileInputStream(which))) {
+                    try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
                         diseaseCase = ProtoJSONModelParser.readDiseaseCase(is)
                                 .orElseThrow(() -> new IOException("Unable to decode JSON file"));
                     } catch (FileNotFoundException e) {
-                        PopUps.showException("Open JSON model", String.format("File '%s' not found", which.getAbsolutePath()), "", e);
+                        PopUps.showException("Open JSON model", String.format("File '%s' not found", file.getAbsolutePath()), "", e);
                         return;
                     } catch (InvalidProtocolBufferException e) {
-                        PopUps.showException("Open JSON model", String.format("Error parsing file content '%s'", which.getAbsolutePath()), "", e);
+                        PopUps.showException("Open JSON model", String.format("Error parsing file content '%s'", file.getAbsolutePath()), "", e);
                         return;
                     } catch (IOException e) {
-                        PopUps.showException("Open JSON model", String.format("Error while reading file '%s'", which.getAbsolutePath()), "", e);
+                        PopUps.showException("Open JSON model", String.format("Error while reading file '%s'", file.getAbsolutePath()), "", e);
                         return;
                     }
                     break;
                 default:
                     throw new RuntimeException("This should not have had happened!");
             }
-
-
-            dataController.presentData(diseaseCase);
-            dataController.setCurrentModelPath(which);
+            addTab(diseaseCase, file.toPath());
         }
     }
 
     @FXML
     void saveMenuItemAction() {
-        saveModel(dataController.getCurrentModelPath(), dataController.getData());
+        int selectedTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
+        DiseaseCaseDataController controller = controllers.get(selectedTabIdx);
+        Path currentModelPath = controller.getCurrentModelPath();
+        Path actualPath = saveModel(currentModelPath, controller.getData());
+
+        // user might have selected to save the model elsewhere, here we reflect the update
+        controller.setCurrentModelPath(actualPath);
     }
 
     @FXML
     void saveAsMenuItemAction() {
-        saveModel(null, dataController.getData());
+        int selectedTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
+        DiseaseCaseDataController controller = controllers.get(selectedTabIdx);
+        Path actualPath = saveModel(null, controller.getData());
+
+        // user might have selected to save the model elsewhere, here we reflect the update
+        controller.setCurrentModelPath(actualPath);
     }
 
     @FXML
@@ -264,8 +353,11 @@ public final class MainController {
 
     @FXML
     void showEditCurrentPublicationMenuItemAction() {
+        int selectedTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
+
         try {
-            ShowEditPublicationController controller = new ShowEditPublicationController(dataController.getData().getPublication());
+            Publication publication = controllers.get(selectedTabIdx).getData().getPublication();
+            ShowEditPublicationController controller = new ShowEditPublicationController(publication);
 
             Parent parent = FXMLLoader.load(
                     ShowEditPublicationController.class.getResource("ShowEditPublicationView.fxml"),
@@ -279,6 +371,7 @@ public final class MainController {
             LOGGER.warn("Unable to show dialog for editing of the current publication", e);
             PopUps.showException("Edit Metadata of the current publication", "Error", "Unable to show dialog for editing of the current publication", e);
         }
+
     }
 
     @FXML
@@ -324,8 +417,33 @@ public final class MainController {
     }
 
     @FXML
+    public void showCuratedVariantsMenuItemAction() {
+        File where = optionalResources.getDiseaseCaseDir();
+
+        Map<File, DiseaseCase> models = readDiseaseCasesFromDirectory(where);
+        try {
+            ShowVariantsController controller = new ShowVariantsController(hostServices);
+            controller.setData(models.values());
+            Parent parent = FXMLLoader.load(ShowVariantsController.class.getResource("ShowVariantsView.fxml"),
+                    resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
+            Stage stage = new Stage();
+            stage.setTitle("Variants within curated cases in '" + where.getAbsolutePath() + "'");
+            stage.initOwner(primaryStage);
+            stage.setScene(new Scene(parent));
+            stage.showAndWait();
+        } catch (IOException e) {
+            LOGGER.warn("Unable to display dialog for showing curated variants", e);
+            PopUps.showException("Show curated variants", "Error", "Unable to display dialog for showing curated variants", e);
+        }
+
+    }
+
+    @FXML
     void validateCurrentEntryMenuItemAction() {
-        DiseaseCase theCase = dataController.getData();
+
+        int selectedTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
+
+        DiseaseCase theCase = controllers.get(selectedTabIdx).getData();
         ValidationRunner<DiseaseCase> runner = ValidationRunner.forAllValidations(assemblies);
         List<ValidationResult> results = runner.validateSingleModel(theCase);
 
@@ -341,6 +459,7 @@ public final class MainController {
         } catch (IOException e) {
             LOGGER.warn("Unable to display dialog for validation of the curated publications", e);
         }
+
     }
 
 
@@ -399,7 +518,7 @@ public final class MainController {
         File where = PopUps.selectDirectory(primaryStage, optionalResources.getDiseaseCaseDir(),
                 "Select export directory");
 
-        DiseaseCaseToPhenopacketCodec codec = Codecs.diseaseCasePhenopacketCodec();
+        AbstractDiseaseCaseToPhenopacketCodec codec = Codecs.diseaseCasePhenopacketCodec();
 
         if (where != null) {
             int counter = 0;
@@ -426,18 +545,23 @@ public final class MainController {
     @FXML
     void exportToSummaryFileMenuItemAction() {
         // TODO -- export to summary menuitem - implement me
+        throw new UnsupportedOperationException();
     }
 
 
     @FXML
     void exportListOfComHetCasesWithOneCodingVariantMenuItemAction() {
-        // TODO -- export list of comphets menuitem - implement me
+        // TODO "export list of comphets menuitem not implemented yet" implement me
+        throw new UnsupportedOperationException();
     }
 
 
     @FXML
     public void exportPhenopacketCurrentCaseMenuItemAction() {
-        DiseaseCase diseaseCase = dataController.getData();
+        int selectedTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
+
+
+        DiseaseCase diseaseCase = controllers.get(selectedTabIdx).getData();
         String suggestedFileName = ModelUtils.getFileNameWithSampleId(diseaseCase) + ".json";
         String title = "Save as Phenopacket";
 
@@ -450,7 +574,7 @@ public final class MainController {
         filechooser.setSelectedExtensionFilter(jsonFormat);
 
         File where = filechooser.showSaveDialog(primaryStage);
-        DiseaseCaseToPhenopacketCodec codec = Codecs.diseaseCasePhenopacketCodec();
+        AbstractDiseaseCaseToPhenopacketCodec codec = Codecs.diseaseCasePhenopacketCodec();
         if (where != null) {
             try (BufferedWriter writer = Files.newBufferedWriter(where.toPath())) {
                 final Phenopacket packet = codec.encode(diseaseCase);
@@ -461,6 +585,7 @@ public final class MainController {
                 PopUps.showException(title, "Error occured during Phenopacket export", e.getMessage(), e);
             }
         }
+
     }
 
     /**
@@ -470,12 +595,12 @@ public final class MainController {
      * Data specific to splicing is encoded into {@link Phenopacket}.
      */
     @FXML
-    public void exportPhenopacketAllCasesForBassMenuItemAction() {
+    public void exportPhenopacketAllCasesForThreesMenuItemAction() {
         Map<File, DiseaseCase> models = readDiseaseCasesFromDirectory(optionalResources.getDiseaseCaseDir());
 
         File where = PopUps.selectDirectory(primaryStage, optionalResources.getDiseaseCaseDir(),
                 "Select export directory");
-        DiseaseCaseToBassPhenopacketCodec codec = Codecs.bassPhenopacketCodec();
+        AbstractDiseaseCaseToPhenopacketCodec codec = Codecs.threesPhenopacketCodec();
 
         if (where != null) {
             int counter = 0;
@@ -556,21 +681,33 @@ public final class MainController {
     public void initialize() {
         StartupTask task = new StartupTask(optionalResources, properties, assemblies);
         executorService.submit(task);
-        try {
-            FXMLLoader loader = new FXMLLoader(DiseaseCaseDataController.class.getResource("DiseaseCaseDataView.fxml"));
-            loader.setResources(resourceBundle);
-            loader.setControllerFactory(clazz -> dataController);
-            Parent parent = loader.load();
 
-            contentStackPane.getChildren().add(parent);
-        } catch (IOException e) {
-            LOGGER.warn("Error occured during initialization of the data view.", e);
-        }
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(saveMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(saveAsMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(saveAllMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(validateCurrentEntryMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(exportPhenopacketMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(cloneCaseMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(showEditCurrentPublicationMenuItem));
+        contentTabPane.getTabs().addListener(disableMenuItemIfCaseListIsEmpty(viewOnPubmedMenuItem));
 
         // disable for now - TODO - enable saving only if the disease case is complete?
 //        saveMenuItem.disableProperty().bind(dataController.diseaseCaseIsComplete().not());
         showCuratedPublicationsMenuItem.disableProperty().bind(optionalResources.diseaseCaseDirIsInitializedProperty().not());
+        showCuratedVariantsMenuItem.disableProperty().bind(optionalResources.diseaseCaseDirIsInitializedProperty().not());
+    }
 
+    /**
+     * @return {@link ListChangeListener} for tab list that disables the {@link #saveAllMenuItem} if the tab list is empty.
+     */
+    private ListChangeListener<Tab> disableMenuItemIfCaseListIsEmpty(final MenuItem menuItem) {
+        return c -> {
+            if (c.getList().isEmpty()) {
+                menuItem.setDisable(true);
+            } else {
+                menuItem.setDisable(false);
+            }
+        };
     }
 
 
@@ -585,7 +722,7 @@ public final class MainController {
      * <li>Save it</li>
      * </ul>
      */
-    private void saveModel(File currentModelPath, DiseaseCase model) {
+    private Path saveModel(Path currentModelPath, DiseaseCase model) {
 //        CompletenessValidator completenessValidator = new CompletenessValidator();
 //        completenessValidator.validateDiseaseCase(model);
         String conversationTitle = "Save data into file";
@@ -608,57 +745,85 @@ public final class MainController {
             File which = fileChooser.showSaveDialog(primaryStage);
 
             if (which == null) {
-                return;
+                return null;
             }
 
             while (which.getName().matches(".*\\s.*")) { // at least one whitespace with or without surrounding characters
-                if (PopUps.getBooleanFromUser("Provide new name or cancel", String.format("File name '%s' contains whitespace character", which.getName()), "Warning"))
+                if (PopUps.getBooleanFromUser("Provide new name or cancel", String.format("File name '%s' contains whitespace character", which.getName()), "Warning")) {
                     which = fileChooser.showSaveDialog(primaryStage);
-                else return;
+                } else {
+                    return null;
+                }
             }
-            currentModelPath = which;
+            currentModelPath = which.toPath();
 
             if (fileChooser.getSelectedExtensionFilter().getDescription().equals(jsonFileFormat.getDescription())) {
-                try (OutputStream os = Files.newOutputStream(currentModelPath.toPath())) {
-                    ProtoJSONModelParser.saveDiseaseCase(os, model, Charset.forName("UTF-8")); // TODO - charset is hardcoded
+                try (OutputStream os = Files.newOutputStream(currentModelPath)) {
+                    ProtoJSONModelParser.saveDiseaseCase(os, model, StandardCharsets.UTF_8); // TODO - charset is hardcoded
                 } catch (IOException e) {
                     PopUps.showException(conversationTitle, "Unable to store data into file", "", e);
-                    LOGGER.warn("Unable to store data into file {}", currentModelPath.getAbsolutePath(), e);
-                    return;
+                    LOGGER.warn("Unable to store data into file {}", currentModelPath, e);
+                    return null;
                 }
             } else if (fileChooser.getSelectedExtensionFilter().getDescription().equals(xmlFileFormat.getDescription())) {
-                try (FileOutputStream fos = new FileOutputStream(currentModelPath)) {
-                    XMLModelParser.saveDiseaseCase(model, fos);
+                try (OutputStream os = Files.newOutputStream(currentModelPath)) {
+                    XMLModelParser.saveDiseaseCase(model, os);
                 } catch (IOException e) {
                     PopUps.showException(conversationTitle, "Unable to store data into file", "", e);
-                    LOGGER.warn("Unable to store data into file {}", currentModelPath.getAbsolutePath(), e);
-                    return;
+                    LOGGER.warn("Unable to store data into file {}", currentModelPath, e);
+                    return null;
                 }
             }
         } else {
             // update the Biocurator ID
             model = model.toBuilder()
-                    .setBiocurator(Biocurator.newBuilder().setBiocuratorId(optionalResources.getBiocuratorId())
-                            .build())
+                    .setBiocurator(Biocurator.newBuilder().setBiocuratorId(optionalResources.getBiocuratorId()).build())
                     .build();
-            try (OutputStream os = Files.newOutputStream(currentModelPath.toPath())) {
+            try (OutputStream os = Files.newOutputStream(currentModelPath)) {
                 // save in the same format the model was saved
-                if (currentModelPath.getName().endsWith(".xml")) {
+                if (currentModelPath.toFile().getName().endsWith(".xml")) {
                     XMLModelParser.saveDiseaseCase(model, os);
-                } else if (currentModelPath.getName().endsWith(".json")) {
-                    ProtoJSONModelParser.saveDiseaseCase(os, model, Charset.forName("UTF-8")); // TODO - charset is hardcoded
+                } else if (currentModelPath.toFile().getName().endsWith(".json")) {
+                    ProtoJSONModelParser.saveDiseaseCase(os, model, StandardCharsets.UTF_8); // TODO - charset is hardcoded
                 }
             } catch (IOException e) {
                 PopUps.showException(conversationTitle, "Unable to store data into file", "", e);
-                LOGGER.warn("Unable to store data into file {}", currentModelPath.getAbsolutePath(), e);
-                return;
+                LOGGER.warn("Unable to store data into file {}", currentModelPath, e);
+                return null;
             }
         }
 
         // SUCCESS (if we got here)
-        dataController.setCurrentModelPath(currentModelPath);
-        PopUps.showInfoMessage(String.format("Data saved into file %s", currentModelPath.getName()), conversationTitle);
+        PopUps.showInfoMessage(String.format("Data saved into file %s", currentModelPath.toFile().getName()), conversationTitle);
+        return currentModelPath;
     }
 
 
+    @FXML
+    public void saveAllMenuItemAction() {
+        controllers.forEach(c -> saveModel(c.getCurrentModelPath(), c.getData()));
+    }
+
+    /**
+     * Create a new tab and populate fields with data from the currently selected case.
+     */
+    @FXML
+    public void cloneCaseMenuItemAction() {
+        int selectedIndex = contentTabPane.getSelectionModel().getSelectedIndex();
+        DiseaseCase currentlySelectedCase = controllers.get(selectedIndex).getData();
+        addTab(currentlySelectedCase, null);
+    }
+
+    /**
+     * View PubMed page of the publication of the currently selected case.
+     */
+    @FXML
+    public void viewOnPubmedMenuItemAction() {
+        int selectedIndex = contentTabPane.getSelectionModel().getSelectedIndex();
+        DiseaseCase currentlySelectedCase = controllers.get(selectedIndex).getData();
+
+        String pmid = currentlySelectedCase.getPublication().getPmid();
+        String publicationUrl = String.format(PUBMED_BASE_LINK, pmid);
+        hostServices.showDocument(publicationUrl);
+    }
 }

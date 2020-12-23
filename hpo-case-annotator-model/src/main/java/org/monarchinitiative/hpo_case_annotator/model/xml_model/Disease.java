@@ -58,7 +58,7 @@ public final class Disease {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Disease{");
+        final StringBuilder sb = new StringBuilder("Disease{");
         sb.append("database=").append(database.get());
         sb.append(", diseaseId=").append(diseaseId.get());
         sb.append(", diseaseName=").append(diseaseName.get());
