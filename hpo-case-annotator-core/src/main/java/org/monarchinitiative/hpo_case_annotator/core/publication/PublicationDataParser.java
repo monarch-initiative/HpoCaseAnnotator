@@ -2,7 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.core.publication;
 
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 
-interface PublicationDataParser {
+public interface PublicationDataParser {
 
     static PublicationDataParser forFormat(PublicationDataFormat format) {
         switch (format) {
