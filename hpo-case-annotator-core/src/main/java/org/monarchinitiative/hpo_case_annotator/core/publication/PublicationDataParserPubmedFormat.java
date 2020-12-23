@@ -14,6 +14,13 @@ import java.util.regex.Pattern;
 /**
  * The class for parsing content such as shown <a href="https://pubmed.ncbi.nlm.nih.gov/33257779/?format=pubmed">here</a>
  * into a {@link org.monarchinitiative.hpo_case_annotator.model.proto.Publication}.
+ * <p>
+ * Note: Even though the parser parses the content that you see when entering the url above into the browser,
+ * the content you see in the browser is not the content that is fetched programatically. From this reason we switched to
+ * PubMed EUtils API and implemented the {@link PublicationDataParserPubmedEpubXml}.
+ * <p>
+ * So, this parser works, but it is probably not going to be used in future. Please consider removing after a couple of
+ * development iterations.
  */
 class PublicationDataParserPubmedFormat implements PublicationDataParser {
 
