@@ -15,11 +15,11 @@ import java.util.regex.Pattern;
  * The class for parsing content such as shown <a href="https://pubmed.ncbi.nlm.nih.gov/33257779/?format=pubmed">here</a>
  * into a {@link org.monarchinitiative.hpo_case_annotator.model.proto.Publication}.
  */
-public class PubmedFormatPublicationDataParser {
+class PublicationDataParserPubmedFormat implements PublicationDataParser {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PubmedFormatPublicationDataParser.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PublicationDataParserPubmedFormat.class);
 
-    static Map<String, List<String>> preprocess(String payload) {
+    private static Map<String, List<String>> preprocess(String payload) {
         Pattern tagPattern = Pattern.compile("\\p{Upper}+\\s*-\\s*");
         Matcher tagMatcher = tagPattern.matcher(payload);
         List<Integer> begin = new ArrayList<>(), end = new ArrayList<>();
@@ -57,6 +57,7 @@ public class PubmedFormatPublicationDataParser {
         return values;
     }
 
+    @Override
     public Publication parse(String payload) throws PubMedParseException {
         Publication.Builder builder = Publication.newBuilder();
 

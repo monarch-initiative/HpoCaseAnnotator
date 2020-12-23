@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 /**
  * Superclass for parsers of PubMed abstracts for the 2020 update of PubMed.
  */
+@Deprecated
 public class PubMedParser {
     Logger LOGGER = LoggerFactory.getLogger(PubMedParser.class);
 

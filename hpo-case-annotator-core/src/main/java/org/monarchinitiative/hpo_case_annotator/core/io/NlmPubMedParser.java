@@ -11,6 +11,7 @@ package org.monarchinitiative.hpo_case_annotator.core.io;
  * This works just like the old parser, so we just pass it through. However, we will still demand that the user
  * enters the PMID by hand, because not all formats have a PMID.
  */
+@Deprecated
 public class NlmPubMedParser extends PubMedParser {
 
     public NlmPubMedParser(String pubmedText, String pmid){

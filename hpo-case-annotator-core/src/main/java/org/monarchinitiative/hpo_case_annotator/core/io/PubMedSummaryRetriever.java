@@ -1,101 +1,146 @@
 package org.monarchinitiative.hpo_case_annotator.core.io;
 
+import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * This class contains methods which can be used to retrieve PubMed summary text of publication which corresponds to
- * provided PMID. Use {@link #getSummary(String)} method to get the summary text.
- * NO LONGER WORKS FOLLOWING 2020 PubMed changes!
+ * This class contains methods which can be used to retrieve {@link Publication} data which corresponds to
+ * provided PMID. Use {@link #getPublication(String)} method to get the {@link Publication}.
  */
-@Deprecated
 public class PubMedSummaryRetriever {
 
     /**
      * This is a template for URL targeted for PubMed's REST API.
      */
-    public static final String URL_TEMPLATE = "https://www.ncbi.nlm.nih.gov/pubmed/%s?report=docsum&format=text";
+    private static final String URL_TEMPLATE = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi";
 
     /**
      * PubMed returns a response containing this String, if there is no record associated with given PMID.
      */
-    public static final String NON_EXISTING_PMID = "cannot get document summary";
+    private static final String NON_EXISTING_PMID = "Sorry, can't find the page or item you're requesting.";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PubMedSummaryRetriever.class);
 
+    private static final PubMedSummaryRetriever INSTANCE = builder().build();
+
     private final Function<String, InputStream> connectionFactory;
 
+    private final PublicationDataParser parser;
 
-    public PubMedSummaryRetriever(Function<String, InputStream> connectionFactory) {
-        this.connectionFactory = connectionFactory;
+    private PubMedSummaryRetriever(Builder builder) {
+        this.connectionFactory = Objects.requireNonNull(builder.connectionFactory);
+        this.parser = Objects.requireNonNull(builder.publicationDataParser);
     }
 
-    /**
-     * Use default connection factory that is available through method {@link PubMedSummaryRetriever#getConnectionFactory()}.
-     * <p>
-     * This constructor should work in most cases.
-     */
-    public PubMedSummaryRetriever() {
-        this(getConnectionFactory());
+    public static PubMedSummaryRetriever defaultInstance() {
+        return INSTANCE;
     }
 
-    /**
-     * Enter PMID and retrieve PubMed summary text with description of the corresponding publication.
-     *
-     * @param pmid String with PMID of the publication.
-     * @return String with summary text if the retrieval was successful
-     * @throws IOException if retrieval fails
-     */
-    public static String getSummary(InputStream is, String pmid) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        String htmlResponse = reader.lines().collect(Collectors.joining(" "));
-
-        if (htmlResponse.contains(NON_EXISTING_PMID)) { // the entry for submitted pmid doesn't exist.
-            throw new IOException("PMID " + pmid + " is not associated with any publication on Pubmed");
-        } else {
-            return extractContent(htmlResponse);
-        }
+    public static Builder builder() {
+        return new Builder();
     }
 
     /**
      * PubMed API returns whole HTML page in response to the query. This method extracts the relevant part of the response.
      *
-     * @param payload String with HTML page
-     * @return String with extracted
+     * @param payload String with HTML content
+     * @return String with the relevant content
      */
     private static String extractContent(String payload) {
+        // extract the visible content enclosed in tags:
+        // <pre class="article-details" id="article-details">ARTICLE_TEXT_HERE</pre>
         int start, stop;
-        start = payload.indexOf("<pre>") + 5;
+        start = payload.indexOf("<pre class=\"article-details\" id=\"article-details\">") + 50;
         stop = payload.indexOf("</pre>");
-        String content = payload.substring(start, stop);
-        return content.replaceAll("\n", "").trim();
+        return payload.substring(start, stop);
     }
 
 
-    public static Function<String, InputStream> getConnectionFactory() {
+    private static Function<String, InputStream> getConnectionFactory() {
         return pmid -> {
-            String urlString = String.format(URL_TEMPLATE, pmid);
+            Map<String, String> params = new HashMap<>();
+            params.put("id", pmid);
+            params.put("db", "pubmed");
+            params.put("version", "2.0");
             try {
-                URL url = new URL(urlString);
-                return url.openStream();
+                URL url = new URL(URL_TEMPLATE);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setDoOutput(true);
+                conn.setRequestMethod("GET");
+                DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+                out.writeBytes(getParamsString(params));
+                out.flush();
+                out.close();
+
+                return conn.getInputStream();
             } catch (IOException e) {
-                LOGGER.warn("Error when trying to open URL '{}' for reading", urlString, e);
+                LOGGER.warn("Error when trying to open URL for reading", e);
                 return null;
             }
         };
     }
 
-    public String getSummary(String pmid) throws IOException {
-        try (InputStream is = connectionFactory.apply(pmid)) {
-            return getSummary(is, pmid);
+
+    private static String getParamsString(Map<String, String> params)
+            throws UnsupportedEncodingException {
+        StringBuilder result = new StringBuilder();
+
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+            result.append("=");
+            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+            result.append("&");
+        }
+
+        String resultString = result.toString();
+        return resultString.length() > 0
+                ? resultString.substring(0, resultString.length() - 1)
+                : resultString;
+    }
+
+
+    public Publication getPublication(String pmid) throws IOException, PubMedParseException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(connectionFactory.apply(pmid)))) {
+            String payload = reader.lines().collect(Collectors.joining("\n"));
+            if (payload.contains(NON_EXISTING_PMID)) {
+                throw new IOException("PMID " + pmid + " is not associated with any publication on Pubmed");
+            }
+            return parser.parse(payload);
+        }
+    }
+
+    public static class Builder {
+
+        private Function<String, InputStream> connectionFactory = getConnectionFactory();
+
+        private PublicationDataParser publicationDataParser = PublicationDataParser.forFormat(PublicationDataFormat.EUTILS);
+
+        private Builder() {
+        }
+
+        public Builder connectionFactory(Function<String, InputStream> connectionFactory) {
+            this.connectionFactory = connectionFactory;
+            return this;
+        }
+
+        public Builder publicationDataParser(PublicationDataParser parser) {
+            this.publicationDataParser = parser;
+            return this;
+        }
+
+        public PubMedSummaryRetriever build() {
+            return new PubMedSummaryRetriever(this);
         }
     }
 }

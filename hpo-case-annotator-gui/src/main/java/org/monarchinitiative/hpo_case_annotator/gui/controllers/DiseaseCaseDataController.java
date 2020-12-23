@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
+import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
@@ -13,13 +14,12 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.monarchinitiative.hpo_case_annotator.core.io.*;
-import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult;
-import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
+import org.monarchinitiative.hpo_case_annotator.core.io.PubMedSummaryRetriever;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.AbstractVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.FutureTask;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -70,19 +71,19 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     private final String appNameVersion;
 
     @FXML
-    public Button inputPubMedDataButton;
+    public Label phenotypeSummaryLabel;
 
     @FXML
-    public Label phenotypeSummaryLabel;
+    public Label publicationSummaryLabel;
+
+    @FXML
+    public Button insertPublicationManuallyButton;
 
     @FXML
     private Button hpoTextMiningButton;
 
     @FXML
     private Label currentModelLabel;
-
-    @FXML
-    private TextField inputPubMedDataTextField;
 
     @FXML
     private TextField pmidTextField;
@@ -349,99 +350,42 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
     }
 
     /**
-     * Parse inputted PubMed string and set Publication info to the model.
-     */
-    @FXML
-    private void inputPubMedDataButtonAction() {
-        String conversationTitle = "PubMed text parse";
-        String pubMedText = inputPubMedDataTextField.getText();
-        String pmid = pmidTextField.getText();
-        try {
-            Integer i = Integer.parseInt(pmid);
-        } catch (NumberFormatException e) {
-            PopUps.showWarningDialog("Need PMID", "You need to enter the PMID (only the integer)", e.getLocalizedMessage());
-            return;
-        }
-        PubMedParser parser = new NlmPubMedParser(inputPubMedDataTextField.getText(),
-                pmidTextField.getText());
-        PubMedParser.Result result;
-
-        Optional<PubMedParser.Result> opt = parser.parsePubMed();
-        if (opt.isPresent()) {
-            result = opt.get();
-        }  else {
-            // try to parse a second format
-            parser = new ApaPubMedParser(inputPubMedDataTextField.getText(), pmid);
-            opt = parser.parsePubMed();
-            if (! opt.isPresent()) {
-                PopUps.showWarningDialog("Could not parse pubmed", pubMedText, parser.getCurrentError());
-                return;
-            }
-            result = opt.get();
-        }
-
-        Publication temporary = Publication.newBuilder()
-                .setAuthorList(result.getAuthorList())
-                .setTitle(result.getTitle())
-                .setJournal(result.getJournal())
-                .setYear(result.getYear())
-                .setVolume(result.getVolume())
-                .setPages(result.getPages())
-                .setPmid(result.getPmid())
-                .build();
-
-        ValidationRunner<Publication> pubMedValidator = ValidationRunner.forPubMedValidation(optionalResources.getDiseaseCaseDir());
-        List<ValidationResult> results = pubMedValidator.validateSingleModel(temporary);
-        if (!results.isEmpty()) { // TODO - this is doing nothing at the moment
-            boolean choice = PopUps.getBooleanFromUser(
-                    "Shall we continue?",
-                    results.get(0).getMessage(),
-                    "This publication has been already used in the project");
-            if (!choice) {
-                inputPubMedDataTextField.setText(null);
-                return;
-            }
-        }
-
-        // Ask user if he wants to create a new model after entering the new Publication to prevent
-        // accidental overwriting of finished file
-        if (publication.get().equals(Publication.getDefaultInstance())) { // we're setting the publication for the first time
-            publication.set(temporary);
-        } else {
-            Optional<String> choice = PopUps.getToggleChoiceFromUser(Arrays.asList("UPDATE", "NEW"), "You entered new" +
-                            " publication data. Do you wish to UPDATE current data or to start annotating a NEW case?",
-                    conversationTitle);
-            if (!choice.isPresent())
-                return;
-
-            if (choice.get().equals("NEW")) {
-                setCurrentModelPath(null);
-                presentData(DiseaseCase.getDefaultInstance());
-            }
-        }
-        PopUps.showInfoMessage("PubMed parse OK", conversationTitle);
-    }
-
-    /**
-     * Retrieve PubMed summary for given PMID.
-     * This does not work after the 2020 format change at PubMed.
-     * Inactivate for now, possibly refactor the GUI later TODO
+     * Retrieve the publication from PubMed for given PMID.
      */
     @FXML
     private void pmidLookupButtonAction() {
-//        final String pmid = pmidTextField.getText();
-//        FutureTask<Void> task = new FutureTask<>(() -> {
-//            try {
-//                PubMedSummaryRetriever retriever = new PubMedSummaryRetriever();
-//                final String summary = retriever.getSummary(pmid);
-//                Platform.runLater(() -> inputPubMedDataTextField.setText(summary));
-//            } catch (IOException e) {
-//                Platform.runLater(() -> PopUps.showInfoMessage(String.format("Unable to retrieve PubMed summary for PMID %s", pmid), "Sorry"));
-//            }
-//            return null;
-//        });
-//        executorService.submit(task);
-        LOGGER.warn("PMID Lookup not functional");
+        FutureTask<Void> task = new FutureTask<>(() -> {
+            String pmid = pmidTextField.getText();
+            try {
+                PubMedSummaryRetriever retriever = PubMedSummaryRetriever.defaultInstance();
+                Publication publication = retriever.getPublication(pmid);
+                Platform.runLater(() -> this.publication.set(publication));
+            } catch (IOException e) {
+                Platform.runLater(() -> PopUps.showInfoMessage(String.format("Unable to retrieve PubMed summary for PMID %s", pmid), "Sorry"));
+            }
+            return null;
+        });
+        executorService.submit(task);
+    }
+
+    @FXML
+    public void insertPublicationManuallyAction() {
+        try {
+            ShowEditPublicationController controller = new ShowEditPublicationController(publication.get());
+
+            Parent parent = FXMLLoader.load(
+                    ShowEditPublicationController.class.getResource("ShowEditPublicationView.fxml"),
+                    resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
+            Stage stage = new Stage();
+            stage.initOwner(insertPublicationManuallyButton.getScene().getWindow());
+            stage.setTitle("Add/edit the current publication");
+            stage.setScene(new Scene(parent));
+            stage.showAndWait();
+            publication.set(controller.getPublication());
+        } catch (IOException e) {
+            LOGGER.warn("Unable to show dialog for editing of the current publication", e);
+            PopUps.showException("Edit Metadata of the current publication", "Error", "Unable to show dialog for editing of the current publication", e);
+        }
     }
 
     /**
@@ -500,7 +444,7 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
         // generate phenotype summary text
         phenotypes.addListener(makePhenotypeSummaryLabel(phenotypes, phenotypeSummaryLabel));
-
+        publication.addListener((obs, o, n) -> currentModelLabel.setText(String.format("%s: %s", n.getPmid(), n.getTitle())));
     }
 
     /**
@@ -562,14 +506,10 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
      */
     @Override
     public void presentData(DiseaseCase data) {
-        // Current model title, this is "readOnly" binding
-        currentModelLabel.setText(data.getPublication().getTitle());
-
         publication.set(data.getPublication());
 
         // Show data on publication in text fields
         pmidTextField.setText(publication.get().getPmid());
-        inputPubMedDataTextField.setText(publication.get().getTitle());
 
         // Gene
         entrezIDTextField.setText(String.valueOf(data.getGene().getEntrezId()));

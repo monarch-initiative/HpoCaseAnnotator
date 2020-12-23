@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE eSummaryResult PUBLIC "-//NLM//DTD esummary pubmed 20160808//EN"
+        "https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20160808/esummary_pubmed.dtd">
+<eSummaryResult>
+    <DocumentSummarySet status="OK">
+        <DbBuild>Build201222-2212m.2</DbBuild>
+
+        <DocumentSummary uid="27057779">
+            <PubDate>2016 Jul</PubDate>
+            <EPubDate>2016 Apr 25</EPubDate>
+            <Source>Expert Rev Cardiovasc Ther</Source>
+            <Authors>
+                <Author>
+                    <Name>Niiranen TJ</Name>
+                    <AuthType>Author</AuthType>
+                    <ClusterID></ClusterID>
+                </Author>
+                <Author>
+                    <Name>Vasan RS</Name>
+                    <AuthType>Author</AuthType>
+                    <ClusterID></ClusterID>
+                </Author>
+            </Authors>
+            <LastAuthor>Vasan RS</LastAuthor>
+            <Title>Epidemiology of cardiovascular disease: recent novel outlooks on risk factors and clinical
+                approaches.
+            </Title>
+            <SortTitle>epidemiology of cardiovascular disease recent novel outlooks on risk factors and clinical
+                approaches
+            </SortTitle>
+            <Volume>14</Volume>
+            <Issue>7</Issue>
+            <Pages>855-69</Pages>
+            <Lang>
+                <string>eng</string>
+            </Lang>
+            <NlmUniqueID>101182328</NlmUniqueID>
+            <ISSN>1477-9072</ISSN>
+            <ESSN>1744-8344</ESSN>
+            <PubType>
+                <flag>Journal Article</flag>
+                <flag>Review</flag>
+            </PubType>
+            <RecordStatus>PubMed - indexed for MEDLINE</RecordStatus>
+            <PubStatus>256</PubStatus>
+            <ArticleIds>
+                <ArticleId>
+                    <IdType>pubmed</IdType>
+                    <IdTypeN>1</IdTypeN>
+                    <Value>27057779</Value>
+                </ArticleId>
+                <ArticleId>
+                    <IdType>doi</IdType>
+                    <IdTypeN>3</IdTypeN>
+                    <Value>10.1080/14779072.2016.1176528</Value>
+                </ArticleId>
+                <ArticleId>
+                    <IdType>pmc</IdType>
+                    <IdTypeN>8</IdTypeN>
+                    <Value>PMC4961207</Value>
+                </ArticleId>
+                <ArticleId>
+                    <IdType>mid</IdType>
+                    <IdTypeN>8</IdTypeN>
+                    <Value>NIHMS802763</Value>
+                </ArticleId>
+                <ArticleId>
+                    <IdType>rid</IdType>
+                    <IdTypeN>8</IdTypeN>
+                    <Value>27057779</Value>
+                </ArticleId>
+                <ArticleId>
+                    <IdType>eid</IdType>
+                    <IdTypeN>8</IdTypeN>
+                    <Value>27057779</Value>
+                </ArticleId>
+                <ArticleId>
+                    <IdType>pmcid</IdType>
+                    <IdTypeN>5</IdTypeN>
+                    <Value>pmc-id: PMC4961207;manuscript-id: NIHMS802763;</Value>
+                </ArticleId>
+            </ArticleIds>
+            <History>
+                <PubMedPubDate>
+                    <PubStatus>entrez</PubStatus>
+                    <Date>2016/04/09 06:00</Date>
+                </PubMedPubDate>
+                <PubMedPubDate>
+                    <PubStatus>pubmed</PubStatus>
+                    <Date>2016/04/09 06:00</Date>
+                </PubMedPubDate>
+                <PubMedPubDate>
+                    <PubStatus>medline</PubStatus>
+                    <Date>2017/01/31 06:00</Date>
+                </PubMedPubDate>
+            </History>
+            <References>
+            </References>
+            <Attributes>
+                <flag>Has Abstract</flag>
+            </Attributes>
+            <PmcRefCount>12</PmcRefCount>
+            <FullJournalName>Expert review of cardiovascular therapy</FullJournalName>
+            <ELocationID>doi: 10.1080/14779072.2016.1176528</ELocationID>
+            <DocType>citation</DocType>
+            <SrcContribList>
+            </SrcContribList>
+            <BookTitle></BookTitle>
+            <Medium></Medium>
+            <Edition></Edition>
+            <PublisherLocation></PublisherLocation>
+            <PublisherName></PublisherName>
+            <SrcDate></SrcDate>
+            <ReportNumber></ReportNumber>
+            <AvailableFromURL></AvailableFromURL>
+            <LocationLabel></LocationLabel>
+            <DocContribList>
+            </DocContribList>
+            <DocDate></DocDate>
+            <BookName></BookName>
+            <Chapter></Chapter>
+            <SortPubDate>2016/07/01 00:00</SortPubDate>
+            <SortFirstAuthor>Niiranen TJ</SortFirstAuthor>
+            <VernacularTitle></VernacularTitle>
+        </DocumentSummary>
+
+    </DocumentSummarySet>
+</eSummaryResult>

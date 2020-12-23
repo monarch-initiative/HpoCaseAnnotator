@@ -10,6 +10,7 @@ import java.util.Optional;
  * i.e.,
  * Authors (year). Title. Journal, vol(issue),pages. Otherstuff
  */
+@Deprecated
 public class ApaPubMedParser extends PubMedParser {
 
 

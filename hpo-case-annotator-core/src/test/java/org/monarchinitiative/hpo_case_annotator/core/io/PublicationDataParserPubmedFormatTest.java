@@ -2,37 +2,27 @@ package org.monarchinitiative.hpo_case_annotator.core.io;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.monarchinitiative.hpo_case_annotator.core.Utils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.junit.Assert.assertThat;
 
-public class PubmedFormatPublicationDataParserTest {
+public class PublicationDataParserPubmedFormatTest {
 
-    private PubmedFormatPublicationDataParser parser;
-
-    private static String readFile(Path path) throws IOException {
-        try (BufferedReader reader = Files.newBufferedReader(path)) {
-            return reader.lines().collect(Collectors.joining("\n"));
-        }
-    }
+    private PublicationDataParserPubmedFormat parser;
 
     @Before
     public void setUp() throws Exception {
-        parser = new PubmedFormatPublicationDataParser();
+        parser = new PublicationDataParserPubmedFormat();
     }
 
     @Test
     public void parse_epubAheadOfPrint() throws Exception {
-        String payload = readFile(Paths.get("src/test/resources/org/monarchinitiative/hpo_case_annotator/core/io/pubmed_fmt_epub.txt"));
+        String payload = Utils.readFile(Paths.get("src/test/resources/org/monarchinitiative/hpo_case_annotator/core/io/pubmed_fmt_epub.txt"));
         Publication publication = parser.parse(payload);
 
         assertThat(publication, hasProperty("authorList", equalTo("Pauper M, Kucuk E, Wenger AM, Chakraborty S, Baybayan P, Kwint M, van der Sanden B, Nelen MR, Derks R, Brunner HG, Hoischen A, Vissers LELM, Gilissen C")));
@@ -47,7 +37,7 @@ public class PubmedFormatPublicationDataParserTest {
 
     @Test
     public void parse_fullPublicationRecord() throws Exception {
-        String payload = readFile(Paths.get("src/test/resources/org/monarchinitiative/hpo_case_annotator/core/io/pubmed_fmt_full.txt"));
+        String payload = Utils.readFile(Paths.get("src/test/resources/org/monarchinitiative/hpo_case_annotator/core/io/pubmed_fmt_full.txt"));
         Publication publication = parser.parse(payload);
 
         assertThat(publication, hasProperty("authorList", equalTo("Niiranen TJ, Vasan RS")));
