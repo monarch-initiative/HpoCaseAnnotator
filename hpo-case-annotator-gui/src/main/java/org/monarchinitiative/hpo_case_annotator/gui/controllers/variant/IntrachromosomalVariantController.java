@@ -140,7 +140,7 @@ public class IntrachromosomalVariantController extends AbstractVariantController
                         .setPos(parseIntOrGetDefaultValue(beginTextField::getText, 0)) // begin is 1-based
                         .setPos2(parseIntOrGetDefaultValue(endTextField::getText, 0)) // end is also 1-based
                         .setRefAllele(defaultRefAllele)
-                        .setAltAllele(String.format("<%s>", svType.name()))
+                        .setAltAllele(svType.name())
                         .setCiBeginOne(parseIntOrGetDefaultValue(ciBeginFirstTextField::getText, 0))
                         .setCiBeginTwo(parseIntOrGetDefaultValue(ciBeginSecondTextField::getText, 0))
                         .setCiEndOne(parseIntOrGetDefaultValue(ciEndFirstTextField::getText, 0))

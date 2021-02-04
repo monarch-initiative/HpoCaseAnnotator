@@ -93,7 +93,7 @@ public class IntrachromosomalVariantControllerTest extends ApplicationTest {
                 .setPos(100)
                 .setPos2(200)
                 .setRefAllele("N")
-                .setAltAllele("<INS>")
+                .setAltAllele("INS")
                 .setCiBeginOne(-5)
                 .setCiBeginTwo(10)
                 .setCiEndOne(-15)

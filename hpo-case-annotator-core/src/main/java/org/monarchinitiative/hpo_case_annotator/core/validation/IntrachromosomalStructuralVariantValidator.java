@@ -21,14 +21,13 @@ public class IntrachromosomalStructuralVariantValidator implements Validator<Var
         int begin = vp.getPos() - 1; // convert to 0-based
         int end = vp.getPos2();
         // genome assembly
-        if (vp.getGenomeAssembly() == null
-                || vp.getGenomeAssembly().equals(GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY)
+        if (vp.getGenomeAssembly().equals(GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY)
                 || vp.getGenomeAssembly().equals(GenomeAssembly.UNRECOGNIZED)) {
             results.add(ValidationResult.fail("Missing genome assembly"));
         }
 
         // chromosome
-        if (vp.getContig() == null || vp.getContig().isEmpty()) {
+        if (vp.getContig().isEmpty()) {
             results.add(ValidationResult.fail("Contig/chromosome is missing"));
         }
 
@@ -46,7 +45,7 @@ public class IntrachromosomalStructuralVariantValidator implements Validator<Var
             results.add(ValidationResult.fail("End position is before begin"));
         }
 
-        if (variant.getGenotype() == null || variant.getGenotype().equals(Genotype.UNRECOGNIZED)) {
+        if (variant.getGenotype().equals(Genotype.UNRECOGNIZED)) {
             results.add(ValidationResult.fail("Missing genotype"));
         }
 
