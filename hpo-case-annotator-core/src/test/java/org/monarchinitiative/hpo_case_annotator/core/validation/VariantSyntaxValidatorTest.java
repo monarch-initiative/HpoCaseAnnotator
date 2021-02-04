@@ -11,6 +11,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertThat;
 
 public class VariantSyntaxValidatorTest {
@@ -150,6 +151,6 @@ public class VariantSyntaxValidatorTest {
 
         List<ValidationResult> results = validator.validate(variant);
 
-        assertThat(results.size(), is(0));
+        assertThat(results, is(empty()));
     }
 }

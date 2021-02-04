@@ -16,19 +16,18 @@ public class BreakendVariantValidator implements Validator<Variant> {
 
         VariantPosition vp = variant.getVariantPosition();
         // genome assembly
-        if (vp.getGenomeAssembly() == null
-                || vp.getGenomeAssembly().equals(GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY)
+        if (vp.getGenomeAssembly().equals(GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY)
                 || vp.getGenomeAssembly().equals(GenomeAssembly.UNRECOGNIZED)) {
             results.add(ValidationResult.fail("Missing genome assembly"));
         }
 
         // chromosome
-        if (vp.getContig() == null || vp.getContig().isEmpty()) {
+        if (vp.getContig().isEmpty()) {
             results.add(ValidationResult.fail("Left contig/chromosome is missing"));
         }
 
         // chromosome 2
-        if (vp.getContig2() == null || vp.getContig2().isEmpty()) {
+        if (vp.getContig2().isEmpty()) {
             results.add(ValidationResult.fail("Right contig/chromosome is missing"));
         }
 

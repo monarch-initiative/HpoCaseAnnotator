@@ -107,8 +107,8 @@ public final class SomaticVariantController extends AbstractVariantController {
         chromosomeComboBox.getItems().addAll(elementValues.getChromosome());
         // add text formatter to impose constraint on the field
         positionTextField.setTextFormatter(makeTextFormatter(positionTextField, POSITIVE_INTEGER_REGEXP));
-        referenceTextField.setTextFormatter(makeTextFormatter(referenceTextField, ALLELE_REGEXP));
-        alternateTextField.setTextFormatter(makeTextFormatter(alternateTextField, ALLELE_REGEXP));
+        referenceTextField.setTextFormatter(makeTextFormatter(referenceTextField, NONEMPTY_ALLELE_REGEXP));
+        alternateTextField.setTextFormatter(makeTextFormatter(alternateTextField, NONEMPTY_ALLELE_REGEXP));
         snippetTextField.setTextFormatter(makeTextFormatter(snippetTextField, SNIPPET_REGEXP));
         genotypeComboBox.getItems().addAll(Arrays.stream(Genotype.values()).filter(g -> !g.equals(Genotype.UNRECOGNIZED)).collect(Collectors.toList()));
         variantClassComboBox.getItems().addAll(elementValues.getVariantClass());

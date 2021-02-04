@@ -148,7 +148,7 @@ public class DiseaseCaseModelExample {
                         .setPos(149741531)
                         .setPos2(149744897)
                         .setRefAllele("N")
-                        .setAltAllele("<DEL>")
+                        .setAltAllele("DEL")
                         .setCiBeginOne(-5)
                         .setCiBeginTwo(5)
                         .setCiEndOne(-15)

@@ -128,7 +128,7 @@ public class BreakpointVariantController extends AbstractVariantController {
         ciBeginRightTextField.setText(String.valueOf(vp.getCiEndOne()));
         ciEndRightTextField.setText(String.valueOf(vp.getCiEndTwo()));
 
-        refTextField.setText(vp.getRefAllele());
+        refTextField.setText(vp.getRefAllele().isEmpty() ? "N" : vp.getRefAllele());
         insertedSequenceTextField.setText(vp.getAltAllele());
 
         preciseCheckBox.setSelected(!variant.getImprecise());

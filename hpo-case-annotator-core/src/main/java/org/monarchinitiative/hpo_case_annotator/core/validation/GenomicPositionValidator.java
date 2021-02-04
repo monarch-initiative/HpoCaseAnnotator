@@ -9,6 +9,7 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
 
 import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.SNIPPET_REGEXP;
 
@@ -131,7 +132,8 @@ public final class GenomicPositionValidator implements Validator<Variant> {
 
         /* The variant string is OK, and now we can validate the snippet string */
         String snippet = variant.getSnippet();
-        if (snippet.matches(SNIPPET_REGEXP)) {
+        Matcher matcher = SNIPPET_REGEXP.matcher(snippet);
+        if (matcher.matches()) {
             results.addAll(validateSnippet(chrom, pos, snippet, sequenceDao));
         } else {
             results.add(ValidationResult.fail("Snippet sequence " + snippet + " does not have the required format (see help)"));

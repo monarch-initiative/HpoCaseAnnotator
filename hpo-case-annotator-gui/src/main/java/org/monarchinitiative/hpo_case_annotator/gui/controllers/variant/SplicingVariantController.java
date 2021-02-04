@@ -124,8 +124,8 @@ public final class SplicingVariantController extends AbstractVariantController {
         varChromosomeComboBox.getItems().addAll(elementValues.getChromosome());
         // add text formatter to impose constraint on the field
         varPositionTextField.setTextFormatter(makeTextFormatter(varPositionTextField, POSITIVE_INTEGER_REGEXP));
-        varReferenceTextField.setTextFormatter(makeTextFormatter(varReferenceTextField, ALLELE_REGEXP));
-        varAlternateTextField.setTextFormatter(makeTextFormatter(varAlternateTextField, ALLELE_REGEXP));
+        varReferenceTextField.setTextFormatter(makeTextFormatter(varReferenceTextField, NONEMPTY_ALLELE_REGEXP));
+        varAlternateTextField.setTextFormatter(makeTextFormatter(varAlternateTextField, NONEMPTY_ALLELE_REGEXP));
         varSnippetTextField.setTextFormatter(makeTextFormatter(varSnippetTextField, SNIPPET_REGEXP));
         varGenotypeComboBox.getItems().addAll(Arrays.stream(Genotype.values()).filter(g -> !g.equals(Genotype.UNRECOGNIZED)).collect(Collectors.toList()));
         varClassComboBox.getItems().addAll(elementValues.getVariantClass());
