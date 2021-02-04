@@ -7,10 +7,10 @@ import org.monarchinitiative.hpo_case_annotator.model.test_resources.TestResourc
 import org.phenopackets.schema.v1.Phenopacket;
 import org.phenopackets.schema.v1.core.*;
 
+import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.monarchinitiative.hpo_case_annotator.model.test_resources.PhenoPacketTestUtil.HET;
 import static org.monarchinitiative.hpo_case_annotator.model.test_resources.PhenoPacketTestUtil.ontologyClass;
@@ -204,17 +204,17 @@ public class DiseaseCaseToPhenopacketCodecTest {
 
         // variants
         assertThat(pp.getVariantsList(), hasSize(1));
-        assertThat(pp.getVariantsList(), hasItem(Variant.newBuilder()
-                .setVcfAllele(VcfAllele.newBuilder()
-                        .setGenomeAssembly("GRCh37")
-                        .setChr("5")
-                        .setPos(149741531)
-                        .setRef("N")
-                        .setAlt("<DEL>")
-                        .setInfo("SVTYPE=DEL;END=149744897;CIPOS=-5,5;CIEND=-15,10;IMPRECISE")
-                        .build())
-                .setZygosity(AbstractDiseaseCaseToPhenopacketCodec.HET)
-                .build()));
+        Variant variant = pp.getVariantsList().get(0);
+        assertThat(variant.getZygosity(), equalTo(HET));
+        VcfAllele vcfAllele = variant.getVcfAllele();
+        List<String> info = Arrays.asList(vcfAllele.getInfo().split(";"));
+        System.out.println(vcfAllele.getInfo());
+        assertThat(info, hasItems("SVTYPE=DEL", "END=149744897", "CIPOS=-5,5", "CIEND=-15,10", "IMPRECISE"));
+        assertThat(vcfAllele.getGenomeAssembly(), equalTo("GRCh37"));
+        assertThat(vcfAllele.getChr(), equalTo("5"));
+        assertThat(vcfAllele.getPos(), equalTo(149741531));
+        assertThat(vcfAllele.getRef(), equalTo("N"));
+        assertThat(vcfAllele.getAlt(), equalTo("DEL"));
 
         // diseases
         List<Disease> diseasesList = pp.getDiseasesList();
@@ -260,7 +260,8 @@ public class DiseaseCaseToPhenopacketCodecTest {
         assertThat(vcfAllele.getPos(), is(133_359_000));
         assertThat(vcfAllele.getRef(), is("G"));
         assertThat(vcfAllele.getAlt(), is("G[13:32300000["));
-        assertThat(vcfAllele.getInfo(), is("SVTYPE=BND;CIPOS=-5,-15;CIEND=10,20;IMPRECISE"));
+        List<String> infoFields = Arrays.asList(vcfAllele.getInfo().split(";"));
+        assertThat(infoFields, hasItems("IMPRECISE", "SVTYPE=BND", "CIPOS=-5,-15", "CIEND=10,20"));
 
         assertThat(variant.getZygosity(), is(HET));
     }
