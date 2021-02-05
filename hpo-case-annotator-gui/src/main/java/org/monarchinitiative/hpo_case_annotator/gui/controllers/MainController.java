@@ -35,7 +35,6 @@ import org.phenopackets.schema.v1.Phenopacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.*;
@@ -825,5 +824,21 @@ public final class MainController {
         String pmid = currentlySelectedCase.getPublication().getPmid();
         String publicationUrl = String.format(PUBMED_BASE_LINK, pmid);
         hostServices.showDocument(publicationUrl);
+    }
+
+    @FXML
+    public void liftoverAction() {
+        try {
+            Parent parent = FXMLLoader.load(LiftoverController.class.getResource("LiftoverView.fxml"),
+                    resourceBundle, new JavaFXBuilderFactory(), injector::getInstance);
+            Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.NONE);
+            stage.setTitle("Liftover");
+            stage.setScene(new Scene(parent));
+            stage.show();
+        } catch (IOException e) {
+            LOGGER.warn("Unable to display liftover dialog: {}", e.getCause().getMessage());
+        }
     }
 }

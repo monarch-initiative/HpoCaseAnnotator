@@ -5,12 +5,10 @@ import com.google.inject.Provides;
 import com.google.inject.name.Names;
 import javafx.application.HostServices;
 import javafx.stage.Stage;
+import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverAdapter;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembliesSerializer;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataController;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.SetResourcesController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.*;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.*;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.slf4j.Logger;
@@ -84,8 +82,15 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
         bind(SplicingVariantController.class);
         bind(IntrachromosomalVariantController.class);
         bind(BreakpointVariantController.class);
+        bind(LiftoverController.class);
     }
 
+
+    @Provides
+    public LiftOverAdapter liftOverAdapter(@Named("liftoverDir") File liftoverDir) {
+        LOGGER.warn("Creating Liftover adapter");
+        return LiftOverAdapter.ofChainFolder(liftoverDir);
+    }
 
     @Provides
     @Singleton
@@ -178,6 +183,12 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
     // ----------------------------------------- FILES -----------------------------------------------------------------
 
+    @Provides
+    @Named("liftoverDir")
+    @Singleton
+    public File liftoverDir(@Named("appHomeDir") File appHomeDir) {
+        return new File(appHomeDir, OptionalResources.DEFAULT_LIFTOVER_FOLDER);
+    }
 
     /**
      * Get path to parent directory of the JAR file (or classes). Note, this is <em>NOT</em> the path to the JAR file.
