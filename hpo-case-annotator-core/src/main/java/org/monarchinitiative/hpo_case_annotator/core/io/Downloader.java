@@ -47,7 +47,7 @@ public class Downloader extends Task<Void> {
     @Override
     protected Void call() throws Exception {
         if (!whereToSave.getParentFile().exists()) {
-            if (!whereToSave.mkdir()) { // try to create the directory
+            if (!whereToSave.getParentFile().mkdirs()) { // try to create the directory
                 String msg = String.format("Unable to create directory %s. Aborting the download.", whereToSave.getParent());
                 log.warn(msg);
                 throw new IOException(msg);

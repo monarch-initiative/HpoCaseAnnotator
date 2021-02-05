@@ -5,16 +5,16 @@
 <?import javafx.scene.layout.BorderPane?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.2-internal"
             fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController">
-   <center>
-      <TabPane fx:id="contentTabPane" prefHeight="600.0" prefWidth="1000.0" BorderPane.alignment="TOP_CENTER" />
-   </center>
-   <top>
-       <MenuBar BorderPane.alignment="TOP_CENTER">
-           <Menu mnemonicParsing="false" text="File">
-               <MenuItem mnemonicParsing="false" onAction="#newMenuItemAction" text="New">
-                   <accelerator>
-                       <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                   </accelerator>
+    <center>
+        <TabPane fx:id="contentTabPane" prefHeight="600.0" prefWidth="1000.0" BorderPane.alignment="TOP_CENTER"/>
+    </center>
+    <top>
+        <MenuBar BorderPane.alignment="TOP_CENTER">
+            <Menu mnemonicParsing="false" text="File">
+                <MenuItem mnemonicParsing="false" onAction="#newMenuItemAction" text="New">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                    </accelerator>
                </MenuItem>
                <MenuItem mnemonicParsing="false" onAction="#openMenuItemAction" text="Open">
                    <accelerator>
@@ -77,6 +77,7 @@
                <MenuItem id="helpMenuItem" mnemonicParsing="false" onAction="#helpMenuItemAction" text="Help" />
                <MenuItem id="TFListMenuItem" mnemonicParsing="false" onAction="#TFListMenuItemAction" text="TF list" />
                <MenuItem id="NCIThesaurusMenuItem" mnemonicParsing="false" onAction="#NCIThesaurusMenuItemAction" text="NCI Thesaurus" />
+               <MenuItem mnemonicParsing="false" onAction="#liftoverAction" text="Liftover"/>
            </Menu>
        </MenuBar>
    </top>

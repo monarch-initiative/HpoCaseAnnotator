@@ -24,6 +24,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 
@@ -96,6 +99,16 @@ public final class SetResourcesController {
         this.executorService = executorService;
         this.primaryStage = primaryStage;
         this.assemblies = assemblies;
+        initializeAppHomeDir();
+    }
+
+    private void initializeAppHomeDir() {
+        File liftoverDir = appHomeDir.toPath().resolve(OptionalResources.DEFAULT_LIFTOVER_FOLDER).toFile();
+        if (!liftoverDir.isDirectory()) {
+            if (!liftoverDir.mkdirs()) {
+                LOGGER.warn("Unable to initialize directory for liftover chain files");
+            }
+        }
     }
 
 
@@ -148,7 +161,7 @@ public final class SetResourcesController {
                     entrezGeneLabel.setText(target.getAbsolutePath());
                 } catch (IOException e) {
                     LOGGER.warn(e.getMessage());
-                    PopUps.showException("Download Entrez gene file", "Error occured", String.format("Error during parsing of Entrez gene file at '%s'",
+                    PopUps.showException("Download Entrez gene file", "Error occurred", String.format("Error during parsing of Entrez gene file at '%s'",
                             target.getAbsolutePath()), e);
                 }
                 return;
@@ -221,7 +234,7 @@ public final class SetResourcesController {
         try {
             url = new URL(properties.getProperty("hp.obo.url"));
         } catch (MalformedURLException e) {
-            PopUps.showException("Download HPO obo file", "Error occured", String.format("Malformed URL: %s",
+            PopUps.showException("Download HPO obo file", "Error occurred", String.format("Malformed URL: %s",
                     properties.getProperty("hp.obo.url")), e);
             LOGGER.error(String.format("Malformed URL: %s", properties.getProperty("hp.obo.url")), e);
             return;
@@ -427,6 +440,30 @@ public final class SetResourcesController {
                 assemblies.putAssembly(GenomeAssembly.GRCH_38, target.toPath());
                 hg38ProgressIndicator.setProgress(1);
                 break;
+            }
+        }
+    }
+
+    @FXML
+    public void downloadLiftoverChainFiles() {
+        List<URL> urls = new ArrayList<>();
+        try {
+            urls.add(new URL(properties.getProperty("hg18.hg38.chain.url")));
+            urls.add(new URL(properties.getProperty("hg19.hg38.chain.url")));
+        } catch (MalformedURLException e) {
+            PopUps.showException("Download liftover chains", "Error occurred", "Malformed URL", e);
+            LOGGER.error("Malformed URL: {}", e.getMessage());
+            return;
+        }
+        for (URL url : urls) {
+            String file = new File(url.getFile()).getName();
+            Path target = appHomeDir.toPath().resolve(OptionalResources.DEFAULT_LIFTOVER_FOLDER).resolve(file);
+
+            Task<Void> task = new Downloader(url, target.toFile());
+            executorService.submit(task);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ignored) {
             }
         }
     }
