@@ -76,8 +76,8 @@ public class IntrachromosomalVariantController extends AbstractVariantController
     private final String defaultRefAllele = "N";
 
     @Inject
-    public IntrachromosomalVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
-        super(elementValues, hostServices);
+    public IntrachromosomalVariantController(HostServicesWrapper hostServices, GuiElementValues elementValues) {
+        super(hostServices, elementValues);
     }
 
     @Override

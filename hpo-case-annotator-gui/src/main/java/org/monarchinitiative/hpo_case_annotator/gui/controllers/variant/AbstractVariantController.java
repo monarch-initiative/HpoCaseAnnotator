@@ -39,17 +39,17 @@ public abstract class AbstractVariantController extends AbstractDataController<V
     /**
      * POJO containing data to be used for populating content of FXML elements such as ComboBoxes.
      */
-    final GuiElementValues elementValues;
+    protected final GuiElementValues elementValues;
 
-    final List<ValidationResult> validationResults;
+    protected final List<ValidationResult> validationResults;
 
     private final StringProperty entrezId;
 
     @Inject
-    AbstractVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
+    AbstractVariantController(HostServicesWrapper hostServices, GuiElementValues elementValues) {
+        this.hostServices = hostServices;
         this.elementValues = elementValues;
         this.validationResults = new ArrayList<>();
-        this.hostServices = hostServices;
         this.entrezId = new SimpleStringProperty(this, "entrezId", null);
     }
 

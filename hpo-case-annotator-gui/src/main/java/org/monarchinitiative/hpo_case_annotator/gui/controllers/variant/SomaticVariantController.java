@@ -97,8 +97,8 @@ public final class SomaticVariantController extends AbstractVariantController {
      * Create instance of this class which acts as a controller from MVC pattern.
      */
     @Inject
-    public SomaticVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
-        super(elementValues,hostServices);
+    public SomaticVariantController(HostServicesWrapper hostServices, GuiElementValues elementValues) {
+        super(hostServices, elementValues);
     }
 
 
