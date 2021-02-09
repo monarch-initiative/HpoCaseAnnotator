@@ -239,9 +239,11 @@ public final class MendelianVariantController extends AbstractVariantController 
     public Binding<String> variantTitleBinding() {
         return Bindings.createStringBinding(() -> {
                     if (isComplete()) {
+                        String ref = referenceTextField.getText().length() > 10 ? referenceTextField.getText().substring(0, 10) + "..." : referenceTextField.getText();
+                        String alt = alternateTextField.getText().length() > 10 ? alternateTextField.getText().substring(0, 10) + "..." : alternateTextField.getText();
                         return String.format("Mendelian variant: %s %s:%s%s>%s",
                                 genomeBuildComboBox.getValue(), chromosomeComboBox.getValue(), positionTextField.getText(),
-                                referenceTextField.getText(), alternateTextField.getText());
+                                ref, alt);
                     } else {
                         return "Mendelian variant: INCOMPLETE: " + validationResults.get(0).getMessage();
                     }
