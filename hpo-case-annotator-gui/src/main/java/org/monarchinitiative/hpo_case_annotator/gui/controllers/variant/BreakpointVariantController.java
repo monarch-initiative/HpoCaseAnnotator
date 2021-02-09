@@ -67,8 +67,8 @@ public class BreakpointVariantController extends AbstractVariantController {
 
 
     @Inject
-    public BreakpointVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
-        super(elementValues, hostServices);
+    public BreakpointVariantController(HostServicesWrapper hostServices, GuiElementValues elementValues) {
+        super(hostServices, elementValues);
     }
 
     @Override

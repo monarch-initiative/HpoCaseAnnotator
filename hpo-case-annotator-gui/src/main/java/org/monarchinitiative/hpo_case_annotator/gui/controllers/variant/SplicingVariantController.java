@@ -111,8 +111,8 @@ public final class SplicingVariantController extends AbstractVariantController {
      * Create instance of this class which acts as a controller from MVC pattern.
      */
     @Inject
-    public SplicingVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
-        super(elementValues, hostServices);
+    public SplicingVariantController(HostServicesWrapper hostServices, GuiElementValues elementValues) {
+        super(hostServices, elementValues);
     }
 
 
