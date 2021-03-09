@@ -2,6 +2,8 @@
 
 ### latest
 
+- use `phenopacket-schema v1.0.0` when exporting phenopackets
+
 ### v1.0.14
 
 - fix PMID-based fetching of publication metadata from Pubmed that was broken due to changes in PubMed design
