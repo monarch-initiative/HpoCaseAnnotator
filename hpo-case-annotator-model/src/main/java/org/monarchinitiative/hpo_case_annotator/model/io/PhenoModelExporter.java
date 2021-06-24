@@ -1,9 +1,9 @@
 package org.monarchinitiative.hpo_case_annotator.model.io;
 
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
+import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +74,7 @@ public class PhenoModelExporter implements ModelExporter {
     void exportModel(DiseaseCase model, Writer writer) throws IOException {
         // ID_SUMMARY: author;year;gene_symbol;patient_id
         String id_summary = String.join(";",
-                ModelUtils.getFirstAuthorsSurname(model.getPublication()),
+                ModelUtils.getFirstAuthorsSurname(model.getPublication().getAuthorList()),
                 model.getPublication().getYear(),
                 model.getGene().getSymbol(),
                 model.getFamilyInfo().getFamilyOrProbandId());
@@ -82,7 +82,7 @@ public class PhenoModelExporter implements ModelExporter {
         String modelLine = String.join(delimiter,
                 model.getGene().getSymbol(),
                 model.getPublication().getPmid(),
-                ModelUtils.getFirstAuthorsSurname(model.getPublication()),
+                ModelUtils.getFirstAuthorsSurname(model.getPublication().getAuthorList()),
                 id_summary,
                 getVariantString(model),
                 getPhenoString(model));

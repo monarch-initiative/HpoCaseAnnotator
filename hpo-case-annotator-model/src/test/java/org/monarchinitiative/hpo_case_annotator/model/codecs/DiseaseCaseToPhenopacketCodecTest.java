@@ -34,7 +34,7 @@ public class DiseaseCaseToPhenopacketCodecTest {
 
         // assert
         assertThat(pp, is(notNullValue()));
-        assertThat(pp.getId(), is("PMID:23954224-Ben_Mahmoud-2013-B3GLCT-Tunisian_patients"));
+        assertThat(pp.getId(), is("Ben_Mahmoud-2013-23954224-B3GLCT-Tunisian_patients"));
         assertThat(pp.getSubject(), is(Individual.newBuilder()
                 .setId("Tunisian patients")
                 .setAgeAtCollection(Age.newBuilder().setAge("P25Y").build())
@@ -103,6 +103,7 @@ public class DiseaseCaseToPhenopacketCodecTest {
                         .setGenomeAssembly("GRCh37")
                         .setChr("13")
                         .setPos(31843349)
+                        .setId("85973ae19dc4c31b6c3d8652fd2df87e")
                         .setRef("A")
                         .setAlt("G")
                         .build())
@@ -139,7 +140,7 @@ public class DiseaseCaseToPhenopacketCodecTest {
 
         // -- assert
         // id
-        assertThat(pp.getId(), is("PMID:22712005-Beygo-2012-TCOF1-M18662"));
+        assertThat(pp.getId(), is("Beygo-2012-22712005-TCOF1-M18662"));
 
         // subject
         assertThat(pp.getSubject(), is(Individual.newBuilder()
@@ -247,7 +248,7 @@ public class DiseaseCaseToPhenopacketCodecTest {
 
         // -- assert
         // id
-        assertThat(pp.getId(), is("PMID:22712005-Beygo-2012-TCOF1-M18662"));
+        assertThat(pp.getId(), is("Beygo-2012-22712005-TCOF1-M18662"));
 
         // here we mainly need to test the variant
         assertThat(pp.getVariantsCount(), is(1));
