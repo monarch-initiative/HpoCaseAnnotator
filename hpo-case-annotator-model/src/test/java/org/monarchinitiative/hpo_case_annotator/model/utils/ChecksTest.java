@@ -6,11 +6,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class ChecksTest {
 
-    private static List<Character> ILLEGAL_CHARS = Arrays.asList('/', '\n', '\r', '\t', '\0', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':');
+    private static final List<Character> ILLEGAL_CHARS = Arrays.asList('/', '\n', '\r', '\t',
+            '\0', '\f', '`', '?', '*', '\\', '<', '>', '|');
 
     @Test
     public void isLegalFileName() {

@@ -1,13 +1,16 @@
 package org.monarchinitiative.hpo_case_annotator.model.utils;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Checks {
 
-    /** I don't want these characters in filenames */
-    private static List<Character> ILLEGAL_CHARACTERS = Arrays.asList('/', '\n', '\r', '\t',
-            '\0', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':');
+    /**
+     * I don't want these characters in filenames
+     */
+    private static final Set<Character> ILLEGAL_CHARACTERS = new HashSet<>(Arrays.asList('/', '\n', '\r', '\t',
+            '\0', '\f', '`', '?', '*', '\\', '<', '>', '|'));
 
     public static boolean isLegalFileName(String fileName) {
         if (fileName == null) {

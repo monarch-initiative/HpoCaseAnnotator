@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.model.codecs;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.phenopackets.schema.v1.Phenopacket;
 import org.phenopackets.schema.v1.core.OntologyClass;
@@ -214,10 +215,13 @@ public abstract class AbstractDiseaseCaseToPhenopacketCodec implements Codec<Dis
                     info.add("IMPRECISE");
                 }
             }
+
+            String id = String.join("-", vp.getContig(), String.valueOf(vp.getPos()), vp.getRefAllele(), vp.getAltAllele());
+            String digest = DigestUtils.md5Hex(id);
             return Variant.newBuilder()
                     .setVcfAllele(VcfAllele.newBuilder()
                             .setGenomeAssembly(hcaGenomeAssemblyToPhenopacketGenomeAssembly(vp.getGenomeAssembly()))
-                            //.setId()
+                            .setId(digest)
                             .setChr(vp.getContig())
                             .setPos(vp.getPos())
                             .setRef(vp.getRefAllele())

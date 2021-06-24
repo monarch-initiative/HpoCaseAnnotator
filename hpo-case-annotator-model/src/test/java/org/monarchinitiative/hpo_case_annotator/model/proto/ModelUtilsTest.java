@@ -7,9 +7,9 @@ import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class ModelUtilsTest {
@@ -39,7 +39,7 @@ public class ModelUtilsTest {
 
     @Test
     public void getFirstAuthorsSurname() {
-        assertThat(ModelUtils.getFirstAuthorsSurname(publication), is("Ben_Mahmoud"));
+        assertThat(ModelUtils.getFirstAuthorsSurname(publication.getAuthorList()), is("Ben_Mahmoud"));
     }
 
     @Test
@@ -56,7 +56,7 @@ public class ModelUtilsTest {
         Publication publication = Publication.newBuilder()
                 .setAuthorList("Irfanullah, Umair M, Khan S, Ahmad W")
                 .build();
-        String surname = ModelUtils.getFirstAuthorsSurname(publication);
+        String surname = ModelUtils.getFirstAuthorsSurname(publication.getAuthorList());
         assertThat(surname, is(equalTo("Irfanullah")));
     }
 
@@ -74,5 +74,15 @@ public class ModelUtilsTest {
             assertThat(ModelUtils.getFileNameWithSampleId(dc),
                     is(expected.get(i) + "-2000-ABCD4-proband1"));
         }
+    }
+
+    @Test
+    public void normalizeAsciiText() {
+        List<String> payloads = Arrays.asList("Cuchet-Lourenço", "Treviño-Alanís JC", "Anczuków O", "Béroud C", "Brüggenwirth HT", "Schön H", "Gonçalves V", "Flønes K");
+        List<String> actual = payloads.stream()
+                .map(ModelUtils::normalizeAsciiText)
+                .collect(Collectors.toList());
+        assertThat(actual, hasItems("Cuchet-Lourenco", "Trevino-Alanis JC", "Anczukow O", "Beroud C", "Bruggenwirth HT", "Schon H", "Goncalves V", "Flønes K"));
+
     }
 }

@@ -27,9 +27,10 @@ public class ModelUtils {
      */
     public static String getFileNameFor(DiseaseCase model) {
         Publication publication = model.getPublication();
-        String ye = (publication.getYear() == null) ? "year" : publication.getYear();
-        String gn = (model.getGene().getSymbol() == null) ? "genesymbol" : model.getGene().getSymbol();
-        String candidate = String.format("%s-%s-%s", getFirstAuthorsSurname(publication), ye, gn);
+        String firstAuthorsSurname = getFirstAuthorsSurname(publication.getAuthorList());
+        String ye = (publication.getYear().isEmpty()) ? "year" : publication.getYear();
+        String gn = (model.getGene().getSymbol().isEmpty()) ? "genesymbol" : model.getGene().getSymbol();
+        String candidate = String.format("%s-%s-%s", firstAuthorsSurname, ye, gn);
         return Checks.makeLegalFileNameWithNoWhitespace(candidate);
     }
 
@@ -47,24 +48,33 @@ public class ModelUtils {
      */
     public static String getFileNameWithSampleId(DiseaseCase model) {
         Publication publication = model.getPublication();
-        String ye = (publication.getYear() == null) ? "year" : publication.getYear();
-        String gn = (model.getGene().getSymbol() == null) ? "genesymbol" : model.getGene().getSymbol();
+        String ye = (publication.getYear().isEmpty()) ? "year" : publication.getYear();
+        String gn = (model.getGene().getSymbol().isEmpty()) ? "genesymbol" : model.getGene().getSymbol();
         String sid = model.getFamilyInfo().getFamilyOrProbandId();
-        String candidate = String.format("%s-%s-%s-%s", getFirstAuthorsSurname(publication), ye, gn, sid);
+        String candidate = String.format("%s-%s-%s-%s", getFirstAuthorsSurname(publication.getAuthorList()), ye, gn, sid);
 
-        // replaces non ASCII characters like `í` with `i`, etc..
-        candidate = Normalizer.normalize(candidate, Normalizer.Form.NFD);
-        candidate = DIACRITICS_AND_FRIENDS.matcher(candidate).replaceAll("");
+        candidate = normalizeAsciiText(candidate);
 
         return Checks.makeLegalFileNameWithNoWhitespace(candidate);
     }
 
-    public static String getFirstAuthorsSurname(Publication publication) {
+    /**
+     * Replace non ASCII characters like <code>í</code> with <code>i</code>, etc..
+     *
+     * @param string to be normalized
+     * @return normalized string
+     */
+    public static String normalizeAsciiText(String string) {
+        String candidate = Normalizer.normalize(string, Normalizer.Form.NFD);
+        return DIACRITICS_AND_FRIENDS.matcher(candidate).replaceAll("");
+    }
+
+    public static String getFirstAuthorsSurname(String authorList) {
         String author;
-        if (publication.getAuthorList() == null || publication.getAuthorList().isEmpty()) {
+        if (authorList.isEmpty()) {
             author = "author";
         } else {
-            String firstAuthor = publication.getAuthorList().split(",")[0];
+            String firstAuthor = authorList.split(",")[0];
             int lastindex = firstAuthor.lastIndexOf(' ');
             if (lastindex >= 0)
                 author = firstAuthor.substring(0, lastindex).replaceAll("\\s", "_");

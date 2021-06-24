@@ -211,7 +211,7 @@ class DiseaseCaseModelExample {
 
                 /* Publication data */
                 .setPublication(
-                        Publication.newBuilder().setAuthorList("Aguilar-Ramirez P, Reis ES, Florido MP, Barbosa AS, Farah CS, Costa-Carvalho BT, Isaac L")
+                        Publication.newBuilder().setAuthorList("Aguilar-Ramírez P, Reis ES, Florido MP, Barbosa AS, Farah CS, Costa-Carvalho BT, Isaac L")
                                 .setTitle("Skipping of exon 30 in C5 gene results in complete human C5 deficiency and demonstrates the importance of C5d and CUB domains for stability")
                                 .setJournal("Mol Immunol")
                                 .setYear("2009")
@@ -226,7 +226,7 @@ class DiseaseCaseModelExample {
                         .setEntrezId(727)
                         .build())
                 /* Variants which belong to this model */
-                .setVariant(0, Variant.newBuilder()
+                .addVariant(Variant.newBuilder()
                         .setVariantPosition(VariantPosition.newBuilder()
                                 .setGenomeAssembly(GenomeAssembly.HG_19)
                                 .setContig("9")
@@ -252,7 +252,7 @@ class DiseaseCaseModelExample {
                                 .setOtherValidation(true)
                                 .build())
                         .build())
-                .setVariant(1, Variant.newBuilder()
+                .addVariant(Variant.newBuilder()
                         .setVariantPosition(VariantPosition.newBuilder()
                                 .setGenomeAssembly(GenomeAssembly.HG_19)
                                 .setContig("9")
@@ -277,7 +277,7 @@ class DiseaseCaseModelExample {
                                 .setReporterResidualActivity("RES_ACT")
                                 .build())
                         .build())
-                .setVariant(2, Variant.newBuilder()
+                .addVariant(Variant.newBuilder()
                         .setVariantPosition(VariantPosition.newBuilder()
                                 .setGenomeAssembly(GenomeAssembly.HG_19)
                                 .setContig("9")
@@ -303,7 +303,7 @@ class DiseaseCaseModelExample {
                         .build())
                 /* Family/proband information */
                 .setFamilyInfo(FamilyInfo.newBuilder()
-                        .setFamilyOrProbandId("II:9")
+                        .setFamilyOrProbandId("1/II:9")
                         .setSex(Sex.MALE)
                         .setAge("19")
                         .build())
@@ -469,7 +469,7 @@ class DiseaseCaseModelExample {
     }
 
     private static Publication beygoPublication() {
-        return Publication.newBuilder().setAuthorList("Beygo J, Buiting K, Seland S, Lüdecke HJ, Hehr U, Lich C, Prager B, Lohmann DR, Wieczorek D")
+        return Publication.newBuilder().setAuthorList("Beygó J, Buiting K, Seland S, Lüdecke HJ, Hehr U, Lich C, Prager B, Lohmann DR, Wieczorek D")
                 .setTitle("First Report of a Single Exon Deletion in TCOF1 Causing Treacher Collins Syndrome")
                 .setJournal("Mol Syndromol")
                 .setYear("2012")
