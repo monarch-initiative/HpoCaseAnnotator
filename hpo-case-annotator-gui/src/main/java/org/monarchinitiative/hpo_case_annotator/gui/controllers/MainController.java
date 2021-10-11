@@ -26,7 +26,9 @@ import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.StartupTask;
 import org.monarchinitiative.hpo_case_annotator.model.codecs.AbstractDiseaseCaseToPhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.model.codecs.Codecs;
-import org.monarchinitiative.hpo_case_annotator.model.io.*;
+import org.monarchinitiative.hpo_case_annotator.model.io.ModelExporter;
+import org.monarchinitiative.hpo_case_annotator.model.io.PhenoModelExporter;
+import org.monarchinitiative.hpo_case_annotator.model.io.ProtoJSONModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
@@ -155,12 +157,13 @@ public final class MainController {
                 .collect(Collectors.toList());
 
         boolean useXML, useJSON;
-        useXML = fileNameList.stream().allMatch(fileName -> fileName.matches(Codecs.SupportedDiseaseCaseFormat.getRegexMap().get(Codecs.SupportedDiseaseCaseFormat.XML)));
+//        useXML = fileNameList.stream().allMatch(fileName -> fileName.matches(Codecs.SupportedDiseaseCaseFormat.getRegexMap().get(Codecs.SupportedDiseaseCaseFormat.XML)));
         useJSON = fileNameList.stream().allMatch(fileName -> fileName.matches(Codecs.SupportedDiseaseCaseFormat.getRegexMap().get(Codecs.SupportedDiseaseCaseFormat.JSON)));
 
-        if (useXML) { // the directory contains only XML-encoded files
-            return Codecs.SupportedDiseaseCaseFormat.XML;
-        } else if (useJSON) { // the directory contains only JSON-encoded files
+//        if (useXML) { // the directory contains only XML-encoded files
+//            return Codecs.SupportedDiseaseCaseFormat.XML;
+//        } else
+        if (useJSON) { // the directory contains only JSON-encoded files
             return Codecs.SupportedDiseaseCaseFormat.JSON;
         } else { // the directory contains a mixture of XML and JSON-encoded files. Let user choose which to use
             return PopUps.getToggleChoiceFromUser(Arrays.asList(Codecs.SupportedDiseaseCaseFormat.values()), "Choose which format to use", "Model directory contains models stored in multiple formats")
@@ -205,9 +208,9 @@ public final class MainController {
             case JSON:
                 decodingFunction = ProtoJSONModelParser::readDiseaseCase;
                 break;
-            case XML:
-                decodingFunction = XMLModelParser::loadDiseaseCase;
-                break;
+//            case XML:
+//                decodingFunction = XMLModelParser::loadDiseaseCase;
+//                break;
             default:
                 LOGGER.warn("Unable to create decoder for selected format '{}'", selectedFormat);
                 return Collections.emptyMap();
@@ -293,15 +296,15 @@ public final class MainController {
         for (File file : files) {
             DiseaseCase diseaseCase;
             switch (filechooser.getSelectedExtensionFilter().getDescription()) {
-                case SPLICING_XML:
-                    try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
-                        diseaseCase = XMLModelParser.loadDiseaseCase(is)
-                                .orElseThrow(() -> new IOException("Unable to decode XML file"));
-                    } catch (IOException e) {
-                        PopUps.showException("Open XML model", "Sorry", "Unable to decode XML file", e);
-                        return;
-                    }
-                    break;
+//                case SPLICING_XML:
+//                    try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
+//                        diseaseCase = XMLModelParser.loadDiseaseCase(is)
+//                                .orElseThrow(() -> new IOException("Unable to decode XML file"));
+//                    } catch (IOException e) {
+//                        PopUps.showException("Open XML model", "Sorry", "Unable to decode XML file", e);
+//                        return;
+//                    }
+//                    break;
                 case PROTO_JSON:
                     try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
                         diseaseCase = ProtoJSONModelParser.readDiseaseCase(is)
@@ -493,19 +496,20 @@ public final class MainController {
 
     @FXML
     void exportToCSVMenuItemAction() {
-        Map<File, DiseaseCase> models = readDiseaseCasesFromDirectory(optionalResources.getDiseaseCaseDir().getAbsoluteFile());
+        PopUps.showWarningDialog("Sorry", "Sorry", "Export functionality was removed");
+//        Map<File, DiseaseCase> models = readDiseaseCasesFromDirectory(optionalResources.getDiseaseCaseDir().getAbsoluteFile());
 
-        ModelExporter exporter = new TSVModelExporter("\t");
-        File where = PopUps.selectFileToSave(primaryStage, optionalResources.getDiseaseCaseDir(),
-                "Export variants to CSV file", "variants.tsv");
-        if (where != null) {
-            try (Writer writer = new FileWriter(where)) {
-                exporter.exportModels(models.values(), writer);
-                LOGGER.info("Exported {} cases", models.size());
-            } catch (IOException e) {
-                LOGGER.warn(String.format("Error occured during variant export: %s", e.getMessage()), e);
-            }
-        }
+//        ModelExporter exporter = new TSVModelExporter("\t");
+//        File where = PopUps.selectFileToSave(primaryStage, optionalResources.getDiseaseCaseDir(),
+//                "Export variants to CSV file", "variants.tsv");
+//        if (where != null) {
+//            try (Writer writer = new FileWriter(where)) {
+//                exporter.exportModels(models.values(), writer);
+//                LOGGER.info("Exported {} cases", models.size());
+//            } catch (IOException e) {
+//                LOGGER.warn(String.format("Error occured during variant export: %s", e.getMessage()), e);
+//            }
+//        }
     }
 
 
@@ -764,15 +768,16 @@ public final class MainController {
                     LOGGER.warn("Unable to store data into file {}", currentModelPath, e);
                     return null;
                 }
-            } else if (fileChooser.getSelectedExtensionFilter().getDescription().equals(xmlFileFormat.getDescription())) {
-                try (OutputStream os = Files.newOutputStream(currentModelPath)) {
-                    XMLModelParser.saveDiseaseCase(model, os);
-                } catch (IOException e) {
-                    PopUps.showException(conversationTitle, "Unable to store data into file", "", e);
-                    LOGGER.warn("Unable to store data into file {}", currentModelPath, e);
-                    return null;
-                }
             }
+//            else if (fileChooser.getSelectedExtensionFilter().getDescription().equals(xmlFileFormat.getDescription())) {
+//                try (OutputStream os = Files.newOutputStream(currentModelPath)) {
+//                    XMLModelParser.saveDiseaseCase(model, os);
+//                } catch (IOException e) {
+//                    PopUps.showException(conversationTitle, "Unable to store data into file", "", e);
+//                    LOGGER.warn("Unable to store data into file {}", currentModelPath, e);
+//                    return null;
+//                }
+//            }
         } else {
             // update the Biocurator ID
             model = model.toBuilder()
@@ -780,9 +785,10 @@ public final class MainController {
                     .build();
             try (OutputStream os = Files.newOutputStream(currentModelPath)) {
                 // save in the same format the model was saved
-                if (currentModelPath.toFile().getName().endsWith(".xml")) {
-                    XMLModelParser.saveDiseaseCase(model, os);
-                } else if (currentModelPath.toFile().getName().endsWith(".json")) {
+//                if (currentModelPath.toFile().getName().endsWith(".xml")) {
+//                    XMLModelParser.saveDiseaseCase(model, os);
+//                } else
+                if (currentModelPath.toFile().getName().endsWith(".json")) {
                     ProtoJSONModelParser.saveDiseaseCase(os, model, StandardCharsets.UTF_8); // TODO - charset is hardcoded
                 }
             } catch (IOException e) {

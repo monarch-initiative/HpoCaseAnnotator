@@ -12,7 +12,6 @@ import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
-import org.monarchinitiative.hpo_case_annotator.model.xml_model.DiseaseCaseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +21,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * This class is the controller for dialog that presents results of validation of {@link DiseaseCaseModel}s. Validation
+ * This class is the controller for dialog that presents results of validation of {@link DiseaseCase}s. Validation
  * is performed by {@link ValidationRunner}. For each model, the runner runs a validation using {@link org.monarchinitiative.hpo_case_annotator.core.validation.Validator}s
  * to create a list of {@link ValidationResult}s.
  * <p>

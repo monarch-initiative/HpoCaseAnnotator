@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.core.refgenome;
+package org.monarchinitiative.hpo_case_annotator.gui.io;
 
 import htsjdk.samtools.reference.IndexedFastaSequenceFile;
 import org.junit.jupiter.api.AfterEach;

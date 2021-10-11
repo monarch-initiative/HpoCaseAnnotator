@@ -6,7 +6,6 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.Gene;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 import org.monarchinitiative.hpo_case_annotator.model.utils.Checks;
 import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
-import org.monarchinitiative.hpo_case_annotator.model.xml_model.DiseaseCaseModel;
 
 import java.util.*;
 
@@ -25,9 +24,9 @@ public final class Codecs {
         return new DiseaseCaseToPhenopacketCodec();
     }
 
-    public static DiseaseCaseToDiseaseCaseModelCodec diseaseCaseToDiseaseCaseModelCodec() {
-        return new DiseaseCaseToDiseaseCaseModelCodec();
-    }
+//    public static DiseaseCaseToDiseaseCaseModelCodec diseaseCaseToDiseaseCaseModelCodec() {
+//        return new DiseaseCaseToDiseaseCaseModelCodec();
+//    }
 
     public static AbstractDiseaseCaseToPhenopacketCodec threesPhenopacketCodec() {
         return new DiseaseCaseToThreesPhenopacketCodec();
@@ -66,11 +65,6 @@ public final class Codecs {
     public enum SupportedDiseaseCaseFormat {
 
         /**
-         * The format represented by {@link DiseaseCaseModel} class and decoded by {@link org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser}.
-         */
-        XML,
-
-        /**
          * The format represented by {@link DiseaseCase} class (protobuf) and decoded by {@link org.monarchinitiative.hpo_case_annotator.model.io.ProtoJSONModelParser}.
          */
         JSON;
@@ -89,7 +83,6 @@ public final class Codecs {
 
         private static Map<SupportedDiseaseCaseFormat, String> initializeRegexMap() {
             Map<SupportedDiseaseCaseFormat, String> regexMap = new HashMap<>();
-            regexMap.put(SupportedDiseaseCaseFormat.XML, "[\\w\\W]+\\.xml");
             regexMap.put(SupportedDiseaseCaseFormat.JSON, "[\\w\\W]+\\.json");
             return ImmutableMap.copyOf(regexMap);
         }

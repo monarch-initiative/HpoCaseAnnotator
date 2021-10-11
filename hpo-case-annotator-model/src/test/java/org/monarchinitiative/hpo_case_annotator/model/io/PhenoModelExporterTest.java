@@ -42,10 +42,10 @@ public class PhenoModelExporterTest {
     @BeforeAll
     public static void setUpBefore() throws Exception {
         Path baroneCase = Paths.get(TestResources.TEST_GPI_MODEL_FILE_DIR.toURI()).resolve("Barone-2012-DPM2.xml");
-        try (InputStream is = Files.newInputStream(baroneCase)) {
-            XMLModelParser.loadDiseaseCase(is)
-                    .ifPresent(cases::add);
-        }
+//        try (InputStream is = Files.newInputStream(baroneCase)) {
+//            XMLModelParser.loadDiseaseCase(is)
+//                    .ifPresent(cases::add);
+//        }
     }
 
 

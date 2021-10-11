@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.model.io;
 
 import com.google.protobuf.util.JsonFormat;
-import org.monarchinitiative.hpo_case_annotator.model.codecs.DiseaseCaseToDiseaseCaseModelCodec;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
@@ -87,7 +86,7 @@ public class ProtoJSONModelParser implements ModelParser {
             for (Variant.Builder varBuilder : builder.getVariantBuilderList()) {
                 if (varBuilder.getVariantPosition().equals(VariantPosition.getDefaultInstance())) {
                     varBuilder.setVariantPosition(VariantPosition.newBuilder()
-                            .setGenomeAssembly(DiseaseCaseToDiseaseCaseModelCodec.convertGenomeAssemblyString(builder.getGenomeBuild()))
+//                            .setGenomeAssembly(DiseaseCaseToDiseaseCaseModelCodec.convertGenomeAssemblyString(builder.getGenomeBuild()))
                             .setContig(varBuilder.getContig())
                             .setPos(varBuilder.getPos())
                             .setRefAllele(varBuilder.getRefAllele())

@@ -1,10 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.gui;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
-import org.junit.runners.BlockJUnit4ClassRunner;
-import org.junit.runners.model.InitializationError;
+//import org.junit.runners.BlockJUnit4ClassRunner;
+//import org.junit.runners.model.InitializationError;
 
 /**
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
