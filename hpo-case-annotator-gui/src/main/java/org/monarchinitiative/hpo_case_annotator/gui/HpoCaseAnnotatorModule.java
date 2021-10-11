@@ -43,7 +43,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
     /**
      * This is the {@link Stage} which is provided by JavaFX and registered into the Spring container in the
-     * {@link Main#start(Stage)} method.
+     * {@link App#start(Stage)} method.
      */
     private final Stage primaryStage;
 
@@ -294,13 +294,13 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
     @Named("appVersion")
     private String appVersion() {
         // this property is set in Play#init()
-        return System.getProperty(Main.HCA_VERSION_PROP_KEY);
+        return System.getProperty(App.HCA_VERSION_PROP_KEY);
     }
 
     @Provides
     @Named("appName")
     private String appName() {
         // this property is set in Play#init()
-        return System.getProperty(Main.HCA_NAME_KEY);
+        return System.getProperty(App.HCA_NAME_KEY);
     }
 }

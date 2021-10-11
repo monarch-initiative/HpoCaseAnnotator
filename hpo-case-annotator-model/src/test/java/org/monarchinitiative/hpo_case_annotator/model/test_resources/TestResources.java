@@ -1,6 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.model.test_resources;
 
-import org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.phenopackets.schema.v1.Family;
 import org.phenopackets.schema.v1.Phenopacket;
@@ -14,8 +13,6 @@ import java.net.URL;
 public final class TestResources {
 
     public static final String SOFTWARE_VERSION = "Hpo Case Annotator";
-
-    public static final URL TEST_XML_MODEL_FILE_DIR = XMLModelParser.class.getResource("");
 
     public static final URL TEST_GPI_MODEL_FILE_DIR = TestResources.class.getResource("/gpi_model");
 

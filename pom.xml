@@ -20,17 +20,26 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
+        <java.version>16</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
         <jannovar.version>0.27</jannovar.version>
         <phenopacket.version>1.0.0</phenopacket.version>
-        <jackson.fasterxml.version>2.8.8</jackson.fasterxml.version>
-        <spring.version>4.3.8.RELEASE</spring.version>
-        <junit.version>4.12</junit.version>
-        <slf4j.version>1.7.25</slf4j.version>
-        <protobuf.version>3.8.0</protobuf.version>
-        <commons-codec.version>1.15</commons-codec.version>
         <phenol.version>1.6.0</phenol.version>
-        <testfx.version>4.0.15-alpha</testfx.version>
+        <svart.version>2.0.0-SNAPSHOT</svart.version>
+        <spring.version>4.3.8.RELEASE</spring.version>
+        <guice.version>5.0.1</guice.version>
+        <protobuf.version>3.8.0</protobuf.version>
+        <hpotextmining.version>0.2.8</hpotextmining.version>
+
+        <javafx.version>${java.version}</javafx.version>
+        <controlsfx.version>11.1.0</controlsfx.version>
+
+        <junit.version>4.12</junit.version>
+        <commons-codec.version>1.15</commons-codec.version>
+        <commons-compress.version>1.21</commons-compress.version>
+
     </properties>
 
     <scm>
@@ -40,8 +49,19 @@
         <tag>v@{project.version}</tag>
     </scm>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.5.5</version>
+    </parent>
+
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.monarchinitiative.hpotextmining</groupId>
+                <artifactId>hpotextmining-gui</artifactId>
+                <version>${hpotextmining.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.monarchinitiative.phenol</groupId>
                 <artifactId>phenol-core</artifactId>
@@ -58,17 +78,47 @@
                 <version>${phenol.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
+                <groupId>org.monarchinitiative.svart</groupId>
+                <artifactId>svart</artifactId>
+                <version>${svart.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-graphics</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-fxml</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-web</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.controlsfx</groupId>
+                <artifactId>controlsfx</artifactId>
+                <version>${controlsfx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons-compress.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.inject</groupId>
+                <artifactId>guice</artifactId>
+                <version>${guice.version}</version>
             </dependency>
 
-            <!-- Libraries for testing -->
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-            </dependency>
+            <!-- Testing libraries -->
             <dependency>
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest-all</artifactId>
@@ -78,11 +128,6 @@
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
                 <version>2.23.4</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-simple</artifactId>
-                <version>${slf4j.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -95,8 +140,8 @@
 
         <!-- Libraries for testing -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
