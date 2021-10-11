@@ -25,14 +25,11 @@
 
 
     <dependencies>
-        <!-- For model classes -->
         <dependency>
             <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
             <artifactId>hpo-case-annotator-model</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/de.charite.compbio/jannovar-core -->
         <dependency>
             <groupId>de.charite.compbio</groupId>
             <artifactId>jannovar-core</artifactId>
@@ -44,8 +41,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.github.samtools/htsjdk -->
         <dependency>
             <groupId>com.github.samtools</groupId>
             <artifactId>htsjdk</artifactId>
