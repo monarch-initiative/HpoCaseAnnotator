@@ -1,27 +1,28 @@
 package org.monarchinitiative.hpo_case_annotator.cli;
 
 import com.beust.jcommander.ParameterException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.hpo_case_annotator.cli.cmd.AbstractNamedCommand;
 import org.monarchinitiative.hpo_case_annotator.cli.cmd.StatsCommand;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MainTest {
 
     private Main main;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         main = new Main();
     }
 
-    @Test(expected = ParameterException.class)
+    @Test
     public void missingRequiredArgs() {
         String[] args = {"stats"};
-        main.parseCli(args);
+        assertThrows(ParameterException.class, () -> main.parseCli(args));
     }
 
     @Test

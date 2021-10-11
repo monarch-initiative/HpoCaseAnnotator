@@ -1,7 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.hpo_case_annotator.core.DiseaseCaseModelExample;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 
 public class CompletenessValidatorTest {
@@ -20,7 +20,7 @@ public class CompletenessValidatorTest {
     private CompletenessValidator validator;
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         validator = new CompletenessValidator();
     }

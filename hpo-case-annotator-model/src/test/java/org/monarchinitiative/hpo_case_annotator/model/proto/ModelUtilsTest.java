@@ -1,7 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.model.proto;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.hpo_case_annotator.model.test_resources.TestResources;
 import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
 
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ModelUtilsTest {
 
@@ -19,7 +19,7 @@ public class ModelUtilsTest {
     private DiseaseCase diseaseCase;
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         diseaseCase = TestResources.benMahmoud2013B3GLCT();
         publication = diseaseCase.getPublication();

@@ -1,6 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.core.refgenome;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 
 import java.io.ByteArrayInputStream;
@@ -9,8 +9,8 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test serialization and deserialization of {@link GenomeAssemblies}.

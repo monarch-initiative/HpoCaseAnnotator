@@ -1,21 +1,21 @@
 package org.monarchinitiative.hpo_case_annotator.core.publication;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.hpo_case_annotator.core.Utils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 
 import java.nio.file.Paths;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
-import static org.junit.Assert.assertThat;
 
 public class PublicationDataParserPubmedFormatTest {
 
     private PublicationDataParserPubmedFormat parser;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         parser = new PublicationDataParserPubmedFormat();
     }

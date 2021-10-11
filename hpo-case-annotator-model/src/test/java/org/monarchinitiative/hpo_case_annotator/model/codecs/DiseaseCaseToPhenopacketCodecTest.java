@@ -1,7 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.model.codecs;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.test_resources.TestResources;
 import org.phenopackets.schema.v1.Phenopacket;
@@ -10,8 +10,8 @@ import org.phenopackets.schema.v1.core.*;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
 import static org.monarchinitiative.hpo_case_annotator.model.test_resources.PhenoPacketTestUtil.HET;
 import static org.monarchinitiative.hpo_case_annotator.model.test_resources.PhenoPacketTestUtil.ontologyClass;
 
@@ -19,7 +19,7 @@ public class DiseaseCaseToPhenopacketCodecTest {
 
     private DiseaseCaseToPhenopacketCodec instance;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         instance = new DiseaseCaseToPhenopacketCodec();
     }

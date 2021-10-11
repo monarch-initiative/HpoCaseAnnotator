@@ -1,13 +1,9 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.SequenceDao;
 import org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser;
@@ -16,13 +12,12 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
 
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * At first two real-life model files are tested and then invalid cases are tested.
@@ -31,8 +26,8 @@ import static org.junit.Assert.assertThat;
  */
 public class GenomicPositionValidatorTest {
 
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
+//    @Rule
+//    public MockitoRule rule = MockitoJUnit.rule();
 
     @Mock
     private GenomeAssemblies assemblies;
@@ -68,6 +63,8 @@ public class GenomicPositionValidatorTest {
 
     @Before
     public void setUp() throws Exception {
+        assemblies = Mockito.mock(GenomeAssemblies.class);
+        hg19SequenceDao = Mockito.mock(SequenceDao.class);
         validator = new GenomicPositionValidator(assemblies);
     }
 
