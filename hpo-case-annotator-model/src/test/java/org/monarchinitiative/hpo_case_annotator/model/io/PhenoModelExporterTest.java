@@ -1,14 +1,12 @@
 package org.monarchinitiative.hpo_case_annotator.model.io;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.test_resources.TestResources;
 
-import java.io.InputStream;
 import java.io.StringWriter;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -18,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * These tests check the correct behaviour of the {@link PhenoModelExporter} class. In particular, <em>NOT</em> present
@@ -41,7 +39,7 @@ public class PhenoModelExporterTest {
     private PhenoModelExporter exporter;
 
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpBefore() throws Exception {
         Path baroneCase = Paths.get(TestResources.TEST_GPI_MODEL_FILE_DIR.toURI()).resolve("Barone-2012-DPM2.xml");
         try (InputStream is = Files.newInputStream(baroneCase)) {
@@ -51,7 +49,7 @@ public class PhenoModelExporterTest {
     }
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         this.exporter = new PhenoModelExporter(DELIMITER);
     }

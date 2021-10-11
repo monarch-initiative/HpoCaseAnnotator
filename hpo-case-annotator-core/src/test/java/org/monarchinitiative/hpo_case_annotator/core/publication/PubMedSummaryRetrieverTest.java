@@ -1,6 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.core.publication;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.hpo_case_annotator.core.Utils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 
@@ -10,9 +10,10 @@ import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.function.Function;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 /**
@@ -51,7 +52,7 @@ public class PubMedSummaryRetrieverTest {
     /**
      * Test that non-existing PMID throws IOException.
      */
-    @Test(expected = IOException.class)
+    @Test
     public void getSummaryForUnexistingPmid() throws Exception {
         String unfoundResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
                 "<!DOCTYPE eSummaryResult PUBLIC \"-//NLM//DTD esummary pubmed 20160808//EN\" \"https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20160808/esummary_pubmed.dtd\">\n" +
@@ -67,6 +68,6 @@ public class PubMedSummaryRetrieverTest {
         PubMedSummaryRetriever retriever = PubMedSummaryRetriever.builder()
                 .connectionFactory(p -> new ByteArrayInputStream(unfoundResponse.getBytes()))
                 .build();
-        retriever.getPublication("12346643234253432");
+        assertThrows(IOException.class, () -> retriever.getPublication("12346643234253432"));
     }
 }

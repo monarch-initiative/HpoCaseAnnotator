@@ -1,11 +1,9 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.mockito.Mockito;
 import org.monarchinitiative.hpo_case_annotator.core.DiseaseCaseModelExample;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.SequenceDao;
@@ -15,16 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
 
 public class ValidationRunnerTest {
 
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
+//    @Rule
+//    public MockitoRule rule = MockitoJUnit.rule();
 
     @Mock
     private GenomeAssemblies assemblies;
@@ -38,8 +34,10 @@ public class ValidationRunnerTest {
     private ValidationRunner<DiseaseCase> runner;
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
+        assemblies = Mockito.mock(GenomeAssemblies.class);
+        hg19SequenceDao = Mockito.mock(SequenceDao.class);
         runner = ValidationRunner.forAllValidations(assemblies);
     }
 
@@ -103,7 +101,7 @@ public class ValidationRunnerTest {
         List<ValidationResult> results = runner.validateSingleModel(diseaseCase);
 
         // model valid, no failures are produced
-        assertTrue(results.isEmpty());
+        assertThat(results.isEmpty(), equalTo(true));
     }
 
     @Test

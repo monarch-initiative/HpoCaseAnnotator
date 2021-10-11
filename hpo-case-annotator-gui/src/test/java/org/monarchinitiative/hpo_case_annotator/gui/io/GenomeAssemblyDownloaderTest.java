@@ -1,16 +1,16 @@
 package org.monarchinitiative.hpo_case_annotator.core.refgenome;
 
 import htsjdk.samtools.reference.IndexedFastaSequenceFile;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.URL;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test download of the ref genome tar.gz file, concatenation of all contigs into a single FASTA file and then indexing
@@ -32,14 +32,14 @@ public class GenomeAssemblyDownloaderTest {
     private GenomeAssemblyDownloader downloader;
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         downloader = new GenomeAssemblyDownloader(GENOME_URL, SINGLE_FASTA);
         downloader.setUpdateTaskVariables(false);
     }
 
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         // these files are about to be created in the next test run, so delete them after successful testing
         if (SINGLE_FASTA.exists())

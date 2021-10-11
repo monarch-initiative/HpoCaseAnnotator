@@ -1,7 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.hpo_case_annotator.core.DiseaseCaseModelExample;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
@@ -11,15 +11,15 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
-import static org.junit.Assert.assertThat;
 
 public class VariantSyntaxValidatorTest {
 
     private VariantSyntaxValidator validator;
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         validator = new VariantSyntaxValidator();
     }

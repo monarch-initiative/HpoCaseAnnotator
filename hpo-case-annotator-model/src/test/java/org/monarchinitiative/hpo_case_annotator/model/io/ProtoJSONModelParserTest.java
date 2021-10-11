@@ -1,6 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.model.io;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.monarchinitiative.hpo_case_annotator.model.test_resources.TestResources;
 
@@ -15,8 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ProtoJSONModelParserTest {
 
@@ -138,7 +137,7 @@ public class ProtoJSONModelParserTest {
             diseaseCaseOptional = ProtoJSONModelParser.readDiseaseCase(is);
         }
 
-        assertTrue(diseaseCaseOptional.isPresent());
+        assertThat(diseaseCaseOptional.isPresent(), equalTo(true));
         final DiseaseCase actual = diseaseCaseOptional.get();
 
         DiseaseCase expected = TestResources.v2Aznarez2003CFTR();
@@ -165,7 +164,7 @@ public class ProtoJSONModelParserTest {
             v1InstanceOptional = ProtoJSONModelParser.readDiseaseCase(is);
         }
 
-        assertTrue(v1InstanceOptional.isPresent());
+        assertThat(v1InstanceOptional.isPresent(), equalTo(true));
         DiseaseCase v1Data = v1InstanceOptional.get();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

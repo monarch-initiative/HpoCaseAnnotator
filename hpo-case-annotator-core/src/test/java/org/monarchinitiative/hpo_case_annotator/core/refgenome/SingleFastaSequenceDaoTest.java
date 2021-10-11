@@ -1,9 +1,9 @@
 package org.monarchinitiative.hpo_case_annotator.core.refgenome;
 
 import htsjdk.samtools.SAMException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
@@ -22,14 +22,13 @@ public class SingleFastaSequenceDaoTest {
     private SingleFastaSequenceDao sequenceDao;
 
 
-
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         sequenceDao = new SingleFastaSequenceDao(SINGLE_FASTA_PATH);
     }
 
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         sequenceDao.close();
     }
@@ -63,19 +62,19 @@ public class SingleFastaSequenceDaoTest {
     /**
      * Test that an exception is thrown, if retrieving sequence beyond end of the truncated chromosome.
      */
-    @Test(expected = SAMException.class)
+    @Test
     public void testFetchSingleNucleotideAfterEndOfContig() {
         // This query asks for one nucleotide past end of contig
-        sequenceDao.fetchSequence("chr8", 49950, 49951);
+        assertThrows(SAMException.class, () -> sequenceDao.fetchSequence("chr8", 49950, 49951));
     }
 
 
     /**
      * Test that an exception is thrown, if retrieving sequence beyond end of the truncated chromosome.
      */
-    @Test(expected = SAMException.class)
+    @Test
     public void testFetchQueryReachingPastEndOfContig() {
-        sequenceDao.fetchSequence("chr8", 49900, 49951);
+        assertThrows(SAMException.class, () -> sequenceDao.fetchSequence("chr8", 49900, 49951));
     }
 
 
@@ -92,8 +91,8 @@ public class SingleFastaSequenceDaoTest {
     /**
      * This test should result in an exception: <code>htsjdk.samtools.SAMException: Unable to find entry for contig: chrZ</code>
      */
-    @Test(expected = SAMException.class)
+    @Test
     public void testNonExistingContig() {
-        sequenceDao.fetchSequence("chrZ", 50, 100);
+        assertThrows(SAMException.class, () -> sequenceDao.fetchSequence("chrZ", 50, 100));
     }
 }
