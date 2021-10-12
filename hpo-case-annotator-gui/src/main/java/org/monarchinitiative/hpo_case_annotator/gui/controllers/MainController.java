@@ -20,19 +20,18 @@ import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
+import org.monarchinitiative.hpo_case_annotator.export.Codecs;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.StartupTask;
-import org.monarchinitiative.hpo_case_annotator.model.codecs.AbstractDiseaseCaseToPhenopacketCodec;
-import org.monarchinitiative.hpo_case_annotator.model.codecs.Codecs;
-import org.monarchinitiative.hpo_case_annotator.model.io.ModelExporter;
-import org.monarchinitiative.hpo_case_annotator.model.io.PhenoModelExporter;
-import org.monarchinitiative.hpo_case_annotator.model.io.ProtoJSONModelParser;
+import org.monarchinitiative.hpo_case_annotator.io.ModelUtils;
+import org.monarchinitiative.hpo_case_annotator.io.v1.ProtoJSONModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
-import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
+import org.monarchinitiative.hpo_case_annotator.model.transform.Codec;
+import org.monarchinitiative.hpo_case_annotator.model.transform.ModelTransformationException;
 import org.phenopackets.schema.v1.Phenopacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -203,10 +202,17 @@ public final class MainController {
         final Codecs.SupportedDiseaseCaseFormat selectedFormat = formatToUse;
 
         // create decoding function
-        Function<InputStream, Optional<DiseaseCase>> decodingFunction;
+        Function<InputStream, DiseaseCase> decodingFunction;
         switch (selectedFormat) {
             case JSON:
-                decodingFunction = ProtoJSONModelParser::readDiseaseCase;
+                decodingFunction = is -> {
+                    try {
+                        return ProtoJSONModelParser.readDiseaseCase(is);
+                    } catch (IOException e) {
+                        // TODO - prettify
+                        throw new RuntimeException(e);
+                    }
+                };
                 break;
 //            case XML:
 //                decodingFunction = XMLModelParser::loadDiseaseCase;
@@ -222,8 +228,8 @@ public final class MainController {
         Map<File, DiseaseCase> models = new HashMap<>();
         for (File path : files) { // this should not be null (precondition in javadoc)
             try (InputStream is = new FileInputStream(path)) {
-                decodingFunction.apply(is)
-                        .ifPresent(dc -> models.put(path, dc));
+                DiseaseCase diseaseCase = decodingFunction.apply(is);
+                models.put(path, diseaseCase);
             } catch (IOException e) {
                 LOGGER.warn("Unable to decode file '{}'", path.getAbsolutePath(), e);
             }
@@ -307,8 +313,7 @@ public final class MainController {
 //                    break;
                 case PROTO_JSON:
                     try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
-                        diseaseCase = ProtoJSONModelParser.readDiseaseCase(is)
-                                .orElseThrow(() -> new IOException("Unable to decode JSON file"));
+                        diseaseCase = ProtoJSONModelParser.readDiseaseCase(is);
                     } catch (FileNotFoundException e) {
                         PopUps.showException("Open JSON model", String.format("File '%s' not found", file.getAbsolutePath()), "", e);
                         return;
@@ -521,7 +526,7 @@ public final class MainController {
         File where = PopUps.selectDirectory(primaryStage, optionalResources.getDiseaseCaseDir(),
                 "Select export directory");
 
-        AbstractDiseaseCaseToPhenopacketCodec codec = Codecs.diseaseCasePhenopacketCodec();
+        Codec<DiseaseCase, Phenopacket> codec = Codecs.diseaseCasePhenopacketCodec();
 
         if (where != null) {
             int counter = 0;
@@ -530,7 +535,7 @@ public final class MainController {
                 String fileName = ModelUtils.getFileNameWithSampleId(model) + ".json";
                 File target = new File(where, fileName);
                 try (BufferedWriter writer = Files.newBufferedWriter(target.toPath())) {
-                    final Phenopacket packet = codec.encode(model);
+                    Phenopacket packet = codec.encode(model);
                     LOGGER.trace("Writing phenopacket to '{}'", target);
                     String jsonString = PRINTER.print(packet);
                     writer.write(jsonString);
@@ -538,6 +543,9 @@ public final class MainController {
                 } catch (IOException e) {
                     LOGGER.warn("Error occurred during phenopacket export", e);
                     PopUps.showException("Error", "Error occurred during phenopacket export", e.getMessage(), e);
+                } catch (ModelTransformationException e) {
+                    LOGGER.warn("Error occurred during phenopacket conversion", e);
+                    PopUps.showException("Error", "Unable to convert to Phenopacket", e.getMessage(), e);
                 }
             }
             LOGGER.info("Exported {} phenopackets", counter);
@@ -577,7 +585,7 @@ public final class MainController {
         filechooser.setSelectedExtensionFilter(jsonFormat);
 
         File where = filechooser.showSaveDialog(primaryStage);
-        AbstractDiseaseCaseToPhenopacketCodec codec = Codecs.diseaseCasePhenopacketCodec();
+        Codec<DiseaseCase, Phenopacket> codec = Codecs.diseaseCasePhenopacketCodec();
         if (where != null) {
             try (BufferedWriter writer = Files.newBufferedWriter(where.toPath())) {
                 final Phenopacket packet = codec.encode(diseaseCase);
@@ -586,6 +594,9 @@ public final class MainController {
             } catch (IOException e) {
                 LOGGER.warn("Error occured during Phenopacket export", e);
                 PopUps.showException(title, "Error occured during Phenopacket export", e.getMessage(), e);
+            } catch (ModelTransformationException e) {
+                LOGGER.warn("Error occurred during Phenopacket conversion", e);
+                PopUps.showException("Error", "Unable to convert to Phenopacket", e.getMessage(), e);
             }
         }
 
@@ -598,51 +609,15 @@ public final class MainController {
      * Data specific to splicing is encoded into {@link Phenopacket}.
      */
     @FXML
+    @Deprecated(forRemoval = true)
     public void exportPhenopacketAllCasesForThreesMenuItemAction() {
-        Map<File, DiseaseCase> models = readDiseaseCasesFromDirectory(optionalResources.getDiseaseCaseDir());
-
-        File where = PopUps.selectDirectory(primaryStage, optionalResources.getDiseaseCaseDir(),
-                "Select export directory");
-        AbstractDiseaseCaseToPhenopacketCodec codec = Codecs.threesPhenopacketCodec();
-
-        if (where != null) {
-            int counter = 0;
-            for (DiseaseCase model : models.values()) {
-                // we're exporting in JSON format
-                String fileName = ModelUtils.getFileNameWithSampleId(model) + ".json";
-                File target = new File(where, fileName);
-                try (BufferedWriter writer = Files.newBufferedWriter(target.toPath())) {
-                    final Phenopacket packet = codec.encode(model);
-                    LOGGER.trace("Writing phenopacket to '{}'", target);
-                    String jsonString = PRINTER.print(packet);
-                    writer.write(jsonString);
-                    counter++;
-                } catch (IOException e) {
-                    LOGGER.warn("Error occurred during phenopacket export", e);
-                    PopUps.showException("Error", "Error occurred during phenopacket export", e.getMessage(), e);
-                }
-            }
-            LOGGER.info("Exported {} phenopackets", counter);
-            PopUps.showInfoMessage(String.format("Exported %d phenopackets", counter), "Export phenopackets");
-        }
+        PopUps.showInfoMessage("The function was removed", "Sorry");
     }
 
     @FXML
+    @Deprecated(forRemoval = true)
     void exportPhenoModelsMenuItemAction() {
-        Map<File, DiseaseCase> models = readDiseaseCasesFromDirectory(optionalResources.getDiseaseCaseDir());
-
-        // write the cases to selected file
-        ModelExporter phenoExporter = new PhenoModelExporter("\t");
-        File where = PopUps.selectFileToSave(primaryStage, optionalResources.getDiseaseCaseDir(),
-                "Export variants in format required by GPI project", "gpi_variants.tsv");
-        if (where != null) {
-            try (Writer writer = new FileWriter(where)) {
-                phenoExporter.exportModels(models.values(), writer);
-                LOGGER.info("Exported {} models", models.size());
-            } catch (IOException e) {
-                LOGGER.warn(String.format("Error occured during variant export: %s", e.getMessage()), e);
-            }
-        }
+        PopUps.showInfoMessage("This export function has been removed", "Sorry");
     }
 
 

@@ -4,13 +4,10 @@ import java.util.Objects;
 
 public class SplicingVariantMetadata extends VariantMetadata {
 
-    /*
-     TODO - add:
-     crypticPosition
-     cryptic splice site type
-     cryptic splice site snippet
-     */
-
+    private final int crypticPosition;
+    private final CrypticSpliceSiteType crypticSpliceSiteType;
+    private final String crypticSpliceSiteSnippet;
+    private final String consequence;
     private final boolean minigeneValidation;
     private final boolean siteDirectedMutagenesisValidation;
     private final boolean rtPcrValidation;
@@ -26,6 +23,10 @@ public class SplicingVariantMetadata extends VariantMetadata {
                                     String pathomechanism,
                                     boolean cosegregation,
                                     boolean comparability,
+                                    int crypticPosition,
+                                    CrypticSpliceSiteType crypticSpliceSiteType,
+                                    String crypticSpliceSiteSnippet,
+                                    String consequence,
                                     boolean minigeneValidation,
                                     boolean siteDirectedMutagenesisValidation,
                                     boolean rtPcrValidation,
@@ -36,7 +37,10 @@ public class SplicingVariantMetadata extends VariantMetadata {
                                     boolean mutOfWtSpliceSiteValidation,
                                     boolean otherValidation) {
         super(VariantMetadataContext.SPLICING, snippet, variantClass, pathomechanism, cosegregation, comparability);
-
+        this.crypticPosition = crypticPosition;
+        this.crypticSpliceSiteType = crypticSpliceSiteType;
+        this.crypticSpliceSiteSnippet = crypticSpliceSiteSnippet;
+        this.consequence = consequence;
         this.minigeneValidation = minigeneValidation;
         this.siteDirectedMutagenesisValidation = siteDirectedMutagenesisValidation;
         this.rtPcrValidation = rtPcrValidation;
@@ -53,6 +57,10 @@ public class SplicingVariantMetadata extends VariantMetadata {
                                              String pathomechanism,
                                              boolean cosegregation,
                                              boolean comparability,
+                                             int crypticPosition,
+                                             CrypticSpliceSiteType crypticSpliceSiteType,
+                                             String crypticSpliceSiteSnippet,
+                                             String consequence,
                                              boolean minigeneValidation,
                                              boolean siteDirectedMutagenesisValidation,
                                              boolean rtPcrValidation,
@@ -67,6 +75,10 @@ public class SplicingVariantMetadata extends VariantMetadata {
                 pathomechanism,
                 cosegregation,
                 comparability,
+                crypticPosition,
+                crypticSpliceSiteType,
+                crypticSpliceSiteSnippet,
+                consequence,
                 minigeneValidation,
                 siteDirectedMutagenesisValidation,
                 rtPcrValidation,
@@ -76,6 +88,22 @@ public class SplicingVariantMetadata extends VariantMetadata {
                 pcrValidation,
                 mutOfWtSpliceSiteValidation,
                 otherValidation);
+    }
+
+    public int getCrypticPosition() {
+        return crypticPosition;
+    }
+
+    public CrypticSpliceSiteType getCrypticSpliceSiteType() {
+        return crypticSpliceSiteType;
+    }
+
+    public String getCrypticSpliceSiteSnippet() {
+        return crypticSpliceSiteSnippet;
+    }
+
+    public String getConsequence() {
+        return consequence;
     }
 
     public boolean isMinigeneValidation() {
@@ -120,18 +148,22 @@ public class SplicingVariantMetadata extends VariantMetadata {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         SplicingVariantMetadata that = (SplicingVariantMetadata) o;
-        return minigeneValidation == that.minigeneValidation && siteDirectedMutagenesisValidation == that.siteDirectedMutagenesisValidation && rtPcrValidation == that.rtPcrValidation && srProteinOverexpressionValidation == that.srProteinOverexpressionValidation && srProteinKnockdownValidation == that.srProteinKnockdownValidation && cDnaSequencingValidation == that.cDnaSequencingValidation && pcrValidation == that.pcrValidation && mutOfWtSpliceSiteValidation == that.mutOfWtSpliceSiteValidation && otherValidation == that.otherValidation;
+        return crypticPosition == that.crypticPosition && minigeneValidation == that.minigeneValidation && siteDirectedMutagenesisValidation == that.siteDirectedMutagenesisValidation && rtPcrValidation == that.rtPcrValidation && srProteinOverexpressionValidation == that.srProteinOverexpressionValidation && srProteinKnockdownValidation == that.srProteinKnockdownValidation && cDnaSequencingValidation == that.cDnaSequencingValidation && pcrValidation == that.pcrValidation && mutOfWtSpliceSiteValidation == that.mutOfWtSpliceSiteValidation && otherValidation == that.otherValidation && crypticSpliceSiteType == that.crypticSpliceSiteType && Objects.equals(crypticSpliceSiteSnippet, that.crypticSpliceSiteSnippet) && Objects.equals(consequence, that.consequence);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), minigeneValidation, siteDirectedMutagenesisValidation, rtPcrValidation, srProteinOverexpressionValidation, srProteinKnockdownValidation, cDnaSequencingValidation, pcrValidation, mutOfWtSpliceSiteValidation, otherValidation);
+        return Objects.hash(super.hashCode(), crypticPosition, crypticSpliceSiteType, crypticSpliceSiteSnippet, consequence, minigeneValidation, siteDirectedMutagenesisValidation, rtPcrValidation, srProteinOverexpressionValidation, srProteinKnockdownValidation, cDnaSequencingValidation, pcrValidation, mutOfWtSpliceSiteValidation, otherValidation);
     }
 
     @Override
     public String toString() {
         return "SplicingVariantMetadata{" +
-                "minigeneValidation=" + minigeneValidation +
+                "crypticPosition=" + crypticPosition +
+                ", crypticSpliceSiteType=" + crypticSpliceSiteType +
+                ", crypticSpliceSiteSnippet='" + crypticSpliceSiteSnippet + '\'' +
+                ", consequence='" + consequence + '\'' +
+                ", minigeneValidation=" + minigeneValidation +
                 ", siteDirectedMutagenesisValidation=" + siteDirectedMutagenesisValidation +
                 ", rtPcrValidation=" + rtPcrValidation +
                 ", srProteinOverexpressionValidation=" + srProteinOverexpressionValidation +
@@ -141,5 +173,11 @@ public class SplicingVariantMetadata extends VariantMetadata {
                 ", mutOfWtSpliceSiteValidation=" + mutOfWtSpliceSiteValidation +
                 ", otherValidation=" + otherValidation +
                 "} " + super.toString();
+    }
+
+    public enum CrypticSpliceSiteType {
+        FIVE_PRIME,
+        THREE_PRIME,
+        NO_CSS
     }
 }

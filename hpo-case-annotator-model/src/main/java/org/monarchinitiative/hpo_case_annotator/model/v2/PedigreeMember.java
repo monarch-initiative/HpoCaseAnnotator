@@ -18,7 +18,15 @@ public interface PedigreeMember extends Individual {
                              List<PhenotypicObservation> phenotypicObservations,
                              boolean isProband,
                              Sex sex) {
-        return PedigreeMemberDefault.of(id, paternalId, maternalId, age, diseases, genotypes, phenotypicObservations, isProband, sex);
+        return PedigreeMemberDefault.of(id,
+                paternalId,
+                maternalId,
+                age,
+                diseases,
+                genotypes,
+                phenotypicObservations,
+                isProband,
+                sex);
     }
 
     Optional<String> paternalId();

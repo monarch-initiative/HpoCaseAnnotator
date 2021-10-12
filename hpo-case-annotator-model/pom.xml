@@ -10,13 +10,6 @@
     <artifactId>hpo-case-annotator-model</artifactId>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-
         <extensions>
             <extension>
                 <groupId>kr.motd.maven</groupId>
@@ -67,28 +60,12 @@
             <artifactId>svart</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-        </dependency>
-
-        <!-- TODO - remove -->
-        <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>${protobuf.version}</version>
         </dependency>
-        <!-- TODO - remove -->
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java-util</artifactId>
-            <version>${protobuf.version}</version>
-        </dependency>
-        <!-- Phenopacket format for exchange of phenotype data. -->
-        <!-- TODO - remove -->
-        <dependency>
-            <groupId>org.phenopackets</groupId>
-            <artifactId>phenopacket-schema</artifactId>
-            <version>${phenopacket.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
