@@ -23,6 +23,7 @@ class IndividualDefault implements Individual {
                                 List<Disease> diseases,
                                 Map<String, Genotype> genotypes,
                                 Sex sex) {
+        // assume that null checks has been made
         this.id = id;
         this.age = age;
         this.phenotypicObservations = phenotypicObservations;
@@ -37,12 +38,12 @@ class IndividualDefault implements Individual {
                                 List<Disease> diseases,
                                 Map<String, Genotype> genotypes,
                                 Sex sex) {
-        return new IndividualDefault(id,
+        return new IndividualDefault(Objects.requireNonNull(id, "Individual ID must not be null"),
                 age,
-                phenotypicObservations,
-                diseases,
-                genotypes,
-                sex);
+                Objects.requireNonNull(phenotypicObservations, "Phenotypes must not be null"),
+                Objects.requireNonNull(diseases, "Diseases must not be null"),
+                Objects.requireNonNull(genotypes, "Genotypes must not be null"),
+                Objects.requireNonNull(sex, "Sex must not be null"));
     }
 
     @Override

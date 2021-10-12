@@ -10,8 +10,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
+import org.monarchinitiative.hpo_case_annotator.io.ModelUtils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

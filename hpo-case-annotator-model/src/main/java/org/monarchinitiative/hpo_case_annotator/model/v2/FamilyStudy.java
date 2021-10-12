@@ -21,8 +21,8 @@ public interface FamilyStudy extends Study {
     // - Map<variant_id, genotype>
     // - phenotype time course
 
-    default Stream<PedigreeMember> members() {
-        return pedigree().members().stream();
+    default Stream<? extends PedigreeMember> members() {
+        return pedigree().members();
     }
 
     // Variant(s)

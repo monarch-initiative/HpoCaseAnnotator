@@ -39,7 +39,7 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
                                     boolean isProband,
                                     Sex sex) {
         // wrap the collections
-        return new PedigreeMemberDefault(Objects.requireNonNull(id, "ID must not be null"),
+        return new PedigreeMemberDefault(Objects.requireNonNull(id, "Individual ID must not be null"),
                 paternalId,
                 maternalId,
                 age,
@@ -47,7 +47,7 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
                 Map.copyOf(Objects.requireNonNull(genotypes, "Genotypes must not be null")),
                 List.copyOf(Objects.requireNonNull(phenotypicObservations, "Phenotypic observations must not be null")),
                 isProband,
-                sex);
+                Objects.requireNonNull(sex, "Sex must not be null"));
     }
 
     @Override

@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.BorderPane?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.2-internal"
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.2"
             fx:controller="org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController">
     <center>
         <TabPane fx:id="contentTabPane" prefHeight="600.0" prefWidth="1000.0" BorderPane.alignment="TOP_CENTER"/>
@@ -60,18 +60,21 @@
            </Menu>
            <Menu text="Export">
                <MenuItem id="exportToCSVMenuItem" mnemonicParsing="false" onAction="#exportToCSVMenuItemAction" text="Export all mutation data to CSV file" />
-               <MenuItem id="exportToSummaryFileMenuItem" mnemonicParsing="false" onAction="#exportToSummaryFileMenuItemAction" text="Export all mutation data to summary file" />
+               <MenuItem id="exportToSummaryFileMenuItem" disable="true" mnemonicParsing="false"
+                         onAction="#exportToSummaryFileMenuItemAction" text="Export all mutation data to summary file"/>
                <MenuItem id="exportListOfComHetCasesWithOneCodingVariantMenuItem" mnemonicParsing="false" onAction="#exportListOfComHetCasesWithOneCodingVariantMenuItemAction" text="Export list of compound het cases with one coding variant" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <Menu mnemonicParsing="false" text="Export phenopacket(s)">
               <items>
                      <MenuItem id="phenopacketMenuItem" fx:id="exportPhenopacketMenuItem" disable="true" mnemonicParsing="false" onAction="#exportPhenopacketCurrentCaseMenuItemAction" text="Current case" />
                      <MenuItem mnemonicParsing="false" onAction="#exportPhenopacketAllCasesMenuItemAction" text="All cases" />
-                  <MenuItem mnemonicParsing="false" onAction="#exportPhenopacketAllCasesForThreesMenuItemAction" text="All cases for 3S" />
+                  <MenuItem disable="true" mnemonicParsing="false"
+                            onAction="#exportPhenopacketAllCasesForThreesMenuItemAction" text="All cases for 3S"/>
               </items>
             </Menu>
             <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem mnemonicParsing="false" onAction="#exportPhenoModelsMenuItemAction" text="Export variants in GPI format" />
+               <MenuItem disable="true" mnemonicParsing="false" onAction="#exportPhenoModelsMenuItemAction"
+                         text="Export variants in GPI format"/>
            </Menu>
            <Menu text="Help">
                <MenuItem id="helpMenuItem" mnemonicParsing="false" onAction="#helpMenuItemAction" text="Help" />

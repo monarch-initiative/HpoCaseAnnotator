@@ -16,8 +16,6 @@ public class CommandFactory {
     public CommandFactory() {
         this.commandMap = new HashMap<>();
 
-        StatsCommand stats = new StatsCommand();
-        this.commandMap.put(stats.getCommandName(), stats);
         ConvertCommand convert = new ConvertCommand();
         this.commandMap.put(convert.getCommandName(), convert);
     }

@@ -11,6 +11,7 @@
         <module>hpo-case-annotator-gui</module>
         <module>hpo-case-annotator-model</module>
         <module>hpo-case-annotator-io</module>
+        <module>hpo-case-annotator-export</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -116,6 +117,21 @@
                 <groupId>com.google.inject</groupId>
                 <artifactId>guice</artifactId>
                 <version>${guice.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.phenopackets</groupId>
+                <artifactId>phenopacket-schema</artifactId>
+                <version>${phenopacket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java-util</artifactId>
+                <version>${protobuf.version}</version>
             </dependency>
 
             <!-- Testing libraries -->
