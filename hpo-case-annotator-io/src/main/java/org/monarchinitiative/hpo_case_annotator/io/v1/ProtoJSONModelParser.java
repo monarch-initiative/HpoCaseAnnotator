@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.io.v1;
 import com.google.protobuf.util.JsonFormat;
 import org.monarchinitiative.hpo_case_annotator.io.ModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
 import org.slf4j.Logger;
@@ -84,7 +85,7 @@ public class ProtoJSONModelParser implements ModelParser<DiseaseCase> {
         for (Variant.Builder varBuilder : builder.getVariantBuilderList()) {
             if (varBuilder.getVariantPosition().equals(VariantPosition.getDefaultInstance())) {
                 varBuilder.setVariantPosition(VariantPosition.newBuilder()
-//                            .setGenomeAssembly(DiseaseCaseToDiseaseCaseModelCodec.convertGenomeAssemblyString(builder.getGenomeBuild()))
+                        .setGenomeAssembly(convertGenomeAssemblyString(builder.getGenomeBuild()))
                         .setContig(varBuilder.getContig())
                         .setPos(varBuilder.getPos())
                         .setRefAllele(varBuilder.getRefAllele())
@@ -95,6 +96,14 @@ public class ProtoJSONModelParser implements ModelParser<DiseaseCase> {
         return builder.build();
     }
 
+    private static GenomeAssembly convertGenomeAssemblyString(String genomeBuild) {
+        return switch (genomeBuild.toUpperCase()) {
+            case "HG18", "NCBI36" -> GenomeAssembly.NCBI_36;
+            case "GRCH37", "HG19" -> GenomeAssembly.GRCH_37;
+            case "GRCH38", "HG38" -> GenomeAssembly.GRCH_38;
+            default -> throw new IllegalArgumentException("Unknown genome build: " + genomeBuild);
+        };
+    }
 
     @Override
     public void write(DiseaseCase model, OutputStream outputStream) throws IOException {

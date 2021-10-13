@@ -9,24 +9,13 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>hpo-case-annotator-io</artifactId>
+    <artifactId>hpo-case-annotator-test</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
             <artifactId>hpo-case-annotator-model</artifactId>
             <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
-            <artifactId>hpo-case-annotator-test</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

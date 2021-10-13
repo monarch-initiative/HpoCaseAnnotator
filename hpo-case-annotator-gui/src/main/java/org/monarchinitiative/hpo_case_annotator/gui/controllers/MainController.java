@@ -17,10 +17,12 @@ import javafx.scene.control.TabPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.monarchinitiative.hpo_case_annotator.convert.Codec;
+import org.monarchinitiative.hpo_case_annotator.convert.ModelTransformationException;
 import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
-import org.monarchinitiative.hpo_case_annotator.export.Codecs;
+import org.monarchinitiative.hpo_case_annotator.export.ExportCodecs;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
@@ -30,8 +32,6 @@ import org.monarchinitiative.hpo_case_annotator.io.v1.ProtoJSONModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
-import org.monarchinitiative.hpo_case_annotator.model.transform.Codec;
-import org.monarchinitiative.hpo_case_annotator.model.transform.ModelTransformationException;
 import org.phenopackets.schema.v1.Phenopacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,9 +141,9 @@ public final class MainController {
 
     /**
      * @param modelDir a {@link File} representing directory with model files.
-     * @return {@link Codecs.SupportedDiseaseCaseFormat} to be used further or <code>null</code>
+     * @return {@link ExportCodecs.SupportedDiseaseCaseFormat} to be used further or <code>null</code>
      */
-    private static Codecs.SupportedDiseaseCaseFormat figureOutWhichFormatToUse(File modelDir) {
+    private static ExportCodecs.SupportedDiseaseCaseFormat figureOutWhichFormatToUse(File modelDir) {
         File[] files = modelDir.listFiles();
         if (files == null) {
             return null;
@@ -152,20 +152,20 @@ public final class MainController {
         final List<String> fileNameList = Arrays.stream(files)
                 .map(File::getName)
                 // the file name may consist of combination of whitespace and non-whitespace characters and must end either with .xml or .json suffix
-                .filter(fileName -> Codecs.SupportedDiseaseCaseFormat.getRegexMap().values().stream().anyMatch(fileName::matches))
+                .filter(fileName -> ExportCodecs.SupportedDiseaseCaseFormat.getRegexMap().values().stream().anyMatch(fileName::matches))
                 .collect(Collectors.toList());
 
         boolean useXML, useJSON;
 //        useXML = fileNameList.stream().allMatch(fileName -> fileName.matches(Codecs.SupportedDiseaseCaseFormat.getRegexMap().get(Codecs.SupportedDiseaseCaseFormat.XML)));
-        useJSON = fileNameList.stream().allMatch(fileName -> fileName.matches(Codecs.SupportedDiseaseCaseFormat.getRegexMap().get(Codecs.SupportedDiseaseCaseFormat.JSON)));
+        useJSON = fileNameList.stream().allMatch(fileName -> fileName.matches(ExportCodecs.SupportedDiseaseCaseFormat.getRegexMap().get(ExportCodecs.SupportedDiseaseCaseFormat.JSON)));
 
 //        if (useXML) { // the directory contains only XML-encoded files
 //            return Codecs.SupportedDiseaseCaseFormat.XML;
 //        } else
         if (useJSON) { // the directory contains only JSON-encoded files
-            return Codecs.SupportedDiseaseCaseFormat.JSON;
+            return ExportCodecs.SupportedDiseaseCaseFormat.JSON;
         } else { // the directory contains a mixture of XML and JSON-encoded files. Let user choose which to use
-            return PopUps.getToggleChoiceFromUser(Arrays.asList(Codecs.SupportedDiseaseCaseFormat.values()), "Choose which format to use", "Model directory contains models stored in multiple formats")
+            return PopUps.getToggleChoiceFromUser(Arrays.asList(ExportCodecs.SupportedDiseaseCaseFormat.values()), "Choose which format to use", "Model directory contains models stored in multiple formats")
                     .orElse(null);
         }
     }
@@ -187,10 +187,10 @@ public final class MainController {
         // we will only consider disease cases stored in `formatToUse` (either JSON or XML at this point)
 
         LOGGER.debug("Figuring out how to parse data in '{}'", where);
-        Codecs.SupportedDiseaseCaseFormat formatToUse = figureOutWhichFormatToUse(where);
+        ExportCodecs.SupportedDiseaseCaseFormat formatToUse = figureOutWhichFormatToUse(where);
         if (formatToUse == null) {
             LOGGER.warn("Unable to choose the proper way to decode the data, asking user");
-            Optional<Codecs.SupportedDiseaseCaseFormat> toggleChoiceFromUser = PopUps.getToggleChoiceFromUser(Arrays.asList(Codecs.SupportedDiseaseCaseFormat.values()),
+            Optional<ExportCodecs.SupportedDiseaseCaseFormat> toggleChoiceFromUser = PopUps.getToggleChoiceFromUser(Arrays.asList(ExportCodecs.SupportedDiseaseCaseFormat.values()),
                     String.format("What encoding is used for models in \n'%s'?", where),
                     "Read data");
             if (toggleChoiceFromUser.isPresent()) {
@@ -199,7 +199,7 @@ public final class MainController {
                 return Collections.emptyMap();
             }
         }
-        final Codecs.SupportedDiseaseCaseFormat selectedFormat = formatToUse;
+        final ExportCodecs.SupportedDiseaseCaseFormat selectedFormat = formatToUse;
 
         // create decoding function
         Function<InputStream, DiseaseCase> decodingFunction;
@@ -223,7 +223,7 @@ public final class MainController {
         }
 
         // decode the files
-        File[] files = where.listFiles(f -> f.getName().matches(Codecs.SupportedDiseaseCaseFormat.getRegexMap().get(selectedFormat)));
+        File[] files = where.listFiles(f -> f.getName().matches(ExportCodecs.SupportedDiseaseCaseFormat.getRegexMap().get(selectedFormat)));
 
         Map<File, DiseaseCase> models = new HashMap<>();
         for (File path : files) { // this should not be null (precondition in javadoc)
@@ -526,7 +526,7 @@ public final class MainController {
         File where = PopUps.selectDirectory(primaryStage, optionalResources.getDiseaseCaseDir(),
                 "Select export directory");
 
-        Codec<DiseaseCase, Phenopacket> codec = Codecs.diseaseCasePhenopacketCodec();
+        Codec<DiseaseCase, Phenopacket> codec = ExportCodecs.diseaseCasePhenopacketCodec();
 
         if (where != null) {
             int counter = 0;
@@ -585,7 +585,7 @@ public final class MainController {
         filechooser.setSelectedExtensionFilter(jsonFormat);
 
         File where = filechooser.showSaveDialog(primaryStage);
-        Codec<DiseaseCase, Phenopacket> codec = Codecs.diseaseCasePhenopacketCodec();
+        Codec<DiseaseCase, Phenopacket> codec = ExportCodecs.diseaseCasePhenopacketCodec();
         if (where != null) {
             try (BufferedWriter writer = Files.newBufferedWriter(where.toPath())) {
                 final Phenopacket packet = codec.encode(diseaseCase);

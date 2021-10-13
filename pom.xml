@@ -6,12 +6,14 @@
     <artifactId>hpo-case-annotator</artifactId>
     <version>1.0.15-SNAPSHOT</version>
     <modules>
+        <module>hpo-case-annotator-model</module>
+        <module>hpo-case-annotator-test</module>
+        <module>hpo-case-annotator-convert</module>
+        <module>hpo-case-annotator-io</module>
         <module>hpo-case-annotator-core</module>
+        <module>hpo-case-annotator-export</module>
         <module>hpo-case-annotator-cli</module>
         <module>hpo-case-annotator-gui</module>
-        <module>hpo-case-annotator-model</module>
-        <module>hpo-case-annotator-io</module>
-        <module>hpo-case-annotator-export</module>
     </modules>
     <packaging>pom</packaging>
 

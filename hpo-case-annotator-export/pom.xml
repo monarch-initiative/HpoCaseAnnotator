@@ -14,12 +14,17 @@
     <dependencies>
         <dependency>
             <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
-            <artifactId>hpo-case-annotator-core</artifactId>
+            <artifactId>hpo-case-annotator-convert</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
             <artifactId>hpo-case-annotator-io</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
+            <artifactId>hpo-case-annotator-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
@@ -34,16 +39,13 @@
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java-util</artifactId>
         </dependency>
-    </dependencies>
 
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <!-- To filter `phenopacket_version.properties` -->
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-    </build>
+        <dependency>
+            <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
+            <artifactId>hpo-case-annotator-test</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 </project>
