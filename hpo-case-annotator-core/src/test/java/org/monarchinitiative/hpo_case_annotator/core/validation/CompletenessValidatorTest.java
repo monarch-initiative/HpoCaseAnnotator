@@ -2,8 +2,8 @@ package org.monarchinitiative.hpo_case_annotator.core.validation;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.monarchinitiative.hpo_case_annotator.core.DiseaseCaseModelExample;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
+import org.monarchinitiative.hpo_case_annotator.test.TestData;
 
 import java.util.List;
 
@@ -69,9 +69,7 @@ public class CompletenessValidatorTest {
 
     @Test
     public void validateCaseWithVariant() {
-        DiseaseCase diseaseCase = DiseaseCase.newBuilder()
-                .addVariant(DiseaseCaseModelExample.makeVariantWithSplicingValidation())
-                .build();
+        DiseaseCase diseaseCase = TestData.V1.comprehensiveCase();
 
         final List<ValidationResult> results = validator.validate(diseaseCase);
 

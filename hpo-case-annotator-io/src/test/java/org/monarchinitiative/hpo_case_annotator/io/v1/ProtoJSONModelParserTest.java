@@ -13,7 +13,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ProtoJSONModelParserTest {
@@ -67,7 +68,8 @@ public class ProtoJSONModelParserTest {
         assertThat(diseaseCase.getBiocurator(), is(Biocurator.newBuilder().setBiocuratorId("HPO:ddanis").build()));
         // variants
         // the first variant
-        assertThat(diseaseCase.getVariantList(), hasItem(Variant.newBuilder()
+        assertThat(diseaseCase.getVariantCount(), equalTo(2));
+        assertThat(diseaseCase.getVariant(0), equalTo(Variant.newBuilder()
                 .setContig("7")
                 .setPos(117232187)
                 .setRefAllele("G")
@@ -93,7 +95,7 @@ public class ProtoJSONModelParserTest {
                         .build())
                 .build()));
         // the second variant
-        assertThat(diseaseCase.getVariantList(), hasItem(Variant.newBuilder()
+        assertThat(diseaseCase.getVariant(1), equalTo(Variant.newBuilder()
                 .setContig("7")
                 .setPos(117232196)
                 .setRefAllele("AA")
