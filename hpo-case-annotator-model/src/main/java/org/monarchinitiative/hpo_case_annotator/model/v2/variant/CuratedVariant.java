@@ -29,12 +29,27 @@ public interface CuratedVariant extends Variant {
     VariantMetadata metadata();
 
     default String md5Hex() {
-        String id = String.join("-",
-                contigName(),
-                String.valueOf(startOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.zeroBased())),
-                String.valueOf(endOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.zeroBased())),
-                ref(),
-                alt());
+        String id;
+        if (this instanceof BreakendVariant bv) {
+            Breakend left = bv.left();
+            Breakend right = bv.right();
+            id = String.join("-",
+                    left.contigName(),
+                    // For breakends, start == end in 0-based CS, no need to hash both.
+                    String.valueOf(left.startWithCoordinateSystem(CoordinateSystem.zeroBased())),
+                    right.contigName(),
+                    String.valueOf(right.startWithCoordinateSystem(CoordinateSystem.zeroBased())),
+                    bv.eventId(),
+                    bv.ref(),
+                    bv.alt());
+        } else {
+            id = String.join("-",
+                    contigName(),
+                    String.valueOf(startWithCoordinateSystem(CoordinateSystem.zeroBased())),
+                    String.valueOf(endWithCoordinateSystem(CoordinateSystem.zeroBased())),
+                    ref(),
+                    alt());
+        }
         return DigestUtils.md5Hex(id);
     }
 

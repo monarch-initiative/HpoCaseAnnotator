@@ -1,0 +1,162 @@
+{
+  "publication": {
+    "authorList": "Beygó J, Buiting K, Seland S, Lüdecke HJ, Hehr U, Lich C, Prager B, Lohmann DR, Wieczorek D",
+    "title": "First Report of a Single Exon Deletion in TCOF1 Causing Treacher Collins Syndrome",
+    "journal": "Mol Syndromol",
+    "year": "2012",
+    "volume": "2(2)",
+    "pages": "53-59",
+    "pmid": "22712005"
+  },
+  "metadata": "Authors are describing a mutations in CFTR exon 13 that appears to contain two 3\u0027CSS utilization of which is increased when there is a mutation in ESE element present in exon 13 (Figure 2.).\n\nThe 3\u0027CSS whose coordinates are recorded in variants is the dominant one (Figure 2. D, D248). However, there exists also another (D195) which has coordinates: 117232182, 3 splice site, CAATTTAG|TGCAGAAA .",
+  "gene": {
+    "entrezId": 1080,
+    "symbol": "CFTR"
+  },
+  "disease": {
+    "database": "OMIM",
+    "diseaseId": "219700",
+    "diseaseName": "CYSTIC FIBROSIS; CF"
+  },
+  "phenotype": [
+    {
+      "id": "HP:1234567",
+      "label": "Some feature"
+    },
+    {
+      "id": "HP:9876543",
+      "label": "Other feature",
+      "notObserved": true
+    }
+  ],
+  "familyInfo": {
+    "familyOrProbandId": "FAM:001",
+    "sex": "MALE",
+    "age": "P10Y5M4D"
+  },
+  "biocurator": {
+    "biocuratorId": "HPO:walterwhite"
+  },
+  "variant": [
+    {
+      "snippet": "TTCATTTAC[C/G]TCTACTGGC",
+      "genotype": "HOMOZYGOUS_ALTERNATE",
+      "variantClass": "promoter",
+      "pathomechanism": "promoter|reduced-transcription",
+      "variantValidation": {
+        "context": "MENDELIAN",
+        "regulator": "TEST_REGULATOR",
+        "reporterRegulation": "no",
+        "reporterResidualActivity": "RES_ACT",
+        "emsaValidationPerformed": true,
+        "emsaTfSymbol": "TF_SYMBOL_TEST",
+        "emsaGeneId": "TF_GENEID_TEST",
+        "otherChoices": "down",
+        "otherEffect": "in vitro mRNA expression assay"
+      },
+      "variantPosition": {
+        "genomeAssembly": "GRCH_37",
+        "contig": "9",
+        "pos": 123737057,
+        "refAllele": "C",
+        "altAllele": "G"
+      }
+    },
+    {
+      "snippet": "TTCATTTAC[C/A]TCTACTGG",
+      "genotype": "HETEROZYGOUS",
+      "variantClass": "5UTR",
+      "pathomechanism": "5UTR|transcription",
+      "variantValidation": {
+        "context": "SOMATIC",
+        "regulator": "SOMATIC_REGULATOR",
+        "reporterRegulation": "up",
+        "reporterResidualActivity": "SOMATIC_RP_PERC",
+        "emsaTfSymbol": "TF_EMSA_SOM_TEST",
+        "emsaGeneId": "TF_GENE_SYMBOL_TEST",
+        "otherChoices": "up",
+        "otherEffect": "Transgenic model",
+        "nPatients": 78,
+        "mPatients": 100
+      },
+      "variantPosition": {
+        "genomeAssembly": "GRCH_37",
+        "contig": "9",
+        "pos": 123737057,
+        "refAllele": "C",
+        "altAllele": "A"
+      }
+    },
+    {
+      "snippet": "TTCATTTAC[C/T]TCTACTGG",
+      "genotype": "HOMOZYGOUS_ALTERNATE",
+      "variantClass": "splicing",
+      "pathomechanism": "splicing|3css|activated",
+      "consequence": "Exon skipping",
+      "crypticPosition": 123737090,
+      "crypticSpliceSiteType": "FIVE_PRIME",
+      "crypticSpliceSiteSnippet": "ATATG|GCGAGTTCTT",
+      "variantValidation": {
+        "context": "SPLICING",
+        "cosegregation": true,
+        "minigeneValidation": true,
+        "rtPcrValidation": true,
+        "srProteinKnockdownValidation": true,
+        "cDnaSequencingValidation": true,
+        "otherValidation": true
+      },
+      "variantPosition": {
+        "genomeAssembly": "GRCH_37",
+        "contig": "9",
+        "pos": 123737057,
+        "refAllele": "C",
+        "altAllele": "T"
+      }
+    },
+    {
+      "genotype": "HETEROZYGOUS",
+      "variantClass": "structural",
+      "variantValidation": {
+        "context": "INTRACHROMOSOMAL"
+      },
+      "variantPosition": {
+        "genomeAssembly": "GRCH_37",
+        "contig": "5",
+        "pos": 149741531,
+        "refAllele": "N",
+        "altAllele": "DEL",
+        "pos2": 149744897,
+        "ciBeginOne": -5,
+        "ciBeginTwo": 5,
+        "ciEndOne": -15,
+        "ciEndTwo": 10
+      },
+      "svType": "DEL",
+      "imprecise": true
+    },
+    {
+      "genotype": "HETEROZYGOUS",
+      "variantClass": "structural",
+      "variantValidation": {
+        "context": "TRANSLOCATION"
+      },
+      "variantPosition": {
+        "genomeAssembly": "GRCH_37",
+        "contig": "9",
+        "pos": 133359000,
+        "refAllele": "G",
+        "contig2": "13",
+        "pos2": 32300000,
+        "contigDirection": "FWD",
+        "contig2Direction": "FWD",
+        "ciBeginOne": -5,
+        "ciBeginTwo": -15,
+        "ciEndOne": 10,
+        "ciEndTwo": 20
+      },
+      "svType": "BND",
+      "imprecise": true
+    }
+  ],
+  "softwareVersion": "Hpo Case Annotator"
+}

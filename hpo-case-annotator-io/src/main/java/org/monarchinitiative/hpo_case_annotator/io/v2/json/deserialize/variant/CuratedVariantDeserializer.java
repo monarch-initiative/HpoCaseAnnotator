@@ -40,10 +40,12 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
 
         String ref = node.get("ref").asText();
         String alt = node.get("alt").asText();
+        String md5Hex = node.get("md5Hex").asText();
 
         VariantMetadata variantMetadata = codec.treeToValue(node.get("variantValidation"), VariantMetadata.class);
 
         String variantType = node.get("variantType").asText();
+        CuratedVariant curatedVariant;
         if (variantType.equals("BND")) {
             // breakend variant
 
@@ -68,7 +70,7 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
             Breakend right = Breakend.of(rightContigOptional.get(), rightId, rightStrand, rightCoordinates);
 
             String eventId = node.get("eventId").asText();
-            return CuratedVariant.breakend(eventId, left, right, ref, alt, variantMetadata);
+            curatedVariant = CuratedVariant.breakend(eventId, left, right, ref, alt, variantMetadata);
         } else {
             // sequence or symbolic
             String contigName = node.get("contigName").asText();
@@ -81,8 +83,12 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
             Coordinates coordinates = Coordinates.of(CoordinateSystem.zeroBased(), node.get("start").asInt(), node.get("end").asInt());
             int changeLength = node.get("changeLength").asInt();
 
-            return CuratedVariant.sequenceSymbolic(contigOptional.get(), id, strand, coordinates, ref, alt, changeLength, variantMetadata);
+            curatedVariant = CuratedVariant.sequenceSymbolic(contigOptional.get(), id, strand, coordinates, ref, alt, changeLength, variantMetadata);
         }
+        if (!md5Hex.equals(curatedVariant.md5Hex())) {
+            throw new IOException("MD5 checksum mismatch for variant. Expected: `" + md5Hex + "`, actual: `" + curatedVariant.md5Hex() + "`. Variant data: `" + node.asText() + "`");
+        }
+        return curatedVariant;
     }
 
     private Optional<Contig> findContig(String contigName) {

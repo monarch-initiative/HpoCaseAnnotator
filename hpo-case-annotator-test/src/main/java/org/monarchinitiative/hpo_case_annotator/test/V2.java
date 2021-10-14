@@ -65,7 +65,7 @@ class V2 {
         return CuratedVariant.sequenceSymbolic(HG19.contigByName("9"),
                 "mendelian",
                 Strand.POSITIVE,
-                Coordinates.of(CoordinateSystem.oneBased(), 123_737_057, 123_737_057),
+                Coordinates.of(CoordinateSystem.zeroBased(), 123_737_056, 123_737_057),
                 "C",
                 "G",
                 0,
@@ -90,7 +90,7 @@ class V2 {
         return CuratedVariant.sequenceSymbolic(HG19.contigByName("9"),
                 "somatic",
                 Strand.POSITIVE,
-                Coordinates.of(CoordinateSystem.oneBased(), 123_737_057, 123_737_057),
+                Coordinates.of(CoordinateSystem.zeroBased(), 123_737_056, 123_737_057),
                 "C",
                 "A",
                 0,
@@ -120,7 +120,7 @@ class V2 {
         return CuratedVariant.sequenceSymbolic(HG19.contigByName("9"),
                 "splicing",
                 Strand.POSITIVE,
-                Coordinates.of(CoordinateSystem.oneBased(), 123_737_057, 123_737_057),
+                Coordinates.of(CoordinateSystem.zeroBased(), 123_737_056, 123_737_057),
                 "C",
                 "T",
                 0,
@@ -129,18 +129,18 @@ class V2 {
 
     private static CuratedVariant symbolicDeletion() {
         VariantMetadata metadata = StructuralVariantMetadata.of(
-                null,
+                "",
                 "structural",
                 "intronic deletion",
                 true,
                 false);
         return CuratedVariant.sequenceSymbolic(HG19.contigByName("5"),
-                "somatic",
+                "symbolic_DEL",
                 Strand.POSITIVE,
-                Coordinates.of(CoordinateSystem.oneBased(), 149_741_531, 149_744_897),
+                Coordinates.of(CoordinateSystem.zeroBased(), 149_741_530, 149_744_897),
                 "N",
                 "<DEL>",
-                149_744_897 - 149_741_531 + 1,
+                -(149_744_897 - 149_741_531 + 1),
                 metadata);
     }
 
@@ -154,7 +154,7 @@ class V2 {
                 Strand.POSITIVE,
                 Coordinates.of(CoordinateSystem.zeroBased(), 32_300_000, 32_300_000));
         VariantMetadata metadata = StructuralVariantMetadata.of(
-                null,
+                "",
                 "structural",
                 "intronic deletion",
                 true,
