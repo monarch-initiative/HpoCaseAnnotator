@@ -28,7 +28,7 @@ public class CuratedVariantSerializer extends StdSerializer<CuratedVariant> {
 
         if (curatedVariant instanceof BreakendVariant bv) {
             Breakend left = bv.left();
-            gen.writeStringField("leftContigName", left.contig().genBankAccession());
+            gen.writeStringField("leftContigGenBankAccession", left.contig().genBankAccession());
             gen.writeStringField("leftStrand", left.strand().toString());
             // TODO - confidence intervals
             gen.writeNumberField("leftStart", left.startWithCoordinateSystem(CoordinateSystem.zeroBased()));
@@ -36,7 +36,7 @@ public class CuratedVariantSerializer extends StdSerializer<CuratedVariant> {
             gen.writeStringField("leftId", left.id());
 
             Breakend right = bv.right();
-            gen.writeStringField("rightContigName", right.contig().genBankAccession());
+            gen.writeStringField("rightContigGenBankAccession", right.contig().genBankAccession());
             gen.writeStringField("rightStrand", right.strand().toString());
             // TODO - confidence intervals
             gen.writeNumberField("rightStart", right.startWithCoordinateSystem(CoordinateSystem.zeroBased()));
@@ -45,7 +45,7 @@ public class CuratedVariantSerializer extends StdSerializer<CuratedVariant> {
 
             gen.writeStringField("eventId", bv.eventId());
         } else {
-            gen.writeStringField("contigName", curatedVariant.contig().genBankAccession());
+            gen.writeStringField("contigGenBankAccession", curatedVariant.contig().genBankAccession());
             gen.writeStringField("strand", curatedVariant.strand().toString());
             // TODO - confidence intervals
             gen.writeNumberField("start", curatedVariant.startWithCoordinateSystem(CoordinateSystem.zeroBased()));

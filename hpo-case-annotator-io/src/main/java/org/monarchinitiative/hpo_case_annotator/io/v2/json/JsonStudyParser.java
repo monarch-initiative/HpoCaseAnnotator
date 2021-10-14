@@ -12,6 +12,7 @@ import org.monarchinitiative.hpo_case_annotator.io.v2.json.serialize.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.*;
+import org.monarchinitiative.svart.GenomicAssemblies;
 import org.monarchinitiative.svart.GenomicAssembly;
 
 import java.io.File;
@@ -20,15 +21,23 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class JsonStudyParser implements ModelParser<Study> {
 
-    // TODO - this should be a singleton
-
     private static final Version VERSION = new Version(2, 0, 0, null, null, null);
+
+    private static final JsonStudyParser INSTANCE = of(
+            // hg18
+            GenomicAssembly.readAssembly(Objects.requireNonNull(JsonStudyParser.class.getResourceAsStream("GCF_000001405.12_NCBI36_assembly_report.txt"), "Missing genome hg18 assembly report file. Contact developers")),
+            // hg19
+            GenomicAssemblies.GRCh37p13(),
+            // hg38
+            GenomicAssemblies.GRCh38p13());
+    
     private final ObjectMapper objectMapper;
 
-    public JsonStudyParser(GenomicAssembly hg19, GenomicAssembly hg38) {
+    private JsonStudyParser(GenomicAssembly... assemblies) {
         objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         SimpleModule module = new SimpleModule("StudyParser", VERSION);
@@ -48,7 +57,7 @@ public class JsonStudyParser implements ModelParser<Study> {
         module.addDeserializer(Study.class, new StudyDeserializer());
         module.addDeserializer(StudyMetadata.class, new StudyMetadataDeserializer());
 
-        module.addDeserializer(CuratedVariant.class, new CuratedVariantDeserializer(hg19, hg38));
+        module.addDeserializer(CuratedVariant.class, new CuratedVariantDeserializer(assemblies));
         module.addDeserializer(VariantMetadata.class, new VariantMetadataDeserializer());
         module.addDeserializer(MendelianVariantMetadata.class, new MendelianVariantMetadataDeserializer());
         module.addDeserializer(SomaticVariantMetadata.class, new SomaticVariantMetadataDeserializer());
@@ -56,6 +65,14 @@ public class JsonStudyParser implements ModelParser<Study> {
         module.addDeserializer(StructuralVariantMetadata.class, new StructuralVariantMetadataDeserializer());
 
         objectMapper.registerModule(module);
+    }
+
+    public static JsonStudyParser getInstance() {
+        return INSTANCE;
+    }
+
+    public static JsonStudyParser of(GenomicAssembly... assemblies) {
+        return new JsonStudyParser(assemblies);
     }
 
     private static List<JsonSerializer<?>> serializers() {
