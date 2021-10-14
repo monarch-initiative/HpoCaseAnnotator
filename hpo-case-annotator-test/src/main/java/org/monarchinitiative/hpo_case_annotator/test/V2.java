@@ -137,7 +137,7 @@ class V2 {
         return CuratedVariant.sequenceSymbolic(HG19.contigByName("5"),
                 "symbolic_DEL",
                 Strand.POSITIVE,
-                Coordinates.of(CoordinateSystem.zeroBased(), 149_741_530, 149_744_897),
+                Coordinates.of(CoordinateSystem.zeroBased(), 149_741_530, ConfidenceInterval.of(-5, 10), 149_744_897, ConfidenceInterval.of(-10, 20)),
                 "N",
                 "<DEL>",
                 -(149_744_897 - 149_741_531 + 1),
@@ -148,7 +148,7 @@ class V2 {
         Breakend left = Breakend.of(HG19.contigByName("9"),
                 "left",
                 Strand.POSITIVE,
-                Coordinates.of(CoordinateSystem.zeroBased(), 133_359_000, 133_359_000));
+                Coordinates.of(CoordinateSystem.zeroBased(), 133_359_000, ConfidenceInterval.of(-5, 15), 133_359_000, ConfidenceInterval.precise()));
         Breakend right = Breakend.of(HG19.contigByName("13"),
                 "right",
                 Strand.POSITIVE,

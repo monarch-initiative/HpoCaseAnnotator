@@ -124,7 +124,15 @@
     "contigGenBankAccession" : "CM000667.1",
     "strand" : "+",
     "start" : 149741530,
+    "startCi" : {
+      "lowerBound" : -5,
+      "upperBound" : 10
+    },
     "end" : 149744897,
+    "endCi" : {
+      "lowerBound" : -10,
+      "upperBound" : 20
+    },
     "changeLength" : -3367,
     "id" : "symbolic_DEL",
     "md5Hex" : "4ccbca63d4212e7dc79259bc64255990",
@@ -146,6 +154,10 @@
     "leftContigGenBankAccession" : "CM000671.1",
     "leftStrand" : "+",
     "leftStart" : 133359000,
+    "leftStartCi" : {
+      "lowerBound" : -5,
+      "upperBound" : 15
+    },
     "leftEnd" : 133359000,
     "leftId" : "left",
     "rightContigGenBankAccession" : "CM000675.1",
@@ -200,11 +212,11 @@
           "endAge" : "P10Y5M4D"
         },
         "phenotypicFeatures" : [ {
-          "termId" : "HP:9876543",
-          "isExcluded" : true
-        }, {
           "termId" : "HP:1234567",
           "isExcluded" : false
+        }, {
+          "termId" : "HP:9876543",
+          "isExcluded" : true
         } ]
       } ],
       "sex" : "MALE",

@@ -12,6 +12,7 @@ import org.monarchinitiative.hpo_case_annotator.io.v2.json.serialize.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.*;
+import org.monarchinitiative.svart.ConfidenceInterval;
 import org.monarchinitiative.svart.GenomicAssemblies;
 import org.monarchinitiative.svart.GenomicAssembly;
 
@@ -58,6 +59,7 @@ public class JsonStudyParser implements ModelParser<Study> {
         module.addDeserializer(StudyMetadata.class, new StudyMetadataDeserializer());
 
         module.addDeserializer(CuratedVariant.class, new CuratedVariantDeserializer(assemblies));
+        module.addDeserializer(ConfidenceInterval.class, new ConfidenceIntervalDeserializer());
         module.addDeserializer(VariantMetadata.class, new VariantMetadataDeserializer());
         module.addDeserializer(MendelianVariantMetadata.class, new MendelianVariantMetadataDeserializer());
         module.addDeserializer(SomaticVariantMetadata.class, new SomaticVariantMetadataDeserializer());
@@ -78,6 +80,7 @@ public class JsonStudyParser implements ModelParser<Study> {
     private static List<JsonSerializer<?>> serializers() {
         return List.of(
                 new AgeRangeSerializer(),
+                new ConfidenceIntervalSerializer(),
                 new CuratedVariantSerializer(),
                 new DiseaseSerializer(),
                 new EditHistorySerializer(),
