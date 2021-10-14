@@ -43,7 +43,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
     /**
      * This is the {@link Stage} which is provided by JavaFX and registered into the Spring container in the
-     * {@link App#start(Stage)} method.
+     * {@link Main#start(Stage)} method.
      */
     private final Stage primaryStage;
 
@@ -248,7 +248,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
     @Provides
     @Named("appHomeDir")
     @Singleton
-    private File appHomeDir(@Named("appVersion") String appVersion) throws IOException {
+    public File appHomeDir(@Named("appVersion") String appVersion) throws IOException {
         String osName = System.getProperty("os.name").toLowerCase();
         // we want to have one resource directory for release version and another for snapshots
         String suffix = appVersion.endsWith("-SNAPSHOT") ? "-SNAPSHOT" : "";
@@ -285,22 +285,22 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
     @Provides
     @Named("appNameVersion")
-    private String appNameVersion(@Named("appVersion") String appVersion, @Named("appName") String appName) {
+    public String appNameVersion(@Named("appVersion") String appVersion, @Named("appName") String appName) {
         return String.format("%s : %s", appName, appVersion);
     }
 
 
     @Provides
     @Named("appVersion")
-    private String appVersion() {
+    public String appVersion() {
         // this property is set in Play#init()
-        return System.getProperty(App.HCA_VERSION_PROP_KEY);
+        return System.getProperty(Main.HCA_VERSION_PROP_KEY);
     }
 
     @Provides
     @Named("appName")
-    private String appName() {
+    public String appName() {
         // this property is set in Play#init()
-        return System.getProperty(App.HCA_NAME_KEY);
+        return System.getProperty(Main.HCA_NAME_KEY);
     }
 }

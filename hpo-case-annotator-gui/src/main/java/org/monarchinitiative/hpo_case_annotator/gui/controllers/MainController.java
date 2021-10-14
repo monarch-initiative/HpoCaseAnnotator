@@ -2,7 +2,6 @@ package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Injector;
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
@@ -27,8 +26,9 @@ import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.StartupTask;
+import org.monarchinitiative.hpo_case_annotator.io.ModelParser;
+import org.monarchinitiative.hpo_case_annotator.io.ModelParsers;
 import org.monarchinitiative.hpo_case_annotator.io.ModelUtils;
-import org.monarchinitiative.hpo_case_annotator.io.v1.ProtoJSONModelParser;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
@@ -207,7 +207,8 @@ public final class MainController {
             case JSON:
                 decodingFunction = is -> {
                     try {
-                        return ProtoJSONModelParser.readDiseaseCase(is);
+                        ModelParser<DiseaseCase> parser = ModelParsers.V1.jsonParser();
+                        return parser.read(is);
                     } catch (IOException e) {
                         // TODO - prettify
                         throw new RuntimeException(e);
@@ -313,12 +314,10 @@ public final class MainController {
 //                    break;
                 case PROTO_JSON:
                     try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
-                        diseaseCase = ProtoJSONModelParser.readDiseaseCase(is);
+                        ModelParser<DiseaseCase> parser = ModelParsers.V1.jsonParser();
+                        diseaseCase = parser.read(is);
                     } catch (FileNotFoundException e) {
                         PopUps.showException("Open JSON model", String.format("File '%s' not found", file.getAbsolutePath()), "", e);
-                        return;
-                    } catch (InvalidProtocolBufferException e) {
-                        PopUps.showException("Open JSON model", String.format("Error parsing file content '%s'", file.getAbsolutePath()), "", e);
                         return;
                     } catch (IOException e) {
                         PopUps.showException("Open JSON model", String.format("Error while reading file '%s'", file.getAbsolutePath()), "", e);
@@ -737,7 +736,8 @@ public final class MainController {
 
             if (fileChooser.getSelectedExtensionFilter().getDescription().equals(jsonFileFormat.getDescription())) {
                 try (OutputStream os = Files.newOutputStream(currentModelPath)) {
-                    ProtoJSONModelParser.saveDiseaseCase(os, model, StandardCharsets.UTF_8); // TODO - charset is hardcoded
+                    ModelParser<DiseaseCase> parser = ModelParsers.V1.jsonParser();
+                    parser.write(model, os);
                 } catch (IOException e) {
                     PopUps.showException(conversationTitle, "Unable to store data into file", "", e);
                     LOGGER.warn("Unable to store data into file {}", currentModelPath, e);
@@ -764,7 +764,8 @@ public final class MainController {
 //                    XMLModelParser.saveDiseaseCase(model, os);
 //                } else
                 if (currentModelPath.toFile().getName().endsWith(".json")) {
-                    ProtoJSONModelParser.saveDiseaseCase(os, model, StandardCharsets.UTF_8); // TODO - charset is hardcoded
+                    ModelParser<DiseaseCase> parser = ModelParsers.V1.jsonParser();
+                    parser.write(model, os);
                 }
             } catch (IOException e) {
                 PopUps.showException(conversationTitle, "Unable to store data into file", "", e);

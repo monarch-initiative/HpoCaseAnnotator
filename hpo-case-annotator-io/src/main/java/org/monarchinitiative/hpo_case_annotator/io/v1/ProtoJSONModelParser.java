@@ -6,14 +6,11 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -21,38 +18,18 @@ import java.util.stream.Collectors;
  */
 public class ProtoJSONModelParser implements ModelParser<DiseaseCase> {
 
-    public static final String MODEL_SUFFIX = ".json";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProtoJSONModelParser.class);
-
     private static final JsonFormat.Printer JSON_PRINTER = JsonFormat.printer();
 
     private static final JsonFormat.Parser JSON_PARSER = JsonFormat.parser();
 
-    private final Path modelDir;
+    private static final ProtoJSONModelParser INSTANCE = new ProtoJSONModelParser();
 
-    private final Charset charset;
-
-
-    /**
-     * Create parser with <code>UTF-8</code> charset
-     *
-     * @param modelDir
-     */
-    public ProtoJSONModelParser(Path modelDir) {
-        this(modelDir, StandardCharsets.UTF_8);
+    private ProtoJSONModelParser() {
     }
 
-
-    /**
-     * @param modelDir {@link Path} to directory with JSON data files
-     * @param charset
-     */
-    public ProtoJSONModelParser(Path modelDir, Charset charset) {
-        this.modelDir = modelDir;
-        this.charset = charset;
+    public static ProtoJSONModelParser getInstance() {
+        return INSTANCE;
     }
-
 
     public static void saveDiseaseCase(OutputStream os, DiseaseCase model, Charset charset) throws IOException {
         // ----------- clear deprecated fields when saving data ---------------
@@ -107,25 +84,12 @@ public class ProtoJSONModelParser implements ModelParser<DiseaseCase> {
 
     @Override
     public void write(DiseaseCase model, OutputStream outputStream) throws IOException {
-        saveDiseaseCase(outputStream, model, charset);
+        saveDiseaseCase(outputStream, model, StandardCharsets.UTF_8);
     }
 
 
     @Override
     public DiseaseCase read(InputStream inputStream) throws IOException {
         return readDiseaseCase(inputStream);
-    }
-
-
-    public Collection<File> getModelNames() {
-        if (modelDir == null) {
-            LOGGER.warn("Unset model directory. Returning empty set of model names");
-            return Collections.emptySet();
-        }
-        File[] files = modelDir.toFile().listFiles(f -> f.getName().endsWith(MODEL_SUFFIX));
-        if (files == null) {
-            return new HashSet<>();
-        }
-        return Arrays.asList(files);
     }
 }
