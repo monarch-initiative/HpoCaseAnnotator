@@ -27,7 +27,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
-        <jannovar.version>0.27</jannovar.version>
+        <jannovar.version>0.36</jannovar.version>
         <phenopacket.version>1.0.0</phenopacket.version>
         <phenol.version>1.6.0</phenol.version>
         <svart.version>2.0.0-SNAPSHOT</svart.version>
@@ -84,6 +84,17 @@
                 <groupId>org.monarchinitiative.svart</groupId>
                 <artifactId>svart</artifactId>
                 <version>${svart.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.charite.compbio</groupId>
+                <artifactId>jannovar-core</artifactId>
+                <version>${jannovar.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.testng</groupId>
+                        <artifactId>testing</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.openjfx</groupId>
