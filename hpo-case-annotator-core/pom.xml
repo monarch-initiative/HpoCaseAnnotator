@@ -9,21 +9,6 @@
 
     <artifactId>hpo-case-annotator-core</artifactId>
 
-    <build>
-        <plugins>
-            <!-- Do NOT run Sphinx docs generation here-->
-            <plugin>
-                <groupId>kr.motd.maven</groupId>
-                <artifactId>sphinx-maven-plugin</artifactId>
-                <version>2.4.0</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
-
     <dependencies>
         <dependency>
             <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
@@ -33,7 +18,7 @@
         <dependency>
             <groupId>com.github.samtools</groupId>
             <artifactId>htsjdk</artifactId>
-            <version>2.19.0</version>
+            <version>${htsjdk.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.commons</groupId>

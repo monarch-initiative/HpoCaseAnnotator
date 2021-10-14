@@ -32,6 +32,7 @@
         <phenopacket.version>1.0.0</phenopacket.version>
         <phenol.version>1.6.0</phenol.version>
         <svart.version>2.0.0-SNAPSHOT</svart.version>
+        <htsjdk.version>2.19.0</htsjdk.version>
         <spring.version>4.3.8.RELEASE</spring.version>
         <guice.version>5.0.1</guice.version>
         <protobuf.version>3.8.0</protobuf.version>
@@ -40,7 +41,6 @@
         <javafx.version>${java.version}</javafx.version>
         <controlsfx.version>11.1.0</controlsfx.version>
 
-        <junit.version>4.12</junit.version>
         <commons-codec.version>1.15</commons-codec.version>
         <commons-compress.version>1.21</commons-compress.version>
 
