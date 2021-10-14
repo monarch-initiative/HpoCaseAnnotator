@@ -103,9 +103,4 @@ public class JsonStudyParser implements ModelParser<Study> {
     public Study read(InputStream inputStream) throws IOException {
         return objectMapper.readValue(inputStream, Study.class);
     }
-
-    @Override
-    public Collection<File> getModelNames() {
-        throw new RuntimeException("Getting model names is not supported anymore");
-    }
 }

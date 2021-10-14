@@ -29,5 +29,7 @@ public interface ModelParser<T> {
     }
 
     @Deprecated
-    Collection<File> getModelNames();
+    default Collection<File> getModelNames() {
+        throw new RuntimeException("Getting model names is not supported anymore");
+    }
 }

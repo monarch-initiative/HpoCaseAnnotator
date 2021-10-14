@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.core.refgenome;
 
 
-import com.google.common.collect.ImmutableMap;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 
 import java.io.File;
@@ -47,18 +46,18 @@ public class GenomeAssemblies implements AutoCloseable {
             final int idx = assemblies.indexOf(assembly);
             if (idx < fastaPaths.size()) {
                 final File fasta = fastaPaths.get(idx).toFile();
-                return fasta != null && fasta.isFile();
+                return fasta.isFile();
             }
         }
         return false;
     }
 
-    public ImmutableMap<GenomeAssembly, Path> getAssemblyMap() {
-        final ImmutableMap.Builder<GenomeAssembly, Path> builder = ImmutableMap.builder();
+    public Map<GenomeAssembly, Path> getAssemblyMap() {
+        Map<GenomeAssembly, Path> builder = new HashMap<>();
         for (int i = 0; i < assemblies.size(); i++) {
             builder.put(assemblies.get(i), fastaPaths.get(i));
         }
-        return builder.build();
+        return Map.copyOf(builder);
     }
 
 
