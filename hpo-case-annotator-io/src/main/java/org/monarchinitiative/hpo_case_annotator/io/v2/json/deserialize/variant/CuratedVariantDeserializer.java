@@ -15,12 +15,11 @@ import java.util.Optional;
 
 public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> {
 
-    private final GenomicAssembly hg19, hg38;
+    private final GenomicAssembly[] assemblies;
 
-    public CuratedVariantDeserializer(GenomicAssembly hg19, GenomicAssembly hg38) {
+    public CuratedVariantDeserializer(GenomicAssembly... assemblies) {
         super(CuratedVariant.class);
-        this.hg19 = hg19;
-        this.hg38 = hg38;
+        this.assemblies = assemblies;
     }
 
     static VariantMetadata deserializeVariantMetadata(JsonNode jsonNode) {
@@ -50,20 +49,20 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
             // breakend variant
 
             // left
-            String leftContigName = node.get("leftContigName").asText();
-            Optional<Contig> leftContigOptional = findContig(leftContigName);
+            String leftContigGenBankAccession = node.get("leftContigGenBankAccession").asText();
+            Optional<Contig> leftContigOptional = findContig(leftContigGenBankAccession);
             if (leftContigOptional.isEmpty())
-                throw new IllegalArgumentException("Unknown contig `" + leftContigName + "`");
+                throw new IllegalArgumentException("Unknown contig `" + leftContigGenBankAccession + "`");
             String leftId = node.get("leftId").asText();
             Strand leftStrand = Strand.parseStrand(node.get("leftStrand").asText());
             Coordinates leftCoordinates = Coordinates.of(CoordinateSystem.zeroBased(), node.get("leftStart").asInt(), node.get("leftEnd").asInt());
             Breakend left = Breakend.of(leftContigOptional.get(), leftId, leftStrand, leftCoordinates);
 
             // right
-            String rightContigName = node.get("rightContigName").asText();
-            Optional<Contig> rightContigOptional = findContig(rightContigName);
+            String rightContigGenBankAccession = node.get("rightContigGenBankAccession").asText();
+            Optional<Contig> rightContigOptional = findContig(rightContigGenBankAccession);
             if (rightContigOptional.isEmpty())
-                throw new IllegalArgumentException("Unknown contig `" + rightContigName + "`");
+                throw new IllegalArgumentException("Unknown contig `" + rightContigGenBankAccession + "`");
             String rightId = node.get("rightId").asText();
             Strand rightStrand = Strand.parseStrand(node.get("rightStrand").asText());
             Coordinates rightCoordinates = Coordinates.of(CoordinateSystem.zeroBased(), node.get("rightStart").asInt(), node.get("rightEnd").asInt());
@@ -73,10 +72,10 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
             curatedVariant = CuratedVariant.breakend(eventId, left, right, ref, alt, variantMetadata);
         } else {
             // sequence or symbolic
-            String contigName = node.get("contigName").asText();
-            Optional<Contig> contigOptional = findContig(contigName);
+            String contigGenBankAccession = node.get("contigGenBankAccession").asText();
+            Optional<Contig> contigOptional = findContig(contigGenBankAccession);
             if (contigOptional.isEmpty())
-                throw new IllegalArgumentException("Unknown contig `" + contigName + "`");
+                throw new IllegalArgumentException("Unknown contig `" + contigGenBankAccession + "`");
 
             String id = node.get("id").asText();
             Strand strand = Strand.parseStrand(node.get("strand").asText());
@@ -91,12 +90,12 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
         return curatedVariant;
     }
 
-    private Optional<Contig> findContig(String contigName) {
-        Contig contig = hg19.contigByName(contigName);
-        if (contig.isUnknown()) {
-            Contig other = hg38.contigByName(contigName);
-            return other.isUnknown() ? Optional.empty() : Optional.of(other);
+    private Optional<Contig> findContig(String genBankAccession) {
+        for (GenomicAssembly assembly : assemblies) {
+            Contig contig = assembly.contigByName(genBankAccession);
+            if (!contig.isUnknown())
+                return Optional.of(contig);
         }
-        return Optional.of(contig);
+        return Optional.empty();
     }
 }

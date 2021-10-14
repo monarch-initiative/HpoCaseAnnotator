@@ -7,7 +7,6 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.CohortStudy;
 import org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
-import org.monarchinitiative.svart.GenomicAssemblies;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -20,20 +19,19 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class JsonStudyParserTest {
 
-    private static BufferedReader openInputStream(InputStream is) {
-        return new BufferedReader(new InputStreamReader(is));
+    private static String readInputStream(InputStream is) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+            return reader.lines()
+                    .collect(Collectors.joining(System.lineSeparator()));
+        }
     }
 
     private static String getCohortStudyPayload() throws IOException {
-        try (BufferedReader reader = openInputStream(JsonStudyParserTest.class.getResourceAsStream("test-model-v2-cohort.json"))) {
-            return reader.lines().collect(Collectors.joining(System.lineSeparator()));
-        }
+        return readInputStream(JsonStudyParserTest.class.getResourceAsStream("test-model-v2-cohort.json"));
     }
 
     private static String getFamilyStudyPayload() throws IOException {
-        try (BufferedReader reader = openInputStream(JsonStudyParserTest.class.getResourceAsStream("test-model-v2-family.json"))) {
-            return reader.lines().collect(Collectors.joining(System.lineSeparator()));
-        }
+        return readInputStream(JsonStudyParserTest.class.getResourceAsStream("test-model-v2-family.json"));
     }
 
     @Nested
@@ -41,7 +39,7 @@ public class JsonStudyParserTest {
 
         @Test
         public void deserialize() throws Exception {
-            JsonStudyParser parser = new JsonStudyParser(GenomicAssemblies.GRCh37p13(), GenomicAssemblies.GRCh38p13());
+            JsonStudyParser parser = JsonStudyParser.getInstance();
 
             Study actual = parser.read(getFamilyStudyPayload());
 
@@ -53,7 +51,7 @@ public class JsonStudyParserTest {
         public void roundTrip() throws IOException {
             FamilyStudy familyStudy = TestData.V2.comprehensiveFamilyStudy();
 
-            JsonStudyParser jsonStudyParser = new JsonStudyParser(GenomicAssemblies.GRCh37p13(), GenomicAssemblies.GRCh38p13());
+            JsonStudyParser jsonStudyParser = JsonStudyParser.getInstance();
 
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             jsonStudyParser.write(familyStudy, os);
@@ -70,8 +68,8 @@ public class JsonStudyParserTest {
             Path path = Paths.get("src/test/resources/org/monarchinitiative/hpo_case_annotator/io/v2/json/test-model-v2-family.json");
             FamilyStudy study = TestData.V2.comprehensiveFamilyStudy();
 
+            JsonStudyParser parser = JsonStudyParser.getInstance();
             try (OutputStream os = Files.newOutputStream(path)) {
-                JsonStudyParser parser = new JsonStudyParser(GenomicAssemblies.GRCh37p13(), GenomicAssemblies.GRCh38p13());
                 parser.write(study, os);
             }
         }
@@ -82,7 +80,7 @@ public class JsonStudyParserTest {
 
         @Test
         public void deserialize() throws Exception {
-            JsonStudyParser parser = new JsonStudyParser(GenomicAssemblies.GRCh37p13(), GenomicAssemblies.GRCh38p13());
+            JsonStudyParser parser = JsonStudyParser.getInstance();
 
             Study actual = parser.read(getCohortStudyPayload());
 
@@ -94,7 +92,7 @@ public class JsonStudyParserTest {
         public void roundTrip() throws IOException {
             CohortStudy cohortStudy = TestData.V2.comprehensiveCohortStudy();
 
-            JsonStudyParser jsonStudyParser = new JsonStudyParser(GenomicAssemblies.GRCh37p13(), GenomicAssemblies.GRCh38p13());
+            JsonStudyParser jsonStudyParser = JsonStudyParser.getInstance();
 
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             jsonStudyParser.write(cohortStudy, os);
@@ -111,8 +109,8 @@ public class JsonStudyParserTest {
             Path path = Paths.get("src/test/resources/org/monarchinitiative/hpo_case_annotator/io/v2/json/test-model-v2-cohort.json");
             CohortStudy study = TestData.V2.comprehensiveCohortStudy();
 
+            JsonStudyParser parser = JsonStudyParser.getInstance();
             try (OutputStream os = Files.newOutputStream(path)) {
-                JsonStudyParser parser = new JsonStudyParser(GenomicAssemblies.GRCh37p13(), GenomicAssemblies.GRCh38p13());
                 parser.write(study, os);
             }
         }

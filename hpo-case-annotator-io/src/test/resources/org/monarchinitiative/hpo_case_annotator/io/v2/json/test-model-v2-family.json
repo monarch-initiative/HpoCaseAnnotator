@@ -1,250 +1,216 @@
 {
-  "studyMetadata": {
-    "freeText": "Authors are describing a mutations in CFTR exon 13 that appears to contain two 3'CSS utilization of which is increased when there is a mutation in ESE element present in exon 13 (Figure 2.).\n\nThe 3'CSS whose coordinates are recorded in variants is the dominant one (Figure 2. D, D248). However, there exists also another (D195) which has coordinates: 117232182, 3 splice site, CAATTTAG|TGCAGAAA .\n",
-    "createdBy": {
-      "curatorId": "HPO:ddanis",
-      "softwareVersion": "2.0.0",
-      "timestamp": "2021-01-01T12:00:00Z"
+  "studyMetadata" : {
+    "freeText" : "Authors are describing a mutations in CFTR exon 13 that appears to contain two 3'CSS utilization of which is increased when there is a mutation in ESE element present in exon 13 (Figure 2.).\n\nThe 3'CSS whose coordinates are recorded in variants is the dominant one (Figure 2. D, D248). However, there exists also another (D195) which has coordinates: 117232182, 3 splice site, CAATTTAG|TGCAGAAA .\n",
+    "createdBy" : {
+      "curatorId" : "HPO:ddanis",
+      "softwareVersion" : "2.0.0",
+      "timestamp" : "2021-01-01T12:00:00Z"
     },
-    "modifiedBy": [
-      {
-        "curatorId": "HPO:ddanis",
-        "softwareVersion": "2.0.0",
-        "timestamp": "2021-01-02T12:00:00Z"
-      },
-      {
-        "curatorId": "HPO:ddanis",
-        "softwareVersion": "2.0.0",
-        "timestamp": "2021-01-02T14:00:00Z"
-      }
-    ]
+    "modifiedBy" : [ {
+      "curatorId" : "HPO:ddanis",
+      "softwareVersion" : "2.0.0",
+      "timestamp" : "2021-01-02T12:00:00Z"
+    }, {
+      "curatorId" : "HPO:ddanis",
+      "softwareVersion" : "2.0.0",
+      "timestamp" : "2021-01-02T14:00:00Z"
+    } ]
   },
-  "publication": {
-    "authors": [
-      "Beygó J",
-      "Buiting K",
-      "Seland S",
-      "Lüdecke HJ",
-      "Hehr U",
-      "Lich C",
-      "Prager B",
-      "Lohmann DR",
-      "Wieczorek D"
-    ],
-    "title": "First Report of a Single Exon Deletion in TCOF1 Causing Treacher Collins Syndrome",
-    "journal": "Mol Syndromol",
-    "year": 2012,
-    "volume": "2(2)",
-    "pages": "53-59",
-    "pmid": "22712005"
+  "publication" : {
+    "authors" : [ "Beygó J", "Buiting K", "Seland S", "Lüdecke HJ", "Hehr U", "Lich C", "Prager B", "Lohmann DR", "Wieczorek D" ],
+    "title" : "First Report of a Single Exon Deletion in TCOF1 Causing Treacher Collins Syndrome",
+    "journal" : "Mol Syndromol",
+    "year" : 2012,
+    "volume" : "2(2)",
+    "pages" : "53-59",
+    "pmid" : "22712005"
   },
-  "variants": [
-    {
-      "variantType": "SNV",
-      "contigName": "CM000671.1",
-      "strand": "+",
-      "start": 123737056,
-      "end": 123737057,
-      "changeLength": 0,
-      "id": "mendelian",
-      "md5Hex": "4ff0f76632e6a0aca94996361bc29c58",
-      "ref": "C",
-      "alt": "G",
-      "variantValidation": {
-        "validationContext": "MENDELIAN",
-        "validationMetadata": {
-          "variantMetadataContext": "MENDELIAN",
-          "snippet": "TTCATTTAC[C/G]TCTACTGG",
-          "variantClass": "promoter",
-          "pathomechanism": "promoter|reduced-transcription",
-          "cosegregation": false,
-          "comparability": false,
-          "regulator": "TEST_REGULATOR",
-          "reporterRegulation": "no",
-          "reporterResidualActivity": "RES_ACT",
-          "emsaValidationPerformed": true,
-          "emsaTfSymbol": "TF_SYMBOL_TEST",
-          "emsaGeneId": "TF_GENEID_TEST",
-          "otherChoices": "down",
-          "otherEffect": "in vitro mRNA expression assay"
-        }
-      }
-    },
-    {
-      "variantType": "SNV",
-      "contigName": "CM000671.1",
-      "strand": "+",
-      "start": 123737056,
-      "end": 123737057,
-      "changeLength": 0,
-      "id": "somatic",
-      "md5Hex": "b8394a48b4e1028f04930c3b739fac88",
-      "ref": "C",
-      "alt": "A",
-      "variantValidation": {
-        "validationContext": "SOMATIC",
-        "validationMetadata": {
-          "variantMetadataContext": "SOMATIC",
-          "snippet": "TTCATTTAC[C/A]TCTACTGG",
-          "variantClass": "5UTR",
-          "pathomechanism": "5UTR|transcription",
-          "cosegregation": false,
-          "comparability": false,
-          "regulator": "SOMATIC_REGULATOR",
-          "reporterRegulation": "up",
-          "reporterResidualActivity": "SOMATIC_RP_PERC",
-          "emsaGeneId": "TF_GENE_SYMBOL_TEST",
-          "otherChoices": "up",
-          "nPatients": 78,
-          "mPatients": 100
-        }
-      }
-    },
-    {
-      "variantType": "SNV",
-      "contigName": "CM000671.1",
-      "strand": "+",
-      "start": 123737056,
-      "end": 123737057,
-      "changeLength": 0,
-      "id": "splicing",
-      "md5Hex": "e8314b7b3d063966458a6bca6c5c3be8",
-      "ref": "C",
-      "alt": "T",
-      "variantValidation": {
-        "validationContext": "SPLICING",
-        "validationMetadata": {
-          "variantMetadataContext": "SPLICING",
-          "snippet": "TTCATTTAC[C/T]TCTACTGG",
-          "variantClass": "splicing",
-          "pathomechanism": "splicing|3css|activated",
-          "cosegregation": true,
-          "comparability": false,
-          "crypticPosition": 123737090,
-          "crypticSpliceSiteType": "FIVE_PRIME",
-          "crypticSpliceSiteSnippet": "ATATG|GCGAGTTCTT",
-          "consequence": "Cryptic splicing",
-          "minigeneValidation": true,
-          "siteDirectedMutagenesisValidation": false,
-          "rtPcrValidation": true,
-          "srProteinOverexpressionValidation": false,
-          "srProteinKnockdownValidation": true,
-          "cDnaSequencingValidation": false,
-          "pcrValidation": true,
-          "mutOfWtSpliceSiteValidation": false,
-          "otherValidation": true
-        }
-      }
-    },
-    {
-      "variantType": "DEL",
-      "contigName": "CM000667.1",
-      "strand": "+",
-      "start": 149741530,
-      "end": 149744897,
-      "changeLength": -3367,
-      "id": "symbolic_DEL",
-      "md5Hex": "4ccbca63d4212e7dc79259bc64255990",
-      "ref": "N",
-      "alt": "<DEL>",
-      "variantValidation": {
-        "validationContext": "STRUCTURAL",
-        "validationMetadata": {
-          "variantMetadataContext": "STRUCTURAL",
-          "snippet": "",
-          "variantClass": "structural",
-          "pathomechanism": "intronic deletion",
-          "cosegregation": true,
-          "comparability": false
-        }
-      }
-    },
-    {
-      "variantType": "BND",
-      "leftContigName": "CM000671.1",
-      "leftStrand": "+",
-      "leftStart": 133359000,
-      "leftEnd": 133359000,
-      "leftId": "left",
-      "rightContigName": "CM000675.1",
-      "rightStrand": "+",
-      "rightStart": 32300000,
-      "rightEnd": 32300000,
-      "rightId": "right",
-      "eventId": "symbolic_breakend",
-      "md5Hex": "d369ae92d8888b70f8adbcab9d5af0db",
-      "ref": "G",
-      "alt": "ACGT",
-      "variantValidation": {
-        "validationContext": "STRUCTURAL",
-        "validationMetadata": {
-          "variantMetadataContext": "STRUCTURAL",
-          "snippet": "",
-          "variantClass": "structural",
-          "pathomechanism": "intronic deletion",
-          "cosegregation": true,
-          "comparability": false
-        }
+  "variants" : [ {
+    "variantType" : "SNV",
+    "contigGenBankAccession" : "CM000671.1",
+    "strand" : "+",
+    "start" : 123737056,
+    "end" : 123737057,
+    "changeLength" : 0,
+    "id" : "mendelian",
+    "md5Hex" : "4ff0f76632e6a0aca94996361bc29c58",
+    "ref" : "C",
+    "alt" : "G",
+    "variantValidation" : {
+      "validationContext" : "MENDELIAN",
+      "validationMetadata" : {
+        "variantMetadataContext" : "MENDELIAN",
+        "snippet" : "TTCATTTAC[C/G]TCTACTGG",
+        "variantClass" : "promoter",
+        "pathomechanism" : "promoter|reduced-transcription",
+        "cosegregation" : false,
+        "comparability" : false,
+        "regulator" : "TEST_REGULATOR",
+        "reporterRegulation" : "no",
+        "reporterResidualActivity" : "RES_ACT",
+        "emsaValidationPerformed" : true,
+        "emsaTfSymbol" : "TF_SYMBOL_TEST",
+        "emsaGeneId" : "TF_GENEID_TEST",
+        "otherChoices" : "down",
+        "otherEffect" : "in vitro mRNA expression assay"
       }
     }
-  ],
-  "pedigree": {
-    "members": [
-      {
-        "id": "FAM:001",
-        "age": "P10Y5M4D",
-        "diseases": [
-          {
-            "diseaseId": "OMIM:219700",
-            "diseaseName": "CYSTIC FIBROSIS; CF",
-            "isExcluded": false
-          }
-        ],
-        "genotypes": [
-          {
-            "variantId": "4ccbca63d4212e7dc79259bc64255990",
-            "genotype": "HETEROZYGOUS"
-          },
-          {
-            "variantId": "4ff0f76632e6a0aca94996361bc29c58",
-            "genotype": "HOMOZYGOUS_ALTERNATE"
-          },
-          {
-            "variantId": "b8394a48b4e1028f04930c3b739fac88",
-            "genotype": "HETEROZYGOUS"
-          },
-          {
-            "variantId": "d369ae92d8888b70f8adbcab9d5af0db",
-            "genotype": "HETEROZYGOUS"
-          },
-          {
-            "variantId": "e8314b7b3d063966458a6bca6c5c3be8",
-            "genotype": "HOMOZYGOUS_ALTERNATE"
-          }
-        ],
-        "phenotypicObservations": [
-          {
-            "observationAge": {
-              "startAge": "P0D",
-              "endAge": "P10Y5M4D"
-            },
-            "phenotypicFeatures": [
-              {
-                "termId": "HP:1234567",
-                "isExcluded": false
-              },
-              {
-                "termId": "HP:9876543",
-                "isExcluded": true
-              }
-            ]
-          }
-        ],
-        "sex": "MALE",
-        "paternalId": "FAM:002",
-        "maternalId": null,
-        "isProband": true
+  }, {
+    "variantType" : "SNV",
+    "contigGenBankAccession" : "CM000671.1",
+    "strand" : "+",
+    "start" : 123737056,
+    "end" : 123737057,
+    "changeLength" : 0,
+    "id" : "somatic",
+    "md5Hex" : "b8394a48b4e1028f04930c3b739fac88",
+    "ref" : "C",
+    "alt" : "A",
+    "variantValidation" : {
+      "validationContext" : "SOMATIC",
+      "validationMetadata" : {
+        "variantMetadataContext" : "SOMATIC",
+        "snippet" : "TTCATTTAC[C/A]TCTACTGG",
+        "variantClass" : "5UTR",
+        "pathomechanism" : "5UTR|transcription",
+        "cosegregation" : false,
+        "comparability" : false,
+        "regulator" : "SOMATIC_REGULATOR",
+        "reporterRegulation" : "up",
+        "reporterResidualActivity" : "SOMATIC_RP_PERC",
+        "emsaGeneId" : "TF_GENE_SYMBOL_TEST",
+        "otherChoices" : "up",
+        "nPatients" : 78,
+        "mPatients" : 100
       }
-    ]
+    }
+  }, {
+    "variantType" : "SNV",
+    "contigGenBankAccession" : "CM000671.1",
+    "strand" : "+",
+    "start" : 123737056,
+    "end" : 123737057,
+    "changeLength" : 0,
+    "id" : "splicing",
+    "md5Hex" : "e8314b7b3d063966458a6bca6c5c3be8",
+    "ref" : "C",
+    "alt" : "T",
+    "variantValidation" : {
+      "validationContext" : "SPLICING",
+      "validationMetadata" : {
+        "variantMetadataContext" : "SPLICING",
+        "snippet" : "TTCATTTAC[C/T]TCTACTGG",
+        "variantClass" : "splicing",
+        "pathomechanism" : "splicing|3css|activated",
+        "cosegregation" : true,
+        "comparability" : false,
+        "crypticPosition" : 123737090,
+        "crypticSpliceSiteType" : "FIVE_PRIME",
+        "crypticSpliceSiteSnippet" : "ATATG|GCGAGTTCTT",
+        "consequence" : "Cryptic splicing",
+        "minigeneValidation" : true,
+        "siteDirectedMutagenesisValidation" : false,
+        "rtPcrValidation" : true,
+        "srProteinOverexpressionValidation" : false,
+        "srProteinKnockdownValidation" : true,
+        "cDnaSequencingValidation" : false,
+        "pcrValidation" : true,
+        "mutOfWtSpliceSiteValidation" : false,
+        "otherValidation" : true
+      }
+    }
+  }, {
+    "variantType" : "DEL",
+    "contigGenBankAccession" : "CM000667.1",
+    "strand" : "+",
+    "start" : 149741530,
+    "end" : 149744897,
+    "changeLength" : -3367,
+    "id" : "symbolic_DEL",
+    "md5Hex" : "4ccbca63d4212e7dc79259bc64255990",
+    "ref" : "N",
+    "alt" : "<DEL>",
+    "variantValidation" : {
+      "validationContext" : "STRUCTURAL",
+      "validationMetadata" : {
+        "variantMetadataContext" : "STRUCTURAL",
+        "snippet" : "",
+        "variantClass" : "structural",
+        "pathomechanism" : "intronic deletion",
+        "cosegregation" : true,
+        "comparability" : false
+      }
+    }
+  }, {
+    "variantType" : "BND",
+    "leftContigGenBankAccession" : "CM000671.1",
+    "leftStrand" : "+",
+    "leftStart" : 133359000,
+    "leftEnd" : 133359000,
+    "leftId" : "left",
+    "rightContigGenBankAccession" : "CM000675.1",
+    "rightStrand" : "+",
+    "rightStart" : 32300000,
+    "rightEnd" : 32300000,
+    "rightId" : "right",
+    "eventId" : "symbolic_breakend",
+    "md5Hex" : "d369ae92d8888b70f8adbcab9d5af0db",
+    "ref" : "G",
+    "alt" : "ACGT",
+    "variantValidation" : {
+      "validationContext" : "STRUCTURAL",
+      "validationMetadata" : {
+        "variantMetadataContext" : "STRUCTURAL",
+        "snippet" : "",
+        "variantClass" : "structural",
+        "pathomechanism" : "intronic deletion",
+        "cosegregation" : true,
+        "comparability" : false
+      }
+    }
+  } ],
+  "pedigree" : {
+    "members" : [ {
+      "id" : "FAM:001",
+      "age" : "P10Y5M4D",
+      "diseases" : [ {
+        "diseaseId" : "OMIM:219700",
+        "diseaseName" : "CYSTIC FIBROSIS; CF",
+        "isExcluded" : false
+      } ],
+      "genotypes" : [ {
+        "variantId" : "4ccbca63d4212e7dc79259bc64255990",
+        "genotype" : "HETEROZYGOUS"
+      }, {
+        "variantId" : "4ff0f76632e6a0aca94996361bc29c58",
+        "genotype" : "HOMOZYGOUS_ALTERNATE"
+      }, {
+        "variantId" : "b8394a48b4e1028f04930c3b739fac88",
+        "genotype" : "HETEROZYGOUS"
+      }, {
+        "variantId" : "d369ae92d8888b70f8adbcab9d5af0db",
+        "genotype" : "HETEROZYGOUS"
+      }, {
+        "variantId" : "e8314b7b3d063966458a6bca6c5c3be8",
+        "genotype" : "HOMOZYGOUS_ALTERNATE"
+      } ],
+      "phenotypicObservations" : [ {
+        "observationAge" : {
+          "startAge" : "P0D",
+          "endAge" : "P10Y5M4D"
+        },
+        "phenotypicFeatures" : [ {
+          "termId" : "HP:9876543",
+          "isExcluded" : true
+        }, {
+          "termId" : "HP:1234567",
+          "isExcluded" : false
+        } ]
+      } ],
+      "sex" : "MALE",
+      "paternalId" : "FAM:002",
+      "maternalId" : null,
+      "isProband" : true
+    } ]
   }
 }
