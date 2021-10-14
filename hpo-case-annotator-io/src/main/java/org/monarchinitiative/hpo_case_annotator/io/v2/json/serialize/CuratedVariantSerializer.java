@@ -53,6 +53,7 @@ public class CuratedVariantSerializer extends StdSerializer<CuratedVariant> {
             gen.writeNumberField("changeLength", curatedVariant.changeLength());
             gen.writeStringField("id", curatedVariant.id());
         }
+        gen.writeStringField("md5Hex", curatedVariant.md5Hex());
         gen.writeStringField("ref", curatedVariant.ref());
         gen.writeStringField("alt", curatedVariant.alt());
 

@@ -277,9 +277,7 @@ class DiseaseCaseToV1PhenopacketCodec implements Codec<DiseaseCase, Phenopacket>
 
     @Override
     public DiseaseCase decode(Phenopacket data) {
-        // TODO - implement phenopacket to diseasecase conversion
-        LOGGER.warn("Not yet supported");
-        return null;
+        throw new UnsupportedOperationException("Conversion from Phenopacket to Disease case is not supported");
     }
 
 }

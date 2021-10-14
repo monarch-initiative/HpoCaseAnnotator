@@ -17,10 +17,10 @@ public abstract class VariantMetadata {
                               String pathomechanism,
                               boolean cosegregation,
                               boolean comparability) {
-        this.variantMetadataContext = variantMetadataContext;
-        this.snippet = snippet;
-        this.variantClass = variantClass;
-        this.pathomechanism = pathomechanism;
+        this.variantMetadataContext = Objects.requireNonNull(variantMetadataContext, "Metadata context cannot be null");
+        this.snippet = Objects.requireNonNull(snippet, "Snippet cannot be null");
+        this.variantClass = Objects.requireNonNull(variantClass, "Variant class cannot be null");
+        this.pathomechanism = Objects.requireNonNull(pathomechanism, "Pathomechanism cannot be null");
         this.cosegregation = cosegregation;
         this.comparability = comparability;
     }
