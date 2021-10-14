@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.io.v2.json.deserialize.variant;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,6 +33,12 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
         return VariantMetadata.of(VariantMetadataContext.UNKNOWN, snippet, variantClass, pathomechanism, cosegregation, comparability);
     }
 
+    private static ConfidenceInterval parseConfidenceInterval(String ciFieldName, JsonNode node, ObjectCodec codec) throws JsonProcessingException {
+        return (node.has(ciFieldName))
+                ? codec.treeToValue(node.get(ciFieldName), ConfidenceInterval.class)
+                : ConfidenceInterval.precise();
+    }
+
     @Override
     public CuratedVariant deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         ObjectCodec codec = jp.getCodec();
@@ -55,7 +62,13 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
                 throw new IllegalArgumentException("Unknown contig `" + leftContigGenBankAccession + "`");
             String leftId = node.get("leftId").asText();
             Strand leftStrand = Strand.parseStrand(node.get("leftStrand").asText());
-            Coordinates leftCoordinates = Coordinates.of(CoordinateSystem.zeroBased(), node.get("leftStart").asInt(), node.get("leftEnd").asInt());
+            ConfidenceInterval leftStartCi = parseConfidenceInterval("leftStartCi", node, codec);
+            ConfidenceInterval leftEndCi = parseConfidenceInterval("leftEndCi", node, codec);
+            Coordinates leftCoordinates = Coordinates.of(CoordinateSystem.zeroBased(),
+                    node.get("leftStart").asInt(),
+                    leftStartCi,
+                    node.get("leftEnd").asInt(),
+                    leftEndCi);
             Breakend left = Breakend.of(leftContigOptional.get(), leftId, leftStrand, leftCoordinates);
 
             // right
@@ -65,7 +78,13 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
                 throw new IllegalArgumentException("Unknown contig `" + rightContigGenBankAccession + "`");
             String rightId = node.get("rightId").asText();
             Strand rightStrand = Strand.parseStrand(node.get("rightStrand").asText());
-            Coordinates rightCoordinates = Coordinates.of(CoordinateSystem.zeroBased(), node.get("rightStart").asInt(), node.get("rightEnd").asInt());
+            ConfidenceInterval rightStartCi = parseConfidenceInterval("rightStartCi", node, codec);
+            ConfidenceInterval rightEndCi = parseConfidenceInterval("rightEndCi", node, codec);
+            Coordinates rightCoordinates = Coordinates.of(CoordinateSystem.zeroBased(),
+                    node.get("rightStart").asInt(),
+                    rightStartCi,
+                    node.get("rightEnd").asInt(),
+                    rightEndCi);
             Breakend right = Breakend.of(rightContigOptional.get(), rightId, rightStrand, rightCoordinates);
 
             String eventId = node.get("eventId").asText();
@@ -79,7 +98,11 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
 
             String id = node.get("id").asText();
             Strand strand = Strand.parseStrand(node.get("strand").asText());
-            Coordinates coordinates = Coordinates.of(CoordinateSystem.zeroBased(), node.get("start").asInt(), node.get("end").asInt());
+
+            ConfidenceInterval startCi = parseConfidenceInterval("startCi", node, codec);
+            ConfidenceInterval endCi = parseConfidenceInterval("endCi", node, codec);
+
+            Coordinates coordinates = Coordinates.of(CoordinateSystem.zeroBased(), node.get("start").asInt(), startCi, node.get("end").asInt(), endCi);
             int changeLength = node.get("changeLength").asInt();
 
             curatedVariant = CuratedVariant.sequenceSymbolic(contigOptional.get(), id, strand, coordinates, ref, alt, changeLength, variantMetadata);

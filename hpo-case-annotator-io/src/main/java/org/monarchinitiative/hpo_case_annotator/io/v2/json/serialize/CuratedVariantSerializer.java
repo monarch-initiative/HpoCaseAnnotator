@@ -30,26 +30,35 @@ public class CuratedVariantSerializer extends StdSerializer<CuratedVariant> {
             Breakend left = bv.left();
             gen.writeStringField("leftContigGenBankAccession", left.contig().genBankAccession());
             gen.writeStringField("leftStrand", left.strand().toString());
-            // TODO - confidence intervals
             gen.writeNumberField("leftStart", left.startWithCoordinateSystem(CoordinateSystem.zeroBased()));
+            if (!left.startConfidenceInterval().isPrecise())
+                gen.writeObjectField("leftStartCi", left.startConfidenceInterval());
             gen.writeNumberField("leftEnd", left.startWithCoordinateSystem(CoordinateSystem.zeroBased()));
+            if (!left.endConfidenceInterval().isPrecise())
+                gen.writeObjectField("leftEndCi", left.endConfidenceInterval());
             gen.writeStringField("leftId", left.id());
 
             Breakend right = bv.right();
             gen.writeStringField("rightContigGenBankAccession", right.contig().genBankAccession());
             gen.writeStringField("rightStrand", right.strand().toString());
-            // TODO - confidence intervals
             gen.writeNumberField("rightStart", right.startWithCoordinateSystem(CoordinateSystem.zeroBased()));
+            if (!right.startConfidenceInterval().isPrecise())
+                gen.writeObjectField("rightStartCi", right.startConfidenceInterval());
             gen.writeNumberField("rightEnd", right.startWithCoordinateSystem(CoordinateSystem.zeroBased()));
+            if (!right.endConfidenceInterval().isPrecise())
+                gen.writeObjectField("rightEndCi", right.endConfidenceInterval());
             gen.writeStringField("rightId", right.id());
 
             gen.writeStringField("eventId", bv.eventId());
         } else {
             gen.writeStringField("contigGenBankAccession", curatedVariant.contig().genBankAccession());
             gen.writeStringField("strand", curatedVariant.strand().toString());
-            // TODO - confidence intervals
             gen.writeNumberField("start", curatedVariant.startWithCoordinateSystem(CoordinateSystem.zeroBased()));
+            if (!curatedVariant.startConfidenceInterval().isPrecise())
+                gen.writeObjectField("startCi", curatedVariant.startConfidenceInterval());
             gen.writeNumberField("end", curatedVariant.endWithCoordinateSystem(CoordinateSystem.zeroBased()));
+            if (!curatedVariant.endConfidenceInterval().isPrecise())
+                gen.writeObjectField("endCi", curatedVariant.endConfidenceInterval());
             gen.writeNumberField("changeLength", curatedVariant.changeLength());
             gen.writeStringField("id", curatedVariant.id());
         }
