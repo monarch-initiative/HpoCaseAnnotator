@@ -6,9 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Collectors;
 
-public class Utils {
+public class TestUtils {
 
-    private Utils() {
+    private TestUtils() {
     }
 
     public static String readFile(Path path) throws IOException {
