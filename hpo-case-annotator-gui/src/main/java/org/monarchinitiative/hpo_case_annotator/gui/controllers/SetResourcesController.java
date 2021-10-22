@@ -8,7 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
-import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
+import org.monarchinitiative.hpo_case_annotator.core.reference.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.io.Downloader;
 import org.monarchinitiative.hpo_case_annotator.gui.io.GenomeAssemblyDownloader;

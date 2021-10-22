@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox alignment="CENTER" minHeight="40.0" prefHeight="40.0" prefWidth="400.0" style="-fx-background-color: #ded7d7;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.StatusBarController">
+   <children>
+      <Label fx:id="summaryLabel" minWidth="100.0" prefHeight="30.0" prefWidth="100.0" HBox.hgrow="SOMETIMES" />
+      <Separator orientation="VERTICAL" HBox.hgrow="NEVER">
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </Separator>
+      <Label fx:id="messageLabel" onMouseClicked="#messageLabelMouseClicked" prefHeight="30.0" prefWidth="250.0" HBox.hgrow="ALWAYS" />
+      <Button fx:id="clearButton" disable="true" mnemonicParsing="false" onAction="#clearButtonAction" prefHeight="30.0" prefWidth="100.0" text="Clear">
+         <HBox.margin>
+            <Insets left="5.0" right="5.0" />
+         </HBox.margin>
+      </Button>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</HBox>

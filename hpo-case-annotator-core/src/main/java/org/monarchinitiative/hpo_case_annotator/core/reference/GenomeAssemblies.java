@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.core.refgenome;
+package org.monarchinitiative.hpo_case_annotator.core.reference;
 
 
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
@@ -15,6 +15,7 @@ import java.util.function.Function;
  * @version 0.0.1
  * @since 0.0
  */
+@Deprecated
 public class GenomeAssemblies implements AutoCloseable {
 
     private final List<GenomeAssembly> assemblies;

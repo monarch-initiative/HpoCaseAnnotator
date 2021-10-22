@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.core.refgenome;
+package org.monarchinitiative.hpo_case_annotator.core.reference;
 
 import htsjdk.samtools.SAMException;
 import org.junit.jupiter.api.AfterEach;
