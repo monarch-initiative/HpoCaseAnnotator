@@ -1,12 +1,15 @@
 module org.monarchinitiative.hpo_case_annotator.forms {
-    requires transitive org.monarchinitiative.hpo_case_annotator.model;
+    requires org.monarchinitiative.hpo_case_annotator.core;
 
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.fxml;
+    requires javafx.web;
+    requires org.controlsfx.controls;
 
     exports org.monarchinitiative.hpo_case_annotator.forms;
-    exports org.monarchinitiative.hpo_case_annotator.forms.utils;
 
-    opens org.monarchinitiative.hpo_case_annotator.forms.individual;
+    opens org.monarchinitiative.hpo_case_annotator.forms to javafx.fxml;
+    opens org.monarchinitiative.hpo_case_annotator.forms.individual to javafx.fxml;
+    opens org.monarchinitiative.hpo_case_annotator.forms.variant to javafx.fxml;
 }

@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.utils;
+package org.monarchinitiative.hpo_case_annotator.forms.format;
 
 import javafx.util.StringConverter;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
@@ -7,11 +7,11 @@ public class SexStringConverter extends StringConverter<Sex> {
 
     private static final SexStringConverter INSTANCE = new SexStringConverter();
 
-    private SexStringConverter() {
-    }
-
     public static SexStringConverter getInstance() {
         return INSTANCE;
+    }
+
+    private SexStringConverter() {
     }
 
     @Override

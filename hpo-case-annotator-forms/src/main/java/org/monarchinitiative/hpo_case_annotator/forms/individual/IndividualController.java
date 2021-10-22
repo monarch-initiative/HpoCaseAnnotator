@@ -3,7 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.individual;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import org.monarchinitiative.hpo_case_annotator.forms.ComponentController;
-import org.monarchinitiative.hpo_case_annotator.forms.utils.SexStringConverter;
+import org.monarchinitiative.hpo_case_annotator.forms.format.SexStringConverter;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Individual;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 

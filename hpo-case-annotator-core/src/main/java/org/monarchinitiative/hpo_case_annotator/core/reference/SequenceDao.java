@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.core.refgenome;
+package org.monarchinitiative.hpo_case_annotator.core.reference;
 
 /**
  * This interface is implemented by classes that fetch nucleotide sequences from specific genomic regions.
@@ -7,6 +7,7 @@ package org.monarchinitiative.hpo_case_annotator.core.refgenome;
  * @version 0.0.1
  * @since 0.0
  */
+@Deprecated // in favor of GenomicAssemblyService
 public interface SequenceDao extends AutoCloseable {
 
     /**
