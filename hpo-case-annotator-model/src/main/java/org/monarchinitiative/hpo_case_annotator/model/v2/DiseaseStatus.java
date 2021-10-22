@@ -2,10 +2,10 @@ package org.monarchinitiative.hpo_case_annotator.model.v2;
 
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
-public interface Disease {
+public interface DiseaseStatus {
 
-    static Disease of(TermId diseaseId, String diseaseName, boolean isExcluded) {
-        return new DiseaseDefault(diseaseId, diseaseName, isExcluded);
+    static DiseaseStatus of(TermId diseaseId, String diseaseName, boolean isExcluded) {
+        return new DiseaseStatusDefault(diseaseId, diseaseName, isExcluded);
     }
 
     /**

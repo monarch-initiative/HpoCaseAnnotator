@@ -163,7 +163,7 @@ class V2 {
     }
 
     private static Pedigree getPedigree() {
-        List<Disease> diseases = List.of(Disease.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", false));
+        List<DiseaseStatus> diseases = List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", false));
 
         Map<String, Genotype> genotypes = Map.of(
                 mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
@@ -209,7 +209,7 @@ class V2 {
                                 )
                         )
                 ),
-                List.of(Disease.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", false)),
+                List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", false)),
                 Map.of(
                         mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
                         somaticVariant().md5Hex(), Genotype.HETEROZYGOUS,
@@ -230,7 +230,7 @@ class V2 {
                                 )
                         )
                 ),
-                List.of(Disease.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", true)),
+                List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", true)),
                 Map.of(
                         mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE,
                         somaticVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE,

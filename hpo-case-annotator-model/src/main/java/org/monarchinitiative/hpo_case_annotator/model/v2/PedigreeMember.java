@@ -13,7 +13,7 @@ public interface PedigreeMember extends Individual {
                              String paternalId,
                              String maternalId,
                              Period age,
-                             List<Disease> diseases,
+                             List<DiseaseStatus> diseases,
                              Map<String, Genotype> genotypes,
                              List<PhenotypicObservation> phenotypicObservations,
                              boolean isProband,

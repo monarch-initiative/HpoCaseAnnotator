@@ -57,7 +57,7 @@ public class V1toV2CodecTest {
         assertThat(members, hasSize(1));
         assertThat(members.get(0), equalTo(PedigreeMember.of("FAM:001", "", "",
                 Period.parse("P10Y5M4D"),
-                List.of(Disease.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", false)),
+                List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", false)),
                 Map.of(
                         "4ff0f76632e6a0aca94996361bc29c58", Genotype.HOMOZYGOUS_ALTERNATE,
                         "b8394a48b4e1028f04930c3b739fac88", Genotype.HETEROZYGOUS,

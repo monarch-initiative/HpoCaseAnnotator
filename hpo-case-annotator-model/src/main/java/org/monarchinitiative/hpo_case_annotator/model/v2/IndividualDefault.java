@@ -13,14 +13,14 @@ class IndividualDefault implements Individual {
     private final String id;
     private final Period age;
     private final List<PhenotypicObservation> phenotypicObservations;
-    private final List<Disease> diseases;
+    private final List<DiseaseStatus> diseases;
     private final Map<String, Genotype> genotypes;
     private final Sex sex;
 
     protected IndividualDefault(String id,
                                 Period age,
                                 List<PhenotypicObservation> phenotypicObservations,
-                                List<Disease> diseases,
+                                List<DiseaseStatus> diseases,
                                 Map<String, Genotype> genotypes,
                                 Sex sex) {
         // assume that null checks has been made
@@ -35,7 +35,7 @@ class IndividualDefault implements Individual {
     static IndividualDefault of(String id,
                                 Period age,
                                 List<PhenotypicObservation> phenotypicObservations,
-                                List<Disease> diseases,
+                                List<DiseaseStatus> diseases,
                                 Map<String, Genotype> genotypes,
                                 Sex sex) {
         return new IndividualDefault(Objects.requireNonNull(id, "Individual ID must not be null"),
@@ -62,7 +62,7 @@ class IndividualDefault implements Individual {
     }
 
     @Override
-    public List<Disease> diseases() {
+    public List<DiseaseStatus> diseases() {
         return diseases;
     }
 

@@ -13,7 +13,7 @@ public interface Individual {
     static Individual of(String id,
                          Period age,
                          List<PhenotypicObservation> phenotypicObservations,
-                         List<Disease> diseases,
+                         List<DiseaseStatus> diseases,
                          Map<String, Genotype> genotypes,
                          Sex sex) {
         return IndividualDefault.of(id,
@@ -36,7 +36,7 @@ public interface Individual {
 
     List<PhenotypicObservation> phenotypicObservations();
 
-    List<Disease> diseases();
+    List<DiseaseStatus> diseases();
 
     /**
      * @return map linking {@link CuratedVariant#md5Hex()} to the {@link Genotype} observed in this individual.

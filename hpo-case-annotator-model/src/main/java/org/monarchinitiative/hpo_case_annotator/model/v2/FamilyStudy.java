@@ -48,7 +48,7 @@ public interface FamilyStudy extends Study {
     }
 
     // Disease(s)
-    default List<Disease> diseases() {
+    default List<DiseaseStatus> diseases() {
         return members()
                 .map(Individual::diseases)
                 .flatMap(Collection::stream)
