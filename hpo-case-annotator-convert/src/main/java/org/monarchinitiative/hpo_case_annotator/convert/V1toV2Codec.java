@@ -2,7 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.convert;
 
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
-import org.monarchinitiative.hpo_case_annotator.model.v2.Disease;
+import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Publication;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
@@ -293,9 +293,9 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         };
     }
 
-    private static Disease transformDisease(org.monarchinitiative.hpo_case_annotator.model.proto.Disease disease) throws ModelTransformationException {
+    private static DiseaseStatus transformDisease(org.monarchinitiative.hpo_case_annotator.model.proto.Disease disease) throws ModelTransformationException {
         try {
-            return Disease.of(TermId.of(disease.getDatabase(), disease.getDiseaseId()), disease.getDiseaseName(), false);
+            return DiseaseStatus.of(TermId.of(disease.getDatabase(), disease.getDiseaseId()), disease.getDiseaseName(), false);
         } catch (RuntimeException e) {
             throw new ModelTransformationException(e);
         }

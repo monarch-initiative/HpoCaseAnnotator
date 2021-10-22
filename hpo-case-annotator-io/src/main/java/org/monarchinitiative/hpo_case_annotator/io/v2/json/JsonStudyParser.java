@@ -16,11 +16,9 @@ import org.monarchinitiative.svart.ConfidenceInterval;
 import org.monarchinitiative.svart.GenomicAssemblies;
 import org.monarchinitiative.svart.GenomicAssembly;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,7 +45,7 @@ public class JsonStudyParser implements ModelParser<Study> {
             module.addSerializer(serializer);
 
         module.addDeserializer(AgeRange.class, new AgeRangeDeserializer());
-        module.addDeserializer(Disease.class, new DiseaseDeserializer());
+        module.addDeserializer(DiseaseStatus.class, new DiseaseStatusDeserializer());
         module.addDeserializer(EditHistory.class, new EditHistoryDeserializer());
         module.addDeserializer(Individual.class, new IndividualDeserializer());
         module.addDeserializer(PhenotypicFeature.class, new PhenotypicFeatureDeserializer());
@@ -82,7 +80,7 @@ public class JsonStudyParser implements ModelParser<Study> {
                 new AgeRangeSerializer(),
                 new ConfidenceIntervalSerializer(),
                 new CuratedVariantSerializer(),
-                new DiseaseSerializer(),
+                new DiseaseStatusSerializer(),
                 new EditHistorySerializer(),
                 new IndividualSerializer(),
                 new PedigreeMemberSerializer(),

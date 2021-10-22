@@ -3,7 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.io.v2.json.serialize;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import org.monarchinitiative.hpo_case_annotator.model.v2.Disease;
+import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Individual;
 import org.monarchinitiative.hpo_case_annotator.model.v2.PhenotypicObservation;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
@@ -30,8 +30,8 @@ public class IndividualSerializer extends StdSerializer<Individual> {
             gen.writeNullField("age");
 
         gen.writeArrayFieldStart("diseases");
-        for (Disease disease : individual.diseases())
-            gen.writeObject(disease);
+        for (DiseaseStatus diseaseStatus : individual.diseases())
+            gen.writeObject(diseaseStatus);
         gen.writeEndArray();
 
         gen.writeArrayFieldStart("genotypes");

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import org.monarchinitiative.hpo_case_annotator.model.v2.Disease;
+import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Individual;
 import org.monarchinitiative.hpo_case_annotator.model.v2.PhenotypicObservation;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
@@ -36,10 +36,10 @@ public class IndividualDeserializer extends StdDeserializer<Individual> {
         JsonNode ageNode = node.get("age");
         Period age = (ageNode.isTextual()) ? Period.parse(ageNode.asText()) : null;
 
-        List<Disease> diseases = new LinkedList<>();
+        List<DiseaseStatus> diseaseStatuses = new LinkedList<>();
         Iterator<JsonNode> diseasesIterator = node.get("diseases").elements();
         while (diseasesIterator.hasNext()) {
-            diseases.add(codec.treeToValue(diseasesIterator.next(), Disease.class));
+            diseaseStatuses.add(codec.treeToValue(diseasesIterator.next(), DiseaseStatus.class));
         }
 
         Map<String, Genotype> genotypeMap = new HashMap<>();
@@ -57,6 +57,6 @@ public class IndividualDeserializer extends StdDeserializer<Individual> {
 
         Sex sex = Sex.valueOf(node.get("sex").asText());
 
-        return Individual.of(id, age, phenotypicObservations, diseases, genotypeMap, sex);
+        return Individual.of(id, age, phenotypicObservations, diseaseStatuses, genotypeMap, sex);
     }
 }
