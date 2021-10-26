@@ -1,7 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.core.publication;
 
 import org.junit.jupiter.api.Test;
-import org.monarchinitiative.hpo_case_annotator.core.Utils;
+import org.monarchinitiative.hpo_case_annotator.core.TestUtils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 
 import java.io.ByteArrayInputStream;
@@ -31,7 +31,7 @@ public class PubMedSummaryRetrieverTest {
      */
     @Test
     public void offlineRetrievalOfPMID() throws Exception {
-        String htmlResponse = Utils.readFile(Paths.get("src/test/resources/org/monarchinitiative/hpo_case_annotator/core/publication/pubmed_eutils_summary.xml"));
+        String htmlResponse = TestUtils.readFile(Paths.get("src/test/resources/org/monarchinitiative/hpo_case_annotator/core/publication/pubmed_eutils_summary.xml"));
 
         Function<String, InputStream> connectionFactory = p -> new ByteArrayInputStream(htmlResponse.getBytes());
         PubMedSummaryRetriever instance = PubMedSummaryRetriever.builder()
