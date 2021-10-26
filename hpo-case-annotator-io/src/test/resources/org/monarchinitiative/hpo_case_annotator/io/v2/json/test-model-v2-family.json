@@ -206,18 +206,20 @@
         "variantId" : "e8314b7b3d063966458a6bca6c5c3be8",
         "genotype" : "HOMOZYGOUS_ALTERNATE"
       } ],
-      "phenotypicObservations" : [ {
+      "phenotypicFeatures" : [ {
+        "termId" : "HP:9876543",
+        "isExcluded" : true,
         "observationAge" : {
           "startAge" : "P0D",
           "endAge" : "P10Y5M4D"
-        },
-        "phenotypicFeatures" : [ {
-          "termId" : "HP:1234567",
-          "isExcluded" : false
-        }, {
-          "termId" : "HP:9876543",
-          "isExcluded" : true
-        } ]
+        }
+      }, {
+        "termId" : "HP:1234567",
+        "isExcluded" : false,
+        "observationAge" : {
+          "startAge" : "P0D",
+          "endAge" : "P10Y5M4D"
+        }
       } ],
       "sex" : "MALE",
       "paternalId" : "FAM:002",

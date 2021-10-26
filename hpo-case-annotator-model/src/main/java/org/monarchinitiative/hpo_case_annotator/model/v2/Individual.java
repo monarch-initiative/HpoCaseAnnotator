@@ -4,21 +4,23 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 
 import java.time.Period;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public interface Individual {
 
     static Individual of(String id,
                          Period age,
-                         List<PhenotypicObservation> phenotypicObservations,
+                         Collection<PhenotypicFeature> phenotypicFeatures,
                          List<DiseaseStatus> diseases,
                          Map<String, Genotype> genotypes,
                          Sex sex) {
         return IndividualDefault.of(id,
                 age,
-                phenotypicObservations,
+                phenotypicFeatures,
                 diseases,
                 genotypes,
                 sex);
@@ -34,7 +36,7 @@ public interface Individual {
      */
     Optional<Period> age();
 
-    List<PhenotypicObservation> phenotypicObservations();
+    Stream<PhenotypicFeature> phenotypicFeatures();
 
     List<DiseaseStatus> diseases();
 

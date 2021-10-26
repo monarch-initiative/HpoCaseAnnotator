@@ -64,13 +64,10 @@ public class V1toV2CodecTest {
                         "e8314b7b3d063966458a6bca6c5c3be8", Genotype.HOMOZYGOUS_ALTERNATE,
                         "4ccbca63d4212e7dc79259bc64255990", Genotype.HETEROZYGOUS,
                         "813960c422f5cc972a7a0e4099439751", Genotype.HETEROZYGOUS),
-                List.of(PhenotypicObservation.of(
-                        AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D")),
-                        List.of(
-                                PhenotypicFeature.of(TermId.of("HP:1234567"), false),
-                                PhenotypicFeature.of(TermId.of("HP:9876543"), true)
-                        )
-                )),
+                List.of(
+                        PhenotypicFeature.of(TermId.of("HP:1234567"), false, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D"))),
+                        PhenotypicFeature.of(TermId.of("HP:9876543"), true, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D")))
+                ),
                 true,
                 Sex.MALE)));
     }

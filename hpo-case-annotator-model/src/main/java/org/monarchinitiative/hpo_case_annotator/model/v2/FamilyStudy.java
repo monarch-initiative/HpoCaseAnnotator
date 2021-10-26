@@ -39,10 +39,7 @@ public interface FamilyStudy extends Study {
     //
     default List<PhenotypicFeature> phenotypicFeatures() {
         return members()
-                .map(Individual::phenotypicObservations)
-                .flatMap(Collection::stream)
-                .map(PhenotypicObservation::phenotypicFeatures)
-                .flatMap(Collection::stream)
+                .flatMap(Individual::phenotypicFeatures)
                 .distinct()
                 .toList();
     }

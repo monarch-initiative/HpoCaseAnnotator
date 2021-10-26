@@ -3,10 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.model.v2;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 
 import java.time.Period;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember {
 
@@ -20,10 +17,10 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
                                   Period age,
                                   List<DiseaseStatus> diseases,
                                   Map<String, Genotype> genotypes,
-                                  List<PhenotypicObservation> phenotypicObservations,
+                                  Set<PhenotypicFeature> phenotypicFeatures,
                                   boolean isProband,
                                   Sex sex) {
-        super(id, age, phenotypicObservations, diseases, genotypes, sex);
+        super(id, age, phenotypicFeatures, diseases, genotypes, sex);
         this.paternalId = paternalId;
         this.maternalId = maternalId;
         this.isProband = isProband;
@@ -35,7 +32,7 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
                                     Period age,
                                     List<DiseaseStatus> diseases,
                                     Map<String, Genotype> genotypes,
-                                    List<PhenotypicObservation> phenotypicObservations,
+                                    Collection<PhenotypicFeature> phenotypicFeatures,
                                     boolean isProband,
                                     Sex sex) {
         // wrap the collections
@@ -45,7 +42,7 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
                 age,
                 List.copyOf(Objects.requireNonNull(diseases, "Diseases must not be null")),
                 Map.copyOf(Objects.requireNonNull(genotypes, "Genotypes must not be null")),
-                List.copyOf(Objects.requireNonNull(phenotypicObservations, "Phenotypic observations must not be null")),
+                Set.copyOf(Objects.requireNonNull(phenotypicFeatures, "Phenotypic observations must not be null")),
                 isProband,
                 Objects.requireNonNull(sex, "Sex must not be null"));
     }

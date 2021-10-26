@@ -3,30 +3,28 @@ package org.monarchinitiative.hpo_case_annotator.model.v2;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 
 import java.time.Period;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Stream;
 
 class IndividualDefault implements Individual {
 
     private final String id;
     private final Period age;
-    private final List<PhenotypicObservation> phenotypicObservations;
+    private final Set<PhenotypicFeature> phenotypicFeatures;
     private final List<DiseaseStatus> diseases;
     private final Map<String, Genotype> genotypes;
     private final Sex sex;
 
     protected IndividualDefault(String id,
                                 Period age,
-                                List<PhenotypicObservation> phenotypicObservations,
+                                Set<PhenotypicFeature> phenotypicFeatures,
                                 List<DiseaseStatus> diseases,
                                 Map<String, Genotype> genotypes,
                                 Sex sex) {
         // assume that null checks has been made
         this.id = id;
         this.age = age;
-        this.phenotypicObservations = phenotypicObservations;
+        this.phenotypicFeatures = phenotypicFeatures;
         this.diseases = diseases;
         this.genotypes = genotypes;
         this.sex = sex;
@@ -34,13 +32,13 @@ class IndividualDefault implements Individual {
 
     static IndividualDefault of(String id,
                                 Period age,
-                                List<PhenotypicObservation> phenotypicObservations,
+                                Collection<PhenotypicFeature> phenotypicFeatures,
                                 List<DiseaseStatus> diseases,
                                 Map<String, Genotype> genotypes,
                                 Sex sex) {
         return new IndividualDefault(Objects.requireNonNull(id, "Individual ID must not be null"),
                 age,
-                Objects.requireNonNull(phenotypicObservations, "Phenotypes must not be null"),
+                Set.copyOf(Objects.requireNonNull(phenotypicFeatures, "Phenotypes must not be null")),
                 Objects.requireNonNull(diseases, "Diseases must not be null"),
                 Objects.requireNonNull(genotypes, "Genotypes must not be null"),
                 Objects.requireNonNull(sex, "Sex must not be null"));
@@ -57,8 +55,8 @@ class IndividualDefault implements Individual {
     }
 
     @Override
-    public List<PhenotypicObservation> phenotypicObservations() {
-        return phenotypicObservations;
+    public Stream<PhenotypicFeature> phenotypicFeatures() {
+        return phenotypicFeatures.stream();
     }
 
     @Override
@@ -81,12 +79,12 @@ class IndividualDefault implements Individual {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IndividualDefault that = (IndividualDefault) o;
-        return Objects.equals(id, that.id) && Objects.equals(age, that.age) && Objects.equals(phenotypicObservations, that.phenotypicObservations) && Objects.equals(diseases, that.diseases) && Objects.equals(genotypes, that.genotypes) && sex == that.sex;
+        return Objects.equals(id, that.id) && Objects.equals(age, that.age) && Objects.equals(phenotypicFeatures, that.phenotypicFeatures) && Objects.equals(diseases, that.diseases) && Objects.equals(genotypes, that.genotypes) && sex == that.sex;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, age, phenotypicObservations, diseases, genotypes, sex);
+        return Objects.hash(id, age, phenotypicFeatures, diseases, genotypes, sex);
     }
 
     @Override
@@ -94,7 +92,7 @@ class IndividualDefault implements Individual {
         return "IndividualDefault{" +
                 "id='" + id + '\'' +
                 ", age=" + age +
-                ", phenotypicObservations=" + phenotypicObservations +
+                ", phenotypicFeatures=" + phenotypicFeatures +
                 ", diseases=" + diseases +
                 ", genotypes=" + genotypes +
                 ", sex=" + sex +

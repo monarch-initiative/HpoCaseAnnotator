@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
+@Deprecated
 public class PhenotypicObservationSerializer extends StdSerializer<PhenotypicObservation> {
 
     public PhenotypicObservationSerializer() {
@@ -23,7 +24,6 @@ public class PhenotypicObservationSerializer extends StdSerializer<PhenotypicObs
     @Override
     public void serialize(PhenotypicObservation observation, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
-        gen.writeObjectField("observationAge", observation.observationAge());
 
         gen.writeArrayFieldStart("phenotypicFeatures");
         List<PhenotypicFeature> sortedById = observation.phenotypicFeatures().stream()

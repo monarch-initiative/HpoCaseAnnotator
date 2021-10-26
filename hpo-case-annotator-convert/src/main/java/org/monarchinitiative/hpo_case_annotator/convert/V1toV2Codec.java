@@ -2,7 +2,6 @@ package org.monarchinitiative.hpo_case_annotator.convert;
 
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
-import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Publication;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
@@ -251,7 +250,7 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         }
 
         // here we only can assume that the proband had all the features since birth
-        List<PhenotypicObservation> observations = transformPhenotypes(age, phenotypes);
+        List<PhenotypicFeature> observations = transformPhenotypes(age, phenotypes);
 
         PedigreeMember member = PedigreeMember.of(familyInfo.getFamilyOrProbandId(),
                 DEFAULT_PARENTAL_ID,
@@ -277,12 +276,12 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         };
     }
 
-    private static List<PhenotypicObservation> transformPhenotypes(Period age, List<OntologyClass> phenotypeList) {
-        Set<PhenotypicFeature> phenotypes = new HashSet<>(phenotypeList.size());
+    private static List<PhenotypicFeature> transformPhenotypes(Period age, List<OntologyClass> phenotypeList) {
+        List<PhenotypicFeature> phenotypes = new ArrayList<>(phenotypeList.size());
         for (OntologyClass phenotype : phenotypeList) {
-            phenotypes.add(PhenotypicFeature.of(TermId.of(phenotype.getId()), phenotype.getNotObserved()));
+            phenotypes.add(PhenotypicFeature.of(TermId.of(phenotype.getId()), phenotype.getNotObserved(), AgeRange.sinceBirthUntilAge(age)));
         }
-        return List.of(PhenotypicObservation.of(AgeRange.sinceBirthUntilAge(age), phenotypes));
+        return phenotypes;
     }
 
     private static Sex transformSex(org.monarchinitiative.hpo_case_annotator.model.proto.Sex sex) throws ModelTransformationException {
