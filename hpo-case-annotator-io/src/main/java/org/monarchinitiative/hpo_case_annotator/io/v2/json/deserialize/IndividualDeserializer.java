@@ -6,10 +6,7 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
-import org.monarchinitiative.hpo_case_annotator.model.v2.Individual;
-import org.monarchinitiative.hpo_case_annotator.model.v2.PhenotypicObservation;
-import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
+import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 
 import java.io.IOException;
@@ -49,14 +46,14 @@ public class IndividualDeserializer extends StdDeserializer<Individual> {
             genotypeMap.put(genotypeNode.get("variantId").asText(), Genotype.valueOf(genotypeNode.get("genotype").asText()));
         }
 
-        List<PhenotypicObservation> phenotypicObservations = new LinkedList<>();
-        Iterator<JsonNode> phenotypicObservationsIterator = node.get("phenotypicObservations").elements();
-        while (phenotypicObservationsIterator.hasNext()) {
-            phenotypicObservations.add(codec.treeToValue(phenotypicObservationsIterator.next(), PhenotypicObservation.class));
+        Set<PhenotypicFeature> phenotypicFeatures = new HashSet<>();
+        Iterator<JsonNode> phenotypicFeaturesIterator = node.get("phenotypicFeatures").elements();
+        while (phenotypicFeaturesIterator.hasNext()) {
+            phenotypicFeatures.add(codec.treeToValue(phenotypicFeaturesIterator.next(), PhenotypicFeature.class));
         }
 
         Sex sex = Sex.valueOf(node.get("sex").asText());
 
-        return Individual.of(id, age, phenotypicObservations, diseaseStatuses, genotypeMap, sex);
+        return Individual.of(id, age, phenotypicFeatures, diseaseStatuses, genotypeMap, sex);
     }
 }

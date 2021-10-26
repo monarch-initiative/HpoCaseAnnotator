@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.model.v2;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 
 import java.time.Period;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,7 +16,7 @@ public interface PedigreeMember extends Individual {
                              Period age,
                              List<DiseaseStatus> diseases,
                              Map<String, Genotype> genotypes,
-                             List<PhenotypicObservation> phenotypicObservations,
+                             Collection<PhenotypicFeature> phenotypicFeatures,
                              boolean isProband,
                              Sex sex) {
         return PedigreeMemberDefault.of(id,
@@ -24,7 +25,7 @@ public interface PedigreeMember extends Individual {
                 age,
                 diseases,
                 genotypes,
-                phenotypicObservations,
+                phenotypicFeatures,
                 isProband,
                 sex);
     }

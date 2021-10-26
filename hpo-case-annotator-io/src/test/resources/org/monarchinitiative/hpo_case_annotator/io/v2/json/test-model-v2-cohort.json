@@ -205,18 +205,20 @@
       "variantId" : "e8314b7b3d063966458a6bca6c5c3be8",
       "genotype" : "HOMOZYGOUS_ALTERNATE"
     } ],
-    "phenotypicObservations" : [ {
+    "phenotypicFeatures" : [ {
+      "termId" : "HP:9876543",
+      "isExcluded" : true,
       "observationAge" : {
         "startAge" : "P0D",
         "endAge" : "P10Y20D"
-      },
-      "phenotypicFeatures" : [ {
-        "termId" : "HP:1234567",
-        "isExcluded" : false
-      }, {
-        "termId" : "HP:9876543",
-        "isExcluded" : true
-      } ]
+      }
+    }, {
+      "termId" : "HP:1234567",
+      "isExcluded" : false,
+      "observationAge" : {
+        "startAge" : "P0D",
+        "endAge" : "P10Y20D"
+      }
     } ],
     "sex" : "MALE"
   }, {
@@ -243,18 +245,20 @@
       "variantId" : "e8314b7b3d063966458a6bca6c5c3be8",
       "genotype" : "HOMOZYGOUS_ALTERNATE"
     } ],
-    "phenotypicObservations" : [ {
+    "phenotypicFeatures" : [ {
+      "termId" : "HP:1234567",
+      "isExcluded" : true,
       "observationAge" : {
         "startAge" : "P0D",
         "endAge" : "P15Y2M4D"
-      },
-      "phenotypicFeatures" : [ {
-        "termId" : "HP:1234567",
-        "isExcluded" : true
-      }, {
-        "termId" : "HP:9876543",
-        "isExcluded" : false
-      } ]
+      }
+    }, {
+      "termId" : "HP:9876543",
+      "isExcluded" : false,
+      "observationAge" : {
+        "startAge" : "P0D",
+        "endAge" : "P15Y2M4D"
+      }
     } ],
     "sex" : "FEMALE"
   } ]

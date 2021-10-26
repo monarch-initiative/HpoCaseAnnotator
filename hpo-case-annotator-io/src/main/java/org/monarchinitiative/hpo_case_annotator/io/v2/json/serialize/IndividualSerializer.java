@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Individual;
-import org.monarchinitiative.hpo_case_annotator.model.v2.PhenotypicObservation;
+import org.monarchinitiative.hpo_case_annotator.model.v2.PhenotypicFeature;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 
 import java.io.IOException;
@@ -45,9 +45,9 @@ public class IndividualSerializer extends StdSerializer<Individual> {
         }
         gen.writeEndArray();
 
-        gen.writeArrayFieldStart("phenotypicObservations");
-        for (PhenotypicObservation phenotypicObservation : individual.phenotypicObservations())
-            gen.writeObject(phenotypicObservation);
+        gen.writeArrayFieldStart("phenotypicFeatures");
+        for (PhenotypicFeature phenotypicFeature : individual.phenotypicFeatures().toList())
+            gen.writeObject(phenotypicFeature);
         gen.writeEndArray();
 
         gen.writeObjectField("sex", individual.sex());

@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+@Deprecated
 public class PhenotypicObservationDeserializer extends StdDeserializer<PhenotypicObservation> {
 
     public PhenotypicObservationDeserializer() {

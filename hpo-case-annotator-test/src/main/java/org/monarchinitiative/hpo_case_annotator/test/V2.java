@@ -172,14 +172,9 @@ class V2 {
                 symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS,
                 symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS);
 
-        List<PhenotypicObservation> phenotypes = List.of(
-                PhenotypicObservation.of(
-                        AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D")),
-                        List.of(
-                                PhenotypicFeature.of(TermId.of("HP:1234567"), false),
-                                PhenotypicFeature.of(TermId.of("HP:9876543"), true)
-                        )
-                )
+        List<PhenotypicFeature> phenotypes = List.of(
+                PhenotypicFeature.of(TermId.of("HP:1234567"), false, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D"))),
+                PhenotypicFeature.of(TermId.of("HP:9876543"), true, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D")))
         );
 
 
@@ -201,13 +196,8 @@ class V2 {
         Individual abc = Individual.of("abc",
                 Period.of(10, 0, 20),
                 List.of(
-                        PhenotypicObservation.of(
-                                AgeRange.sinceBirthUntilAge(Period.parse("P10Y0M20D")),
-                                List.of(
-                                        PhenotypicFeature.of(TermId.of("HP:1234567"), false),
-                                        PhenotypicFeature.of(TermId.of("HP:9876543"), true)
-                                )
-                        )
+                        PhenotypicFeature.of(TermId.of("HP:1234567"), false, AgeRange.sinceBirthUntilAge(Period.parse("P10Y0M20D"))),
+                        PhenotypicFeature.of(TermId.of("HP:9876543"), true, AgeRange.sinceBirthUntilAge(Period.parse("P10Y0M20D")))
                 ),
                 List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", false)),
                 Map.of(
@@ -222,13 +212,8 @@ class V2 {
         Individual def = Individual.of("def",
                 Period.of(15, 2, 4),
                 List.of(
-                        PhenotypicObservation.of(
-                                AgeRange.sinceBirthUntilAge(Period.parse("P15Y2M4D")),
-                                List.of(
-                                        PhenotypicFeature.of(TermId.of("HP:1234567"), true),
-                                        PhenotypicFeature.of(TermId.of("HP:9876543"), false)
-                                )
-                        )
+                        PhenotypicFeature.of(TermId.of("HP:1234567"), true, AgeRange.sinceBirthUntilAge(Period.parse("P15Y2M4D"))),
+                        PhenotypicFeature.of(TermId.of("HP:9876543"), false, AgeRange.sinceBirthUntilAge(Period.parse("P15Y2M4D")))
                 ),
                 List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", true)),
                 Map.of(
