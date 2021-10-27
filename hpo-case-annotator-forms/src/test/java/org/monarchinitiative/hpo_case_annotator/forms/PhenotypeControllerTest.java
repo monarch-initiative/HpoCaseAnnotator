@@ -37,7 +37,7 @@ public class PhenotypeControllerTest {
 
     @Test
     public void showIt(FxRobot robot) {
-        robot.sleep(25, TimeUnit.SECONDS);
+        robot.sleep(10, TimeUnit.SECONDS);
     }
 
 }

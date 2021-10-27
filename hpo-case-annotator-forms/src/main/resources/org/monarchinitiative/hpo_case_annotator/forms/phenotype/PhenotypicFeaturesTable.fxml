@@ -4,8 +4,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="250.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeaturesTableController">
+<VBox id="phenotypicFeaturesTable" prefHeight="250.0" styleClass="section" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeaturesTableController">
     <children>
+      <HBox prefHeight="100.0" prefWidth="200.0" styleClass="subsection">
+         <children>
+            <Label styleClass="title" text="Approved phenotype terms" />
+         </children>
+      </HBox>
         <TableView fx:id="termsTableView" editable="true" VBox.vgrow="SOMETIMES">
             <columns>
                 <TableColumn fx:id="termIdTableColumn" editable="false" minWidth="80.0" resizable="false" text="Term ID" />

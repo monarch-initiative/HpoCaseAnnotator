@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+
+<TabPane xmlns="http://javafx.com/javafx/11.0.2" styleClass="section" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeEntryController">
+   <tabs>
+      <Tab closable="false" text="Text mining">
+         <content>
+            <fx:include fx:id="textMining" source="TextMining.fxml" />
+         </content>
+      </Tab>
+   </tabs>
+</TabPane>

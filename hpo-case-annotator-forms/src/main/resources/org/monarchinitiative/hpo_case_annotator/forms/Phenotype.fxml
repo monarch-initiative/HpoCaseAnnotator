@@ -1,28 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-
-<VBox xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.PhenotypeController">
-   <children>
-       <HBox style="-fx-background-color: #e3e3e3;" VBox.vgrow="NEVER">
-           <children>
-               <Label text="Phenotype" underline="true">
-                   <font>
-                       <Font name="System Bold" size="18.0" />
-                   </font>
-                   <HBox.margin>
-                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                   </HBox.margin>
-               </Label>
-           </children>
-           <VBox.margin>
-               <Insets bottom="5.0" top="5.0" />
-           </VBox.margin>
-       </HBox>
-       <fx:include fx:id="phenotypicFeature" source="phenotype/PhenotypicFeature.fxml"/>
-       <fx:include fx:id="phenotypicFeaturesTable" source="phenotype/PhenotypicFeaturesTable.fxml"/>
-   </children>
-</VBox>
+<?import javafx.scene.text.Font?>
+<BorderPane stylesheets="@Phenotype.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.monarchinitiative.hpo_case_annotator.forms.PhenotypeController">
+    <top>
+        <HBox alignment="TOP_CENTER" style="-fx-background-color: #e3e3e3;" BorderPane.alignment="TOP_CENTER"
+              VBox.vgrow="NEVER">
+            <children>
+                <Label text="Phenotype terms" underline="true">
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                    <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </HBox.margin>
+                </Label>
+            </children>
+            <VBox.margin>
+                <Insets bottom="5.0" top="5.0"/>
+            </VBox.margin>
+        </HBox>
+    </top>
+    <left>
+        <fx:include fx:id="ontologyTree" source="phenotype/OntologyTree.fxml"/>
+    </left>
+    <center>
+        <fx:include fx:id="phenotypeEntry" source="phenotype/PhenotypeEntry.fxml"/>
+    </center>
+    <right>
+        <fx:include fx:id="phenotypicFeature" source="phenotype/PhenotypicFeature.fxml"/>
+    </right>
+    <bottom>
+        <fx:include fx:id="phenotypicFeaturesTable" source="phenotype/PhenotypicFeaturesTable.fxml"/>
+    </bottom>
+</BorderPane>
