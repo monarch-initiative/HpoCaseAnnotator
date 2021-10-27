@@ -2,6 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.variant;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -21,10 +22,14 @@ public abstract class VcfBaseVariantController {
     protected final GenomicAssemblyRegistry genomicAssemblyRegistry;
     protected final ObjectProperty<GenomicAssemblyService> assemblyService = new SimpleObjectProperty<>(null, "assemblyService");
 
-    public RadioButton hg18RadioButton;
-    public RadioButton hg19RadioButton;
-    public RadioButton hg38RadioButton;
-    public ComboBox<Contig> contigComboBox;
+    @FXML
+    private  RadioButton hg18RadioButton;
+    @FXML
+    private  RadioButton hg19RadioButton;
+    @FXML
+    private  RadioButton hg38RadioButton;
+    @FXML
+    private  ComboBox<Contig> contigComboBox;
 
     protected void initialize() {
         initializeGenomicAssemblyToggleGroup();
