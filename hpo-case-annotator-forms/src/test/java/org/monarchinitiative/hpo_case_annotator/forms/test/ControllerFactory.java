@@ -3,7 +3,10 @@ package org.monarchinitiative.hpo_case_annotator.forms.test;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.CuratedVariantController;
+import org.monarchinitiative.hpo_case_annotator.forms.PhenotypeController;
 import org.monarchinitiative.hpo_case_annotator.forms.StatusBarController;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeatureController;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeaturesTableController;
 import org.monarchinitiative.hpo_case_annotator.forms.variant.*;
 
 public class ControllerFactory {
@@ -31,8 +34,18 @@ public class ControllerFactory {
             return new VcfBreakendVariantController(genomicAssemblyRegistry);
         } else if (clz.equals(BreakendController.class)) {
             return new BreakendController();
-        } else {
-            throw new RuntimeException("Unknown controller " + clz);
+        }
+        // phenotypes
+        else if (clz.equals(PhenotypeController.class)) {
+            return new PhenotypeController();
+        } else if (clz.equals(PhenotypicFeatureController.class)) {
+            return new PhenotypicFeatureController();
+        } else if (clz.equals(PhenotypicFeaturesTableController.class)) {
+            return new PhenotypicFeaturesTableController();
+        }
+
+        else {
+                throw new RuntimeException("Unknown controller " + clz);
         }
 
     }

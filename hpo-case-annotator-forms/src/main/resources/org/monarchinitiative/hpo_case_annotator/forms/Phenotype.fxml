@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.PhenotypeController">
+   <children>
+       <HBox style="-fx-background-color: #e3e3e3;" VBox.vgrow="NEVER">
+           <children>
+               <Label text="Phenotype" underline="true">
+                   <font>
+                       <Font name="System Bold" size="18.0" />
+                   </font>
+                   <HBox.margin>
+                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                   </HBox.margin>
+               </Label>
+           </children>
+           <VBox.margin>
+               <Insets bottom="5.0" top="5.0" />
+           </VBox.margin>
+       </HBox>
+       <fx:include fx:id="phenotypicFeature" source="phenotype/PhenotypicFeature.fxml"/>
+       <fx:include fx:id="phenotypicFeaturesTable" source="phenotype/PhenotypicFeaturesTable.fxml"/>
+   </children>
+</VBox>
