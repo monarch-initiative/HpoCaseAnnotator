@@ -1,0 +1,26 @@
+/* GENERAL */
+.section {
+    -fx-border-color: #919191;
+}
+
+.subsection {
+    -fx-padding: 5px;
+}
+
+RadioButton {
+    -fx-padding: 5px;
+}
+
+.subsection .title {
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+    -fx-padding: 5px;
+    -fx-text-fill: #003688;
+    -fx-effect: dropshadow(gaussian, #d7d7d7, 5, .5, 1, 1);
+}
+
+/* Description of a single feature  */
+
+
+/* Summary of all features  */
+

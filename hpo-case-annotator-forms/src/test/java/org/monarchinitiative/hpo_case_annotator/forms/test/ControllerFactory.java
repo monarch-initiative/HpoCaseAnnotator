@@ -5,8 +5,7 @@ import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblyRe
 import org.monarchinitiative.hpo_case_annotator.forms.CuratedVariantController;
 import org.monarchinitiative.hpo_case_annotator.forms.PhenotypeController;
 import org.monarchinitiative.hpo_case_annotator.forms.StatusBarController;
-import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeatureController;
-import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeaturesTableController;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.*;
 import org.monarchinitiative.hpo_case_annotator.forms.variant.*;
 
 public class ControllerFactory {
@@ -42,10 +41,14 @@ public class ControllerFactory {
             return new PhenotypicFeatureController();
         } else if (clz.equals(PhenotypicFeaturesTableController.class)) {
             return new PhenotypicFeaturesTableController();
-        }
-
-        else {
-                throw new RuntimeException("Unknown controller " + clz);
+        } else if (clz.equals(TextMiningController.class)) {
+            return new TextMiningController();
+        } else if (clz.equals(PhenotypeEntryController.class)) {
+            return new PhenotypeEntryController();
+        } else if (clz.equals(OntologyTreeController.class)) {
+            return new OntologyTreeController();
+        } else {
+            throw new RuntimeException("Unknown controller " + clz);
         }
 
     }
