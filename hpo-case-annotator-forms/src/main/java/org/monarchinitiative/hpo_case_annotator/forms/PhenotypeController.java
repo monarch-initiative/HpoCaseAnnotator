@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.model.PhenotypeDescriptionSimple;
-import org.monarchinitiative.hpo_case_annotator.forms.phenotype.OntologyTreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeEntryController;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeatureController;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeaturesTableController;

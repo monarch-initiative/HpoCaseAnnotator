@@ -11,6 +11,14 @@ RadioButton {
     -fx-padding: 5px;
 }
 
+TextField {
+    -fx-pref-height: 30;
+}
+
+ComboBox {
+    -fx-pref-height: 30;
+}
+
 .subsection .title {
     -fx-font-size: 20;
     -fx-font-weight: bold;
