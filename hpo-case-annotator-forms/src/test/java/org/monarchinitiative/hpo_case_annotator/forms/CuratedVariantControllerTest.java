@@ -25,13 +25,13 @@ import java.util.concurrent.TimeUnit;
 @ExtendWith(ApplicationExtension.class)
 public class CuratedVariantControllerTest {
 
+    private static final Resources RESOURCES = new Resources();
 
     @Start
     public void start(Stage stage) throws Exception {
         TestGenomicAssemblyRegistry genomicAssemblyRegistry = new TestGenomicAssemblyRegistry();
         TestGeneIdentifierService testGeneIdentifierService = getGeneIdService();
-        Ontology ontology = null;
-        ControllerFactory factory = new ControllerFactory(genomicAssemblyRegistry, testGeneIdentifierService, ontology);
+        ControllerFactory factory = new ControllerFactory(RESOURCES, genomicAssemblyRegistry, testGeneIdentifierService);
         FXMLLoader loader = new FXMLLoader(CuratedVariantController.class.getResource("CuratedVariant.fxml"));
         loader.setControllerFactory(factory::getController);
 

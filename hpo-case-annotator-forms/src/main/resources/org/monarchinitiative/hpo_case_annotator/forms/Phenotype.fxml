@@ -25,7 +25,7 @@
         </HBox>
     </top>
     <left>
-        <fx:include fx:id="ontologyTree" source="OntologyTree.fxml"/>
+        <fx:include fx:id="ontologyTreeBrowser" source="ontotree/OntologyTreeBrowser.fxml"/>
     </left>
     <center>
         <fx:include fx:id="phenotypeEntry" source="phenotype/PhenotypeEntry.fxml"/>

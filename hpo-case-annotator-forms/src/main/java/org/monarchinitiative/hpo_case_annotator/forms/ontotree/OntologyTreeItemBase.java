@@ -11,44 +11,40 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
-public class OntologyTreeItem extends TreeItem<OntologyTreeTermSimple> {
+abstract class OntologyTreeItemBase<T extends OntologyTreeTermBase> extends TreeItem<T> {
 
     private final Ontology ontology;
 
-    private ObservableList<TreeItem<OntologyTreeTermSimple>> children;
+    private ObservableList<TreeItem<T>> children;
 
-    public static OntologyTreeItem of(Ontology ontology, Term term) {
-        OntologyTreeTermSimple treeTerm = OntologyTreeTermSimple.of(term);
-        return new OntologyTreeItem(ontology, treeTerm);
-    }
-
-    private OntologyTreeItem(Ontology ontology, OntologyTreeTermSimple value) {
+    protected OntologyTreeItemBase(Ontology ontology, T value) {
         super(value);
         this.ontology = ontology;
-
     }
+
+    protected abstract TreeItem<T> treeItemForTerm(Ontology ontology, Term term);
+
+
     @Override
     public boolean isLeaf() {
-        return OntologyAlgorithm.getChildTerms(ontology, getValue().getTerm().getId(), false).isEmpty();
+        return OntologyAlgorithm.getChildTerms(ontology, getValue().term().getId(), false).isEmpty();
     }
 
     @Override
-    public ObservableList<TreeItem<OntologyTreeTermSimple>> getChildren() {
+    public ObservableList<TreeItem<T>> getChildren() {
         if (children == null) {
             children = FXCollections.observableArrayList();
-            Set<Term> childrenTerms = OntologyAlgorithm.getChildTerms(ontology, getValue().getTerm().getId(), false).stream()
+            Set<Term> childrenTerms = OntologyAlgorithm.getChildTerms(ontology, getValue().term().getId(), false).stream()
                     .map(ontology.getTermMap()::get)
                     .collect(Collectors.toUnmodifiableSet());
 
             children = childrenTerms.stream()
                     .sorted(Comparator.comparing(Term::getName))
-                    .map(term -> of(ontology, term))
+                    .map(term -> treeItemForTerm(ontology, term))
                     .collect(Collectors.toCollection(FXCollections::observableArrayList));
             super.getChildren().setAll(children);
         }
 
         return super.getChildren();
     }
-
 }

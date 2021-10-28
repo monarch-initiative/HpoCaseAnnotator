@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.monarchinitiative.hpo_case_annotator.forms.ontotree.SelectableOntologyTreeController;
 import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.testfx.api.FxRobot;
@@ -19,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 @Disabled // unless specifically run
 @ExtendWith(ApplicationExtension.class)
-public class OntologyTreeControllerTest {
+public class SelectableOntologyTreeControllerTest {
 
     public static final File LOCAL_ONTOLOGY_OBO = new File("/home/ielis/tmp/hp.obo");
 
@@ -30,12 +32,12 @@ public class OntologyTreeControllerTest {
         ONTOLOGY = OntologyLoader.loadOntology(LOCAL_ONTOLOGY_OBO);
     }
 
-    private OntologyTreeController controller;
+    private SelectableOntologyTreeController controller;
 
     @Start
     public void start(Stage stage) throws Exception {
-        controller = new OntologyTreeController(ONTOLOGY);
-        FXMLLoader loader = new FXMLLoader(OntologyTreeController.class.getResource("OntologyTree.fxml"));
+        controller = new SelectableOntologyTreeController();
+        FXMLLoader loader = new FXMLLoader(SelectableOntologyTreeController.class.getResource("SelectableOntologyTree.fxml"));
         loader.setControllerFactory(clz -> controller);
 
         Parent parent = loader.load();
@@ -47,6 +49,7 @@ public class OntologyTreeControllerTest {
 
     @Test
     public void test(FxRobot robot) {
+        Platform.runLater(() -> controller.ontologyProperty().set(ONTOLOGY));
         robot.sleep(20, TimeUnit.SECONDS);
     }
 

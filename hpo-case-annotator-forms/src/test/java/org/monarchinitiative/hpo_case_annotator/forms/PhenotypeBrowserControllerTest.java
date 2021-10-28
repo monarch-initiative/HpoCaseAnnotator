@@ -20,9 +20,11 @@ import org.testfx.framework.junit5.Start;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 @Disabled
 @ExtendWith(ApplicationExtension.class)
-public class PhenotypeControllerTest {
+public class PhenotypeBrowserControllerTest {
 
     public static final File LOCAL_ONTOLOGY_OBO = new File("/home/ielis/tmp/hp.obo");
 
@@ -36,7 +38,7 @@ public class PhenotypeControllerTest {
         TestGeneIdentifierService testGeneIdentifierService = null;
 
         ControllerFactory factory = new ControllerFactory(RESOURCES, genomicAssemblyRegistry, testGeneIdentifierService);
-        FXMLLoader loader = new FXMLLoader(PhenotypeController.class.getResource("Phenotype.fxml"));
+        FXMLLoader loader = new FXMLLoader(PhenotypeBrowserController.class.getResource("PhenotypeBrowser.fxml"));
         loader.setControllerFactory(factory::getController);
 
         Parent parent = loader.load();

@@ -2,24 +2,27 @@ package org.monarchinitiative.hpo_case_annotator.forms.test;
 
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblyRegistry;
-import org.monarchinitiative.hpo_case_annotator.forms.CuratedVariantController;
-import org.monarchinitiative.hpo_case_annotator.forms.PhenotypeController;
-import org.monarchinitiative.hpo_case_annotator.forms.StatusBarController;
-import org.monarchinitiative.hpo_case_annotator.forms.OntologyTreeController;
-import org.monarchinitiative.hpo_case_annotator.forms.phenotype.*;
+import org.monarchinitiative.hpo_case_annotator.forms.*;
+import org.monarchinitiative.hpo_case_annotator.forms.ontotree.OntologyTreeBrowserController;
+import org.monarchinitiative.hpo_case_annotator.forms.ontotree.SelectableOntologyTreeController;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeEntryController;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeatureController;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeaturesTableController;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.TextMiningController;
 import org.monarchinitiative.hpo_case_annotator.forms.variant.*;
-import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 public class ControllerFactory {
 
+    private final Resources resources;
     private final GenomicAssemblyRegistry genomicAssemblyRegistry;
     private final GeneIdentifierService geneIdentifierService;
-    private final Ontology ontology;
 
-    public ControllerFactory(GenomicAssemblyRegistry genomicAssemblyRegistry, GeneIdentifierService geneIdentifierService, Ontology ontology) {
+    public ControllerFactory(Resources resources,
+                             GenomicAssemblyRegistry genomicAssemblyRegistry,
+                             GeneIdentifierService geneIdentifierService) {
+        this.resources = resources;
         this.genomicAssemblyRegistry = genomicAssemblyRegistry;
         this.geneIdentifierService = geneIdentifierService;
-        this.ontology = ontology;
     }
 
     public Object getController(Class<?> clz) {
@@ -40,7 +43,9 @@ public class ControllerFactory {
         }
         // phenotypes
         else if (clz.equals(PhenotypeController.class)) {
-            return new PhenotypeController();
+            PhenotypeController phenotypeController = new PhenotypeController();
+            phenotypeController.ontologyProperty().bind(resources.ontologyProperty());
+            return phenotypeController;
         } else if (clz.equals(PhenotypicFeatureController.class)) {
             return new PhenotypicFeatureController();
         } else if (clz.equals(PhenotypicFeaturesTableController.class)) {
@@ -49,8 +54,18 @@ public class ControllerFactory {
             return new TextMiningController();
         } else if (clz.equals(PhenotypeEntryController.class)) {
             return new PhenotypeEntryController();
-        } else if (clz.equals(OntologyTreeController.class)) {
-            return new OntologyTreeController(ontology);
+        } else if (clz.equals(SelectableOntologyTreeController.class)) {
+            return new SelectableOntologyTreeController();
+        } else if (clz.equals(OntologyController.class)) {
+            OntologyController ontologyController = new OntologyController();
+            ontologyController.ontologyProperty().bind(resources.ontologyProperty());
+            return ontologyController;
+        } else if (clz.equals(PhenotypeBrowserController.class)) {
+            PhenotypeBrowserController phenotypeBrowserController = new PhenotypeBrowserController();
+            phenotypeBrowserController.ontologyProperty().bind(resources.ontologyProperty());
+            return phenotypeBrowserController;
+        } else if (clz.equals(OntologyTreeBrowserController.class)) {
+            return new OntologyTreeBrowserController();
         } else {
             throw new RuntimeException("Unknown controller " + clz);
         }
