@@ -11,6 +11,7 @@ import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifier;
 import org.monarchinitiative.hpo_case_annotator.forms.test.ControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.forms.test.TestGeneIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.test.TestGenomicAssemblyRegistry;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
@@ -29,7 +30,8 @@ public class CuratedVariantControllerTest {
     public void start(Stage stage) throws Exception {
         TestGenomicAssemblyRegistry genomicAssemblyRegistry = new TestGenomicAssemblyRegistry();
         TestGeneIdentifierService testGeneIdentifierService = getGeneIdService();
-        ControllerFactory factory = new ControllerFactory(genomicAssemblyRegistry, testGeneIdentifierService);
+        Ontology ontology = null;
+        ControllerFactory factory = new ControllerFactory(genomicAssemblyRegistry, testGeneIdentifierService, ontology);
         FXMLLoader loader = new FXMLLoader(CuratedVariantController.class.getResource("CuratedVariant.fxml"));
         loader.setControllerFactory(factory::getController);
 

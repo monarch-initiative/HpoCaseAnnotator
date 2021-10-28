@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox styleClass="section" stylesheets="@OntologyTree.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.OntologyTreeController">
+   <children>
+      <HBox styleClass="subsection" VBox.vgrow="NEVER">
+         <children>
+            <Label styleClass="title" text="Browse HPO hierarchy" />
+         </children>
+      </HBox>
+      <HBox styleClass="subsection" VBox.vgrow="NEVER">
+         <children>
+            <TextField fx:id="searchTextField" onAction="#searchTextFieldAction" promptText="Search for HPO term" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+      <HBox styleClass="subsection" VBox.vgrow="ALWAYS">
+         <children>
+            <TreeView fx:id="ontologyTreeView" showRoot="false" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

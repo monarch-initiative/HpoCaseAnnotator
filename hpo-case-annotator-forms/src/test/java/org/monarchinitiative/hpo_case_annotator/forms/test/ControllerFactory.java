@@ -5,17 +5,21 @@ import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblyRe
 import org.monarchinitiative.hpo_case_annotator.forms.CuratedVariantController;
 import org.monarchinitiative.hpo_case_annotator.forms.PhenotypeController;
 import org.monarchinitiative.hpo_case_annotator.forms.StatusBarController;
+import org.monarchinitiative.hpo_case_annotator.forms.OntologyTreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.*;
 import org.monarchinitiative.hpo_case_annotator.forms.variant.*;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 public class ControllerFactory {
 
     private final GenomicAssemblyRegistry genomicAssemblyRegistry;
     private final GeneIdentifierService geneIdentifierService;
+    private final Ontology ontology;
 
-    public ControllerFactory(GenomicAssemblyRegistry genomicAssemblyRegistry, GeneIdentifierService geneIdentifierService) {
+    public ControllerFactory(GenomicAssemblyRegistry genomicAssemblyRegistry, GeneIdentifierService geneIdentifierService, Ontology ontology) {
         this.genomicAssemblyRegistry = genomicAssemblyRegistry;
         this.geneIdentifierService = geneIdentifierService;
+        this.ontology = ontology;
     }
 
     public Object getController(Class<?> clz) {
@@ -46,7 +50,7 @@ public class ControllerFactory {
         } else if (clz.equals(PhenotypeEntryController.class)) {
             return new PhenotypeEntryController();
         } else if (clz.equals(OntologyTreeController.class)) {
-            return new OntologyTreeController();
+            return new OntologyTreeController(ontology);
         } else {
             throw new RuntimeException("Unknown controller " + clz);
         }
