@@ -5,30 +5,30 @@ import javafx.beans.property.Property;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TreeCell;
 
-public class OntologyTreeCell extends TreeCell<OntologyTreeTermSimple> {
+class SelectableOntologyTreeCell extends TreeCell<SelectableOntologyTreeTerm> {
 
     private final TermSelectionButton selectionButton;
 
     private ObservableValue<Boolean> includedProperty;
     private ObservableValue<Boolean> excludedProperty;
 
-    public OntologyTreeCell() {
+    SelectableOntologyTreeCell() {
         selectionButton = new TermSelectionButton();
     }
 
-    public static OntologyTreeCell of() {
-        return new OntologyTreeCell();
+    static SelectableOntologyTreeCell of() {
+        return new SelectableOntologyTreeCell();
     }
 
     @Override
-    protected void updateItem(OntologyTreeTermSimple item, boolean empty) {
+    protected void updateItem(SelectableOntologyTreeTerm item, boolean empty) {
         super.updateItem(item, empty);
 
         if (empty) {
             setGraphic(null);
             setText(null);
         } else {
-            setText(getItem().getTerm().getName());
+            setText(getItem().term().getName());
             setGraphic(selectionButton);
 
             if (includedProperty != null)

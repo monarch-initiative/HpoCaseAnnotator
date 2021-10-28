@@ -3,6 +3,8 @@ package org.monarchinitiative.hpo_case_annotator.forms.phenotype;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -18,9 +20,11 @@ import java.util.Optional;
 
 public class PhenotypicFeatureController {
 
+    private final ObjectProperty<PhenotypeDescription> phenotypeDescription = new SimpleObjectProperty<>(this, "phenotypeDescription");
     private final ToggleGroup statusToggleGroup = new ToggleGroup();
     private final ToggleGroup onsetToggleGroup = new ToggleGroup();
     private final ToggleGroup resolutionToggleGroup = new ToggleGroup();
+
     @FXML
     private VBox phenotypicFeatureAllControlsVBox;
     @FXML
@@ -69,9 +73,22 @@ public class PhenotypicFeatureController {
         ).not();
     }
 
+    public ObjectProperty<PhenotypeDescription> phenotypeDescriptionProperty() {
+        return phenotypeDescription;
+    }
+
     public void initialize() {
         initializeToggles();
         initializeAgefields();
+        phenotypeDescription.addListener((obs, old, novel) -> {
+            if (novel == null) {
+                phenotypicFeatureAllControlsVBox.setDisable(true);
+                cleanForm();
+            } else {
+                phenotypicFeatureAllControlsVBox.setDisable(false);
+                showPhenotypeDescription(novel);
+            }
+        });
     }
 
     private void initializeToggles() {
@@ -103,46 +120,6 @@ public class PhenotypicFeatureController {
         resolutionDaysComboBox.getSelectionModel().selectFirst();
     }
 
-    public BooleanProperty disablePhenotypicFeature() {
-        return phenotypicFeatureAllControlsVBox.disableProperty();
-    }
-
-    public void setPhenotypicFeature(PhenotypeDescription feature) {
-        if (feature == null) {
-            phenotypicFeatureAllControlsVBox.setDisable(true);
-            cleanForm();
-        } else {
-            phenotypicFeatureAllControlsVBox.setDisable(false);
-            termIdLabel.setText(feature.getTermId().getValue());
-            nameLabel.setText(feature.getLabel());
-            // status
-            if (feature.isPresent())
-                statusToggleGroup.selectToggle(presentRadioButton);
-            else
-                statusToggleGroup.selectToggle(absentRadioButton);
-            // onset
-            Period onset = feature.getOnset();
-            if (Period.ZERO.equals(onset))
-                onsetToggleGroup.selectToggle(onsetBirthRadioButton);
-            else {
-                onsetToggleGroup.selectToggle(onsetAgeRadioButton);
-                onsetYearsTextField.setText(String.valueOf(onset.getYears()));
-                onsetMonthsComboBox.getSelectionModel().select((Integer) onset.getMonths());
-                onsetDaysComboBox.getSelectionModel().select((Integer) onset.getDays());
-            }
-            // resolution
-            Period resolution = feature.getResolution();
-            if (Period.of(80, 0, 0).equals(resolution)) {
-                resolutionToggleGroup.selectToggle(resolutionDeathRadioButton);
-            } else {
-                resolutionToggleGroup.selectToggle(resolutionAgeRadioButton);
-                resolutionYearsTextField.setText(String.valueOf(resolution.getYears()));
-                resolutionMonthsComboBox.getSelectionModel().select((Integer) resolution.getMonths());
-                resolutionDaysComboBox.getSelectionModel().select((Integer) resolution.getDays());
-            }
-        }
-    }
-
     private void cleanForm() {
         termIdLabel.setText("");
         nameLabel.setText("");
@@ -157,9 +134,34 @@ public class PhenotypicFeatureController {
         resolutionDaysComboBox.getSelectionModel().selectFirst();
     }
 
-    public Optional<PhenotypeDescription> getPhenotypicFeature() {
-        // TODO: 10/26/21 implement
-        return Optional.empty();
+    private void showPhenotypeDescription(PhenotypeDescription feature) {
+        termIdLabel.setText(feature.getTermId().getValue());
+        nameLabel.setText(feature.getLabel());
+        // status
+        if (feature.isPresent())
+            statusToggleGroup.selectToggle(presentRadioButton);
+        else
+            statusToggleGroup.selectToggle(absentRadioButton);
+        // onset
+        Period onset = feature.getOnset();
+        if (Period.ZERO.equals(onset))
+            onsetToggleGroup.selectToggle(onsetBirthRadioButton);
+        else {
+            onsetToggleGroup.selectToggle(onsetAgeRadioButton);
+            onsetYearsTextField.setText(String.valueOf(onset.getYears()));
+            onsetMonthsComboBox.getSelectionModel().select((Integer) onset.getMonths());
+            onsetDaysComboBox.getSelectionModel().select((Integer) onset.getDays());
+        }
+        // resolution
+        Period resolution = feature.getResolution();
+        if (Period.of(80, 0, 0).equals(resolution)) {
+            resolutionToggleGroup.selectToggle(resolutionDeathRadioButton);
+        } else {
+            resolutionToggleGroup.selectToggle(resolutionAgeRadioButton);
+            resolutionYearsTextField.setText(String.valueOf(resolution.getYears()));
+            resolutionMonthsComboBox.getSelectionModel().select((Integer) resolution.getMonths());
+            resolutionDaysComboBox.getSelectionModel().select((Integer) resolution.getDays());
+        }
     }
 
 }

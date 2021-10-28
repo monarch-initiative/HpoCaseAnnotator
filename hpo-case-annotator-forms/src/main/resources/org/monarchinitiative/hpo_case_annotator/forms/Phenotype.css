@@ -3,10 +3,6 @@
     -fx-border-color: #919191;
 }
 
-.subsection {
-    -fx-padding: 5px;
-}
-
 RadioButton {
     -fx-padding: 5px;
 }
@@ -15,8 +11,18 @@ TextField {
     -fx-pref-height: 30;
 }
 
+Button {
+    -fx-padding: 5;
+    -fx-pref-height: 30;
+    -fx-pref-width: 135;
+}
+
 ComboBox {
     -fx-pref-height: 30;
+}
+
+.subsection {
+    -fx-padding: 5px;
 }
 
 .subsection .title {

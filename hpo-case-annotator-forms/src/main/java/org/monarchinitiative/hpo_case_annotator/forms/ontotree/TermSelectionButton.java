@@ -4,12 +4,12 @@ import javafx.beans.property.BooleanProperty;
 import javafx.scene.control.ToggleButton;
 import org.controlsfx.control.SegmentedButton;
 
-public class TermSelectionButton extends SegmentedButton {
+class TermSelectionButton extends SegmentedButton {
 
     private final ToggleButton includedButton = new ToggleButton("Y");
     private final ToggleButton excludedButton = new ToggleButton("N");
 
-    public TermSelectionButton() {
+    TermSelectionButton() {
         initGraphics();
     }
 

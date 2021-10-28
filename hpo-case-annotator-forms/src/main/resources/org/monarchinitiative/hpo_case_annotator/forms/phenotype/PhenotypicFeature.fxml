@@ -6,16 +6,16 @@
 <?import javafx.scene.text.*?>
 <?import org.controlsfx.control.*?>
 
-<VBox id="phenotypicFeature" fx:id="phenotypicFeatureAllControlsVBox" alignment="CENTER_LEFT" styleClass="section" stylesheets="@PhenotypicFeature.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeatureController">
+<VBox id="phenotypicFeature" fx:id="phenotypicFeatureAllControlsVBox" alignment="CENTER_LEFT" disable="true" prefWidth="300.0" styleClass="section" stylesheets="@PhenotypicFeature.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeatureController">
    <children>
-      <VBox id="phenotypicFeatureTitle" styleClass="subsection" VBox.vgrow="SOMETIMES">
+      <VBox id="phenotypicFeatureTitle" styleClass="subsection" VBox.vgrow="ALWAYS">
          <children>
             <Label id="termId" fx:id="termIdLabel">
                <font>
                   <Font name="System" size="13.0" />
                </font>
             </Label>
-            <Label id="termName" fx:id="nameLabel" textOverrun="WORD_ELLIPSIS" wrapText="true">
+            <Label id="termName" fx:id="nameLabel" wrapText="true" VBox.vgrow="SOMETIMES">
                <font>
                   <Font name="System" size="13.0" />
                </font>

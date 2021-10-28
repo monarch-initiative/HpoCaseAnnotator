@@ -2,10 +2,8 @@ package org.monarchinitiative.hpo_case_annotator.forms.model;
 
 import org.monarchinitiative.phenol.ontology.data.Term;
 
-public interface OntologyTreeTerm {
+public interface OntologyTerm {
 
-    Term getTerm();
-
-    SelectionStatus selectionStatus();
+    Term term();
 
 }

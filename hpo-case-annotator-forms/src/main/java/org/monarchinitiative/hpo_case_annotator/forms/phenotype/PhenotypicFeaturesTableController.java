@@ -2,7 +2,8 @@ package org.monarchinitiative.hpo_case_annotator.forms.phenotype;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.*;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import org.monarchinitiative.hpo_case_annotator.forms.model.PhenotypeDescription;
 
 import java.util.List;
@@ -23,17 +23,20 @@ public class PhenotypicFeaturesTableController {
     private TableColumn<PhenotypeDescription, String> termIdTableColumn;
     @FXML
     private TableColumn<PhenotypeDescription, String> labelTableColumn;
+    //    @FXML
+//    private TableColumn<PhenotypeDescription, String> onsetTableColumn;
+//    @FXML
+//    private TableColumn<PhenotypeDescription, String> resolutionTableColumn;
+//    @FXML
+//    private TableColumn<PhenotypeDescription, Boolean> presentTableColumn;
     @FXML
-    private TableColumn<PhenotypeDescription, String> onsetTableColumn;
-    @FXML
-    private TableColumn<PhenotypeDescription, String> resolutionTableColumn;
-    @FXML
-    private TableColumn<PhenotypeDescription, Boolean> presentTableColumn;
+    private Button addEditButton;
     @FXML
     private Button removeButton;
 
     public void initialize() {
         initializeTableView();
+        initializeAddEditButton();
         initializeRemoveButton();
     }
 
@@ -42,14 +45,18 @@ public class PhenotypicFeaturesTableController {
 
         labelTableColumn.setCellValueFactory(cd -> new ReadOnlyStringWrapper(cd.getValue().getLabel()));
 
-        onsetTableColumn.setCellValueFactory(cd -> new ReadOnlyStringWrapper(cd.getValue().getOnset().toString()));
+//        onsetTableColumn.setCellValueFactory(cd -> new ReadOnlyStringWrapper(cd.getValue().getOnset().toString()));
 
-        resolutionTableColumn.setCellValueFactory(cd -> new ReadOnlyStringWrapper(cd.getValue().getResolution().toString()));
+//        resolutionTableColumn.setCellValueFactory(cd -> new ReadOnlyStringWrapper(cd.getValue().getResolution().toString()));
 
-        presentTableColumn.setCellValueFactory(cd -> new ReadOnlyBooleanWrapper(cd.getValue().isPresent()));
-        presentTableColumn.setCellFactory(CheckBoxTableCell.forTableColumn(presentTableColumn));
+//        presentTableColumn.setCellValueFactory(cd -> new ReadOnlyBooleanWrapper(cd.getValue().isPresent()));
+//        presentTableColumn.setCellFactory(CheckBoxTableCell.forTableColumn(presentTableColumn));
 
         termsTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+    }
+
+    private void initializeAddEditButton() {
+        // TODO: 10/28/21 implement
     }
 
     private void initializeRemoveButton() {
@@ -58,15 +65,11 @@ public class PhenotypicFeaturesTableController {
         removeButton.disableProperty().bind(nothingIsSelected);
     }
 
-    public void addFeatures(PhenotypeDescription... features) {
-        termsTableView.getItems().addAll(features);
+    public ObservableList<PhenotypeDescription> phenotypeDescriptions() {
+        return termsTableView.getItems();
     }
 
-    public List<PhenotypeDescription> phenotypicFeatures() {
-        return List.copyOf(termsTableView.getItems());
-    }
-
-    public ReadOnlyObjectProperty<PhenotypeDescription> selectedPhenotypicDescriptionProperty() {
+    public ReadOnlyObjectProperty<PhenotypeDescription> phenotypeDescriptionInFocusProperty() {
         return termsTableView.getSelectionModel().selectedItemProperty();
     }
 
@@ -81,6 +84,12 @@ public class PhenotypicFeaturesTableController {
 
             items.removeAll(toRemove);
         }
+        event.consume();
+    }
+
+    @FXML
+    private void addEditButtonAction(ActionEvent event) {
+        // TODO: 10/28/21 implement
         event.consume();
     }
 }
