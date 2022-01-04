@@ -10,6 +10,7 @@
     <artifactId>hpo-case-annotator-core</artifactId>
 
     <dependencies>
+        <!-- TODO - clean the module such that external dependencies are in a separate module -->
         <dependency>
             <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
             <artifactId>hpo-case-annotator-model</artifactId>
