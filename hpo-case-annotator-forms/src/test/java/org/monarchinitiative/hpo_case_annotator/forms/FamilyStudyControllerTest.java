@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.study;
+package org.monarchinitiative.hpo_case_annotator.forms;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
 
+import org.monarchinitiative.hpo_case_annotator.forms.FamilyStudyController;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;

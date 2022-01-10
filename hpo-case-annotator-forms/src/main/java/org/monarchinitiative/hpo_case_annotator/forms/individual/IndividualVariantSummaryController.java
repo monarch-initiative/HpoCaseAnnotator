@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.study;
+package org.monarchinitiative.hpo_case_annotator.forms.individual;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;

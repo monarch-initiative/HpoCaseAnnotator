@@ -5,7 +5,7 @@
 
 <VBox styleClass="section" stylesheets="@pedigree.css" xmlns="http://javafx.com/javafx/16"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.study.PedigreeController">
+      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.individual.PedigreeController">
     <children>
         <Label styleClass="h1" text="Pedigree"/>
         <TabPane fx:id="familyTabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">

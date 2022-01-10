@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.study;
+package org.monarchinitiative.hpo_case_annotator.forms.individual;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.monarchinitiative.hpo_case_annotator.forms.TestData;
-import org.monarchinitiative.hpo_case_annotator.forms.study.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Individual;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.testfx.api.FxRobot;

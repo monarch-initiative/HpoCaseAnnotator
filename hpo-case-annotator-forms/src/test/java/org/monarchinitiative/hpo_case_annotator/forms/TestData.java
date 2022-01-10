@@ -1,6 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms;
 
-import org.monarchinitiative.hpo_case_annotator.forms.study.GenotypedVariant;
+import org.monarchinitiative.hpo_case_annotator.forms.individual.GenotypedVariant;
 import org.monarchinitiative.hpo_case_annotator.forms.model.PhenotypeDescription;
 import org.monarchinitiative.hpo_case_annotator.forms.model.PhenotypeDescriptionSimple;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;

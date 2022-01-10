@@ -5,7 +5,7 @@
 <?import org.controlsfx.control.*?>
 
 <VBox stylesheets="@pedigree-member.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.study.PedigreeMemberController">
+      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.individual.PedigreeMemberController">
     <children>
         <HBox styleClass="row">
             <children>

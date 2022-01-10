@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.study;
+package org.monarchinitiative.hpo_case_annotator.forms.individual;
 
 import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Individual;
