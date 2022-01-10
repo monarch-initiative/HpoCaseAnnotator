@@ -1,9 +1,9 @@
-package org.monarchinitiative.hpo_case_annotator.forms.study;
+package org.monarchinitiative.hpo_case_annotator.forms;
 
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.*;
+import org.monarchinitiative.hpo_case_annotator.forms.individual.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy;
 
 public class FamilyStudyController implements ComponentController<FamilyStudy> {

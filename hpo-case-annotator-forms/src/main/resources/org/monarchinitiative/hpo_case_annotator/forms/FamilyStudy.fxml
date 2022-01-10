@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="TOP_CENTER" stylesheets="@family-study.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.study.FamilyStudyController">
+<VBox alignment="TOP_CENTER" stylesheets="@family-study.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.FamilyStudyController">
    <children>
       <Label styleClass="title" text="Family study" />
       <VBox>
@@ -12,22 +12,22 @@
                <tabs>
                   <Tab closable="false" text="Publication">
                      <content>
-                        <fx:include fx:id="publication" source="../Publication.fxml" />
+                        <fx:include fx:id="publication" source="Publication.fxml" />
                      </content>
                   </Tab>
                   <Tab closable="false" text="Variants">
                      <content>
-                        <fx:include fx:id="variantSummary" source="../VariantSummary.fxml" />
+                        <fx:include fx:id="variantSummary" source="VariantSummary.fxml" />
                      </content>
                   </Tab>
                   <Tab closable="false" text="Pedigree">
                      <content>
-                        <fx:include fx:id="pedigree" source="Pedigree.fxml" />
+                        <fx:include fx:id="pedigree" source="individual/Pedigree.fxml" />
                      </content>
                   </Tab>
                   <Tab closable="false" text="Metadata">
                      <content>
-                        <fx:include fx:id="metadata" source="../Metadata.fxml" />
+                        <fx:include fx:id="metadata" source="Metadata.fxml" />
                      </content>
                   </Tab>
                </tabs>
