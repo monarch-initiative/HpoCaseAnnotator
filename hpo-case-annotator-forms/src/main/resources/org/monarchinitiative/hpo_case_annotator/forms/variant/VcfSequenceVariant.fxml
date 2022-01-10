@@ -1,177 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import org.controlsfx.control.*?>
 
-<VBox prefHeight="320.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variant.VcfSequenceVariantController">
+<VBox stylesheets="@variant.css" styleClass="section" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variant.VcfSequenceVariantController">
     <children>
-        <HBox style="-fx-background-color: #e3e3e3;" VBox.vgrow="NEVER">
+        <Label styleClass="h2" text="VCF sequence variant"/>
+        <HBox alignment="CENTER_LEFT" styleClass="row">
             <children>
-                <Label text="VCF sequence variant">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                    <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                    </HBox.margin>
-                </Label>
-            </children>
-            <VBox.margin>
-                <Insets bottom="5.0" top="5.0" />
-            </VBox.margin>
-        </HBox>
-        <HBox alignment="CENTER_LEFT" VBox.vgrow="NEVER">
-            <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </VBox.margin>
-            <children>
-                <VBox alignment="CENTER_LEFT" minHeight="50.0" minWidth="250.0" HBox.hgrow="NEVER">
+                <VBox alignment="CENTER_LEFT" styleClass="column" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label text="Genome build" underline="true">
-                            <font>
-                                <Font name="System Italic" size="14.0" />
-                            </font>
-                            <VBox.margin>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </VBox.margin>
-                        </Label>
-                        <HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="5.0" VBox.vgrow="NEVER">
+                        <Label styleClass="h3" text="Genome build"/>
+                        <HBox alignment="CENTER_LEFT" VBox.vgrow="NEVER">
                             <children>
-                                <RadioButton fx:id="hg18RadioButton" disable="true" mnemonicParsing="false" text="hg18" />
-                                <RadioButton fx:id="hg19RadioButton" disable="true" mnemonicParsing="false" text="GRCh37" />
-                                <RadioButton fx:id="hg38RadioButton" disable="true" mnemonicParsing="false" text="GRCh38" />
+                                <RadioButton fx:id="hg18RadioButton" disable="true" mnemonicParsing="false"
+                                             text="hg18"/>
+                                <RadioButton fx:id="hg19RadioButton" disable="true" mnemonicParsing="false"
+                                             text="GRCh37"/>
+                                <RadioButton fx:id="hg38RadioButton" disable="true" mnemonicParsing="false"
+                                             text="GRCh38"/>
                             </children>
-                            <VBox.margin>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </VBox.margin>
-                     <padding>
-                        <Insets top="5.0" />
-                     </padding>
                         </HBox>
                     </children>
                 </VBox>
-
-                <VBox alignment="CENTER_LEFT" minHeight="50.0" minWidth="150.0" HBox.hgrow="NEVER">
+                <VBox alignment="CENTER_LEFT" styleClass="column" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label alignment="CENTER" contentDisplay="CENTER" text="Contig" underline="true">
-                            <VBox.margin>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </VBox.margin>
-                            <font>
-                                <Font name="System Italic" size="14.0" />
-                            </font>
-                        </Label>
-                        <SearchableComboBox fx:id="contigComboBox" disable="true" prefWidth="150.0">
-                            <VBox.margin>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </VBox.margin>
-                        </SearchableComboBox>
-                    </children>
-                </VBox>
-
-            </children>
-        </HBox>
-        <Separator prefWidth="200.0" />
-      <HBox alignment="CENTER_LEFT" layoutX="15.0" layoutY="137.0" prefWidth="200.0">
-         <children>
-            <Label text="Id" underline="true">
-               <font>
-                  <Font name="System Italic" size="14.0" />
-               </font>
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </Label>
-            <TextField fx:id="idTextField" prefWidth="150.0" promptText="e.g. rs123456" HBox.hgrow="NEVER">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </TextField>
-         </children>
-      </HBox>
-        <Separator prefWidth="200.0" />
-        <HBox alignment="CENTER_LEFT" prefWidth="200.0">
-            <children>
-                <Label text="Position" underline="true">
-                    <font>
-                        <Font name="System Italic" size="14.0" />
-                    </font>
-                    <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                    </HBox.margin>
-                </Label>
-                <TextField fx:id="positionTextField" prefWidth="150.0" promptText="e.g. 12345" HBox.hgrow="NEVER">
-                    <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                    </HBox.margin>
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </TextField>
-            </children>
-            <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </VBox.margin>
-        </HBox>
-        <Separator prefWidth="200.0" />
-        <VBox prefWidth="100.0">
-            <children>
-                <Label text="Alleles" underline="true">
-                    <font>
-                        <Font name="System Italic" size="14.0" />
-                    </font>
-                    <VBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                    </VBox.margin>
-                </Label>
-                <VBox>
-                    <children>
-                        <HBox alignment="CENTER_LEFT">
-                            <children>
-                                <Label minWidth="80.0" text="Reference">
-                                    <HBox.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                    </HBox.margin>
-                                </Label>
-                                <TextField fx:id="referenceTextField" promptText="e.g. C" HBox.hgrow="SOMETIMES">
-                                    <HBox.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                    </HBox.margin>
-                                </TextField>
-                            </children>
-                            <VBox.margin>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </VBox.margin>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT">
-                            <children>
-                                <Label alignment="CENTER" minWidth="80.0" text="Alternative">
-                                    <HBox.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                    </HBox.margin>
-                                </Label>
-                                <TextField fx:id="alternativeTextField" promptText="e.g. A" HBox.hgrow="SOMETIMES">
-                                    <HBox.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                    </HBox.margin>
-                                </TextField>
-                            </children>
-                            <VBox.margin>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </VBox.margin>
-                        </HBox>
+                        <Label alignment="CENTER" contentDisplay="CENTER" styleClass="h3" text="Contig"/>
+                        <SearchableComboBox fx:id="contigComboBox" disable="true"/>
                     </children>
                 </VBox>
             </children>
-            <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </VBox.margin>
-        </VBox>
+        </HBox>
+        <Separator/>
+        <HBox alignment="CENTER_LEFT" layoutX="15.0" layoutY="137.0" styleClass="row">
+            <children>
+                <Label text="Id">
+                    <styleClass>
+                        <String fx:value="h3"/>
+                        <String fx:value="label"/>
+                    </styleClass>
+                </Label>
+                <TextField fx:id="idTextField" promptText="e.g. rs123456" HBox.hgrow="NEVER"/>
+            </children>
+        </HBox>
+        <Separator/>
+        <HBox alignment="CENTER_LEFT" styleClass="row">
+            <children>
+                <Label text="Position">
+                    <styleClass>
+                        <String fx:value="h3"/>
+                        <String fx:value="label"/>
+                    </styleClass>
+                </Label>
+                <TextField fx:id="positionTextField" promptText="e.g. 12345" HBox.hgrow="NEVER"/>
+            </children>
+        </HBox>
+        <Separator/>
+        <HBox styleClass="row">
+            <children>
+                <VBox styleClass="column" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="h3" text="Alleles"/>
+                        <VBox>
+                            <children>
+                                <HBox alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label text="Reference"/>
+                                        <TextField fx:id="referenceTextField" promptText="e.g. C"
+                                                   HBox.hgrow="SOMETIMES"/>
+                                    </children>
+                                </HBox>
+                                <HBox alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label text="Alternative"/>
+                                        <TextField fx:id="alternativeTextField" promptText="e.g. A"
+                                                   HBox.hgrow="SOMETIMES"/>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
     </children>
 </VBox>

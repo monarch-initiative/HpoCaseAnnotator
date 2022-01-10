@@ -110,6 +110,13 @@ public class ControllerFactory implements HCAControllerFactory {
             return new VariantSummaryController(this);
         }
 
+        // publication & metadata
+        else if (clz.equals(PublicationController.class)) {
+            return new PublicationController();
+        } else if (clz.equals(MetadataController.class)) {
+            return new MetadataController();
+        } else
+
         {
             throw new RuntimeException("Unknown controller " + clz);
         }

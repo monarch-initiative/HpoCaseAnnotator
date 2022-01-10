@@ -1,143 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<VBox prefHeight="320.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variant.VcfBreakendVariantController">
+<VBox styleClass="section" stylesheets="@variant.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variant.VcfBreakendVariantController">
     <children>
-        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #e3e3e3;" VBox.vgrow="NEVER">
+          <Label styleClass="h2" text="VCF breakend variant" />
+        <HBox alignment="CENTER_LEFT" styleClass="row" VBox.vgrow="NEVER">
             <children>
-                <Label text="VCF breakend variant">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                    <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                    </HBox.margin>
-                </Label>
-            </children>
-            <VBox.margin>
-                <Insets bottom="5.0" top="5.0" />
-            </VBox.margin>
-        </HBox>
-        <HBox alignment="CENTER_LEFT" VBox.vgrow="NEVER">
-            <VBox.margin>
-                <Insets />
-            </VBox.margin>
-            <children>
-                <VBox alignment="CENTER_LEFT" minHeight="50.0" minWidth="250.0" HBox.hgrow="SOMETIMES">
+                <VBox alignment="CENTER_LEFT" minHeight="50.0" minWidth="250.0" styleClass="column" HBox.hgrow="SOMETIMES">
                     <children>
-                        <Label text="Genome build" underline="true">
-                            <font>
-                                <Font name="System Italic" size="14.0" />
-                            </font>
-                            <VBox.margin>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </VBox.margin>
-                        </Label>
+                        <Label styleClass="h3" text="Genome build" />
                         <HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="5.0" VBox.vgrow="NEVER">
                             <children>
                                 <RadioButton fx:id="hg18RadioButton" disable="true" mnemonicParsing="false" text="hg18" />
                                 <RadioButton fx:id="hg19RadioButton" disable="true" mnemonicParsing="false" text="GRCh37" />
                                 <RadioButton fx:id="hg38RadioButton" disable="true" mnemonicParsing="false" text="GRCh38" />
                             </children>
-                            <VBox.margin>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </VBox.margin>
-                            <padding>
-                                <Insets top="5.0" />
-                            </padding>
                         </HBox>
                     </children>
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
                 </VBox>
             </children>
         </HBox>
-      <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="286.0">
-         <children>
-            <Label text="Event id" underline="true" wrapText="true">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </Label>
-            <TextField fx:id="eventIdTextField" promptText="e.g. CCTAAGCT" HBox.hgrow="SOMETIMES">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </TextField>
-         </children>
-      </HBox>
-        <HBox alignment="CENTER_LEFT">
+        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="286.0" styleClass="row">
             <children>
-                <VBox alignment="CENTER" prefWidth="200.0">
-                    <children>
-                        <Label contentDisplay="CENTER" text="Left">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                            <VBox.margin>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </VBox.margin>
-                        </Label>
-                        <fx:include fx:id="leftBreakend" source="Breakend.fxml" />
-                    </children>
-                </VBox>
-                <Separator orientation="VERTICAL" />
-                <VBox alignment="CENTER" prefWidth="200.0">
-                    <children>
-                        <Label text="Right">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                            <VBox.margin>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </VBox.margin>
-                        </Label>
-                        <fx:include fx:id="rightBreakend" source="Breakend.fxml" />
-                    </children>
-                    <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                    </HBox.margin>
-                </VBox>
+            <VBox styleClass="column" HBox.hgrow="ALWAYS">
+               <children>
+                      <Label styleClass="h3" text="Event id" wrapText="true" />
+                      <TextField fx:id="eventIdTextField" promptText="e.g. CCTAAGCT" />
+               </children>
+            </VBox>
             </children>
-         <VBox.margin>
-            <Insets bottom="10.0" top="10.0" />
-         </VBox.margin>
         </HBox>
-      <HBox alignment="CENTER_LEFT" layoutX="15.0" layoutY="291.0">
-         <children>
-            <Label text="Reference sequence" underline="true" wrapText="true">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </Label>
-            <TextField fx:id="referenceSequenceTextField" promptText="e.g. CCTAAGCT" HBox.hgrow="SOMETIMES">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </TextField>
-         </children>
-      </HBox>
-        <HBox alignment="CENTER_LEFT">
+        <HBox alignment="CENTER_LEFT" styleClass="row">
             <children>
-                <Label text="Inserted sequence" underline="true" wrapText="true">
-                    <HBox.margin>
-                        <Insets />
-                    </HBox.margin>
-                </Label>
-                <TextField fx:id="insertedSequenceTextField" promptText="e.g. CCTAAGCT" HBox.hgrow="SOMETIMES">
-                    <HBox.margin>
-                        <Insets />
-                    </HBox.margin>
-                </TextField>
+            <VBox styleClass="column" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label styleClass="h3" text="Breakpoints" />
+                  <HBox prefHeight="100.0" prefWidth="200.0" styleClass="row">
+                     <children>
+                            <VBox alignment="CENTER_LEFT" prefWidth="200.0" styleClass="column">
+                                <children>
+                                    <Label contentDisplay="CENTER" styleClass="h4" text="Left" />
+                                    <fx:include fx:id="leftBreakend" source="Breakend.fxml" />
+                                </children>
+                            </VBox>
+                            <Separator orientation="VERTICAL" />
+                            <VBox alignment="CENTER_LEFT" prefWidth="200.0" styleClass="column">
+                                <children>
+                                    <Label styleClass="h4" text="Right" />
+                                    <fx:include fx:id="rightBreakend" source="Breakend.fxml" />
+                                </children>
+                            </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
             </children>
-            <VBox.margin>
-                <Insets />
-            </VBox.margin>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" layoutX="15.0" layoutY="291.0" styleClass="row">
+            <children>
+            <VBox styleClass="column" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label styleClass="h3" text="Alleles" />
+                  <HBox alignment="CENTER_LEFT">
+                     <children>
+                            <Label text="Reference sequence" wrapText="true" />
+                            <TextField fx:id="referenceSequenceTextField" promptText="e.g. CCTAAGCT" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <styleClass>
+                        <String fx:value="row" />
+                        <String fx:value="allele-row" />
+                     </styleClass>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT">
+                     <children>
+                            <Label text="Inserted sequence" wrapText="true" />
+                            <TextField fx:id="insertedSequenceTextField" promptText="e.g. CCTAAGCT" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <styleClass>
+                        <String fx:value="row" />
+                        <String fx:value="allele-row" />
+                     </styleClass>
+                  </HBox>
+               </children>
+            </VBox>
+            </children>
         </HBox>
     </children>
 </VBox>

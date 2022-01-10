@@ -3,15 +3,15 @@ package org.monarchinitiative.hpo_case_annotator.forms.study;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.ComponentController;
-import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataException;
-import org.monarchinitiative.hpo_case_annotator.forms.VariantSummaryController;
+import org.monarchinitiative.hpo_case_annotator.forms.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy;
 
 public class FamilyStudyController implements ComponentController<FamilyStudy> {
 
-    private FamilyStudy familyStudy;
-
+    @FXML
+    private VBox publication;
+    @FXML
+    private PublicationController publicationController;
     @FXML
     private VBox variantSummary;
     @FXML
@@ -20,6 +20,10 @@ public class FamilyStudyController implements ComponentController<FamilyStudy> {
     private VBox pedigree;
     @FXML
     private PedigreeController pedigreeController;
+    @FXML
+    private VBox metadata;
+    @FXML
+    private MetadataController metadataController;
 
     @FXML
     private void initialize() {
@@ -29,24 +33,18 @@ public class FamilyStudyController implements ComponentController<FamilyStudy> {
 
     @Override
     public void presentComponent(FamilyStudy study) {
-        // First the individuals
+        publicationController.presentComponent(study.publication());
         pedigreeController.presentComponent(study.pedigree());
-
-        // Then the variants
-        variantSummaryController.curatedVariants()
-                .addAll(study.variants());
-
-        // cache the study
-        // TODO - write controllers for metadata and publication
-        familyStudy = study;
+        variantSummaryController.curatedVariants().addAll(study.variants());
+        metadataController.presentComponent(study.studyMetadata());
     }
 
     @Override
     public FamilyStudy getComponent() throws InvalidComponentDataException {
-        return FamilyStudy.of(familyStudy.publication(),
+        return FamilyStudy.of(publicationController.getComponent(),
                 variantSummaryController.curatedVariants(),
                 pedigreeController.getComponent(),
-                familyStudy.studyMetadata());
+                metadataController.getComponent());
     }
 
 }
