@@ -50,4 +50,7 @@ public interface AgeRange {
      */
     Period endAge();
 
+    default Period length() {
+        return endAge().minus(startAge()).normalized();
+    }
 }

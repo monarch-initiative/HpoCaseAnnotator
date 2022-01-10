@@ -70,15 +70,15 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
 
         VariantMetadata variantMetadata = parseVariantMetadata(variant);
 
-        return CuratedVariant.sequenceSymbolic(contig,
+        // The assembly will not be null, as it is null-checked in `parseContig` method above
+        GenomicAssembly assembly = ASSEMBLIES.get(variantPosition.getGenomeAssembly());
+        org.monarchinitiative.svart.Variant v = org.monarchinitiative.svart.Variant.of(contig,
                 DEFAULT_VARIANT_ID,
                 Strand.POSITIVE,
                 coordinates,
                 variantPosition.getRefAllele(),
-                variantPosition.getAltAllele(),
-                // this changelength calculation should be OK since these variants should be symbolic
-                variantPosition.getRefAllele().length() - variantPosition.getAltAllele().length(),
-                variantMetadata);
+                variantPosition.getAltAllele());
+        return CuratedVariant.of(assembly.name(), v, variantMetadata);
     }
 
     private static CuratedVariant transformSymbolicVariant(Variant variant) throws ModelTransformationException {
@@ -110,14 +110,18 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         };
 
         VariantMetadata variantMetadata = parseVariantMetadata(variant);
-        return CuratedVariant.sequenceSymbolic(contig,
+        org.monarchinitiative.svart.Variant v = org.monarchinitiative.svart.Variant.of(contig,
                 DEFAULT_VARIANT_ID,
                 Strand.POSITIVE,
                 coordinates,
                 variantPosition.getRefAllele(),
                 String.format("<%s>", variantPosition.getAltAllele()),
-                changeLength,
-                variantMetadata);
+                changeLength);
+
+        // The assembly will not be null, as it is null-checked in `parseContig` method above
+        GenomicAssembly assembly = ASSEMBLIES.get(variantPosition.getGenomeAssembly());
+
+        return CuratedVariant.of(assembly.name(), v, variantMetadata);
     }
 
     private static Coordinates getSymbolicVariantCoordinates(VariantPosition variantPosition) {
@@ -152,12 +156,15 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
                 rightCoordinates);
 
         VariantMetadata variantMetadata = parseVariantMetadata(variant);
-        return CuratedVariant.breakend(DEFAULT_VARIANT_ID,
+        org.monarchinitiative.svart.Variant v = org.monarchinitiative.svart.Variant.of(DEFAULT_VARIANT_ID,
                 left,
                 right,
                 variantPosition.getRefAllele(),
-                variantPosition.getAltAllele(),
-                variantMetadata);
+                variantPosition.getAltAllele());
+
+        // The assembly will not be null, as it is null-checked in `parseContig` method above
+        GenomicAssembly assembly = ASSEMBLIES.get(variantPosition.getGenomeAssembly());
+        return CuratedVariant.of(assembly.name(), v, variantMetadata);
     }
 
     private static Strand directionToStrand(VariantPosition.Direction direction) throws ModelTransformationException {
@@ -255,11 +262,8 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         PedigreeMember member = PedigreeMember.of(familyInfo.getFamilyOrProbandId(),
                 DEFAULT_PARENTAL_ID,
                 DEFAULT_PARENTAL_ID,
-                age,
-                List.of(transformDisease(disease)),
-                genotypes,
-                observations,
-                true, // by definition as we only store probands in v1 model
+                true, observations, List.of(transformDisease(disease)), genotypes, age,
+                // by definition as we only store probands in v1 model
                 transformSex(familyInfo.getSex()));
 
         return Pedigree.of(List.of(member));

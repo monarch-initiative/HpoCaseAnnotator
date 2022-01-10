@@ -21,6 +21,6 @@ public class ContigNameStringConverter extends StringConverter<Contig> {
 
     @Override
     public Contig fromString(String string) {
-        throw new UnsupportedOperationException("Converting string to Contig is not supported here!");
+        throw new UnsupportedOperationException("Converting string to a contig is not supported!");
     }
 }

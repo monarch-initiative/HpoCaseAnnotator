@@ -13,20 +13,20 @@ public interface PedigreeMember extends Individual {
     static PedigreeMember of(String id,
                              String paternalId,
                              String maternalId,
-                             Period age,
+                             boolean isProband,
+                             Collection<PhenotypicFeature> phenotypicFeatures,
                              List<DiseaseStatus> diseases,
                              Map<String, Genotype> genotypes,
-                             Collection<PhenotypicFeature> phenotypicFeatures,
-                             boolean isProband,
+                             Period age,
                              Sex sex) {
         return PedigreeMemberDefault.of(id,
                 paternalId,
                 maternalId,
-                age,
+                isProband,
+                phenotypicFeatures,
                 diseases,
                 genotypes,
-                phenotypicFeatures,
-                isProband,
+                age,
                 sex);
     }
 

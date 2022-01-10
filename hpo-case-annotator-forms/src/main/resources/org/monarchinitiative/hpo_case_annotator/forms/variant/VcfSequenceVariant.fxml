@@ -4,9 +4,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import org.controlsfx.control.SearchableComboBox?>
+<?import org.controlsfx.control.*?>
 
-<VBox prefHeight="320.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variant.VcfSequenceVariantController">
+<VBox prefHeight="320.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variant.VcfSequenceVariantController">
     <children>
         <HBox style="-fx-background-color: #e3e3e3;" VBox.vgrow="NEVER">
             <children>
@@ -64,7 +64,7 @@
                                 <Font name="System Italic" size="14.0" />
                             </font>
                         </Label>
-                        <SearchableComboBox fx:id="contigComboBox" prefWidth="150.0">
+                        <SearchableComboBox fx:id="contigComboBox" disable="true" prefWidth="150.0">
                             <VBox.margin>
                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </VBox.margin>
@@ -74,6 +74,27 @@
 
             </children>
         </HBox>
+        <Separator prefWidth="200.0" />
+      <HBox alignment="CENTER_LEFT" layoutX="15.0" layoutY="137.0" prefWidth="200.0">
+         <children>
+            <Label text="Id" underline="true">
+               <font>
+                  <Font name="System Italic" size="14.0" />
+               </font>
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+            </Label>
+            <TextField fx:id="idTextField" prefWidth="150.0" promptText="e.g. rs123456" HBox.hgrow="NEVER">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+         </children>
+      </HBox>
         <Separator prefWidth="200.0" />
         <HBox alignment="CENTER_LEFT" prefWidth="200.0">
             <children>

@@ -1,43 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import org.controlsfx.control.*?>
-
-<VBox maxHeight="160.0" minHeight="160.0" minWidth="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variant.BreakendController">
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.SearchableComboBox?>
+<VBox maxHeight="160.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variant.BreakendController">
     <children>
-        <Label alignment="CENTER" contentDisplay="CENTER" text="Contig" underline="true">
+        <HBox alignment="CENTER_LEFT">
+            <children>
+                <Label alignment="CENTER" contentDisplay="CENTER" text="Contig" underline="true">
+                    <font>
+                        <Font name="System Italic" size="14.0"/>
+                    </font>
+                </Label>
+                <SearchableComboBox fx:id="contigComboBox" prefWidth="150.0"/>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER_LEFT">
+            <children>
+                <Label text="Position" underline="true">
+                    <font>
+                        <Font name="System Italic" size="14.0"/>
+                    </font>
+                </Label>
+                <TextField fx:id="positionTextField"/>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" layoutX="15.0" layoutY="137.0">
+            <children>
+                <Label text="Id" underline="true">
+                    <font>
+                        <Font name="System Italic" size="14.0"/>
+                    </font>
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                </Label>
+                <TextField fx:id="idTextField" promptText="e.g. rs123456" HBox.hgrow="NEVER">
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                    <font>
+                        <Font size="14.0"/>
+                    </font>
+                </TextField>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER_LEFT">
             <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
             </VBox.margin>
-            <font>
-                <Font name="System Italic" size="14.0" />
-            </font>
-        </Label>
-        <SearchableComboBox fx:id="contigComboBox" prefWidth="150.0">
-            <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </VBox.margin>
-        </SearchableComboBox>
-        <Label text="Position" underline="true">
-            <font>
-                <Font name="System Italic" size="14.0" />
-            </font>
-            <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </VBox.margin>
-        </Label>
-        <TextField fx:id="positionTextField">
-            <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </VBox.margin>
-        </TextField>
-        <CheckBox fx:id="isPositiveStrandCheckBox" mnemonicParsing="false" selected="true" text="Positive strand">
-            <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </VBox.margin>
-        </CheckBox>
+            <children>
+                <CheckBox fx:id="isPositiveStrandCheckBox" mnemonicParsing="false" selected="true"
+                          text="Positive strand"/>
+            </children>
+        </HBox>
     </children>
 </VBox>

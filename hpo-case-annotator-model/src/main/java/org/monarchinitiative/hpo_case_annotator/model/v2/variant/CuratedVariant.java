@@ -4,36 +4,27 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadata;
 import org.monarchinitiative.svart.*;
 
-public interface CuratedVariant extends Variant {
+public interface CuratedVariant {
 
-    static CuratedVariant sequenceSymbolic(Contig contig,
-                                           String id,
-                                           Strand strand,
-                                           Coordinates coordinates,
-                                           String ref,
-                                           String alt,
-                                           int changeLength,
-                                           VariantMetadata variantMetadata) {
-        return SequenceSymbolicCuratedVariant.of(contig, id, strand, coordinates, ref, alt, changeLength, variantMetadata);
+    static CuratedVariant of(String genomicAssembly,
+                             Variant variant,
+                             VariantMetadata variantMetadata) {
+        return CuratedVariantDefault.of(genomicAssembly, variant, variantMetadata);
     }
 
-    static CuratedVariant breakend(String eventId,
-                                   Breakend left,
-                                   Breakend right,
-                                   String ref,
-                                   String alt,
-                                   VariantMetadata variantMetadata) {
-        return BreakendCuratedVariant.of(eventId, left, right, ref, alt, variantMetadata);
-    }
+    String genomicAssembly();
 
-    VariantMetadata metadata();
+    Variant variant();
+
+    VariantMetadata variantMetadata();
 
     default String md5Hex() {
         String id;
-        if (this instanceof BreakendVariant bv) {
+        if (variant() instanceof BreakendVariant bv) {
             Breakend left = bv.left();
             Breakend right = bv.right();
             id = String.join("-",
+                    genomicAssembly(),
                     left.contigName(),
                     // For breakends, start == end in 0-based CS, no need to hash both.
                     String.valueOf(left.startWithCoordinateSystem(CoordinateSystem.zeroBased())),
@@ -44,7 +35,8 @@ public interface CuratedVariant extends Variant {
                     bv.alt());
         } else {
             id = String.join("-",
-                    contigName(),
+                    genomicAssembly(),
+                    contig().name(),
                     String.valueOf(startWithCoordinateSystem(CoordinateSystem.zeroBased())),
                     String.valueOf(endWithCoordinateSystem(CoordinateSystem.zeroBased())),
                     ref(),
@@ -52,6 +44,68 @@ public interface CuratedVariant extends Variant {
         }
         return DigestUtils.md5Hex(id);
     }
+
+    default Contig contig() {
+        return variant().contig();
+    }
+
+    default Strand strand() {
+        return variant().strand();
+    }
+
+    default Coordinates coordinates() {
+        return variant().coordinates();
+    }
+
+    default int start() {
+        return coordinates().start();
+    }
+
+    default int startWithCoordinateSystem(CoordinateSystem target) {
+        return variant().startWithCoordinateSystem(target);
+    }
+
+    default int startOnStrandWithCoordinateSystem(Strand strand, CoordinateSystem coordinateSystem) {
+        return variant().startOnStrandWithCoordinateSystem(strand, coordinateSystem);
+    }
+
+    default int end() {
+        return coordinates().end();
+    }
+
+    default int endWithCoordinateSystem(CoordinateSystem target) {
+        return variant().endWithCoordinateSystem(target);
+    }
+
+    default int endOnStrandWithCoordinateSystem(Strand strand, CoordinateSystem coordinateSystem) {
+        return variant().endOnStrandWithCoordinateSystem(strand, coordinateSystem);
+    }
+
+    default String ref() {
+        return variant().ref();
+    }
+
+    default String alt() {
+        return variant().alt();
+    }
+
+    default String id() {
+        if (variant() instanceof BreakendVariant bv) {
+            return bv.eventId();
+        } else {
+            return variant().id();
+        }
+    }
+
+    default int changeLength() {
+        return variant().changeLength();
+    }
+
+    default VariantType variantType() {
+        return variant().variantType();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     int hashCode();
 

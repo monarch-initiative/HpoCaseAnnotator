@@ -25,8 +25,8 @@ public class CuratedVariantSerializer extends StdSerializer<CuratedVariant> {
     public void serialize(CuratedVariant curatedVariant, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
         gen.writeStringField("variantType", curatedVariant.variantType().toString());
-
-        if (curatedVariant instanceof BreakendVariant bv) {
+        gen.writeStringField("genomicAssemblyAccession", curatedVariant.genomicAssembly());
+        if (curatedVariant.variant() instanceof BreakendVariant bv) {
             Breakend left = bv.left();
             gen.writeStringField("leftContigGenBankAccession", left.contig().genBankAccession());
             gen.writeStringField("leftStrand", left.strand().toString());
@@ -54,11 +54,11 @@ public class CuratedVariantSerializer extends StdSerializer<CuratedVariant> {
             gen.writeStringField("contigGenBankAccession", curatedVariant.contig().genBankAccession());
             gen.writeStringField("strand", curatedVariant.strand().toString());
             gen.writeNumberField("start", curatedVariant.startWithCoordinateSystem(CoordinateSystem.zeroBased()));
-            if (!curatedVariant.startConfidenceInterval().isPrecise())
-                gen.writeObjectField("startCi", curatedVariant.startConfidenceInterval());
+            if (!curatedVariant.coordinates().startConfidenceInterval().isPrecise())
+                gen.writeObjectField("startCi", curatedVariant.coordinates().startConfidenceInterval());
             gen.writeNumberField("end", curatedVariant.endWithCoordinateSystem(CoordinateSystem.zeroBased()));
-            if (!curatedVariant.endConfidenceInterval().isPrecise())
-                gen.writeObjectField("endCi", curatedVariant.endConfidenceInterval());
+            if (!curatedVariant.coordinates().endConfidenceInterval().isPrecise())
+                gen.writeObjectField("endCi", curatedVariant.coordinates().endConfidenceInterval());
             gen.writeNumberField("changeLength", curatedVariant.changeLength());
             gen.writeStringField("id", curatedVariant.id());
         }
@@ -68,7 +68,7 @@ public class CuratedVariantSerializer extends StdSerializer<CuratedVariant> {
 
         // validation
         gen.writeObjectFieldStart("variantValidation");
-        VariantMetadata variantMetadata = curatedVariant.metadata();
+        VariantMetadata variantMetadata = curatedVariant.variantMetadata();
         gen.writeStringField("validationContext", variantMetadata.getVariantMetadataContext().toString());
         gen.writeObjectField("validationMetadata", variantMetadata); // metadata have default serializers
         gen.writeEndObject();

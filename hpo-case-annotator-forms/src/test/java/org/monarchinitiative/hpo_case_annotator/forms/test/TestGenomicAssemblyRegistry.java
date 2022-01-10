@@ -5,6 +5,7 @@ import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblySe
 import org.monarchinitiative.svart.GenomicAssemblies;
 
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class TestGenomicAssemblyRegistry implements GenomicAssemblyRegistry {
 
@@ -13,8 +14,8 @@ public class TestGenomicAssemblyRegistry implements GenomicAssemblyRegistry {
             new TestGenomicAssemblyService(GenomicAssemblies.GRCh38p13()));
 
     @Override
-    public Set<GenomicAssemblyService> genomicAssemblyServices() {
-        return services;
+    public Stream<GenomicAssemblyService> genomicAssemblyServices() {
+        return services.stream();
     }
 
 }

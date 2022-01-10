@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.VariantSummaryController">
+   <children>
+      <TableView fx:id="variantTableView" editable="true" onMouseClicked="#variantTableViewOnMouseClicked">
+        <columns>
+          <TableColumn fx:id="idTableColumn" prefWidth="75.0" text="ID" />
+            <TableColumn fx:id="genomicAssemblyTableColumn" prefWidth="120.0" text="Assembly" />
+          <TableColumn fx:id="contigTableColumn" prefWidth="75.0" text="Contig" />
+            <TableColumn fx:id="startTableColumn" editable="false" prefWidth="120.0" text="Start" />
+            <TableColumn fx:id="endTableColumn" prefWidth="120.0" text="End" />
+            <TableColumn fx:id="refTableColumn" prefWidth="150.0" text="REF" />
+            <TableColumn fx:id="altTableColumn" prefWidth="150.0" text="ALT" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+      <HBox VBox.vgrow="SOMETIMES">
+         <children>
+            <Button fx:id="addVariantButton" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#addVariantButtonAction" prefHeight="30.0" prefWidth="30.0" text="+" />
+            <Button fx:id="removeVariantButton" disable="true" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#removeVariantButtonAction" prefHeight="30.0" prefWidth="30.0" text="-" />
+            <Button fx:id="editButton" disable="true" mnemonicParsing="false" onAction="#editButtonAction" prefHeight="30.0" prefWidth="80.0" text="Edit" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

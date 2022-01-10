@@ -40,11 +40,11 @@ public class PedigreeMemberDeserializer extends StdDeserializer<PedigreeMember> 
         return PedigreeMember.of(individual.id(),
                 paternalId,
                 maternalId,
-                individual.age().isEmpty() ? null : individual.age().get(),
+                isProband,
+                individual.phenotypicFeatures().toList(),
                 individual.diseases(),
                 individual.genotypes(),
-                individual.phenotypicFeatures().toList(),
-                isProband,
+                individual.age().isEmpty() ? null : individual.age().get(),
                 individual.sex());
     }
 }

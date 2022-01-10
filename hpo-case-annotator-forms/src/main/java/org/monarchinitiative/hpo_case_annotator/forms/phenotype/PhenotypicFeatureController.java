@@ -2,7 +2,6 @@ package org.monarchinitiative.hpo_case_annotator.forms.phenotype;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -13,10 +12,9 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.SearchableComboBox;
 import org.monarchinitiative.hpo_case_annotator.forms.model.PhenotypeDescription;
-import org.monarchinitiative.hpo_case_annotator.forms.util.FormsUtils;
+import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
 
 import java.time.Period;
-import java.util.Optional;
 
 public class PhenotypicFeatureController {
 
@@ -109,14 +107,14 @@ public class PhenotypicFeatureController {
     }
 
     private void initializeAgefields() {
-        onsetMonthsComboBox.getItems().addAll(FormsUtils.getIntegers(11));
+        onsetMonthsComboBox.getItems().addAll(FormUtils.getIntegers(11));
         onsetMonthsComboBox.getSelectionModel().selectFirst();
-        onsetDaysComboBox.getItems().addAll(FormsUtils.getIntegers(30));
+        onsetDaysComboBox.getItems().addAll(FormUtils.getIntegers(30));
         onsetDaysComboBox.getSelectionModel().selectFirst();
 
-        resolutionMonthsComboBox.getItems().addAll(FormsUtils.getIntegers(11));
+        resolutionMonthsComboBox.getItems().addAll(FormUtils.getIntegers(11));
         resolutionMonthsComboBox.getSelectionModel().selectFirst();
-        resolutionDaysComboBox.getItems().addAll(FormsUtils.getIntegers(30));
+        resolutionDaysComboBox.getItems().addAll(FormUtils.getIntegers(30));
         resolutionDaysComboBox.getSelectionModel().selectFirst();
     }
 

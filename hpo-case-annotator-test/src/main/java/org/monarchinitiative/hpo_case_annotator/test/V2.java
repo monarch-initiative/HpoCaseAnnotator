@@ -62,14 +62,13 @@ class V2 {
                 "TF_GENEID_TEST",
                 "down",
                 "in vitro mRNA expression assay");
-        return CuratedVariant.sequenceSymbolic(HG19.contigByName("9"),
+        Variant variant = Variant.of(HG19.contigByName("9"),
                 "mendelian",
                 Strand.POSITIVE,
                 Coordinates.of(CoordinateSystem.zeroBased(), 123_737_056, 123_737_057),
                 "C",
-                "G",
-                0,
-                metadata);
+                "G");
+        return CuratedVariant.of(HG19.name(), variant, metadata);
     }
 
     private static CuratedVariant somaticVariant() {
@@ -87,14 +86,13 @@ class V2 {
                 78,
                 100
         );
-        return CuratedVariant.sequenceSymbolic(HG19.contigByName("9"),
+        Variant variant = Variant.of(HG19.contigByName("9"),
                 "somatic",
                 Strand.POSITIVE,
                 Coordinates.of(CoordinateSystem.zeroBased(), 123_737_056, 123_737_057),
                 "C",
-                "A",
-                0,
-                metadata);
+                "A");
+        return CuratedVariant.of(HG19.name(), variant, metadata);
     }
 
     private static CuratedVariant splicingVariant() {
@@ -117,14 +115,13 @@ class V2 {
                 true,
                 false,
                 true);
-        return CuratedVariant.sequenceSymbolic(HG19.contigByName("9"),
+        Variant variant = Variant.of(HG19.contigByName("9"),
                 "splicing",
                 Strand.POSITIVE,
                 Coordinates.of(CoordinateSystem.zeroBased(), 123_737_056, 123_737_057),
                 "C",
-                "T",
-                0,
-                metadata);
+                "T");
+        return CuratedVariant.of(HG19.name(), variant, metadata);
     }
 
     private static CuratedVariant symbolicDeletion() {
@@ -134,14 +131,14 @@ class V2 {
                 "intronic deletion",
                 true,
                 false);
-        return CuratedVariant.sequenceSymbolic(HG19.contigByName("5"),
+        Variant variant = Variant.of(HG19.contigByName("5"),
                 "symbolic_DEL",
                 Strand.POSITIVE,
                 Coordinates.of(CoordinateSystem.zeroBased(), 149_741_530, ConfidenceInterval.of(-5, 10), 149_744_897, ConfidenceInterval.of(-10, 20)),
                 "N",
                 "<DEL>",
-                -(149_744_897 - 149_741_531 + 1),
-                metadata);
+                -(149_744_897 - 149_741_531 + 1));
+        return CuratedVariant.of(HG19.name(), variant, metadata);
     }
 
     private static CuratedVariant symbolicBreakendVariant() {
@@ -159,7 +156,8 @@ class V2 {
                 "intronic deletion",
                 true,
                 false);
-        return CuratedVariant.breakend("symbolic_breakend", left, right, "G", "ACGT", metadata);
+        Variant variant = Variant.of("symbolic_breakend", left, right, "G", "ACGT");
+        return CuratedVariant.of(HG19.name(), variant, metadata);
     }
 
     private static Pedigree getPedigree() {
@@ -182,11 +180,7 @@ class V2 {
                 List.of(PedigreeMember.of("FAM:001",
                         "FAM:002",
                         null,
-                        Period.parse("P10Y5M4D"),
-                        diseases,
-                        genotypes,
-                        phenotypes,
-                        true,
+                        true, phenotypes, diseases, genotypes, Period.parse("P10Y5M4D"),
                         Sex.MALE))
         );
     }
@@ -194,34 +188,28 @@ class V2 {
     private static Collection<? extends Individual> getCohortMembers() {
         // abc
         Individual abc = Individual.of("abc",
-                Period.of(10, 0, 20),
                 List.of(
                         PhenotypicFeature.of(TermId.of("HP:1234567"), false, AgeRange.sinceBirthUntilAge(Period.parse("P10Y0M20D"))),
                         PhenotypicFeature.of(TermId.of("HP:9876543"), true, AgeRange.sinceBirthUntilAge(Period.parse("P10Y0M20D")))
-                ),
-                List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", false)),
-                Map.of(
+                ), List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", false)), Map.of(
                         mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
                         somaticVariant().md5Hex(), Genotype.HETEROZYGOUS,
                         splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
                         symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS,
-                        symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS),
+                        symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS), Period.of(10, 0, 20),
                 Sex.MALE);
 
         // def
         Individual def = Individual.of("def",
-                Period.of(15, 2, 4),
                 List.of(
                         PhenotypicFeature.of(TermId.of("HP:1234567"), true, AgeRange.sinceBirthUntilAge(Period.parse("P15Y2M4D"))),
                         PhenotypicFeature.of(TermId.of("HP:9876543"), false, AgeRange.sinceBirthUntilAge(Period.parse("P15Y2M4D")))
-                ),
-                List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", true)),
-                Map.of(
+                ), List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", true)), Map.of(
                         mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE,
                         somaticVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE,
                         splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
                         symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS,
-                        symbolicBreakendVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE),
+                        symbolicBreakendVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE), Period.of(15, 2, 4),
                 Sex.FEMALE);
 
         return List.of(abc, def);

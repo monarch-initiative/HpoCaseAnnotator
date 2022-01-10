@@ -56,19 +56,19 @@ public class V1toV2CodecTest {
         List<? extends PedigreeMember> members = familyStudy.members().toList();
         assertThat(members, hasSize(1));
         assertThat(members.get(0), equalTo(PedigreeMember.of("FAM:001", "", "",
-                Period.parse("P10Y5M4D"),
-                List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", false)),
-                Map.of(
-                        "4ff0f76632e6a0aca94996361bc29c58", Genotype.HOMOZYGOUS_ALTERNATE,
-                        "b8394a48b4e1028f04930c3b739fac88", Genotype.HETEROZYGOUS,
-                        "e8314b7b3d063966458a6bca6c5c3be8", Genotype.HOMOZYGOUS_ALTERNATE,
-                        "4ccbca63d4212e7dc79259bc64255990", Genotype.HETEROZYGOUS,
-                        "813960c422f5cc972a7a0e4099439751", Genotype.HETEROZYGOUS),
+                true,
                 List.of(
                         PhenotypicFeature.of(TermId.of("HP:1234567"), false, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D"))),
                         PhenotypicFeature.of(TermId.of("HP:9876543"), true, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D")))
                 ),
-                true,
+                List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", false)),
+                Map.of(
+                        "bfed08fc27778a1587dcaebc2b455718", Genotype.HOMOZYGOUS_ALTERNATE,
+                        "94f38002744f2dfdbad129153880603f", Genotype.HETEROZYGOUS,
+                        "c9dda67d707ab3c69142d891d6a0a4e1", Genotype.HOMOZYGOUS_ALTERNATE,
+                        "f2e88a99810ce259880f744fbbddc0f3", Genotype.HETEROZYGOUS,
+                        "caa6a8f18e7996e8fd67c9beb003100b", Genotype.HETEROZYGOUS),
+                Period.parse("P10Y5M4D"),
                 Sex.MALE)));
     }
 }

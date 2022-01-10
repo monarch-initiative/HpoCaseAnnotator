@@ -13,16 +13,16 @@ import java.util.stream.Stream;
 public interface Individual {
 
     static Individual of(String id,
-                         Period age,
                          Collection<PhenotypicFeature> phenotypicFeatures,
                          List<DiseaseStatus> diseases,
                          Map<String, Genotype> genotypes,
+                         Period age,
                          Sex sex) {
         return IndividualDefault.of(id,
-                age,
                 phenotypicFeatures,
                 diseases,
                 genotypes,
+                age,
                 sex);
     }
 

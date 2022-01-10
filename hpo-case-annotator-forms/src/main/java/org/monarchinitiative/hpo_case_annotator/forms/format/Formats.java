@@ -7,7 +7,8 @@ import java.text.NumberFormat;
 
 public class Formats {
 
-    private static final FormatStringConverter<Number> NUMBER_FORMAT_STRING_CONVERTER = new FormatStringConverter<>(NumberFormat.getInstance());
+    public static final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance();
+    private static final FormatStringConverter<Number> NUMBER_FORMAT_STRING_CONVERTER = new FormatStringConverter<>(NUMBER_FORMAT);
 
     private Formats(){}
 

@@ -38,7 +38,6 @@ public class PhenotypeBrowserController {
         ontologyTreeBrowserController.ontologyProperty().bind(ontology);
         ontologyTreeBrowserController.phenotypeDescriptionInFocusProperty().bind(phenotypicFeaturesTableController.phenotypeDescriptionInFocusProperty());
         phenotypicFeatureController.phenotypeDescriptionProperty().bind(phenotypicFeaturesTableController.phenotypeDescriptionInFocusProperty());
-        phenotypicFeaturesTableController.phenotypeDescriptions().addAll(TestData.sampleValues());
     }
 
     public ObservableList<PhenotypeDescription> phenotypeDescriptions() {

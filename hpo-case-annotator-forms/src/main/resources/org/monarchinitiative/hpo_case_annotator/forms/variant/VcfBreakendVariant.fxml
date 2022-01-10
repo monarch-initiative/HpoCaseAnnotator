@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="320.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variant.VcfBreakendVariantController">
+<VBox prefHeight="320.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variant.VcfBreakendVariantController">
     <children>
         <HBox alignment="CENTER_LEFT" style="-fx-background-color: #e3e3e3;" VBox.vgrow="NEVER">
             <children>
@@ -24,7 +24,7 @@
         </HBox>
         <HBox alignment="CENTER_LEFT" VBox.vgrow="NEVER">
             <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                <Insets />
             </VBox.margin>
             <children>
                 <VBox alignment="CENTER_LEFT" minHeight="50.0" minWidth="250.0" HBox.hgrow="SOMETIMES">
@@ -57,6 +57,20 @@
                 </VBox>
             </children>
         </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="286.0">
+         <children>
+            <Label text="Event id" underline="true" wrapText="true">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Label>
+            <TextField fx:id="eventIdTextField" promptText="e.g. CCTAAGCT" HBox.hgrow="SOMETIMES">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </TextField>
+         </children>
+      </HBox>
         <HBox alignment="CENTER_LEFT">
             <children>
                 <VBox alignment="CENTER" prefWidth="200.0">
@@ -94,21 +108,35 @@
             <Insets bottom="10.0" top="10.0" />
          </VBox.margin>
         </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="15.0" layoutY="291.0">
+         <children>
+            <Label text="Reference sequence" underline="true" wrapText="true">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Label>
+            <TextField fx:id="referenceSequenceTextField" promptText="e.g. CCTAAGCT" HBox.hgrow="SOMETIMES">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </TextField>
+         </children>
+      </HBox>
         <HBox alignment="CENTER_LEFT">
             <children>
-                <Label maxWidth="80.0" minHeight="40.0" minWidth="80.0" text="Inserted sequence" underline="true" wrapText="true">
+                <Label text="Inserted sequence" underline="true" wrapText="true">
                     <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        <Insets />
                     </HBox.margin>
                 </Label>
                 <TextField fx:id="insertedSequenceTextField" promptText="e.g. CCTAAGCT" HBox.hgrow="SOMETIMES">
                     <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        <Insets />
                     </HBox.margin>
                 </TextField>
             </children>
             <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                <Insets />
             </VBox.margin>
         </HBox>
     </children>
