@@ -118,6 +118,7 @@ public class VariantSummaryController {
 
             // setup stage
             Stage stage = new Stage();
+            stage.setTitle(notation.label());
             stage.initOwner(variantTableView.getScene().getWindow());
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(parent));
