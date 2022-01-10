@@ -45,6 +45,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
      * This is the {@link Stage} which is provided by JavaFX and registered into the Spring container in the
      * {@link Main#start(Stage)} method.
      */
+    @Deprecated // TODO - remove as it is possible to get the stage from any node
     private final Stage primaryStage;
 
     private final HostServices hostServices;

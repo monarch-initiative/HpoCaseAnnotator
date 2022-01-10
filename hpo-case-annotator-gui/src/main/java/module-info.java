@@ -31,7 +31,7 @@ module org.monarchinitiative.hpo_case_annotator.gui {
 
     exports org.monarchinitiative.hpo_case_annotator.gui to javafx.graphics;
     exports org.monarchinitiative.hpo_case_annotator.gui.controllers to javafx.fxml;
-    opens org.monarchinitiative.hpo_case_annotator.gui.controllers to javafx.fxml, com.google.guice;
 
+    opens org.monarchinitiative.hpo_case_annotator.gui.controllers to javafx.fxml, com.google.guice, com.fasterxml.jackson.databind;
     opens org.monarchinitiative.hpo_case_annotator.gui to com.google.guice; // TODO - deprecate/remove
 }

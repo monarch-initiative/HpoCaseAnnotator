@@ -54,6 +54,11 @@ public class IndividualDeserializer extends StdDeserializer<Individual> {
 
         Sex sex = Sex.valueOf(node.get("sex").asText());
 
-        return Individual.of(id, age, phenotypicFeatures, diseaseStatuses, genotypeMap, sex);
+        return Individual.of(id,
+                phenotypicFeatures,
+                diseaseStatuses,
+                genotypeMap,
+                age,
+                sex);
     }
 }

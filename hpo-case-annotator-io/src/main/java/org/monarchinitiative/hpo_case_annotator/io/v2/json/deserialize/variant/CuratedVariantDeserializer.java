@@ -47,11 +47,12 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
         String ref = node.get("ref").asText();
         String alt = node.get("alt").asText();
         String md5Hex = node.get("md5Hex").asText();
+        String genomicAssemblyAccession = node.get("genomicAssemblyAccession").asText();
 
         VariantMetadata variantMetadata = codec.treeToValue(node.get("variantValidation"), VariantMetadata.class);
 
         String variantType = node.get("variantType").asText();
-        CuratedVariant curatedVariant;
+        Variant variant;
         if (variantType.equals("BND")) {
             // breakend variant
 
@@ -88,7 +89,11 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
             Breakend right = Breakend.of(rightContigOptional.get(), rightId, rightStrand, rightCoordinates);
 
             String eventId = node.get("eventId").asText();
-            curatedVariant = CuratedVariant.breakend(eventId, left, right, ref, alt, variantMetadata);
+            variant = Variant.of(eventId,
+                    left,
+                    right,
+                    ref,
+                    alt);
         } else {
             // sequence or symbolic
             String contigGenBankAccession = node.get("contigGenBankAccession").asText();
@@ -105,8 +110,27 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
             Coordinates coordinates = Coordinates.of(CoordinateSystem.zeroBased(), node.get("start").asInt(), startCi, node.get("end").asInt(), endCi);
             int changeLength = node.get("changeLength").asInt();
 
-            curatedVariant = CuratedVariant.sequenceSymbolic(contigOptional.get(), id, strand, coordinates, ref, alt, changeLength, variantMetadata);
+            if (VariantType.isSymbolic(ref, alt)) {
+                variant = Variant.of(contigOptional.get(),
+                        id,
+                        strand,
+                        coordinates,
+                        ref,
+                        alt,
+                        changeLength);
+            } else {
+                variant = Variant.of(contigOptional.get(),
+                        id,
+                        strand,
+                        coordinates,
+                        ref,
+                        alt);
+            }
         }
+
+        CuratedVariant curatedVariant = CuratedVariant.of(genomicAssemblyAccession,
+                variant,
+                variantMetadata);
         if (!md5Hex.equals(curatedVariant.md5Hex())) {
             throw new IOException("MD5 checksum mismatch for variant. Expected: `" + md5Hex + "`, actual: `" + curatedVariant.md5Hex() + "`. Variant data: `" + node.asText() + "`");
         }

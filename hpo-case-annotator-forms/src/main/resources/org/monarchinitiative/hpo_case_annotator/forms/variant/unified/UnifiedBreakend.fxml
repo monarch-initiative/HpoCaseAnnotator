@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import org.controlsfx.control.*?>
+
+<VBox maxHeight="160.0" minHeight="160.0" minWidth="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variant.unified.UnifiedBreakendController">
+    <children>
+        <Label alignment="CENTER" contentDisplay="CENTER" text="Contig" underline="true">
+            <VBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </VBox.margin>
+            <font>
+                <Font name="System Italic" size="14.0" />
+            </font>
+        </Label>
+        <SearchableComboBox fx:id="contigComboBox" prefWidth="150.0">
+            <VBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </VBox.margin>
+        </SearchableComboBox>
+        <Label text="Position" underline="true">
+            <font>
+                <Font name="System Italic" size="14.0" />
+            </font>
+            <VBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </VBox.margin>
+        </Label>
+        <TextField fx:id="positionTextField">
+            <VBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </VBox.margin>
+        </TextField>
+        <CheckBox fx:id="isPositiveStrandCheckBox" mnemonicParsing="false" selected="true" text="Positive strand">
+            <VBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </VBox.margin>
+        </CheckBox>
+    </children>
+</VBox>

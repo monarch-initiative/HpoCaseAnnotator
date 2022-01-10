@@ -27,13 +27,14 @@
   },
   "variants" : [ {
     "variantType" : "SNV",
+    "genomicAssemblyAccession" : "GRCh37.p13",
     "contigGenBankAccession" : "CM000671.1",
     "strand" : "+",
     "start" : 123737056,
     "end" : 123737057,
     "changeLength" : 0,
     "id" : "mendelian",
-    "md5Hex" : "4ff0f76632e6a0aca94996361bc29c58",
+    "md5Hex" : "c9dda67d707ab3c69142d891d6a0a4e1",
     "ref" : "C",
     "alt" : "G",
     "variantValidation" : {
@@ -57,13 +58,14 @@
     }
   }, {
     "variantType" : "SNV",
+    "genomicAssemblyAccession" : "GRCh37.p13",
     "contigGenBankAccession" : "CM000671.1",
     "strand" : "+",
     "start" : 123737056,
     "end" : 123737057,
     "changeLength" : 0,
     "id" : "somatic",
-    "md5Hex" : "b8394a48b4e1028f04930c3b739fac88",
+    "md5Hex" : "f2e88a99810ce259880f744fbbddc0f3",
     "ref" : "C",
     "alt" : "A",
     "variantValidation" : {
@@ -86,13 +88,14 @@
     }
   }, {
     "variantType" : "SNV",
+    "genomicAssemblyAccession" : "GRCh37.p13",
     "contigGenBankAccession" : "CM000671.1",
     "strand" : "+",
     "start" : 123737056,
     "end" : 123737057,
     "changeLength" : 0,
     "id" : "splicing",
-    "md5Hex" : "e8314b7b3d063966458a6bca6c5c3be8",
+    "md5Hex" : "bfed08fc27778a1587dcaebc2b455718",
     "ref" : "C",
     "alt" : "T",
     "variantValidation" : {
@@ -121,6 +124,7 @@
     }
   }, {
     "variantType" : "DEL",
+    "genomicAssemblyAccession" : "GRCh37.p13",
     "contigGenBankAccession" : "CM000667.1",
     "strand" : "+",
     "start" : 149741530,
@@ -135,7 +139,7 @@
     },
     "changeLength" : -3367,
     "id" : "symbolic_DEL",
-    "md5Hex" : "4ccbca63d4212e7dc79259bc64255990",
+    "md5Hex" : "94f38002744f2dfdbad129153880603f",
     "ref" : "N",
     "alt" : "<DEL>",
     "variantValidation" : {
@@ -151,6 +155,7 @@
     }
   }, {
     "variantType" : "BND",
+    "genomicAssemblyAccession" : "GRCh37.p13",
     "leftContigGenBankAccession" : "CM000671.1",
     "leftStrand" : "+",
     "leftStart" : 133359000,
@@ -166,7 +171,7 @@
     "rightEnd" : 32300000,
     "rightId" : "right",
     "eventId" : "symbolic_breakend",
-    "md5Hex" : "d369ae92d8888b70f8adbcab9d5af0db",
+    "md5Hex" : "ab671d73cb3a1ba57d3a31889c4d29cc",
     "ref" : "G",
     "alt" : "ACGT",
     "variantValidation" : {
@@ -191,20 +196,20 @@
         "isExcluded" : false
       } ],
       "genotypes" : [ {
-        "variantId" : "4ccbca63d4212e7dc79259bc64255990",
+        "variantId" : "94f38002744f2dfdbad129153880603f",
         "genotype" : "HETEROZYGOUS"
       }, {
-        "variantId" : "4ff0f76632e6a0aca94996361bc29c58",
+        "variantId" : "ab671d73cb3a1ba57d3a31889c4d29cc",
+        "genotype" : "HETEROZYGOUS"
+      }, {
+        "variantId" : "bfed08fc27778a1587dcaebc2b455718",
         "genotype" : "HOMOZYGOUS_ALTERNATE"
       }, {
-        "variantId" : "b8394a48b4e1028f04930c3b739fac88",
-        "genotype" : "HETEROZYGOUS"
-      }, {
-        "variantId" : "d369ae92d8888b70f8adbcab9d5af0db",
-        "genotype" : "HETEROZYGOUS"
-      }, {
-        "variantId" : "e8314b7b3d063966458a6bca6c5c3be8",
+        "variantId" : "c9dda67d707ab3c69142d891d6a0a4e1",
         "genotype" : "HOMOZYGOUS_ALTERNATE"
+      }, {
+        "variantId" : "f2e88a99810ce259880f744fbbddc0f3",
+        "genotype" : "HETEROZYGOUS"
       } ],
       "phenotypicFeatures" : [ {
         "termId" : "HP:9876543",

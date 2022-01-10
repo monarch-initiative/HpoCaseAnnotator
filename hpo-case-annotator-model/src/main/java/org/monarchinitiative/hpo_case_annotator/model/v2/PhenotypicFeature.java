@@ -15,9 +15,13 @@ public interface PhenotypicFeature {
 
     AgeRange observationAge();
 
-    // TODO - we may add other attributes like severity, onset
+    // TODO - we may add other attributes like severity, onset/offset
 
     int hashCode();
 
     boolean equals(Object o);
+
+    default boolean isIncluded() {
+        return !isExcluded();
+    }
 }
