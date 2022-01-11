@@ -4,6 +4,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import org.monarchinitiative.hpo_case_annotator.forms.observable.ObservablePedigreeMember;
 
 public class PedigreeMemberController extends BaseIndividualController<ObservablePedigreeMember> {
 

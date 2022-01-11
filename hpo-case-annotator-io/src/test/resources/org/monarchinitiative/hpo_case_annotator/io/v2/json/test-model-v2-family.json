@@ -212,18 +212,18 @@
         "genotype" : "HETEROZYGOUS"
       } ],
       "phenotypicFeatures" : [ {
-        "termId" : "HP:9876543",
-        "isExcluded" : true,
-        "observationAge" : {
-          "startAge" : "P0D",
-          "endAge" : "P10Y5M4D"
-        }
-      }, {
-        "termId" : "HP:1234567",
+        "termId" : "HP:0002110",
         "isExcluded" : false,
         "observationAge" : {
-          "startAge" : "P0D",
-          "endAge" : "P10Y5M4D"
+          "onset" : "P0D",
+          "resolution" : "P10Y5M4D"
+        }
+      }, {
+        "termId" : "HP:0000822",
+        "isExcluded" : true,
+        "observationAge" : {
+          "onset" : "P0D",
+          "resolution" : "P10Y5M4D"
         }
       } ],
       "sex" : "MALE",

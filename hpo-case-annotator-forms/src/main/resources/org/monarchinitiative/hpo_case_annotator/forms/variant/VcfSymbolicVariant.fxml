@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.*?>
 
-<VBox styleClass="section" stylesheets="@variant.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variant.VcfSymbolicVariantController">
+<VBox styleClass="section" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variant.VcfSymbolicVariantController">
+    <stylesheets>
+        <URL value="@variant.css" />
+        <URL value="@../base.css" />
+    </stylesheets>
     <children>
-          <Label styleClass="h2" text="VCF symbolic variant" />
+        <Label styleClass="h2" text="VCF symbolic variant" />
         <HBox alignment="CENTER_LEFT" styleClass="row" VBox.vgrow="NEVER">
             <children>
                 <VBox alignment="CENTER_LEFT" styleClass="column" HBox.hgrow="NEVER">
@@ -22,9 +27,9 @@
                     </children>
                 </VBox>
 
-                <VBox alignment="CENTER_LEFT" styleClass="column" HBox.hgrow="NEVER">
+                <VBox styleClass="column" HBox.hgrow="NEVER">
                     <children>
-                        <Label alignment="CENTER" contentDisplay="CENTER" styleClass="h3" text="Contig" />
+                        <Label styleClass="h3" text="Contig" />
                         <SearchableComboBox fx:id="contigComboBox" disable="true" />
                     </children>
                 </VBox>
@@ -52,13 +57,13 @@
                      <children>
                             <VBox alignment="CENTER_LEFT" styleClass="column" HBox.hgrow="ALWAYS">
                            <children>
-                                    <Label text="Start coordinate" />
+                                    <Label text="Start" />
                                     <TextField fx:id="startTextField" promptText="e.g. 10001" />
                            </children>
                             </VBox>
                             <VBox alignment="CENTER_LEFT" styleClass="column" HBox.hgrow="ALWAYS">
                                 <children>
-                                    <Label text="End coordinate" />
+                                    <Label text="End" />
                                     <TextField fx:id="endTextField" promptText="e.g. 20000" />
                                 </children>
                             </VBox>

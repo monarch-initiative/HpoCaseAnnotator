@@ -1,17 +1,16 @@
-package org.monarchinitiative.hpo_case_annotator.forms.individual;
+package org.monarchinitiative.hpo_case_annotator.forms.observable;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import org.monarchinitiative.hpo_case_annotator.model.v2.AgeRange;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 public class ObservablePhenotypicFeature {
 
     private final ObjectProperty<TermId> termId = new SimpleObjectProperty<>(this, "termId");
     private final BooleanProperty excluded = new SimpleBooleanProperty(this, "excluded");
-    private final ObjectProperty<AgeRange> observationAge = new SimpleObjectProperty<>(this, "observationAge");
+    private final ObjectProperty<ObservableAgeRange> observationAge = new SimpleObjectProperty<>(this, "observationAge");
 
     public TermId getTermId() {
         return termId.get();
@@ -37,15 +36,15 @@ public class ObservablePhenotypicFeature {
         return excluded;
     }
 
-    public AgeRange getObservationAge() {
+    public ObservableAgeRange getObservationAge() {
         return observationAge.get();
     }
 
-    public void setObservationAge(AgeRange observationAge) {
+    public void setObservationAge(ObservableAgeRange observationAge) {
         this.observationAge.set(observationAge);
     }
 
-    public ObjectProperty<AgeRange> observationAgeProperty() {
+    public ObjectProperty<ObservableAgeRange> observationAgeProperty() {
         return observationAge;
     }
 

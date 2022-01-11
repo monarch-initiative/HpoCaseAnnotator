@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.monarchinitiative.hpo_case_annotator.forms.TestData;
+import org.monarchinitiative.hpo_case_annotator.forms.observable.BaseObservableIndividual;
+import org.monarchinitiative.hpo_case_annotator.forms.util.Convert;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Individual;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.testfx.api.FxRobot;

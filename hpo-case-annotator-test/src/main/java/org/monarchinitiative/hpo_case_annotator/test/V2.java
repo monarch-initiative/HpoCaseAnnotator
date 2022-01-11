@@ -171,8 +171,8 @@ class V2 {
                 symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS);
 
         List<PhenotypicFeature> phenotypes = List.of(
-                PhenotypicFeature.of(TermId.of("HP:1234567"), false, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D"))),
-                PhenotypicFeature.of(TermId.of("HP:9876543"), true, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D")))
+                PhenotypicFeature.of(TermId.of("HP:0002110"), false, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D"))), // Bronchiectasis
+                PhenotypicFeature.of(TermId.of("HP:0000822"), true, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D"))) // Hypertension
         );
 
 
@@ -189,8 +189,8 @@ class V2 {
         // abc
         Individual abc = Individual.of("abc",
                 List.of(
-                        PhenotypicFeature.of(TermId.of("HP:1234567"), false, AgeRange.sinceBirthUntilAge(Period.parse("P10Y0M20D"))),
-                        PhenotypicFeature.of(TermId.of("HP:9876543"), true, AgeRange.sinceBirthUntilAge(Period.parse("P10Y0M20D")))
+                        PhenotypicFeature.of(TermId.of("HP:0002110"), false, AgeRange.sinceBirthUntilAge(Period.parse("P10Y0M20D"))), // Bronchiectasis
+                        PhenotypicFeature.of(TermId.of("HP:0000822"), true, AgeRange.sinceBirthUntilAge(Period.parse("P10Y0M20D"))) // Hypertension
                 ), List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", false)), Map.of(
                         mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
                         somaticVariant().md5Hex(), Genotype.HETEROZYGOUS,
@@ -202,8 +202,8 @@ class V2 {
         // def
         Individual def = Individual.of("def",
                 List.of(
-                        PhenotypicFeature.of(TermId.of("HP:1234567"), true, AgeRange.sinceBirthUntilAge(Period.parse("P15Y2M4D"))),
-                        PhenotypicFeature.of(TermId.of("HP:9876543"), false, AgeRange.sinceBirthUntilAge(Period.parse("P15Y2M4D")))
+                        PhenotypicFeature.of(TermId.of("HP:0002110"), true, AgeRange.sinceBirthUntilAge(Period.parse("P15Y2M4D"))), // Bronchiectasis
+                        PhenotypicFeature.of(TermId.of("HP:0000822"), false, AgeRange.sinceBirthUntilAge(Period.parse("P15Y2M4D"))) // Hypertension
                 ), List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", true)), Map.of(
                         mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE,
                         somaticVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE,

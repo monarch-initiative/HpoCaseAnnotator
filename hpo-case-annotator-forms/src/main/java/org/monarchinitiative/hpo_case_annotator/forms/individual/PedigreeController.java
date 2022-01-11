@@ -10,6 +10,8 @@ import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.ComponentController;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataException;
+import org.monarchinitiative.hpo_case_annotator.forms.observable.ObservablePedigreeMember;
+import org.monarchinitiative.hpo_case_annotator.forms.util.Convert;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Pedigree;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.slf4j.Logger;

@@ -211,18 +211,18 @@
       "genotype" : "HETEROZYGOUS"
     } ],
     "phenotypicFeatures" : [ {
-      "termId" : "HP:9876543",
+      "termId" : "HP:0000822",
       "isExcluded" : true,
       "observationAge" : {
-        "startAge" : "P0D",
-        "endAge" : "P10Y20D"
+        "onset" : "P0D",
+        "resolution" : "P10Y20D"
       }
     }, {
-      "termId" : "HP:1234567",
+      "termId" : "HP:0002110",
       "isExcluded" : false,
       "observationAge" : {
-        "startAge" : "P0D",
-        "endAge" : "P10Y20D"
+        "onset" : "P0D",
+        "resolution" : "P10Y20D"
       }
     } ],
     "sex" : "MALE"
@@ -251,18 +251,18 @@
       "genotype" : "HOMOZYGOUS_REFERENCE"
     } ],
     "phenotypicFeatures" : [ {
-      "termId" : "HP:1234567",
+      "termId" : "HP:0002110",
       "isExcluded" : true,
       "observationAge" : {
-        "startAge" : "P0D",
-        "endAge" : "P15Y2M4D"
+        "onset" : "P0D",
+        "resolution" : "P15Y2M4D"
       }
     }, {
-      "termId" : "HP:9876543",
+      "termId" : "HP:0000822",
       "isExcluded" : false,
       "observationAge" : {
-        "startAge" : "P0D",
-        "endAge" : "P15Y2M4D"
+        "onset" : "P0D",
+        "resolution" : "P15Y2M4D"
       }
     } ],
     "sex" : "FEMALE"

@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.individual;
+package org.monarchinitiative.hpo_case_annotator.forms.observable;
 
 public class ObservableIndividual extends BaseObservableIndividual {
 

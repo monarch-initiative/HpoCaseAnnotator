@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import java.net.URL?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox styleClass="section" stylesheets="@variant.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variant.VcfBreakendVariantController">
+<VBox styleClass="section" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variant.VcfBreakendVariantController">
+    <stylesheets>
+        <URL value="@variant.css" />
+        <URL value="@../base.css" />
+    </stylesheets>
     <children>
           <Label styleClass="h2" text="VCF breakend variant" />
         <HBox alignment="CENTER_LEFT" styleClass="row" VBox.vgrow="NEVER">
