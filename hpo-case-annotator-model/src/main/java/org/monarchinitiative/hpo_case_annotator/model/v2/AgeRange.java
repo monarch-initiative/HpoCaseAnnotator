@@ -41,16 +41,16 @@ public interface AgeRange {
     }
 
     /**
-     * @return start age (inclusive)
+     * @return onset age (inclusive)
      */
-    Period startAge();
+    Period onset();
 
     /**
-     * @return end age (exclusive)
+     * @return resolution age (exclusive)
      */
-    Period endAge();
+    Period resolution();
 
     default Period length() {
-        return endAge().minus(startAge()).normalized();
+        return resolution().minus(onset()).normalized();
     }
 }

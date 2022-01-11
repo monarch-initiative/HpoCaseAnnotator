@@ -30,6 +30,9 @@
                                         <TableColumn fx:id="isProbandTableColumn" editable="false" prefWidth="100.0"
                                                      text="Proband?"/>
                                     </columns>
+                                    <placeholder>
+                                        <Label>No pedigree members</Label>
+                                    </placeholder>
                                 </TableView>
                             </children>
                         </VBox>

@@ -19,6 +19,9 @@
                         <TableColumn fx:id="refTableColumn" editable="false" prefWidth="75.0" text="REF" />
                         <TableColumn fx:id="altTableColumn" editable="false" prefWidth="75.0" text="ALT" />
                     </columns>
+                    <placeholder>
+                        <Label>No variants</Label>
+                    </placeholder>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                     </columnResizePolicy>

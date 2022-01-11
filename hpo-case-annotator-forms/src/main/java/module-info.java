@@ -10,9 +10,11 @@ module org.monarchinitiative.hpo_case_annotator.forms {
     requires org.slf4j;
 
     exports org.monarchinitiative.hpo_case_annotator.forms;
-    exports org.monarchinitiative.hpo_case_annotator.forms.model;
     exports org.monarchinitiative.hpo_case_annotator.forms.individual;
+    exports org.monarchinitiative.hpo_case_annotator.forms.model;
+    exports org.monarchinitiative.hpo_case_annotator.forms.phenotype;
     exports org.monarchinitiative.hpo_case_annotator.forms.variant;
+    exports org.monarchinitiative.hpo_case_annotator.forms.observable; // TODO - consider removing
 
     opens org.monarchinitiative.hpo_case_annotator.forms to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.model to javafx.fxml;
@@ -20,4 +22,6 @@ module org.monarchinitiative.hpo_case_annotator.forms {
     opens org.monarchinitiative.hpo_case_annotator.forms.phenotype to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.individual to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.variant to javafx.fxml;
+    opens org.monarchinitiative.hpo_case_annotator.forms.util to javafx.fxml;
+    opens org.monarchinitiative.hpo_case_annotator.forms.observable to javafx.fxml;
 }

@@ -20,37 +20,6 @@ Separator {
 
 /* ------------------------------------------------------------------------------------------------------------------ */
 /* The headings are the same as in family-study.css */
-.h1 {
-    -fx-font-size: 18pt;
-    -fx-font-weight: bold;
-    -fx-padding: 15px 0px 5px 0px;
-}
-
-.h2 {
-    -fx-font-size: 14pt;
-    -fx-font-style: italic;
-    -fx-text-fill: #003688;
-    -fx-effect: dropshadow(gaussian, #d7d7d7, 5, .5, 1, 1);
-    -fx-padding: 10px 0px 5px 0px;
-}
-
-.h3 {
-    -fx-font-size: 12pt;
-    -fx-font-style: italic;
-    -fx-padding: 5px 0px 0px 0px;
-}
-
-.h4 {
-    -fx-font-size: 10pt;
-    -fx-underline: true;
-}
-
-.section {
-    -fx-border-color: rgba(128, 128, 128, 0.5);
-    -fx-border-style: dotted;
-    -fx-border-width: 1px;
-    -fx-padding: 15px 0px 0px 15px;
-}
 
 .column {
     -fx-padding: 0px 10px 0px 0px;

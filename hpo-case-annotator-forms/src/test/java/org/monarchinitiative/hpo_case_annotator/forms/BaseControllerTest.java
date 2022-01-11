@@ -26,7 +26,7 @@ public class BaseControllerTest {
 
     public static final GeneIdentifierService GENE_IDENTIFIER_SERVICE = makeGeneIdService();
 
-    public static final ControllerFactory CONTROLLER_FACTORY = new ControllerFactory(RESOURCES, GENOMIC_ASSEMBLY_REGISTRY, GENE_IDENTIFIER_SERVICE);
+    public static final ControllerFactory CONTROLLER_FACTORY = new ControllerFactory(GENOMIC_ASSEMBLY_REGISTRY, GENE_IDENTIFIER_SERVICE);
 
     private static TestGeneIdentifierService makeGeneIdService() {
         Map<GeneIdentifier, List<String>> genes = Map.of(

@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.individual;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
@@ -34,6 +35,7 @@ public class IndividualVariantSummaryController {
 
     @FXML
     private void initialize() {
+        variantTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         genotypeTableColumn.setCellValueFactory(cdf -> cdf.getValue().genotypeProperty());
         genotypeTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(Genotype.values()));
         variantIdTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().curatedVariant().id()));

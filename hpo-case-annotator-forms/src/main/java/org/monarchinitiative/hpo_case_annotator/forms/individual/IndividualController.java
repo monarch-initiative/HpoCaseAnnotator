@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.forms.individual;
 
 import javafx.beans.value.ChangeListener;
+import org.monarchinitiative.hpo_case_annotator.forms.observable.BaseObservableIndividual;
 
 public class IndividualController extends BaseIndividualController<BaseObservableIndividual> {
 

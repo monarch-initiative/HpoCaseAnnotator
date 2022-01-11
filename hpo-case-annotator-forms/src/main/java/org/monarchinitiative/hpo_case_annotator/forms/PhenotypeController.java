@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.model.PhenotypeDescription;
+import org.monarchinitiative.hpo_case_annotator.forms.observable.ObservablePhenotypicFeature;
 import org.monarchinitiative.hpo_case_annotator.forms.ontotree.OntologyTreeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeEntryController;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeatureController;
@@ -43,15 +43,15 @@ public class PhenotypeController {
         return ontology;
     }
 
-    public ObservableList<PhenotypeDescription> phenotypeDescriptions() {
-        return phenotypicFeaturesTableController.phenotypeDescriptions();
+    public ObservableList<ObservablePhenotypicFeature> phenotypeDescriptions() {
+        return phenotypicFeaturesTableController.observablePhenotypeDescriptions();
     }
 
     @FXML
     private void initialize() {
-        phenotypicFeatureController.phenotypeDescriptionProperty().bind(phenotypicFeaturesTableController.phenotypeDescriptionInFocusProperty());
-        ontologyTreeBrowserController.phenotypeDescriptionInFocusProperty().bind(phenotypicFeaturesTableController.phenotypeDescriptionInFocusProperty());
-        ontologyTreeBrowserController.ontologyProperty().bind(ontology);
+//        phenotypicFeatureController.phenotypeDescriptionProperty().bind(phenotypicFeaturesTableController.phenotypeDescriptionInFocusProperty());
+//        ontologyTreeBrowserController.phenotypeDescriptionInFocusProperty().bind(phenotypicFeaturesTableController.phenotypeDescriptionInFocusProperty());
+//        ontologyTreeBrowserController.ontologyProperty().bind(ontology);
     }
 
 }

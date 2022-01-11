@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.individual;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
+import org.monarchinitiative.hpo_case_annotator.forms.observable.ObservableDiseaseStatus;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
 
 public class ObservableDiseaseStatusListCell extends ListCell<ObservableDiseaseStatus> {
@@ -19,6 +20,8 @@ public class ObservableDiseaseStatusListCell extends ListCell<ObservableDiseaseS
                     ? FormUtils.checkMark()
                     : FormUtils.crossMark();
             setText(String.format("%s | %s | %s", presence, item.getDiseaseId(), item.getDiseaseName()));
+        } else {
+            setText(null);
         }
     }
 }

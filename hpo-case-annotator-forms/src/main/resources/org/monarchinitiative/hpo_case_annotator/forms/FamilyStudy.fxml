@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="TOP_CENTER" stylesheets="@family-study.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.FamilyStudyController">
+<VBox alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.FamilyStudyController">
+   <stylesheets>
+      <URL value="@base.css" />
+      <URL value="@family-study.css" />
+   </stylesheets>
    <children>
       <Label styleClass="title" text="Family study" />
       <VBox>

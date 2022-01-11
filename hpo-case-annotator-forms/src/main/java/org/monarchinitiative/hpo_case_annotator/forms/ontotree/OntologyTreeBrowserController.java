@@ -8,7 +8,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.model.PhenotypeDescription;
+import org.monarchinitiative.hpo_case_annotator.forms.observable.ObservablePhenotypicFeature;
 import org.monarchinitiative.phenol.ontology.algo.OntologyAlgorithm;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
@@ -24,10 +24,9 @@ public class OntologyTreeBrowserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SelectableOntologyTreeController.class);
     private final ObjectProperty<Ontology> ontology = new SimpleObjectProperty<>(this, "ontology");
-    private final ObjectProperty<PhenotypeDescription> phenotypeDescriptionInFocus = new SimpleObjectProperty<>(this, "phenotypeDescriptionInFocus");
-    private ChangeListener<PhenotypeDescription> termIdChangeListener = null;
+
     @FXML
-    private VBox section;
+    private VBox ontologyBrowserBox;
     @FXML
     private TreeView<SimpleOntologyTreeTerm> ontologyTreeView;
 
@@ -41,18 +40,13 @@ public class OntologyTreeBrowserController {
     }
 
 
-    public ObjectProperty<PhenotypeDescription> phenotypeDescriptionInFocusProperty() {
-        return phenotypeDescriptionInFocus;
-    }
-
     @FXML
     private void initialize() {
         ontologyTreeView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        termIdChangeListener = getTermIdChangeListener();
         ontology.addListener(getOntologyChangeListener());
     }
 
-    private ChangeListener<PhenotypeDescription> getTermIdChangeListener() {
+    public ChangeListener<ObservablePhenotypicFeature> phenotypeDescriptionChangeListener() {
         return (obs, old, novel) -> {
             if (novel != null)
                 navigateToTermId(novel.getTermId());
@@ -70,17 +64,17 @@ public class OntologyTreeBrowserController {
     }
 
     private void clearOntologyTree() {
-        section.setDisable(true);
+        ontologyBrowserBox.setDisable(true);
         ontologyTreeView.setRoot(null);
         ontologyTreeView.setCellFactory(null);
-        phenotypeDescriptionInFocus.removeListener(termIdChangeListener);
+//        phenotypeDescriptionInFocus.removeListener(termIdChangeListener);
     }
 
     private void initializeOntology(Ontology ontology) {
-        section.setDisable(false);
+        ontologyBrowserBox.setDisable(false);
         ontologyTreeView.setRoot(simpleRoot(ontology));
         ontologyTreeView.setCellFactory(tv -> SimpleOntologyTreeCell.of());
-        phenotypeDescriptionInFocus.addListener(termIdChangeListener);
+//        phenotypeDescriptionInFocus.addListener(termIdChangeListener);
     }
 
     private void navigateToTermId(TermId termId) {

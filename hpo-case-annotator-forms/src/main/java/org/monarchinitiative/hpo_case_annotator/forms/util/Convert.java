@@ -1,9 +1,12 @@
-package org.monarchinitiative.hpo_case_annotator.forms.individual;
+package org.monarchinitiative.hpo_case_annotator.forms.util;
 
-import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
-import org.monarchinitiative.hpo_case_annotator.model.v2.Individual;
-import org.monarchinitiative.hpo_case_annotator.model.v2.PedigreeMember;
-import org.monarchinitiative.hpo_case_annotator.model.v2.PhenotypicFeature;
+import org.monarchinitiative.hpo_case_annotator.forms.observable.BaseObservableIndividual;
+import org.monarchinitiative.hpo_case_annotator.forms.observable.ObservableDiseaseStatus;
+import org.monarchinitiative.hpo_case_annotator.forms.observable.ObservableIndividual;
+import org.monarchinitiative.hpo_case_annotator.forms.observable.ObservablePedigreeMember;
+import org.monarchinitiative.hpo_case_annotator.forms.observable.ObservableAgeRange;
+import org.monarchinitiative.hpo_case_annotator.forms.observable.ObservablePhenotypicFeature;
+import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 
 import java.time.Period;
 
@@ -29,7 +32,11 @@ public class Convert {
     }
 
     private static PhenotypicFeature toPhenotypicFeature(ObservablePhenotypicFeature feature) {
-        return PhenotypicFeature.of(feature.getTermId(), feature.isExcluded(), feature.getObservationAge());
+        return PhenotypicFeature.of(feature.getTermId(), feature.isExcluded(), toAgeRange(feature.getObservationAge()));
+    }
+
+    private static AgeRange toAgeRange(ObservableAgeRange observableAgeRange) {
+        return AgeRange.of(observableAgeRange.getOnset(), observableAgeRange.getResolution());
     }
 
     private static String nullWhenEmptyOrBlankInput(String value) {
@@ -80,14 +87,23 @@ public class Convert {
         return ods;
     }
 
-    private static ObservablePhenotypicFeature toObservablePhenotypicFeature(PhenotypicFeature phenotypicFeature) {
+    public static ObservablePhenotypicFeature toObservablePhenotypicFeature(PhenotypicFeature phenotypicFeature) {
         ObservablePhenotypicFeature opf = new ObservablePhenotypicFeature();
 
         opf.setTermId(phenotypicFeature.termId());
         opf.setExcluded(phenotypicFeature.isExcluded());
-        opf.setObservationAge(phenotypicFeature.observationAge());
+        opf.setObservationAge(toObservableAgeRange(phenotypicFeature.observationAge()));
 
         return opf;
+    }
+
+    private static ObservableAgeRange toObservableAgeRange(AgeRange ageRange) {
+        ObservableAgeRange oar = new ObservableAgeRange();
+
+        oar.setOnset(ageRange.onset());
+        oar.setResolution(ageRange.resolution());
+
+        return oar;
     }
 
     public static <T extends Individual> ObservableIndividual toObservableIndividual(T individual) {

@@ -21,8 +21,8 @@ public class AgeRangeSerializer extends StdSerializer<AgeRange> {
     public void serialize(AgeRange ageRange, JsonGenerator gen, SerializerProvider serializerProvider) throws IOException {
         gen.writeStartObject();
 
-        gen.writeStringField("startAge", ageRange.startAge().toString());
-        gen.writeStringField("endAge", ageRange.endAge().toString());
+        gen.writeStringField("onset", ageRange.onset().toString());
+        gen.writeStringField("resolution", ageRange.resolution().toString());
 
         gen.writeEndObject();
     }

@@ -23,10 +23,10 @@ public class AgeRangeDeserializer extends StdDeserializer<AgeRange> {
     public AgeRange deserialize(JsonParser jp, DeserializationContext deserializationContext) throws IOException {
         JsonNode node = jp.getCodec().readTree(jp);
 
-        Period startAge = Period.parse(node.get("startAge").asText());
+        Period startAge = Period.parse(node.get("onset").asText());
         Period endAge = null;
-        if (node.has("endAge"))
-            endAge = Period.parse(node.get("endAge").asText());
+        if (node.has("resolution"))
+            endAge = Period.parse(node.get("resolution").asText());
 
         return (endAge == null)
                 ? AgeRange.point(startAge)
