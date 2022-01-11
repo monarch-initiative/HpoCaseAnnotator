@@ -8,7 +8,6 @@ import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 
 import java.util.Comparator;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 abstract class OntologyTreeItemBase<T extends OntologyTreeTermBase> extends TreeItem<T> {
@@ -33,12 +32,8 @@ abstract class OntologyTreeItemBase<T extends OntologyTreeTermBase> extends Tree
     @Override
     public ObservableList<TreeItem<T>> getChildren() {
         if (children == null) {
-            children = FXCollections.observableArrayList();
-            Set<Term> childrenTerms = OntologyAlgorithm.getChildTerms(ontology, getValue().term().getId(), false).stream()
+            children = OntologyAlgorithm.getChildTerms(ontology, getValue().term().getId(), false).stream()
                     .map(ontology.getTermMap()::get)
-                    .collect(Collectors.toUnmodifiableSet());
-
-            children = childrenTerms.stream()
                     .sorted(Comparator.comparing(Term::getName))
                     .map(term -> treeItemForTerm(ontology, term))
                     .collect(Collectors.toCollection(FXCollections::observableArrayList));

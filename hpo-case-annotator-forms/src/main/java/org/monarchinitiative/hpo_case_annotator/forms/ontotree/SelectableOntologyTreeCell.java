@@ -1,16 +1,14 @@
 package org.monarchinitiative.hpo_case_annotator.forms.ontotree;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.Property;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TreeCell;
 
 class SelectableOntologyTreeCell extends TreeCell<SelectableOntologyTreeTerm> {
 
     private final TermSelectionButton selectionButton;
 
-    private ObservableValue<Boolean> includedProperty;
-    private ObservableValue<Boolean> excludedProperty;
+    private BooleanProperty includedProperty;
+    private BooleanProperty excludedProperty;
 
     SelectableOntologyTreeCell() {
         selectionButton = new TermSelectionButton();
@@ -28,18 +26,18 @@ class SelectableOntologyTreeCell extends TreeCell<SelectableOntologyTreeTerm> {
             setGraphic(null);
             setText(null);
         } else {
-            setText(getItem().term().getName());
+            setText(item.term().getName());
             setGraphic(selectionButton);
 
             if (includedProperty != null)
-                selectionButton.includedProperty().unbindBidirectional((BooleanProperty) includedProperty);
+                selectionButton.includedProperty().unbindBidirectional(includedProperty);
             if (excludedProperty != null)
-                selectionButton.excludedProperty().unbindBidirectional((BooleanProperty) excludedProperty);
+                selectionButton.excludedProperty().unbindBidirectional(excludedProperty);
 
             includedProperty = item.includedProperty();
-            selectionButton.includedProperty().bindBidirectional((Property<Boolean>) includedProperty);
+            selectionButton.includedProperty().bindBidirectional(includedProperty);
             excludedProperty = item.excludedProperty();
-            selectionButton.excludedProperty().bindBidirectional((Property<Boolean>) excludedProperty);
+            selectionButton.excludedProperty().bindBidirectional(excludedProperty);
 
         }
     }

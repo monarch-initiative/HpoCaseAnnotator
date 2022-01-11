@@ -78,7 +78,7 @@ private final GenomicAssemblyRegistry genomicAssemblyRegistry;
         } else if (clz.equals(OntologyController.class)) {
             return new OntologyController();
         } else if (clz.equals(PhenotypeBrowserController.class)) {
-            return new PhenotypeBrowserController();
+            return new PhenotypeBrowserController(this);
         } else if (clz.equals(OntologyTreeBrowserController.class)) {
             return new OntologyTreeBrowserController();
         }

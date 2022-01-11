@@ -49,7 +49,7 @@ public class OntologyController {
 
     @FXML
     private void initialize() {
-        selectableOntologyTreeController.phenotypeDescriptionInFocusProperty().bind(phenotypeDescriptionInFocus);
+//        selectableOntologyTreeController.phenotypeDescriptionInFocusProperty().bind(phenotypeDescriptionInFocus);
         selectableOntologyTreeController.ontologyProperty().bind(ontology);
 
         ontology.addListener(updateNameToTermIdMap());

@@ -8,9 +8,9 @@
         <TableView fx:id="termsTableView" editable="true" onMouseClicked="#termTableOnMouseClicked" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="termIdTableColumn" editable="false" maxWidth="-1.0" minWidth="120.0" prefWidth="-1.0" resizable="false" text="Term ID" />
+                <TableColumn fx:id="excludedTableColumn" editable="false" minWidth="75.0" prefWidth="75.0" text="Excluded" />
                 <TableColumn fx:id="onsetTableColumn" editable="false" minWidth="90.0" prefWidth="90.0" text="Onset" />
                 <TableColumn fx:id="resolutionTableColumn" editable="false" minWidth="90.0" prefWidth="90.0" text="Resolution" />
-                <TableColumn fx:id="presentTableColumn" editable="false" minWidth="75.0" prefWidth="75.0" text="Present" />
             </columns>
             <placeholder>
                 <Label>No phenotype terms to display.</Label>

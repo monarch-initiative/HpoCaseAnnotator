@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms.ontotree;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -9,8 +8,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import org.monarchinitiative.hpo_case_annotator.forms.model.SelectableOntologyTerm;
 import org.monarchinitiative.hpo_case_annotator.forms.model.SelectionStatus;
 import org.monarchinitiative.phenol.ontology.data.Term;
-
-import java.util.Objects;
 
 class SelectableOntologyTreeTerm extends OntologyTreeTermBase implements SelectableOntologyTerm {
 
@@ -20,7 +17,7 @@ class SelectableOntologyTreeTerm extends OntologyTreeTermBase implements Selecta
 
     private SelectableOntologyTreeTerm(Term term) {
         super(term);
-        ObjectBinding<SelectionStatus> condensate = Bindings.createObjectBinding(() -> {
+        selectionStatus.bind(Bindings.createObjectBinding(() -> {
                     if (included.get()) {
                         return SelectionStatus.INCLUDED;
                     } else if (excluded.get()) {
@@ -29,12 +26,8 @@ class SelectableOntologyTreeTerm extends OntologyTreeTermBase implements Selecta
                         return SelectionStatus.NA;
                     }
                 },
-                includedProperty(), excludedProperty());
-        selectionStatus.bind(condensate);
-    }
+                includedProperty(), excludedProperty()));
 
-    static SelectableOntologyTreeTerm of(Term term) {
-        return new SelectableOntologyTreeTerm(term);
     }
 
     public BooleanProperty includedProperty() {
@@ -50,17 +43,8 @@ class SelectableOntologyTreeTerm extends OntologyTreeTermBase implements Selecta
         return selectionStatus.get();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SelectableOntologyTreeTerm that = (SelectableOntologyTreeTerm) o;
-        return Objects.equals(term, that.term) && selectionStatus == that.selectionStatus;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(term, selectionStatus);
+    static SelectableOntologyTreeTerm of(Term term) {
+        return new SelectableOntologyTreeTerm(term);
     }
 
     @Override
