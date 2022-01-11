@@ -88,6 +88,8 @@ public class PhenotypicFeatureController {
     private ObjectBinding<Period> prepareOnsetBinding() {
         return Bindings.createObjectBinding(() -> {
                     RadioButton selectedToggle = (RadioButton) onsetToggleGroup.getSelectedToggle();
+                    if (selectedToggle == null)
+                        return null;
                     if (selectedToggle.equals(onsetAgeRadioButton)) {
                         // age
                         return extractAge(onsetYearsTextField, onsetMonthsComboBox, onsetDaysComboBox);
@@ -103,6 +105,19 @@ public class PhenotypicFeatureController {
 
     }
 
+    private ObjectBinding<Period> prepareResolutionBinding() {
+        return Bindings.createObjectBinding(() -> {
+            RadioButton selectedToggle = (RadioButton) resolutionToggleGroup.getSelectedToggle();
+            if (selectedToggle == null)
+                return null;
+            if (selectedToggle.equals(resolutionAgeRadioButton)) {
+                // age
+                return extractAge(resolutionYearsTextField, resolutionMonthsComboBox, resolutionDaysComboBox);
+            }
+            return null;
+        }, resolutionToggleGroup.selectedToggleProperty(), resolutionYearsTextField.textProperty(), resolutionMonthsComboBox.valueProperty(), resolutionDaysComboBox.valueProperty());
+    }
+
     private static Period extractAge(TextField resolutionYearsTextField, ComboBox<Integer> resolutionMonthsComboBox, ComboBox<Integer> resolutionDaysComboBox) {
         try {
             int years = Integer.parseInt(resolutionYearsTextField.getText());
@@ -113,17 +128,6 @@ public class PhenotypicFeatureController {
             LOGGER.warn("Error in onset age format {}", e.getMessage());
             return null;
         }
-    }
-
-    private ObjectBinding<Period> prepareResolutionBinding() {
-        return Bindings.createObjectBinding(() -> {
-            RadioButton selectedToggle = (RadioButton) resolutionToggleGroup.getSelectedToggle();
-            if (selectedToggle.equals(resolutionAgeRadioButton)) {
-                // age
-                return extractAge(resolutionYearsTextField, resolutionMonthsComboBox, resolutionDaysComboBox);
-            }
-            return null;
-        }, resolutionToggleGroup.selectedToggleProperty(), resolutionYearsTextField.textProperty(), resolutionMonthsComboBox.valueProperty(), resolutionDaysComboBox.valueProperty());
     }
 
     private BooleanBinding preparePhenotypicFeatureIsExcludedBinding() {
@@ -223,26 +227,31 @@ public class PhenotypicFeatureController {
 
         // onset
         Period onset = feature.getObservationAge().getOnset();
-        if (Period.ZERO.equals(onset))
-            onsetToggleGroup.selectToggle(onsetBirthRadioButton);
-        else {
-            onsetToggleGroup.selectToggle(onsetAgeRadioButton);
-            onsetYearsTextField.setText(String.valueOf(onset.getYears()));
-            onsetMonthsComboBox.getSelectionModel().select((Integer) onset.getMonths());
-            onsetDaysComboBox.getSelectionModel().select((Integer) onset.getDays());
+        if (onset != null) {
+            if (Period.ZERO.equals(onset))
+                onsetToggleGroup.selectToggle(onsetBirthRadioButton);
+            else {
+                onsetToggleGroup.selectToggle(onsetAgeRadioButton);
+                onsetYearsTextField.setText(String.valueOf(onset.getYears()));
+                onsetMonthsComboBox.getSelectionModel().select((Integer) onset.getMonths());
+                onsetDaysComboBox.getSelectionModel().select((Integer) onset.getDays());
+            }
         }
         feature.getObservationAge().onsetProperty().bind(onsetBinding);
 
         // resolution
         Period resolution = feature.getObservationAge().getResolution();
+        if (resolution != null) {
+            resolutionToggleGroup.selectToggle(resolutionAgeRadioButton);
+            resolutionYearsTextField.setText(String.valueOf(resolution.getYears()));
+            resolutionMonthsComboBox.getSelectionModel().select((Integer) resolution.getMonths());
+            resolutionDaysComboBox.getSelectionModel().select((Integer) resolution.getDays());
 //        if (Period.of(80, 0, 0).equals(resolution)) {
 //            resolutionToggleGroup.selectToggle(resolutionDeathRadioButton);
 //        } else {
-        resolutionToggleGroup.selectToggle(resolutionAgeRadioButton);
-        resolutionYearsTextField.setText(String.valueOf(resolution.getYears()));
-        resolutionMonthsComboBox.getSelectionModel().select((Integer) resolution.getMonths());
-        resolutionDaysComboBox.getSelectionModel().select((Integer) resolution.getDays());
+
 //        }
+        }
         feature.getObservationAge().resolutionProperty().bind(resolutionBinding);
     }
 

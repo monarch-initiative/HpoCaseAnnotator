@@ -26,20 +26,20 @@ public class PhenotypicFeaturesTableController {
     @FXML
     private TableColumn<ObservablePhenotypicFeature, String> termIdTableColumn;
     @FXML
+    private TableColumn<ObservablePhenotypicFeature, Boolean> excludedTableColumn;
+    @FXML
     private TableColumn<ObservablePhenotypicFeature, Period> onsetTableColumn;
     @FXML
     private TableColumn<ObservablePhenotypicFeature, Period> resolutionTableColumn;
-    @FXML
-    private TableColumn<ObservablePhenotypicFeature, Boolean> presentTableColumn;
 
     public void initialize() {
         termIdTableColumn.setCellValueFactory(cd -> cd.getValue().termIdProperty().asString());
+        excludedTableColumn.setCellValueFactory(cd -> cd.getValue().excludedProperty());
+        excludedTableColumn.setCellFactory(CheckBoxTableCell.forTableColumn(excludedTableColumn));
         onsetTableColumn.setCellValueFactory(cd -> cd.getValue().getObservationAge().onsetProperty());
         onsetTableColumn.setCellFactory(PeriodTableCell.of());
         resolutionTableColumn.setCellValueFactory(cd -> cd.getValue().getObservationAge().resolutionProperty());
         resolutionTableColumn.setCellFactory(PeriodTableCell.of());
-        presentTableColumn.setCellValueFactory(cd -> cd.getValue().excludedProperty());
-        presentTableColumn.setCellFactory(CheckBoxTableCell.forTableColumn(presentTableColumn));
 
         termsTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }

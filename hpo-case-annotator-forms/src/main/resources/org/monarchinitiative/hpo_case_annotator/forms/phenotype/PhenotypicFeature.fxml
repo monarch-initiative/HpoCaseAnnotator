@@ -4,9 +4,9 @@
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.*?>
 
-<VBox stylesheets="@phenotypic-feature.css" id="phenotypic-feature-box" fx:id="phenotypicFeatureBox" alignment="CENTER_LEFT" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeatureController">
+<VBox id="phenotypic-feature-box" fx:id="phenotypicFeatureBox" alignment="CENTER_LEFT" stylesheets="@phenotypic-feature.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeatureController">
     <children>
-        <VBox styleClass="column" VBox.vgrow="ALWAYS">
+        <VBox styleClass="column" VBox.vgrow="SOMETIMES">
             <children>
             <Label styleClass="h3" text="Definition" />
             <VBox styleClass="column">
@@ -23,7 +23,7 @@
             <children>
                 <Label styleClass="h3" text="Status" />
                 <RadioButton fx:id="presentRadioButton" mnemonicParsing="false" text="Present" />
-                <RadioButton fx:id="absentRadioButton" mnemonicParsing="false" text="Absent" />
+                <RadioButton fx:id="absentRadioButton" mnemonicParsing="false" text="Excluded" />
             </children>
         </VBox>
         <Separator VBox.vgrow="NEVER" />

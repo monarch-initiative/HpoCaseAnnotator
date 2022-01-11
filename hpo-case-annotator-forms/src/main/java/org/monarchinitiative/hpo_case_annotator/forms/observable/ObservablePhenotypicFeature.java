@@ -10,7 +10,7 @@ public class ObservablePhenotypicFeature {
 
     private final ObjectProperty<TermId> termId = new SimpleObjectProperty<>(this, "termId");
     private final BooleanProperty excluded = new SimpleBooleanProperty(this, "excluded");
-    private final ObjectProperty<ObservableAgeRange> observationAge = new SimpleObjectProperty<>(this, "observationAge");
+    private final ObjectProperty<ObservableAgeRange> observationAge = new SimpleObjectProperty<>(this, "observationAge", new ObservableAgeRange());
 
     public TermId getTermId() {
         return termId.get();
