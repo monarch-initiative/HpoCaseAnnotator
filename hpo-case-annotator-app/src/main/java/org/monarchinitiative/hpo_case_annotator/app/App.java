@@ -22,7 +22,6 @@ import org.springframework.context.annotation.Bean;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.Properties;
@@ -37,8 +36,6 @@ import java.util.Properties;
 })
 public class App extends Application {
 
-    public static final String HCA_VERSION_PROP_KEY = "hca.version";
-    private static final String HCA_NAME_KEY = "hca.name";
     private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
 
     private ConfigurableApplicationContext context;
@@ -48,7 +45,6 @@ public class App extends Application {
     @Override
     public void init() throws Exception {
         super.init();
-//        exportHcaVersionIntoSystemProperties();
         String[] args = getParameters().getRaw().toArray(String[]::new);
         context = new SpringApplicationBuilder(App.class)
                 .headless(false)
@@ -61,8 +57,11 @@ public class App extends Application {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("Main.fxml"));
         loader.setControllerFactory(context::getBean);
 
+        HcaProperties properties = context.getBean(HcaProperties.class);
+
         Parent parent = loader.load();
-        Scene scene = new Scene(parent, 800, 600);
+        Scene scene = new Scene(parent, 1000, 800);
+        stage.setTitle(properties.name() + ' ' + properties.version());
         stage.setScene(scene);
         stage.show();
     }
@@ -82,11 +81,11 @@ public class App extends Application {
     private static void serializeResourceState(OptionalResources optionalResources, Properties resourceProperties, File target) throws IOException {
         GenomicLocalResources localResources = optionalResources.getGenomicLocalResources();
         if (localResources != null) {
-            createRefGenomePath(localResources.getHg18())
+            createReferenceGenomeFastaPath(localResources.getHg18())
                     .ifPresent(refGenomePath -> resourceProperties.setProperty(ResourcePaths.HG18_FASTA_PATH_PROPETY, refGenomePath));
-            createRefGenomePath(localResources.getHg19())
+            createReferenceGenomeFastaPath(localResources.getHg19())
                     .ifPresent(refGenomePath -> resourceProperties.setProperty(ResourcePaths.HG19_FASTA_PATH_PROPETY, refGenomePath));
-            createRefGenomePath(localResources.getHg38())
+            createReferenceGenomeFastaPath(localResources.getHg38())
                     .ifPresent(refGenomePath -> resourceProperties.setProperty(ResourcePaths.HG38_FASTA_PATH_PROPETY, refGenomePath));
         }
 
@@ -106,7 +105,7 @@ public class App extends Application {
         LOGGER.info("Properties saved to `{}`", target.getAbsolutePath());
     }
 
-    private static Optional<String> createRefGenomePath(GenomicLocalResource localResource) {
+    private static Optional<String> createReferenceGenomeFastaPath(GenomicLocalResource localResource) {
         if (localResource != null) {
             Path fasta = localResource.getFasta();
             if (fasta != null) {
@@ -119,18 +118,6 @@ public class App extends Application {
     @Bean
     public HostServices hostServices() {
         return hostServices;
-    }
-
-    private static void exportHcaVersionIntoSystemProperties() throws IOException {
-        // export app's version into System properties
-        try (InputStream is = App.class.getResourceAsStream("/application.properties")) {
-            Properties properties = new Properties();
-            properties.load(is);
-            String version = properties.getProperty(HCA_VERSION_PROP_KEY, "unknown version");
-            System.setProperty(HCA_VERSION_PROP_KEY, version);
-            String name = properties.getProperty(HCA_NAME_KEY, "Hpo Case Annotator");
-            System.setProperty(HCA_NAME_KEY, name);
-        }
     }
 
     public static void main(String[] args) {
