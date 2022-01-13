@@ -63,7 +63,7 @@ public class Main extends Application {
         // Apply CSS
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
 
-        injector = Guice.createInjector(new HpoCaseAnnotatorModule(window, getHostServices()));
+        injector = Guice.createInjector(new HpoCaseAnnotatorModule(getHostServices()));
         ResourceBundle resourceBundle = injector.getInstance(ResourceBundle.class);
 
         Parent rootNode = FXMLLoader.load(MainController.class.getResource("MainView.fxml"), resourceBundle,

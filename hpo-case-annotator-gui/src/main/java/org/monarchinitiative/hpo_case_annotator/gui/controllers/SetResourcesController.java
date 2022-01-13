@@ -49,8 +49,6 @@ public final class SetResourcesController {
 
     private final ExecutorService executorService;
 
-    private final Stage primaryStage;
-
     private final GenomeAssemblies assemblies;
 
     @FXML
@@ -92,12 +90,11 @@ public final class SetResourcesController {
 
     @Inject
     SetResourcesController(OptionalResources optionalResources, Properties properties, @Named("appHomeDir") File appHomeDir,
-                           ExecutorService executorService, @Named("primaryStage") Stage primaryStage, GenomeAssemblies assemblies) {
+                           ExecutorService executorService, GenomeAssemblies assemblies) {
         this.optionalResources = optionalResources;
         this.properties = properties;
         this.appHomeDir = appHomeDir;
         this.executorService = executorService;
-        this.primaryStage = primaryStage;
         this.assemblies = assemblies;
         initializeAppHomeDir();
     }
@@ -130,7 +127,7 @@ public final class SetResourcesController {
                 ? optionalResources.getDiseaseCaseDir()
                 : new File(System.getProperty("user.home"));
 
-        File curatedDir = PopUps.selectDirectory(primaryStage, initial, "Set directory for curated files.");
+        File curatedDir = PopUps.selectDirectory((Stage) hg19ProgressIndicator.getScene().getWindow(), initial, "Set directory for curated files.");
         if (curatedDir != null) {
             optionalResources.setDiseaseCaseDir(curatedDir);
             curatedFilesDirLabel.setText(curatedDir.getAbsolutePath());
@@ -325,7 +322,7 @@ public final class SetResourcesController {
             chooser.setInitialDirectory(appHomeDir);
             chooser.setTitle("Save hg19 fasta as");
             chooser.setInitialFileName(GenomeAssembly.GRCH_37 + ".fa");
-            File target = chooser.showSaveDialog(primaryStage);
+            File target = chooser.showSaveDialog(hg19ProgressIndicator.getScene().getWindow());
             if (target == null) return;
 
             GenomeAssemblyDownloader downloader = new GenomeAssemblyDownloader(url, target);
@@ -365,7 +362,7 @@ public final class SetResourcesController {
             chooser.setInitialDirectory(appHomeDir);
             chooser.setTitle("Save hg38 fasta as");
             chooser.setInitialFileName(GenomeAssembly.GRCH_38 + ".fa");
-            File target = chooser.showSaveDialog(primaryStage);
+            File target = chooser.showSaveDialog(hg19ProgressIndicator.getScene().getWindow());
             if (target == null) return;
 
 
@@ -405,7 +402,7 @@ public final class SetResourcesController {
         chooser.setInitialFileName(GenomeAssembly.GRCH_37 + ".fa");
 
         while (true) { // loop until we get proper FASTA file
-            File target = chooser.showOpenDialog(primaryStage);
+            File target = chooser.showOpenDialog(hg19ProgressIndicator.getScene().getWindow());
             if (target == null) break;
             else if (!target.isFile()) { // we need to get path to a file
                 PopUps.showInfoMessage("Provide path to valid FASTA file", String.format("'%s' - not a file", target.getAbsolutePath()));
@@ -429,7 +426,7 @@ public final class SetResourcesController {
         chooser.setInitialFileName(GenomeAssembly.GRCH_38.toString() + ".fa");
 
         while (true) { // loop until we get proper FASTA file
-            File target = chooser.showOpenDialog(primaryStage);
+            File target = chooser.showOpenDialog(hg19ProgressIndicator.getScene().getWindow());
             if (target == null) break;
             else if (!target.isFile()) { // we need to get path to a file
                 PopUps.showInfoMessage("Provide path to valid FASTA file", String.format("'%s' - not a file", target.getAbsolutePath()));

@@ -1,10 +1,9 @@
 package org.monarchinitiative.hpo_case_annotator.gui;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Injector;
 import com.google.inject.Provides;
-import com.google.inject.name.Names;
 import javafx.application.HostServices;
-import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverAdapter;
 import org.monarchinitiative.hpo_case_annotator.core.reference.*;
 import org.monarchinitiative.hpo_case_annotator.forms.*;
@@ -24,6 +23,9 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSymbolicVari
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.*;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.*;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
+import org.monarchinitiative.svart.GenomicAssemblies;
+import org.monarchinitiative.svart.GenomicAssembly;
+import org.monarchinitiative.svart.GenomicRegion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,9 +35,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -54,28 +54,16 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
     private static final String GUI_ELEMENTS_VALUES = "gui-elements-values.yml";
 
-    /**
-     * This is the {@link Stage} which is provided by JavaFX and registered into the Spring container in the
-     * {@link Main#start(Stage)} method.
-     */
-    @Deprecated // TODO - remove as it is possible to get the stage from any node
-    private final Stage primaryStage;
-
     private final HostServices hostServices;
 
 
-    HpoCaseAnnotatorModule(Stage primaryStage, HostServices hostServices) {
-        this.primaryStage = primaryStage;
+    HpoCaseAnnotatorModule(HostServices hostServices) {
         this.hostServices = hostServices;
     }
 
 
     @Override
     protected void configure() {
-        bind(Stage.class)
-                .annotatedWith(Names.named("primaryStage"))
-                .toInstance(primaryStage);
-
         bind(HostServicesWrapper.class)
                 .toInstance(HostServicesWrapper.wrap(hostServices));
 
@@ -186,6 +174,10 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
         return genomicAssemblyServices::stream;
     }
 
+    @Provides
+    public HCAControllerFactory hcaControllerFactory(Injector injector) {
+        return injector::getInstance;
+    }
 
     @Provides
     public LiftOverAdapter liftOverAdapter(@Named("liftoverDir") File liftoverDir) {
