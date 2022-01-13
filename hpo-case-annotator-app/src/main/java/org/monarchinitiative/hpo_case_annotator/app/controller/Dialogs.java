@@ -19,10 +19,10 @@ class Dialogs {
     /**
      * Show information to user.
      *
-     * @param text        - message text
      * @param windowTitle - Title of PopUp window
+     * @param text        - message text
      */
-    static void showInfoMessage(String text, String windowTitle) {
+    static void showInfoMessage(String windowTitle, String text) {
         Alert al = new Alert(Alert.AlertType.INFORMATION);
         al.setTitle(windowTitle);
         al.setHeaderText(null);
@@ -44,7 +44,7 @@ class Dialogs {
      * @param windowTitle Title of PopUp window
      * @return true or false according to the user input
      */
-    static boolean getBooleanFromUser(String question, String headerText, String windowTitle) {
+    static boolean getBooleanFromUser(String windowTitle, String headerText, String question) {
         Alert al = new Alert(Alert.AlertType.CONFIRMATION);
         al.setTitle(windowTitle);
         al.setHeaderText(headerText);

@@ -2,10 +2,10 @@ package org.monarchinitiative.hpo_case_annotator.app;
 
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResource;
+import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicRemoteResources;
+import org.monarchinitiative.hpo_case_annotator.app.util.GenomicLocalResourceValidator;
 import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
 import org.monarchinitiative.hpo_case_annotator.core.io.OMIMParser;
-import org.monarchinitiative.phenol.base.PhenolException;
-import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
@@ -45,9 +45,14 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
 
     private final OptionalResources optionalResources;
 
+    private final GenomicRemoteResources genomicRemoteResources;
+
     private final Properties resourceProperties;
 
-    public Startup(OptionalResources optionalResources, Properties resourceProperties) {
+    public Startup(OptionalResources optionalResources,
+                   GenomicRemoteResources genomicRemoteResources,
+                   Properties resourceProperties) {
+        this.genomicRemoteResources = genomicRemoteResources;
         this.optionalResources = optionalResources;
         this.resourceProperties = resourceProperties;
     }
@@ -67,58 +72,59 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
     @Override
     public void run() {
         try {
-            optionalResources.setBiocuratorId(resourceProperties.getProperty(ResourcePaths.BIOCURATOR_ID_PROPERTY, ""));
+            LOGGER.debug("Loading resources");
+            optionalResources.setBiocuratorId(resourceProperties.getProperty(ResourcePaths.BIOCURATOR_ID_PROPERTY, null));
 
-            setupGenomicAssemblyRegistry(resourceProperties, optionalResources);
+            setupGenomicAssemblyRegistry();
 
-            setCuratedFilesFolder(resourceProperties.getProperty(ResourcePaths.DISEASE_CASE_DIR_PROPERTY), optionalResources);
+            setCuratedFilesFolder(resourceProperties.getProperty(ResourcePaths.DISEASE_CASE_DIR_PROPERTY));
 
+            readOmim("/data/omim.tsv");
 
-            readOmim(optionalResources);
+            readEntrezGenes(resourceProperties.getProperty(ResourcePaths.ENTREZ_GENE_PATH_PROPERTY));
 
-            String entrezPath = resourceProperties.getProperty(ResourcePaths.ENTREZ_GENE_PATH_PROPERTY);
-            readEntrezGenes(entrezPath, optionalResources);
-
-            String hpoPath = resourceProperties.getProperty(ResourcePaths.ONTOLOGY_PATH_PROPERTY);
-            readHpo(hpoPath, optionalResources);
-            LOGGER.info("Done");
-        } catch (IOException | PhenolException e) {
+            readHpo(resourceProperties.getProperty(ResourcePaths.ONTOLOGY_PATH_PROPERTY));
+            LOGGER.info("Loading complete");
+        } catch (IOException e) {
             LOGGER.warn("Error during startup: {}", e.getMessage(), e);
         }
     }
 
-    private static void setupGenomicAssemblyRegistry(Properties resourceProperties, OptionalResources optionalResources) {
+    private void setupGenomicAssemblyRegistry() {
+        GenomicLocalResourceValidator validator = GenomicLocalResourceValidator.of(LOGGER::debug);
         String hg18 = resourceProperties.getProperty(ResourcePaths.HG18_FASTA_PATH_PROPETY);
         if (hg18 != null) {
             GenomicLocalResource.createFromFastaPath(Paths.get(hg18))
+                    .flatMap(local -> validator.verify(local, genomicRemoteResources.getHg18()))
                     .ifPresent(resource -> optionalResources.getGenomicLocalResources().setHg18(resource));
         }
 
         String hg19 = resourceProperties.getProperty(ResourcePaths.HG19_FASTA_PATH_PROPETY);
         if (hg19 != null) {
             GenomicLocalResource.createFromFastaPath(Paths.get(hg19))
+                    .flatMap(local -> validator.verify(local, genomicRemoteResources.getHg19()))
                     .ifPresent(resource -> optionalResources.getGenomicLocalResources().setHg19(resource));
         }
 
         String hg38 = resourceProperties.getProperty(ResourcePaths.HG38_FASTA_PATH_PROPETY);
         if (hg38 != null) {
             GenomicLocalResource.createFromFastaPath(Paths.get(hg38))
+                    .flatMap(local -> validator.verify(local, genomicRemoteResources.getHg38()))
                     .ifPresent(resource -> optionalResources.getGenomicLocalResources().setHg38(resource));
         }
     }
 
-    private void setCuratedFilesFolder(String curatedDirPath, OptionalResources optionalResources) {
+    private void setCuratedFilesFolder(String curatedDirPath) {
         if (curatedDirPath != null && new File(curatedDirPath).isDirectory()) {
             File curatedDir = new File(curatedDirPath);
-            LOGGER.info("Setting curated files directory to '{}'", curatedDir.getAbsolutePath());
+            LOGGER.debug("Setting curated files directory to '{}'", curatedDir.getAbsolutePath());
             optionalResources.setDiseaseCaseDir(curatedDir);
         } else
             LOGGER.info("Skipping setting of the curated files dictionary. Path '{}' does not point to directory", curatedDirPath);
     }
 
-    private static void readOmim(OptionalResources optionalResources) throws IOException {
-        String omimPath = "/data/omim.tsv";
-        LOGGER.info("Parsing bundled OMIM file '{}'", omimPath);
+    private void readOmim(String omimPath) throws IOException {
+        LOGGER.debug("Parsing bundled OMIM file '{}'", omimPath);
         try (InputStream is = Startup.class.getResourceAsStream(omimPath)) {
             OMIMParser omimParser = new OMIMParser(is, StandardCharsets.UTF_8);
             optionalResources.setCanonicalName2mimid(omimParser.getCanonicalName2mimid());
@@ -126,10 +132,10 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
         }
     }
 
-    private static void readEntrezGenes(String entrezPath, OptionalResources optionalResources) throws IOException {
+    private void readEntrezGenes(String entrezPath) throws IOException {
         if (entrezPath != null && new File(entrezPath).isFile()) {
             File entrezGenesFile = new File(entrezPath);
-            LOGGER.info("Loading Entrez genes from file '{}'", entrezGenesFile.getAbsolutePath());
+            LOGGER.debug("Loading Entrez genes from file '{}'", entrezGenesFile.getAbsolutePath());
             EntrezParser entrezParser = new EntrezParser(entrezGenesFile);
             entrezParser.readFile();
             optionalResources.setEntrezId2symbol(entrezParser.getEntrezId2symbol());
@@ -141,12 +147,11 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
         }
     }
 
-    private static void readHpo(String ontologyPath, OptionalResources optionalResources) throws IOException, PhenolException {
+    private void readHpo(String ontologyPath) {
         if (ontologyPath != null && new File(ontologyPath).isFile()) {
             File ontologyFile = new File(ontologyPath);
-            LOGGER.info("Loading HPO from file '{}'", ontologyFile.getAbsolutePath());
+            LOGGER.debug("Loading HPO from file '{}'", ontologyFile.getAbsolutePath());
             optionalResources.setOntologyPath(ontologyFile);
-            optionalResources.setOntology(OntologyLoader.loadOntology(ontologyFile));
         } else {
             LOGGER.info("Skipping loading HPO file since the location is unset");
         }

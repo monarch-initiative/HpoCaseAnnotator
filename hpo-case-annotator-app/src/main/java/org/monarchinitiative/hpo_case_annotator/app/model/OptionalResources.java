@@ -6,10 +6,14 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import org.monarchinitiative.hpo_case_annotator.app.controller.Loaders;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResources;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Gene;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Map;
@@ -21,6 +25,8 @@ import java.util.stream.Stream;
  * Created by Daniel Danis on 7/16/17.
  */
 public class OptionalResources {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(OptionalResources.class);
 
     private final BooleanBinding entrezIsMissing;
 
@@ -43,14 +49,11 @@ public class OptionalResources {
 
     private final ObjectProperty<Map<String, String>> entrezId2symbol = new SimpleObjectProperty<>(this, "entrezId2symbol");
 
-    private final ObjectProperty<Map<String, String>> symbol2entrezId = new SimpleObjectProperty<>(this,
-            "symbol2entrezId");
+    private final ObjectProperty<Map<String, String>> symbol2entrezId = new SimpleObjectProperty<>(this, "symbol2entrezId");
 
-    private final ObjectProperty<Map<String, String>> mimid2canonicalName = new SimpleObjectProperty<>(this,
-            "mimid2canonicalName");
+    private final ObjectProperty<Map<String, String>> mimid2canonicalName = new SimpleObjectProperty<>(this, "mimid2canonicalName");
 
-    private final ObjectProperty<Map<String, String>> canonicalName2mimid = new SimpleObjectProperty<>(this,
-            "canonicalName2mimid");
+    private final ObjectProperty<Map<String, String>> canonicalName2mimid = new SimpleObjectProperty<>(this,"canonicalName2mimid");
 
     public OptionalResources() {
         this.entrezIsMissing = Bindings.createBooleanBinding(() -> Stream.of(entrezId2geneProperty(),
@@ -62,8 +65,20 @@ public class OptionalResources {
 
         this.diseaseCaseDirIsInitialized = Bindings.createBooleanBinding(() -> getDiseaseCaseDir() != null && getDiseaseCaseDir().isDirectory(),
                 diseaseCaseDirProperty());
+        ontologyPath.addListener(loadOntologyWhenFileIsValid());
     }
 
+    private ChangeListener<File> loadOntologyWhenFileIsValid() {
+        return (obs, old, novel) -> {
+            if (novel != null) {
+                if (!novel.isFile()) {
+                    LOGGER.warn("Path to HPO does not point to a file: `{}`", novel.getAbsolutePath());
+                    return;
+                }
+                setOntology(Loaders.loadOntology(novel.toPath()));
+            }
+        };
+    }
 
 
     /**

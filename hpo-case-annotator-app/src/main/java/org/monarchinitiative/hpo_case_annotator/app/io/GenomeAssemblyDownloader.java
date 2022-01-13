@@ -1,17 +1,13 @@
 package org.monarchinitiative.hpo_case_annotator.app.io;
 
-import htsjdk.samtools.SAMSequenceDictionary;
-import htsjdk.samtools.SAMSequenceDictionaryCodec;
-import htsjdk.samtools.SAMSequenceRecord;
 import htsjdk.samtools.reference.FastaSequenceIndex;
-import htsjdk.samtools.reference.FastaSequenceIndexCreator;
-import htsjdk.samtools.reference.FastaSequenceIndexEntry;
 import javafx.concurrent.Task;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.compress.utils.IOUtils;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResource;
+import org.monarchinitiative.hpo_case_annotator.app.util.Genome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,8 +16,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class downloads big
@@ -77,25 +71,13 @@ public final class GenomeAssemblyDownloader extends Task<Void> {
 
         concatenateIntoSingleMulticontigFasta(genomeTarGz, genomicAssemblyPaths.getFasta());
 
-        FastaSequenceIndex index = indexFastaFile(genomicAssemblyPaths.getFasta(), genomicAssemblyPaths.getFastaFai());
+        LOGGER.info("Indexing FASTA file `{}`", genomicAssemblyPaths.getFasta());
+        FastaSequenceIndex index = Genome.indexFastaFile(genomicAssemblyPaths.getFasta(), genomicAssemblyPaths.getFastaFai());
 
-        buildSequenceDictionary(index, genomicAssemblyPaths.getFastaDict());
+        LOGGER.info("Building SAM sequence dictionary");
+        Genome.buildSamSequenceDictionary(index, genomicAssemblyPaths.getFastaDict());
 
         return null;
-    }
-
-    private static void buildSequenceDictionary(FastaSequenceIndex index, Path fastaDict) throws IOException {
-        List<SAMSequenceRecord> records = new ArrayList<>(index.size());
-        for (FastaSequenceIndexEntry entry : index) {
-            records.add(new SAMSequenceRecord(entry.getContig(), Math.toIntExact(entry.getSize())));
-        }
-
-        SAMSequenceDictionary sequenceDictionary = new SAMSequenceDictionary(records);
-        LOGGER.info("Writing FASTA sequence dictionary to `{}`", fastaDict);
-        try (BufferedWriter writer = Files.newBufferedWriter(fastaDict)) {
-            SAMSequenceDictionaryCodec codec = new SAMSequenceDictionaryCodec(writer);
-            codec.encode(sequenceDictionary);
-        }
     }
 
     private void concatenateIntoSingleMulticontigFasta(File genomeTarGz, Path fastaPath) throws IOException {
@@ -115,21 +97,6 @@ public final class GenomeAssemblyDownloader extends Task<Void> {
                 tarEntry = tarInput.getNextTarEntry();
             }
         }
-    }
-
-    private FastaSequenceIndex indexFastaFile(Path fastaPath, Path indexPath) throws IOException {
-        LOGGER.debug("Indexing FASTA file {}", fastaPath);
-        if (updateTaskVariables) {
-            updateProgress(-1, 1);
-            updateMessage("Indexing FASTA file " + fastaPath);
-        }
-        FastaSequenceIndex index = FastaSequenceIndexCreator.buildFromFasta(fastaPath);
-        index.write(indexPath);
-        if (updateTaskVariables) {
-            updateProgress(1, 1);
-            updateMessage("Done!");
-        }
-        return index;
     }
 
 

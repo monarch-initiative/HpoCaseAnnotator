@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.app.config;
 
 import org.monarchinitiative.hpo_case_annotator.app.controller.StatusBarController;
-import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualController;

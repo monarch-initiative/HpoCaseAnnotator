@@ -55,7 +55,7 @@ public class ResourceConfiguration {
         Properties properties = new Properties();
         if (resourcePropertiesFilePath.isFile()) {
             try {
-                LOGGER.info("Loading app properties from {}", resourcePropertiesFilePath.getAbsolutePath());
+                LOGGER.info("Loading app properties from '{}'", resourcePropertiesFilePath.getAbsolutePath());
                 properties.load(new FileReader(resourcePropertiesFilePath));
             } catch (IOException e) {
                 LOGGER.warn("Cannot load app properties", e);
@@ -64,7 +64,7 @@ public class ResourceConfiguration {
         } else {
             try {
                 URL propertiesUrl = MainConfiguration.class.getResource("/" + ResourcePaths.PROPERTIES_FILE_NAME);
-                LOGGER.info("Loading bundled app properties {}", propertiesUrl.getPath());
+                LOGGER.info("Loading bundled app properties '{}'", propertiesUrl);
                 properties.load(MainConfiguration.class.getResourceAsStream("/" + ResourcePaths.PROPERTIES_FILE_NAME));
             } catch (IOException e) {
                 LOGGER.warn("Cannot load app properties", e);

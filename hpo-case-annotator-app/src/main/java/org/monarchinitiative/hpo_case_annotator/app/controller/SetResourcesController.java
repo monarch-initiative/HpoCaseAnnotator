@@ -16,10 +16,10 @@ import org.monarchinitiative.hpo_case_annotator.app.io.Downloader;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResource;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicRemoteResource;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicRemoteResources;
+import org.monarchinitiative.hpo_case_annotator.app.util.GenomicLocalResourceValidator;
 import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblyService;
 import org.monarchinitiative.hpo_case_annotator.core.reference.InvalidFastaFileException;
-import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -165,8 +165,9 @@ public class SetResourcesController {
     private void downloadEntrezGenesButtonAction() {
         File target = new File(appHomeDir, ResourcePaths.DEFAULT_ENTREZ_FILE_NAME);
         if (target.isFile()) {
-            boolean response = Dialogs.getBooleanFromUser("Overwrite?", "Entrez file already exists at the target " +
-                    "location", "Download Entrez gene file");
+            boolean response = Dialogs.getBooleanFromUser("Download Entrez gene file",
+                    "Entrez file already exists at the target location",
+                    "Overwrite?");
             if (!response) { // re-loading the old file
                 try {
                     EntrezParser parser = new EntrezParser(target);
@@ -175,7 +176,6 @@ public class SetResourcesController {
                     optionalResources.setEntrezId2symbol(parser.getEntrezId2symbol());
                     optionalResources.setSymbol2entrezId(parser.getSymbol2entrezId());
                     optionalResources.setEntrezPath(target);
-                    entrezGeneLabel.setText(target.getAbsolutePath());
                 } catch (IOException e) {
                     LOGGER.warn(e.getMessage());
                     Dialogs.showException("Download Entrez gene file", "Error occurred", String.format("Error during parsing of Entrez gene file at '%s'",
@@ -207,7 +207,6 @@ public class SetResourcesController {
                 optionalResources.setEntrezId2symbol(parser.getEntrezId2symbol());
                 optionalResources.setSymbol2entrezId(parser.getSymbol2entrezId());
                 optionalResources.setEntrezPath(target);
-                entrezGeneLabel.setText(target.getAbsolutePath());
             } catch (IOException ex) {
                 LOGGER.warn(ex.getMessage());
                 Dialogs.showException("Download Entrez gene file", "Error occured", String.format("Error during parsing of Entrez gene file at '%s'",
@@ -219,7 +218,6 @@ public class SetResourcesController {
             optionalResources.setEntrezId2symbol(null);
             optionalResources.setSymbol2entrezId(null);
             optionalResources.setEntrezPath(null);
-            entrezGeneLabel.setText("unset");
         });
         executorService.submit(task);
     }
@@ -231,13 +229,12 @@ public class SetResourcesController {
     private void downloadHPOFileButtonAction() {
         File target = new File(appHomeDir, ResourcePaths.DEFAULT_HPO_FILE_NAME);
         if (target.isFile()) {
-            boolean response = Dialogs.getBooleanFromUser("Overwrite?", "HPO file already exists at the target " +
-                    "location", "Download HPO");
-            if (!response) {
+            boolean overwrite = Dialogs.getBooleanFromUser("Download HPO",
+                    "HPO file already exists at the target location",
+                    "Overwrite?");
+            if (!overwrite) {
                 try {
-                    optionalResources.setOntology(OntologyLoader.loadOntology(target));
                     optionalResources.setOntologyPath(target);
-                    hpOboLabel.setText(target.getAbsolutePath());
                 } catch (RuntimeException e) {
                     LOGGER.warn("Error during opening the ontology file '{}'", target, e);
                 }
@@ -260,9 +257,7 @@ public class SetResourcesController {
         hpoProgressIndicator.progressProperty().bind(task.progressProperty());
         task.setOnSucceeded(e -> {
             try {
-                optionalResources.setOntology(OntologyLoader.loadOntology(target));
                 optionalResources.setOntologyPath(target);
-                hpOboLabel.setText(target.getAbsolutePath());
             } catch (RuntimeException ex) {
                 LOGGER.warn("Error occured during opening the ontology file '{}'", target, ex);
             }
@@ -301,6 +296,10 @@ public class SetResourcesController {
 
     }
 
+    private Function<GenomicLocalResource, GenomeAssemblyDownloader> createDownloader(GenomicRemoteResource resource) {
+        return genomicAssemblyPaths -> new GenomeAssemblyDownloader(resource.genomeUrl(), resource.assemblyReportUrl(), genomicAssemblyPaths);
+    }
+
     @FXML
     private void downloadHg38RefGenomeButtonAction() {
         FileChooser chooser = new FileChooser();
@@ -334,7 +333,10 @@ public class SetResourcesController {
 
         File fastaPath = chooser.showOpenDialog(hg19ProgressIndicator.getScene().getWindow());
 
+        GenomicLocalResourceValidator validator = GenomicLocalResourceValidator.of(statusBarController::showMessage);
+
         GenomicLocalResource.createFromFastaPath(fastaPath)
+                .flatMap(local -> validator.verify(local, genomicRemoteResources.getHg19()))
                 .ifPresent(optionalResources.getGenomicLocalResources()::setHg19);
     }
 
@@ -347,25 +349,12 @@ public class SetResourcesController {
 
         File fastaPath = chooser.showOpenDialog(hg38ProgressIndicator.getScene().getWindow());
 
+        GenomicLocalResourceValidator validator = GenomicLocalResourceValidator.of(statusBarController::showMessage);
+
         GenomicLocalResource.createFromFastaPath(fastaPath)
+                .flatMap(local -> validator.verify(local, genomicRemoteResources.getHg38()))
                 .ifPresent(optionalResources.getGenomicLocalResources()::setHg38);
     }
-
-
-    private Function<GenomicLocalResource, GenomeAssemblyDownloader> createDownloader(GenomicRemoteResource resource) {
-        return genomicAssemblyPaths -> new GenomeAssemblyDownloader(resource.genomeUrl(), resource.assemblyReportUrl(), genomicAssemblyPaths);
-    }
-
-    private static GenomicAssemblyService createGenomicAssemblyService(GenomicLocalResource resource) {
-        try {
-            return GenomicAssemblyService.of(resource.getAssemblyReport(), resource.getFasta(), resource.getFastaFai(), resource.getFastaDict());
-        } catch (InvalidFastaFileException e) {
-            Dialogs.showException("Error", "Error", "Unable to use downloaded genomic resources", e);
-            return null;
-        }
-    }
-
-
 
 
     @FXML
@@ -393,8 +382,17 @@ public class SetResourcesController {
         }
     }
 
+    private static GenomicAssemblyService createGenomicAssemblyService(GenomicLocalResource resource) {
+        try {
+            return GenomicAssemblyService.of(resource.getAssemblyReport(), resource.getFasta(), resource.getFastaFai(), resource.getFastaDict());
+        } catch (InvalidFastaFileException e) {
+            Dialogs.showException("Error", "Error", "Unable to use downloaded genomic resources", e);
+            return null;
+        }
+    }
+
     /**
-     * @param assemblyPath must not be <code>null</code>, must be a file and the name must have suffix <em>.fa</em>
+     * @param assemblyPath must not be <code>null</code>, must be a file and the name must have the <em>.fa</em> suffix.
      * @return <code>true</code> if the {@link File} satisfies criteria stated above
      */
     private static boolean notNullAndValidFasta(File assemblyPath) {
