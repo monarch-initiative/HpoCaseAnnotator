@@ -1,5 +1,5 @@
 module org.monarchinitiative.hpo_case_annotator.model {
-    requires transitive phenol.core;
+    requires transitive org.monarchinitiative.phenol.core;
     requires transitive org.monarchitiative.svart;
 
     requires protobuf.java;

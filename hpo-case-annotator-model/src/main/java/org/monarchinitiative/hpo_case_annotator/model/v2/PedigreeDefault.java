@@ -1,14 +1,15 @@
 package org.monarchinitiative.hpo_case_annotator.model.v2;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
 class PedigreeDefault implements Pedigree {
 
-    private final Set<PedigreeMember> members;
+    private final List<PedigreeMember> members;
 
-    PedigreeDefault(Set<PedigreeMember> members) {
+    PedigreeDefault(List<PedigreeMember> members) {
         this.members = members;
     }
 

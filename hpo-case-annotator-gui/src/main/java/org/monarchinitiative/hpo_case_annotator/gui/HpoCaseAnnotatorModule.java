@@ -6,8 +6,21 @@ import com.google.inject.name.Names;
 import javafx.application.HostServices;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverAdapter;
-import org.monarchinitiative.hpo_case_annotator.core.reference.GenomeAssemblies;
-import org.monarchinitiative.hpo_case_annotator.core.reference.GenomeAssembliesSerializer;
+import org.monarchinitiative.hpo_case_annotator.core.reference.*;
+import org.monarchinitiative.hpo_case_annotator.forms.*;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.disease.DiseaseStatusController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeBrowserController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeEntryController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypicFeatureController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypicFeaturesTableController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.BreakendController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfBreakendVariantController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSequenceVariantController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSymbolicVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.*;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.*;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
@@ -84,6 +97,93 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
         bind(IntrachromosomalVariantController.class);
         bind(BreakpointVariantController.class);
         bind(LiftoverController.class);
+
+        bind(FamilyStudyController.class);
+        bind(PublicationController.class);
+
+        // variant
+        bind(BreakendController.class);
+
+        // individual
+        bind(PedigreeMemberController.class);
+        bind(DiseaseStatusController.class);
+        bind(PhenotypeEntryController.class);
+        bind(OntologyTreeBrowserController.class);
+        bind(PhenotypicFeatureController.class);
+        bind(PhenotypicFeaturesTableController.class);
+
+        // metadata
+        bind(StudyMetadataController.class);
+    }
+
+    @Provides
+    public VcfBreakendVariantController vcfBreakendVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
+        return new VcfBreakendVariantController(genomicAssemblyRegistry);
+    }
+
+    @Provides
+    public VcfSymbolicVariantController vcfSymbolicVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
+        return new VcfSymbolicVariantController(genomicAssemblyRegistry);
+    }
+
+    @Provides
+    public VcfSequenceVariantController vcfSequenceVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
+        return new VcfSequenceVariantController(genomicAssemblyRegistry);
+    }
+
+    @Provides
+    public VariantSummaryController variantSummaryController(HCAControllerFactory hcaControllerFactory) {
+        return new VariantSummaryController(hcaControllerFactory);
+    }
+
+    @Provides
+    public PedigreeController pedigreeController(HCAControllerFactory hcaControllerFactory) {
+        return new PedigreeController(hcaControllerFactory);
+    }
+
+    @Provides
+    public PhenotypeBrowserController phenotypeBrowserController(HCAControllerFactory hcaControllerFactory) {
+        return new PhenotypeBrowserController(hcaControllerFactory);
+    }
+
+    @Provides
+    public DeprecatedGenomicAssemblyRegistry genomicAssemblyRegistry() {
+        // TODO - get a real one
+        GenomicAssemblyService hg19 = new GenomicAssemblyService() {
+            @Override
+            public GenomicAssembly genomicAssembly() {
+                return GenomicAssemblies.GRCh37p13();
+            }
+
+            @Override
+            public Optional<StrandedSequence> referenceSequence(GenomicRegion region) {
+                return Optional.empty();
+            }
+
+            @Override
+            public void close() throws Exception {
+
+            }
+        };
+        GenomicAssemblyService hg38 = new GenomicAssemblyService() {
+            @Override
+            public GenomicAssembly genomicAssembly() {
+                return GenomicAssemblies.GRCh38p13();
+            }
+
+            @Override
+            public Optional<StrandedSequence> referenceSequence(GenomicRegion region) {
+                return Optional.empty();
+            }
+
+            @Override
+            public void close() throws Exception {
+
+            }
+        };
+
+        List<GenomicAssemblyService> genomicAssemblyServices = List.of(hg19, hg38);
+        return genomicAssemblyServices::stream;
     }
 
 

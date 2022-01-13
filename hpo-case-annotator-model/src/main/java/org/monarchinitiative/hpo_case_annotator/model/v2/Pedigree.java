@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.model.v2;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,7 +21,7 @@ public interface Pedigree {
                 throw new IllegalArgumentException("Pedigree members IDs must be present only once, but `" + entry.getKey() + "` was present " + entry.getValue() + " times");
         }
 
-        return new PedigreeDefault(Set.copyOf(members));
+        return new PedigreeDefault(List.copyOf(members));
     }
 
     Stream<PedigreeMember> members();

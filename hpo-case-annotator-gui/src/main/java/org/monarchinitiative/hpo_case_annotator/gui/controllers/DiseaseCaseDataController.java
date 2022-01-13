@@ -24,7 +24,7 @@ import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.AbstractVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.WidthAwareTextFields;
-import org.monarchinitiative.hpo_case_annotator.io.ModelUtils;
+import org.monarchinitiative.hpo_case_annotator.model.ModelUtils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.monarchinitiative.hpotextmining.gui.controller.HpoTextMining;
 import org.monarchinitiative.hpotextmining.gui.controller.Main;

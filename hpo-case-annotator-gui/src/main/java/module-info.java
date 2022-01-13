@@ -5,7 +5,7 @@ module org.monarchinitiative.hpo_case_annotator.gui {
     requires org.monarchinitiative.hpo_case_annotator.io;
 
     requires org.monarchinitiative.hpotextmining.gui;
-    requires phenol.io;
+    requires org.monarchinitiative.phenol.io;
     requires phenopacket.schema;
     requires protobuf.java.util;
 
@@ -26,7 +26,7 @@ module org.monarchinitiative.hpo_case_annotator.gui {
 
     requires htsjdk;
     requires org.apache.commons.compress;
-    requires org.apache.commons.io;
+//    requires org.apache.commons.io;
     requires org.slf4j;
 
     exports org.monarchinitiative.hpo_case_annotator.gui to javafx.graphics;

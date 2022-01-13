@@ -1,22 +1,25 @@
 package org.monarchinitiative.hpo_case_annotator.forms.test;
 
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblyRegistry;
+import org.monarchinitiative.hpo_case_annotator.core.reference.DeprecatedGenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.*;
-import org.monarchinitiative.hpo_case_annotator.forms.individual.PedigreeController;
-import org.monarchinitiative.hpo_case_annotator.forms.FamilyStudyController;
-import org.monarchinitiative.hpo_case_annotator.forms.individual.IndividualController;
-import org.monarchinitiative.hpo_case_annotator.forms.individual.IndividualVariantSummaryController;
-import org.monarchinitiative.hpo_case_annotator.forms.individual.PedigreeMemberController;
-import org.monarchinitiative.hpo_case_annotator.forms.ontotree.OntologyTreeBrowserController;
-import org.monarchinitiative.hpo_case_annotator.forms.ontotree.SelectableOntologyTreeController;
-import org.monarchinitiative.hpo_case_annotator.forms.phenotype.*;
-import org.monarchinitiative.hpo_case_annotator.forms.variant.*;
-import org.monarchinitiative.hpo_case_annotator.forms.variant.cache.HgvsVariantController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.PublicationController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.StudyMetadataController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.VariantSummaryController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.FamilyStudyController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualVariantSummaryController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.SelectableOntologyTreeController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.*;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.*;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.cache.HgvsVariantController;
 
 public class ControllerFactory implements HCAControllerFactory {
 
-private final GenomicAssemblyRegistry genomicAssemblyRegistry;
+    private final GenomicAssemblyRegistry genomicAssemblyRegistry;
     private final GeneIdentifierService geneIdentifierService;
 
     public ControllerFactory(GenomicAssemblyRegistry genomicAssemblyRegistry,
@@ -40,11 +43,10 @@ private final GenomicAssemblyRegistry genomicAssemblyRegistry;
             return new VcfBreakendVariantController(genomicAssemblyRegistry);
         } else if (clz.equals(BreakendController.class)) {
             return new BreakendController();
-        }
-        else if (clz.equals(StatusBarController.class)) {
-            return new StatusBarController();
         } else if (clz.equals(HgvsVariantController.class)) {
             return new HgvsVariantController(geneIdentifierService);
+        } else if (clz.equals(VariantSummaryController.class)) {
+            return new VariantSummaryController(this);
         }
 
         // unified
@@ -63,9 +65,7 @@ private final GenomicAssemblyRegistry genomicAssemblyRegistry;
         */
 
         // phenotypes
-        else if (clz.equals(PhenotypeController.class)) {
-            return new PhenotypeController();
-        } else if (clz.equals(PhenotypicFeatureController.class)) {
+        else if (clz.equals(PhenotypicFeatureController.class)) {
             return new PhenotypicFeatureController();
         } else if (clz.equals(PhenotypicFeaturesTableController.class)) {
             return new PhenotypicFeaturesTableController();
@@ -75,8 +75,6 @@ private final GenomicAssemblyRegistry genomicAssemblyRegistry;
             return new PhenotypeEntryController();
         } else if (clz.equals(SelectableOntologyTreeController.class)) {
             return new SelectableOntologyTreeController();
-        } else if (clz.equals(OntologyController.class)) {
-            return new OntologyController();
         } else if (clz.equals(PhenotypeBrowserController.class)) {
             return new PhenotypeBrowserController(this);
         } else if (clz.equals(OntologyTreeBrowserController.class)) {
@@ -94,15 +92,13 @@ private final GenomicAssemblyRegistry genomicAssemblyRegistry;
             return new FamilyStudyController();
         } else if (clz.equals(PedigreeMemberController.class)) {
             return new PedigreeMemberController();
-        } else if (clz.equals(VariantSummaryController.class)) {
-            return new VariantSummaryController(this);
         }
 
         // publication & metadata
         else if (clz.equals(PublicationController.class)) {
             return new PublicationController();
-        } else if (clz.equals(MetadataController.class)) {
-            return new MetadataController();
+        } else if (clz.equals(StudyMetadataController.class)) {
+            return new StudyMetadataController();
         } else
 
         {

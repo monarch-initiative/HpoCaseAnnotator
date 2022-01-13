@@ -25,10 +25,11 @@ public class StudyDeserializer extends StdDeserializer<Study> {
     }
 
     @Override
-    public Study deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Study deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         ObjectCodec codec = jp.getCodec();
         JsonNode node = codec.readTree(jp);
 
+        String id = node.get("id").asText();
         Publication publication = codec.treeToValue(node.get("publication"), Publication.class);
         StudyMetadata studyMetadata = codec.treeToValue(node.get("studyMetadata"), StudyMetadata.class);
 
@@ -43,7 +44,7 @@ public class StudyDeserializer extends StdDeserializer<Study> {
             // FamilyStudy
             Pedigree pedigree = codec.treeToValue(node.get("pedigree"), Pedigree.class);
 
-            return FamilyStudy.of(publication, variants, pedigree, studyMetadata);
+            return FamilyStudy.of(id, publication, variants, pedigree, studyMetadata);
         } else if (node.has("individuals")) {
             List<Individual> individuals = new LinkedList<>();
             Iterator<JsonNode> individualsIterator = node.get("individuals").elements();
@@ -51,7 +52,7 @@ public class StudyDeserializer extends StdDeserializer<Study> {
                 individuals.add(codec.treeToValue(individualsIterator.next(), Individual.class));
             }
 
-            return CohortStudy.of(publication, variants, individuals, studyMetadata);
+            return CohortStudy.of(id, publication, variants, individuals, studyMetadata);
         } else {
             throw new IOException("Invalid input. Neither `pedigree` nor `individuals` field was found");
         }

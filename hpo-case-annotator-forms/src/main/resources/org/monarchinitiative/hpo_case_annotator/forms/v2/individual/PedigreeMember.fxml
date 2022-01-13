@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.*?>
+
+<VBox stylesheets="@pedigree-member.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController">
+    <children>
+        <HBox styleClass="row">
+            <children>
+                <VBox id="id-column" styleClass="column" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="h2" text="Identifiers" />
+                        <HBox alignment="CENTER_LEFT">
+                            <children>
+                                <Label text="ID" />
+                                <TextField fx:id="individualIdTextField" promptText="I:1" HBox.hgrow="ALWAYS" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                            <children>
+                                <Label text="Parental ID" />
+                                <TextField fx:id="paternalIdTextField" promptText="I:2" HBox.hgrow="ALWAYS" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                            <children>
+                                <Label text="Maternal ID" />
+                                <TextField fx:id="maternalIdTextField" promptText="I:3" HBox.hgrow="ALWAYS" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                            <children>
+                                <CheckBox fx:id="probandCheckBox" mnemonicParsing="false" text="Proband" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+                <VBox id="age-column" styleClass="column" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="h2" text="Age" />
+                        <HBox alignment="CENTER_LEFT">
+                            <children>
+                                <TextField fx:id="yearsTextField" promptText="18" HBox.hgrow="ALWAYS" />
+                                <Label text="years" HBox.hgrow="NEVER" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                            <children>
+                                <SearchableComboBox fx:id="monthsComboBox" promptText="0" HBox.hgrow="ALWAYS" />
+                                <Label text="months" HBox.hgrow="NEVER" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                            <children>
+                                <SearchableComboBox fx:id="daysComboBox" promptText="0" HBox.hgrow="ALWAYS" />
+                                <Label text="days" HBox.hgrow="NEVER" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+                <VBox id="sex-column" styleClass="column" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="h2" text="Sex" />
+                        <HBox>
+                            <children>
+                                <VBox>
+                                    <children>
+                                        <RadioButton fx:id="unknownSexRadioButton" mnemonicParsing="false" text="Unknown" />
+                                        <RadioButton fx:id="maleSexRadioButton" mnemonicParsing="false" text="Male" />
+                                        <RadioButton fx:id="femaleSexRadioButton" mnemonicParsing="false" text="Female" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <Separator VBox.vgrow="NEVER" />
+        <HBox styleClass="row" VBox.vgrow="NEVER">
+            <children>
+                <VBox HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="h2" text="Phenotype features" VBox.vgrow="NEVER" />
+                        <VBox alignment="TOP_CENTER" VBox.vgrow="NEVER">
+                            <children>
+                                <VBox id="phenotype-description-box" alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label fx:id="observedFeatureCountLabel" VBox.vgrow="NEVER" />
+                                        <Label fx:id="notObservedFeatureCountLabel" VBox.vgrow="NEVER" />
+                                    </children>
+                                </VBox>
+<!--                                <Button fx:id="addEditPhenotypeFeaturesButton" disable="true" mnemonicParsing="false" text="Add / Edit" />-->
+<!--                                        onAction="#addEditPhenotypeFeaturesButtonAction" -->
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <Separator VBox.vgrow="NEVER" />
+        <HBox styleClass="row">
+            <children>
+                <VBox HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="h2" text="Diseases" VBox.vgrow="NEVER" />
+                        <VBox alignment="TOP_CENTER">
+                            <children>
+                                <ListView fx:id="diseaseListView" focusTraversable="false" VBox.vgrow="ALWAYS" />
+<!--                                <Button fx:id="addEditDiseaseButton" mnemonicParsing="false" disable="true" text="Add / Edit" VBox.vgrow="NEVER" />-->
+                                <!-- onAction="#addEditDiseaseButtonAction" -->
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <Separator VBox.vgrow="NEVER" />
+        <HBox alignment="TOP_CENTER" styleClass="row">
+            <children>
+                <fx:include fx:id="individualVariantSummary" source="IndividualVariantSummary.fxml" HBox.hgrow="ALWAYS" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

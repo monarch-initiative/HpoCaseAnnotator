@@ -8,11 +8,12 @@ import java.util.stream.Stream;
 
 public interface FamilyStudy extends Study {
 
-    static FamilyStudy of(Publication publication,
+    static FamilyStudy of(String id,
+                          Publication publication,
                           List<CuratedVariant> variants,
                           Pedigree pedigree,
                           StudyMetadata studyMetadata) {
-        return new FamilyStudyDefault(publication, variants, pedigree, studyMetadata);
+        return new FamilyStudyDefault(id, publication, variants, pedigree, studyMetadata);
     }
 
     Pedigree pedigree();
