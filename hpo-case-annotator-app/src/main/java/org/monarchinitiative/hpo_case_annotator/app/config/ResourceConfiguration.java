@@ -41,6 +41,31 @@ public class ResourceConfiguration {
         return new GenomicRemoteResources(null, hg19, hg38);
     }
 
+    @Bean
+    public File liftoverDir(File appHomeDir) {
+        return new File(appHomeDir, ResourcePaths.DEFAULT_LIFTOVER_FOLDER);
+    }
+
+    /**
+     * Get path to parent directory of the JAR file (or classes). Note, this is <em>NOT</em> the path to the JAR file.
+     * The method ensures, that the parent directory is created, otherwise, the application will shut down.
+     *
+     * @return {@link File} path of the directory with code
+     */
+    @Bean
+    public File codeHomeDir() throws IOException {
+        File codeHomeDir = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getFile())
+                .getParentFile();
+        if (codeHomeDir.exists() || codeHomeDir.mkdirs()) {// ensure that the home dir exists
+            LOGGER.trace("Code home directory is {}", codeHomeDir.getAbsolutePath());
+            return codeHomeDir;
+        } else {
+            String msg = String.format("Cannot find or create code home directory at `%s`", codeHomeDir.getAbsolutePath());
+            LOGGER.error(msg);
+            throw new IOException(msg);
+        }
+    }
+
     /**
      * Return {@link Properties} with paths to resources. At first, {@link File} <code>propertiesFilePath</code>
      * will be tried. If the file doesn't exist, we will fall back to the <code>hpo-case-annotator.properties</code>
@@ -74,31 +99,6 @@ public class ResourceConfiguration {
         return properties;
     }
 
-    @Bean
-    public File liftoverDir(File appHomeDir) {
-        return new File(appHomeDir, ResourcePaths.DEFAULT_LIFTOVER_FOLDER);
-    }
-
-    /**
-     * Get path to parent directory of the JAR file (or classes). Note, this is <em>NOT</em> the path to the JAR file.
-     * The method ensures, that the parent directory is created, otherwise, the application will shut down.
-     *
-     * @return {@link File} path of the directory with code
-     */
-    @Bean
-    public File codeHomeDir() throws IOException {
-        File codeHomeDir = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getFile())
-                .getParentFile();
-        if (codeHomeDir.exists() || codeHomeDir.mkdirs()) {// ensure that the home dir exists
-            LOGGER.trace("Code home directory is {}", codeHomeDir.getAbsolutePath());
-            return codeHomeDir;
-        } else {
-            String msg = String.format("Cannot find or create code home directory at `%s`", codeHomeDir.getAbsolutePath());
-            LOGGER.error(msg);
-            throw new IOException(msg);
-        }
-    }
-
     /**
      * @param appHomeDir path to application home directory, where HpoCaseAnnotator stores global settings and files. The path depends
      *                   on underlying operating system.
@@ -109,10 +109,10 @@ public class ResourceConfiguration {
         return new File(appHomeDir, ResourcePaths.PROPERTIES_FILE_NAME);
     }
 
-    @Bean
-    public File refGenomePropertiesFilePath(File appHomeDir) {
-        return new File(appHomeDir, GENOME_ASSEMBLIES_FILE_NAME);
-    }
+//    @Bean
+//    public File refGenomePropertiesFilePath(File appHomeDir) {
+//        return new File(appHomeDir, GENOME_ASSEMBLIES_FILE_NAME);
+//    }
 
     /**
      * Get path to application home directory, where HpoCaseAnnotator stores global settings and files. The path depends
@@ -158,6 +158,7 @@ public class ResourceConfiguration {
                 }
             }
         }
+        LOGGER.info("Using '{}' as app home directory", appHomeDir.getAbsolutePath());
         return appHomeDir;
     }
 
