@@ -1,6 +1,8 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
@@ -25,10 +27,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Consumer;
 
 /**
  * This class is the controller of the setResources dialog. The user performs initial setup of the
@@ -85,6 +86,12 @@ public final class SetResourcesController {
 
     @FXML
     private Label hg19GenomeLabel;
+
+    @FXML
+    private Label hg18LiftoverLabel;
+
+    @FXML
+    private Label hg19LiftoverLabel;
 
     @FXML
     private TextField biocuratorIDTextField;
@@ -267,7 +274,8 @@ public final class SetResourcesController {
     /**
      * Initialize elements of this controller.
      */
-    public void initialize() {
+    @FXML
+    private void initialize() {
         if (assemblies.hasFastaForAssembly(GenomeAssembly.GRCH_37)) {
             File hg19Assembly = assemblies.getAssemblyMap().get(GenomeAssembly.GRCH_37).toFile();
             if (notNullAndValidFasta(hg19Assembly)) {
@@ -314,6 +322,23 @@ public final class SetResourcesController {
                 ? optionalResources.getDiseaseCaseDir().getAbsolutePath()
                 : "unset");
         biocuratorIDTextField.textProperty().bindBidirectional(optionalResources.biocuratorIdProperty());
+
+        // Liftover
+        Path liftoverFolder = appHomeDir.toPath().resolve(OptionalResources.DEFAULT_LIFTOVER_FOLDER);
+        // hg18
+        File hg18 = liftoverFolder.resolve("hg18ToHg38.over.chain.gz").toFile();
+        if (hg18.isFile()) {
+            hg18LiftoverLabel.setText(hg18.getAbsolutePath());
+        } else {
+            hg18LiftoverLabel.setText("unset");
+        }
+        // hg38
+        File hg19 = liftoverFolder.resolve("hg19ToHg38.over.chain.gz").toFile();
+        if (hg19.isFile()) {
+            hg19LiftoverLabel.setText(hg19.getAbsolutePath());
+        } else {
+            hg19LiftoverLabel.setText("unset");
+        }
     }
 
 
@@ -446,25 +471,24 @@ public final class SetResourcesController {
 
     @FXML
     public void downloadLiftoverChainFiles() {
-        List<URL> urls = new ArrayList<>();
         try {
-            urls.add(new URL(properties.getProperty("hg18.hg38.chain.url")));
-            urls.add(new URL(properties.getProperty("hg19.hg38.chain.url")));
+            URL hg18ToHg38 = new URL(properties.getProperty("hg18.hg38.chain.url"));
+            downloadChainFile(hg18ToHg38, hg18LiftoverLabel::setText);
+
+            URL hg19ToHg38 = new URL(properties.getProperty("hg19.hg38.chain.url"));
+            downloadChainFile(hg19ToHg38, hg19LiftoverLabel::setText);
         } catch (MalformedURLException e) {
             PopUps.showException("Download liftover chains", "Error occurred", "Malformed URL", e);
             LOGGER.error("Malformed URL: {}", e.getMessage());
-            return;
         }
-        for (URL url : urls) {
-            String file = new File(url.getFile()).getName();
-            Path target = appHomeDir.toPath().resolve(OptionalResources.DEFAULT_LIFTOVER_FOLDER).resolve(file);
+    }
 
-            Task<Void> task = new Downloader(url, target.toFile());
-            executorService.submit(task);
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ignored) {
-            }
-        }
+    private void downloadChainFile(URL url, Consumer<String> notify) {
+        String file = new File(url.getFile()).getName();
+        Path target = appHomeDir.toPath().resolve(OptionalResources.DEFAULT_LIFTOVER_FOLDER).resolve(file);
+        EventHandler<WorkerStateEvent> eventHandler = e -> notify.accept(target.toAbsolutePath().toString());
+        Task<Void> task = new Downloader(url, target.toFile());
+        task.setOnSucceeded(eventHandler);
+        executorService.submit(task);
     }
 }
