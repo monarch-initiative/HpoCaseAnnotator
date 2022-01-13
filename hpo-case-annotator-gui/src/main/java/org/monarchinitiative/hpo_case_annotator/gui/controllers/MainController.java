@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -22,6 +23,8 @@ import org.monarchinitiative.hpo_case_annotator.core.reference.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult;
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
 import org.monarchinitiative.hpo_case_annotator.export.ExportCodecs;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.FamilyStudyController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.Convert;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
@@ -33,6 +36,7 @@ import org.monarchinitiative.hpo_case_annotator.model.ModelUtils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Biocurator;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
+import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
 import org.phenopackets.schema.v1.Phenopacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,8 +74,6 @@ public final class MainController {
     private final ResourceBundle resourceBundle;
 
     private final Injector injector;
-
-    private final Stage primaryStage;
 
     private final Properties properties;
 
@@ -119,19 +121,18 @@ public final class MainController {
     /**
      * This list contains controllers of the tabs in the same order as they are present in the {@link #contentTabPane#getTabs} method.
      * <p>
-     * The only place where items are added into this list is the {@link #addTab(DiseaseCase, Path)} method.
+     * The only place where items are added into this list is the {@link #addV1Tab(DiseaseCase, Path)} method.
      */
-    private List<DiseaseCaseDataController> controllers = new ArrayList<>();
+    private final List<Object> controllers = new ArrayList<>();
 
 
     @Inject
-    public MainController(OptionalResources optionalResources, ResourceBundle resourceBundle, Injector injector, Stage primaryStage,
+    public MainController(OptionalResources optionalResources, ResourceBundle resourceBundle, Injector injector,
                           Properties properties, @Named("appHomeDir") File appHomeDir, ExecutorService executorService,
                           GenomeAssemblies assemblies, HostServicesWrapper hostServices) {
         this.optionalResources = optionalResources;
         this.resourceBundle = resourceBundle;
         this.injector = injector;
-        this.primaryStage = primaryStage;
         this.properties = properties;
         this.appHomeDir = appHomeDir;
         this.executorService = executorService;
@@ -247,7 +248,7 @@ public final class MainController {
      * @param currentModelPath {@link Path} to file where the case was read from, might be {@code null} if the case was
      *                         just generated
      */
-    private void addTab(DiseaseCase diseaseCase, Path currentModelPath) {
+    private void addV1Tab(DiseaseCase diseaseCase, Path currentModelPath) {
         try {
             final Tab tab = new Tab();
             final FXMLLoader loader = new FXMLLoader(DiseaseCaseDataController.class.getResource("DiseaseCaseDataView.fxml"));
@@ -267,14 +268,48 @@ public final class MainController {
             contentTabPane.getTabs().add(tab);
             controllers.add(controller);
         } catch (IOException e) {
-            LOGGER.warn("Error occured during initialization of the data view.", e);
+            LOGGER.warn("Error occured during initialization of the V1 data view.", e);
         }
     }
 
 
+    private void addV2Tab() {
+        try {
+            FXMLLoader loader = new FXMLLoader(FamilyStudyController.class.getResource("FamilyStudy.fxml"));
+            loader.setControllerFactory(injector::getInstance);
+
+            Tab tab = new Tab();
+            tab.setContent(loader.load());
+
+            FamilyStudyController controller = loader.getController();
+            tab.textProperty().bind(controller.getData().idProperty());
+            tab.setOnCloseRequest(e -> {
+                int idx = contentTabPane.getTabs().indexOf(tab);
+                contentTabPane.getTabs().remove(idx);
+                controllers.remove(idx);
+            });
+            contentTabPane.getTabs().add(tab);
+            controllers.add(controller);
+        } catch (IOException e) {
+            LOGGER.warn("Error occured during initialization of the V2 data view.", e);
+        }
+    }
+
     @FXML
     void newMenuItemAction() {
-        addTab(DiseaseCase.getDefaultInstance(), null);
+        ChoiceDialog<DataModel> dataModelDialog = new ChoiceDialog<>(DataModel.V2, DataModel.values());
+        dataModelDialog.setTitle(null);
+        dataModelDialog.setHeaderText("Select data model version");
+        dataModelDialog.setContentText(null);
+        Optional<DataModel> dataModelOptional = dataModelDialog.showAndWait();
+        dataModelOptional.ifPresent(dataModel -> {
+            switch (dataModel) {
+                case V1 -> addV1Tab(DiseaseCase.getDefaultInstance(), null);
+                case V2 -> addV2Tab();
+            }
+        });
+
+
     }
 
     @FXML
@@ -292,7 +327,7 @@ public final class MainController {
         filechooser.getExtensionFilters().addAll(xmlFileFormat, jsonFileFormat);
         filechooser.setSelectedExtensionFilter(jsonFileFormat);
 
-        List<File> files = filechooser.showOpenMultipleDialog(primaryStage);
+        List<File> files = filechooser.showOpenMultipleDialog(contentTabPane.getScene().getWindow());
 
         if (files == null) {
             // no file was selected
@@ -327,29 +362,36 @@ public final class MainController {
                 default:
                     throw new RuntimeException("This should not have had happened!");
             }
-            addTab(diseaseCase, file.toPath());
+            addV1Tab(diseaseCase, file.toPath());
         }
     }
 
     @FXML
     void saveMenuItemAction() {
         int selectedTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
-        DiseaseCaseDataController controller = controllers.get(selectedTabIdx);
-        Path currentModelPath = controller.getCurrentModelPath();
-        Path actualPath = saveModel(currentModelPath, controller.getData());
+        Object controller = controllers.get(selectedTabIdx);
+        if (controller instanceof DiseaseCaseDataController dcdc) {
+            Path currentModelPath = dcdc.getCurrentModelPath();
+            Path actualPath = saveModel(currentModelPath, dcdc.getData());
 
-        // user might have selected to save the model elsewhere, here we reflect the update
-        controller.setCurrentModelPath(actualPath);
+            // user might have selected to save the model elsewhere, here we reflect the update
+            dcdc.setCurrentModelPath(actualPath);
+        } else if (controller instanceof FamilyStudyController fsc) {
+            Study study = Convert.toFamilyStudy(fsc.getData());
+            LOGGER.info("Saving V2 study");
+            // TODO - implement
+        }
     }
 
     @FXML
     void saveAsMenuItemAction() {
         int selectedTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
-        DiseaseCaseDataController controller = controllers.get(selectedTabIdx);
-        Path actualPath = saveModel(null, controller.getData());
-
-        // user might have selected to save the model elsewhere, here we reflect the update
-        controller.setCurrentModelPath(actualPath);
+        Object o = controllers.get(selectedTabIdx);
+        if (o instanceof DiseaseCaseDataController controller) {
+            Path actualPath = saveModel(null, controller.getData());
+            // user might have selected to save the model elsewhere, here we reflect the update
+            controller.setCurrentModelPath(actualPath);
+        }
     }
 
     @FXML
@@ -360,37 +402,38 @@ public final class MainController {
     @FXML
     void showEditCurrentPublicationMenuItemAction() {
         int selectedTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
+        Object o = controllers.get(selectedTabIdx);
+        if (o instanceof DiseaseCaseDataController dc) {
+            try {
+                Publication publication = dc.getData().getPublication();
+                ShowEditPublicationController controller = new ShowEditPublicationController(publication);
+                FXMLLoader loader = new FXMLLoader(ShowEditPublicationController.class.getResource("ShowEditPublicationView.fxml"));
+                loader.setResources(resourceBundle);
+                loader.setControllerFactory(clazz -> controller);
 
-        try {
-            Publication publication = controllers.get(selectedTabIdx).getData().getPublication();
-            ShowEditPublicationController controller = new ShowEditPublicationController(publication);
-
-            Parent parent = FXMLLoader.load(
-                    ShowEditPublicationController.class.getResource("ShowEditPublicationView.fxml"),
-                    resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
-            Stage stage = new Stage();
-            stage.setTitle("Edit metadata of the current publication");
-            stage.initOwner(primaryStage);
-            stage.setScene(new Scene(parent));
-            stage.showAndWait();
-        } catch (IOException e) {
-            LOGGER.warn("Unable to show dialog for editing of the current publication", e);
-            PopUps.showException("Edit Metadata of the current publication", "Error", "Unable to show dialog for editing of the current publication", e);
+                Stage stage = new Stage();
+                stage.setTitle("Edit metadata of the current publication");
+                stage.initOwner(contentTabPane.getScene().getWindow());
+                stage.setScene(new Scene(loader.load()));
+                stage.showAndWait();
+            } catch (IOException e) {
+                LOGGER.warn("Unable to show dialog for editing of the current publication", e);
+                PopUps.showException("Edit Metadata of the current publication", "Error", "Unable to show dialog for editing of the current publication", e);
+            }
         }
-
     }
 
     @FXML
     void setResourcesMenuItemAction() {
         try {
             SetResourcesController controller = new SetResourcesController(optionalResources, properties, appHomeDir,
-                    executorService, primaryStage, assemblies);
+                    executorService, assemblies);
             Parent parent = FXMLLoader.load(
                     SetResourcesController.class.getResource("SetResourcesView.fxml"),
                     resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
             Stage stage = new Stage();
             stage.setTitle("Initialize Hpo Case Annotator resources");
-            stage.initOwner(primaryStage);
+            stage.initOwner(contentTabPane.getScene().getWindow());
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
             stage.setScene(new Scene(parent));
@@ -413,7 +456,7 @@ public final class MainController {
                     resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
             Stage stage = new Stage();
             stage.setTitle("Curated publications in '" + where.getAbsolutePath() + "'");
-            stage.initOwner(primaryStage);
+            stage.initOwner(contentTabPane.getScene().getWindow());
             stage.setScene(new Scene(parent));
             stage.showAndWait();
         } catch (IOException e) {
@@ -434,7 +477,7 @@ public final class MainController {
                     resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
             Stage stage = new Stage();
             stage.setTitle("Variants within curated cases in '" + where.getAbsolutePath() + "'");
-            stage.initOwner(primaryStage);
+            stage.initOwner(contentTabPane.getScene().getWindow());
             stage.setScene(new Scene(parent));
             stage.showAndWait();
         } catch (IOException e) {
@@ -449,21 +492,24 @@ public final class MainController {
 
         int selectedTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
 
-        DiseaseCase theCase = controllers.get(selectedTabIdx).getData();
-        ValidationRunner<DiseaseCase> runner = ValidationRunner.forAllValidations(assemblies);
-        List<ValidationResult> results = runner.validateSingleModel(theCase);
+        Object o = controllers.get(selectedTabIdx);
+        if (o instanceof DiseaseCaseDataController dc) {
+            DiseaseCase theCase = dc.getData();
+            ValidationRunner<DiseaseCase> runner = ValidationRunner.forAllValidations(assemblies);
+            List<ValidationResult> results = runner.validateSingleModel(theCase);
 
-        try {
-            ShowValidationResultsController controller = new ShowValidationResultsController();
-            Parent parent = FXMLLoader.load(ShowValidationResultsController.class.getResource("ShowValidationResults.fxml"),
-                    resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
-            controller.setValidationResult(theCase, results);
-            Stage stage = new Stage();
-            stage.initOwner(primaryStage);
-            stage.setScene(new Scene(parent));
-            stage.showAndWait();
-        } catch (IOException e) {
-            LOGGER.warn("Unable to display dialog for validation of the curated publications", e);
+            try {
+                ShowValidationResultsController controller = new ShowValidationResultsController();
+                Parent parent = FXMLLoader.load(ShowValidationResultsController.class.getResource("ShowValidationResults.fxml"),
+                        resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
+                controller.setValidationResult(theCase, results);
+                Stage stage = new Stage();
+                stage.initOwner(contentTabPane.getScene().getWindow());
+                stage.setScene(new Scene(parent));
+                stage.showAndWait();
+            } catch (IOException e) {
+                LOGGER.warn("Unable to display dialog for validation of the curated publications", e);
+            }
         }
 
     }
@@ -489,7 +535,7 @@ public final class MainController {
             controller.setValidationResults(validationResults);
             Stage stage = new Stage();
             stage.setTitle("Validate all cases");
-            stage.initOwner(primaryStage);
+            stage.initOwner(contentTabPane.getScene().getWindow());
             stage.setScene(new Scene(parent));
             stage.showAndWait();
         } catch (IOException e) {
@@ -522,7 +568,7 @@ public final class MainController {
 
         Map<File, DiseaseCase> models = readDiseaseCasesFromDirectory(optionalResources.getDiseaseCaseDir());
 
-        File where = PopUps.selectDirectory(primaryStage, optionalResources.getDiseaseCaseDir(),
+        File where = PopUps.selectDirectory((Stage) contentTabPane.getScene().getWindow(), optionalResources.getDiseaseCaseDir(),
                 "Select export directory");
 
         Codec<DiseaseCase, Phenopacket> codec = ExportCodecs.diseaseCasePhenopacketCodec();
@@ -571,31 +617,34 @@ public final class MainController {
         int selectedTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
 
 
-        DiseaseCase diseaseCase = controllers.get(selectedTabIdx).getData();
-        String suggestedFileName = ModelUtils.getFileNameWithSampleId(diseaseCase) + ".json";
-        String title = "Save as Phenopacket";
+        Object o = controllers.get(selectedTabIdx);
+        if (o instanceof DiseaseCaseDataController dc) {
+            DiseaseCase diseaseCase = dc.getData();
+            String suggestedFileName = ModelUtils.getFileNameWithSampleId(diseaseCase) + ".json";
+            String title = "Save as Phenopacket";
 
-        final FileChooser filechooser = new FileChooser();
-        filechooser.setTitle(title);
-        filechooser.setInitialDirectory(optionalResources.getDiseaseCaseDir());
-        filechooser.setInitialFileName(suggestedFileName);
-        FileChooser.ExtensionFilter jsonFormat = new FileChooser.ExtensionFilter("Phenopacket in JSON format", "*.phenopacket");
-        filechooser.getExtensionFilters().add(jsonFormat);
-        filechooser.setSelectedExtensionFilter(jsonFormat);
+            final FileChooser filechooser = new FileChooser();
+            filechooser.setTitle(title);
+            filechooser.setInitialDirectory(optionalResources.getDiseaseCaseDir());
+            filechooser.setInitialFileName(suggestedFileName);
+            FileChooser.ExtensionFilter jsonFormat = new FileChooser.ExtensionFilter("Phenopacket in JSON format", "*.phenopacket");
+            filechooser.getExtensionFilters().add(jsonFormat);
+            filechooser.setSelectedExtensionFilter(jsonFormat);
 
-        File where = filechooser.showSaveDialog(primaryStage);
-        Codec<DiseaseCase, Phenopacket> codec = ExportCodecs.diseaseCasePhenopacketCodec();
-        if (where != null) {
-            try (BufferedWriter writer = Files.newBufferedWriter(where.toPath())) {
-                final Phenopacket packet = codec.encode(diseaseCase);
-                String jsonString = PRINTER.print(packet);
-                writer.write(jsonString);
-            } catch (IOException e) {
-                LOGGER.warn("Error occured during Phenopacket export", e);
-                PopUps.showException(title, "Error occured during Phenopacket export", e.getMessage(), e);
-            } catch (ModelTransformationException e) {
-                LOGGER.warn("Error occurred during Phenopacket conversion", e);
-                PopUps.showException("Error", "Unable to convert to Phenopacket", e.getMessage(), e);
+            File where = filechooser.showSaveDialog(contentTabPane.getScene().getWindow());
+            Codec<DiseaseCase, Phenopacket> codec = ExportCodecs.diseaseCasePhenopacketCodec();
+            if (where != null) {
+                try (BufferedWriter writer = Files.newBufferedWriter(where.toPath())) {
+                    final Phenopacket packet = codec.encode(diseaseCase);
+                    String jsonString = PRINTER.print(packet);
+                    writer.write(jsonString);
+                } catch (IOException e) {
+                    LOGGER.warn("Error occured during Phenopacket export", e);
+                    PopUps.showException(title, "Error occured during Phenopacket export", e.getMessage(), e);
+                } catch (ModelTransformationException e) {
+                    LOGGER.warn("Error occurred during Phenopacket conversion", e);
+                    PopUps.showException("Error", "Unable to convert to Phenopacket", e.getMessage(), e);
+                }
             }
         }
 
@@ -645,7 +694,7 @@ public final class MainController {
                     resourceBundle, new JavaFXBuilderFactory(), clazz -> controller);
             controller.setContent(contentUrl);
             Stage stage = new Stage();
-            stage.initOwner(primaryStage);
+            stage.initOwner(contentTabPane.getScene().getWindow());
             stage.setScene(new Scene(parent));
             stage.showAndWait();
         } catch (IOException e) {
@@ -719,7 +768,7 @@ public final class MainController {
             fileChooser.setInitialFileName(suggestedName);
             fileChooser.setInitialDirectory(optionalResources.getDiseaseCaseDir());
             fileChooser.getExtensionFilters().addAll(jsonFileFormat, xmlFileFormat);
-            File which = fileChooser.showSaveDialog(primaryStage);
+            File which = fileChooser.showSaveDialog(contentTabPane.getScene().getWindow());
 
             if (which == null) {
                 return null;
@@ -727,7 +776,7 @@ public final class MainController {
 
             while (which.getName().matches(".*\\s.*")) { // at least one whitespace with or without surrounding characters
                 if (PopUps.getBooleanFromUser("Provide new name or cancel", String.format("File name '%s' contains whitespace character", which.getName()), "Warning")) {
-                    which = fileChooser.showSaveDialog(primaryStage);
+                    which = fileChooser.showSaveDialog(contentTabPane.getScene().getWindow());
                 } else {
                     return null;
                 }
@@ -782,7 +831,11 @@ public final class MainController {
 
     @FXML
     public void saveAllMenuItemAction() {
-        controllers.forEach(c -> saveModel(c.getCurrentModelPath(), c.getData()));
+        controllers.forEach(c -> {
+            if (c instanceof DiseaseCaseDataController dc) {
+                saveModel(dc.getCurrentModelPath(), dc.getData());
+            }
+        });
     }
 
     /**
@@ -791,8 +844,12 @@ public final class MainController {
     @FXML
     public void cloneCaseMenuItemAction() {
         int selectedIndex = contentTabPane.getSelectionModel().getSelectedIndex();
-        DiseaseCase currentlySelectedCase = controllers.get(selectedIndex).getData();
-        addTab(currentlySelectedCase, null);
+        Object o = controllers.get(selectedIndex);
+        if (o instanceof DiseaseCaseDataController dc) {
+            DiseaseCase currentlySelectedCase = dc.getData();
+            addV1Tab(currentlySelectedCase, null);
+        }
+
     }
 
     /**
@@ -801,11 +858,14 @@ public final class MainController {
     @FXML
     public void viewOnPubmedMenuItemAction() {
         int selectedIndex = contentTabPane.getSelectionModel().getSelectedIndex();
-        DiseaseCase currentlySelectedCase = controllers.get(selectedIndex).getData();
+        Object o = controllers.get(selectedIndex);
+        if (o instanceof DiseaseCaseDataController dc) {
+            DiseaseCase currentlySelectedCase = dc.getData();
 
-        String pmid = currentlySelectedCase.getPublication().getPmid();
-        String publicationUrl = String.format(PUBMED_BASE_LINK, pmid);
-        hostServices.showDocument(publicationUrl);
+            String pmid = currentlySelectedCase.getPublication().getPmid();
+            String publicationUrl = String.format(PUBMED_BASE_LINK, pmid);
+            hostServices.showDocument(publicationUrl);
+        }
     }
 
     @FXML
@@ -814,7 +874,7 @@ public final class MainController {
             Parent parent = FXMLLoader.load(LiftoverController.class.getResource("LiftoverView.fxml"),
                     resourceBundle, new JavaFXBuilderFactory(), injector::getInstance);
             Stage stage = new Stage();
-            stage.initOwner(primaryStage);
+            stage.initOwner(contentTabPane.getScene().getWindow());
             stage.initModality(Modality.NONE);
             stage.setTitle("Liftover");
             stage.setScene(new Scene(parent));

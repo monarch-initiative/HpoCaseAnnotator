@@ -3,6 +3,7 @@ module org.monarchinitiative.hpo_case_annotator.gui {
     requires org.monarchinitiative.hpo_case_annotator.convert;
     requires org.monarchinitiative.hpo_case_annotator.export;
     requires org.monarchinitiative.hpo_case_annotator.io;
+    requires org.monarchinitiative.hpo_case_annotator.forms;
 
     requires org.monarchinitiative.hpotextmining.gui;
     requires org.monarchinitiative.phenol.io;
@@ -29,8 +30,11 @@ module org.monarchinitiative.hpo_case_annotator.gui {
 //    requires org.apache.commons.io;
     requires org.slf4j;
 
-    exports org.monarchinitiative.hpo_case_annotator.gui to javafx.graphics;
-    exports org.monarchinitiative.hpo_case_annotator.gui.controllers to javafx.fxml;
+    exports org.monarchinitiative.hpo_case_annotator.gui;
+//    exports org.monarchinitiative.hpo_case_annotator.gui to javafx.graphics;
+    exports org.monarchinitiative.hpo_case_annotator.gui.controllers;
+//    exports org.monarchinitiative.hpo_case_annotator.gui.controllers to javafx.fxml;
+    exports org.monarchinitiative.hpo_case_annotator.gui.util;
 
     opens org.monarchinitiative.hpo_case_annotator.gui.controllers to javafx.fxml, com.google.guice, com.fasterxml.jackson.databind;
     opens org.monarchinitiative.hpo_case_annotator.gui to com.google.guice; // TODO - deprecate/remove
