@@ -47,7 +47,7 @@ public class MainConfiguration {
         return registry;
     }
 
-    private GenomicAssemblyService createGenomicAssemblyService(GenomicLocalResource novel) {
+    private static GenomicAssemblyService createGenomicAssemblyService(GenomicLocalResource novel) {
         try {
             return GenomicAssemblyService.of(novel.getAssemblyReport(), novel.getFasta(), novel.getFastaFai(), novel.getFastaDict());
         } catch (InvalidFastaFileException e) {
