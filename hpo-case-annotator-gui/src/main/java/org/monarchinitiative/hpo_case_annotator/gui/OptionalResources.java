@@ -25,6 +25,8 @@ import java.util.stream.Stream;
  */
 public final class OptionalResources {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(OptionalResources.class);
+
     /**
      * Use this name to save HP.obo file on the local filesystem.
      */
@@ -44,8 +46,6 @@ public final class OptionalResources {
     public static final String ENTREZ_GENE_PATH_PROPERTY = "entrez.gene.path";
 
     public static final String DEFAULT_LIFTOVER_FOLDER = "liftover";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(OptionalResources.class);
 
     private final BooleanBinding entrezIsMissing;
 
