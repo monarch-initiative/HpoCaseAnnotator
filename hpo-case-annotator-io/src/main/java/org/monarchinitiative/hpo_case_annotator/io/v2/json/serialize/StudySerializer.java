@@ -26,6 +26,7 @@ public class StudySerializer extends StdSerializer<Study> {
     public void serialize(Study study, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
 
+        gen.writeStringField("id", study.id());
         gen.writeObjectField("studyMetadata", study.studyMetadata());
         gen.writeObjectField("publication", study.publication());
 

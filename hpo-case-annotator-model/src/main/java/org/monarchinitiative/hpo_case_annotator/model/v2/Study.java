@@ -10,6 +10,8 @@ import java.util.stream.Stream;
  */
 public interface Study {
 
+    String id();
+
     Publication publication();
 
     List<CuratedVariant> variants();

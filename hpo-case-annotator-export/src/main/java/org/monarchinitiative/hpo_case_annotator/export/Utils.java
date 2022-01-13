@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.export;
 
-import org.monarchinitiative.hpo_case_annotator.io.Checks;
-import org.monarchinitiative.hpo_case_annotator.io.ModelUtils;
+import org.monarchinitiative.hpo_case_annotator.model.ModelUtils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Gene;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
@@ -34,7 +33,7 @@ class Utils {
         for (String item : Arrays.asList(firstAuthorsSurname, year, pmid, geneSymbol, probandId)) {
             String noDash = item.replaceAll("-", "_");
             String normalized = ModelUtils.normalizeAsciiText(noDash);
-            String legal = Checks.makeLegalFileNameWithNoWhitespace(normalized, '_');
+            String legal = ModelUtils.makeLegalFileNameWithNoWhitespace(normalized, '_');
             tokens.add(legal);
         }
 

@@ -1,4 +1,5 @@
 {
+  "id" : "cohortStudyTest",
   "studyMetadata" : {
     "freeText" : "Authors are describing a mutations in CFTR exon 13 that appears to contain two 3'CSS utilization of which is increased when there is a mutation in ESE element present in exon 13 (Figure 2.).\n\nThe 3'CSS whose coordinates are recorded in variants is the dominant one (Figure 2. D, D248). However, there exists also another (D195) which has coordinates: 117232182, 3 splice site, CAATTTAG|TGCAGAAA .\n",
     "createdBy" : {
@@ -211,15 +212,15 @@
       "genotype" : "HETEROZYGOUS"
     } ],
     "phenotypicFeatures" : [ {
-      "termId" : "HP:0000822",
-      "isExcluded" : true,
+      "termId" : "HP:0002110",
+      "isExcluded" : false,
       "observationAge" : {
         "onset" : "P0D",
         "resolution" : "P10Y20D"
       }
     }, {
-      "termId" : "HP:0002110",
-      "isExcluded" : false,
+      "termId" : "HP:0000822",
+      "isExcluded" : true,
       "observationAge" : {
         "onset" : "P0D",
         "resolution" : "P10Y20D"
@@ -251,15 +252,15 @@
       "genotype" : "HOMOZYGOUS_REFERENCE"
     } ],
     "phenotypicFeatures" : [ {
-      "termId" : "HP:0002110",
-      "isExcluded" : true,
+      "termId" : "HP:0000822",
+      "isExcluded" : false,
       "observationAge" : {
         "onset" : "P0D",
         "resolution" : "P15Y2M4D"
       }
     }, {
-      "termId" : "HP:0000822",
-      "isExcluded" : false,
+      "termId" : "HP:0002110",
+      "isExcluded" : true,
       "observationAge" : {
         "onset" : "P0D",
         "resolution" : "P15Y2M4D"

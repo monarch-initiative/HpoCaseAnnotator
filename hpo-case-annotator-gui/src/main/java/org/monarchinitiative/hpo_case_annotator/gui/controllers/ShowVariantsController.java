@@ -7,7 +7,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
-import org.monarchinitiative.hpo_case_annotator.io.ModelUtils;
+import org.monarchinitiative.hpo_case_annotator.model.ModelUtils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;

@@ -10,37 +10,42 @@ import java.util.stream.Stream;
 
 class CohortStudyDefault implements CohortStudy {
 
+    private final String id;
     private final Publication publication;
     private final List<CuratedVariant> variants;
     private final Set<Individual> members;
     private final StudyMetadata studyMetadata;
 
-    private CohortStudyDefault(Publication publication,
+    private CohortStudyDefault(String id,
+                               Publication publication,
                                List<CuratedVariant> variants,
                                Set<Individual> members,
                                StudyMetadata studyMetadata) {
-        this.publication = publication;
-        this.variants = variants;
-        this.members = members;
-        this.studyMetadata = studyMetadata;
+        this.id = Objects.requireNonNull(id, "Id must not be null");
+        this.publication = Objects.requireNonNull(publication, "Publication must not be null");
+        this.variants = Objects.requireNonNull(variants, "Variants must not be null");
+        this.members = Objects.requireNonNull(members, "Members must not be null");
+        if (members.isEmpty())
+            throw new IllegalArgumentException("At least one member must be present");
+        this.studyMetadata = Objects.requireNonNull(studyMetadata, "Study metadata must not be null");
     }
 
-    static CohortStudyDefault of(Publication publication,
+    static CohortStudyDefault of(String id,
+                                 Publication publication,
                                  Collection<CuratedVariant> variants,
                                  Collection<? extends Individual> members,
                                  StudyMetadata studyMetadata) {
-        Objects.requireNonNull(publication, "Publication must not be null");
-        Objects.requireNonNull(variants, "Variants must not be null");
-        Objects.requireNonNull(members, "Members must not be null");
-        if (members.isEmpty())
-            throw new IllegalArgumentException("At least one member must be present");
 
-        Objects.requireNonNull(studyMetadata, "Study metadata must not be null");
-
-        return new CohortStudyDefault(publication,
+        return new CohortStudyDefault(id,
+                publication,
                 List.copyOf(variants),
                 Set.copyOf(members),
                 studyMetadata);
+    }
+
+    @Override
+    public String id() {
+        return id;
     }
 
     @Override
@@ -68,20 +73,21 @@ class CohortStudyDefault implements CohortStudy {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CohortStudyDefault that = (CohortStudyDefault) o;
-        return Objects.equals(publication, that.publication) && Objects.equals(variants, that.variants) && Objects.equals(members, that.members) && Objects.equals(studyMetadata, that.studyMetadata);
+        return Objects.equals(id, that.id) && Objects.equals(publication, that.publication) && Objects.equals(variants, that.variants) && Objects.equals(members, that.members) && Objects.equals(studyMetadata, that.studyMetadata);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(publication, variants, members, studyMetadata);
+        return Objects.hash(id, publication, variants, members, studyMetadata);
     }
 
     @Override
     public String toString() {
         return "CohortStudyDefault{" +
-                "publication=" + publication +
+                "id='" + id + '\'' +
+                ", publication=" + publication +
                 ", variants=" + variants +
-                ", individuals=" + members +
+                ", members=" + members +
                 ", studyMetadata=" + studyMetadata +
                 '}';
     }

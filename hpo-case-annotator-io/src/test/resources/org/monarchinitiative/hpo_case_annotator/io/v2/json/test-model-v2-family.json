@@ -1,4 +1,5 @@
 {
+  "id" : "familyStudyTest",
   "studyMetadata" : {
     "freeText" : "Authors are describing a mutations in CFTR exon 13 that appears to contain two 3'CSS utilization of which is increased when there is a mutation in ESE element present in exon 13 (Figure 2.).\n\nThe 3'CSS whose coordinates are recorded in variants is the dominant one (Figure 2. D, D248). However, there exists also another (D195) which has coordinates: 117232182, 3 splice site, CAATTTAG|TGCAGAAA .\n",
     "createdBy" : {

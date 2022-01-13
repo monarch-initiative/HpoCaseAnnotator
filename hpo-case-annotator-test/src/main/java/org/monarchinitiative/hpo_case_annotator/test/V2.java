@@ -18,18 +18,13 @@ class V2 {
     private static final GenomicAssembly HG19 = GenomicAssemblies.GRCh37p13();
 
     public static FamilyStudy comprehensiveFamilyStudy() {
-        Publication publication = getPublication();
-        List<CuratedVariant> variants = getVariants();
-        Pedigree pedigree = getPedigree();
-        StudyMetadata studyMetadata = getStudyMetadata();
-
-        return FamilyStudy.of(publication, variants, pedigree, studyMetadata);
+        return FamilyStudy.of("familyStudyTest", getPublication(), getVariants(), getPedigree(), getStudyMetadata());
     }
 
     public static CohortStudy comprehensiveCohortStudy() {
         Collection<? extends Individual> members = getCohortMembers();
 
-        return CohortStudy.of(getPublication(), getVariants(), members, getStudyMetadata());
+        return CohortStudy.of("cohortStudyTest", getPublication(), getVariants(), members, getStudyMetadata());
     }
 
     private static Publication getPublication() {

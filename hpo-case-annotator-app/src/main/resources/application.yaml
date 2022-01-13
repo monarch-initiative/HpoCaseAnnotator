@@ -1,0 +1,31 @@
+## This file is supposed to be bundled in the JAR file
+
+# Maven will insert the project version here, e.g. 1.0.9
+hca:
+  version: @project.version@
+  name: Hpo Case Annotator
+
+  entrez-gene-url: ftp://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/Mammalia/Homo_sapiens.gene_info.gz
+  reference:
+#    hg18:
+#      genome-fasta-url:
+#      genome-assembly-report-url:
+
+    hg19:
+      genome-fasta-url: http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/chromFa.tar.gz
+      genome-assembly-report-url: https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/405/GCF_000001405.25_GRCh37.p13/GCF_000001405.25_GRCh37.p13_assembly_report.txt
+
+    hg38:
+      genome-fasta-url: http://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.chromFa.tar.gz
+      genome-assembly-report-url: https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/405/GCF_000001405.39_GRCh38.p13/GCF_000001405.39_GRCh38.p13_assembly_report.txt
+
+  hpo:
+    ontology-url: https://raw.githubusercontent.com/obophenotype/human-phenotype-ontology/master/hp.json
+
+  text-mining:
+    biolark-url: http://phenotyper.monarchinitiative.org:5678/cr/annotate
+    scigraph-url: https://scigraph-ontology.monarchinitiative.org/scigraph/annotations/complete
+
+  liftover:
+    hg18-to-hg38-url: http://hgdownload.cse.ucsc.edu/goldenPath/hg18/liftOver/hg18ToHg38.over.chain.gz
+    hg19-to-hg38-url: https://hgdownload.cse.ucsc.edu/goldenPath/hg19/liftOver/hg19ToHg38.over.chain.gz

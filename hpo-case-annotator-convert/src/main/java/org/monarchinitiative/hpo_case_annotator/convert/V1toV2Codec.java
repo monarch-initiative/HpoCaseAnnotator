@@ -2,6 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.convert;
 
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
+import org.monarchinitiative.hpo_case_annotator.model.ModelUtils;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Publication;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
@@ -306,12 +307,13 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
 
     @Override
     public Study encode(DiseaseCase diseaseCase) throws ModelTransformationException {
+        String id = ModelUtils.getFileNameFor(diseaseCase);
         Publication publication = transformPublication(diseaseCase.getPublication());
         List<CuratedVariant> variants = transformVariants(diseaseCase.getVariantList());
         Pedigree pedigree = transformPedigree(diseaseCase.getFamilyInfo(), diseaseCase.getDisease(), diseaseCase.getPhenotypeList(), diseaseCase.getVariantList(), variants);
         StudyMetadata metadata = transformMetadata(diseaseCase.getMetadata(), diseaseCase.getBiocurator(), diseaseCase.getSoftwareVersion());
 
-        return FamilyStudy.of(publication, variants, pedigree, metadata);
+        return FamilyStudy.of(id, publication, variants, pedigree, metadata);
     }
 
     @Override

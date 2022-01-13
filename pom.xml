@@ -4,7 +4,7 @@
 
     <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
     <artifactId>hpo-case-annotator</artifactId>
-    <version>1.0.15-SNAPSHOT</version>
+    <version>2.0.0-RC1-SNAPSHOT</version>
     <modules>
         <module>hpo-case-annotator-model</module>
         <module>hpo-case-annotator-test</module>
@@ -15,6 +15,7 @@
         <module>hpo-case-annotator-forms</module>
         <module>hpo-case-annotator-gui</module>
         <module>hpo-case-annotator-cli</module>
+        <module>hpo-case-annotator-app</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -30,7 +31,7 @@
 
         <jannovar.version>0.36</jannovar.version>
         <phenopacket.version>1.0.0</phenopacket.version>
-        <phenol.version>1.6.0</phenol.version>
+        <phenol.version>1.6.4-SNAPSHOT</phenol.version>
         <svart.version>2.0.0-SNAPSHOT</svart.version>
         <htsjdk.version>2.19.0</htsjdk.version>
         <spring.version>4.3.8.RELEASE</spring.version>

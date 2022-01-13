@@ -1,11 +1,8 @@
 package org.monarchinitiative.hpo_case_annotator.forms;
 
-import org.monarchinitiative.hpo_case_annotator.forms.individual.GenotypedVariant;
-import org.monarchinitiative.hpo_case_annotator.forms.model.PhenotypeDescription;
-import org.monarchinitiative.hpo_case_annotator.forms.model.PhenotypeDescriptionSimple;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.model.PhenotypeDescription;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.model.PhenotypeDescriptionSimple;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadata;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadataContext;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -20,13 +17,6 @@ public class TestData {
     private static final GenomicAssembly GRCH38 = GenomicAssemblies.GRCh38p13();
     private static final Contig CHR_X = GRCH38.contigByName("chrX");
 
-    public static List<GenotypedVariant> makeTestVariants() {
-        return List.of(
-                GenotypedVariant.of(CuratedVariant.of(GRCH38.name(), Variant.of(CHR_X, "abc", Strand.POSITIVE, Coordinates.of(CoordinateSystem.oneBased(), 100_000, 100_000), "A", "C"), variantMetadata()), Genotype.UNKNOWN),
-                GenotypedVariant.of(CuratedVariant.of(GRCH38.name(), Variant.of(CHR_X, "def", Strand.POSITIVE, Coordinates.of(CoordinateSystem.oneBased(), 20, 20), "G", "T"), variantMetadata()), Genotype.UNKNOWN),
-                GenotypedVariant.of(CuratedVariant.of(GRCH38.name(), Variant.of(CHR_X, "ghi", Strand.POSITIVE, Coordinates.of(CoordinateSystem.oneBased(), 30, 30), "T", "TCA"), variantMetadata()), Genotype.UNKNOWN)
-        );
-    }
 
     public static Individual makeIndividual() {
         return Individual.of("ABC",

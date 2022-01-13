@@ -2,13 +2,15 @@ package org.monarchinitiative.hpo_case_annotator.forms;
 
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifier;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblyRegistry;
+import org.monarchinitiative.hpo_case_annotator.core.reference.DeprecatedGenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.test.ControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.forms.test.TestGeneIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.test.TestGenomicAssemblyRegistry;
+import org.monarchinitiative.hpo_case_annotator.forms.test.TestGenomicAssemblyService;
 import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;
+import org.monarchinitiative.svart.GenomicAssemblies;
 
 import java.io.File;
 import java.util.List;
@@ -20,13 +22,16 @@ public class BaseControllerTest {
 
     public static final Ontology ONTOLOGY = OntologyLoader.loadOntology(LOCAL_ONTOLOGY_OBO);
 
-    public static final Resources RESOURCES = new Resources();
-
-    public static final GenomicAssemblyRegistry GENOMIC_ASSEMBLY_REGISTRY = new TestGenomicAssemblyRegistry();
-
+    public static final GenomicAssemblyRegistry GENOMIC_ASSEMBLY_REGISTRY = createGenomicAssemblyRegistry();
     public static final GeneIdentifierService GENE_IDENTIFIER_SERVICE = makeGeneIdService();
-
     public static final ControllerFactory CONTROLLER_FACTORY = new ControllerFactory(GENOMIC_ASSEMBLY_REGISTRY, GENE_IDENTIFIER_SERVICE);
+
+    private static GenomicAssemblyRegistry createGenomicAssemblyRegistry() {
+        GenomicAssemblyRegistry genomicAssemblyRegistry = new GenomicAssemblyRegistry();
+        genomicAssemblyRegistry.setHg19Service(new TestGenomicAssemblyService(GenomicAssemblies.GRCh37p13()));
+        genomicAssemblyRegistry.setHg38Service(new TestGenomicAssemblyService(GenomicAssemblies.GRCh38p13()));
+        return genomicAssemblyRegistry;
+    }
 
     private static TestGeneIdentifierService makeGeneIdService() {
         Map<GeneIdentifier, List<String>> genes = Map.of(

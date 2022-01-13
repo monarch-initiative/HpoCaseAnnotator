@@ -4,7 +4,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.ComboBox;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblyService;
 import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataException;
-import org.monarchinitiative.hpo_case_annotator.forms.format.ContigNameStringConverter;
 import org.monarchinitiative.svart.Contig;
 
 import java.util.List;

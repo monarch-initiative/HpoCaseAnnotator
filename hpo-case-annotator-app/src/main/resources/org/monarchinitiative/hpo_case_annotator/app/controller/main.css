@@ -1,0 +1,6 @@
+TabPane {
+    -fx-tab-min-width: 120px;
+    -fx-tab-min-height: 40px;
+}
+
+

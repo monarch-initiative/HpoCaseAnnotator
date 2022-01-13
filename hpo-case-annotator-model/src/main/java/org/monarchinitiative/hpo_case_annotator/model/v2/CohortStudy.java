@@ -6,11 +6,12 @@ import java.util.Collection;
 
 public interface CohortStudy extends Study {
 
-    static CohortStudy of(Publication publication,
+    static CohortStudy of(String id,
+                          Publication publication,
                           Collection<CuratedVariant> variants,
                           Collection<? extends Individual> members,
                           StudyMetadata studyMetadata) {
-        return CohortStudyDefault.of(publication, variants, members, studyMetadata);
+        return CohortStudyDefault.of(id, publication, variants, members, studyMetadata);
     }
 
 }
