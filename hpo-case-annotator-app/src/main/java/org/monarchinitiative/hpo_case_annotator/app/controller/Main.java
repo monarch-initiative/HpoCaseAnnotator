@@ -28,7 +28,6 @@ import org.monarchinitiative.hpo_case_annotator.io.ModelParsers;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.v2.CohortStudy;
 import org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy;
-import org.monarchinitiative.hpo_case_annotator.model.v2.PedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,11 +50,10 @@ public class Main {
     private final HCAControllerFactory controllerFactory;
 
     /**
-     * This list contains controllers of the tabs in the same order as they are present in the {@link #contentTabPane}.
+     * This list contains data wrappers in the same order as they are present in the {@link #contentTabPane}.
      * <p>
      * The only place where items are added into this list is the {@link #addStudy(URL, StudyWrapper)} method.
      */
-    private final List<DataController<?>> controllers = new LinkedList<>();
     private final List<StudyWrapper<?>> wrappers = new LinkedList<>();
     public MenuItem addEditDiseaseMenuItem;
 
@@ -172,7 +170,6 @@ public class Main {
             tab.setOnCloseRequest(e -> removeStudy(contentTabPane.getTabs().indexOf(tab)));
 
             contentTabPane.getTabs().add(tab);
-            controllers.add(controller);
             wrappers.add(wrapper);
         } catch (IOException e) {
             LOGGER.warn("Error loading study: {}", e.getMessage(), e);
@@ -181,7 +178,6 @@ public class Main {
 
     private void removeStudy(int tabIdx) {
         contentTabPane.getTabs().remove(tabIdx);
-        controllers.remove(tabIdx);
         wrappers.remove(tabIdx);
     }
 
@@ -334,21 +330,26 @@ public class Main {
 
     @FXML
     private void exportToCSVMenuItemAction() {
+        // TODO - implement
+        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
     }
 
     @FXML
     private void exportToSummaryFileMenuItemAction() {
-
+        // TODO - implement
+        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
     }
 
     @FXML
     private void exportPhenopacketCurrentCaseMenuItemAction() {
-
+        // TODO - implement
+        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
     }
 
     @FXML
     private void exportPhenopacketAllCasesMenuItemAction() {
-
+        // TODO - implement
+        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
     }
 
     @FXML
@@ -393,17 +394,22 @@ public class Main {
 
     @FXML
     private void viewOnPubmedMenuItemAction() {
+        // TODO - implement
+        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
     }
 
     /*                                                 PROJECT                                                        */
 
     @FXML
     private void showCuratedPublicationsMenuItemAction() {
-
+        // TODO - implement
+        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
     }
 
     @FXML
     private void showCuratedVariantsMenuItemAction() {
+        // TODO - implement
+        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
     }
 
     /*                                                 GENOTYPE                                                       */
@@ -455,28 +461,34 @@ public class Main {
 
     @FXML
     private void addEditDiseaseMenuItemAction() {
+        // TODO - implement
+        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
     }
 
     /*                                                 VALIDATE                                                       */
     @FXML
     private void validateCurrentEntryMenuItemAction() {
-
+        // TODO - implement
+        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
     }
 
     @FXML
     private void validateAllModelsMenuItemAction() {
-
+        // TODO - implement
+        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
     }
 
     /*                                                 HELP                                                           */
 
     @FXML
     private void helpMenuItemAction() {
-
+        // TODO - implement
+        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
     }
 
     @FXML
     private void liftoverAction() {
-
+        // TODO - implement
+        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
     }
 }

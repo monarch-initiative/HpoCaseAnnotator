@@ -15,30 +15,6 @@ public class GenomicLocalResource {
     private final ObjectProperty<Path> fastaDict = new SimpleObjectProperty<>(this, "fastaDict");
 
 
-    public static Optional<GenomicLocalResource> createFromFastaPath(File fastaPath) {
-        return fastaPath == null
-                ? Optional.empty()
-                : createFromFastaPath(fastaPath.toPath());
-    }
-
-
-    public static Optional<GenomicLocalResource> createFromFastaPath(Path fastaPath) {
-        if (fastaPath==null) return Optional.empty();
-
-        File fastaFile = fastaPath.toFile();
-        String fastaName = fastaFile.getName();
-        if (!fastaName.endsWith(".fa")) {
-            return Optional.empty();
-        }
-
-        Path parent = fastaFile.getParentFile().toPath();
-        Path assemblyReport = parent.resolve(fastaName.replace(".fa", ".assembly-report.txt"));
-        Path fastaFai = parent.resolve(fastaName + ".fai");
-        Path fastaDict = parent.resolve(fastaName + ".dict");
-
-        return Optional.of(new GenomicLocalResource(assemblyReport, fastaPath, fastaFai, fastaDict));
-    }
-
     public GenomicLocalResource() {
     }
 
@@ -95,5 +71,28 @@ public class GenomicLocalResource {
 
     public ObjectProperty<Path> fastaDictProperty() {
         return fastaDict;
+    }
+
+    public static Optional<GenomicLocalResource> createFromFastaPath(File fastaPath) {
+        return fastaPath == null
+                ? Optional.empty()
+                : createFromFastaPath(fastaPath.toPath());
+    }
+
+    public static Optional<GenomicLocalResource> createFromFastaPath(Path fastaPath) {
+        if (fastaPath == null) return Optional.empty();
+
+        File fastaFile = fastaPath.toFile();
+        String fastaName = fastaFile.getName();
+        if (!fastaName.endsWith(".fa")) {
+            return Optional.empty();
+        }
+
+        Path parent = fastaFile.getParentFile().toPath();
+        Path assemblyReport = parent.resolve(fastaName.replace(".fa", ".assembly-report.txt"));
+        Path fastaFai = parent.resolve(fastaName + ".fai");
+        Path fastaDict = parent.resolve(fastaName + ".dict");
+
+        return Optional.of(new GenomicLocalResource(assemblyReport, fastaPath, fastaFai, fastaDict));
     }
 }

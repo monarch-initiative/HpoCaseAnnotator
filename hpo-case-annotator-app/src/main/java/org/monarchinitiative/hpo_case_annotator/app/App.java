@@ -73,7 +73,7 @@ public class App extends Application {
                 context.getBean("resourceProperties", Properties.class),
                 context.getBean("resourcePropertiesFilePath", File.class));
 
-        LOGGER.info("Shutting down...");
+        LOGGER.debug("Shutting down...");
         context.close();
         LOGGER.info("Bye!");
     }
@@ -102,7 +102,7 @@ public class App extends Application {
             resourceProperties.setProperty(ResourcePaths.BIOCURATOR_ID_PROPERTY, optionalResources.getBiocuratorId());
         }
         resourceProperties.store(new FileWriter(target), "Hpo Case Annotator properties");
-        LOGGER.info("Properties saved to `{}`", target.getAbsolutePath());
+        LOGGER.debug("Properties saved to `{}`", target.getAbsolutePath());
     }
 
     private static Optional<String> createReferenceGenomeFastaPath(GenomicLocalResource localResource) {

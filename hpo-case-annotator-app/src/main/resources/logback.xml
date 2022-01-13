@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <property name="pattern" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+            <pattern>${pattern}</pattern>
         </encoder>
     </appender>
-    <logger name="org.monarchinitiative.hpo_case_annotator" level="INFO"/>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>hpo-case-annotator.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
+    <logger name="org.monarchinitiative.hpo_case_annotator" level="DEBUG">
+        <appender-ref ref="FILE"/>
+    </logger>
     <logger name="org.monarchinitiative.phenol" level="INFO"/>
     <logger name="org.springframework.boot" level="WARN"/>
     <root level="info">
