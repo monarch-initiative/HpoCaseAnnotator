@@ -1,6 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.model.v2.variant;
 
-import org.apache.commons.codec.digest.DigestUtils;
+import org.monarchinitiative.hpo_case_annotator.model.util.MD5Digest;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadata;
 import org.monarchinitiative.svart.*;
 
@@ -42,7 +42,7 @@ public interface CuratedVariant {
                     ref(),
                     alt());
         }
-        return DigestUtils.md5Hex(id);
+        return MD5Digest.digest(id);
     }
 
     default Contig contig() {

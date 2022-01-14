@@ -5,6 +5,7 @@ import javafx.application.HostServices;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.app.config.*;
 import org.monarchinitiative.hpo_case_annotator.app.controller.Main;
@@ -62,6 +63,7 @@ public class App extends Application {
         Parent parent = loader.load();
         Scene scene = new Scene(parent, 1000, 800);
         stage.setTitle(properties.name() + ' ' + properties.version());
+        stage.getIcons().add(new Image(App.class.getResourceAsStream("/img/donald-duck.png")));
         stage.setScene(scene);
         stage.show();
     }
