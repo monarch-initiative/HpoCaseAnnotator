@@ -12,6 +12,8 @@ import javafx.stage.Window;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -27,6 +29,8 @@ import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSy
  * Created by Daniel Danis.
  */
 public final class SplicingVariantController extends AbstractVariantController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SplicingVariantController.class);
 
     // ******************** FXML elements, injected by FXMLLoader ********************************** //
     // ************************* Variant *********************************** //
@@ -193,12 +197,7 @@ public final class SplicingVariantController extends AbstractVariantController {
 
     @Override
     public Variant getData() {
-        int pos;
-        try {
-            pos = Integer.parseInt(varPositionTextField.getText());
-        } catch (NumberFormatException nfe) {
-            pos = 0;
-        }
+        int pos = parseIntOrGetDefaultValue(varPositionTextField::getText, -1);
 
         return Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()

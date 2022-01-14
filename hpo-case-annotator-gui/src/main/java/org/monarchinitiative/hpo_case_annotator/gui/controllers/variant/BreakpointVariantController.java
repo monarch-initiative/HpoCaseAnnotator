@@ -168,8 +168,8 @@ public class BreakpointVariantController extends AbstractVariantController {
     @Override
     public Variant getData() {
         String rightContig = rightChrComboBox.getValue() == null ? "NA" : rightChrComboBox.getValue();
-        int leftPos = parseIntOrGetDefaultValue(leftPosTextField::getText, 0);
-        int rightPos = parseIntOrGetDefaultValue(rightPosTextField::getText, 0);
+        int leftPos = parseIntOrGetDefaultValue(leftPosTextField::getText,-1);
+        int rightPos = parseIntOrGetDefaultValue(rightPosTextField::getText, -1);
         return Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()
                         .setGenomeAssembly(assemblyComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : assemblyComboBox.getValue())
