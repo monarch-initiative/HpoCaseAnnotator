@@ -1,6 +1,5 @@
 module org.monarchinitiative.hpo_case_annotator.forms {
     requires org.monarchinitiative.hpo_case_annotator.core;
-    requires org.monarchinitiative.hpo_case_annotator.test; // TODO remove after prototyping
 
     requires javafx.controls;
     requires javafx.graphics;

@@ -11,7 +11,7 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>hpo-case-annotator.log</file>
+        <file>.hpo-case-annotator.log</file>
         <append>false</append>
         <encoder>
             <pattern>${pattern}</pattern>

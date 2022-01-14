@@ -84,7 +84,7 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
             readEntrezGenes(resourceProperties.getProperty(ResourcePaths.ENTREZ_GENE_PATH_PROPERTY));
 
             readHpo(resourceProperties.getProperty(ResourcePaths.ONTOLOGY_PATH_PROPERTY));
-            LOGGER.info("Loading complete");
+            LOGGER.info("Startup complete");
         } catch (IOException e) {
             LOGGER.warn("Error during startup: {}", e.getMessage(), e);
         }

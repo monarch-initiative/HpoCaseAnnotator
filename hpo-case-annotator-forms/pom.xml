@@ -41,11 +41,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <!-- TODO - remove after prototyping -->
             <groupId>org.monarchinitiative.hpo-case-annotator</groupId>
             <artifactId>hpo-case-annotator-test</artifactId>
             <version>${project.parent.version}</version>
-<!--            <scope>test</scope>-->
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

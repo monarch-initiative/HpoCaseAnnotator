@@ -19,7 +19,7 @@
             </resource>
         </resources>
         <plugins>
-            <!-- TODO - modular start -->
+            <!-- This is how we should include dependencies when we advance to module path -->
 <!--            <plugin>-->
 <!--                <groupId>org.apache.maven.plugins</groupId>-->
 <!--                <artifactId>maven-dependency-plugin</artifactId>-->
@@ -32,11 +32,13 @@
 <!--                            <goal>copy-dependencies</goal>-->
 <!--                        </goals>-->
 <!--                        <configuration>-->
+<!--                            <includeScope>compile</includeScope>-->
 <!--                            <outputDirectory>${project.build.directory}/lib</outputDirectory>-->
 <!--                        </configuration>-->
 <!--                    </execution>-->
 <!--                </executions>-->
 <!--            </plugin>-->
+            <!-- Build fat JAR -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

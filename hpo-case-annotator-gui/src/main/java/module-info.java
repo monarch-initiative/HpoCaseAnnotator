@@ -7,8 +7,8 @@ module org.monarchinitiative.hpo_case_annotator.gui {
 
     requires org.monarchinitiative.hpotextmining.gui;
     requires org.monarchinitiative.phenol.io;
-    requires phenopacket.schema;
-    requires protobuf.java.util;
+
+    requires com.google.protobuf.util;
 
     requires javafx.base;
     requires javafx.controls;
