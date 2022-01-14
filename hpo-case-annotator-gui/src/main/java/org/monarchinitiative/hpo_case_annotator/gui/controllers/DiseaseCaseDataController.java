@@ -544,44 +544,31 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
     @Override
     public DiseaseCase getData() {
-        Gene gene;
-        if (entrezIDTextField.getText().isEmpty() || geneSymbolTextField.getText().isEmpty()) {
-            gene = Gene.getDefaultInstance();
-        } else {
-            try {
-                gene = Gene.newBuilder()
-                        .setEntrezId(Integer.parseInt(entrezIDTextField.getText()))
-                        .setSymbol(geneSymbolTextField.getText())
-                        .build();
-            } catch (NumberFormatException nfe) {
-                LOGGER.warn("Not valid integer/entrez id: {}", entrezIDTextField.getText());
-                gene = Gene.getDefaultInstance();
-            }
+        int entrezId;
+        try {
+            entrezId = Integer.parseInt(entrezIDTextField.getText());
+        } catch (NumberFormatException nfe) {
+            LOGGER.warn("Not valid integer/entrez id: {}", entrezIDTextField.getText());
+            entrezId = -1;
         }
 
-        Disease disease;
-        if (diseaseDatabaseComboBox.getValue() == null || diseaseDatabaseComboBox.getValue().isEmpty() ||
-                diseaseIDTextField.getText().isEmpty() || diseaseNameTextField.getText().isEmpty()) {
-            disease = Disease.getDefaultInstance();
-        } else {
-            disease = Disease.newBuilder()
+        Gene gene = Gene.newBuilder()
+                .setEntrezId(entrezId)
+                .setSymbol(geneSymbolTextField.getText())
+                .build();
+
+
+        Disease disease = Disease.newBuilder()
                     .setDatabase(diseaseDatabaseComboBox.getValue())
                     .setDiseaseId(diseaseIDTextField.getText())
                     .setDiseaseName(diseaseNameTextField.getText())
                     .build();
-        }
 
-        FamilyInfo familyInfo;
-        if (probandFamilyTextField.getText().isEmpty() || ageTextField.getText().isEmpty()
-                || sexComboBox.getValue() == null) {
-            familyInfo = FamilyInfo.getDefaultInstance();
-        } else {
-            familyInfo = FamilyInfo.newBuilder()
+        FamilyInfo familyInfo = FamilyInfo.newBuilder()
                     .setAge(ageTextField.getText())
                     .setFamilyOrProbandId(probandFamilyTextField.getText())
                     .setSex(sexComboBox.getValue())
                     .build();
-        }
 
         return DiseaseCase.newBuilder()
                 .setPublication(publication.get())

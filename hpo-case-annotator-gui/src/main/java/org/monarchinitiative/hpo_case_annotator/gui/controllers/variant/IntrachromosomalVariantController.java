@@ -137,8 +137,8 @@ public class IntrachromosomalVariantController extends AbstractVariantController
                 .setVariantPosition(VariantPosition.newBuilder()
                         .setGenomeAssembly(assemblyComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : assemblyComboBox.getValue())
                         .setContig(chromosomeComboBox.getValue() == null ? "NA" : chromosomeComboBox.getValue())
-                        .setPos(parseIntOrGetDefaultValue(beginTextField::getText, 0)) // begin is 1-based
-                        .setPos2(parseIntOrGetDefaultValue(endTextField::getText, 0)) // end is also 1-based
+                        .setPos(parseIntOrGetDefaultValue(beginTextField::getText, -1)) // begin is 1-based
+                        .setPos2(parseIntOrGetDefaultValue(endTextField::getText, -1)) // end is also 1-based
                         .setRefAllele(defaultRefAllele)
                         .setAltAllele(svType.name())
                         .setCiBeginOne(parseIntOrGetDefaultValue(ciBeginFirstTextField::getText, 0))

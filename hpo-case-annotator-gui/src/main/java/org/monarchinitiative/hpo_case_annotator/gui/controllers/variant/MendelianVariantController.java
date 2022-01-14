@@ -128,7 +128,8 @@ public final class MendelianVariantController extends AbstractVariantController 
     }
 
 
-    public void initialize() {
+    @FXML
+    private void initialize() {
         genomeBuildComboBox.getItems().addAll(elementValues.getGenomeBuild());
         chromosomeComboBox.getItems().addAll(elementValues.getChromosome());
         // add text formatter to impose constraint on the field
@@ -161,9 +162,8 @@ public final class MendelianVariantController extends AbstractVariantController 
                         && NONEMPTY_ALLELE_REGEXP.matcher(referenceTextField.getText()).matches()
                         && NONEMPTY_ALLELE_REGEXP.matcher(alternateTextField.getText()).matches(),
                 genomeBuildComboBox.valueProperty(), chromosomeComboBox.valueProperty(), positionTextField.textProperty(),
-                referenceTextField.textProperty(), alternateTextField.textProperty())
-                .not();
-        generateSnippetButton.disableProperty().bind(allDataForSnippetGenerationIsPresent);
+                referenceTextField.textProperty(), alternateTextField.textProperty());
+        generateSnippetButton.disableProperty().bind(allDataForSnippetGenerationIsPresent.not());
     }
 
     @Override
@@ -199,12 +199,7 @@ public final class MendelianVariantController extends AbstractVariantController 
 
     @Override
     public Variant getData() {
-        int pos;
-        try {
-            pos = Integer.parseInt(positionTextField.getText());
-        } catch (NumberFormatException nfe) {
-            pos = 0;
-        }
+        int pos = parseIntOrGetDefaultValue(positionTextField::getText, -1);
 
         return Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()
