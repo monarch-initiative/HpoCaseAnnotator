@@ -66,16 +66,26 @@ public final class GenomeAssemblyDownloader extends Task<Void> {
         File genomeTarGz = File.createTempFile("hca-genome-downloader", ".tar.gz");
         genomeTarGz.deleteOnExit();
 
+        LOGGER.info("Downloading genomic assembly report from `{}`", genomeAssemblyReportUrl);
         downloadResource(genomeAssemblyReportUrl, genomicAssemblyPaths.getAssemblyReport());
+        LOGGER.info("Downloading reference genome from `{}`", genomeUrl);
         downloadResource(genomeUrl, genomeTarGz.toPath());
 
+        LOGGER.info("Concatenating reference genome into a single file at `{}`", genomicAssemblyPaths.getFasta());
         concatenateIntoSingleMulticontigFasta(genomeTarGz, genomicAssemblyPaths.getFasta());
 
         LOGGER.info("Indexing FASTA file `{}`", genomicAssemblyPaths.getFasta());
+        updateMessage("Indexing FASTA file");
+        updateProgress(-1, 1);
         FastaSequenceIndex index = Genome.indexFastaFile(genomicAssemblyPaths.getFasta(), genomicAssemblyPaths.getFastaFai());
+        updateProgress(1, 1);
 
         LOGGER.info("Building SAM sequence dictionary");
+        updateMessage("Building SAM sequence dictionary");
+        updateProgress(-1, 1);
         Genome.buildSamSequenceDictionary(index, genomicAssemblyPaths.getFastaDict());
+        updateProgress(1, 1);
+        updateMessage("Done");
 
         return null;
     }
