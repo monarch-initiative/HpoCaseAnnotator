@@ -27,13 +27,10 @@ module org.monarchinitiative.hca.gui {
 
     requires htsjdk;
     requires org.apache.commons.compress;
-//    requires org.apache.commons.io;
     requires org.slf4j;
 
     exports org.monarchinitiative.hpo_case_annotator.gui;
-//    exports org.monarchinitiative.hpo_case_annotator.gui to javafx.graphics;
     exports org.monarchinitiative.hpo_case_annotator.gui.controllers;
-//    exports org.monarchinitiative.hpo_case_annotator.gui.controllers to javafx.fxml;
     exports org.monarchinitiative.hpo_case_annotator.gui.util;
 
     opens org.monarchinitiative.hpo_case_annotator.gui.controllers to javafx.fxml, com.google.guice, com.fasterxml.jackson.databind;
