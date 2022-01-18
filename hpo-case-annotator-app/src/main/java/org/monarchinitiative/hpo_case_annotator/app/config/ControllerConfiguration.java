@@ -146,6 +146,13 @@ public class ControllerConfiguration {
         return new OntologyTreeBrowserController();
     }
 
+    /* *****************************************         Various           ****************************************** */
+    @Bean
+    @Scope("prototype")
+    public AgeController ageController() {
+        return new AgeController();
+    }
+
     /* *****************************************          Utils            ****************************************** */
 
     @Bean
