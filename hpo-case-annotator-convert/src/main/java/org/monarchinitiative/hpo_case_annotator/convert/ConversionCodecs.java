@@ -15,7 +15,7 @@ public final class ConversionCodecs {
         // private no-op
     }
 
-    public static Codec<DiseaseCase, Study> diseaseCaseStudyCodec() {
+    public static Codec<DiseaseCase, Study> v1ToV2() {
         return V1toV2Codec.getInstance();
     }
 

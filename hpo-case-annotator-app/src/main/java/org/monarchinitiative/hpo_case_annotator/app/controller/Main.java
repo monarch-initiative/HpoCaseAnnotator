@@ -209,7 +209,7 @@ public class Main {
                 // v1
                 try {
                     DiseaseCase dc = v1Parser.read(file.toPath());
-                    study = ConversionCodecs.diseaseCaseStudyCodec().encode(dc);
+                    study = ConversionCodecs.v1ToV2().encode(dc);
                 } catch (IOException | ModelTransformationException e) {
                     Dialogs.showException("Error", "Error reading v1 case", e.getMessage(), e);
                     continue;
@@ -260,7 +260,7 @@ public class Main {
     private static Optional<Study> convertToStudy(Object data) {
         if (data instanceof DiseaseCase dc) {
             try {
-                return Optional.of(ConversionCodecs.diseaseCaseStudyCodec().encode(dc));
+                return Optional.of(ConversionCodecs.v1ToV2().encode(dc));
             } catch (ModelTransformationException e) {
                 LOGGER.warn("Error serializing study: {}", e.getMessage(), e);
                 return Optional.empty();
