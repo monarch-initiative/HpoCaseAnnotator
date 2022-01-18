@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.controlsfx.control.*?>
 
 <VBox stylesheets="@pedigree-member.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController">
     <children>
@@ -38,25 +37,8 @@
                 </VBox>
                 <VBox id="age-column" styleClass="column" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="h2" text="Age" />
-                        <HBox alignment="CENTER_LEFT">
-                            <children>
-                                <TextField fx:id="yearsTextField" promptText="18" HBox.hgrow="ALWAYS" />
-                                <Label text="years" HBox.hgrow="NEVER" />
-                            </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT">
-                            <children>
-                                <SearchableComboBox fx:id="monthsComboBox" promptText="0" HBox.hgrow="ALWAYS" />
-                                <Label text="months" HBox.hgrow="NEVER" />
-                            </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT">
-                            <children>
-                                <SearchableComboBox fx:id="daysComboBox" promptText="0" HBox.hgrow="ALWAYS" />
-                                <Label text="days" HBox.hgrow="NEVER" />
-                            </children>
-                        </HBox>
+                        <Label styleClass="h2" text="Age"/>
+                        <fx:include source="../Age.fxml" fx:id="age"/>
                     </children>
                 </VBox>
                 <VBox id="sex-column" styleClass="column" HBox.hgrow="ALWAYS">

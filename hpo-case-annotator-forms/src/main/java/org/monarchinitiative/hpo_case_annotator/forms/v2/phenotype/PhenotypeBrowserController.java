@@ -51,7 +51,7 @@ public class PhenotypeBrowserController {
     private void initialize() {
         ontologyTreeBrowserController.ontologyProperty().bind(ontology);
         phenotypicFeatureController.ontologyProperty().bind(ontology);
-        phenotypicFeaturesTableController.selectedPhenotypeDescription().addListener(phenotypicFeatureController.phenotypeDescriptionChangeListener());
+        phenotypicFeatureController.dataProperty().bind(phenotypicFeaturesTableController.selectedPhenotypeDescription());
         phenotypicFeaturesTableController.selectedPhenotypeDescription().addListener(ontologyTreeBrowserController.phenotypeDescriptionChangeListener());
 
         // phenotypic feature is disabled when no phenotypic feature is selected

@@ -1,0 +1,21 @@
+SearchableComboBox {
+    -fx-max-width: 100px;
+    -fx-min-height: 30px;
+}
+
+
+HBox {
+    -fx-min-height: 40px;
+    -fx-padding: 5px 0px 5px 0px;
+}
+
+Label {
+    -fx-padding: 0px 0px 0px 5px;
+    -fx-min-width: 90px;
+    -fx-min-height: 30px;
+}
+
+TextField {
+    -fx-max-width: 100px;
+    -fx-min-height: 30px;
+}

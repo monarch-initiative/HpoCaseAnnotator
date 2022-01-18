@@ -6,10 +6,12 @@ import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservableAge;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservablePhenotypicFeature;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
@@ -18,14 +20,14 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Period;
 import java.util.Optional;
 
-public class PhenotypicFeatureController {
+public class PhenotypicFeatureController extends BindingDataController<ObservablePhenotypicFeature> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PhenotypicFeatureController.class);
 
     private final ObjectProperty<Ontology> ontology = new SimpleObjectProperty<>(this, "ontology");
+    private final ObjectProperty<ObservablePhenotypicFeature> phenotypicFeature = new SimpleObjectProperty<>(this, "phenotypicFeature");
 
     private final ToggleGroup presenceStatusToggleGroup = new ToggleGroup();
     private final ToggleGroup onsetToggleGroup = new ToggleGroup();
@@ -49,6 +51,7 @@ public class PhenotypicFeatureController {
     private RadioButton onsetAgeRadioButton;
     @FXML
     private TextField onsetYearsTextField;
+    private final TextFormatter<Integer> onsetYearsTextFormatter = Formats.integerFormatter();
     @FXML
     private ComboBox<Integer> onsetMonthsComboBox;
     @FXML
@@ -63,6 +66,7 @@ public class PhenotypicFeatureController {
     private RadioButton resolutionAgeRadioButton;
     @FXML
     private TextField resolutionYearsTextField;
+    private final TextFormatter<Integer> resolutionYearsTextFormatter = Formats.integerFormatter();
     @FXML
     private ComboBox<Integer> resolutionMonthsComboBox;
     @FXML
@@ -73,11 +77,11 @@ public class PhenotypicFeatureController {
     private RadioButton resolutionDeathRadioButton;
 
     private BooleanBinding phenotypicFeatureIsExcluded;
-    private ObjectBinding<Period> onsetBinding;
-    private ObjectBinding<Period> resolutionBinding;
+    private ObjectBinding<ObservableAge> onsetBinding;
+    private ObjectBinding<ObservableAge> resolutionBinding;
 
     @FXML
-    private void initialize() {
+    protected void initialize() {
         initializeToggles();
         initializeAgeFields();
         phenotypicFeatureIsExcluded = preparePhenotypicFeatureIsExcludedBinding();
@@ -85,17 +89,17 @@ public class PhenotypicFeatureController {
         resolutionBinding = prepareResolutionBinding();
     }
 
-    private ObjectBinding<Period> prepareOnsetBinding() {
+    private ObjectBinding<ObservableAge> prepareOnsetBinding() {
         return Bindings.createObjectBinding(() -> {
                     RadioButton selectedToggle = (RadioButton) onsetToggleGroup.getSelectedToggle();
                     if (selectedToggle == null)
                         return null;
                     if (selectedToggle.equals(onsetAgeRadioButton)) {
                         // age
-                        return extractAge(onsetYearsTextField, onsetMonthsComboBox, onsetDaysComboBox);
+                        return extractAge(onsetYearsTextFormatter, onsetMonthsComboBox, onsetDaysComboBox);
                     } else if (selectedToggle.equals(onsetBirthRadioButton)) {
                         // birth
-                        return Period.ZERO;
+                        return new ObservableAge();
                     } else {
                         LOGGER.warn("Neither age nor birth selected in the onset field");
                         return null;
@@ -105,29 +109,29 @@ public class PhenotypicFeatureController {
 
     }
 
-    private ObjectBinding<Period> prepareResolutionBinding() {
+    private static ObservableAge extractAge(TextFormatter<Integer> yearsTextFormatter, ComboBox<Integer> resolutionMonthsComboBox, ComboBox<Integer> resolutionDaysComboBox) {
+        try {
+            int years = yearsTextFormatter.getValue();
+            int months = resolutionMonthsComboBox.getValue();
+            int days = resolutionDaysComboBox.getValue();
+            return new ObservableAge(years, months, days);
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Error in onset age format {}", e.getMessage());
+            return null;
+        }
+    }
+
+    private ObjectBinding<ObservableAge> prepareResolutionBinding() {
         return Bindings.createObjectBinding(() -> {
             RadioButton selectedToggle = (RadioButton) resolutionToggleGroup.getSelectedToggle();
             if (selectedToggle == null)
                 return null;
             if (selectedToggle.equals(resolutionAgeRadioButton)) {
                 // age
-                return extractAge(resolutionYearsTextField, resolutionMonthsComboBox, resolutionDaysComboBox);
+                return extractAge(resolutionYearsTextFormatter, resolutionMonthsComboBox, resolutionDaysComboBox);
             }
             return null;
         }, resolutionToggleGroup.selectedToggleProperty(), resolutionYearsTextField.textProperty(), resolutionMonthsComboBox.valueProperty(), resolutionDaysComboBox.valueProperty());
-    }
-
-    private static Period extractAge(TextField resolutionYearsTextField, ComboBox<Integer> resolutionMonthsComboBox, ComboBox<Integer> resolutionDaysComboBox) {
-        try {
-            int years = Integer.parseInt(resolutionYearsTextField.getText());
-            int months = resolutionMonthsComboBox.getValue();
-            int days = resolutionDaysComboBox.getValue();
-            return Period.of(years, months, days);
-        } catch (NumberFormatException e) {
-            LOGGER.warn("Error in onset age format {}", e.getMessage());
-            return null;
-        }
     }
 
     private BooleanBinding preparePhenotypicFeatureIsExcludedBinding() {
@@ -178,40 +182,21 @@ public class PhenotypicFeatureController {
     }
 
     private void initializeAgeFields() {
+        onsetYearsTextField.setTextFormatter(onsetYearsTextFormatter);
         onsetMonthsComboBox.getItems().addAll(FormUtils.getIntegers(11));
         onsetMonthsComboBox.getSelectionModel().selectFirst();
         onsetDaysComboBox.getItems().addAll(FormUtils.getIntegers(30));
         onsetDaysComboBox.getSelectionModel().selectFirst();
 
+        resolutionYearsTextField.setTextFormatter(resolutionYearsTextFormatter);
         resolutionMonthsComboBox.getItems().addAll(FormUtils.getIntegers(11));
         resolutionMonthsComboBox.getSelectionModel().selectFirst();
         resolutionDaysComboBox.getItems().addAll(FormUtils.getIntegers(30));
         resolutionDaysComboBox.getSelectionModel().selectFirst();
     }
 
-    public ChangeListener<ObservablePhenotypicFeature> phenotypeDescriptionChangeListener() {
-        return (obs, old, novel) -> {
-            if (old != null) unbind(old);
-            if (novel != null) bind(novel);
-        };
-    }
-
-    private void unbind(ObservablePhenotypicFeature feature) {
-        // term id & label
-        termIdLabel.setText(null);
-        nameLabel.setText(null);
-        termDefinitionLabel.setText(null);
-
-        // status
-        feature.excludedProperty().unbind();
-
-
-        // onset & resolution
-        feature.getObservationAge().onsetProperty().unbind();
-        feature.getObservationAge().resolutionProperty().unbind();
-    }
-
-    private void bind(ObservablePhenotypicFeature feature) {
+    @Override
+    protected void bind(ObservablePhenotypicFeature feature) {
         // term id & label
         termIdLabel.setText(feature.getTermId().getValue());
         nameLabel.setText(getLabelForTerm(feature.getTermId()));
@@ -226,26 +211,26 @@ public class PhenotypicFeatureController {
         feature.excludedProperty().bind(phenotypicFeatureIsExcluded);
 
         // onset
-        Period onset = feature.getObservationAge().getOnset();
+        ObservableAge onset = feature.getObservationAge().getOnset();
         if (onset != null) {
-            if (Period.ZERO.equals(onset))
+            if (onset.getYears() == 0 && onset.getMonths() == 0 && onset.getDays() == 0)
                 onsetToggleGroup.selectToggle(onsetBirthRadioButton);
             else {
                 onsetToggleGroup.selectToggle(onsetAgeRadioButton);
-                onsetYearsTextField.setText(String.valueOf(onset.getYears()));
-                onsetMonthsComboBox.getSelectionModel().select((Integer) onset.getMonths());
-                onsetDaysComboBox.getSelectionModel().select((Integer) onset.getDays());
+                onsetYearsTextFormatter.setValue(onset.getYears());
+                onsetMonthsComboBox.getSelectionModel().select(onset.getMonths());
+                onsetDaysComboBox.getSelectionModel().select(onset.getDays());
             }
         }
         feature.getObservationAge().onsetProperty().bind(onsetBinding);
 
         // resolution
-        Period resolution = feature.getObservationAge().getResolution();
+        ObservableAge resolution = feature.getObservationAge().getResolution();
         if (resolution != null) {
             resolutionToggleGroup.selectToggle(resolutionAgeRadioButton);
-            resolutionYearsTextField.setText(String.valueOf(resolution.getYears()));
-            resolutionMonthsComboBox.getSelectionModel().select((Integer) resolution.getMonths());
-            resolutionDaysComboBox.getSelectionModel().select((Integer) resolution.getDays());
+            resolutionYearsTextFormatter.setValue(resolution.getYears());
+            resolutionMonthsComboBox.getSelectionModel().select(resolution.getMonths());
+            resolutionDaysComboBox.getSelectionModel().select(resolution.getDays());
 //        if (Period.of(80, 0, 0).equals(resolution)) {
 //            resolutionToggleGroup.selectToggle(resolutionDeathRadioButton);
 //        } else {
@@ -255,17 +240,26 @@ public class PhenotypicFeatureController {
         feature.getObservationAge().resolutionProperty().bind(resolutionBinding);
     }
 
+    @Override
+    protected void unbind(ObservablePhenotypicFeature feature) {
+        // term id & label
+        termIdLabel.setText(null);
+        nameLabel.setText(null);
+        termDefinitionLabel.setText(null);
+
+        // status
+        feature.excludedProperty().unbind();
+
+
+        // onset & resolution
+        feature.getObservationAge().onsetProperty().unbind();
+        feature.getObservationAge().resolutionProperty().unbind();
+    }
+
     private String getLabelForTerm(TermId termId) {
         return getOntologyOptional()
                 .flatMap(ontology -> getTerm(ontology, termId))
                 .map(Term::getName)
-                .orElse(null);
-    }
-
-    private String getDefinitionForTermId(TermId termId) {
-        return getOntologyOptional()
-                .flatMap(ontology -> getTerm(ontology, termId))
-                .map(Term::getDefinition)
                 .orElse(null);
     }
 
@@ -275,6 +269,13 @@ public class PhenotypicFeatureController {
 
     private static Optional<Term> getTerm(Ontology ontology, TermId termId) {
         return Optional.ofNullable(ontology.getTermMap().get(termId));
+    }
+
+    private String getDefinitionForTermId(TermId termId) {
+        return getOntologyOptional()
+                .flatMap(ontology -> getTerm(ontology, termId))
+                .map(Term::getDefinition)
+                .orElse(null);
     }
 
     public BooleanProperty disableProperty() {
@@ -293,4 +294,8 @@ public class PhenotypicFeatureController {
         return ontology;
     }
 
+    @Override
+    public ObjectProperty<ObservablePhenotypicFeature> dataProperty() {
+        return phenotypicFeature;
+    }
 }
