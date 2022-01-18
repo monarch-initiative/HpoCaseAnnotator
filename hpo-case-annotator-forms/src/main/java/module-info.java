@@ -1,5 +1,5 @@
-module org.monarchinitiative.hpo_case_annotator.forms {
-    requires org.monarchinitiative.hpo_case_annotator.core;
+module org.monarchinitiative.hca.forms {
+    requires org.monarchinitiative.hca.core;
 
     requires javafx.controls;
     requires javafx.graphics;

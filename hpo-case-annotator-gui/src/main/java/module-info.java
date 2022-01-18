@@ -1,9 +1,9 @@
-module org.monarchinitiative.hpo_case_annotator.gui {
-    requires org.monarchinitiative.hpo_case_annotator.core;
-    requires org.monarchinitiative.hpo_case_annotator.convert;
-    requires org.monarchinitiative.hpo_case_annotator.export;
-    requires org.monarchinitiative.hpo_case_annotator.io;
-    requires org.monarchinitiative.hpo_case_annotator.forms;
+module org.monarchinitiative.hca.gui {
+    requires org.monarchinitiative.hca.core;
+    requires org.monarchinitiative.hca.convert;
+    requires org.monarchinitiative.hca.export;
+    requires org.monarchinitiative.hca.io;
+    requires org.monarchinitiative.hca.forms;
 
     requires org.monarchinitiative.hpotextmining.gui;
     requires org.monarchinitiative.phenol.io;

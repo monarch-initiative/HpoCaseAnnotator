@@ -1,4 +1,4 @@
-module org.monarchinitiative.hpo_case_annotator.model {
+module org.monarchinitiative.hca.model {
     requires transitive org.monarchinitiative.phenol.core;
     requires transitive org.monarchitiative.svart;
     requires transitive com.google.protobuf;
