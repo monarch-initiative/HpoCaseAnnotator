@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.test;
+package org.monarchinitiative.hpo_case_annotator.forms;
 
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifier;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierService;
