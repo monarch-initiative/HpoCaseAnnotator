@@ -13,7 +13,7 @@
                 <TableColumn fx:id="resolutionTableColumn" editable="false" minWidth="90.0" prefWidth="90.0" text="Resolution" />
             </columns>
             <placeholder>
-                <Label>No phenotype terms to display.</Label>
+                <Label>No phenotype features to display.</Label>
             </placeholder>
         </TableView>
     </children>
