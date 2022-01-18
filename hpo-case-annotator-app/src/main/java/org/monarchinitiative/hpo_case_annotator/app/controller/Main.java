@@ -13,6 +13,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.controlsfx.dialog.CommandLinksDialog;
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.StudyType;
 import org.monarchinitiative.hpo_case_annotator.convert.ConversionCodecs;
@@ -122,23 +123,26 @@ public class Main {
 
     @FXML
     private void newMenuItemAction() {
-        ChoiceDialog<StudyType> dialog = new ChoiceDialog<>(StudyType.FAMILY, StudyType.values());
-        dialog.setTitle("Choose a study type");
-        Optional<StudyType> studyType = dialog.showAndWait();
+        var individualStudy = new CommandLinksDialog.CommandLinksButtonType("Individual study", "Enter data about an individual (a cohort with size 1)", false);
+        var familyStudy = new CommandLinksDialog.CommandLinksButtonType("Family study", "Enter data about several related individuals", false);
+        var cohortStudy = new CommandLinksDialog.CommandLinksButtonType("Cohort study", "Enter data about several unrelated individuals", false);
+        CommandLinksDialog dialog = new CommandLinksDialog(individualStudy, familyStudy, cohortStudy);
+        dialog.setTitle("New study");
+        dialog.setHeaderText("Select study type");
+        dialog.setContentText("HCA supports biocuration of several study types");
+        Optional<ButtonType> buttonType = dialog.showAndWait();
 
+        Optional<StudyType> studyType = buttonType.flatMap(bt -> {
+            if (bt.equals(individualStudy.getButtonType()) || bt.equals(cohortStudy.getButtonType())) {
+                return Optional.of(StudyType.COHORT);
+            } else if (bt.equals(familyStudy.getButtonType())) {
+                return Optional.of(StudyType.FAMILY);
+            } else {
+                return Optional.empty();
+            }
+        });
         studyType.flatMap(Main::controllerUrlForStudyType)
                 .ifPresent(url -> addStudy(url, StudyWrapper.of(studyForStudyType(studyType.get()))));
-    }
-
-    private static Optional<StudyType> studyTypeForData(Object data) {
-        if (data instanceof ObservableFamilyStudy || data instanceof FamilyStudy) {
-            return Optional.of(StudyType.FAMILY);
-        } else if (data instanceof ObservableCohortStudy || data instanceof CohortStudy) {
-            return Optional.of(StudyType.COHORT);
-        } else {
-            LOGGER.warn("Unknown study data class: {}", data.getClass());
-            return Optional.empty();
-        }
     }
 
     private static Optional<URL> controllerUrlForStudyType(StudyType type) {
@@ -327,7 +331,6 @@ public class Main {
         }
     }
 
-
     @FXML
     private void exportToCSVMenuItemAction() {
         // TODO - implement
@@ -376,8 +379,6 @@ public class Main {
         Platform.exit();
     }
 
-    /*                                                 VIEW                                                           */
-
     @FXML
     private void cloneCaseMenuItemAction() {
         int index = contentTabPane.getSelectionModel().getSelectedIndex();
@@ -390,6 +391,19 @@ public class Main {
         }
         // TODO - make it work for all study/disease case types
 
+    }
+
+    /*                                                 VIEW                                                           */
+
+    private static Optional<StudyType> studyTypeForData(Object data) {
+        if (data instanceof ObservableFamilyStudy || data instanceof FamilyStudy) {
+            return Optional.of(StudyType.FAMILY);
+        } else if (data instanceof ObservableCohortStudy || data instanceof CohortStudy) {
+            return Optional.of(StudyType.COHORT);
+        } else {
+            LOGGER.warn("Unknown study data class: {}", data.getClass());
+            return Optional.empty();
+        }
     }
 
     @FXML

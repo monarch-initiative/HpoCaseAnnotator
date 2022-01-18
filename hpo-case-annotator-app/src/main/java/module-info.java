@@ -15,6 +15,7 @@ module org.monarchinitiative.hca.app {
     requires javafx.graphics;
     requires javafx.controls;
     requires javafx.fxml;
+    requires org.controlsfx.controls;
 
     requires org.slf4j;
 
