@@ -2,11 +2,6 @@ package org.monarchinitiative.hpo_case_annotator.forms;
 
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifier;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.core.reference.DeprecatedGenomicAssemblyRegistry;
-import org.monarchinitiative.hpo_case_annotator.forms.test.ControllerFactory;
-import org.monarchinitiative.hpo_case_annotator.forms.test.TestGeneIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.forms.test.TestGenomicAssemblyRegistry;
-import org.monarchinitiative.hpo_case_annotator.forms.test.TestGenomicAssemblyService;
 import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -18,6 +13,7 @@ import java.util.Map;
 
 public class BaseControllerTest {
 
+    // TODO - remove
     public static final File LOCAL_ONTOLOGY_OBO = new File("/home/ielis/data/ontologies/hpo/2021-06-08/hp.json");
 
     public static final Ontology ONTOLOGY = OntologyLoader.loadOntology(LOCAL_ONTOLOGY_OBO);
