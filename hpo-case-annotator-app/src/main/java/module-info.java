@@ -1,8 +1,8 @@
-module org.monarchinitiative.hpo_case_annotator.app {
-    requires org.monarchinitiative.hpo_case_annotator.core;
-    requires org.monarchinitiative.hpo_case_annotator.io;
-    requires org.monarchinitiative.hpo_case_annotator.forms;
-    requires org.monarchinitiative.hpo_case_annotator.convert;
+module org.monarchinitiative.hca.app {
+    requires org.monarchinitiative.hca.core;
+    requires org.monarchinitiative.hca.io;
+    requires org.monarchinitiative.hca.forms;
+    requires org.monarchinitiative.hca.convert;
 
     requires org.monarchinitiative.phenol.io;
 
