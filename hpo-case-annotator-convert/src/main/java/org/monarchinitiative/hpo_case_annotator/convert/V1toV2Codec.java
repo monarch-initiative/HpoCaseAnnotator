@@ -316,8 +316,4 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         return FamilyStudy.of(id, publication, variants, pedigree, metadata);
     }
 
-    @Override
-    public DiseaseCase decode(Study data) throws ModelTransformationException {
-        throw new ModelTransformationException("Unsupported operation");
-    }
 }

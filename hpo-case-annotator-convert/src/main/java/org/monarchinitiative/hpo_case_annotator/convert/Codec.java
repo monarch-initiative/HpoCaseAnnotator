@@ -1,14 +1,12 @@
 package org.monarchinitiative.hpo_case_annotator.convert;
 
 /**
- * Classes implementing this interface are able to convert instances of {@link A} to format {@link B}, and back.
+ * Classes implementing this interface are able to convert instances of {@link SOURCE} to {@link TARGET} format, and back.
  *
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
  */
-public interface Codec<A, B> {
+public interface Codec<SOURCE, TARGET> {
 
-    B encode(A data) throws ModelTransformationException;
-
-    A decode(B data) throws ModelTransformationException;
+    TARGET encode(SOURCE data) throws ModelTransformationException;
 
 }
