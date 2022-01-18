@@ -8,11 +8,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
-import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.AgeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservablePhenotypicFeature;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservableDiseaseStatus;
-import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.slf4j.Logger;
@@ -30,11 +29,9 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual> exte
     @FXML
     private TextField individualIdTextField;
     @FXML
-    private TextField yearsTextField;
+    private VBox age;
     @FXML
-    private ComboBox<Integer> monthsComboBox;
-    @FXML
-    private ComboBox<Integer> daysComboBox;
+    private AgeController ageController;
     @FXML
     private RadioButton maleSexRadioButton;
     @FXML
@@ -63,11 +60,6 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual> exte
     @FXML
     protected void initialize() {
         super.initialize();
-        yearsTextField.setTextFormatter(Formats.numberFormatter());
-        monthsComboBox.getItems().addAll(FormUtils.getIntegers(11));
-        monthsComboBox.getSelectionModel().selectFirst();
-        daysComboBox.getItems().addAll(FormUtils.getIntegers(30));
-        daysComboBox.getSelectionModel().selectFirst();
 
         maleSexRadioButton.setToggleGroup(sexToggleGroup);
         femaleSexRadioButton.setToggleGroup(sexToggleGroup);
@@ -130,9 +122,7 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual> exte
         individualIdTextField.textProperty().bindBidirectional(individual.idProperty());
 
         // age
-        yearsTextField.textProperty().bindBidirectional(individual.yearsProperty());
-        monthsComboBox.valueProperty().bindBidirectional(individual.monthsProperty());
-        daysComboBox.valueProperty().bindBidirectional(individual.daysProperty());
+        ageController.dataProperty().bindBidirectional(individual.ageProperty());
 
         // sex
         if (individual.getSex() != null) {
@@ -161,9 +151,7 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual> exte
         individualIdTextField.textProperty().unbindBidirectional(individual.idProperty());
 
         // age
-        yearsTextField.textProperty().unbindBidirectional(individual.yearsProperty());
-        monthsComboBox.valueProperty().unbindBidirectional(individual.monthsProperty());
-        daysComboBox.valueProperty().unbindBidirectional(individual.daysProperty());
+        ageController.dataProperty().unbindBidirectional(individual.ageProperty());
 
         // sex
         individual.sexProperty().unbind();

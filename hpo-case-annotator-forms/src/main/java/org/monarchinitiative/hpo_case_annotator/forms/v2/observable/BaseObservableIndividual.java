@@ -1,7 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.forms.v2.observable;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,7 +12,6 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Period;
 import java.util.*;
 
 public class BaseObservableIndividual {
@@ -22,23 +19,18 @@ public class BaseObservableIndividual {
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseObservableIndividual.class);
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
-    private final StringProperty years = new SimpleStringProperty(this, "years");
-    private final ObjectProperty<Integer> months = new SimpleObjectProperty<>(this, "months", 0);
-    private final ObjectProperty<Integer> days = new SimpleObjectProperty<>(this, "days", 0);
+    private final ObjectProperty<ObservableAge> age = new SimpleObjectProperty<>(this, "age", new ObservableAge());
     private final ObjectProperty<Sex> sex = new SimpleObjectProperty<>(this, "sex", Sex.UNKNOWN);
     private final ObservableList<ObservablePhenotypicFeature> phenotypicFeatures = FXCollections.observableList(new LinkedList<>());
     private final ObservableList<ObservableDiseaseStatus> diseaseStates = FXCollections.observableList(new LinkedList<>());
     private final ObservableMap<String, Genotype> genotypes = FXCollections.observableHashMap();
-    private final ObjectBinding<Period> age = ageBinding();
 
     public BaseObservableIndividual() {
     }
 
     protected BaseObservableIndividual(Builder<?> builder) {
         this.id.set(builder.id);
-        this.years.set(builder.years);
-        this.months.set(builder.months);
-        this.days.set(builder.days);
+        this.age.set(builder.age);
         this.sex.set(builder.sex);
         this.phenotypicFeatures.addAll(builder.phenotypicFeatures);
         this.diseaseStates.addAll(builder.diseaseStates);
@@ -56,48 +48,15 @@ public class BaseObservableIndividual {
     public StringProperty idProperty() {
         return id;
     }
-
-    public String getYears() {
-        return years.get();
-    }
-
-    public void setYears(String years) {
-        this.years.set(years);
-    }
-
-    public StringProperty yearsProperty() {
-        return years;
-    }
-
-    public int getMonths() {
-        return months.get();
-    }
-
-    public void setMonths(int months) {
-        this.months.set(months);
-    }
-
-    public ObjectProperty<Integer> monthsProperty() {
-        return months;
-    }
-
-    public int getDays() {
-        return days.get();
-    }
-
-    public void setDays(int days) {
-        this.days.set(days);
-    }
-
-    public ObjectProperty<Integer> daysProperty() {
-        return days;
-    }
-
-    public Period getAge() {
+    public ObservableAge getAge() {
         return age.get();
     }
 
-    public ObjectBinding<Period> ageProperty() {
+    public void setAge(ObservableAge age) {
+        this.age.set(age);
+    }
+
+    public ObjectProperty<ObservableAge> ageProperty() {
         return age;
     }
 
@@ -125,28 +84,6 @@ public class BaseObservableIndividual {
         return genotypes;
     }
 
-    private ObjectBinding<Period> ageBinding() {
-        return Bindings.createObjectBinding(() -> {
-                    String y = years.get();
-                    if (y == null) return null;
-
-                    int yr;
-                    try {
-                        yr = Integer.parseInt(y);
-                    } catch (NumberFormatException e) {
-                        LOGGER.debug("Error converting years ({}) to an integer: {}", y, e.getMessage());
-                        return null;
-                    }
-                    Integer m = months.get();
-                    Integer d = days.get();
-                    if (m == null || d == null) {
-                        return null;
-                    }
-                    return Period.of(yr, m, d);
-                },
-                years, months, days);
-    }
-
 
     public abstract static class Builder<T extends Builder<T>> {
 
@@ -154,9 +91,7 @@ public class BaseObservableIndividual {
         private final List<ObservableDiseaseStatus> diseaseStates = new LinkedList<>();
         private final Map<String, Genotype> genotypes = new HashMap<>();
         private String id;
-        private String years;
-        private int months;
-        private int days;
+        private final ObservableAge age = new ObservableAge();
         private Sex sex;
 
         protected Builder() {
@@ -169,18 +104,18 @@ public class BaseObservableIndividual {
 
         protected abstract T self();
 
-        public T setYears(String years) {
-            this.years = years;
+        public T setYears(Integer years) {
+            this.age.setYears(years);
             return self();
         }
 
         public T setMonths(int months) {
-            this.months = months;
+            this.age.setMonths(months);
             return self();
         }
 
         public T setDays(int days) {
-            this.days = days;
+            this.age.setDays(days);
             return self();
         }
 

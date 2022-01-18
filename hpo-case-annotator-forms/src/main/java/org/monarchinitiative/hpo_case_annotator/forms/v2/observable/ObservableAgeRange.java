@@ -3,34 +3,32 @@ package org.monarchinitiative.hpo_case_annotator.forms.v2.observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-import java.time.Period;
-
 public class ObservableAgeRange {
 
-    private final ObjectProperty<Period> onset = new SimpleObjectProperty<>(this, "onset");
-    private final ObjectProperty<Period> resolution = new SimpleObjectProperty<>(this, "resolution");
+    private final ObjectProperty<ObservableAge> onset = new SimpleObjectProperty<>(this, "onset");
+    private final ObjectProperty<ObservableAge> resolution = new SimpleObjectProperty<>(this, "resolution");
 
-    public Period getOnset() {
+    public ObservableAge getOnset() {
         return onset.get();
     }
 
-    public void setOnset(Period onset) {
+    public void setOnset(ObservableAge onset) {
         this.onset.set(onset);
     }
 
-    public ObjectProperty<Period> onsetProperty() {
+    public ObjectProperty<ObservableAge> onsetProperty() {
         return onset;
     }
 
-    public Period getResolution() {
+    public ObservableAge getResolution() {
         return resolution.get();
     }
 
-    public void setResolution(Period resolution) {
+    public void setResolution(ObservableAge resolution) {
         this.resolution.set(resolution);
     }
 
-    public ObjectProperty<Period> resolutionProperty() {
+    public ObjectProperty<ObservableAge> resolutionProperty() {
         return resolution;
     }
 

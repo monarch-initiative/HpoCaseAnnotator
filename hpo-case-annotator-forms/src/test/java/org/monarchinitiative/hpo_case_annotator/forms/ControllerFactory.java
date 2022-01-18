@@ -1,13 +1,8 @@
 package org.monarchinitiative.hpo_case_annotator.forms;
 
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.core.reference.DeprecatedGenomicAssemblyRegistry;
-import org.monarchinitiative.hpo_case_annotator.forms.*;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.PublicationController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.StudyMetadataController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.VariantSummaryController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.FamilyStudyController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualVariantSummaryController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
@@ -63,6 +58,11 @@ public class ControllerFactory implements HCAControllerFactory {
             return new UnifiedBreakendController();
         }
         */
+
+        // various
+        else if (clz.equals(AgeController.class)) {
+            return new AgeController();
+        }
 
         // phenotypes
         else if (clz.equals(PhenotypicFeatureController.class)) {

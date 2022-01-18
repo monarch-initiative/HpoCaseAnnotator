@@ -50,7 +50,7 @@ public class Convert {
                 member.phenotypicFeatures().stream().map(Convert::toPhenotypicFeature).toList(),
                 member.diseaseStates().stream().map(Convert::toDiseaseStatus).toList(),
                 member.genotypes(),
-                member.getAge(),
+                toAge(member.getAge()),
                 member.getSex());
     }
 
@@ -63,7 +63,11 @@ public class Convert {
     }
 
     private static AgeRange toAgeRange(ObservableAgeRange observableAgeRange) {
-        return AgeRange.of(observableAgeRange.getOnset(), observableAgeRange.getResolution());
+        return AgeRange.of(toAge(observableAgeRange.getOnset()), toAge(observableAgeRange.getResolution()));
+    }
+
+    private static Period toAge(ObservableAge age) {
+        return Period.of(age.getYears(), age.getMonths(), age.getDays());
     }
 
     private static String nullWhenEmptyOrBlankInput(String value) {
@@ -89,7 +93,7 @@ public class Convert {
                 individual.phenotypicFeatures().stream().map(Convert::toPhenotypicFeature).toList(),
                 individual.diseaseStates().stream().map(Convert::toDiseaseStatus).toList(),
                 individual.genotypes(),
-                individual.getAge(),
+                toAge(individual.getAge()),
                 individual.getSex());
     }
 
@@ -165,7 +169,7 @@ public class Convert {
 
     private static <T extends Individual, U extends BaseObservableIndividual.Builder<U>> U toBaseObservableIndividual(T individual, U builder) {
         return builder.setId(individual.id())
-                .setYears(individual.age().map(p -> String.valueOf(p.getYears())).orElse(null))
+                .setYears(individual.age().map(Period::getYears).orElse(null))
                 .setMonths(individual.age().map(Period::getMonths).orElse(0))
                 .setDays(individual.age().map(Period::getDays).orElse(0))
                 .setSex(individual.sex())
@@ -201,10 +205,14 @@ public class Convert {
     private static ObservableAgeRange toObservableAgeRange(AgeRange ageRange) {
         ObservableAgeRange oar = new ObservableAgeRange();
 
-        oar.setOnset(ageRange.onset());
-        oar.setResolution(ageRange.resolution());
+        oar.setOnset(toObservableAge(ageRange.onset()));
+        oar.setResolution(toObservableAge(ageRange.resolution()));
 
         return oar;
+    }
+
+    private static ObservableAge toObservableAge(Period period) {
+        return new ObservableAge(period.getYears(), period.getMonths(), period.getDays());
     }
 
     private static ObservableStudyMetadata toObservableStudyMetadata(StudyMetadata studyMetadata) {

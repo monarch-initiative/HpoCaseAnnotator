@@ -10,13 +10,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import org.monarchinitiative.hpo_case_annotator.forms.util.PeriodTableCell;
+import org.monarchinitiative.hpo_case_annotator.forms.util.ObservableAgeTableCell;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservableAge;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservablePhenotypicFeature;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Period;
 import java.util.Optional;
 
 public class PhenotypicFeaturesTableController {
@@ -29,18 +29,18 @@ public class PhenotypicFeaturesTableController {
     @FXML
     private TableColumn<ObservablePhenotypicFeature, Boolean> excludedTableColumn;
     @FXML
-    private TableColumn<ObservablePhenotypicFeature, Period> onsetTableColumn;
+    private TableColumn<ObservablePhenotypicFeature, ObservableAge> onsetTableColumn;
     @FXML
-    private TableColumn<ObservablePhenotypicFeature, Period> resolutionTableColumn;
+    private TableColumn<ObservablePhenotypicFeature, ObservableAge> resolutionTableColumn;
 
     public void initialize() {
         termIdTableColumn.setCellValueFactory(cd -> cd.getValue().termIdProperty().asString());
         excludedTableColumn.setCellValueFactory(cd -> cd.getValue().excludedProperty());
         excludedTableColumn.setCellFactory(CheckBoxTableCell.forTableColumn(excludedTableColumn));
         onsetTableColumn.setCellValueFactory(cd -> cd.getValue().getObservationAge().onsetProperty());
-        onsetTableColumn.setCellFactory(PeriodTableCell.of());
+        onsetTableColumn.setCellFactory(ObservableAgeTableCell.of());
         resolutionTableColumn.setCellValueFactory(cd -> cd.getValue().getObservationAge().resolutionProperty());
-        resolutionTableColumn.setCellFactory(PeriodTableCell.of());
+        resolutionTableColumn.setCellFactory(ObservableAgeTableCell.of());
 
         termsTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }

@@ -48,7 +48,7 @@ public class PhenotypeEntryController {
         ontologyTreeBrowserController.ontologyProperty().bind(ontology);
         ontologyTreeBox.disableProperty().bind(ontology.isNull());
 
-        phenotypicFeaturesTableController.selectedPhenotypeDescription().addListener(phenotypicFeatureController.phenotypeDescriptionChangeListener());
+        phenotypicFeatureController.dataProperty().bind(phenotypicFeaturesTableController.selectedPhenotypeDescription());
         phenotypicFeaturesTableController.selectedPhenotypeDescription().addListener(ontologyTreeBrowserController.phenotypeDescriptionChangeListener());
         phenotypicFeatureController.ontologyProperty().bind(ontology);
 

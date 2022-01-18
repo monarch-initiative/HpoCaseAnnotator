@@ -12,8 +12,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
-import org.monarchinitiative.hpo_case_annotator.forms.util.PeriodTableCell;
+import org.monarchinitiative.hpo_case_annotator.forms.util.ObservableAgeTableCell;
 import org.monarchinitiative.hpo_case_annotator.forms.util.SexTableCell;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservableAge;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservablePedigree;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Pedigree;
@@ -23,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.time.Period;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -55,7 +55,7 @@ public class PedigreeController extends BindingDataController<ObservablePedigree
     @FXML
     private TableColumn<ObservablePedigreeMember, String> maternalIdTableColumn;
     @FXML
-    private TableColumn<ObservablePedigreeMember, Period> ageTableColumn;
+    private TableColumn<ObservablePedigreeMember, ObservableAge> ageTableColumn;
     @FXML
     private TableColumn<ObservablePedigreeMember, Sex> sexTableColumn;
     @FXML
@@ -75,7 +75,7 @@ public class PedigreeController extends BindingDataController<ObservablePedigree
         paternalIdTableColumn.setCellValueFactory(cdf -> cdf.getValue().paternalIdProperty());
         maternalIdTableColumn.setCellValueFactory(cdf -> cdf.getValue().maternalIdProperty());
         ageTableColumn.setCellValueFactory(cdf -> cdf.getValue().ageProperty());
-        ageTableColumn.setCellFactory(PeriodTableCell.of());
+        ageTableColumn.setCellFactory(ObservableAgeTableCell.of());
         sexTableColumn.setCellValueFactory(cdf -> cdf.getValue().sexProperty());
         sexTableColumn.setCellFactory(SexTableCell.of());
         isProbandTableColumn.setCellValueFactory(cdf -> cdf.getValue().probandCheckMark());
