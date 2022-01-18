@@ -1,5 +1,5 @@
-module org.monarchinitiative.hpo_case_annotator.io {
-    requires transitive org.monarchinitiative.hpo_case_annotator.model;
+module org.monarchinitiative.hca.io {
+    requires transitive org.monarchinitiative.hca.model;
 
     requires com.google.protobuf.util;
     requires com.fasterxml.jackson.databind;
