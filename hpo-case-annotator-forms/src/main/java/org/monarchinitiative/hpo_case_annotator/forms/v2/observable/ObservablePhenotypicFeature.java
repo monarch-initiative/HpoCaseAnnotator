@@ -44,8 +44,12 @@ public class ObservablePhenotypicFeature {
         this.observationAge.set(observationAge);
     }
 
-    public ObjectProperty<ObservableAgeRange> observationAgeProperty() {
-        return observationAge;
+    @Override
+    public String toString() {
+        return "ObservablePhenotypicFeature{" +
+                "termId=" + termId.get() +
+                ", excluded=" + excluded.get() +
+                ", observationAge=" + observationAge.get() +
+                '}';
     }
-
 }

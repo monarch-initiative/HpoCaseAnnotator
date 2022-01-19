@@ -34,6 +34,11 @@
                     </accelerator>
                 </MenuItem>
                 <MenuItem fx:id="saveAllMenuItem" disable="true" mnemonicParsing="false" onAction="#saveAllMenuItemAction" text="Save all" />
+                <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#closeMenuItemAction" text="Close">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                    </accelerator>
+                </MenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
                <Menu mnemonicParsing="false" text="Settings">
                    <MenuItem mnemonicParsing="false" onAction="#setResourcesMenuItemAction" text="Initialize resources" />

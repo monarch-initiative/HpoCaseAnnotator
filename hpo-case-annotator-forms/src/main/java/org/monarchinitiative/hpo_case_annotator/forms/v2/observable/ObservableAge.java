@@ -1,13 +1,18 @@
 package org.monarchinitiative.hpo_case_annotator.forms.v2.observable;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+
+import java.time.Period;
 
 public class ObservableAge {
 
     private final ObjectProperty<Integer> years = new SimpleObjectProperty<>(this, "years", null);
     private final ObjectProperty<Integer> months = new SimpleObjectProperty<>(this, "months", 0);
     private final ObjectProperty<Integer> days = new SimpleObjectProperty<>(this, "days", 0);
+    private final ObjectBinding<Period> period = createPeriodBinding();
 
     public ObservableAge() {
     }
@@ -16,6 +21,17 @@ public class ObservableAge {
         this.years.set(years);
         this.months.set(months);
         this.days.set(days);
+    }
+
+    private ObjectBinding<Period> createPeriodBinding() {
+        return Bindings.createObjectBinding(() -> {
+            Integer y = years.get();
+            if (y == null) {
+                return null;
+            } else {
+                return Period.of(years.get(), months.get(), days.get());
+            }
+        }, years, months, days);
     }
 
     public Integer getYears() {
@@ -52,5 +68,18 @@ public class ObservableAge {
 
     public ObjectProperty<Integer> daysProperty() {
         return days;
+    }
+
+    public ObjectBinding<Period> period() {
+        return period;
+    }
+
+    @Override
+    public String toString() {
+        return "ObservableAge{" +
+                "years=" + years.get() +
+                ", months=" + months.get() +
+                ", days=" + days.get() +
+                '}';
     }
 }

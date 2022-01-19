@@ -10,11 +10,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
-import org.monarchinitiative.hpo_case_annotator.forms.util.ObservableAgeTableCell;
+import org.monarchinitiative.hpo_case_annotator.forms.util.PeriodTableCell;
 import org.monarchinitiative.hpo_case_annotator.forms.util.SexTableCell;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservableAge;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservablePedigree;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Pedigree;
@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.Period;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -55,11 +56,11 @@ public class PedigreeController extends BindingDataController<ObservablePedigree
     @FXML
     private TableColumn<ObservablePedigreeMember, String> maternalIdTableColumn;
     @FXML
-    private TableColumn<ObservablePedigreeMember, ObservableAge> ageTableColumn;
+    private TableColumn<ObservablePedigreeMember, Period> ageTableColumn;
     @FXML
     private TableColumn<ObservablePedigreeMember, Sex> sexTableColumn;
     @FXML
-    private TableColumn<ObservablePedigreeMember, String> isProbandTableColumn;
+    private TableColumn<ObservablePedigreeMember, Boolean> isProbandTableColumn;
     @FXML
     private Button removeIndividualButton;
 
@@ -74,11 +75,12 @@ public class PedigreeController extends BindingDataController<ObservablePedigree
         idTableColumn.setCellValueFactory(cdf -> cdf.getValue().idProperty());
         paternalIdTableColumn.setCellValueFactory(cdf -> cdf.getValue().paternalIdProperty());
         maternalIdTableColumn.setCellValueFactory(cdf -> cdf.getValue().maternalIdProperty());
-        ageTableColumn.setCellValueFactory(cdf -> cdf.getValue().ageProperty());
-        ageTableColumn.setCellFactory(ObservableAgeTableCell.of());
+        ageTableColumn.setCellValueFactory(cdf -> cdf.getValue().getAge().period());
+        ageTableColumn.setCellFactory(PeriodTableCell.of());
         sexTableColumn.setCellValueFactory(cdf -> cdf.getValue().sexProperty());
         sexTableColumn.setCellFactory(SexTableCell.of());
-        isProbandTableColumn.setCellValueFactory(cdf -> cdf.getValue().probandCheckMark());
+        isProbandTableColumn.setCellValueFactory(cdf -> cdf.getValue().probandProperty());
+        isProbandTableColumn.setCellFactory(CheckBoxTableCell.forTableColumn(isProbandTableColumn));
 
         familyMembersTableView.getItems().addListener(pedigreeMemberListChangeListener());
 

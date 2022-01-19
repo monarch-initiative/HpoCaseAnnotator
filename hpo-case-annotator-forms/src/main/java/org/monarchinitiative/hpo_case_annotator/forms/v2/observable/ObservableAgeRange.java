@@ -5,8 +5,8 @@ import javafx.beans.property.SimpleObjectProperty;
 
 public class ObservableAgeRange {
 
-    private final ObjectProperty<ObservableAge> onset = new SimpleObjectProperty<>(this, "onset");
-    private final ObjectProperty<ObservableAge> resolution = new SimpleObjectProperty<>(this, "resolution");
+    private final ObjectProperty<ObservableAge> onset = new SimpleObjectProperty<>(this, "onset", new ObservableAge());
+    private final ObjectProperty<ObservableAge> resolution = new SimpleObjectProperty<>(this, "resolution", new ObservableAge());
 
     public ObservableAge getOnset() {
         return onset.get();
@@ -32,4 +32,11 @@ public class ObservableAgeRange {
         return resolution;
     }
 
+    @Override
+    public String toString() {
+        return "ObservableAgeRange{" +
+                "onset=" + onset.get() +
+                ", resolution=" + resolution.get() +
+                '}';
+    }
 }

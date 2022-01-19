@@ -1,8 +1,3 @@
-/* GENERAL */
-.section {
-    -fx-border-color: #919191;
-}
-
 RadioButton {
     -fx-padding: 5px;
 }
@@ -12,29 +7,16 @@ TextField {
 }
 
 Button {
-    -fx-padding: 5;
     -fx-pref-height: 30;
-    -fx-pref-width: 135;
+    -fx-pref-width: 120;
 }
 
 ComboBox {
     -fx-pref-height: 30;
 }
 
-.subsection {
-    -fx-padding: 5px;
-}
-
-.subsection .title {
-    -fx-font-size: 20;
+.individual-info-label {
     -fx-font-weight: bold;
-    -fx-padding: 5px;
-    -fx-text-fill: #003688;
-    -fx-effect: dropshadow(gaussian, #d7d7d7, 5, .5, 1, 1);
+    -fx-padding: 0px 10px 0px 0px;
+    -fx-pref-width: 80px;
 }
-
-/* Description of a single feature  */
-
-
-/* Summary of all features  */
-

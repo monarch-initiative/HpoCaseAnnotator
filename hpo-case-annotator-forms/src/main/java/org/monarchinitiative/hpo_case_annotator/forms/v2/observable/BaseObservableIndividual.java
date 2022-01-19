@@ -30,7 +30,9 @@ public class BaseObservableIndividual {
 
     protected BaseObservableIndividual(Builder<?> builder) {
         this.id.set(builder.id);
-        this.age.set(builder.age);
+        this.age.get().setYears(builder.age.getYears());
+        this.age.get().setMonths(builder.age.getMonths());
+        this.age.get().setDays(builder.age.getDays());
         this.sex.set(builder.sex);
         this.phenotypicFeatures.addAll(builder.phenotypicFeatures);
         this.diseaseStates.addAll(builder.diseaseStates);
@@ -48,6 +50,7 @@ public class BaseObservableIndividual {
     public StringProperty idProperty() {
         return id;
     }
+
     public ObservableAge getAge() {
         return age.get();
     }
@@ -84,6 +87,17 @@ public class BaseObservableIndividual {
         return genotypes;
     }
 
+    @Override
+    public String toString() {
+        return "BaseObservableIndividual{" +
+                "id=" + id.get() +
+                ", age=" + age.get() +
+                ", sex=" + sex.get() +
+                ", phenotypicFeatures=" + phenotypicFeatures +
+                ", diseaseStates=" + diseaseStates +
+                ", genotypes=" + genotypes +
+                '}';
+    }
 
     public abstract static class Builder<T extends Builder<T>> {
 

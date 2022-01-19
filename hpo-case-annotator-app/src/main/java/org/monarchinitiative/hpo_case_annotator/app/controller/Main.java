@@ -3,6 +3,9 @@ package org.monarchinitiative.hpo_case_annotator.app.controller;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.ObjectBinding;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -65,6 +68,8 @@ public class Main {
     @FXML
     private MenuItem saveAllMenuItem;
     @FXML
+    private MenuItem closeMenuItem;
+    @FXML
     private MenuItem cloneCaseMenuItem;
     @FXML
     private MenuItem viewOnPubmedMenuItem;
@@ -122,7 +127,7 @@ public class Main {
     /*                                                 FILE                                                           */
 
     @FXML
-    private void newMenuItemAction() {
+    private void newMenuItemAction(ActionEvent e) {
         var individualStudy = new CommandLinksDialog.CommandLinksButtonType("Individual study", "Enter data about an individual (a cohort with size 1)", false);
         var familyStudy = new CommandLinksDialog.CommandLinksButtonType("Family study", "Enter data about several related individuals", false);
         var cohortStudy = new CommandLinksDialog.CommandLinksButtonType("Cohort study", "Enter data about several unrelated individuals", false);
@@ -143,6 +148,7 @@ public class Main {
         });
         studyType.flatMap(Main::controllerUrlForStudyType)
                 .ifPresent(url -> addStudy(url, StudyWrapper.of(studyForStudyType(studyType.get()))));
+        e.consume();
     }
 
     private static Optional<URL> controllerUrlForStudyType(StudyType type) {
@@ -186,7 +192,7 @@ public class Main {
     }
 
     @FXML
-    private void openMenuItemAction() {
+    private void openMenuItemAction(ActionEvent e) {
         FileChooser filechooser = new FileChooser();
         filechooser.setInitialDirectory(optionalResources.getDiseaseCaseDir());
         filechooser.setTitle("Open study");
@@ -214,15 +220,15 @@ public class Main {
                 try {
                     DiseaseCase dc = v1Parser.read(file.toPath());
                     study = ConversionCodecs.v1ToV2().encode(dc);
-                } catch (IOException | ModelTransformationException e) {
-                    Dialogs.showException("Error", "Error reading v1 case", e.getMessage(), e);
+                } catch (IOException | ModelTransformationException ex) {
+                    Dialogs.showException("Error", "Error reading v1 case", ex.getMessage(), ex);
                     continue;
                 }
             } else if (selectedFilter.equals(v2Json)) {
                 try {
                     study = v2Parser.read(file.toPath());
-                } catch (IOException e) {
-                    Dialogs.showException("Error", "Error reading v2 case", e.getMessage(), e);
+                } catch (IOException ex) {
+                    Dialogs.showException("Error", "Error reading v2 case", ex.getMessage(), ex);
                     continue;
                 }
             } else {
@@ -236,6 +242,7 @@ public class Main {
                             .ifPresent(url -> addStudy(url, StudyWrapper.of(observableStudy, file.toPath())))
                     );
         }
+        e.consume();
     }
 
     private static Optional<StudyType> studyTypeForStudy(ObservableStudy study) {
@@ -249,10 +256,11 @@ public class Main {
     }
 
     @FXML
-    private void saveMenuItemAction() {
+    private void saveMenuItemAction(ActionEvent e) {
         int tabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
         StudyWrapper<?> wrapper = wrappers.get(tabIdx);
         saveStudy(wrapper.study(), wrapper.studyPath());
+        e.consume();
     }
 
     private boolean saveStudy(Object data, Path path) {
@@ -315,48 +323,61 @@ public class Main {
     }
 
     @FXML
-    private void saveAsMenuItemAction() {
+    private void saveAsMenuItemAction(ActionEvent e) {
         int tabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
         StudyWrapper<?> wrapper = wrappers.get(tabIdx);
         saveStudy(wrapper.study(), null);
+        e.consume();
     }
 
     @FXML
-    private void saveAllMenuItemAction() {
+    private void saveAllMenuItemAction(ActionEvent e) {
         for (StudyWrapper<?> wrapper : wrappers) {
             if (!saveStudy(wrapper.study(), wrapper.studyPath())) {
                 // user cancelled
                 break;
             }
         }
+        e.consume();
     }
 
     @FXML
-    private void exportToCSVMenuItemAction() {
+    private void closeMenuItemAction(ActionEvent e) {
         // TODO - implement
         Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        e.consume();
     }
 
     @FXML
-    private void exportToSummaryFileMenuItemAction() {
+    private void exportToCSVMenuItemAction(ActionEvent e) {
         // TODO - implement
         Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        e.consume();
     }
 
     @FXML
-    private void exportPhenopacketCurrentCaseMenuItemAction() {
+    private void exportToSummaryFileMenuItemAction(ActionEvent e) {
         // TODO - implement
         Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        e.consume();
     }
 
     @FXML
-    private void exportPhenopacketAllCasesMenuItemAction() {
+    private void exportPhenopacketCurrentCaseMenuItemAction(ActionEvent e) {
         // TODO - implement
         Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        e.consume();
     }
 
     @FXML
-    private void setResourcesMenuItemAction() {
+    private void exportPhenopacketAllCasesMenuItemAction(ActionEvent e) {
+        // TODO - implement
+        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        e.consume();
+    }
+
+    @FXML
+    private void setResourcesMenuItemAction(ActionEvent e) {
         try {
             FXMLLoader loader = new FXMLLoader(SetResourcesController.class.getResource("SetResources.fxml"));
             loader.setControllerFactory(controllerFactory);
@@ -369,18 +390,20 @@ public class Main {
             stage.setTitle("Initialize resources");
             stage.setScene(new Scene(parent));
             stage.showAndWait();
-        } catch (IOException e) {
-            LOGGER.warn("Error setting up resources: {}", e.getMessage(), e);
+        } catch (IOException ex) {
+            LOGGER.warn("Error setting up resources: {}", ex.getMessage(), ex);
         }
+        e.consume();
     }
 
     @FXML
-    private void exitMenuItemAction() {
+    private void exitMenuItemAction(ActionEvent e) {
         Platform.exit();
+        e.consume();
     }
 
     @FXML
-    private void cloneCaseMenuItemAction() {
+    private void cloneCaseMenuItemAction(ActionEvent e) {
         int index = contentTabPane.getSelectionModel().getSelectedIndex();
         StudyWrapper<?> wrapper = wrappers.get(index);
         Optional<StudyType> studyType = studyTypeForData(wrapper.study());
@@ -390,6 +413,7 @@ public class Main {
                     .ifPresent(url -> addStudy(url, StudyWrapper.of(s)));
         }
         // TODO - make it work for all study/disease case types
+        e.consume();
 
     }
 
@@ -407,23 +431,26 @@ public class Main {
     }
 
     @FXML
-    private void viewOnPubmedMenuItemAction() {
+    private void viewOnPubmedMenuItemAction(ActionEvent e) {
         // TODO - implement
         Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        e.consume();
     }
 
     /*                                                 PROJECT                                                        */
 
     @FXML
-    private void showCuratedPublicationsMenuItemAction() {
+    private void showCuratedPublicationsMenuItemAction(ActionEvent e) {
         // TODO - implement
         Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        e.consume();
     }
 
     @FXML
-    private void showCuratedVariantsMenuItemAction() {
+    private void showCuratedVariantsMenuItemAction(ActionEvent e) {
         // TODO - implement
         Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        e.consume();
     }
 
     /*                                                 GENOTYPE                                                       */
@@ -433,7 +460,7 @@ public class Main {
     /*                                                 PHENOTYPE                                                      */
 
     @FXML
-    private void addEditPhenotypicFeaturesMenuItemAction() {
+    private void addEditPhenotypicFeaturesMenuItemAction(ActionEvent e) {
         int selectedTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
         Tab tab = contentTabPane.getSelectionModel().getSelectedItem();
 
@@ -441,22 +468,25 @@ public class Main {
         if (study instanceof ObservableFamilyStudy ofs) {
             TabPane familyTabPane = (TabPane) tab.getContent().getParent().lookup("#family-tab-pane");
             int tabIdx = familyTabPane.getSelectionModel().getSelectedIndex();
-            List<ObservablePedigreeMember> members = ofs.getPedigree().members();
-            ObservablePedigreeMember member = members.get(tabIdx - 1);
+            ObservableList<ObservablePedigreeMember> members = ofs.getPedigree().members();
+            ObjectBinding<ObservablePedigreeMember> member = Bindings.valueAt(members, tabIdx - 1);
             editPhenotypeFeatures(member);
         }
+        e.consume();
     }
 
-    private <T extends BaseObservableIndividual> void editPhenotypeFeatures(T individual) {
+    private <T extends BaseObservableIndividual> void editPhenotypeFeatures(ObjectBinding<T> individual) {
         try {
             FXMLLoader loader = new FXMLLoader(PhenotypeBrowserController.class.getResource("PhenotypeBrowser.fxml"));
             loader.setControllerFactory(controllerFactory);
             Parent parent = loader.load();
 
-            PhenotypeBrowserController controller = loader.getController();
+            // setup & bind controller
+            PhenotypeBrowserController<T> controller = loader.getController();
             controller.ontologyProperty().bind(optionalResources.ontologyProperty());
-            Bindings.bindContentBidirectional(controller.phenotypeDescriptions(), individual.phenotypicFeatures());
+            controller.dataProperty().bind(individual);
 
+            // show the phenotype stage
             Stage stage = new Stage();
             stage.initStyle(StageStyle.DECORATED);
             stage.initOwner(contentTabPane.getScene().getWindow());
@@ -464,8 +494,9 @@ public class Main {
             stage.setScene(new Scene(parent));
             stage.showAndWait();
 
+            // unbind
             controller.ontologyProperty().unbind();
-            Bindings.unbindContentBidirectional(controller.phenotypeDescriptions(), individual.phenotypicFeatures());
+            controller.dataProperty().unbind();
         } catch (IOException e) {
             LOGGER.warn("Error adding phenotype features: {}", e.getMessage());
         }
@@ -474,35 +505,40 @@ public class Main {
     /*                                                 DISEASE                                                        */
 
     @FXML
-    private void addEditDiseaseMenuItemAction() {
+    private void addEditDiseaseMenuItemAction(ActionEvent e) {
         // TODO - implement
         Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        e.consume();
     }
 
     /*                                                 VALIDATE                                                       */
     @FXML
-    private void validateCurrentEntryMenuItemAction() {
+    private void validateCurrentEntryMenuItemAction(ActionEvent e) {
         // TODO - implement
         Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        e.consume();
     }
 
     @FXML
-    private void validateAllModelsMenuItemAction() {
+    private void validateAllModelsMenuItemAction(ActionEvent e) {
         // TODO - implement
         Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        e.consume();
     }
 
     /*                                                 HELP                                                           */
 
     @FXML
-    private void helpMenuItemAction() {
+    private void helpMenuItemAction(ActionEvent e) {
         // TODO - implement
         Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        e.consume();
     }
 
     @FXML
-    private void liftoverAction() {
+    private void liftoverAction(ActionEvent e) {
         // TODO - implement
         Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        e.consume();
     }
 }

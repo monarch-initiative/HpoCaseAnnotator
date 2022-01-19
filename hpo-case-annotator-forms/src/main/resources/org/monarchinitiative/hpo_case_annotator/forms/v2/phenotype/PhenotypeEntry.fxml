@@ -27,21 +27,48 @@
             </VBox>
             <VBox HBox.hgrow="ALWAYS">
                <children>
-                  <Label styleClass="h2" text="Phenotype features" />
-                  <fx:include fx:id="phenotypicFeaturesTable" source="PhenotypicFeaturesTable.fxml" VBox.vgrow="ALWAYS" />
-                  <HBox alignment="CENTER_RIGHT" styleClass="edit-row">
+                  <VBox>
                      <children>
-                        <Button fx:id="removeButton" disable="true" mnemonicParsing="false" onAction="#removeButtonAction" styleClass="remove-item" text="-" />
+                        <Label styleClass="h2" text="Time course defaults" />
+                        <VBox>
+                           <children>
+                              <Label styleClass="h3" text="Onset" />
+                              <fx:include fx:id="onsetAge" source="../AgeHorizontal.fxml" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label styleClass="h3" text="Resolution" />
+                              <fx:include fx:id="resolutionAge" source="../AgeHorizontal.fxml" />
+                           </children>
+                        </VBox>
                      </children>
-                  </HBox>
+                  </VBox>
+                  <VBox>
+                     <children>
+                        <Label styleClass="h2" text="Phenotype features of the individual" />
+                        <fx:include fx:id="phenotypicFeaturesTable" source="PhenotypicFeaturesTable.fxml" VBox.vgrow="ALWAYS" />
+                        <HBox alignment="CENTER_RIGHT" styleClass="edit-row">
+                           <children>
+                              <Button fx:id="removeButton" disable="true" mnemonicParsing="false" onAction="#removeButtonAction" styleClass="remove-item" text="-" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
                </children>
             </VBox>
-            <VBox HBox.hgrow="ALWAYS">
+            <VBox HBox.hgrow="SOMETIMES">
                <children>
                   <Label styleClass="h2" text="Phenotype feature" />
                   <fx:include fx:id="phenotypicFeature" source="PhenotypicFeature.fxml" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
+         </children>
+      </HBox>
+      <HBox styleClass="edit-row">
+         <children>
+            <Pane HBox.hgrow="ALWAYS" />
+            <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" onAction="#okButtonAction" text="OK" />
          </children>
       </HBox>
 

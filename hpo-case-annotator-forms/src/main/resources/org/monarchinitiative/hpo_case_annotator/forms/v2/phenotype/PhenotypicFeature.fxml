@@ -2,18 +2,32 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.controlsfx.control.*?>
 
 <VBox id="phenotypic-feature-box" fx:id="phenotypicFeatureBox" alignment="CENTER_LEFT" stylesheets="@phenotypic-feature.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypicFeatureController">
     <children>
         <VBox styleClass="column" VBox.vgrow="SOMETIMES">
             <children>
-            <Label styleClass="h3" text="Definition" />
-            <VBox styleClass="column">
+            <Label styleClass="h3" text="Phenotype feature" />
+            <VBox id="phenotypic-feature-column" styleClass="column">
                <children>
-                      <Label id="term-id" fx:id="termIdLabel" wrapText="true" />
-                      <Label id="term-name" fx:id="nameLabel" wrapText="true" />
-                      <Label id="term-definition" fx:id="termDefinitionLabel" textAlignment="JUSTIFY" wrapText="true" />
+                  <VBox styleClass="column">
+                     <children>
+                        <Label text="ID" />
+                            <Label id="term-id" fx:id="termIdLabel" wrapText="true" />
+                     </children>
+                  </VBox>
+                  <VBox styleClass="column">
+                     <children>
+                        <Label text="Name" />
+                            <Label id="term-name" fx:id="nameLabel" wrapText="true" />
+                     </children>
+                  </VBox>
+                  <VBox styleClass="column" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label text="Definition" />
+                            <Label id="term-definition" fx:id="termDefinitionLabel" textAlignment="JUSTIFY" textOverrun="WORD_ELLIPSIS" wrapText="true" />
+                     </children>
+                  </VBox>
                </children>
             </VBox>
             </children>
@@ -32,73 +46,13 @@
                 <VBox>
                     <children>
                         <Label styleClass="h3" text="Onset" />
-                        <RadioButton fx:id="onsetAgeRadioButton" mnemonicParsing="false" text="Age" />
-                        <VBox VBox.vgrow="NEVER">
-                            <children>
-                                <VBox fx:id="onsetAgeControlsVBox" HBox.hgrow="NEVER" VBox.vgrow="NEVER">
-                                    <children>
-                                        <HBox alignment="CENTER_LEFT">
-                                            <children>
-                                                <TextField fx:id="onsetYearsTextField" promptText="18" />
-                                                <Label text="years" />
-                                            </children>
-                                        </HBox>
-                                        <HBox alignment="CENTER_LEFT">
-                                            <children>
-                                                <SearchableComboBox fx:id="onsetMonthsComboBox" promptText="0" />
-                                                <Label text="months" />
-                                            </children>
-                                        </HBox>
-                                        <HBox alignment="CENTER_LEFT">
-                                            <children>
-                                                <SearchableComboBox fx:id="onsetDaysComboBox" promptText="0" />
-                                                <Label text="days" />
-                                            </children>
-                                        </HBox>
-                                    </children>
-                                </VBox>
-                            </children>
-                        </VBox>
-                        <RadioButton fx:id="onsetPresentAgeRadioButton" disable="true" mnemonicParsing="false" text="Present age" />
-                        <RadioButton fx:id="onsetBirthRadioButton" mnemonicParsing="false" text="Birth" />
+                        <fx:include fx:id="onsetAge" source="../AgeVertical.fxml" />
                     </children>
                 </VBox>
                 <VBox>
                     <children>
                         <Label styleClass="h3" text="Resolution" />
-                        <VBox VBox.vgrow="NEVER">
-                            <children>
-                                <VBox VBox.vgrow="NEVER">
-                                    <children>
-                                        <RadioButton fx:id="resolutionAgeRadioButton" mnemonicParsing="false" text="Age" />
-                                        <VBox fx:id="resolutionAgeControlsVBox" HBox.hgrow="NEVER" VBox.vgrow="NEVER">
-                                            <children>
-                                                <HBox alignment="CENTER_LEFT">
-                                                    <children>
-                                                        <TextField fx:id="resolutionYearsTextField" promptText="18" />
-                                                        <Label text="years" />
-                                                    </children>
-                                                </HBox>
-                                                <HBox alignment="CENTER_LEFT">
-                                                    <children>
-                                                        <SearchableComboBox fx:id="resolutionMonthsComboBox" promptText="0" />
-                                                        <Label text="months" />
-                                                    </children>
-                                                </HBox>
-                                                <HBox alignment="CENTER_LEFT">
-                                                    <children>
-                                                        <SearchableComboBox fx:id="resolutionDaysComboBox" promptText="0" />
-                                                        <Label text="days" />
-                                                    </children>
-                                                </HBox>
-                                            </children>
-                                        </VBox>
-                                    </children>
-                                </VBox>
-                                <RadioButton fx:id="resolutionPresentAgeRadioButton" disable="true" mnemonicParsing="false" text="Present age" />
-                                <RadioButton fx:id="resolutionDeathRadioButton" disable="true" mnemonicParsing="false" text="Death" />
-                            </children>
-                        </VBox>
+                        <fx:include fx:id="resolutionAge" source="../AgeVertical.fxml" />
                     </children>
                 </VBox>
             </children>
