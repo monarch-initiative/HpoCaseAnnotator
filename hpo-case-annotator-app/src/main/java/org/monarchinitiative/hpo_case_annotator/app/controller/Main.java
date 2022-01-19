@@ -17,6 +17,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.controlsfx.dialog.CommandLinksDialog;
+import org.monarchinitiative.hpo_case_annotator.app.dialogs.Dialogs;
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.StudyType;
 import org.monarchinitiative.hpo_case_annotator.convert.ConversionCodecs;
@@ -116,6 +117,8 @@ public class Main {
         saveMenuItem.disableProperty().bind(noTabIsPresent);
         saveAsMenuItem.disableProperty().bind(noTabIsPresent);
         saveAllMenuItem.disableProperty().bind(noTabIsPresent);
+        closeMenuItem.disableProperty().bind(noTabIsPresent);
+
         cloneCaseMenuItem.disableProperty().bind(noTabIsPresent);
         viewOnPubmedMenuItem.disableProperty().bind(noTabIsPresent);
         validateCurrentEntryMenuItem.disableProperty().bind(noTabIsPresent);
@@ -343,8 +346,9 @@ public class Main {
 
     @FXML
     private void closeMenuItemAction(ActionEvent e) {
-        // TODO - implement
-        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        Dialogs.getBooleanFromUser("Close study", "Do you want to close the current study?", null)
+                .filter(bt -> bt.equals(ButtonType.OK))
+                .ifPresent(bt -> removeStudy(contentTabPane.getSelectionModel().getSelectedIndex()));
         e.consume();
     }
 
@@ -398,8 +402,10 @@ public class Main {
 
     @FXML
     private void exitMenuItemAction(ActionEvent e) {
-        Platform.exit();
         e.consume();
+        Dialogs.getBooleanFromUser("Exit", "Are you sure you want to quit?", null)
+                .filter(buttonType -> buttonType.equals(ButtonType.OK))
+                .ifPresent(buttonType -> Platform.exit());
     }
 
     @FXML

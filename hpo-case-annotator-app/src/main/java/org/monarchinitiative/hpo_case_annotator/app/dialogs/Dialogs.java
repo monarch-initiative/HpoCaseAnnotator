@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.app.controller;
+package org.monarchinitiative.hpo_case_annotator.app.dialogs;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
 
-class Dialogs {
+public class Dialogs {
 
     /**
      * Show information to user.
@@ -22,7 +22,7 @@ class Dialogs {
      * @param windowTitle - Title of PopUp window
      * @param text        - message text
      */
-    static void showInfoMessage(String windowTitle, String text) {
+    public static void showInfoMessage(String windowTitle, String text) {
         Alert al = new Alert(Alert.AlertType.INFORMATION);
         al.setTitle(windowTitle);
         al.setHeaderText(null);
@@ -30,7 +30,7 @@ class Dialogs {
         al.showAndWait();
     }
 
-    static void showWarningDialog(String windowTitle, String header, String contentText) {
+    public static void showWarningDialog(String windowTitle, String header, String contentText) {
         Alert a = new Alert(Alert.AlertType.WARNING);
         a.setTitle(windowTitle);
         a.setHeaderText(header);
@@ -44,14 +44,13 @@ class Dialogs {
      * @param windowTitle Title of PopUp window
      * @return true or false according to the user input
      */
-    static boolean getBooleanFromUser(String windowTitle, String headerText, String question) {
-        Alert al = new Alert(Alert.AlertType.CONFIRMATION);
-        al.setTitle(windowTitle);
-        al.setHeaderText(headerText);
-        al.setContentText(question);
+    public static Optional<ButtonType> getBooleanFromUser(String windowTitle, String headerText, String question) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(windowTitle);
+        alert.setHeaderText(headerText);
+        alert.setContentText(question);
 
-        Optional<ButtonType> result = al.showAndWait();
-        return result.isPresent() && result.get() == ButtonType.OK;
+        return alert.showAndWait();
     }
 
     /**
@@ -70,7 +69,7 @@ class Dialogs {
         return dirchooser.showDialog(ownerWindow);
     }
 
-    static void showException(String windowTitle, String header, String contentText, Exception exception) {
+    public static void showException(String windowTitle, String header, String contentText, Exception exception) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(windowTitle);
         alert.setHeaderText(header);

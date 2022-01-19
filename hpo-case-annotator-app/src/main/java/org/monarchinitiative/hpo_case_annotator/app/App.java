@@ -2,12 +2,16 @@ package org.monarchinitiative.hpo_case_annotator.app;
 
 import javafx.application.Application;
 import javafx.application.HostServices;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.monarchinitiative.hpo_case_annotator.app.config.*;
+import org.monarchinitiative.hpo_case_annotator.app.dialogs.Dialogs;
 import org.monarchinitiative.hpo_case_annotator.app.controller.Main;
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResource;
@@ -65,6 +69,7 @@ public class App extends Application {
         stage.setTitle(properties.name() + ' ' + properties.version());
         stage.getIcons().add(new Image(App.class.getResourceAsStream("/img/donald-duck.png")));
         stage.setScene(scene);
+        stage.setOnCloseRequest(quitUponUserConfirmation());
         stage.show();
     }
 
@@ -115,6 +120,12 @@ public class App extends Application {
             }
         }
         return Optional.empty();
+    }
+
+    private static EventHandler<WindowEvent> quitUponUserConfirmation() {
+        return e -> Dialogs.getBooleanFromUser("Exit", "Are you sure you want to quit?", null)
+                .filter(buttonType -> buttonType.equals(ButtonType.CANCEL))
+                .ifPresent(buttonType -> e.consume());
     }
 
     @Bean
