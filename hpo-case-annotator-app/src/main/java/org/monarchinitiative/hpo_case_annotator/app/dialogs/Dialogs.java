@@ -1,9 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.app.dialogs;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.DirectoryChooser;
@@ -69,7 +66,7 @@ public class Dialogs {
         return dirchooser.showDialog(ownerWindow);
     }
 
-    public static void showException(String windowTitle, String header, String contentText, Exception exception) {
+    public static void showException(String windowTitle, String header, String contentText, Throwable exception) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(windowTitle);
         alert.setHeaderText(header);

@@ -4,13 +4,9 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import java.util.LinkedList;
 
 public class ObservablePublication {
-    private final ObservableList<String> authors = FXCollections.observableList(new LinkedList<>());
+    private final StringProperty authors = new SimpleStringProperty(this, "authors");
     private final StringProperty title = new SimpleStringProperty(this, "title");
     private final StringProperty journal = new SimpleStringProperty(this, "journal");
     private final IntegerProperty year = new SimpleIntegerProperty(this, "year");
@@ -18,7 +14,15 @@ public class ObservablePublication {
     private final StringProperty pages = new SimpleStringProperty(this, "pages");
     private final StringProperty pmid = new SimpleStringProperty(this, "pmid");
 
-    public ObservableList<String> authors() {
+    public String getAuthors() {
+        return authors.get();
+    }
+
+    public void setAuthors(String authors) {
+        this.authors.set(authors);
+    }
+
+    public StringProperty authorsProperty() {
         return authors;
     }
 

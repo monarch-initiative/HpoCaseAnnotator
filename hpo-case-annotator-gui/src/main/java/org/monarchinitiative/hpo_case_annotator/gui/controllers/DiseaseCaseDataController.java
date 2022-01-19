@@ -20,6 +20,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.core.publication.PubMedSummaryRetriever;
+import org.monarchinitiative.hpo_case_annotator.core.publication.PublicationDataFormat;
+import org.monarchinitiative.hpo_case_annotator.core.publication.PublicationDataParser;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.AbstractVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
@@ -357,7 +359,9 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         FutureTask<Void> task = new FutureTask<>(() -> {
             String pmid = pmidTextField.getText();
             try {
-                PubMedSummaryRetriever retriever = PubMedSummaryRetriever.defaultInstance();
+                PubMedSummaryRetriever<Publication> retriever = PubMedSummaryRetriever.<Publication>builder()
+                        .publicationDataParser(PublicationDataParser.forV1PublicationFormat(PublicationDataFormat.EUTILS))
+                        .build();
                 Publication publication = retriever.getPublication(pmid);
                 Platform.runLater(() -> this.publication.set(publication));
             } catch (IOException e) {
