@@ -34,8 +34,8 @@ public class PubMedSummaryRetrieverTest {
         String htmlResponse = TestUtils.readFile(Paths.get("src/test/resources/org/monarchinitiative/hpo_case_annotator/core/publication/pubmed_eutils_summary.xml"));
 
         Function<String, InputStream> connectionFactory = p -> new ByteArrayInputStream(htmlResponse.getBytes());
-        PubMedSummaryRetriever instance = PubMedSummaryRetriever.builder()
-                .publicationDataParser(PublicationDataParser.forFormat(PublicationDataFormat.EUTILS))
+        PubMedSummaryRetriever<Publication> instance = PubMedSummaryRetriever.<Publication>builder()
+                .publicationDataParser(PublicationDataParser.forV1PublicationFormat(PublicationDataFormat.EUTILS))
                 .connectionFactory(connectionFactory).build();
         Publication publication = instance.getPublication("27057779");
 
@@ -65,8 +65,9 @@ public class PubMedSummaryRetrieverTest {
                 "\n" +
                 "</DocumentSummarySet>\n" +
                 "</eSummaryResult>\n";
-        PubMedSummaryRetriever retriever = PubMedSummaryRetriever.builder()
+        PubMedSummaryRetriever<Publication> retriever = PubMedSummaryRetriever.<Publication>builder()
                 .connectionFactory(p -> new ByteArrayInputStream(unfoundResponse.getBytes()))
+                .publicationDataParser(PublicationDataParser.forV1PublicationFormat(PublicationDataFormat.EUTILS))
                 .build();
         assertThrows(IOException.class, () -> retriever.getPublication("12346643234253432"));
     }

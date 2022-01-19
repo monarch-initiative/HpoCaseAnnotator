@@ -5,6 +5,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,16 +13,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.*;
+import javafx.util.converter.IntegerStringConverter;
 import org.controlsfx.dialog.CommandLinksDialog;
 import org.monarchinitiative.hpo_case_annotator.app.dialogs.Dialogs;
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.StudyType;
 import org.monarchinitiative.hpo_case_annotator.convert.ConversionCodecs;
 import org.monarchinitiative.hpo_case_annotator.convert.ModelTransformationException;
+import org.monarchinitiative.hpo_case_annotator.app.io.PubmedIO;
 import org.monarchinitiative.hpo_case_annotator.forms.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.CohortStudyController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.FamilyStudyController;
@@ -33,6 +33,7 @@ import org.monarchinitiative.hpo_case_annotator.io.ModelParsers;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.v2.CohortStudy;
 import org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy;
+import org.monarchinitiative.hpo_case_annotator.model.v2.Publication;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,7 @@ import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
 
 @Component
 public class Main {
@@ -53,6 +55,7 @@ public class Main {
 
     private final OptionalResources optionalResources;
     private final HCAControllerFactory controllerFactory;
+    private final ExecutorService executorService;
 
     /**
      * This list contains data wrappers in the same order as they are present in the {@link #contentTabPane}.
@@ -60,8 +63,8 @@ public class Main {
      * The only place where items are added into this list is the {@link #addStudy(URL, StudyWrapper)} method.
      */
     private final List<StudyWrapper<?>> wrappers = new LinkedList<>();
-    public MenuItem addEditDiseaseMenuItem;
 
+    /* **************************************************   FILE   ************************************************** */
     @FXML
     private MenuItem saveMenuItem;
     @FXML
@@ -70,27 +73,53 @@ public class Main {
     private MenuItem saveAllMenuItem;
     @FXML
     private MenuItem closeMenuItem;
+
+    /* *************************************************    VIEW      *********************************************** */
     @FXML
     private MenuItem cloneCaseMenuItem;
+
+    /* *************************************************    STUDY     *********************************************** */
+    @FXML
+    private Menu studyMenu;
     @FXML
     private MenuItem viewOnPubmedMenuItem;
     @FXML
+    private MenuItem fetchFromPubmedMenuItem;
+
+    /* *************************************************   PROJECT    *********************************************** */
+    @FXML
     private MenuItem showCuratedPublicationsMenuItem;
     @FXML
-    private MenuItem addEditPhenotypeFeaturesMenuItem;
-    @FXML
     private MenuItem showCuratedVariantsMenuItem;
+
+    /* ************************************************   GENOTYPE    *********************************************** */
+    @FXML
+    private Menu genotypeMenu;
+
+    /* ************************************************   PHENOTYPE  ************************************************ */
+    @FXML
+    private Menu phenotypeMenu;
+    @FXML
+    private MenuItem editPhenotypeFeaturesMenuItem;
+
+    /* ************************************************    DISEASE  ************************************************* */
+    @FXML
+    private Menu diseaseMenu;
+    @FXML
+    private MenuItem editDiseaseMenuItem;
+
+    /* ************************************************   VALIDATE  ************************************************* */
+
     @FXML
     private MenuItem validateCurrentEntryMenuItem;
     @FXML
     private MenuItem exportPhenopacketMenuItem;
 
-    @FXML
-    private Menu genotypeMenu;
-    @FXML
-    private Menu phenotypeMenu;
-    @FXML
-    private Menu diseaseMenu;
+    /* ************************************************     HELP    ************************************************* */
+
+
+    /* ************************************************   THE REST   ************************************************* */
+
 
     @FXML
     private TabPane contentTabPane;
@@ -102,9 +131,11 @@ public class Main {
     private StatusBarController statusBarController;
 
     public Main(OptionalResources optionalResources,
-                HCAControllerFactory controllerFactory) {
+                HCAControllerFactory controllerFactory,
+                ExecutorService executorService) {
         this.optionalResources = optionalResources;
         this.controllerFactory = controllerFactory;
+        this.executorService = executorService;
     }
 
     @FXML
@@ -120,11 +151,13 @@ public class Main {
         closeMenuItem.disableProperty().bind(noTabIsPresent);
 
         cloneCaseMenuItem.disableProperty().bind(noTabIsPresent);
-        viewOnPubmedMenuItem.disableProperty().bind(noTabIsPresent);
-        validateCurrentEntryMenuItem.disableProperty().bind(noTabIsPresent);
+        studyMenu.disableProperty().bind(noTabIsPresent);
+
         genotypeMenu.disableProperty().bind(noTabIsPresent);
         phenotypeMenu.disableProperty().bind(noTabIsPresent);
         diseaseMenu.disableProperty().bind(noTabIsPresent);
+
+        validateCurrentEntryMenuItem.disableProperty().bind(noTabIsPresent);
     }
 
     /*                                                 FILE                                                           */
@@ -207,7 +240,7 @@ public class Main {
         filechooser.getExtensionFilters().addAll(v1Json, v2Json);
         filechooser.setSelectedExtensionFilter(v1Json);
 
-        List<File> files = filechooser.showOpenMultipleDialog(contentTabPane.getScene().getWindow());
+        List<File> files = filechooser.showOpenMultipleDialog(getOwnerWindow());
 
         if (files == null)
             return;
@@ -256,6 +289,10 @@ public class Main {
         } else {
             return Optional.empty();
         }
+    }
+
+    private Window getOwnerWindow() {
+        return contentTabPane.getScene().getWindow();
     }
 
     @FXML
@@ -318,7 +355,7 @@ public class Main {
         fileChooser.setInitialFileName(suggestedName);
         fileChooser.setInitialDirectory(optionalResources.getDiseaseCaseDir());
         fileChooser.getExtensionFilters().add(jsonFileFormat);
-        File which = fileChooser.showSaveDialog(contentTabPane.getScene().getWindow());
+        File which = fileChooser.showSaveDialog(getOwnerWindow());
 
         return (which == null)
                 ? null
@@ -389,7 +426,7 @@ public class Main {
             Parent parent = loader.load();
             Stage stage = new Stage();
             stage.initStyle(StageStyle.DECORATED);
-            stage.initOwner(contentTabPane.getScene().getWindow());
+            stage.initOwner(getOwnerWindow());
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Initialize resources");
             stage.setScene(new Scene(parent));
@@ -423,8 +460,6 @@ public class Main {
 
     }
 
-    /*                                                 VIEW                                                           */
-
     private static Optional<StudyType> studyTypeForData(Object data) {
         if (data instanceof ObservableFamilyStudy || data instanceof FamilyStudy) {
             return Optional.of(StudyType.FAMILY);
@@ -436,6 +471,40 @@ public class Main {
         }
     }
 
+    /*                                                 VIEW                                                           */
+    @FXML
+    private void fetchFromPubmedMenuItemAction(ActionEvent e) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Fetch publication from PubMed");
+        dialog.setHeaderText("Enter PMID number");
+        dialog.setContentText("E.g. 34289339");
+        dialog.initOwner(getOwnerWindow());
+        TextFormatter<Integer> formatter = new TextFormatter<>(new IntegerStringConverter());
+        dialog.getEditor().setTextFormatter(formatter);
+
+        dialog.showAndWait().ifPresent(pmid -> {
+            Task<Publication> task = PubmedIO.v2publication(pmid);
+
+            task.setOnSucceeded(we -> Platform.runLater(() -> {
+                Publication publication = task.getValue();
+
+                int selectedTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
+                Object data = wrappers.get(selectedTabIdx).study();
+                if (data instanceof ObservableStudy study) {
+                    Convert.toObservablePublication(publication, study.getPublication());
+                }
+            }));
+
+            task.setOnFailed(we -> {
+                Throwable throwable = we.getSource().getException();
+                Dialogs.showException("Error", "Error fetching PubMed data for " + pmid, throwable.getMessage(), throwable);
+            });
+            executorService.submit(task);
+        });
+
+        e.consume();
+    }
+
     @FXML
     private void viewOnPubmedMenuItemAction(ActionEvent e) {
         // TODO - implement
@@ -444,7 +513,6 @@ public class Main {
     }
 
     /*                                                 PROJECT                                                        */
-
     @FXML
     private void showCuratedPublicationsMenuItemAction(ActionEvent e) {
         // TODO - implement
@@ -464,9 +532,8 @@ public class Main {
 
 
     /*                                                 PHENOTYPE                                                      */
-
     @FXML
-    private void addEditPhenotypicFeaturesMenuItemAction(ActionEvent e) {
+    private void editPhenotypicFeaturesMenuItemAction(ActionEvent e) {
         int selectedTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
         Tab tab = contentTabPane.getSelectionModel().getSelectedItem();
 
@@ -495,7 +562,7 @@ public class Main {
             // show the phenotype stage
             Stage stage = new Stage();
             stage.initStyle(StageStyle.DECORATED);
-            stage.initOwner(contentTabPane.getScene().getWindow());
+            stage.initOwner(getOwnerWindow());
             stage.setTitle("Add / edit phenotype features");
             stage.setScene(new Scene(parent));
             stage.showAndWait();
@@ -511,7 +578,7 @@ public class Main {
     /*                                                 DISEASE                                                        */
 
     @FXML
-    private void addEditDiseaseMenuItemAction(ActionEvent e) {
+    private void editDiseaseMenuItemAction(ActionEvent e) {
         // TODO - implement
         Dialogs.showInfoMessage("Sorry", "Not yet implemented");
         e.consume();

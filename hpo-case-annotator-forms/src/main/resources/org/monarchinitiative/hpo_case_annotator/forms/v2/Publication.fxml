@@ -11,7 +11,8 @@
    </stylesheets>
    <children>
       <Label styleClass="h1" text="Publication" />
-      <Label fx:id="summaryLabel" layoutX="26.0" layoutY="26.0" styleClass="h4" />
+      <Label fx:id="summaryLabel" layoutX="26.0" layoutY="26.0" styleClass="h4" VBox.vgrow="ALWAYS" />
+      <Pane VBox.vgrow="SOMETIMES" />
       <VBox styleClass="column" VBox.vgrow="ALWAYS">
          <children>
             <VBox styleClass="column">
@@ -35,7 +36,7 @@
             <VBox layoutX="10.0" layoutY="120.0" styleClass="column">
                <children>
                   <Label styleClass="h2" text="Year" />
-                  <TextField fx:id="yearTextField" editable="false" />
+                  <TextField fx:id="yearTextField" />
                </children>
             </VBox>
             <VBox layoutX="10.0" layoutY="175.0" styleClass="column">

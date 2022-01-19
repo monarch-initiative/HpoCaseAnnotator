@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.v2.observable;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 
 import java.time.Period;
+import java.util.Arrays;
 import java.util.Optional;
 
 public class Convert {
@@ -28,8 +29,8 @@ public class Convert {
                 toStudyMetadata(study.getStudyMetadata()));
     }
 
-    private static Publication toPublication(ObservablePublication publication) {
-        return Publication.of(publication.authors(),
+    public static Publication toPublication(ObservablePublication publication) {
+        return Publication.of(Arrays.stream(publication.getAuthors().split(",")).map(String::trim).toList(),
                 publication.getTitle(),
                 publication.getJournal(),
                 publication.getYear(),
@@ -133,8 +134,8 @@ public class Convert {
         toObservableStudyMetadata(familyStudy.studyMetadata(), study.getStudyMetadata());
     }
 
-    private static void toObservablePublication(Publication publication, ObservablePublication op) {
-        op.authors().addAll(publication.authors());
+    public static void toObservablePublication(Publication publication, ObservablePublication op) {
+        op.setAuthors(String.join(", ", publication.authors()));
         op.setTitle(publication.title());
         op.setJournal(publication.journal());
         op.setYear(publication.year());

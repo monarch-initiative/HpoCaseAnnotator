@@ -5,112 +5,139 @@
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.app.controller.Main">
+<BorderPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.monarchinitiative.hpo_case_annotator.app.controller.Main">
     <stylesheets>
-        <URL value="@base.css" />
-        <URL value="@main.css" />
+        <URL value="@base.css"/>
+        <URL value="@main.css"/>
     </stylesheets>
     <top>
         <MenuBar BorderPane.alignment="TOP_CENTER">
             <Menu mnemonicParsing="false" text="File">
                 <MenuItem mnemonicParsing="false" onAction="#newMenuItemAction" text="New">
                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                     </accelerator>
                 </MenuItem>
                 <MenuItem mnemonicParsing="false" onAction="#openMenuItemAction" text="Open">
                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                     </accelerator>
                 </MenuItem>
-                <MenuItem fx:id="saveMenuItem" disable="true" mnemonicParsing="false" onAction="#saveMenuItemAction" text="Save">
+                <MenuItem fx:id="saveMenuItem" disable="true" mnemonicParsing="false" onAction="#saveMenuItemAction"
+                          text="Save">
                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                     </accelerator>
                 </MenuItem>
-                <MenuItem fx:id="saveAsMenuItem" disable="true" mnemonicParsing="false" onAction="#saveAsMenuItemAction" text="Save as">
+                <MenuItem fx:id="saveAsMenuItem" disable="true" mnemonicParsing="false" onAction="#saveAsMenuItemAction"
+                          text="Save as">
                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP"/>
                     </accelerator>
                 </MenuItem>
-                <MenuItem fx:id="saveAllMenuItem" disable="true" mnemonicParsing="false" onAction="#saveAllMenuItemAction" text="Save all" />
+                <MenuItem fx:id="saveAllMenuItem" disable="true" mnemonicParsing="false"
+                          onAction="#saveAllMenuItemAction" text="Save all"/>
                 <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#closeMenuItemAction" text="Close">
                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                        <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                     </accelerator>
                 </MenuItem>
-            <SeparatorMenuItem mnemonicParsing="false" />
-               <Menu mnemonicParsing="false" text="Settings">
-                   <MenuItem mnemonicParsing="false" onAction="#setResourcesMenuItemAction" text="Initialize resources" />
-               </Menu>
-                <SeparatorMenuItem mnemonicParsing="false" />
-               <Menu text="Export">
-                   <MenuItem mnemonicParsing="false" onAction="#exportToCSVMenuItemAction" text="Export all mutation data to CSV file" />
-                   <MenuItem disable="true" mnemonicParsing="false" onAction="#exportToSummaryFileMenuItemAction" text="Export all mutation data to summary file" />
-                   <SeparatorMenuItem mnemonicParsing="false" />
-                   <Menu mnemonicParsing="false" text="Export phenopacket(s)">
-                       <items>
-                           <MenuItem id="phenopacketMenuItem" fx:id="exportPhenopacketMenuItem" disable="true" mnemonicParsing="false" onAction="#exportPhenopacketCurrentCaseMenuItemAction" text="Current case" />
-                           <MenuItem mnemonicParsing="false" onAction="#exportPhenopacketAllCasesMenuItemAction" text="All cases" />
-                       </items>
-                   </Menu>
-                   <SeparatorMenuItem mnemonicParsing="false" />
-               </Menu>
-                <SeparatorMenuItem mnemonicParsing="false" />
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <Menu mnemonicParsing="false" text="Settings">
+                    <MenuItem mnemonicParsing="false" onAction="#setResourcesMenuItemAction"
+                              text="Initialize resources"/>
+                </Menu>
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <Menu text="Export">
+                    <MenuItem mnemonicParsing="false" onAction="#exportToCSVMenuItemAction"
+                              text="Export all mutation data to CSV file"/>
+                    <MenuItem disable="true" mnemonicParsing="false" onAction="#exportToSummaryFileMenuItemAction"
+                              text="Export all mutation data to summary file"/>
+                    <SeparatorMenuItem mnemonicParsing="false"/>
+                    <Menu mnemonicParsing="false" text="Export phenopacket(s)">
+                        <items>
+                            <MenuItem id="phenopacketMenuItem" fx:id="exportPhenopacketMenuItem" disable="true"
+                                      mnemonicParsing="false" onAction="#exportPhenopacketCurrentCaseMenuItemAction"
+                                      text="Current case"/>
+                            <MenuItem mnemonicParsing="false" onAction="#exportPhenopacketAllCasesMenuItemAction"
+                                      text="All cases"/>
+                        </items>
+                    </Menu>
+                    <SeparatorMenuItem mnemonicParsing="false"/>
+                </Menu>
+                <SeparatorMenuItem mnemonicParsing="false"/>
                 <MenuItem mnemonicParsing="false" onAction="#exitMenuItemAction" text="Exit">
                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                        <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                     </accelerator>
                 </MenuItem>
             </Menu>
             <Menu mnemonicParsing="false" text="View">
-                <MenuItem fx:id="cloneCaseMenuItem" disable="true" mnemonicParsing="false" onAction="#cloneCaseMenuItemAction" text="Clone case to new tab" />
-                <MenuItem fx:id="viewOnPubmedMenuItem" disable="true" mnemonicParsing="false" onAction="#viewOnPubmedMenuItemAction" text="View on Pubmed" />
+                <MenuItem fx:id="cloneCaseMenuItem" disable="true" mnemonicParsing="false"
+                          onAction="#cloneCaseMenuItemAction" text="Clone case to new tab"/>
+            </Menu>
+            <Menu fx:id="studyMenu" disable="true" mnemonicParsing="false" text="Study">
+                <items>
+                    <Menu mnemonicParsing="false" text="Publication">
+                        <items>
+                            <MenuItem fx:id="fetchFromPubmedMenuItem" mnemonicParsing="false"
+                                      onAction="#fetchFromPubmedMenuItemAction" text="Fetch from Pubmed"/>
+                            <MenuItem fx:id="viewOnPubmedMenuItem" disable="true" mnemonicParsing="false"
+                                      onAction="#viewOnPubmedMenuItemAction" text="View on Pubmed"/>
+                        </items>
+                    </Menu>
+                </items>
+                <accelerator>
+                    <KeyCodeCombination alt="ANY" code="S" control="UP" meta="UP" shift="UP" shortcut="UP"/>
+                </accelerator>
             </Menu>
             <Menu mnemonicParsing="false" text="Project">
-                <MenuItem fx:id="showCuratedPublicationsMenuItem" mnemonicParsing="false" onAction="#showCuratedPublicationsMenuItemAction" text="Show curated publications" />
-                <MenuItem fx:id="showCuratedVariantsMenuItem" mnemonicParsing="false" onAction="#showCuratedVariantsMenuItemAction" text="Show curated variants" />
+                <MenuItem fx:id="showCuratedPublicationsMenuItem" mnemonicParsing="false"
+                          onAction="#showCuratedPublicationsMenuItemAction" text="Show curated publications"/>
+                <MenuItem fx:id="showCuratedVariantsMenuItem" mnemonicParsing="false"
+                          onAction="#showCuratedVariantsMenuItemAction" text="Show curated variants"/>
             </Menu>
-         <Menu fx:id="genotypeMenu" disable="true" mnemonicParsing="false" text="Genotype">
-           <items>
-             <MenuItem mnemonicParsing="false" />
-           </items>
-         </Menu>
-         <Menu fx:id="phenotypeMenu" disable="true" mnemonicParsing="false" text="Phenotype">
-           <items>
-             <MenuItem fx:id="addEditPhenotypeFeaturesMenuItem" mnemonicParsing="false" onAction="#addEditPhenotypicFeaturesMenuItemAction" text="Add / Edit phenotype features" />
-           </items>
-         </Menu>
-         <Menu fx:id="diseaseMenu" disable="true" mnemonicParsing="false" text="Disease">
-           <items>
-             <MenuItem fx:id="addEditDiseaseMenuItem" mnemonicParsing="false" onAction="#addEditDiseaseMenuItemAction" text="Action 1" />
-           </items>
-         </Menu>
+            <Menu fx:id="genotypeMenu" disable="true" mnemonicParsing="false" text="Genotype"/>
+            <Menu fx:id="phenotypeMenu" disable="true" mnemonicParsing="false" text="Phenotype">
+                <items>
+                    <MenuItem fx:id="editPhenotypeFeaturesMenuItem" mnemonicParsing="false"
+                              onAction="#editPhenotypicFeaturesMenuItemAction" text="Edit phenotypic features"/>
+                </items>
+            </Menu>
+            <Menu fx:id="diseaseMenu" disable="true" mnemonicParsing="false" text="Disease">
+                <items>
+                    <MenuItem fx:id="editDiseaseMenuItem" mnemonicParsing="false" onAction="#editDiseaseMenuItemAction"
+                              text="Edit disease data"/>
+                </items>
+            </Menu>
             <Menu text="Validate">
-                <MenuItem fx:id="validateCurrentEntryMenuItem" disable="true" mnemonicParsing="false" onAction="#validateCurrentEntryMenuItemAction" text="Validate current case">
+                <MenuItem fx:id="validateCurrentEntryMenuItem" disable="true" mnemonicParsing="false"
+                          onAction="#validateCurrentEntryMenuItemAction" text="Validate current case">
                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                        <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="DOWN" shortcut="UP"/>
                     </accelerator>
                 </MenuItem>
-                <MenuItem mnemonicParsing="false" onAction="#validateAllModelsMenuItemAction" text="Validate all cases" />
+                <MenuItem mnemonicParsing="false" onAction="#validateAllModelsMenuItemAction"
+                          text="Validate all cases"/>
             </Menu>
             <Menu text="Help">
-                <MenuItem id="helpMenuItem" mnemonicParsing="false" onAction="#helpMenuItemAction" text="Help" />
-                <MenuItem mnemonicParsing="false" onAction="#liftoverAction" text="Liftover" />
+                <MenuItem id="helpMenuItem" mnemonicParsing="false" onAction="#helpMenuItemAction" text="Help"/>
+                <MenuItem mnemonicParsing="false" onAction="#liftoverAction" text="Liftover"/>
             </Menu>
         </MenuBar>
     </top>
     <center>
-       <VBox maxHeight="1.7976931348623157E308">
-         <children>
-             <TabPane fx:id="contentTabPane" maxHeight="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
-         </children>
-       </VBox>
-   </center>
+        <VBox maxHeight="1.7976931348623157E308">
+            <children>
+                <TabPane fx:id="contentTabPane" maxHeight="1.7976931348623157E308" VBox.vgrow="ALWAYS"/>
+            </children>
+        </VBox>
+    </center>
     <bottom>
         <VBox alignment="CENTER_LEFT">
             <children>
-                <fx:include fx:id="statusBar" source="StatusBar.fxml" />
+                <fx:include fx:id="statusBar" source="StatusBar.fxml"/>
             </children>
         </VBox>
     </bottom>
