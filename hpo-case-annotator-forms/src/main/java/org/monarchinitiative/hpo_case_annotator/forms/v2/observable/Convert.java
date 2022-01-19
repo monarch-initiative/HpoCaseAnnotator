@@ -101,43 +101,39 @@ public class Convert {
 
     public static Optional<? extends ObservableStudy> toObservableStudy(Study study) {
         if (study instanceof FamilyStudy fs) {
-            return Optional.of(toObservableFamilyStudy(fs));
+            ObservableFamilyStudy familyStudy = new ObservableFamilyStudy();
+            toObservableFamilyStudy(fs, familyStudy);
+            return Optional.of(familyStudy);
         } else if (study instanceof CohortStudy cs) {
-            return Optional.of(toObservableCohortStudy(cs));
+            ObservableCohortStudy cohortStudy = new ObservableCohortStudy();
+            toObservableCohortStudy(cs, cohortStudy);
+            return Optional.of(cohortStudy);
         } else {
             return Optional.empty();
         }
     }
 
-    private static ObservableCohortStudy toObservableCohortStudy(CohortStudy cs) {
-        ObservableCohortStudy ocs = new ObservableCohortStudy();
+    private static void toObservableCohortStudy(CohortStudy cs, ObservableCohortStudy study) {
+        study.setId(cs.id());
 
-        ocs.setId(cs.id());
-        ocs.setPublication(toObservablePublication(cs.publication()));
-        ocs.variants().addAll(cs.variants());
+        toObservablePublication(cs.publication(), study.getPublication());
+        study.variants().addAll(cs.variants());
         cs.members()
                 .map(Convert::toObservableIndividual)
-                .forEachOrdered(oi -> ocs.members().add(oi));
-        ocs.setStudyMetadata(toObservableStudyMetadata(cs.studyMetadata()));
-
-        return ocs;
+                .forEachOrdered(oi -> study.members().add(oi));
+        toObservableStudyMetadata(cs.studyMetadata(), study.getStudyMetadata());
     }
 
-    public static <T extends FamilyStudy> ObservableFamilyStudy toObservableFamilyStudy(T familyStudy) {
-        ObservableFamilyStudy study = new ObservableFamilyStudy();
-
+    public static <T extends FamilyStudy> void toObservableFamilyStudy(T familyStudy, ObservableFamilyStudy study) {
         study.setId(familyStudy.id());
-        study.setPublication(toObservablePublication(familyStudy.publication()));
+        toObservablePublication(familyStudy.publication(), study.getPublication());
         study.variants().addAll(familyStudy.variants());
-        study.setPedigree(toObservablePedigree(familyStudy.pedigree()));
-        study.setStudyMetadata(toObservableStudyMetadata(familyStudy.studyMetadata()));
 
-        return study;
+        toObservablePedigree(familyStudy.pedigree(), study.getPedigree());
+        toObservableStudyMetadata(familyStudy.studyMetadata(), study.getStudyMetadata());
     }
 
-    private static ObservablePublication toObservablePublication(Publication publication) {
-        ObservablePublication op = new ObservablePublication();
-
+    private static void toObservablePublication(Publication publication, ObservablePublication op) {
         op.authors().addAll(publication.authors());
         op.setTitle(publication.title());
         op.setJournal(publication.journal());
@@ -145,26 +141,12 @@ public class Convert {
         op.setVolume(publication.volume());
         op.setPages(publication.pages());
         op.setPmid(publication.pmid());
-
-        return op;
     }
 
-    private static ObservablePedigree toObservablePedigree(Pedigree pedigree) {
-        ObservablePedigree op = new ObservablePedigree();
-
+    private static void toObservablePedigree(Pedigree pedigree, ObservablePedigree op) {
         pedigree.members()
                 .map(Convert::toObservablePedigreeMember)
                 .forEachOrdered(opm -> op.members().add(opm));
-
-        return op;
-    }
-
-    public static <T extends PedigreeMember> ObservablePedigreeMember toObservablePedigreeMember(T pedigreeMember) {
-        return toBaseObservableIndividual(pedigreeMember, ObservablePedigreeMember.builder())
-                .setParentalId(pedigreeMember.paternalId().orElse(null))
-                .setMaternalId(pedigreeMember.maternalId().orElse(null))
-                .setProband(pedigreeMember.isProband())
-                .build();
     }
 
     private static <T extends Individual, U extends BaseObservableIndividual.Builder<U>> U toBaseObservableIndividual(T individual, U builder) {
@@ -182,6 +164,19 @@ public class Convert {
                 .putAllGenotypes(individual.genotypes());
     }
 
+    public static <T extends PedigreeMember> ObservablePedigreeMember toObservablePedigreeMember(T pedigreeMember) {
+        return toBaseObservableIndividual(pedigreeMember, ObservablePedigreeMember.builder())
+                .setParentalId(pedigreeMember.paternalId().orElse(null))
+                .setMaternalId(pedigreeMember.maternalId().orElse(null))
+                .setProband(pedigreeMember.isProband())
+                .build();
+    }
+
+    public static <T extends Individual> ObservableIndividual toObservableIndividual(T individual) {
+        return toBaseObservableIndividual(individual, ObservableIndividual.builder())
+                .build();
+    }
+
     private static ObservableDiseaseStatus toObservableDiseaseStatus(DiseaseStatus diseaseStatus) {
         ObservableDiseaseStatus ods = new ObservableDiseaseStatus();
 
@@ -197,36 +192,25 @@ public class Convert {
 
         opf.setTermId(phenotypicFeature.termId());
         opf.setExcluded(phenotypicFeature.isExcluded());
-        opf.setObservationAge(toObservableAgeRange(phenotypicFeature.observationAge()));
+        toObservableAgeRange(phenotypicFeature.observationAge(), opf.getObservationAge());
 
         return opf;
     }
 
-    private static ObservableAgeRange toObservableAgeRange(AgeRange ageRange) {
-        ObservableAgeRange oar = new ObservableAgeRange();
-
-        oar.setOnset(toObservableAge(ageRange.onset()));
-        oar.setResolution(toObservableAge(ageRange.resolution()));
-
-        return oar;
+    private static void toObservableAgeRange(AgeRange ageRange, ObservableAgeRange oar) {
+        toObservableAge(ageRange.onset(), oar.getOnset());
+        toObservableAge(ageRange.resolution(), oar.getResolution());
     }
 
-    private static ObservableAge toObservableAge(Period period) {
-        return new ObservableAge(period.getYears(), period.getMonths(), period.getDays());
+    private static void toObservableAge(Period period, ObservableAge age) {
+        age.setYears(period.getYears());
+        age.setMonths(period.getMonths());
+        age.setDays(period.getDays());
     }
 
-    private static ObservableStudyMetadata toObservableStudyMetadata(StudyMetadata studyMetadata) {
-        ObservableStudyMetadata osm = new ObservableStudyMetadata();
-
+    private static void toObservableStudyMetadata(StudyMetadata studyMetadata, ObservableStudyMetadata osm) {
         osm.setFreeText(studyMetadata.freeText());
         osm.setCreatedBy(studyMetadata.createdBy());
         osm.modifiedBy().addAll(studyMetadata.modifiedBy());
-
-        return osm;
-    }
-
-    public static <T extends Individual> ObservableIndividual toObservableIndividual(T individual) {
-        return toBaseObservableIndividual(individual, ObservableIndividual.builder())
-                .build();
     }
 }

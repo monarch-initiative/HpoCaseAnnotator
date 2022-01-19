@@ -62,12 +62,17 @@ public class ObservablePedigreeMember extends BaseObservableIndividual {
         return proband;
     }
 
-    public ObservableStringValue probandCheckMark() {
-        return Bindings.createStringBinding(() -> proband.get() ? FormUtils.checkMark() : "", proband);
-    }
-
     public static Builder builder() {
         return new Builder();
+    }
+
+    @Override
+    public String toString() {
+        return "ObservablePedigreeMember{" +
+                "paternalId=" + paternalId.get() +
+                ", maternalId=" + maternalId.get() +
+                ", proband=" + proband.get() +
+                "} " + super.toString();
     }
 
     public static class Builder extends BaseObservableIndividual.Builder<Builder> {

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservableAge;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
@@ -38,6 +39,8 @@ public class PhenotypeEntryControllerTest extends BaseControllerTest {
     @Test
     public void showIt(FxRobot robot) {
         Platform.runLater(() -> controller.setOntology(ONTOLOGY));
+        Platform.runLater(() -> controller.onsetAge().set(new ObservableAge(5, 2, 1)));
+        Platform.runLater(() -> controller.resolutionAge().set(new ObservableAge(10, 8, 31)));
 
         robot.sleep(100, TimeUnit.SECONDS);
     }

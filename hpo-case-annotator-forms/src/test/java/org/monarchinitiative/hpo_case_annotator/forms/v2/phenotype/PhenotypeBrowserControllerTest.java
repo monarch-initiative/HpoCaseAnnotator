@@ -1,6 +1,8 @@
 package org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype;
 
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.Convert;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservablePedigreeMember;
+import org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
@@ -22,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 @ExtendWith(ApplicationExtension.class)
 public class PhenotypeBrowserControllerTest extends BaseControllerTest {
 
-    private PhenotypeBrowserController controller;
+    private PhenotypeBrowserController<ObservablePedigreeMember> controller;
 
     @Start
     public void start(Stage stage) throws Exception {
@@ -41,12 +45,18 @@ public class PhenotypeBrowserControllerTest extends BaseControllerTest {
 
     @Test
     public void showIt(FxRobot robot) {
-        Platform.runLater(() -> TestData.V2.comprehensiveFamilyStudy().phenotypicFeatures().stream()
-                .map(Convert::toObservablePhenotypicFeature)
-                .forEach(controller.phenotypeDescriptions()::add));
-        Platform.runLater(() -> controller.setOntology(ONTOLOGY));
+        FamilyStudy study = TestData.V2.comprehensiveFamilyStudy();
+        ObjectProperty<ObservablePedigreeMember> individual = new SimpleObjectProperty<>();
+        study.members().findFirst()
+                .map(Convert::toObservablePedigreeMember)
+                .ifPresent(individual::set);
 
-        robot.sleep(100, TimeUnit.SECONDS);
+        Platform.runLater(() -> controller.setOntology(ONTOLOGY));
+        Platform.runLater(() -> controller.dataProperty().bind(individual));
+
+        robot.sleep(20, TimeUnit.SECONDS);
+
+        System.err.println(controller.getData());
     }
 
 }

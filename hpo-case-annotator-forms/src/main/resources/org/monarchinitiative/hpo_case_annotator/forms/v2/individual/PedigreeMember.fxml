@@ -38,7 +38,7 @@
                 <VBox id="age-column" styleClass="column" HBox.hgrow="ALWAYS">
                     <children>
                         <Label styleClass="h2" text="Age"/>
-                        <fx:include source="../Age.fxml" fx:id="age"/>
+                        <fx:include source="../AgeVertical.fxml" fx:id="age"/>
                     </children>
                 </VBox>
                 <VBox id="sex-column" styleClass="column" HBox.hgrow="ALWAYS">
