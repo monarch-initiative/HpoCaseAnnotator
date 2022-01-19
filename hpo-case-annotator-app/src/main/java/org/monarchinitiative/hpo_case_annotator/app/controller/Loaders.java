@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.app.controller;
 
+import org.monarchinitiative.hpo_case_annotator.app.dialogs.Dialogs;
 import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 

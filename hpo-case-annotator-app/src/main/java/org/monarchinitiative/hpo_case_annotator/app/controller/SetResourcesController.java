@@ -2,6 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.app.controller;
 
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
@@ -9,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.app.config.HcaProperties;
+import org.monarchinitiative.hpo_case_annotator.app.dialogs.Dialogs;
 import org.monarchinitiative.hpo_case_annotator.app.io.GenomeAssemblyDownloader;
 import org.monarchinitiative.hpo_case_annotator.app.model.*;
 import org.monarchinitiative.hpo_case_annotator.app.ResourcePaths;
@@ -167,7 +169,9 @@ public class SetResourcesController {
         if (target.isFile()) {
             boolean response = Dialogs.getBooleanFromUser("Download Entrez gene file",
                     "Entrez file already exists at the target location",
-                    "Overwrite?");
+                    "Overwrite?")
+                    .map(bt -> bt.equals(ButtonType.OK))
+                    .orElse(false);
             if (!response) { // re-loading the old file
                 try {
                     EntrezParser parser = new EntrezParser(target);
@@ -231,7 +235,9 @@ public class SetResourcesController {
         if (target.isFile()) {
             boolean overwrite = Dialogs.getBooleanFromUser("Download HPO",
                     "HPO file already exists at the target location",
-                    "Overwrite?");
+                    "Overwrite?")
+                    .map(bt -> bt.equals(ButtonType.OK))
+                    .orElse(false);
             if (!overwrite) {
                 try {
                     optionalResources.setOntologyPath(target);
