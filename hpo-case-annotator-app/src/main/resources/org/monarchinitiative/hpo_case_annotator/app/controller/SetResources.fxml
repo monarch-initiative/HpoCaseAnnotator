@@ -57,7 +57,7 @@
          <children>
             <HBox alignment="CENTER_LEFT" styleClass="row">
                <children>
-                      <Label styleClass="h2" text="HPO obo" wrapText="true" />
+                      <Label styleClass="h2" text="Human Phenotype Ontology" wrapText="true" />
                       <Label fx:id="hpOboLabel" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                       <Button mnemonicParsing="false" onAction="#downloadHPOFileButtonAction" text="Download" />
                       <ProgressIndicator fx:id="hpoProgressIndicator" progress="0.0" />
@@ -115,6 +115,6 @@
             </HBox>
          </children>
       </VBox>
-        <fx:include fx:id="statusBar" source="StatusBar.fxml"/>
+        <fx:include fx:id="statusBar" source="StatusBar.fxml" />
     </children>
 </VBox>
