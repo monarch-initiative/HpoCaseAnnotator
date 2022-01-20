@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.app.controller;
 
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -145,7 +146,8 @@ public class SetResourcesController {
      * Open DirChooser and ask user to provide a directory where curated files will be stored.
      */
     @FXML
-    private void setCuratedDirButtonAction() {
+    private void setCuratedDirButtonAction(ActionEvent e) {
+        e.consume();
         File initial = optionalResources.getDiseaseCaseDir() != null && optionalResources.getDiseaseCaseDir().isDirectory()
                 ? optionalResources.getDiseaseCaseDir()
                 : new File(System.getProperty("user.home"));
@@ -158,7 +160,8 @@ public class SetResourcesController {
      * Download entrez gene file to the app home directory.
      */
     @FXML
-    private void downloadEntrezGenesButtonAction() {
+    private void downloadEntrezGenesButtonAction(ActionEvent e) {
+        e.consume();
         File target = new File(appHomeDir, ResourcePaths.DEFAULT_ENTREZ_FILE_NAME);
         if (target.isFile()) {
             boolean response = Dialogs.getBooleanFromUser("Download Entrez gene file",
@@ -174,10 +177,10 @@ public class SetResourcesController {
                     optionalResources.setEntrezId2symbol(parser.getEntrezId2symbol());
                     optionalResources.setSymbol2entrezId(parser.getSymbol2entrezId());
                     optionalResources.setEntrezPath(target);
-                } catch (IOException e) {
-                    LOGGER.warn(e.getMessage());
+                } catch (IOException ex) {
+                    LOGGER.warn(ex.getMessage());
                     Dialogs.showException("Download Entrez gene file", "Error occurred", String.format("Error during parsing of Entrez gene file at '%s'",
-                            target.getAbsolutePath()), e);
+                            target.getAbsolutePath()), ex);
                 }
                 return;
             }
@@ -186,10 +189,10 @@ public class SetResourcesController {
         URL entrezGeneUrl;
         try {
             entrezGeneUrl = new URL(entrezGeneUrlString);
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException ex) {
             Dialogs.showException("Download Entrez gene file", "Error occured",
-                    String.format("Malformed URL: %s", entrezGeneUrlString), e);
-            LOGGER.error(String.format("Malformed URL: %s", entrezGeneUrlString), e);
+                    String.format("Malformed URL: %s", entrezGeneUrlString), ex);
+            LOGGER.error(String.format("Malformed URL: %s", entrezGeneUrlString), ex);
             return;
         }
 
@@ -197,7 +200,7 @@ public class SetResourcesController {
         entrezProgressIndicator.progressProperty().unbind();
         entrezProgressIndicator.progressProperty().bind(task.progressProperty());
 
-        task.setOnSucceeded(e -> {
+        task.setOnSucceeded(event -> {
             try {
                 EntrezParser parser = new EntrezParser(target);
                 parser.readFile();
@@ -211,7 +214,7 @@ public class SetResourcesController {
                         target.getAbsolutePath()), ex);
             }
         });
-        task.setOnFailed(e -> {
+        task.setOnFailed(event -> {
             optionalResources.setEntrezId2gene(null);
             optionalResources.setEntrezId2symbol(null);
             optionalResources.setSymbol2entrezId(null);
@@ -224,7 +227,8 @@ public class SetResourcesController {
      * Download HP.obo file to the data directory if the path to data directory has been set.
      */
     @FXML
-    private void downloadHPOFileButtonAction() {
+    private void downloadHPOFileButtonAction(ActionEvent e) {
+        e.consume();
         File target = new File(appHomeDir, ResourcePaths.DEFAULT_HPO_FILE_NAME);
         if (target.isFile()) {
             boolean overwrite = Dialogs.getBooleanFromUser("Download HPO",
@@ -235,8 +239,8 @@ public class SetResourcesController {
             if (!overwrite) {
                 try {
                     optionalResources.setOntologyPath(target);
-                } catch (RuntimeException e) {
-                    LOGGER.warn("Error during opening the ontology file '{}'", target, e);
+                } catch (RuntimeException ex) {
+                    LOGGER.warn("Error during opening the ontology file '{}'", target, ex);
                 }
                 return;
             }
@@ -245,17 +249,16 @@ public class SetResourcesController {
         URL url;
         try {
             url = new URL(urlString);
-        } catch (MalformedURLException e) {
-            Dialogs.showException("Download HPO obo file", "Error occurred",
-                    String.format("Malformed URL: %s", urlString), e);
-            LOGGER.error(String.format("Malformed URL: %s", urlString), e);
+        } catch (MalformedURLException ex) {
+            Dialogs.showException("Download HPO obo file", "Error occurred", String.format("Malformed URL: %s", urlString), ex);
+            LOGGER.error("Malformed URL: {}", urlString, ex);
             return;
         }
         Task<Void> task = new Downloader(url, target);
 
         hpoProgressIndicator.progressProperty().unbind();
         hpoProgressIndicator.progressProperty().bind(task.progressProperty());
-        task.setOnSucceeded(e -> {
+        task.setOnSucceeded(event -> {
             try {
                 optionalResources.setOntologyPath(target);
             } catch (RuntimeException ex) {
@@ -263,7 +266,7 @@ public class SetResourcesController {
             }
 
         });
-        task.setOnFailed(e -> {
+        task.setOnFailed(event -> {
             optionalResources.setOntologyPath(null);
             optionalResources.setOntology(null);
         });
@@ -271,7 +274,8 @@ public class SetResourcesController {
     }
 
     @FXML
-    private void downloadHg19RefGenomeButtonAction() {
+    private void downloadHg19RefGenomeButtonAction(ActionEvent e) {
+        e.consume();
         FileChooser chooser = new FileChooser();
         chooser.setInitialDirectory(appHomeDir);
         chooser.setTitle("Save hg19 fasta as");
@@ -286,9 +290,9 @@ public class SetResourcesController {
                     hg19ProgressLabel.textProperty().unbind();
                     hg19ProgressLabel.textProperty().bind(dwn.messageProperty());
 
-                    dwn.setOnSucceeded(e -> optionalResources.getGenomicLocalResources().setHg19(paths.get()));
-                    dwn.setOnFailed(e -> optionalResources.getGenomicLocalResources().setHg19(null));
-                    dwn.setOnCancelled(e -> optionalResources.getGenomicLocalResources().setHg19(null));
+                    dwn.setOnSucceeded(event -> optionalResources.getGenomicLocalResources().setHg19(paths.get()));
+                    dwn.setOnFailed(event -> optionalResources.getGenomicLocalResources().setHg19(null));
+                    dwn.setOnCancelled(event -> optionalResources.getGenomicLocalResources().setHg19(null));
                     return dwn;
                 })
                 .ifPresent(executorService::submit);
@@ -300,7 +304,8 @@ public class SetResourcesController {
     }
 
     @FXML
-    private void downloadHg38RefGenomeButtonAction() {
+    private void downloadHg38RefGenomeButtonAction(ActionEvent e) {
+        e.consume();
         FileChooser chooser = new FileChooser();
         chooser.setInitialDirectory(appHomeDir);
         chooser.setTitle("Save hg38 fasta as");
@@ -315,16 +320,17 @@ public class SetResourcesController {
                     hg38ProgressLabel.textProperty().unbind();
                     hg38ProgressLabel.textProperty().bind(dwn.messageProperty());
 
-                    dwn.setOnSucceeded(e -> optionalResources.getGenomicLocalResources().setHg38(paths.get()));
-                    dwn.setOnFailed(e -> optionalResources.getGenomicLocalResources().setHg38(null));
-                    dwn.setOnCancelled(e -> optionalResources.getGenomicLocalResources().setHg38(null));
+                    dwn.setOnSucceeded(event -> optionalResources.getGenomicLocalResources().setHg38(paths.get()));
+                    dwn.setOnFailed(event -> optionalResources.getGenomicLocalResources().setHg38(null));
+                    dwn.setOnCancelled(event -> optionalResources.getGenomicLocalResources().setHg38(null));
                     return dwn;
                 })
                 .ifPresent(executorService::submit);
     }
 
     @FXML
-    private void setPathToHg19ButtonAction() {
+    private void setPathToHg19ButtonAction(ActionEvent e) {
+        e.consume();
         FileChooser chooser = new FileChooser();
         chooser.setInitialDirectory(appHomeDir);
         chooser.setTitle("Select local hg19 FASTA file");
@@ -333,14 +339,20 @@ public class SetResourcesController {
         File fastaPath = chooser.showOpenDialog(hg19ProgressIndicator.getScene().getWindow());
 
         GenomicLocalResourceValidator validator = GenomicLocalResourceValidator.of(statusBarController::showMessage);
+        try {
+            GenomicLocalResource.createFromFastaPath(fastaPath)
+                    .flatMap(local -> validator.verify(local, genomicRemoteResources.getHg19()))
+                    .ifPresent(optionalResources.getGenomicLocalResources()::setHg19);
+        } catch (Exception ex) {
+            Dialogs.showErrorDialog("Error", "Unable to use selected genome build", "See log for more details");
+            LOGGER.error("Unable to use selected genome build: {}", ex.getMessage(), ex);
+        }
 
-        GenomicLocalResource.createFromFastaPath(fastaPath)
-                .flatMap(local -> validator.verify(local, genomicRemoteResources.getHg19()))
-                .ifPresent(optionalResources.getGenomicLocalResources()::setHg19);
     }
 
     @FXML
-    private void setPathToHg38ButtonAction() {
+    private void setPathToHg38ButtonAction(ActionEvent e) {
+        e.consume();
         FileChooser chooser = new FileChooser();
         chooser.setInitialDirectory(appHomeDir);
         chooser.setTitle("Select local hg38 FASTA file");
@@ -350,22 +362,28 @@ public class SetResourcesController {
 
         GenomicLocalResourceValidator validator = GenomicLocalResourceValidator.of(statusBarController::showMessage);
 
-        GenomicLocalResource.createFromFastaPath(fastaPath)
-                .flatMap(local -> validator.verify(local, genomicRemoteResources.getHg38()))
-                .ifPresent(optionalResources.getGenomicLocalResources()::setHg38);
+        try {
+            GenomicLocalResource.createFromFastaPath(fastaPath)
+                    .flatMap(local -> validator.verify(local, genomicRemoteResources.getHg38()))
+                    .ifPresent(optionalResources.getGenomicLocalResources()::setHg38);
+        } catch (Exception ex) {
+            Dialogs.showErrorDialog("Error", "Unable to use selected genome build", "See log for more details");
+            LOGGER.error("Unable to use selected genome build: {}", ex.getMessage(), ex);
+        }
     }
 
 
     @FXML
-    private void downloadLiftoverChainFiles() {
+    private void downloadLiftoverChainFiles(ActionEvent e) {
+        e.consume();
         // TODO - add progress report & notification
         List<URL> urls = new ArrayList<>();
         try {
             urls.add(new URL(hcaProperties.liftover().hg18ToHg38Url()));
             urls.add(new URL(hcaProperties.liftover().hg19ToHg38Url()));
-        } catch (MalformedURLException e) {
-            Dialogs.showException("Download liftover chains", "Error occurred", "Malformed URL", e);
-            LOGGER.error("Malformed URL: {}", e.getMessage());
+        } catch (MalformedURLException ex) {
+            Dialogs.showException("Download liftover chains", "Error occurred", "Malformed URL", ex);
+            LOGGER.error("Malformed URL: {}", ex.getMessage());
             return;
         }
         for (URL url : urls) {

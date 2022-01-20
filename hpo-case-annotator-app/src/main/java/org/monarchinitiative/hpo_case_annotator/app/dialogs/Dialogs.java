@@ -13,22 +13,20 @@ import java.util.Optional;
 
 public class Dialogs {
 
-    /**
-     * Show information to user.
-     *
-     * @param windowTitle - Title of PopUp window
-     * @param text        - message text
-     */
-    public static void showInfoMessage(String windowTitle, String text) {
-        Alert al = new Alert(Alert.AlertType.INFORMATION);
-        al.setTitle(windowTitle);
-        al.setHeaderText(null);
-        al.setContentText(text);
-        al.showAndWait();
+    public static void showInfoDialog(String title, String header, String content) {
+        showDialog(title, header, content, Alert.AlertType.INFORMATION);
     }
 
-    public static void showWarningDialog(String windowTitle, String header, String contentText) {
-        Alert a = new Alert(Alert.AlertType.WARNING);
+    public static void showWarningDialog(String title, String header, String content) {
+        showDialog(title, header, content, Alert.AlertType.WARNING);
+    }
+
+    public static void showErrorDialog(String title, String header, String content) {
+        showDialog(title, header, content, Alert.AlertType.ERROR);
+    }
+
+    private static void showDialog(String windowTitle, String header, String contentText, Alert.AlertType alertType) {
+        Alert a = new Alert(alertType);
         a.setTitle(windowTitle);
         a.setHeaderText(header);
         a.setContentText(contentText);
@@ -38,13 +36,13 @@ public class Dialogs {
     /**
      * Ask user a boolean question and get an answer.
      *
-     * @param windowTitle Title of PopUp window
+     * @param title Title of PopUp window
      * @return true or false according to the user input
      */
-    public static Optional<ButtonType> getBooleanFromUser(String windowTitle, String headerText, String question) {
+    public static Optional<ButtonType> getBooleanFromUser(String title, String header, String question) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(windowTitle);
-        alert.setHeaderText(headerText);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
         alert.setContentText(question);
 
         return alert.showAndWait();
@@ -66,6 +64,7 @@ public class Dialogs {
         return dirchooser.showDialog(ownerWindow);
     }
 
+    @Deprecated(since = "2.0.0", forRemoval = true)
     public static void showException(String windowTitle, String header, String contentText, Throwable exception) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(windowTitle);

@@ -398,28 +398,28 @@ public class Main {
     @FXML
     private void exportToCSVMenuItemAction(ActionEvent e) {
         // TODO - implement
-        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        Dialogs.showInfoDialog("Sorry", null, "Not yet implemented");
         e.consume();
     }
 
     @FXML
     private void exportToSummaryFileMenuItemAction(ActionEvent e) {
         // TODO - implement
-        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        Dialogs.showInfoDialog("Sorry", null, "Not yet implemented");
         e.consume();
     }
 
     @FXML
     private void exportPhenopacketCurrentCaseMenuItemAction(ActionEvent e) {
         // TODO - implement
-        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        Dialogs.showInfoDialog("Sorry", null, "Not yet implemented");
         e.consume();
     }
 
     @FXML
     private void exportPhenopacketAllCasesMenuItemAction(ActionEvent e) {
         // TODO - implement
-        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        Dialogs.showInfoDialog("Sorry", null, "Not yet implemented");
         e.consume();
     }
 
@@ -540,14 +540,14 @@ public class Main {
     @FXML
     private void showCuratedPublicationsMenuItemAction(ActionEvent e) {
         // TODO - implement
-        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        Dialogs.showInfoDialog("Sorry", null, "Not yet implemented");
         e.consume();
     }
 
     @FXML
     private void showCuratedVariantsMenuItemAction(ActionEvent e) {
         // TODO - implement
-        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        Dialogs.showInfoDialog("Sorry", null, "Not yet implemented");
         e.consume();
     }
 
@@ -605,7 +605,7 @@ public class Main {
     @FXML
     private void editDiseaseMenuItemAction(ActionEvent e) {
         // TODO - implement
-        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        Dialogs.showInfoDialog("Sorry", null, "Not yet implemented");
         e.consume();
     }
 
@@ -613,14 +613,14 @@ public class Main {
     @FXML
     private void validateCurrentEntryMenuItemAction(ActionEvent e) {
         // TODO - implement
-        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        Dialogs.showInfoDialog("Sorry", null, "Not yet implemented");
         e.consume();
     }
 
     @FXML
     private void validateAllModelsMenuItemAction(ActionEvent e) {
         // TODO - implement
-        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        Dialogs.showInfoDialog("Sorry", null, "Not yet implemented");
         e.consume();
     }
 
@@ -629,14 +629,14 @@ public class Main {
     @FXML
     private void helpMenuItemAction(ActionEvent e) {
         // TODO - implement
-        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        Dialogs.showInfoDialog("Sorry", null, "Not yet implemented");
         e.consume();
     }
 
     @FXML
     private void liftoverAction(ActionEvent e) {
         // TODO - implement
-        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
+        Dialogs.showInfoDialog("Sorry", null, "Not yet implemented");
         e.consume();
     }
 
