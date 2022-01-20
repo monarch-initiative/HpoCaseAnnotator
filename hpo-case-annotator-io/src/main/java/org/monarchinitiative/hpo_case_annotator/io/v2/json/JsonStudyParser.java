@@ -45,6 +45,7 @@ public class JsonStudyParser implements ModelParser<Study> {
             module.addSerializer(serializer);
 
         module.addDeserializer(AgeRange.class, new AgeRangeDeserializer());
+        module.addDeserializer(DiseaseIdentifier.class, new DiseaseIdentifierDeserializer());
         module.addDeserializer(DiseaseStatus.class, new DiseaseStatusDeserializer());
         module.addDeserializer(EditHistory.class, new EditHistoryDeserializer());
         module.addDeserializer(Individual.class, new IndividualDeserializer());
@@ -80,6 +81,7 @@ public class JsonStudyParser implements ModelParser<Study> {
                 new AgeRangeSerializer(),
                 new ConfidenceIntervalSerializer(),
                 new CuratedVariantSerializer(),
+                new DiseaseIdentifierSerializer(),
                 new DiseaseStatusSerializer(),
                 new EditHistorySerializer(),
                 new IndividualSerializer(),

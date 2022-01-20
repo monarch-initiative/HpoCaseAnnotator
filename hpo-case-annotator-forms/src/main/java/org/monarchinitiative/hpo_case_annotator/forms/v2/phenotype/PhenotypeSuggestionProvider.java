@@ -16,7 +16,8 @@ public class PhenotypeSuggestionProvider implements Callback<AutoCompletionBindi
     private final Map<String, TermId> nameToTermId = new HashMap<>();
 
     public PhenotypeSuggestionProvider() {
-        ontology.addListener((obs, old, novel) -> {
+        ontology.addListener(obs -> {
+            Ontology novel = this.ontology.get();
             if (novel == null)
                 nameToTermId.clear();
             else {

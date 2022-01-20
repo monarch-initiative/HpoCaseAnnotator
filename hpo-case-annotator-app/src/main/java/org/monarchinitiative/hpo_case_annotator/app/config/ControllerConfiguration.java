@@ -1,10 +1,13 @@
 package org.monarchinitiative.hpo_case_annotator.app.config;
 
 import org.monarchinitiative.hpo_case_annotator.app.controller.StatusBarController;
+import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.*;
+import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.disease.DiseaseStatusController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualVariantSummaryController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualVariantSummaryController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
@@ -147,11 +150,31 @@ public class ControllerConfiguration {
         return new OntologyTreeBrowserController();
     }
 
+    /* *****************************************         Disease           ****************************************** */
+
+    @Bean
+    @Scope("prototype")
+    public DiseaseStatusController<ObservablePedigreeMember> diseaseStatusController(DiseaseIdentifierService diseaseIdentifierService) {
+        return new DiseaseStatusController<>(diseaseIdentifierService);
+    }
+
+    @Bean
+    @Scope("prototype")
+    public DiseaseTableController diseaseTableController() {
+        return new DiseaseTableController();
+    }
+
     /* *****************************************         Various           ****************************************** */
     @Bean
     @Scope("prototype")
     public AgeController ageController() {
         return new AgeController();
+    }
+
+    @Bean
+    @Scope("prototype")
+    public IndividualDetailController individualDetailController() {
+        return new IndividualDetailController();
     }
 
     /* *****************************************          Utils            ****************************************** */

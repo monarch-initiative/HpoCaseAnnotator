@@ -1,23 +1,12 @@
 package org.monarchinitiative.hpo_case_annotator.model.v2;
 
-import org.monarchinitiative.phenol.ontology.data.TermId;
-
 public interface DiseaseStatus {
 
-    static DiseaseStatus of(TermId diseaseId, String diseaseName, boolean isExcluded) {
-        return new DiseaseStatusDefault(diseaseId, diseaseName, isExcluded);
+    static DiseaseStatus of(DiseaseIdentifier diseaseId, boolean isExcluded) {
+        return new DiseaseStatusDefault(diseaseId, isExcluded);
     }
 
-    /**
-     * @return term id with disease ID, i.e. <code>OMIM:154700</code>, or <code>ORPHA:558</code>
-     */
-    TermId diseaseId();
-
-    /**
-     * @return human readable disease name, i.e. <code>Marfan syndrome</code>
-     */
-    String diseaseName();
-
+    DiseaseIdentifier diseaseId();
     /**
      * @return <code>true</code> if presence of the disease was excluded
      */

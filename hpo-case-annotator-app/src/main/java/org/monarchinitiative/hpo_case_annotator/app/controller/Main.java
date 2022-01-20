@@ -21,6 +21,7 @@ import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.StudyType;
 import org.monarchinitiative.hpo_case_annotator.app.publication.PublicationBrowser;
 import org.monarchinitiative.hpo_case_annotator.convert.ConversionCodecs;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.disease.DiseaseStatusController;
 import org.monarchinitiative.hpo_case_annotator.model.convert.ModelTransformationException;
 import org.monarchinitiative.hpo_case_annotator.app.io.PubmedIO;
 import org.monarchinitiative.hpo_case_annotator.forms.*;
@@ -48,6 +49,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Function;
 
 @Component
 public class Main {
@@ -558,17 +560,9 @@ public class Main {
     /*                                                 PHENOTYPE                                                      */
     @FXML
     private void editPhenotypicFeaturesMenuItemAction(ActionEvent e) {
-        Tab tab = contentTabPane.getSelectionModel().getSelectedItem();
-
-        getCurrentStudyData().ifPresent(data -> {
-            if (data instanceof ObservableFamilyStudy study) {
-                TabPane familyTabPane = (TabPane) tab.getContent().getParent().lookup("#family-tab-pane");
-                int tabIdx = familyTabPane.getSelectionModel().getSelectedIndex();
-                ObservableList<ObservablePedigreeMember> members = study.getPedigree().members();
-                ObjectBinding<ObservablePedigreeMember> member = Bindings.valueAt(members, tabIdx - 1);
-                editPhenotypeFeatures(member);
-            }
-        });
+        getCurrentStudyData()
+                .flatMap(getObservablePedigreeMemberBinding())
+                .ifPresent(this::editPhenotypeFeatures);
 
         e.consume();
     }
@@ -588,7 +582,7 @@ public class Main {
             Stage stage = new Stage();
             stage.initStyle(StageStyle.DECORATED);
             stage.initOwner(getOwnerWindow());
-            stage.setTitle("Add / edit phenotype features");
+            stage.setTitle(String.format("Phenotype features of %s", individual.get().getId()));
             stage.setScene(new Scene(parent));
             stage.showAndWait();
 
@@ -596,7 +590,8 @@ public class Main {
             controller.ontologyProperty().unbind();
             controller.dataProperty().unbind();
         } catch (IOException e) {
-            LOGGER.warn("Error adding phenotype features: {}", e.getMessage());
+            Dialogs.showErrorDialog("Error", "Error occurred while adding phenotype features", "See log for more details");
+            LOGGER.warn("Error adding phenotype features: {}", e.getMessage(), e);
         }
     }
 
@@ -604,9 +599,54 @@ public class Main {
 
     @FXML
     private void editDiseaseMenuItemAction(ActionEvent e) {
-        // TODO - implement
-        Dialogs.showInfoDialog("Sorry", null, "Not yet implemented");
+        getCurrentStudyData()
+                .flatMap(getObservablePedigreeMemberBinding())
+                .ifPresent(this::editDisease);
+
         e.consume();
+    }
+
+    private <T extends BaseObservableIndividual> void editDisease(ObjectBinding<T> individual) {
+        try {
+            FXMLLoader loader = new FXMLLoader(DiseaseStatusController.class.getResource("DiseaseStatus.fxml"));
+            loader.setControllerFactory(controllerFactory);
+            Parent parent = loader.load();
+
+            // setup & bind controller
+            DiseaseStatusController<T> controller = loader.getController();
+            controller.dataProperty().bind(individual);
+
+            // show the phenotype stage
+            Stage stage = new Stage();
+            stage.initStyle(StageStyle.DECORATED);
+            stage.initOwner(getOwnerWindow());
+            stage.setTitle(String.format("Disease data of %s", individual.get().getId()));
+            stage.setScene(new Scene(parent));
+            stage.showAndWait();
+
+            // unbind
+            controller.dataProperty().unbind();
+        } catch (IOException e) {
+            Dialogs.showErrorDialog("Error", "Error occurred while adding phenotype features", "See log for more details");
+            LOGGER.warn("Error adding phenotype features: {}", e.getMessage(), e);
+        }
+    }
+
+    private Function<Object, Optional<? extends ObjectBinding<? extends BaseObservableIndividual>>> getObservablePedigreeMemberBinding() {
+        return data -> {
+            Tab tab = contentTabPane.getSelectionModel().getSelectedItem();
+            if (data instanceof ObservableFamilyStudy study) {
+                TabPane familyTabPane = (TabPane) tab.getContent().getParent().lookup("#family-tab-pane");
+                int tabIdx = familyTabPane.getSelectionModel().getSelectedIndex();
+                ObservableList<ObservablePedigreeMember> members = study.getPedigree().members();
+                return Optional.of(Bindings.valueAt(members, tabIdx - 1));
+            } else if (data instanceof ObservableCohortStudy study) {
+                // TODO - implement
+                return Optional.empty();
+            } else {
+                return Optional.empty();
+            }
+        };
     }
 
     /*                                                 VALIDATE                                                       */

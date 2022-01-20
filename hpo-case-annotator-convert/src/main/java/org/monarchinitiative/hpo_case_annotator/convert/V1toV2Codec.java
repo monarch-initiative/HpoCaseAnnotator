@@ -301,7 +301,8 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
 
     private static DiseaseStatus transformDisease(org.monarchinitiative.hpo_case_annotator.model.proto.Disease disease) throws ModelTransformationException {
         try {
-            return DiseaseStatus.of(TermId.of(disease.getDatabase(), disease.getDiseaseId()), disease.getDiseaseName(), false);
+            DiseaseIdentifier diseaseIdentifier = DiseaseIdentifier.of(TermId.of(disease.getDatabase(), disease.getDiseaseId()), disease.getDiseaseName());
+            return DiseaseStatus.of(diseaseIdentifier, false);
         } catch (RuntimeException e) {
             throw new ModelTransformationException(e);
         }

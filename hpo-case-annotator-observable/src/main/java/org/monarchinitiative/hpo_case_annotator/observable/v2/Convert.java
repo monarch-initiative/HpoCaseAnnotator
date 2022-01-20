@@ -49,14 +49,18 @@ public class Convert {
                 nullWhenEmptyOrBlankInput(member.getMaternalId()),
                 member.isProband(),
                 member.phenotypicFeatures().stream().map(Convert::toPhenotypicFeature).toList(),
-                member.diseaseStates().stream().map(Convert::toDiseaseStatus).toList(),
+                member.diseaseStatuses().stream().map(Convert::toDiseaseStatus).toList(),
                 member.genotypes(),
                 toAge(member.getAge()),
                 member.getSex());
     }
 
-    private static DiseaseStatus toDiseaseStatus(ObservableDiseaseStatus status) {
-        return DiseaseStatus.of(status.getDiseaseId(), status.getDiseaseName(), status.isExcluded());
+    public static DiseaseStatus toDiseaseStatus(ObservableDiseaseStatus status) {
+        return DiseaseStatus.of(toDiseaseIdentifier(status.getDiseaseIdentifier()), status.isExcluded());
+    }
+
+    public static DiseaseIdentifier toDiseaseIdentifier(ObservableDiseaseIdentifier odi) {
+        return DiseaseIdentifier.of(odi.getDiseaseId(), odi.getDiseaseName());
     }
 
     private static PhenotypicFeature toPhenotypicFeature(ObservablePhenotypicFeature feature) {
@@ -92,7 +96,7 @@ public class Convert {
     public static <T extends ObservableIndividual> Individual toIndividual(T individual) {
         return Individual.of(individual.getId(),
                 individual.phenotypicFeatures().stream().map(Convert::toPhenotypicFeature).toList(),
-                individual.diseaseStates().stream().map(Convert::toDiseaseStatus).toList(),
+                individual.diseaseStatuses().stream().map(Convert::toDiseaseStatus).toList(),
                 individual.genotypes(),
                 toAge(individual.getAge()),
                 individual.getSex());
@@ -181,11 +185,15 @@ public class Convert {
     private static ObservableDiseaseStatus toObservableDiseaseStatus(DiseaseStatus diseaseStatus) {
         ObservableDiseaseStatus ods = new ObservableDiseaseStatus();
 
-        ods.setDiseaseId(diseaseStatus.diseaseId());
-        ods.setDiseaseName(diseaseStatus.diseaseName());
+        toObservableDiseaseIdentifier(diseaseStatus.diseaseId(), ods.getDiseaseIdentifier());
         ods.setExcluded(diseaseStatus.isExcluded());
 
         return ods;
+    }
+
+    public static void toObservableDiseaseIdentifier(DiseaseIdentifier diseaseIdentifier, ObservableDiseaseIdentifier odi) {
+        odi.setDiseaseId(diseaseIdentifier.diseaseId());
+        odi.setDiseaseName(diseaseIdentifier.diseaseName());
     }
 
     public static ObservablePhenotypicFeature toObservablePhenotypicFeature(PhenotypicFeature phenotypicFeature) {

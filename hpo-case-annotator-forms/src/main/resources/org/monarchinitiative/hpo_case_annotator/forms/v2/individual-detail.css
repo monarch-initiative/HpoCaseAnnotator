@@ -1,0 +1,5 @@
+.individual-info-label {
+    -fx-font-weight: bold;
+    -fx-padding: 0px 10px 0px 0px;
+    -fx-pref-width: 80px;
+}

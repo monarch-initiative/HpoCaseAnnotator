@@ -1,12 +1,20 @@
 package org.monarchinitiative.hpo_case_annotator.core.io;
 
+import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseIdentifier;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * This parser is designed for /dat/OMIM.tsv file. The file is indeed in TSV format with following structure:
@@ -14,14 +22,14 @@ import java.util.Map;
  * 2nd column -> canonical name of entry
  * 3rd column -> mim ID of entry
  * <p>
- * Each OMIM entry has single mim ID, single canonical name, but more "names" (synonyms). We expect tsv file
- * to be sorted by MIMID.
+ * Each OMIM entry has single mim ID, single canonical name, but more "names" (synonyms).
  *
  * @author Daniel Danis
  */
 public final class OMIMParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OMIMParser.class);
+    private static final String OMIM_PREFIX = "OMIM";
 
     /**
      * Map containing MIM IDs as keys and canonical names as values.
@@ -72,12 +80,49 @@ public final class OMIMParser {
         }
     }
 
+    /**
+     * Read OMIM file from given path using UTF-8.
+     * @param path omim file path
+     * @return list of disease identifiers
+     * @throws IOException if anything goes wrong!
+     */
+    public static List<DiseaseIdentifier> loadDiseaseIdentifiers(Path path) throws IOException {
+        try (InputStream inputStream = Files.newInputStream(path)) {
+            return loadDiseaseIdentifiers(inputStream, StandardCharsets.UTF_8);
+        }
+    }
 
+    public static List<DiseaseIdentifier> loadDiseaseIdentifiers(InputStream is, Charset charset) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, charset));
+        return br.lines()
+                .map(toDiseaseIdentifier())
+                .flatMap(Optional::stream)
+                .distinct()
+                .toList();
+    }
+
+    private static Function<String, Optional<DiseaseIdentifier>> toDiseaseIdentifier() {
+        return line -> {
+            if (line.startsWith("#"))
+                return Optional.empty(); // skip header
+
+            String[] fields = line.split("\t");
+            String omimCanonicalName = fields[1];
+            String mimID = fields[2];
+
+            DiseaseIdentifier diseaseIdentifier = DiseaseIdentifier.of(TermId.of(OMIM_PREFIX, mimID), omimCanonicalName);
+            return Optional.of(diseaseIdentifier);
+        };
+    }
+
+
+    @Deprecated(since = "2.0.0", forRemoval = true)
     public Map<String, String> getMimid2canonicalName() {
         return mimid2canonicalName;
     }
 
 
+    @Deprecated(since = "2.0.0", forRemoval = true)
     public Map<String, String> getCanonicalName2mimid() {
         return canonicalName2mimid;
     }

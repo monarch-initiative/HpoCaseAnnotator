@@ -4,7 +4,7 @@ import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierSer
 import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualVariantSummaryController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualVariantSummaryController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.SelectableOntologyTreeController;

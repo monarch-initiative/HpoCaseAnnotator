@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox stylesheets="@individual-detail.css" alignment="CENTER_LEFT" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualDetailController">
+
+    <children>
+        <VBox fillWidth="false" HBox.hgrow="ALWAYS">
+            <children>
+                <Label text="ID" />
+                <Label fx:id="idLabel" maxWidth="1.7976931348623157E308" styleClass="individual-info-label" />
+            </children>
+        </VBox>
+        <VBox fillWidth="false" HBox.hgrow="SOMETIMES">
+            <children>
+                <Label text="Sex" />
+                <Label fx:id="sexLabel" styleClass="individual-info-label" />
+            </children>
+        </VBox>
+        <VBox HBox.hgrow="ALWAYS">
+            <children>
+                <Label text="Age" />
+                <Label fx:id="ageLabel" maxWidth="1.7976931348623157E308" styleClass="individual-info-label" />
+            </children>
+        </VBox>
+    </children>
+
+</HBox>

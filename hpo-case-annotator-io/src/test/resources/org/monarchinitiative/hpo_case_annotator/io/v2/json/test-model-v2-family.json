@@ -192,8 +192,10 @@
       "id" : "FAM:001",
       "age" : "P10Y5M4D",
       "diseases" : [ {
-        "diseaseId" : "OMIM:219700",
-        "diseaseName" : "CYSTIC FIBROSIS; CF",
+        "diseaseIdentifier" : {
+          "diseaseId" : "OMIM:219700",
+          "diseaseName" : "CYSTIC FIBROSIS; CF"
+        },
         "isExcluded" : false
       } ],
       "genotypes" : [ {

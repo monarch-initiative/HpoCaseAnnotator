@@ -75,7 +75,7 @@ public class BaseObservableIndividual {
         return phenotypicFeatures;
     }
 
-    public ObservableList<ObservableDiseaseStatus> diseaseStates() {
+    public ObservableList<ObservableDiseaseStatus> diseaseStatuses() {
         return diseaseStates;
     }
 
