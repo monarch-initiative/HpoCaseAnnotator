@@ -14,7 +14,7 @@ module org.monarchinitiative.hca.forms {
     exports org.monarchinitiative.hpo_case_annotator.forms.v2.disease;
     exports org.monarchinitiative.hpo_case_annotator.forms.v2.individual;
     exports org.monarchinitiative.hpo_case_annotator.forms.v2.model;
-    exports org.monarchinitiative.hpo_case_annotator.forms.v2.observable; // TODO - consider removing
+    exports org.monarchinitiative.hpo_case_annotator.forms.v2.observable;
     exports org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree;
     exports org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype;
     exports org.monarchinitiative.hpo_case_annotator.forms.v2.variant;

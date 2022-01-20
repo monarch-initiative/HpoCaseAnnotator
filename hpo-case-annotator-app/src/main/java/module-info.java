@@ -25,6 +25,7 @@ module org.monarchinitiative.hca.app {
     exports org.monarchinitiative.hpo_case_annotator.app.controller to javafx.fxml;
     exports org.monarchinitiative.hpo_case_annotator.app.model;
     exports org.monarchinitiative.hpo_case_annotator.app.model.genome;
+    exports org.monarchinitiative.hpo_case_annotator.app.publication;
 
     opens org.monarchinitiative.hpo_case_annotator.app;
     opens org.monarchinitiative.hpo_case_annotator.app.config;

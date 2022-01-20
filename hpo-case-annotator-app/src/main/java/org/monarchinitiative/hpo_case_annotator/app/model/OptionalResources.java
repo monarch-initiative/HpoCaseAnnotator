@@ -14,6 +14,7 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.Gene;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Map;
@@ -24,6 +25,7 @@ import java.util.stream.Stream;
  * <p>
  * Created by Daniel Danis on 7/16/17.
  */
+@Component
 public class OptionalResources {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OptionalResources.class);

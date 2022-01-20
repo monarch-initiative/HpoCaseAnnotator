@@ -1,7 +1,10 @@
 package org.monarchinitiative.hpo_case_annotator.app.config;
 
+import org.monarchinitiative.hpo_case_annotator.app.publication.PublicationBrowser;
+import org.monarchinitiative.hpo_case_annotator.app.UrlBrowser;
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResource;
+import org.monarchinitiative.hpo_case_annotator.app.publication.PubmedPublicationBrowser;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblyService;
 import org.monarchinitiative.hpo_case_annotator.core.reference.InvalidFastaFileException;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
@@ -49,16 +52,12 @@ public class MainConfiguration {
 
     private static GenomicAssemblyService createGenomicAssemblyService(GenomicLocalResource novel) {
         try {
+            LOGGER.debug("Registering genomic assembly service for '{}', '{}', '{}', and '{}'", novel.getAssemblyReport().toAbsolutePath(), novel.getFasta().toAbsolutePath(), novel.getFastaFai().toAbsolutePath(), novel.getFastaDict().toAbsolutePath());
             return GenomicAssemblyService.of(novel.getAssemblyReport(), novel.getFasta(), novel.getFastaFai(), novel.getFastaDict());
         } catch (InvalidFastaFileException e) {
-            LOGGER.warn("Error while setting hg19 genomic assembly service: ", e);
+            LOGGER.warn("Error while setting genomic assembly service: ", e);
             return null;
         }
-    }
-
-    @Bean
-    public OptionalResources optionalResources() {
-        return new OptionalResources();
     }
 
     @Bean
@@ -67,13 +66,20 @@ public class MainConfiguration {
     }
 
     @Bean
+    public PublicationBrowser publicationBrowser(UrlBrowser urlBrowser) {
+        return new PubmedPublicationBrowser(urlBrowser);
+    }
+
+    @Bean
     public LiftOverAdapter liftOverAdapter(File liftoverDir) {
-        LOGGER.debug("Creating Liftover adapter from chain files located at `{}`", liftoverDir.getAbsolutePath());
+        LOGGER.debug("Creating Liftover adapter from chain files located at '{}'", liftoverDir.getAbsolutePath());
         return LiftOverAdapter.ofChainFolder(liftoverDir);
     }
 
     @Bean
     public ExecutorService executorService() {
-        return Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        int nThreads = Runtime.getRuntime().availableProcessors();
+        LOGGER.debug("Creating executor with {} threads", nThreads);
+        return Executors.newFixedThreadPool(nThreads);
     }
 }

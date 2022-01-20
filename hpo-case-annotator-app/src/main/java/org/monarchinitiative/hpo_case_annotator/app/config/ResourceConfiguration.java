@@ -57,10 +57,10 @@ public class ResourceConfiguration {
         File codeHomeDir = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getFile())
                 .getParentFile();
         if (codeHomeDir.exists() || codeHomeDir.mkdirs()) {// ensure that the home dir exists
-            LOGGER.trace("Code home directory is {}", codeHomeDir.getAbsolutePath());
+            LOGGER.debug("Code home directory is '{}'", codeHomeDir.getAbsolutePath());
             return codeHomeDir;
         } else {
-            String msg = String.format("Cannot find or create code home directory at `%s`", codeHomeDir.getAbsolutePath());
+            String msg = String.format("Cannot find or create code home directory at '%s'", codeHomeDir.getAbsolutePath());
             LOGGER.error(msg);
             throw new IOException(msg);
         }
@@ -108,11 +108,6 @@ public class ResourceConfiguration {
     public File resourcePropertiesFilePath(File appHomeDir) {
         return new File(appHomeDir, ResourcePaths.PROPERTIES_FILE_NAME);
     }
-
-//    @Bean
-//    public File refGenomePropertiesFilePath(File appHomeDir) {
-//        return new File(appHomeDir, GENOME_ASSEMBLIES_FILE_NAME);
-//    }
 
     /**
      * Get path to application home directory, where HpoCaseAnnotator stores global settings and files. The path depends
