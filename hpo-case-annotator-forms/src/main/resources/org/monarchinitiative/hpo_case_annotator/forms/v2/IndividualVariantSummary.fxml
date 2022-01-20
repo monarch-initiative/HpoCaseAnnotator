@@ -3,12 +3,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox styleClass="section" stylesheets="@variant-summary.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.VariantSummaryController">
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualVariantSummaryController">
     <children>
-        <Label styleClass="h1" text="Variant summary" />
-        <TableView fx:id="variantTableView" onMouseClicked="#variantTableViewOnMouseClicked" VBox.vgrow="ALWAYS">
+        <TableView fx:id="variantTableView" editable="true" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="idTableColumn" editable="false" maxWidth="-1.0" minWidth="120.0" prefWidth="-1.0" text="ID" />
+                <TableColumn fx:id="genotypeTableColumn" maxWidth="-1.0" minWidth="200.0" prefWidth="-1.0" text="Genotype" />
+                <TableColumn fx:id="variantIdTableColumn" editable="false" maxWidth="-1.0" minWidth="120.0" prefWidth="-1.0" text="Id" />
                 <TableColumn fx:id="genomicAssemblyTableColumn" editable="false" maxWidth="-1.0" minWidth="120.0" prefWidth="-1.0" text="Assembly" />
                 <TableColumn fx:id="contigTableColumn" editable="false" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Contig" />
                 <TableColumn fx:id="startTableColumn" editable="false" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Start" />
@@ -23,12 +23,5 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
         </TableView>
-        <HBox alignment="BOTTOM_LEFT" styleClass="edit-row">
-            <children>
-                <Button fx:id="addVariantButton" mnemonicParsing="false" onAction="#addVariantButtonAction" styleClass="add-item" text="+" />
-                <Button fx:id="removeVariantButton" disable="true" mnemonicParsing="false" onAction="#removeVariantButtonAction" styleClass="remove-item" text="-" />
-                <Button fx:id="editButton" disable="true" mnemonicParsing="false" onAction="#editButtonAction" styleClass="edit-item" text="Edit" />
-            </children>
-        </HBox>
     </children>
 </VBox>

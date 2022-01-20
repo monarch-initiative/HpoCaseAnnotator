@@ -11,11 +11,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualDetailController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
@@ -40,11 +42,9 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual> exte
     private OntologyTreeBrowserController ontologyTreeBrowserController;
 
     @FXML
-    private Label idLabel;
+    private HBox individualDetail;
     @FXML
-    private Label sexLabel;
-    @FXML
-    private Label ageLabel;
+    private IndividualDetailController individualDetailController;
 
     @FXML
     private VBox phenotypicFeaturesTable;
@@ -85,17 +85,17 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual> exte
 
     @Override
     protected void bind(T individual) {
-        idLabel.textProperty().bind(individual.idProperty());
-        sexLabel.textProperty().bind(individual.sexProperty().asString());
-        ageLabel.textProperty().bind(individual.getAge().period().asString());
+        individualDetailController.idProperty().bind(individual.idProperty());
+        individualDetailController.sexProperty().bind(individual.sexProperty().asString());
+        individualDetailController.ageLabel().bind(individual.getAge().period().asString());
         Bindings.bindContentBidirectional(phenotypicFeaturesTableController.observablePhenotypeDescriptions(), individual.phenotypicFeatures());
     }
 
     @Override
     protected void unbind(T individual) {
-        idLabel.textProperty().unbind();
-        sexLabel.textProperty().unbind();
-        ageLabel.textProperty().unbind();
+        individualDetailController.idProperty().unbind();
+        individualDetailController.sexProperty().unbind();
+        individualDetailController.ageLabel().unbind();
         Bindings.unbindContentBidirectional(phenotypicFeaturesTableController.observablePhenotypeDescriptions(), individual.phenotypicFeatures());
     }
 

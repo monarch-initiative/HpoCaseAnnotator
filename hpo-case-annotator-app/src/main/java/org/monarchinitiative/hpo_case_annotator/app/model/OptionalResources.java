@@ -7,16 +7,21 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.monarchinitiative.hpo_case_annotator.app.controller.Loaders;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResources;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Gene;
+import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseIdentifier;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -53,8 +58,12 @@ public class OptionalResources {
 
     private final ObjectProperty<Map<String, String>> symbol2entrezId = new SimpleObjectProperty<>(this, "symbol2entrezId");
 
+    private final ObservableList<DiseaseIdentifier> diseaseIdentifiers = FXCollections.observableList(new LinkedList<>());
+
+    @Deprecated
     private final ObjectProperty<Map<String, String>> mimid2canonicalName = new SimpleObjectProperty<>(this, "mimid2canonicalName");
 
+    @Deprecated
     private final ObjectProperty<Map<String, String>> canonicalName2mimid = new SimpleObjectProperty<>(this,"canonicalName2mimid");
 
     public OptionalResources() {
@@ -180,6 +189,9 @@ public class OptionalResources {
         return canonicalName2mimid;
     }
 
+    public ObservableList<DiseaseIdentifier> diseaseIdentifiers() {
+        return diseaseIdentifiers;
+    }
 
     public Boolean getEntrezIsMissing() {
         return entrezIsMissing.get();

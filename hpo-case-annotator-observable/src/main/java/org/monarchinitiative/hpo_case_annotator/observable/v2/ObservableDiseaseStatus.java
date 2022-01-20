@@ -1,36 +1,22 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
 import javafx.beans.property.*;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 
 public class ObservableDiseaseStatus {
 
-    private final ObjectProperty<TermId> diseaseId = new SimpleObjectProperty<>(this, "diseaseId");
-    private final StringProperty diseaseName = new SimpleStringProperty(this, "diseaseName");
+    private final ObjectProperty<ObservableDiseaseIdentifier> diseaseIdentifier = new SimpleObjectProperty<>(this, "diseaseIdentifier", new ObservableDiseaseIdentifier());
     private final BooleanProperty excluded = new SimpleBooleanProperty(this, "excluded");
 
-    public TermId getDiseaseId() {
-        return diseaseId.get();
+    public ObservableDiseaseIdentifier getDiseaseIdentifier() {
+        return diseaseIdentifier.get();
     }
 
-    public void setDiseaseId(TermId diseaseId) {
-        this.diseaseId.set(diseaseId);
+    public void setDiseaseIdentifier(ObservableDiseaseIdentifier diseaseIdentifier) {
+        this.diseaseIdentifier.set(diseaseIdentifier);
     }
 
-    public ObjectProperty<TermId> diseaseIdProperty() {
-        return diseaseId;
-    }
-
-    public String getDiseaseName() {
-        return diseaseName.get();
-    }
-
-    public void setDiseaseName(String diseaseName) {
-        this.diseaseName.set(diseaseName);
-    }
-
-    public StringProperty diseaseNameProperty() {
-        return diseaseName;
+    public ObjectProperty<ObservableDiseaseIdentifier> diseaseIdentifierProperty() {
+        return diseaseIdentifier;
     }
 
     public boolean isExcluded() {

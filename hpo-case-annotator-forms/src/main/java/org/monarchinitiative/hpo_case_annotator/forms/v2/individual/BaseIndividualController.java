@@ -9,9 +9,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.AgeController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.DiseaseTableController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualVariantSummaryController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableDiseaseStatus;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.slf4j.Logger;
@@ -42,12 +43,10 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual> exte
     private Label observedFeatureCountLabel;
     @FXML
     private Label notObservedFeatureCountLabel;
-//    @FXML
-//    private Button addEditPhenotypeFeaturesButton;
     @FXML
-    private ListView<ObservableDiseaseStatus> diseaseListView;
-//    @FXML
-//    private Button addEditDiseaseButton;
+    private VBox diseaseTable;
+    @FXML
+    private DiseaseTableController diseaseTableController;
     @FXML
     private VBox individualVariantSummary;
     @FXML
@@ -64,8 +63,6 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual> exte
         maleSexRadioButton.setToggleGroup(sexToggleGroup);
         femaleSexRadioButton.setToggleGroup(sexToggleGroup);
         unknownSexRadioButton.setToggleGroup(sexToggleGroup);
-
-        diseaseListView.setCellFactory(ObservableDiseaseStatusListCell.of());
 
         summarizePhenotypeCount = prepareSummarizePhenotypeCountListener();
         sexBinding = prepareSexBinding();
@@ -92,7 +89,7 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual> exte
         int nAbsentTerms = phenotypesByPresence.getOrDefault(true, List.of()).size();
         String absentTermsMessage = nAbsentTerms == 1
                 ? "1 absent phenotype term"
-                : String.format("%d present phenotype terms", nAbsentTerms);
+                : String.format("%d absent phenotype terms", nAbsentTerms);
         notObservedFeatureCountLabel.setText(absentTermsMessage);
     }
 
@@ -140,7 +137,7 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual> exte
         individual.phenotypicFeatures().addListener(summarizePhenotypeCount);
 
         // diseases
-        Bindings.bindContentBidirectional(diseaseListView.getItems(), individual.diseaseStates());
+        Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatuses());
 
         // genotypes
         Bindings.bindContentBidirectional(individualVariantSummaryController.genotypes(), individual.genotypes());
@@ -160,23 +157,10 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual> exte
         individual.phenotypicFeatures().removeListener(summarizePhenotypeCount);
 
         // diseases
-        Bindings.unbindContentBidirectional(diseaseListView.getItems(), individual.diseaseStates());
+        Bindings.unbindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatuses());
 
         // genotypes
         Bindings.unbindContentBidirectional(individualVariantSummaryController.genotypes(), individual.genotypes());
     }
 
-/*
-    TODO - deal with phenotypes
-    @FXML
-    private void addEditPhenotypeFeaturesButtonAction() {
-
-    }
-
-    @FXML
-    private void addEditDiseaseButtonAction() {
-        // TODO - show disease browser
-        LOGGER.info("Adding/editing diseases");
-    }
-    */
 }

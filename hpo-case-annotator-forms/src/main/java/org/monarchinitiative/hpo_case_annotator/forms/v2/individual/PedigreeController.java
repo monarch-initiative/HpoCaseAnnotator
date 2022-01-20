@@ -132,8 +132,7 @@ public class PedigreeController extends BindingDataController<ObservablePedigree
             // Select the added tab
             familyTabPane.getSelectionModel().select(tab);
         } catch (IOException e) {
-            LOGGER.warn("Unable to add individual: {}", e.getMessage());
-            LOGGER.debug("Unable to add individual: {}", e.getMessage(), e);
+            LOGGER.warn("Unable to add individual: {}", e.getMessage(), e);
         }
     }
 

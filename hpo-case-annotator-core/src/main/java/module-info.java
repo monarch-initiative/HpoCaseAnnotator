@@ -5,6 +5,7 @@ module org.monarchinitiative.hca.core {
     requires com.google.protobuf;
     requires org.slf4j;
 
+    exports org.monarchinitiative.hpo_case_annotator.core.data;
     exports org.monarchinitiative.hpo_case_annotator.core.io;
     exports org.monarchinitiative.hpo_case_annotator.core.liftover;
     exports org.monarchinitiative.hpo_case_annotator.core.publication;

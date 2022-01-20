@@ -4,76 +4,63 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeBrowserController">
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeBrowserController">
     <stylesheets>
-        <URL value="@../base.css" />
-        <URL value="@phenotype-browser.css" />
+        <URL value="@../base.css"/>
+        <URL value="@phenotype-browser.css"/>
     </stylesheets>
     <children>
         <HBox styleClass="row" VBox.vgrow="ALWAYS">
             <children>
                 <VBox styleClass="column" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="h2" text="HPO hierarchy" VBox.vgrow="NEVER" />
-                        <fx:include fx:id="ontologyTreeBrowser" source="../ontotree/OntologyTreeBrowser.fxml" VBox.vgrow="ALWAYS" />
+                        <Label styleClass="h2" text="HPO hierarchy" VBox.vgrow="NEVER"/>
+                        <fx:include fx:id="ontologyTreeBrowser" source="../ontotree/OntologyTreeBrowser.fxml"
+                                    VBox.vgrow="ALWAYS"/>
                     </children>
                 </VBox>
-            <VBox HBox.hgrow="ALWAYS">
-               <children>
-                  <Label styleClass="h2" text="Individual" />
-                  <HBox alignment="CENTER_LEFT">
-                     <children>
-                        <VBox fillWidth="false" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label text="ID" />
-                              <Label fx:id="idLabel" maxWidth="1.7976931348623157E308" styleClass="individual-info-label" />
-                           </children>
+                <VBox HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="h2" text="Individual"/>
+                        <fx:include source="../IndividualDetail.fxml" fx:id="individualDetail"/>
+                        <VBox styleClass="column" VBox.vgrow="ALWAYS">
+                            <children>
+                                <VBox VBox.vgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="h2" text="Phenotype features" VBox.vgrow="NEVER"/>
+                                        <fx:include fx:id="phenotypicFeaturesTable"
+                                                    source="PhenotypicFeaturesTable.fxml" VBox.vgrow="ALWAYS"/>
+                                    </children>
+                                </VBox>
+                                <HBox alignment="CENTER_RIGHT" styleClass="edit-row">
+                                    <children>
+                                        <Button fx:id="addPhenotypeFeatureButton" mnemonicParsing="false"
+                                                onAction="#addPhenotypeFeatureButtonAction" styleClass="add-item"
+                                                text="+"/>
+                                        <Button fx:id="removePhenotypeFeatureButton" disable="true"
+                                                mnemonicParsing="false" onAction="#removePhenotypeFeatureButtonAction"
+                                                styleClass="remove-item" text="-"/>
+                                    </children>
+                                </HBox>
+                            </children>
                         </VBox>
-                        <VBox fillWidth="false" HBox.hgrow="SOMETIMES">
-                           <children>
-                              <Label text="Sex" />
-                              <Label fx:id="sexLabel" styleClass="individual-info-label" />
-                           </children>
-                        </VBox>
-                        <VBox HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label text="Age" />
-                              <Label fx:id="ageLabel" maxWidth="1.7976931348623157E308" styleClass="individual-info-label" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
-                      <VBox styleClass="column" VBox.vgrow="ALWAYS">
-                          <children>
-                              <VBox VBox.vgrow="ALWAYS">
-                                  <children>
-                                      <Label styleClass="h2" text="Phenotype features" VBox.vgrow="NEVER" />
-                                      <fx:include fx:id="phenotypicFeaturesTable" source="PhenotypicFeaturesTable.fxml" VBox.vgrow="ALWAYS" />
-                                  </children>
-                              </VBox>
-                              <HBox alignment="CENTER_RIGHT" styleClass="edit-row">
-                                  <children>
-                                      <Button fx:id="addPhenotypeFeatureButton" mnemonicParsing="false" onAction="#addPhenotypeFeatureButtonAction" styleClass="add-item" text="+" />
-                                      <Button fx:id="removePhenotypeFeatureButton" disable="true" mnemonicParsing="false" onAction="#removePhenotypeFeatureButtonAction" styleClass="remove-item" text="-" />
-                                  </children>
-                              </HBox>
-                          </children>
-                      </VBox>
-               </children>
-            </VBox>
+                    </children>
+                </VBox>
                 <VBox styleClass="column" HBox.hgrow="SOMETIMES">
                     <children>
-                        <Label styleClass="h2" text="Phenotype feature" />
-                        <fx:include fx:id="phenotypicFeature" source="PhenotypicFeature.fxml" />
+                        <Label styleClass="h2" text="Phenotype feature"/>
+                        <fx:include fx:id="phenotypicFeature" source="PhenotypicFeature.fxml"/>
                     </children>
                 </VBox>
             </children>
         </HBox>
         <HBox styleClass="edit-row">
             <children>
-                <Pane HBox.hgrow="ALWAYS" />
-                <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" onAction="#okButtonAction" text="OK" />
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" onAction="#okButtonAction"
+                        text="OK"/>
             </children>
         </HBox>
-   </children>
+    </children>
 </VBox>

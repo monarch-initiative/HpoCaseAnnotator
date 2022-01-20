@@ -156,7 +156,8 @@ class V2 {
     }
 
     private static Pedigree getPedigree() {
-        List<DiseaseStatus> diseases = List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", false));
+        DiseaseIdentifier diseaseIdentifier = DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF");
+        List<DiseaseStatus> diseases = List.of(DiseaseStatus.of(diseaseIdentifier , false));
 
         Map<String, Genotype> genotypes = Map.of(
                 mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
@@ -181,12 +182,13 @@ class V2 {
     }
 
     private static Collection<? extends Individual> getCohortMembers() {
+        DiseaseIdentifier diseaseIdentifier = DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF");
         // abc
         Individual abc = Individual.of("abc",
                 List.of(
                         PhenotypicFeature.of(TermId.of("HP:0002110"), false, AgeRange.sinceBirthUntilAge(Period.parse("P10Y0M20D"))), // Bronchiectasis
                         PhenotypicFeature.of(TermId.of("HP:0000822"), true, AgeRange.sinceBirthUntilAge(Period.parse("P10Y0M20D"))) // Hypertension
-                ), List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", false)), Map.of(
+                ), List.of(DiseaseStatus.of(diseaseIdentifier, false)), Map.of(
                         mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
                         somaticVariant().md5Hex(), Genotype.HETEROZYGOUS,
                         splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
@@ -199,7 +201,7 @@ class V2 {
                 List.of(
                         PhenotypicFeature.of(TermId.of("HP:0002110"), true, AgeRange.sinceBirthUntilAge(Period.parse("P15Y2M4D"))), // Bronchiectasis
                         PhenotypicFeature.of(TermId.of("HP:0000822"), false, AgeRange.sinceBirthUntilAge(Period.parse("P15Y2M4D"))) // Hypertension
-                ), List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", true)), Map.of(
+                ), List.of(DiseaseStatus.of(diseaseIdentifier, true)), Map.of(
                         mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE,
                         somaticVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE,
                         splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,

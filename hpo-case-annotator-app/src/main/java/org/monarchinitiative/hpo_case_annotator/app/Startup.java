@@ -6,6 +6,7 @@ import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicRemoteRe
 import org.monarchinitiative.hpo_case_annotator.app.util.GenomicLocalResourceValidator;
 import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
 import org.monarchinitiative.hpo_case_annotator.core.io.OMIMParser;
+import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 
@@ -126,9 +128,8 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
     private void readOmim(String omimPath) throws IOException {
         LOGGER.debug("Parsing bundled OMIM file '{}'", omimPath);
         try (InputStream is = Startup.class.getResourceAsStream(omimPath)) {
-            OMIMParser omimParser = new OMIMParser(is, StandardCharsets.UTF_8);
-            optionalResources.setCanonicalName2mimid(omimParser.getCanonicalName2mimid());
-            optionalResources.setMimid2canonicalName(omimParser.getMimid2canonicalName());
+            List<DiseaseIdentifier> identifiers = OMIMParser.loadDiseaseIdentifiers(is, StandardCharsets.UTF_8);
+            optionalResources.diseaseIdentifiers().setAll(identifiers);
         }
     }
 

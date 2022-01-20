@@ -1,10 +1,12 @@
 package org.monarchinitiative.hpo_case_annotator.app.config;
 
+import org.monarchinitiative.hpo_case_annotator.app.DiseaseIdentifierServiceImpl;
 import org.monarchinitiative.hpo_case_annotator.app.publication.PublicationBrowser;
 import org.monarchinitiative.hpo_case_annotator.app.UrlBrowser;
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResource;
 import org.monarchinitiative.hpo_case_annotator.app.publication.PubmedPublicationBrowser;
+import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblyService;
 import org.monarchinitiative.hpo_case_annotator.core.reference.InvalidFastaFileException;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
@@ -58,6 +60,11 @@ public class MainConfiguration {
             LOGGER.warn("Error while setting genomic assembly service: ", e);
             return null;
         }
+    }
+
+    @Bean
+    public DiseaseIdentifierService diseaseIdentifierService(OptionalResources optionalResources) {
+        return new DiseaseIdentifierServiceImpl(optionalResources.diseaseIdentifiers());
     }
 
     @Bean

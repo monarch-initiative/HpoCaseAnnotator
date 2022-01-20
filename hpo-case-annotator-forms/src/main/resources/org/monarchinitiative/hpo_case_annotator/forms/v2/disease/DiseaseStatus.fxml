@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox styleClass="section" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.disease.DiseaseStatusController">
+    <stylesheets>
+        <URL value="@../base.css" />
+        <URL value="@disease-status.css" />
+    </stylesheets>
+    <children>
+        <HBox>
+            <children>
+                <VBox styleClass="column" HBox.hgrow="SOMETIMES">
+                    <children>
+                        <VBox VBox.vgrow="ALWAYS">
+                            <children>
+                                <Label styleClass="h2" text="Individual" />
+                                <fx:include fx:id="individualDetail" source="../IndividualDetail.fxml" />
+                                <Label styleClass="h2" text="Diseases" />
+                                <fx:include fx:id="diseaseTable" source="../DiseaseTable.fxml" />
+                            </children>
+                        </VBox>
+                        <HBox alignment="CENTER_LEFT" styleClass="edit-row">
+                            <children>
+                                <Pane HBox.hgrow="ALWAYS" />
+                                <Button fx:id="removeDiseaseButton" disable="true" mnemonicParsing="false" onAction="#removeDiseaseButtonAction" styleClass="remove-item" text="-" />
+                            </children>
+                        </HBox>
+                        <VBox styleClass="column">
+                            <children>
+                                <Label styleClass="h2" text="Add disease" />
+                                <HBox>
+                                    <children>
+                                        <VBox alignment="CENTER_LEFT" styleClass="column" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="h3" text="Disease ID" />
+                                                <TextField fx:id="diseaseIdTextField" onAction="#addDisease" promptText="E.g. OMIM:256000" />
+                                            </children>
+                                        </VBox>
+                                        <VBox alignment="CENTER_LEFT" styleClass="column" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="h3" text="Name" />
+                                                <TextField fx:id="diseaseNameTextField" onAction="#addDisease" promptText="LEIGH SYNDROME; LS " />
+                                            </children>
+                                        </VBox>
+                                        <VBox alignment="CENTER_LEFT" styleClass="column">
+                                            <children>
+                                                <Button fx:id="addDiseaseButton" mnemonicParsing="false" onAction="#addDisease" styleClass="add-item" text="+" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</VBox>

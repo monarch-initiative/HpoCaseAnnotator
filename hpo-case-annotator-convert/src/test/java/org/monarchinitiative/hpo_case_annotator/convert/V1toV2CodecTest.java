@@ -62,7 +62,7 @@ public class V1toV2CodecTest {
                         PhenotypicFeature.of(TermId.of("HP:1234567"), false, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D"))),
                         PhenotypicFeature.of(TermId.of("HP:9876543"), true, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D")))
                 ),
-                List.of(DiseaseStatus.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF", false)),
+                List.of(DiseaseStatus.of(DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF"), false)),
                 Map.of(
                         "bfed08fc27778a1587dcaebc2b455718", Genotype.HOMOZYGOUS_ALTERNATE,
                         "94f38002744f2dfdbad129153880603f", Genotype.HETEROZYGOUS,
