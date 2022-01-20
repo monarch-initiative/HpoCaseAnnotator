@@ -19,6 +19,7 @@ import org.controlsfx.dialog.CommandLinksDialog;
 import org.monarchinitiative.hpo_case_annotator.app.dialogs.Dialogs;
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.StudyType;
+import org.monarchinitiative.hpo_case_annotator.app.publication.PublicationBrowser;
 import org.monarchinitiative.hpo_case_annotator.convert.ConversionCodecs;
 import org.monarchinitiative.hpo_case_annotator.convert.ModelTransformationException;
 import org.monarchinitiative.hpo_case_annotator.app.io.PubmedIO;
@@ -56,6 +57,7 @@ public class Main {
     private final OptionalResources optionalResources;
     private final HCAControllerFactory controllerFactory;
     private final ExecutorService executorService;
+    private final PublicationBrowser publicationBrowser;
 
     /**
      * This list contains data wrappers in the same order as they are present in the {@link #contentTabPane}.
@@ -82,9 +84,9 @@ public class Main {
     @FXML
     private Menu studyMenu;
     @FXML
-    private MenuItem viewOnPubmedMenuItem;
-    @FXML
     private MenuItem fetchFromPubmedMenuItem;
+    @FXML
+    private MenuItem viewOnPubmedMenuItem;
 
     /* *************************************************   PROJECT    *********************************************** */
     @FXML
@@ -132,10 +134,12 @@ public class Main {
 
     public Main(OptionalResources optionalResources,
                 HCAControllerFactory controllerFactory,
-                ExecutorService executorService) {
+                ExecutorService executorService,
+                PublicationBrowser publicationBrowser) {
         this.optionalResources = optionalResources;
         this.controllerFactory = controllerFactory;
         this.executorService = executorService;
+        this.publicationBrowser = publicationBrowser;
     }
 
     @FXML
@@ -152,6 +156,8 @@ public class Main {
 
         cloneCaseMenuItem.disableProperty().bind(noTabIsPresent);
         studyMenu.disableProperty().bind(noTabIsPresent);
+        fetchFromPubmedMenuItem.disableProperty().bind(noTabIsPresent);
+        viewOnPubmedMenuItem.disableProperty().bind(noTabIsPresent);
 
         genotypeMenu.disableProperty().bind(noTabIsPresent);
         phenotypeMenu.disableProperty().bind(noTabIsPresent);
@@ -447,14 +453,16 @@ public class Main {
 
     @FXML
     private void cloneCaseMenuItemAction(ActionEvent e) {
-        int index = contentTabPane.getSelectionModel().getSelectedIndex();
-        StudyWrapper<?> wrapper = wrappers.get(index);
-        Optional<StudyType> studyType = studyTypeForData(wrapper.study());
+        Optional<Object> studyData = getCurrentStudyData();
+        Optional<StudyType> studyType = studyData.flatMap(Main::studyTypeForData);
 
-        if (wrapper.study() instanceof ObservableStudy s) {
-            studyType.flatMap(Main::controllerUrlForStudyType)
-                    .ifPresent(url -> addStudy(url, StudyWrapper.of(s)));
-        }
+        studyData.ifPresent(data -> {
+            if (data instanceof ObservableStudy study) {
+                studyType.flatMap(Main::controllerUrlForStudyType)
+                        .ifPresent(url -> addStudy(url, StudyWrapper.of(study)));
+            }
+        });
+
         // TODO - make it work for all study/disease case types
         e.consume();
 
@@ -485,16 +493,21 @@ public class Main {
         dialog.showAndWait().ifPresent(pmid -> {
             Task<Publication> task = PubmedIO.v2publication(pmid);
 
+            // trip to PubMed was successful
             task.setOnSucceeded(we -> Platform.runLater(() -> {
                 Publication publication = task.getValue();
 
-                int selectedTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
-                Object data = wrappers.get(selectedTabIdx).study();
-                if (data instanceof ObservableStudy study) {
-                    Convert.toObservablePublication(publication, study.getPublication());
-                }
+                getCurrentStudyData().ifPresent(data -> {
+                    if (data instanceof ObservableStudy study) {
+                        Convert.toObservablePublication(publication, study.getPublication());
+                    } else {
+                        // TODO - support?
+                        Dialogs.showWarningDialog("Sorry", "PubMed import is not supported for v1 model", null);
+                    }
+                });
             }));
 
+            // No avail
             task.setOnFailed(we -> {
                 Throwable throwable = we.getSource().getException();
                 Dialogs.showException("Error", "Error fetching PubMed data for " + pmid, throwable.getMessage(), throwable);
@@ -507,9 +520,20 @@ public class Main {
 
     @FXML
     private void viewOnPubmedMenuItemAction(ActionEvent e) {
-        // TODO - implement
-        Dialogs.showInfoMessage("Sorry", "Not yet implemented");
         e.consume();
+        getCurrentStudyData().ifPresent(data -> {
+            String pmid;
+            if (data instanceof ObservableStudy study) {
+                pmid = study.getPublication().getPmid();
+            } else if (data instanceof DiseaseCase dc) {
+                pmid = dc.getPublication().getPmid();
+            } else {
+                LOGGER.warn("Unable to to get PMID from {}", data.getClass().getName());
+                return;
+            }
+            publicationBrowser.browse(pmid);
+        });
+
     }
 
     /*                                                 PROJECT                                                        */
@@ -534,17 +558,18 @@ public class Main {
     /*                                                 PHENOTYPE                                                      */
     @FXML
     private void editPhenotypicFeaturesMenuItemAction(ActionEvent e) {
-        int selectedTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
         Tab tab = contentTabPane.getSelectionModel().getSelectedItem();
 
-        Object study = wrappers.get(selectedTabIdx).study();
-        if (study instanceof ObservableFamilyStudy ofs) {
-            TabPane familyTabPane = (TabPane) tab.getContent().getParent().lookup("#family-tab-pane");
-            int tabIdx = familyTabPane.getSelectionModel().getSelectedIndex();
-            ObservableList<ObservablePedigreeMember> members = ofs.getPedigree().members();
-            ObjectBinding<ObservablePedigreeMember> member = Bindings.valueAt(members, tabIdx - 1);
-            editPhenotypeFeatures(member);
-        }
+        getCurrentStudyData().ifPresent(data -> {
+            if (data instanceof ObservableFamilyStudy study) {
+                TabPane familyTabPane = (TabPane) tab.getContent().getParent().lookup("#family-tab-pane");
+                int tabIdx = familyTabPane.getSelectionModel().getSelectedIndex();
+                ObservableList<ObservablePedigreeMember> members = study.getPedigree().members();
+                ObjectBinding<ObservablePedigreeMember> member = Bindings.valueAt(members, tabIdx - 1);
+                editPhenotypeFeatures(member);
+            }
+        });
+
         e.consume();
     }
 
@@ -613,5 +638,20 @@ public class Main {
         // TODO - implement
         Dialogs.showInfoMessage("Sorry", "Not yet implemented");
         e.consume();
+    }
+
+    /*                                                 OTHERS                                                         */
+
+    private Optional<StudyWrapper<?>> getCurrentStudyWrapper() {
+        if (!contentTabPane.getSelectionModel().isEmpty()) {
+            int selectedStudyTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
+            return Optional.of(wrappers.get(selectedStudyTabIdx));
+        }
+        return Optional.empty();
+    }
+
+    private Optional<Object> getCurrentStudyData() {
+        return getCurrentStudyWrapper()
+                .map(StudyWrapper::study);
     }
 }

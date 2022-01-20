@@ -45,8 +45,6 @@ public class App extends Application {
 
     private ConfigurableApplicationContext context;
 
-    private HostServices hostServices;
-
     @Override
     public void init() throws Exception {
         super.init();
@@ -54,7 +52,6 @@ public class App extends Application {
         context = new SpringApplicationBuilder(App.class)
                 .headless(false)
                 .run(args);
-        hostServices = getHostServices();
     }
 
     @Override
@@ -63,6 +60,7 @@ public class App extends Application {
         loader.setControllerFactory(context::getBean);
 
         HcaProperties properties = context.getBean(HcaProperties.class);
+        context.getBean(HostServicesUrlBrowser.class).setHostServices(getHostServices());
 
         Parent parent = loader.load();
         Scene scene = new Scene(parent, 1000, 800);
@@ -126,11 +124,6 @@ public class App extends Application {
         return e -> Dialogs.getBooleanFromUser("Exit", "Are you sure you want to quit?", null)
                 .filter(buttonType -> buttonType.equals(ButtonType.CANCEL))
                 .ifPresent(buttonType -> e.consume());
-    }
-
-    @Bean
-    public HostServices hostServices() {
-        return hostServices;
     }
 
     public static void main(String[] args) {

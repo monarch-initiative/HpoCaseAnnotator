@@ -151,13 +151,7 @@ public class SetResourcesController {
                 : new File(System.getProperty("user.home"));
 
         File curatedDir = Dialogs.selectDirectory((Stage) hg19ProgressIndicator.getScene().getWindow(), initial, "Set directory for curated files.");
-        if (curatedDir != null) {
-            optionalResources.setDiseaseCaseDir(curatedDir);
-            curatedFilesDirLabel.setText(curatedDir.getAbsolutePath());
-        } else {
-            optionalResources.setDiseaseCaseDir(null);
-            curatedFilesDirLabel.setText("unset");
-        }
+        optionalResources.setDiseaseCaseDir(curatedDir);
     }
 
     /**
@@ -272,7 +266,6 @@ public class SetResourcesController {
         task.setOnFailed(e -> {
             optionalResources.setOntologyPath(null);
             optionalResources.setOntology(null);
-            hpOboLabel.setText("unset");
         });
         executorService.submit(task);
     }
