@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.monarchinitiative.hpo_case_annotator.core.utils.BreakendAltComposer.composeBreakendAltAllele;
+import static org.monarchinitiative.hpo_case_annotator.export.BreakendAltComposer.composeBreakendAltAllele;
 import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.POSITIVE_INTEGER_REGEXP;
 
 /**

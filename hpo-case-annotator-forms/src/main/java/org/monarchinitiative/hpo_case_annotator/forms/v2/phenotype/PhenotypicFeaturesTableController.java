@@ -11,7 +11,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import org.monarchinitiative.hpo_case_annotator.forms.util.PeriodTableCell;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservablePhenotypicFeature;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

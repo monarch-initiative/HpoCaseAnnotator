@@ -1,6 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.export;
 
-import org.monarchinitiative.hpo_case_annotator.convert.Codec;
+import org.monarchinitiative.hpo_case_annotator.model.convert.Codec;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.phenopackets.schema.v1.Phenopacket;
 
@@ -28,7 +28,7 @@ public final class ExportCodecs {
     public enum SupportedDiseaseCaseFormat {
 
         /**
-         * The format represented by {@link DiseaseCase} class (protobuf) and decoded by {@link org.monarchinitiative.hpo_case_annotator.io.ModelParser<DiseaseCase>}.
+         * The format represented by {@link DiseaseCase} class (protobuf).
          */
         JSON;
 

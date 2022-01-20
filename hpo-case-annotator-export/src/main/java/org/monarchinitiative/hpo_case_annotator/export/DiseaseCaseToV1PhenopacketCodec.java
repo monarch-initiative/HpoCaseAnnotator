@@ -2,8 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.export;
 
 import com.google.protobuf.Timestamp;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.monarchinitiative.hpo_case_annotator.convert.Codec;
-import org.monarchinitiative.hpo_case_annotator.core.utils.BreakendAltComposer;
+import org.monarchinitiative.hpo_case_annotator.model.convert.Codec;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.phenopackets.schema.v1.Phenopacket;
 import org.phenopackets.schema.v1.core.Disease;

@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservableStudyMetadata;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudyMetadata;
 
 public class StudyMetadataController extends BindingDataController<ObservableStudyMetadata> {
 

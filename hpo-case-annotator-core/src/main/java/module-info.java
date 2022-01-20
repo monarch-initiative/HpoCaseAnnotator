@@ -9,6 +9,5 @@ module org.monarchinitiative.hca.core {
     exports org.monarchinitiative.hpo_case_annotator.core.liftover;
     exports org.monarchinitiative.hpo_case_annotator.core.publication;
     exports org.monarchinitiative.hpo_case_annotator.core.reference;
-    exports org.monarchinitiative.hpo_case_annotator.core.utils;
     exports org.monarchinitiative.hpo_case_annotator.core.validation;
 }

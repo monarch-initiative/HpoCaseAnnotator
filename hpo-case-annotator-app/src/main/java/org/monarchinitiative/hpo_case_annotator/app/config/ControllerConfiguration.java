@@ -7,7 +7,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualCo
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualVariantSummaryController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservablePedigreeMember;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeEntryController;

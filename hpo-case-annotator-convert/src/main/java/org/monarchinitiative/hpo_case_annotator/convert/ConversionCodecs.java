@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.convert;
 
 
+import org.monarchinitiative.hpo_case_annotator.model.convert.Codec;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
 

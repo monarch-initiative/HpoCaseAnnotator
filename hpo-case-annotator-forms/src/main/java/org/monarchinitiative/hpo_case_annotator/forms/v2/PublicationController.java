@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservablePublication;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
 
 public class PublicationController extends BindingDataController<ObservablePublication> {
 

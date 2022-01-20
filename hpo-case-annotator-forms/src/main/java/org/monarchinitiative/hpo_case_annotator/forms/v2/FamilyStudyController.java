@@ -4,10 +4,9 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservableFamilyStudy;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilyStudy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

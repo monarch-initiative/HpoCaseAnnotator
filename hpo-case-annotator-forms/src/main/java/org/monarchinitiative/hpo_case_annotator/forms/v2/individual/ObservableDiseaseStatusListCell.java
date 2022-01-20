@@ -3,7 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.v2.individual;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservableDiseaseStatus;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableDiseaseStatus;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
 
 class ObservableDiseaseStatusListCell extends ListCell<ObservableDiseaseStatus> {

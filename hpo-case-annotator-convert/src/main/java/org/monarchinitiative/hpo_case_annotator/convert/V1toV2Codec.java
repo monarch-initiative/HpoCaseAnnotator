@@ -1,5 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.convert;
 
+import org.monarchinitiative.hpo_case_annotator.model.convert.Codec;
+import org.monarchinitiative.hpo_case_annotator.model.convert.ModelTransformationException;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.monarchinitiative.hpo_case_annotator.model.ModelUtils;

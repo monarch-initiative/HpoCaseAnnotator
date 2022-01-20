@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.convert;
 
 import org.junit.jupiter.api.Test;
+import org.monarchinitiative.hpo_case_annotator.model.convert.ModelTransformationException;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;

@@ -9,7 +9,7 @@ import javafx.scene.control.TextFormatter;
 import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservableAge;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
 
 public class AgeController extends BindingDataController<ObservableAge> {
 
