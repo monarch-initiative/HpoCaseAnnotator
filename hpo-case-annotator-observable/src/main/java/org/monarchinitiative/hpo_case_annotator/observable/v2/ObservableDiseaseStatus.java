@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.v2.observable;
+package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
 import javafx.beans.property.*;
 import org.monarchinitiative.phenol.ontology.data.TermId;

@@ -3,7 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.v2;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservableCohortStudy;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCohortStudy;
 
 public class CohortStudyController extends StudyController<ObservableCohortStudy> {
 

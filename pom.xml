@@ -12,6 +12,7 @@
         <module>hpo-case-annotator-io</module>
         <module>hpo-case-annotator-core</module>
         <module>hpo-case-annotator-export</module>
+        <module>hpo-case-annotator-observable</module>
         <module>hpo-case-annotator-forms</module>
         <module>hpo-case-annotator-gui</module>
         <module>hpo-case-annotator-cli</module>
@@ -111,6 +112,11 @@
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-base</artifactId>
+                <version>${javafx.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.openjfx</groupId>

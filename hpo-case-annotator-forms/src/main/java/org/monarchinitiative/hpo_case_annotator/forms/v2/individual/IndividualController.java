@@ -2,7 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.v2.individual;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.observable.ObservableIndividual;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividual;
 
 public class IndividualController extends BaseIndividualController<ObservableIndividual> {
 

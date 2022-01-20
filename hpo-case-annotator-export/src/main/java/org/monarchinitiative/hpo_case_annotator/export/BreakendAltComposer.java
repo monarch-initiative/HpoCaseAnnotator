@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.core.utils;
+package org.monarchinitiative.hpo_case_annotator.export;
 
 public class BreakendAltComposer {
 

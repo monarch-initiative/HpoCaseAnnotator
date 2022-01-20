@@ -1,12 +1,9 @@
-package org.monarchinitiative.hpo_case_annotator.forms.v2.observable;
+package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableStringValue;
-import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
 
 public class ObservablePedigreeMember extends BaseObservableIndividual {
 

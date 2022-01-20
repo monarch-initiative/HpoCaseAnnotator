@@ -1,5 +1,4 @@
 module org.monarchinitiative.hca.app {
-    requires org.monarchinitiative.hca.core;
     requires org.monarchinitiative.hca.io;
     requires org.monarchinitiative.hca.forms;
     requires org.monarchinitiative.hca.convert;

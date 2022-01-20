@@ -1,7 +1,5 @@
 module org.monarchinitiative.hca.export {
-    requires org.monarchinitiative.hca.convert;
-    requires org.monarchinitiative.hca.io;
-    requires org.monarchinitiative.hca.core;
+    requires transitive org.monarchinitiative.hca.model;
 
     requires transitive phenopacket.schema;
 

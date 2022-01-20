@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.v2.observable;
+package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -9,14 +9,10 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class BaseObservableIndividual {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseObservableIndividual.class);
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
     private final ObjectProperty<ObservableAge> age = new SimpleObjectProperty<>(this, "age", new ObservableAge());

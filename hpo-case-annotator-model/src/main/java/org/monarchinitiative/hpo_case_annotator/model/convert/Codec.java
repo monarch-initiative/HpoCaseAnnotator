@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.convert;
+package org.monarchinitiative.hpo_case_annotator.model.convert;
 
 /**
  * Classes implementing this interface are able to convert instances of {@link SOURCE} to {@link TARGET} format, and back.
