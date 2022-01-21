@@ -3,17 +3,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox styleClass="section" stylesheets="@pedigree-and-cohort.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController">
+<VBox stylesheets="@pedigree-and-cohort.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController">
     <children>
         <Label styleClass="h1" text="Pedigree" />
-        <TabPane id="family-tab-pane" fx:id="membersTabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <TabPane id="members-tab-pane" fx:id="membersTabPane" onKeyPressed="#membersTabPaneKeyPressed" tabClosingPolicy="ALL_TABS" VBox.vgrow="ALWAYS">
             <tabs>
                 <Tab closable="false" styleClass="summary-tab" text="Summary">
                     <content>
                         <VBox>
                             <children>
                                 <Label styleClass="h2" text="Pedigree members" VBox.vgrow="NEVER" />
-                                <TableView fx:id="membersTableView" VBox.vgrow="ALWAYS">
+                                <TableView fx:id="membersTableView" onKeyPressed="#membersTableViewKeyPressed" onMouseClicked="#membersTableViewOnMouseClicked" VBox.vgrow="ALWAYS">
                                     <columns>
                                         <TableColumn fx:id="idTableColumn" editable="false" prefWidth="150.0" text="ID" />
                                         <TableColumn fx:id="paternalIdTableColumn" editable="false" prefWidth="120.0" text="Father ID" />

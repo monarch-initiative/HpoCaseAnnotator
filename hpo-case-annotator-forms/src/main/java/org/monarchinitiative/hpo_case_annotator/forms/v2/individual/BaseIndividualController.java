@@ -7,23 +7,20 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.AgeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.DiseaseTableController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualVariantSummaryController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.VariantAwareBindingController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-abstract class BaseIndividualController<T extends BaseObservableIndividual> extends BindingDataController<T> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseIndividualController.class);
+abstract class BaseIndividualController<T extends BaseObservableIndividual> extends VariantAwareBindingController<T> {
 
     private final ToggleGroup sexToggleGroup = new ToggleGroup();
 
@@ -110,7 +107,8 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual> exte
 
     /* ************************************************************************************************************** */
 
-    public ObservableList<CuratedVariant> variants() {
+    @Override
+    public ObservableList<CuratedVariant> curatedVariants() {
         return individualVariantSummaryController.variants();
     }
 

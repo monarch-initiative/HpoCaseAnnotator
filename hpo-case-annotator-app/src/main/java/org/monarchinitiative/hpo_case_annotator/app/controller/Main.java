@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,15 +27,12 @@ import org.monarchinitiative.hpo_case_annotator.forms.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.CohortStudyController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.FamilyStudyController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.StudyController;
+import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.io.ModelParser;
 import org.monarchinitiative.hpo_case_annotator.io.ModelParsers;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.monarchinitiative.hpo_case_annotator.model.v2.CohortStudy;
-import org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy;
-import org.monarchinitiative.hpo_case_annotator.model.v2.Publication;
-import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -55,6 +51,7 @@ import java.util.function.Function;
 public class Main {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    private static final String SEE_LOG_FOR_MORE_DETAILS = "See log for more details.";
 
     private final OptionalResources optionalResources;
     private final HCAControllerFactory controllerFactory;
@@ -62,7 +59,7 @@ public class Main {
     private final PublicationBrowser publicationBrowser;
 
     /**
-     * This list contains data wrappers in the same order as they are present in the {@link #contentTabPane}.
+     * This list contains data wrappers in the same order as they are present in the {@link #studiesTabPane}.
      * <p>
      * The only place where items are added into this list is the {@link #addStudy(URL, StudyWrapper)} method.
      */
@@ -126,7 +123,7 @@ public class Main {
 
 
     @FXML
-    private TabPane contentTabPane;
+    private TabPane studiesTabPane;
 
     @FXML
     private HBox statusBar;
@@ -150,7 +147,7 @@ public class Main {
     }
 
     private void disableMenuEntriesDependentOnADataModel() {
-        BooleanBinding noTabIsPresent = contentTabPane.getSelectionModel().selectedItemProperty().isNull();
+        BooleanBinding noTabIsPresent = studiesTabPane.getSelectionModel().selectedItemProperty().isNull();
         saveMenuItem.disableProperty().bind(noTabIsPresent);
         saveAsMenuItem.disableProperty().bind(noTabIsPresent);
         saveAllMenuItem.disableProperty().bind(noTabIsPresent);
@@ -221,10 +218,10 @@ public class Main {
             controller.setData(wrapper.study());
 
             tab.textProperty().bind(controller.getData().idProperty());
-            tab.setOnCloseRequest(e -> removeStudy(contentTabPane.getTabs().indexOf(tab)));
+            tab.setOnCloseRequest(e -> removeStudy(studiesTabPane.getTabs().indexOf(tab)));
 
-            contentTabPane.getTabs().add(tab);
-            contentTabPane.getSelectionModel().select(tab);
+            studiesTabPane.getTabs().add(tab);
+            studiesTabPane.getSelectionModel().select(tab);
             wrappers.add(wrapper);
         } catch (IOException e) {
             LOGGER.warn("Error loading study: {}", e.getMessage(), e);
@@ -232,7 +229,7 @@ public class Main {
     }
 
     private void removeStudy(int tabIdx) {
-        contentTabPane.getTabs().remove(tabIdx);
+        studiesTabPane.getTabs().remove(tabIdx);
         wrappers.remove(tabIdx);
     }
 
@@ -266,14 +263,16 @@ public class Main {
                     DiseaseCase dc = v1Parser.read(file.toPath());
                     study = ConversionCodecs.v1ToV2().encode(dc);
                 } catch (IOException | ModelTransformationException ex) {
-                    Dialogs.showException("Error", "Error reading v1 case", ex.getMessage(), ex);
+                    Dialogs.showWarningDialog("Error", "Error reading v1 case", SEE_LOG_FOR_MORE_DETAILS);
+                    LOGGER.warn("Error reading v1 case.", ex);
                     continue;
                 }
             } else if (selectedFilter.equals(v2Json)) {
                 try {
                     study = v2Parser.read(file.toPath());
                 } catch (IOException ex) {
-                    Dialogs.showException("Error", "Error reading v2 case", ex.getMessage(), ex);
+                    Dialogs.showWarningDialog("Error", "Error reading v2 case", SEE_LOG_FOR_MORE_DETAILS);
+                    LOGGER.warn("Error reading v2 case.", ex);
                     continue;
                 }
             } else {
@@ -301,12 +300,12 @@ public class Main {
     }
 
     private Window getOwnerWindow() {
-        return contentTabPane.getScene().getWindow();
+        return studiesTabPane.getScene().getWindow();
     }
 
     @FXML
     private void saveMenuItemAction(ActionEvent e) {
-        int tabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
+        int tabIdx = studiesTabPane.getSelectionModel().getSelectedIndex();
         StudyWrapper<?> wrapper = wrappers.get(tabIdx);
         saveStudy(wrapper.study(), wrapper.studyPath());
         e.consume();
@@ -373,7 +372,7 @@ public class Main {
 
     @FXML
     private void saveAsMenuItemAction(ActionEvent e) {
-        int tabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
+        int tabIdx = studiesTabPane.getSelectionModel().getSelectedIndex();
         StudyWrapper<?> wrapper = wrappers.get(tabIdx);
         saveStudy(wrapper.study(), null);
         e.consume();
@@ -394,7 +393,7 @@ public class Main {
     private void closeMenuItemAction(ActionEvent e) {
         Dialogs.getBooleanFromUser("Close study", "Do you want to close the current study?", null)
                 .filter(bt -> bt.equals(ButtonType.OK))
-                .ifPresent(bt -> removeStudy(contentTabPane.getSelectionModel().getSelectedIndex()));
+                .ifPresent(bt -> removeStudy(studiesTabPane.getSelectionModel().getSelectedIndex()));
         e.consume();
     }
 
@@ -482,6 +481,19 @@ public class Main {
         }
     }
 
+    private Optional<Object> getCurrentStudyData() {
+        return getCurrentStudyWrapper()
+                .map(StudyWrapper::study);
+    }
+
+    private Optional<StudyWrapper<?>> getCurrentStudyWrapper() {
+        if (!studiesTabPane.getSelectionModel().isEmpty()) {
+            int selectedStudyTabIdx = studiesTabPane.getSelectionModel().getSelectedIndex();
+            return Optional.of(wrappers.get(selectedStudyTabIdx));
+        }
+        return Optional.empty();
+    }
+
     /*                                                 VIEW                                                           */
     @FXML
     private void fetchFromPubmedMenuItemAction(ActionEvent e) {
@@ -513,7 +525,8 @@ public class Main {
             // No avail
             task.setOnFailed(we -> {
                 Throwable throwable = we.getSource().getException();
-                Dialogs.showException("Error", "Error fetching PubMed data for " + pmid, throwable.getMessage(), throwable);
+                Dialogs.showWarningDialog("Error", "Error fetching PubMed data for " + pmid, SEE_LOG_FOR_MORE_DETAILS);
+                LOGGER.warn("Error fetching PubMed data for " + pmid, throwable);
             });
             executorService.submit(task);
         });
@@ -562,7 +575,7 @@ public class Main {
     @FXML
     private void editPhenotypicFeaturesMenuItemAction(ActionEvent e) {
         getCurrentStudyData()
-                .flatMap(getObservablePedigreeMemberBinding())
+                .flatMap(getBaseObservableIndividualBinding())
                 .ifPresent(this::editPhenotypeFeatures);
 
         e.consume();
@@ -591,17 +604,44 @@ public class Main {
             controller.ontologyProperty().unbind();
             controller.dataProperty().unbind();
         } catch (IOException e) {
-            Dialogs.showErrorDialog("Error", "Error occurred while adding phenotype features", "See log for more details");
+            Dialogs.showErrorDialog("Error", "Error occurred while adding phenotype features", SEE_LOG_FOR_MORE_DETAILS);
             LOGGER.warn("Error adding phenotype features: {}", e.getMessage(), e);
         }
     }
 
-    /*                                                 DISEASE                                                        */
+    private Function<Object, Optional<? extends ObjectBinding<? extends BaseObservableIndividual>>> getBaseObservableIndividualBinding() {
+        return data -> {
+            Tab selectedStudyTab = studiesTabPane.getSelectionModel().getSelectedItem();
+            if (data instanceof ObservableFamilyStudy || data instanceof ObservableCohortStudy) {
+                TabPane membersTabPane = (TabPane) selectedStudyTab.getContent().getParent().lookup("#members-tab-pane");
+                Integer tabIdx = membersTabPane.getSelectionModel().selectedIndexProperty().getValue();
+
+                if (tabIdx == null || tabIdx == 0) {
+                    // No tab is open, or summary tab is open.
+                    Dialogs.showWarningDialog("Sorry", "Unable to open the dialog when no individual tab is open", "Open a tab in the pedigree/cohort");
+                    return Optional.empty();
+                }
+
+
+                if (data instanceof ObservableFamilyStudy study) {
+                    return Optional.of(Bindings.valueAt(study.getPedigree().members(), tabIdx - 1));
+                } else if (data instanceof ObservableCohortStudy study) {
+                    // I really want to have this branch for clarity
+                    return Optional.of(Bindings.valueAt(study.members(), tabIdx - 1));
+                } else {
+                    return Optional.empty();
+                }
+            } else {
+                Dialogs.showInfoDialog("Sorry", String.format("Working with '%s' is not yet implemented", data.getClass().getName()), null);
+                return Optional.empty();
+            }
+        };
+    }
 
     @FXML
     private void editDiseaseMenuItemAction(ActionEvent e) {
         getCurrentStudyData()
-                .flatMap(getObservablePedigreeMemberBinding())
+                .flatMap(getBaseObservableIndividualBinding())
                 .ifPresent(this::editDisease);
 
         e.consume();
@@ -628,27 +668,11 @@ public class Main {
             // unbind
             controller.dataProperty().unbind();
         } catch (IOException e) {
-            Dialogs.showErrorDialog("Error", "Error occurred while adding phenotype features", "See log for more details");
+            Dialogs.showErrorDialog("Error", "Error occurred while adding phenotype features", SEE_LOG_FOR_MORE_DETAILS);
             LOGGER.warn("Error adding phenotype features: {}", e.getMessage(), e);
         }
     }
 
-    private Function<Object, Optional<? extends ObjectBinding<? extends BaseObservableIndividual>>> getObservablePedigreeMemberBinding() {
-        return data -> {
-            Tab tab = contentTabPane.getSelectionModel().getSelectedItem();
-            if (data instanceof ObservableFamilyStudy study) {
-                TabPane familyTabPane = (TabPane) tab.getContent().getParent().lookup("#family-tab-pane");
-                int tabIdx = familyTabPane.getSelectionModel().getSelectedIndex();
-                ObservableList<ObservablePedigreeMember> members = study.getPedigree().members();
-                return Optional.of(Bindings.valueAt(members, tabIdx - 1));
-            } else if (data instanceof ObservableCohortStudy study) {
-                // TODO - implement
-                return Optional.empty();
-            } else {
-                return Optional.empty();
-            }
-        };
-    }
 
     /*                                                 VALIDATE                                                       */
     @FXML
@@ -683,16 +707,4 @@ public class Main {
 
     /*                                                 OTHERS                                                         */
 
-    private Optional<StudyWrapper<?>> getCurrentStudyWrapper() {
-        if (!contentTabPane.getSelectionModel().isEmpty()) {
-            int selectedStudyTabIdx = contentTabPane.getSelectionModel().getSelectedIndex();
-            return Optional.of(wrappers.get(selectedStudyTabIdx));
-        }
-        return Optional.empty();
-    }
-
-    private Optional<Object> getCurrentStudyData() {
-        return getCurrentStudyWrapper()
-                .map(StudyWrapper::study);
-    }
 }
