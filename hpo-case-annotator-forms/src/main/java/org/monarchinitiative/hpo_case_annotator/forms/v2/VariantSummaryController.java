@@ -11,6 +11,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.controlsfx.dialog.CommandLinksDialog;
 import org.monarchinitiative.hpo_case_annotator.forms.ComponentController;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataException;
@@ -28,8 +29,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -90,15 +89,25 @@ public class VariantSummaryController {
 
     @FXML
     private void addVariantButtonAction() {
-        List<String> labels = Arrays.stream(VariantNotation.values()).map(VariantNotation::label).toList();
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(VariantNotation.SEQUENCE.label(), labels);
-        dialog.setTitle("Variant notation");
+        var sequenceVariant = new CommandLinksDialog.CommandLinksButtonType("Sequence variant", "Both REF and ALT alleles are known.", true);
+        var symbolicVariant = new CommandLinksDialog.CommandLinksButtonType("Symbolic variant", "The ALT allele is symbolic (E.g. \"<DEL>\").", false);
+        var breakendVariant = new CommandLinksDialog.CommandLinksButtonType("Breakend variant", "A rearrangement involving two chromosomes.", false);
+        CommandLinksDialog dialog = new CommandLinksDialog(sequenceVariant, symbolicVariant, breakendVariant);
+        dialog.setTitle("New variant");
         dialog.setHeaderText("Select variant notation");
-        dialog.setContentText("Variant notation");
+        dialog.setContentText("The following variant notations are supported:");
 
-        dialog.showAndWait()
-                .flatMap(VariantNotation::fromLabel)
-                .flatMap(notation -> addEditVariant(notation, null))
+        dialog.showAndWait().flatMap(bt -> {
+                    if (bt.equals(sequenceVariant.getButtonType())) {
+                        return Optional.of(VariantNotation.SEQUENCE);
+                    } else if (bt.equals(symbolicVariant.getButtonType())) {
+                        return Optional.of(VariantNotation.SYMBOLIC);
+                    } else if (bt.equals(breakendVariant.getButtonType())) {
+                        return Optional.of(VariantNotation.BREAKEND);
+                    } else {
+                        return Optional.empty();
+                    }
+                }).flatMap(notation -> addEditVariant(notation, null))
                 .ifPresent(variantTableView.getItems()::add);
     }
 
