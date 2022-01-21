@@ -224,6 +224,7 @@ public class Main {
             tab.setOnCloseRequest(e -> removeStudy(contentTabPane.getTabs().indexOf(tab)));
 
             contentTabPane.getTabs().add(tab);
+            contentTabPane.getSelectionModel().select(tab);
             wrappers.add(wrapper);
         } catch (IOException e) {
             LOGGER.warn("Error loading study: {}", e.getMessage(), e);

@@ -40,7 +40,7 @@
                           onAction="#saveAllMenuItemAction" text="Save all"/>
                 <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#closeMenuItemAction" text="Close">
                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                        <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="DOWN" shortcut="UP"/>
                     </accelerator>
                 </MenuItem>
                 <SeparatorMenuItem mnemonicParsing="false"/>

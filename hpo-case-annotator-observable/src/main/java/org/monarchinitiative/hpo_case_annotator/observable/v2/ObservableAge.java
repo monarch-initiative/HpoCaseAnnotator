@@ -26,10 +26,12 @@ public class ObservableAge {
     private ObjectBinding<Period> createPeriodBinding() {
         return Bindings.createObjectBinding(() -> {
             Integer y = years.get();
-            if (y == null) {
+            Integer m = months.get();
+            Integer d = days.get();
+            if (y == null || m == null || d == null) {
                 return null;
             } else {
-                return Period.of(years.get(), months.get(), days.get());
+                return Period.of(y, m, d);
             }
         }, years, months, days);
     }

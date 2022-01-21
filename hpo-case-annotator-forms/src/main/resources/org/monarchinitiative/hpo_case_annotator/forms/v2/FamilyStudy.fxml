@@ -7,7 +7,7 @@
 <VBox alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.FamilyStudyController">
    <stylesheets>
       <URL value="@base.css" />
-      <URL value="@family-study.css" />
+      <URL value="@study.css" />
    </stylesheets>
    <children>
       <Label styleClass="title" text="Family study" />
@@ -33,7 +33,7 @@
                   </Tab>
                   <Tab closable="false" text="Pedigree">
                      <content>
-                        <fx:include fx:id="pedigree" source="individual/Pedigree.fxml" />
+                        <fx:include fx:id="pedigree" source="Pedigree.fxml" />
                      </content>
                   </Tab>
                   <Tab closable="false" text="Metadata">

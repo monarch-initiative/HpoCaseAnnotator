@@ -8,7 +8,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.disease.DiseaseStatusController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualVariantSummaryController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
@@ -67,6 +67,12 @@ public class ControllerConfiguration {
 
     @Bean
     @Scope("prototype")
+    public CohortController cohortController(HCAControllerFactory hcaControllerFactory) {
+        return new CohortController(hcaControllerFactory);
+    }
+
+    @Bean
+    @Scope("prototype")
     public StudyMetadataController studyMetadataController() {
         return new StudyMetadataController();
     }
@@ -102,13 +108,13 @@ public class ControllerConfiguration {
 
     @Bean
     @Scope("prototype")
-    public PedigreeMemberController pedigreeMemberController(HCAControllerFactory hcaControllerFactory) {
+    public PedigreeMemberController pedigreeMemberController() {
         return new PedigreeMemberController();
     }
 
     @Bean
     @Scope("prototype")
-    public IndividualController individualController(HCAControllerFactory hcaControllerFactory) {
+    public IndividualController individualController() {
         return new IndividualController();
     }
 

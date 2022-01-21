@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.v2.individual;
+package org.monarchinitiative.hpo_case_annotator.forms.v2;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -15,6 +15,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.forms.util.PeriodTableCell;
 import org.monarchinitiative.hpo_case_annotator.forms.util.SexTableCell;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigree;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Pedigree;
@@ -41,14 +42,14 @@ public class PedigreeController extends BindingDataController<ObservablePedigree
     private final HCAControllerFactory controllerFactory;
 
     // This list is not supposed to be modified directly. The elements are added/removed in VariantSummaryController
-    private final ObservableList<CuratedVariant> variants = FXCollections.observableList(new LinkedList<>());
+    private final ObservableList<CuratedVariant> curatedVariants = FXCollections.observableList(new LinkedList<>());
 
     private final List<PedigreeMemberController> controllers = new LinkedList<>();
 
     @FXML
-    private TabPane familyTabPane;
+    private TabPane membersTabPane;
     @FXML
-    private TableView<ObservablePedigreeMember> familyMembersTableView;
+    private TableView<ObservablePedigreeMember> membersTableView;
     @FXML
     private TableColumn<ObservablePedigreeMember, String> idTableColumn;
     @FXML
@@ -82,10 +83,10 @@ public class PedigreeController extends BindingDataController<ObservablePedigree
         isProbandTableColumn.setCellValueFactory(cdf -> cdf.getValue().probandProperty());
         isProbandTableColumn.setCellFactory(CheckBoxTableCell.forTableColumn(isProbandTableColumn));
 
-        familyMembersTableView.getItems().addListener(pedigreeMemberListChangeListener());
+        membersTableView.getItems().addListener(pedigreeMemberListChangeListener());
 
         // Disable the remove button when the Summary tab is selected.
-        familyTabPane.getSelectionModel().selectedIndexProperty()
+        membersTabPane.getSelectionModel().selectedIndexProperty()
                 .addListener((obs, old, novel) -> removeIndividualButton.setDisable(novel.intValue() == 0));
     }
 
@@ -117,7 +118,7 @@ public class PedigreeController extends BindingDataController<ObservablePedigree
             PedigreeMemberController controller = loader.getController();
             controller.setData(pedigreeMember);
 
-            Bindings.bindContentBidirectional(controller.variants(), variants);
+            Bindings.bindContentBidirectional(controller.variants(), curatedVariants);
 
             // Setup Tab
             Tab tab = new Tab();
@@ -126,11 +127,11 @@ public class PedigreeController extends BindingDataController<ObservablePedigree
             tab.setContent(parent);
 
             // Store the Tab & the controller
-            familyTabPane.getTabs().add(tab);
+            membersTabPane.getTabs().add(tab);
             controllers.add(controller);
 
             // Select the added tab
-            familyTabPane.getSelectionModel().select(tab);
+            membersTabPane.getSelectionModel().select(tab);
         } catch (IOException e) {
             LOGGER.warn("Unable to add individual: {}", e.getMessage(), e);
         }
@@ -139,11 +140,11 @@ public class PedigreeController extends BindingDataController<ObservablePedigree
     private void removePedigreeMember(int tableIdx) {
         // Remove the Tab
         int tabIdx = tableIdx + 1;
-        familyTabPane.getTabs().remove(tabIdx);
+        membersTabPane.getTabs().remove(tabIdx);
 
         // Remove the controller
         PedigreeMemberController controller = controllers.remove(tableIdx);
-        Bindings.unbindContentBidirectional(controller.variants(), variants);
+        Bindings.unbindContentBidirectional(controller.variants(), curatedVariants);
     }
 
     @Override
@@ -153,28 +154,28 @@ public class PedigreeController extends BindingDataController<ObservablePedigree
 
     @Override
     public void bind(ObservablePedigree pedigree) {
-        Bindings.bindContentBidirectional(familyMembersTableView.getItems(), pedigree.members());
+        Bindings.bindContentBidirectional(membersTableView.getItems(), pedigree.members());
     }
 
     @Override
     public void unbind(ObservablePedigree pedigree) {
-        Bindings.unbindContentBidirectional(familyMembersTableView.getItems(), pedigree.members());
+        Bindings.unbindContentBidirectional(membersTableView.getItems(), pedigree.members());
     }
 
     @FXML
     private void addIndividualButtonAction() {
-        familyMembersTableView.getItems().add(new ObservablePedigreeMember());
+        membersTableView.getItems().add(new ObservablePedigreeMember());
     }
 
     @FXML
     private void removeIndividualButtonAction() {
-        int tabIdx = familyTabPane.getSelectionModel().getSelectedIndex();
+        int tabIdx = membersTabPane.getSelectionModel().getSelectedIndex();
         int tableIdx = tabIdx - 1;
-        familyMembersTableView.getItems().remove(tableIdx);
+        membersTableView.getItems().remove(tableIdx);
     }
 
     public ObservableList<CuratedVariant> curatedVariants() {
-        return variants;
+        return curatedVariants;
     }
 
 }
