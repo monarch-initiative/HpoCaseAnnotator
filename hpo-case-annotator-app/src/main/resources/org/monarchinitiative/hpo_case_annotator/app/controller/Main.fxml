@@ -130,7 +130,7 @@
     <center>
         <VBox maxHeight="1.7976931348623157E308">
             <children>
-                <TabPane fx:id="contentTabPane" maxHeight="1.7976931348623157E308" VBox.vgrow="ALWAYS"/>
+                <TabPane fx:id="studiesTabPane" maxHeight="1.7976931348623157E308" VBox.vgrow="ALWAYS"/>
             </children>
         </VBox>
     </center>

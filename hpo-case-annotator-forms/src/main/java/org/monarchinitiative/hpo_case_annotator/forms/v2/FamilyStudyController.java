@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilyStudy;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigree;
 
 public class FamilyStudyController extends StudyController<ObservableFamilyStudy> {
 
@@ -22,27 +23,28 @@ public class FamilyStudyController extends StudyController<ObservableFamilyStudy
     }
 
     @Override
-    public ObjectProperty<ObservableFamilyStudy> dataProperty() {
-        return study;
-    }
-
-    @Override
     protected void bind(ObservableFamilyStudy study) {
         super.bind(study);
 
-        // pedigreeController.variants() must not be modified directly from now on!
-        Bindings.bindContentBidirectional(variantSummaryController.curatedVariants(), study.variants());
         Bindings.bindContent(pedigreeController.curatedVariants(), variantSummaryController.curatedVariants());
-
-        pedigreeController.dataProperty().bindBidirectional(study.pedigreeProperty());
+        ObservablePedigree pedigree = study.getPedigree();
+        if (pedigree != null)
+            Bindings.bindContentBidirectional(pedigreeController.members(), pedigree.members());
     }
 
     @Override
     protected void unbind(ObservableFamilyStudy study) {
         super.unbind(study);
-        Bindings.unbindContent(pedigreeController.curatedVariants(), variantSummaryController.curatedVariants());
 
-        pedigreeController.dataProperty().unbindBidirectional(study.pedigreeProperty());
+        Bindings.unbindContent(pedigreeController.curatedVariants(), variantSummaryController.curatedVariants());
+        ObservablePedigree pedigree = study.getPedigree();
+        if (pedigree != null)
+            Bindings.unbindContentBidirectional(pedigreeController.members(), pedigree.members());
+    }
+
+    @Override
+    public ObjectProperty<ObservableFamilyStudy> dataProperty() {
+        return study;
     }
 
 }

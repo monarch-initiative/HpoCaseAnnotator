@@ -17,3 +17,7 @@ Tab {
     -fx-border-style: dotted;
     -fx-border-width: 1px;
 }
+
+#members-tab-pane {
+    /* Do not remove, used in app/Main */
+}
