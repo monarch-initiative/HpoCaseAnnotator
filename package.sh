@@ -34,13 +34,22 @@ function detect_platform() {
 function build_for_module_path() {
     # copy the JAR and lib (dependencies)
     cp $BUILD_DIR/$JAR_NAME $PACKAGE_DIR
-    cp -r $BUILD_DIR/lib $PACKAGE_DIR
+    cp -r $BUILD_DIR/lib $PACKAGE_DIR/lib
     if [[ "$PLATFORM" == "Linux" ]]; then
       # Setup Linux CLI using module path
-#      MODULE="org.monarchinitiative.hpo_case_annotator.app/org.monarchinitiative.hpo_case_annotator.App"
-#      MPATH="${PACKAGE_DIR}/lib:${PACKAGE_DIR}/${JAR_NAME}"
-#      jpackage --name "${APP_NAME}" --module-path "${MPATH}" --module "${MODULE}" --linux-menu-group Science --linux-shortcut --linux-package-name "${CMD_NAME}" --icon "${ICON}.png" --app-version "${VERSION}" --description "${DESCRIPTION}" --vendor "${VENDOR}" --license-file LICENSE --copyright "${COPYRIGHT}"
-      echo "Sorry, module path is not yet supported"
+      MPATH="${PACKAGE_DIR}/lib:${PACKAGE_DIR}/${JAR_NAME}"
+      printf "Module path: %s\n" "${MPATH}"
+      MODULE="org.monarchinitiative.hca.app/org.monarchinitiative.hpo_case_annotator.App"
+      printf "Module %s\n" "${MODULE}"
+
+      DETECTED_MODULES=$(jdeps --multi-release 17 --ignore-missing-deps --print-module-deps --module-path "${MPATH}" ${PACKAGE_DIR}/${JAR_NAME})
+      printf "Detected modules: %s\n" "${DETECTED_MODULES}"
+      MANUAL_MODULES="jdk.localedata"
+      JAVA_RUNTIME=${PACKAGE_DIR}/java-runtime
+      printf "Building Java runtime to: %s\n" ${JAVA_RUNTIME}
+      #jlink --no-header-files --no-man-pages --compress=2 --strip-debug --module-path ${MPATH} --add-modules "${DETECTED_MODULES},${MANUAL_MODULES}" --include-locales=en --output ${JAVA_RUNTIME}
+
+      # jpackage --name "${APP_NAME}" --module-path "${MPATH}" --module "${MODULE}" --java-options -Xmx2048m --runtime-image ${JAVA_RUNTIME} --linux-menu-group Science --linux-shortcut --linux-package-name "${CMD_NAME}" --icon "${ICON}.png" --app-version "${VERSION}" --description "${DESCRIPTION}" --vendor "${VENDOR}" --license-file LICENSE --copyright "${COPYRIGHT}"
     elif [[ "$PLATFORM" == "Osx" ]]; then
       # setup OSX CLI using module path
       #jpackage --name "${APP_NAME}" --input "${PACKAGE_DIR}" --main-jar "${JAR_NAME}" --mac-package-name "${CMD_NAME}" --icon "${ICON}.icns" --app-version "${VERSION}" --description "${DESCRIPTION}" --vendor "${VENDOR}" --license-file LICENSE --copyright "${COPYRIGHT}"
@@ -96,7 +105,8 @@ function build_for_class_path() {
 # Dynamic variables
 #
 PLATFORM=$(detect_platform)
-PACKAGE="classpath" # or "modular"
+PACKAGE="classpath"
+#PACKAGE="modular"
 
 
 # 1. Build
@@ -111,10 +121,12 @@ mkdir -p $PACKAGE_DIR
 # 3. Package for platform and package type
 if [[ "$PACKAGE" == "modular" ]]; then
   printf "Packaging modular Hpo Case Annotator for %s\n" "${PLATFORM}"
-  $(build_for_module_path)
+  build_for_module_path
+
 elif [[ "$PACKAGE" == "classpath" ]]; then
   printf "Packaging classpath Hpo Case Annotator for %s\n" "${PLATFORM}"
-  $(build_for_class_path)
+  build_for_class_path
+
 else
   printf "\nUnknown packaging type '%s'\n" "${PACKAGE}"
 fi
