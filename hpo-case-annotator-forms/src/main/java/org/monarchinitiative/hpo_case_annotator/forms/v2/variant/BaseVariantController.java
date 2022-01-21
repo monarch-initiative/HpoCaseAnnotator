@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.v2.variant;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
@@ -11,6 +12,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblyService;
 import org.monarchinitiative.hpo_case_annotator.forms.ComponentController;
 import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataException;
+import org.monarchinitiative.hpo_case_annotator.forms.util.Utils;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.StructuralVariantMetadata;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadata;
@@ -114,7 +116,11 @@ public abstract class BaseVariantController implements ComponentController<Curat
 
     protected void setGenomicAssembly(String genomicAssembly) {
         buttonForAssembly(genomicAssembly)
-//                .filter(b -> !b.isDisabled())
                 .ifPresent(genomeAssemblyToggleGroup::selectToggle);
+    }
+
+    @FXML
+    private void okButtonAction(ActionEvent e) {
+        Utils.closeTheStage(e);
     }
 }

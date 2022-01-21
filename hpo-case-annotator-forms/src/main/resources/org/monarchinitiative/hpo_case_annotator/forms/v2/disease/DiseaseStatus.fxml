@@ -47,7 +47,7 @@
                                         </VBox>
                                         <VBox alignment="CENTER_LEFT" styleClass="column">
                                             <children>
-                                                <Button fx:id="addDiseaseButton" mnemonicParsing="false" onAction="#addDisease" styleClass="add-item" text="+" />
+                                                <Button fx:id="addDiseaseButton" mnemonicParsing="false" onAction="#addDisease" text="Add" />
                                             </children>
                                         </VBox>
                                     </children>
@@ -56,6 +56,12 @@
                         </VBox>
                     </children>
                 </VBox>
+            </children>
+        </HBox>
+        <HBox styleClass="edit-row">
+            <children>
+                <Pane HBox.hgrow="ALWAYS" />
+                <Button defaultButton="true" mnemonicParsing="false" onAction="#okButtonAction" styleClass="ok-button" text="OK" />
             </children>
         </HBox>
     </children>

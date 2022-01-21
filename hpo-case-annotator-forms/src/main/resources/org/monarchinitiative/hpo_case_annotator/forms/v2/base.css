@@ -62,3 +62,8 @@
     -fx-min-height: 40px;
     -fx-padding: 5px;
 }
+
+.ok-button {
+    -fx-pref-width: 100px;
+    -fx-pref-height: 30px;
+}

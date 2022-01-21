@@ -68,7 +68,7 @@
       <HBox styleClass="edit-row">
          <children>
             <Pane HBox.hgrow="ALWAYS" />
-            <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" onAction="#okButtonAction" text="OK" />
+            <Button defaultButton="true" mnemonicParsing="false" onAction="#okButtonAction" styleClass="ok-button" text="OK" />
          </children>
       </HBox>
 

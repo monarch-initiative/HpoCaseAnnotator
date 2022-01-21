@@ -93,5 +93,11 @@
             </VBox>
             </children>
         </HBox>
+        <HBox styleClass="row">
+            <children>
+                <Pane HBox.hgrow="ALWAYS" />
+                <Button defaultButton="true" mnemonicParsing="false" onAction="#okButtonAction" styleClass="ok-button" text="OK" />
+            </children>
+        </HBox>
     </children>
 </VBox>
