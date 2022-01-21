@@ -169,13 +169,13 @@ public class Main {
 
     @FXML
     private void newMenuItemAction(ActionEvent e) {
-        var individualStudy = new CommandLinksDialog.CommandLinksButtonType("Individual study", "Enter data about an individual (a cohort with size 1)", false);
-        var familyStudy = new CommandLinksDialog.CommandLinksButtonType("Family study", "Enter data about several related individuals", false);
-        var cohortStudy = new CommandLinksDialog.CommandLinksButtonType("Cohort study", "Enter data about several unrelated individuals", false);
+        var individualStudy = new CommandLinksDialog.CommandLinksButtonType("Individual study", "Enter data about a single individual (a cohort with size 1).", true);
+        var familyStudy = new CommandLinksDialog.CommandLinksButtonType("Family study", "Enter data about several related individuals.", false);
+        var cohortStudy = new CommandLinksDialog.CommandLinksButtonType("Cohort study", "Enter data about several unrelated individuals.", false);
         CommandLinksDialog dialog = new CommandLinksDialog(individualStudy, familyStudy, cohortStudy);
         dialog.setTitle("New study");
-        dialog.setHeaderText("Select study type");
-        dialog.setContentText("HCA supports biocuration of several study types");
+        dialog.setHeaderText("Select study type.");
+        dialog.setContentText("HCA supports the following study types:");
         Optional<ButtonType> buttonType = dialog.showAndWait();
 
         Optional<StudyType> studyType = buttonType.flatMap(bt -> {
