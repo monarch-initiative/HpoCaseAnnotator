@@ -2,7 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.forms;
 
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualVariantSummaryController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
@@ -92,6 +92,12 @@ public class ControllerFactory implements HCAControllerFactory {
             return new FamilyStudyController();
         } else if (clz.equals(PedigreeMemberController.class)) {
             return new PedigreeMemberController();
+        } else if (clz.equals(IndividualDetailController.class)) {
+            return new IndividualDetailController();
+        } else if (clz.equals(CohortController.class)) {
+            return new CohortController(this);
+        } else if (clz.equals(CohortStudyController.class)) {
+            return new CohortStudyController();
         }
 
         // publication & metadata
@@ -99,9 +105,7 @@ public class ControllerFactory implements HCAControllerFactory {
             return new PublicationController();
         } else if (clz.equals(StudyMetadataController.class)) {
             return new StudyMetadataController();
-        } else
-
-        {
+        } else {
             throw new RuntimeException("Unknown controller " + clz);
         }
 

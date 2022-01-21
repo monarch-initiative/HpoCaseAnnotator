@@ -3,7 +3,7 @@ TabPane {
     -fx-tab-min-height: 30px;
 }
 
-.pedigree-summary-tab {
+.summary-tab {
     -fx-font-size: 14px;
     -fx-font-weight: bold;
 }

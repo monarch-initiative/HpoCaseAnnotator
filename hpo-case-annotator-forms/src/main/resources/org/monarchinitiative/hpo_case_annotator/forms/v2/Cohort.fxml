@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox stylesheets="@pedigree-and-cohort.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.CohortController">
+   <children>
+       <Label styleClass="h1" text="Cohort" />
+       <TabPane id="cohort-tab-pane" fx:id="membersTabPane" onKeyPressed="#membersTabPaneKeyPressed" tabClosingPolicy="ALL_TABS" VBox.vgrow="ALWAYS">
+           <tabs>
+               <Tab closable="false" styleClass="summary-tab" text="Summary">
+                   <content>
+                       <VBox>
+                           <children>
+                               <Label styleClass="h2" text="Pedigree members" VBox.vgrow="NEVER" />
+                               <TableView fx:id="membersTableView" onKeyPressed="#membersTableViewKeyPressed" onMouseClicked="#membersTableViewOnMouseClicked" VBox.vgrow="ALWAYS">
+                                   <columns>
+                                       <TableColumn fx:id="idTableColumn" editable="false" prefWidth="150.0" text="ID" />
+                                       <TableColumn fx:id="ageTableColumn" editable="false" prefWidth="100.0" text="Age" />
+                                       <TableColumn fx:id="sexTableColumn" editable="false" prefWidth="100.0" text="Sex" />
+                                   </columns>
+                                   <placeholder>
+                                       <Label>No cohort members to display.</Label>
+                                   </placeholder>
+                               </TableView>
+                           </children>
+                       </VBox>
+                   </content>
+               </Tab>
+           </tabs>
+       </TabPane>
+       <HBox alignment="CENTER_LEFT" styleClass="edit-row">
+           <children>
+               <Button mnemonicParsing="false" onAction="#addIndividualButtonAction" styleClass="add-item" text="+" />
+               <Button fx:id="removeIndividualButton" disable="true" mnemonicParsing="false" onAction="#removeIndividualButtonAction" styleClass="remove-item" text="-" />
+           </children>
+       </HBox>
+   </children>
+</VBox>
