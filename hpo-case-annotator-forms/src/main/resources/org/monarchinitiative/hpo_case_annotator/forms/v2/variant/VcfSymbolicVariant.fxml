@@ -12,7 +12,7 @@
     </stylesheets>
     <children>
         <Label styleClass="h2" text="VCF symbolic variant" />
-        <HBox alignment="CENTER_LEFT" styleClass="row" VBox.vgrow="NEVER">
+        <HBox alignment="CENTER_LEFT" styleClass="row">
             <children>
                 <VBox alignment="CENTER_LEFT" styleClass="column" HBox.hgrow="NEVER">
                     <children>
@@ -37,7 +37,7 @@
             </children>
         </HBox>
         <Separator />
-        <HBox alignment="CENTER_LEFT" layoutX="15.0" layoutY="137.0" styleClass="row">
+        <HBox alignment="CENTER_LEFT" styleClass="row">
             <children>
             <VBox styleClass="column" HBox.hgrow="ALWAYS">
                <children>
@@ -97,6 +97,12 @@
                       </VBox>
                   </children>
               </VBox>
+         </children>
+      </HBox>
+      <HBox styleClass="row">
+         <children>
+            <Pane HBox.hgrow="ALWAYS" />
+            <Button defaultButton="true" mnemonicParsing="false" onAction="#okButtonAction" styleClass="ok-button" text="OK" />
          </children>
       </HBox>
     </children>

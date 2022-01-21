@@ -6,10 +6,6 @@ TextField {
     -fx-pref-height: 30;
 }
 
-Button {
-    -fx-pref-height: 30;
-    -fx-pref-width: 120;
-}
 
 ComboBox {
     -fx-pref-height: 30;

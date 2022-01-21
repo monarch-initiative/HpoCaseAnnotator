@@ -9,8 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
+import org.monarchinitiative.hpo_case_annotator.forms.util.Utils;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.AgeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
@@ -53,9 +53,6 @@ public class PhenotypeEntryController {
     private PhenotypicFeatureController phenotypicFeatureController;
     @FXML
     private Button removeButton;
-
-    @FXML
-    private Button okButton;
 
     @FXML
     private void initialize() {
@@ -108,10 +105,7 @@ public class PhenotypeEntryController {
 
     @FXML
     private void okButtonAction(ActionEvent e) {
-        // close the stage
-        Stage stage = (Stage) okButton.getParent().getScene().getWindow();
-        stage.close();
-        e.consume();
+        Utils.closeTheStage(e);
     }
 
     public Ontology getOntology() {

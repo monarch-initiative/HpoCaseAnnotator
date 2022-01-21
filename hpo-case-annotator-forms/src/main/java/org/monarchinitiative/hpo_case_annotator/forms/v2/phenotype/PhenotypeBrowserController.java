@@ -10,13 +10,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
+import org.monarchinitiative.hpo_case_annotator.forms.util.Utils;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualDetailController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
@@ -60,9 +60,6 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual> exte
     private Button addPhenotypeFeatureButton;
     @FXML
     private Button removePhenotypeFeatureButton;
-
-    @FXML
-    private Button okButton;
 
     public PhenotypeBrowserController(HCAControllerFactory controllerFactory) {
         this.controllerFactory = controllerFactory;
@@ -150,10 +147,7 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual> exte
 
     @FXML
     private void okButtonAction(ActionEvent e) {
-        // close the stage
-        Stage stage = (Stage) okButton.getParent().getScene().getWindow();
-        stage.close();
-        e.consume();
+        Utils.closeTheStage(e);
     }
 
     /* --------------------------------------------   PROPERTIES  --------------------------------------------------- */

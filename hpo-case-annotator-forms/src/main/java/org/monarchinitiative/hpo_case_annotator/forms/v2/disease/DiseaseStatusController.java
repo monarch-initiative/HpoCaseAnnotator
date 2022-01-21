@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import org.controlsfx.control.textfield.TextFields;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.util.Utils;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.DiseaseTableController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualDetailController;
 import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseIdentifier;
@@ -144,6 +145,11 @@ public class DiseaseStatusController<T extends BaseObservableIndividual> extends
         ObservableList<ObservableDiseaseStatus> selectedItems = diseaseTableController.selectionModel().getSelectedItems();
         diseaseTableController.diseaseStatuses().removeAll(selectedItems);
         e.consume();
+    }
+
+    @FXML
+    private void okButtonAction(ActionEvent e) {
+        Utils.closeTheStage(e);
     }
 
     @Override
