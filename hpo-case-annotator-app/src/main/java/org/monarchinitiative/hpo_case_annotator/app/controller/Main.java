@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.app.controller;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -30,7 +31,6 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.StudyController;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeBrowserController;
-import org.monarchinitiative.hpo_case_annotator.io.ModelParser;
 import org.monarchinitiative.hpo_case_annotator.io.ModelParsers;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.slf4j.Logger;
@@ -239,54 +239,60 @@ public class Main {
         filechooser.setInitialDirectory(optionalResources.getDiseaseCaseDir());
         filechooser.setTitle("Open study");
 
-        String HCA_v1_JSON = "HCA v1 JSON data format (*.json)";
-        String HCA_v2_JSON = "HCA v2 JSON data format (*.json)";
-        FileChooser.ExtensionFilter v1Json = new FileChooser.ExtensionFilter(HCA_v1_JSON, "*.json");
-        FileChooser.ExtensionFilter v2Json = new FileChooser.ExtensionFilter(HCA_v2_JSON, "*.json");
-        filechooser.getExtensionFilters().addAll(v1Json, v2Json);
-        filechooser.setSelectedExtensionFilter(v1Json);
+        String HCA_JSON = "HCA JSON data format (*.json)";
+        FileChooser.ExtensionFilter jsonFilter = new FileChooser.ExtensionFilter(HCA_JSON, "*.json");
+        filechooser.getExtensionFilters().addAll(jsonFilter);
+        filechooser.setSelectedExtensionFilter(jsonFilter);
 
         List<File> files = filechooser.showOpenMultipleDialog(getOwnerWindow());
 
         if (files == null)
             return;
 
-        FileChooser.ExtensionFilter selectedFilter = filechooser.getSelectedExtensionFilter();
-
-        ModelParser<Study> v2Parser = ModelParsers.V2.jsonParser();
-        ModelParser<DiseaseCase> v1Parser = ModelParsers.V1.jsonParser();
         for (File file : files) {
-            Study study;
-            if (selectedFilter.equals(v1Json)) {
-                // v1
-                try {
-                    DiseaseCase dc = v1Parser.read(file.toPath());
-                    study = ConversionCodecs.v1ToV2().encode(dc);
-                } catch (IOException | ModelTransformationException ex) {
-                    Dialogs.showWarningDialog("Error", "Error reading v1 case", SEE_LOG_FOR_MORE_DETAILS);
-                    LOGGER.warn("Error reading v1 case.", ex);
-                    continue;
-                }
-            } else if (selectedFilter.equals(v2Json)) {
-                try {
-                    study = v2Parser.read(file.toPath());
-                } catch (IOException ex) {
-                    Dialogs.showWarningDialog("Error", "Error reading v2 case", SEE_LOG_FOR_MORE_DETAILS);
-                    LOGGER.warn("Error reading v2 case.", ex);
-                    continue;
-                }
-            } else {
-                Dialogs.showWarningDialog("Sorry", "Sorry", "Unexpected model version");
-                continue;
-            }
-
-            Convert.toObservableStudy(study)
+            readStudy(file).flatMap(Convert::toObservableStudy)
                     .ifPresent(observableStudy -> studyTypeForStudy(observableStudy)
                             .flatMap(Main::controllerUrlForStudyType)
                             .ifPresent(url -> addStudy(url, StudyWrapper.of(observableStudy, file.toPath())))
                     );
         }
         e.consume();
+    }
+
+    private static Optional<Study> readStudy(File studyFile) {
+        Study study = null;
+
+        // try v1 first
+        try {
+            DiseaseCase dc = ModelParsers.V1.jsonParser().read(studyFile.toPath());
+            study = ConversionCodecs.v1ToV2().encode(dc);
+        } catch (InvalidProtocolBufferException pbe) {
+            // The following holds if we're trying to read v2 model.
+            if (!pbe.getMessage().contains("Cannot find field: id in message org.monarchinitiative.hpo_case_annotator_model.proto.DiseaseCase")) {
+                Dialogs.showWarningDialog("Error", String.format("Unable to read study at '%s'", studyFile.getAbsolutePath()), SEE_LOG_FOR_MORE_DETAILS);
+                LOGGER.warn("Unable to read study at '{}'", studyFile.getAbsolutePath(), pbe);
+            }
+        } catch (IOException | ModelTransformationException ex) {
+            Dialogs.showWarningDialog("Error", String.format("Unable to read study at '%s'", studyFile.getAbsolutePath()), SEE_LOG_FOR_MORE_DETAILS);
+            LOGGER.warn("Unable to read study at '{}'", studyFile.getAbsolutePath(), ex);
+        }
+
+        // then try v2
+        if (study == null) {
+            try {
+                study = ModelParsers.V2.jsonParser().read(studyFile.toPath());
+            } catch (IOException ex) {
+                Dialogs.showWarningDialog("Error", "Error reading v2 case", SEE_LOG_FOR_MORE_DETAILS);
+                LOGGER.warn("Error reading v2 study at '{}'", studyFile.getAbsolutePath(), ex);
+                return Optional.empty();
+            }
+        }
+
+        if (study == null) {
+            Dialogs.showWarningDialog("Sorry", "Unable to read study data", "Unknown format");
+        }
+
+        return Optional.ofNullable(study);
     }
 
     private static Optional<StudyType> studyTypeForStudy(ObservableStudy study) {
