@@ -1,0 +1,16 @@
+TabPane {
+    -fx-tab-min-width: 80px;
+    -fx-tab-min-height: 30px;
+}
+
+Tab {
+    -fx-font-size: 16px;
+}
+
+#study-id-box {
+    -fx-padding: 5px;
+}
+
+#study-id-text-field {
+    -fx-pref-width: 450px;
+}

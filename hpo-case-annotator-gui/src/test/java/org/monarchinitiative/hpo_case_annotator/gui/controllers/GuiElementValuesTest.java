@@ -1,20 +1,20 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 
 import java.io.InputStream;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class GuiElementValuesTest {
 
     private GuiElementValues instance;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         try (InputStream is = GuiElementValuesTest.class.getResourceAsStream("test-gui-elements-values.yml")) {
             instance = GuiElementValues.guiElementValuesFrom(is);

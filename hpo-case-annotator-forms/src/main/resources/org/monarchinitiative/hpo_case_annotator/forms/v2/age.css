@@ -1,0 +1,29 @@
+HBox {
+    -fx-min-height: 40px;
+    -fx-padding: 5px 0px 5px 0px;
+}
+
+Label {
+    -fx-padding: 0px 15px 0px 5px;
+    -fx-min-height: 30px;
+}
+
+.age-vertical SearchableComboBox {
+    -fx-max-width: 100px;
+    -fx-min-height: 30px;
+}
+
+.age-vertical TextField {
+    -fx-max-width: 100px;
+    -fx-min-height: 30px;
+}
+
+.age-horizontal SearchableComboBox {
+    -fx-max-width: 60px;
+    -fx-min-height: 30px;
+}
+
+.age-horizontal TextField {
+    -fx-max-width: 50px;
+    -fx-min-height: 30px;
+}

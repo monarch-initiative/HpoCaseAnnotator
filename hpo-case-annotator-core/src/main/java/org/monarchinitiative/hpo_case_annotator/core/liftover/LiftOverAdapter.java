@@ -32,7 +32,7 @@ public class LiftOverAdapter {
         if (chains == null)
             throw new IllegalArgumentException("Error using chain directory " + chainFolder.getAbsolutePath());
 
-        LOGGER.info("Found {} chain file(s) in directory '{}'", chains.length, chainFolder.getAbsolutePath());
+        LOGGER.debug("Found {} chain file(s) in directory '{}'", chains.length, chainFolder.getAbsolutePath());
         return ofChains(chains);
     }
 

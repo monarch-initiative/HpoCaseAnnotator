@@ -1,28 +1,21 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
-import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
-import org.monarchinitiative.hpo_case_annotator.core.refgenome.SequenceDao;
-import org.monarchinitiative.hpo_case_annotator.model.io.XMLModelParser;
-import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.core.reference.GenomeAssemblies;
+import org.monarchinitiative.hpo_case_annotator.core.reference.SequenceDao;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
 
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * At first two real-life model files are tested and then invalid cases are tested.
@@ -31,8 +24,8 @@ import static org.junit.Assert.assertThat;
  */
 public class GenomicPositionValidatorTest {
 
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
+//    @Rule
+//    public MockitoRule rule = MockitoJUnit.rule();
 
     @Mock
     private GenomeAssemblies assemblies;
@@ -46,28 +39,10 @@ public class GenomicPositionValidatorTest {
     private GenomicPositionValidator validator;
 
 
-    /**
-     * Utility method for creating DiseaseCaseModel instance for testing.
-     *
-     * @return {@link DiseaseCase} instance for testing.
-     */
-    private static DiseaseCase getArs() throws Exception {
-        try (InputStream is = GenomicPositionValidatorTest.class.getResourceAsStream("/models/xml/Ars-2000-NF1-95-89.xml")) {
-            return XMLModelParser.loadDiseaseCase(is)
-                    .orElseThrow(() -> new Exception("Unable to read test data from /models/xml/Ars-2000-NF1-95-89.xml"));
-        }
-    }
-
-
-    private static DiseaseCase getHull() throws Exception {
-        try (InputStream is = GenomicPositionValidatorTest.class.getResourceAsStream("/models/xml/Hull-1994-CFTR.xml")) {
-            return XMLModelParser.loadDiseaseCase(is)
-                    .orElseThrow(() -> new Exception("Unable to read test data from /models/xml/Hull-1994-CFTR.xml"));
-        }
-    }
-
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
+        assemblies = Mockito.mock(GenomeAssemblies.class);
+        hg19SequenceDao = Mockito.mock(SequenceDao.class);
         validator = new GenomicPositionValidator(assemblies);
     }
 
@@ -202,7 +177,6 @@ public class GenomicPositionValidatorTest {
                 .build();
 
         final List<ValidationResult> results = validator.validate(variant);
-//        results.forEach(System.err::println);
         assertThat(results.size(), is(2));
         assertThat(results, hasItems(ValidationResult.fail("Ref sequence not initialized (length=0)"),
                 ValidationResult.fail("Alt sequence not initialized (length=0)")));
@@ -242,204 +216,4 @@ public class GenomicPositionValidatorTest {
         assertThat(results, is(Collections.emptyList()));
     }
 
-    /**
-     * Test validation of correct real-life model.
-     */
-    @Test
-    @Ignore
-    public void validateDiseaseCaseHull() throws Exception {
-//        ValidationResult result = validator.validateDiseaseCase(getHull());
-//        assertEquals(ValidationResult.PASSED, result);
-//        assertEquals(validator.OKAY, result.getMessage());
-    }
-
-
-    /**
-     * Test validation of correct real-life model.
-     */
-    @Test
-    @Ignore
-    public void validateDiseaseCaseArs() throws Exception {
-//        ValidationResult result = validator.validateDiseaseCase(getArs());
-//        assertEquals(ValidationResult.PASSED, result);
-//        assertEquals(validator.OKAY, result.getMessage());
-    }
-
-
-    /**
-     * Test validation of incorrect REF allele.
-     */
-    @Test
-    @Ignore
-    public void testInvalidAllele() throws Exception {
-        DiseaseCase ARS = getArs();
-
-        ARS = ARS.toBuilder().setVariant(0, Variant.newBuilder(ARS.getVariant(0)).setRefAllele("GG").build()).build();
-//        ValidationResult result = validator.validateDiseaseCase(ARS);
-//        assertEquals(ValidationResult.FAILED, result);
-//        assertEquals("genomic reference=\"AA\" at chr7:10490-10491; entered ref=GG/alt=CC/len=2", result.getMessage());
-    }
-
-
-    /**
-     * Test correct snippet validation and error reporting.
-     */
-    @Test
-    @Ignore
-    public void testSnippetValidation() throws Exception {
-        DiseaseCase ARS = getArs();
-
-        /*String correctSnippet = "TATCTT[A/CC]AGGCTTTT";
-        ARS = ARS.toBuilder().setVariant(0, ARS.getVariant(0).toBuilder().setSnippet(correctSnippet)).build();
-        ValidationResult result = validator.validateDiseaseCase(ARS);
-        assertEquals(ValidationResult.PASSED, result);
-        assertEquals(validator.OKAY, result.getMessage());
-
-        String missingSnippet = "";
-        ARS = ARS.toBuilder().setVariant(0, ARS.getVariant(0).toBuilder().setSnippet(missingSnippet)).build();
-        result = validator.validateDiseaseCase(ARS);
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(ARS));
-        assertEquals("Snippet wasn't entered!", result.getMessage());
-
-        String missingLeftSeq = "[A/CC]AGGCTTTT";
-        ARS = ARS.toBuilder().setVariant(0, ARS.getVariant(0).toBuilder().setSnippet(missingLeftSeq)).build();
-        result = validator.validateDiseaseCase(ARS);
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(ARS));
-        assertEquals("Could not find upstream sequence in snippet: [A/CC]AGGCTTTT",
-                result.getMessage());
-
-        String missingLeftBracket = "TA/CC]AGGCTTTT";
-        ARS = ARS.toBuilder().setVariant(0, ARS.getVariant(0).toBuilder().setSnippet(missingLeftBracket)).build();
-        result = validator.validateDiseaseCase(ARS);
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(ARS));
-        assertEquals("Could not find opening bracket in snippet: TA/CC]AGGCTTTT",
-                result.getMessage());
-
-        String missingRightBracket = "TATCTT[A/CCAGGCTTTT";
-        ARS = ARS.toBuilder().setVariant(0, ARS.getVariant(0).toBuilder().setSnippet(missingRightBracket)).build();
-        result = validator.validateDiseaseCase(ARS);
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(ARS));
-        assertEquals("Could not find closing bracket in snippet: TATCTT[A/CCAGGCTTTT",
-                result.getMessage());
-
-        String missingRightSeq = "TATCTT[A/CC]";
-        ARS = ARS.toBuilder().setVariant(0, ARS.getVariant(0).toBuilder().setSnippet(missingRightSeq)).build();
-        result = validator.validateDiseaseCase(ARS);
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(ARS));
-        assertEquals("Could not find downstream sequence in snippet: TATCTT[A/CC]",
-                result.getMessage());
-
-        String missingSlash = "TATCTT[ACC]AGGCTTTT";
-        ARS = ARS.toBuilder().setVariant(0, ARS.getVariant(0).toBuilder().setSnippet(missingSlash)).build();
-        result = validator.validateDiseaseCase(ARS);
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(ARS));
-        assertEquals("Could not find proper slash (/) in snippet: TATCTT[ACC]AGGCTTTT", result.getMessage());
-
-        String missingRef = "TATCTT[/CC]AGGCTTTT";
-        ARS = ARS.toBuilder().setVariant(0, ARS.getVariant(0).toBuilder().setSnippet(missingRef)).build();
-        result = validator.validateDiseaseCase(ARS);
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(ARS));
-        assertEquals("Malformed (null) string for REF in snippet: TATCTT[/CC]AGGCTTTT",
-                result.getMessage());
-
-        String missingAlt = "TATCTT[A/]AGGCTTTT";
-        ARS = ARS.toBuilder().setVariant(0, ARS.getVariant(0).toBuilder().setSnippet(missingAlt)).build();
-        result = validator.validateDiseaseCase(ARS);
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(ARS));
-        assertEquals("Malformed (null) string for ALT in snippet: TATCTT[A/]AGGCTTTT", result.getMessage());
-
-        String incorrectRef = "TATCTT[G/CC]AGGCTTTT";
-        ARS = ARS.toBuilder().setVariant(0, ARS.getVariant(0).toBuilder().setSnippet(incorrectRef)).build();
-        result = validator.validateDiseaseCase(ARS);
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(ARS));
-        assertEquals("Reference sequence (A) not given correctly in snippet (G): TATCTT[G/CC]AGGCTTTT", result.getMessage());*/
-    }
-
-
-    /**
-     * Test correct validation of CSS snippet & position.
-     */
-    @Test
-    @Ignore
-    public void testCrypticSpliceSiteValidation() throws Exception {
-        DiseaseCase ARS = getArs(); // here, no CSS info is set by default, validation checked in other tests
-        Variant V = ARS.getVariant(0);
-        DiseaseCase ARS_CLEAN = ARS.toBuilder().clearVariant().build();
-
-/*
-        ValidationResult result = validator.validateDiseaseCase(
-                DiseaseCase.newBuilder(ARS_CLEAN).addVariant(
-                        V.toBuilder().setCrypticPosition(10499)
-                                .setCrypticSpliceSiteSnippet("GGCTTTTG|AGAAAAAAC")
-                                .setCrypticSpliceSiteType(CrypticSpliceSiteType.FIVE_PRIME)).build());
-        assertEquals(ValidationResult.PASSED, result);
-        assertEquals(validator.OKAY, result.getMessage());
-
-
-        result = validator.validateDiseaseCase(ARS_CLEAN.toBuilder()
-                .addVariant(V.toBuilder().setCrypticPosition(10500))
-                .build());
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(ARS));
-        assertEquals("Prefix of CSS snippet: GGCTTTTG, Genomic sequence: GCTTTTGA",
-                result.getMessage());
-
-        result = validator.validateDiseaseCase(ARS_CLEAN.toBuilder()
-                .addVariant(V.toBuilder().setCrypticPosition(10499).setCrypticSpliceSiteSnippet("GGCTTTTGAGAAAAAAC").build())
-                .build());
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(ARS));
-        assertEquals("Unable to find '|' symbol in CSS snippet GGCTTTTGAGAAAAAAC",
-                result.getMessage());
-
-        result = validator.validateDiseaseCase(ARS_CLEAN.toBuilder()
-                .addVariant(V.toBuilder().setCrypticPosition(10499).setCrypticSpliceSiteSnippet("GGCTTTTGA|GAAAAAAC").build())
-                .build());
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(ARS));
-        assertEquals("Prefix of CSS snippet: GGCTTTTGA, Genomic sequence: AGGCTTTTG",
-                result.getMessage());
-
-
-        result = validator.validateDiseaseCase(ARS_CLEAN.toBuilder()
-                .addVariant(V.toBuilder().setCrypticPosition(10499).setCrypticSpliceSiteSnippet("GGCTTTT|GAGAAAAAAC").build())
-                .build());
-        assertEquals(ValidationResult.FAILED, validator.validateDiseaseCase(ARS));
-        assertEquals("Prefix of CSS snippet: GGCTTTT, Genomic sequence: GCTTTTG",
-                result.getMessage());*/
-    }
-
-
-    /**
-     * Test the variants chr7:g.10490AA>CC, chr7:g.10490AA>CCG
-     *
-     * @throws Exception blah
-     */
-    @Test
-    @Ignore
-    public void testDelInsVariant() throws Exception {
-        /*DiseaseCase ARS = getArs();
-        Variant V = ARS.getVariant(0);
-        assertEquals(ValidationResult.PASSED, validator.variantValid(V.toBuilder()
-                .setRefAllele("AA")
-                .setAltAllele("CC")
-                .setSnippet("TTCTATCTT[AA/CC]GGCTTT")
-                .build())); // chr7:g.10490AA>CC
-
-//        variant.setReferenceAllele("AA");
-//        variant.setAlternateAllele("CCG");
-//        variant.setSnippet("TTCTATCTT[AA/CCG]GGCTTT");
-        assertEquals(ValidationResult.PASSED, validator.variantValid(V.toBuilder()
-                .setRefAllele("AA")
-                .setAltAllele("CCG")
-                .setSnippet("TTCTATCTT[AA/CCG]GGCTTT")
-                .build())); // chr7:g.10490AA>CCG
-
-//        variant.setReferenceAllele("AA");
-//        variant.setAlternateAllele("C");
-//        variant.setSnippet("TTCTATCTT[AA/C]GGCTTT");
-        assertEquals(ValidationResult.PASSED, validator.variantValid(V.toBuilder()
-                .setRefAllele("AA")
-                .setAltAllele("C")
-                .setSnippet("TTCTATCTT[AA/C]GGCTTT")
-                .build())); // chr7:g.10490AA>C
-                */
-    }
 }

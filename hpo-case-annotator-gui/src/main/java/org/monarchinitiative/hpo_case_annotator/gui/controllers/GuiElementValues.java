@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * Structure of this POJO matches structure of the YAML file <code>gui-element-values.yml</code> (formerly
  * <code>choice-basket.yml</code>) located at classpath.
  * <p>
- * The file contains options that are loaded into GUI elements (mainly {@link javafx.scene.control.ComboBox}es) that need
+ * The file contains options that are loaded into GUI elements (mainly ComboBoxes) that need
  * to offer to the user a set of pre-defined values.
  */
 public class GuiElementValues {

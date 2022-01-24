@@ -1,0 +1,17 @@
+HBox {
+    -fx-background-color: #ded7d7;
+    -fx-padding: 5px;
+}
+
+Button {
+    -fx-min-width: 80px;
+    -fx-min-height: 30px;
+}
+
+#summary-label {
+    -fx-pref-width: 50px;
+}
+
+#message-label {
+    -fx-pref-width: 300px;
+}

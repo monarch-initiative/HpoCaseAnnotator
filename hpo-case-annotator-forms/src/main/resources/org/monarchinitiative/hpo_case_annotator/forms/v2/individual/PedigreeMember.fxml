@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox stylesheets="@pedigree-member-and-individual.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController">
+    <children>
+      <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
+         <content>
+            <FlowPane columnHalignment="CENTER" prefWrapLength="520.0">
+               <children>
+                    <HBox>
+                        <children>
+                        <VBox HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="h2" text="Individual" />
+                              <HBox>
+                                 <children>
+                                        <VBox id="id-column" styleClass="column">
+                                            <children>
+                                                <Label styleClass="h3" text="Identifiers" />
+                                                <HBox alignment="CENTER_LEFT">
+                                                    <children>
+                                                        <Label text="ID" />
+                                                        <TextField fx:id="individualIdTextField" promptText="I:1" HBox.hgrow="SOMETIMES" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT">
+                                                    <children>
+                                                        <Label text="Parental ID" />
+                                                        <TextField fx:id="paternalIdTextField" promptText="I:2" HBox.hgrow="SOMETIMES" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT">
+                                                    <children>
+                                                        <Label text="Maternal ID" />
+                                                        <TextField fx:id="maternalIdTextField" promptText="I:3" HBox.hgrow="SOMETIMES" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT">
+                                                    <children>
+                                                        <CheckBox fx:id="probandCheckBox" mnemonicParsing="false" text="Proband" />
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                            <Separator orientation="VERTICAL" />
+                                        <VBox id="age-column" styleClass="column">
+                                            <children>
+                                                <Label styleClass="h3" text="Age" />
+                                                <fx:include fx:id="age" source="../AgeVertical.fxml" />
+                                            </children>
+                                        </VBox>
+                                    <Separator orientation="VERTICAL" />
+                                        <VBox id="sex-column" styleClass="column">
+                                            <children>
+                                                <Label styleClass="h3" text="Sex" />
+                                                <HBox>
+                                                    <children>
+                                                        <VBox>
+                                                            <children>
+                                                                <RadioButton fx:id="unknownSexRadioButton" mnemonicParsing="false" text="Unknown" />
+                                                                <RadioButton fx:id="maleSexRadioButton" mnemonicParsing="false" text="Male" />
+                                                                <RadioButton fx:id="femaleSexRadioButton" mnemonicParsing="false" text="Female" />
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        </children>
+                     <styleClass>
+                        <String fx:value="row" />
+                        <String fx:value="sub-section" />
+                     </styleClass>
+                    </HBox>
+            
+                    <HBox>
+                        <children>
+                            <VBox HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label styleClass="h2" text="Phenotype features" />
+                                    <VBox id="phenotype-description-box" alignment="CENTER_LEFT">
+                                        <children>
+                                            <Label fx:id="observedFeatureCountLabel" VBox.vgrow="NEVER" />
+                                            <Label fx:id="notObservedFeatureCountLabel" VBox.vgrow="NEVER" />
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </VBox>
+                        </children>
+                     <styleClass>
+                        <String fx:value="row" />
+                        <String fx:value="sub-section" />
+                     </styleClass>
+                    </HBox>
+                    <HBox>
+                        <children>
+                            <VBox HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label styleClass="h2" text="Diseases" VBox.vgrow="NEVER" />
+                                    <fx:include fx:id="diseaseTable" source="../DiseaseTable.fxml" />
+                                </children>
+                            </VBox>
+                        </children>
+                     <styleClass>
+                        <String fx:value="row" />
+                        <String fx:value="sub-section" />
+                     </styleClass>
+                    </HBox>
+                    <HBox alignment="TOP_CENTER">
+                        <children>
+                            <VBox HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label styleClass="h2" text="Variant genotypes" VBox.vgrow="NEVER" />
+                                    <fx:include fx:id="individualVariantSummary" source="../IndividualVariantSummary.fxml" HBox.hgrow="ALWAYS" />
+                                </children>
+                            </VBox>
+                        </children>
+                     <styleClass>
+                        <String fx:value="sub-section" />
+                        <String fx:value="row" />
+                     </styleClass>
+                    </HBox>
+               </children>
+            </FlowPane>
+         </content>
+      </ScrollPane>
+    </children>
+</VBox>

@@ -8,6 +8,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
  * This class contains methods which can be used to retrieve {@link Publication} data which corresponds to
  * provided PMID. Use {@link #getPublication(String)} method to get the {@link Publication}.
  */
-public class PubMedSummaryRetriever {
+public class PubMedSummaryRetriever<T> {
 
     /**
      * This is a template for URL targeted for PubMed's REST API.
@@ -32,23 +33,17 @@ public class PubMedSummaryRetriever {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PubMedSummaryRetriever.class);
 
-    private static final PubMedSummaryRetriever INSTANCE = builder().build();
-
     private final Function<String, InputStream> connectionFactory;
 
-    private final PublicationDataParser parser;
+    private final PublicationDataParser<T> parser;
 
-    private PubMedSummaryRetriever(Builder builder) {
+    private PubMedSummaryRetriever(Builder<T> builder) {
         this.connectionFactory = Objects.requireNonNull(builder.connectionFactory);
         this.parser = Objects.requireNonNull(builder.publicationDataParser);
     }
 
-    public static PubMedSummaryRetriever defaultInstance() {
-        return INSTANCE;
-    }
-
-    public static Builder builder() {
-        return new Builder();
+    public static <T> Builder<T> builder() {
+        return new Builder<>();
     }
 
 
@@ -82,9 +77,9 @@ public class PubMedSummaryRetriever {
         StringBuilder result = new StringBuilder();
 
         for (Map.Entry<String, String> entry : params.entrySet()) {
-            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+            result.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8));
             result.append("=");
-            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+            result.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8));
             result.append("&");
         }
 
@@ -95,7 +90,7 @@ public class PubMedSummaryRetriever {
     }
 
 
-    public Publication getPublication(String pmid) throws IOException, PubMedParseException {
+    public T getPublication(String pmid) throws IOException, PubMedParseException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(connectionFactory.apply(pmid)))) {
             String payload = reader.lines().collect(Collectors.joining("\n"));
             if (payload.contains(NON_EXISTING_PMID)) {
@@ -105,27 +100,26 @@ public class PubMedSummaryRetriever {
         }
     }
 
-    public static class Builder {
+    public static class Builder<T> {
 
         private Function<String, InputStream> connectionFactory = getConnectionFactory();
-
-        private PublicationDataParser publicationDataParser = PublicationDataParser.forFormat(PublicationDataFormat.EUTILS);
+        private PublicationDataParser<T> publicationDataParser;
 
         private Builder() {
         }
 
-        public Builder connectionFactory(Function<String, InputStream> connectionFactory) {
+        public Builder<T> connectionFactory(Function<String, InputStream> connectionFactory) {
             this.connectionFactory = connectionFactory;
             return this;
         }
 
-        public Builder publicationDataParser(PublicationDataParser parser) {
+        public Builder<T> publicationDataParser(PublicationDataParser<T> parser) {
             this.publicationDataParser = parser;
             return this;
         }
 
-        public PubMedSummaryRetriever build() {
-            return new PubMedSummaryRetriever(this);
+        public PubMedSummaryRetriever<T> build() {
+            return new PubMedSummaryRetriever<>(this);
         }
     }
 }

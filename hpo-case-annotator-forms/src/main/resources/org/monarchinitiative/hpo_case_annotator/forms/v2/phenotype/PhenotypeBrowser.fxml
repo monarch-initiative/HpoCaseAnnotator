@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeBrowserController">
+    <stylesheets>
+        <URL value="@../base.css"/>
+        <URL value="@phenotype-browser.css"/>
+    </stylesheets>
+    <children>
+        <HBox styleClass="row" VBox.vgrow="ALWAYS">
+            <children>
+                <VBox styleClass="column" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="h2" text="HPO hierarchy" VBox.vgrow="NEVER"/>
+                        <fx:include fx:id="ontologyTreeBrowser" source="../ontotree/OntologyTreeBrowser.fxml"
+                                    VBox.vgrow="ALWAYS"/>
+                    </children>
+                </VBox>
+                <VBox HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="h2" text="Individual"/>
+                        <fx:include source="../IndividualDetail.fxml" fx:id="individualDetail"/>
+                        <VBox styleClass="column" VBox.vgrow="ALWAYS">
+                            <children>
+                                <VBox VBox.vgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="h2" text="Phenotype features" VBox.vgrow="NEVER"/>
+                                        <fx:include fx:id="phenotypicFeaturesTable"
+                                                    source="PhenotypicFeaturesTable.fxml" VBox.vgrow="ALWAYS"/>
+                                    </children>
+                                </VBox>
+                                <HBox alignment="CENTER_RIGHT" styleClass="edit-row">
+                                    <children>
+                                        <Button fx:id="addPhenotypeFeatureButton" mnemonicParsing="false"
+                                                onAction="#addPhenotypeFeatureButtonAction" styleClass="add-item"
+                                                text="+"/>
+                                        <Button fx:id="removePhenotypeFeatureButton" disable="true"
+                                                mnemonicParsing="false" onAction="#removePhenotypeFeatureButtonAction"
+                                                styleClass="remove-item" text="-"/>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+                <VBox styleClass="column" HBox.hgrow="SOMETIMES">
+                    <children>
+                        <Label styleClass="h2" text="Phenotype feature"/>
+                        <fx:include fx:id="phenotypicFeature" source="PhenotypicFeature.fxml"/>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <HBox styleClass="edit-row">
+            <children>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Button defaultButton="true" mnemonicParsing="false" onAction="#okButtonAction" styleClass="ok-button" text="OK"/>
+            </children>
+        </HBox>
+    </children>
+</VBox>

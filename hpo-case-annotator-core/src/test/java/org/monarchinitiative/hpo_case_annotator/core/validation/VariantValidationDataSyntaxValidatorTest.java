@@ -1,13 +1,13 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.hpo_case_annotator.model.proto.VariantValidation;
 
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class VariantValidationDataSyntaxValidatorTest {
 

@@ -6,12 +6,10 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.monarchinitiative.hpo_case_annotator.model.xml_model.TargetGene;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Gene;
 import org.monarchinitiative.phenol.base.PhenolException;
 import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,7 +58,7 @@ public final class OptionalResources {
 
     private final ObjectProperty<Ontology> ontology = new SimpleObjectProperty<>(this, "ontology");
 
-    private final ObjectProperty<Map<Integer, TargetGene>> entrezId2gene = new SimpleObjectProperty<>(this, "entrezId2gene");
+    private final ObjectProperty<Map<Integer, Gene>> entrezId2gene = new SimpleObjectProperty<>(this, "entrezId2gene");
 
     private final ObjectProperty<Map<String, String>> entrezId2symbol = new SimpleObjectProperty<>(this, "entrezId2symbol");
 
@@ -184,17 +182,17 @@ public final class OptionalResources {
     }
 
 
-    public Map<Integer, TargetGene> getEntrezId2gene() {
+    public Map<Integer, Gene> getEntrezId2gene() {
         return entrezId2gene.get();
     }
 
 
-    public void setEntrezId2gene(Map<Integer, TargetGene> entrezId2gene) {
+    public void setEntrezId2gene(Map<Integer, Gene> entrezId2gene) {
         this.entrezId2gene.set(entrezId2gene);
     }
 
 
-    public ObjectProperty<Map<Integer, TargetGene>> entrezId2geneProperty() {
+    public ObjectProperty<Map<Integer, Gene>> entrezId2geneProperty() {
         return entrezId2gene;
     }
 

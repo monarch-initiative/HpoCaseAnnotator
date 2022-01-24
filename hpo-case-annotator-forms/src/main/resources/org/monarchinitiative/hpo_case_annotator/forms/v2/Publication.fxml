@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox styleClass="section" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.PublicationController">
+   <stylesheets>
+      <URL value="@base.css" />
+      <URL value="@publication.css" />
+   </stylesheets>
+   <children>
+      <Label styleClass="h1" text="Publication" />
+      <Label fx:id="summaryLabel" layoutX="26.0" layoutY="26.0" styleClass="h4" VBox.vgrow="ALWAYS" />
+      <Pane VBox.vgrow="SOMETIMES" />
+      <VBox styleClass="column" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox styleClass="column">
+               <children>
+                  <Label styleClass="h2" text="Title" />
+                  <TextField fx:id="titleTextField" />
+               </children>
+            </VBox>
+            <VBox layoutX="10.0" layoutY="10.0" styleClass="column">
+               <children>
+                  <Label styleClass="h2" text="Authors" />
+                  <TextField fx:id="authorsTextField" />
+               </children>
+            </VBox>
+            <VBox layoutX="10.0" layoutY="65.0" styleClass="column">
+               <children>
+                  <Label styleClass="h2" text="Journal" />
+                  <TextField fx:id="journalTextField" />
+               </children>
+            </VBox>
+            <VBox layoutX="10.0" layoutY="120.0" styleClass="column">
+               <children>
+                  <Label styleClass="h2" text="Year" />
+                  <TextField fx:id="yearTextField" />
+               </children>
+            </VBox>
+            <VBox layoutX="10.0" layoutY="175.0" styleClass="column">
+               <children>
+                  <Label styleClass="h2" text="Volume" />
+                  <TextField fx:id="volumeTextField" />
+               </children>
+            </VBox>
+            <VBox layoutX="10.0" layoutY="262.0" styleClass="column">
+               <children>
+                  <Label styleClass="h2" text="Pages" />
+                  <TextField fx:id="pagesTextField" />
+               </children>
+            </VBox>
+            <VBox layoutX="10.0" layoutY="325.0" styleClass="column">
+               <children>
+                  <Label styleClass="h2" text="Pmid" />
+                  <TextField fx:id="pmidTextField" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</VBox>
