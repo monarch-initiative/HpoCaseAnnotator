@@ -111,15 +111,15 @@ class GenomicAssemblyServiceDefault implements GenomicAssemblyService {
     }
 
     @Override
-    public Optional<StrandedSequence> referenceSequence(GenomicRegion region) {
-        Contig contig = genomicAssembly.contigByName(region.contigName());
+    public Optional<StrandedSequence> referenceSequence(GenomicRegion query) {
+        Contig contig = genomicAssembly.contigByName(query.contigName());
         if (contig.equals(Contig.unknown())) {
-            LOGGER.warn("Unknown chromosome `{}`", region.contigName());
+            LOGGER.warn("Unknown chromosome `{}`", query.contigName());
             return Optional.empty();
         }
 
         // the name we use for contig in FASTA file
-        GenomicRegion onPositive = region.toPositiveStrand().toOneBased();
+        GenomicRegion onPositive = query.toPositiveStrand().toOneBased();
         String contigName = usesPrefix ? contig.ucscName() : contig.name();
         String seq;
         try {
@@ -131,7 +131,7 @@ class GenomicAssemblyServiceDefault implements GenomicAssemblyService {
             LOGGER.warn("Error getting sequence for query `{}:{}-{}`: {}", onPositive.contigName(), onPositive.start(), onPositive.end(), e.getMessage());
             return Optional.empty();
         }
-        return Optional.of(StrandedSequence.of(region, region.strand().isPositive() ? seq : Seq.reverseComplement(seq)));
+        return Optional.of(StrandedSequence.of(query, query.strand().isPositive() ? seq : Seq.reverseComplement(seq)));
     }
 
     @Override

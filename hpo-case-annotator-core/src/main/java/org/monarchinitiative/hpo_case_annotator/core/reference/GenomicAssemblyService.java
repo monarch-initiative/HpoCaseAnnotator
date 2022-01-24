@@ -15,9 +15,10 @@ public interface GenomicAssemblyService extends AutoCloseable {
     GenomicAssembly genomicAssembly();
 
     /**
-     * Get reference sequence for given <code>region</code>
-     * @param region query
-     * @return reference sequence
+     * Get reference sequence for given <code>query</code>
+     *
+     * @param query region
+     * @return optional with reference sequence or an empty optional if <code>query</code> is not present in the reference genome
      */
-    Optional<StrandedSequence> referenceSequence(GenomicRegion region);
+    Optional<StrandedSequence> referenceSequence(GenomicRegion query);
 }
