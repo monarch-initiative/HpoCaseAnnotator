@@ -145,7 +145,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
             }
 
             @Override
-            public Optional<StrandedSequence> referenceSequence(GenomicRegion region) {
+            public Optional<StrandedSequence> referenceSequence(GenomicRegion query) {
                 return Optional.empty();
             }
 
@@ -161,7 +161,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
             }
 
             @Override
-            public Optional<StrandedSequence> referenceSequence(GenomicRegion region) {
+            public Optional<StrandedSequence> referenceSequence(GenomicRegion query) {
                 return Optional.empty();
             }
 

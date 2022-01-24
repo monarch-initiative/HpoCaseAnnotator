@@ -15,7 +15,7 @@ public record TestGenomicAssemblyService(GenomicAssembly genomicAssembly)
     private static final Logger LOGGER = LoggerFactory.getLogger(TestGenomicAssemblyService.class);
 
     @Override
-    public Optional<StrandedSequence> referenceSequence(GenomicRegion region) {
+    public Optional<StrandedSequence> referenceSequence(GenomicRegion query) {
         return Optional.empty();
     }
 
