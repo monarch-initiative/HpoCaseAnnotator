@@ -25,6 +25,10 @@
 <!--                <configuration>-->
 <!--                    <archive>-->
 <!--                        <manifest>-->
+<!--                            &lt;!&ndash; Remove the following for modular builds &ndash;&gt;-->
+<!--                            <addClasspath>true</addClasspath>-->
+<!--                            <classpathPrefix>lib/</classpathPrefix>-->
+<!--                            &lt;!&ndash; End remove &ndash;&gt;-->
 <!--                            <mainClass>org.monarchinitiative.hpo_case_annotator.app.App</mainClass>-->
 <!--                        </manifest>-->
 <!--                    </archive>-->
