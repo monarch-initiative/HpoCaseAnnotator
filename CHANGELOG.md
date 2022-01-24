@@ -1,7 +1,14 @@
 # HRMD gui
 
-### latest
+### v2.0.0
 
+Major:
+- implement `v2` model that is better aligned with phenopackets
+- redesign UI to support curation of cohorts and families 
+
+Minor:
+- add Liftover widget
+- generate snippet for long variants
 - use `phenopacket-schema v1.0.0` when exporting phenopackets
 
 ### v1.0.14
