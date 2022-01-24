@@ -45,12 +45,14 @@
                                                 </HBox>
                                             </children>
                                         </VBox>
+                                            <Separator orientation="VERTICAL" />
                                         <VBox id="age-column" styleClass="column">
                                             <children>
                                                 <Label styleClass="h3" text="Age" />
                                                 <fx:include fx:id="age" source="../AgeVertical.fxml" />
                                             </children>
                                         </VBox>
+                                    <Separator orientation="VERTICAL" />
                                         <VBox id="sex-column" styleClass="column">
                                             <children>
                                                 <Label styleClass="h3" text="Sex" />
