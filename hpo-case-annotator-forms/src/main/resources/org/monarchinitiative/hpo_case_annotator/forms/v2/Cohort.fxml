@@ -12,7 +12,7 @@
                    <content>
                        <VBox>
                            <children>
-                               <Label styleClass="h2" text="Pedigree members" VBox.vgrow="NEVER" />
+                               <Label styleClass="h2" text="Cohort members" VBox.vgrow="NEVER" />
                                <TableView fx:id="membersTableView" onKeyPressed="#membersTableViewKeyPressed" onMouseClicked="#membersTableViewOnMouseClicked" VBox.vgrow="ALWAYS">
                                    <columns>
                                        <TableColumn fx:id="idTableColumn" editable="false" prefWidth="150.0" text="ID" />

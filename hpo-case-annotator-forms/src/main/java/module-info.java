@@ -6,7 +6,6 @@ module org.monarchinitiative.hca.forms {
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.fxml;
-    requires javafx.web;
     requires org.controlsfx.controls;
 
     requires org.slf4j;
