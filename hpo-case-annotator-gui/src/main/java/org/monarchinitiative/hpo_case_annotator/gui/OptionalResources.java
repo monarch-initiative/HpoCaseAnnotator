@@ -23,8 +23,6 @@ import java.util.stream.Stream;
  */
 public final class OptionalResources {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OptionalResources.class);
-
     /**
      * Use this name to save HP.obo file on the local filesystem.
      */
