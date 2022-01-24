@@ -1,6 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.core.io;
 
-import org.monarchinitiative.hpo_case_annotator.model.xml_model.TargetGene;
+import org.monarchinitiative.hpo_case_annotator.model.proto.Gene;
 
 import java.io.*;
 import java.util.HashMap;
@@ -11,7 +11,7 @@ public class EntrezParser {
 
     private final File entrezFile;
 
-    private final Map<Integer, TargetGene> entrezId2gene;
+    private final Map<Integer, Gene> entrezId2gene;
 
     private final Map<String, String> entrezId2symbol, symbol2entrezId;
 
@@ -30,7 +30,7 @@ public class EntrezParser {
     }
 
 
-    public Map<Integer, TargetGene> getEntrezMap() {
+    public Map<Integer, Gene> getEntrezMap() {
         return this.entrezId2gene;
     }
 
@@ -74,21 +74,21 @@ public class EntrezParser {
                 if (!line.startsWith("9606")) {
                     break; // We are done with Homo sapiens sapiens, just the Neanderthals etc come after, skip them
                 }
-                String fields[] = line.split("\t");
+                String[] fields = line.split("\t");
                 String entrezidString = fields[1];
                 String symbol = fields[2];
                 String chromosome = fields[6];
 
                 try {
-                    Integer entrez = Integer.parseInt(entrezidString);
-                    TargetGene eg = new TargetGene();
-                    eg.setEntrezID(entrezidString);
-                    eg.setGeneName(symbol);
-                    eg.setChromosome(chromosome);
+                    int entrez = Integer.parseInt(entrezidString);
+                    Gene gene = Gene.newBuilder()
+                            .setEntrezId(entrez)
+                            .setSymbol(symbol)
+                            .build();
 
                     this.entrezId2symbol.put(entrezidString, symbol);
                     this.symbol2entrezId.put(symbol, entrezidString);
-                    this.entrezId2gene.put(entrez, eg);
+                    this.entrezId2gene.put(entrez, gene);
                 } catch (NumberFormatException nfe) {
                     System.err.println(nfe.getMessage());
                 }

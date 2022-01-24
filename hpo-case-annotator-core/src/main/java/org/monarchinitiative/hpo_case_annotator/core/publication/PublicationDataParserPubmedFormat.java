@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  * So, this parser works, but it is probably not going to be used in future. Please consider removing after a couple of
  * development iterations.
  */
-class PublicationDataParserPubmedFormat implements PublicationDataParser {
+class PublicationDataParserPubmedFormat implements PublicationDataParser<Publication> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PublicationDataParserPubmedFormat.class);
 

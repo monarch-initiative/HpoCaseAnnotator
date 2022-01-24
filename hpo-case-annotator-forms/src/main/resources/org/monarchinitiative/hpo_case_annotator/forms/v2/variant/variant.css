@@ -1,0 +1,42 @@
+RadioButton {
+    -fx-min-height: 30px;
+    -fx-min-width: 80px;
+}
+
+SearchableComboBox {
+    -fx-min-height: 30px;
+    -fx-min-width: 80px;
+    -fx-max-width: 150px;
+}
+
+TextField {
+    -fx-min-height: 30px;
+    -fx-min-width: 80px;
+}
+
+Separator {
+    -fx-padding: 0px 5px 0px 5px;
+}
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* The headings are the same as in family-study.css */
+
+.column {
+    -fx-padding: 0px 10px 0px 0px;
+}
+
+.row {
+    -fx-padding: 10px 0px 5px 0px;
+}
+
+.allele-row Label {
+    -fx-max-width: 120px;
+}
+
+.label {
+    -fx-min-width: 120px;
+}
+
+.breakend-box {
+    -fx-min-width: 350px;
+}

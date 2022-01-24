@@ -5,6 +5,8 @@ import javafx.scene.control.Control;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Tooltip;
 
+import java.util.regex.Pattern;
+
 /**
  * Abstract class for grouping GUI-related methods, such as tooltips, text formatters..
  *
@@ -41,15 +43,15 @@ public abstract class AbstractDataController<T> implements DataController<T> {
     }
 
     /**
-     * @param control   {@link Control} wrapped with the text formatter
-     * @param yesRegexp String with regular expression. The <code>control</code> will have green border if the content
-     *                  matches the <code>yesRegexp</code> and red border if it does not
-     * @param <K>       class of the formatter being returned
+     * @param control {@link Control} wrapped with the text formatter
+     * @param pattern String with regular expression. The <code>control</code> will have green border if the content
+     *                matches the <code>pattern</code> and red border if it does not
+     * @param <K>     class of the formatter being returned
      * @return {@link TextFormatter} for the <code>control</code>'s content
      */
-    protected static <K> TextFormatter<K> makeTextFormatter(Control control, String yesRegexp) {
+    protected static <K> TextFormatter<K> makeTextFormatter(Control control, Pattern pattern) {
         return new TextFormatter<>(change -> {
-            if (change.getControlNewText().matches(yesRegexp)) {
+            if (pattern.matcher(change.getControlNewText()).matches()) {
                 control.setStyle(VALID_STYLE);
             } else {
                 control.setStyle(INVALID_STYLE);
@@ -60,17 +62,17 @@ public abstract class AbstractDataController<T> implements DataController<T> {
 
     /**
      * @param control   {@link Control} wrapped with the text formatter
-     * @param yesRegexp String with regular expression. The <code>control</code> will have green border if the content
-     *                  matches the <code>yesRegexp</code>, red border if it does not, and <em>neutral</em> border, if
+     * @param pattern String with regular expression. The <code>control</code> will have green border if the content
+     *                  matches the <code>pattern</code>, red border if it does not, and <em>neutral</em> border, if
      *                  the content is empty
      * @param <K>       class of the formatter being returned
      * @return {@link TextFormatter} for the <code>control</code>'s content
      */
-    protected static <K> TextFormatter<K> makeToleratingTextFormatter(Control control, String yesRegexp) {
+    protected static <K> TextFormatter<K> makeToleratingTextFormatter(Control control, Pattern pattern) {
         return new TextFormatter<>(change -> {
             if (change.getControlNewText().isEmpty()) {
                 control.setStyle(EMPTY_STYLE);
-            } else if (change.getControlNewText().matches(yesRegexp)) {
+            } else if (pattern.matcher(change.getControlNewText()).matches()) {
                 control.setStyle(VALID_STYLE);
             } else {
                 control.setStyle(INVALID_STYLE);

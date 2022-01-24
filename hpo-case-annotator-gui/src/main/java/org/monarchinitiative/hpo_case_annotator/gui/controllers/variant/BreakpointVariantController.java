@@ -15,8 +15,8 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.monarchinitiative.hpo_case_annotator.export.BreakendAltComposer.composeBreakendAltAllele;
 import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.POSITIVE_INTEGER_REGEXP;
-import static org.monarchinitiative.hpo_case_annotator.model.utils.BreakendAltComposer.composeBreakendAltAllele;
 
 /**
  *
@@ -67,8 +67,8 @@ public class BreakpointVariantController extends AbstractVariantController {
 
 
     @Inject
-    public BreakpointVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
-        super(elementValues, hostServices);
+    public BreakpointVariantController(HostServicesWrapper hostServices, GuiElementValues elementValues) {
+        super(hostServices, elementValues);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class BreakpointVariantController extends AbstractVariantController {
         ciBeginRightTextField.setText(String.valueOf(vp.getCiEndOne()));
         ciEndRightTextField.setText(String.valueOf(vp.getCiEndTwo()));
 
-        refTextField.setText(vp.getRefAllele());
+        refTextField.setText(vp.getRefAllele().isEmpty() ? "N" : vp.getRefAllele());
         insertedSequenceTextField.setText(vp.getAltAllele());
 
         preciseCheckBox.setSelected(!variant.getImprecise());
@@ -168,8 +168,8 @@ public class BreakpointVariantController extends AbstractVariantController {
     @Override
     public Variant getData() {
         String rightContig = rightChrComboBox.getValue() == null ? "NA" : rightChrComboBox.getValue();
-        int leftPos = parseIntOrGetDefaultValue(leftPosTextField::getText, 0);
-        int rightPos = parseIntOrGetDefaultValue(rightPosTextField::getText, 0);
+        int leftPos = parseIntOrGetDefaultValue(leftPosTextField::getText,-1);
+        int rightPos = parseIntOrGetDefaultValue(rightPosTextField::getText, -1);
         return Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()
                         .setGenomeAssembly(assemblyComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : assemblyComboBox.getValue())

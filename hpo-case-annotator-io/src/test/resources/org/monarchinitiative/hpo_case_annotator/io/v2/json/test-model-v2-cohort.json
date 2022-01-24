@@ -1,0 +1,275 @@
+{
+  "id" : "cohortStudyTest",
+  "studyMetadata" : {
+    "freeText" : "Authors are describing a mutations in CFTR exon 13 that appears to contain two 3'CSS utilization of which is increased when there is a mutation in ESE element present in exon 13 (Figure 2.).\n\nThe 3'CSS whose coordinates are recorded in variants is the dominant one (Figure 2. D, D248). However, there exists also another (D195) which has coordinates: 117232182, 3 splice site, CAATTTAG|TGCAGAAA .\n",
+    "createdBy" : {
+      "curatorId" : "HPO:ddanis",
+      "softwareVersion" : "2.0.0",
+      "timestamp" : "2021-01-01T12:00:00Z"
+    },
+    "modifiedBy" : [ {
+      "curatorId" : "HPO:ddanis",
+      "softwareVersion" : "2.0.0",
+      "timestamp" : "2021-01-02T12:00:00Z"
+    }, {
+      "curatorId" : "HPO:ddanis",
+      "softwareVersion" : "2.0.0",
+      "timestamp" : "2021-01-02T14:00:00Z"
+    } ]
+  },
+  "publication" : {
+    "authors" : [ "Beygó J", "Buiting K", "Seland S", "Lüdecke HJ", "Hehr U", "Lich C", "Prager B", "Lohmann DR", "Wieczorek D" ],
+    "title" : "First Report of a Single Exon Deletion in TCOF1 Causing Treacher Collins Syndrome",
+    "journal" : "Mol Syndromol",
+    "year" : 2012,
+    "volume" : "2(2)",
+    "pages" : "53-59",
+    "pmid" : "22712005"
+  },
+  "variants" : [ {
+    "variantType" : "SNV",
+    "genomicAssemblyAccession" : "GRCh37.p13",
+    "contigGenBankAccession" : "CM000671.1",
+    "strand" : "+",
+    "start" : 123737056,
+    "end" : 123737057,
+    "changeLength" : 0,
+    "id" : "mendelian",
+    "md5Hex" : "c9dda67d707ab3c69142d891d6a0a4e1",
+    "ref" : "C",
+    "alt" : "G",
+    "variantValidation" : {
+      "validationContext" : "MENDELIAN",
+      "validationMetadata" : {
+        "variantMetadataContext" : "MENDELIAN",
+        "snippet" : "TTCATTTAC[C/G]TCTACTGG",
+        "variantClass" : "promoter",
+        "pathomechanism" : "promoter|reduced-transcription",
+        "cosegregation" : false,
+        "comparability" : false,
+        "regulator" : "TEST_REGULATOR",
+        "reporterRegulation" : "no",
+        "reporterResidualActivity" : "RES_ACT",
+        "emsaValidationPerformed" : true,
+        "emsaTfSymbol" : "TF_SYMBOL_TEST",
+        "emsaGeneId" : "TF_GENEID_TEST",
+        "otherChoices" : "down",
+        "otherEffect" : "in vitro mRNA expression assay"
+      }
+    }
+  }, {
+    "variantType" : "SNV",
+    "genomicAssemblyAccession" : "GRCh37.p13",
+    "contigGenBankAccession" : "CM000671.1",
+    "strand" : "+",
+    "start" : 123737056,
+    "end" : 123737057,
+    "changeLength" : 0,
+    "id" : "somatic",
+    "md5Hex" : "f2e88a99810ce259880f744fbbddc0f3",
+    "ref" : "C",
+    "alt" : "A",
+    "variantValidation" : {
+      "validationContext" : "SOMATIC",
+      "validationMetadata" : {
+        "variantMetadataContext" : "SOMATIC",
+        "snippet" : "TTCATTTAC[C/A]TCTACTGG",
+        "variantClass" : "5UTR",
+        "pathomechanism" : "5UTR|transcription",
+        "cosegregation" : false,
+        "comparability" : false,
+        "regulator" : "SOMATIC_REGULATOR",
+        "reporterRegulation" : "up",
+        "reporterResidualActivity" : "SOMATIC_RP_PERC",
+        "emsaGeneId" : "TF_GENE_SYMBOL_TEST",
+        "otherChoices" : "up",
+        "nPatients" : 78,
+        "mPatients" : 100
+      }
+    }
+  }, {
+    "variantType" : "SNV",
+    "genomicAssemblyAccession" : "GRCh37.p13",
+    "contigGenBankAccession" : "CM000671.1",
+    "strand" : "+",
+    "start" : 123737056,
+    "end" : 123737057,
+    "changeLength" : 0,
+    "id" : "splicing",
+    "md5Hex" : "bfed08fc27778a1587dcaebc2b455718",
+    "ref" : "C",
+    "alt" : "T",
+    "variantValidation" : {
+      "validationContext" : "SPLICING",
+      "validationMetadata" : {
+        "variantMetadataContext" : "SPLICING",
+        "snippet" : "TTCATTTAC[C/T]TCTACTGG",
+        "variantClass" : "splicing",
+        "pathomechanism" : "splicing|3css|activated",
+        "cosegregation" : true,
+        "comparability" : false,
+        "crypticPosition" : 123737090,
+        "crypticSpliceSiteType" : "FIVE_PRIME",
+        "crypticSpliceSiteSnippet" : "ATATG|GCGAGTTCTT",
+        "consequence" : "Cryptic splicing",
+        "minigeneValidation" : true,
+        "siteDirectedMutagenesisValidation" : false,
+        "rtPcrValidation" : true,
+        "srProteinOverexpressionValidation" : false,
+        "srProteinKnockdownValidation" : true,
+        "cDnaSequencingValidation" : false,
+        "pcrValidation" : true,
+        "mutOfWtSpliceSiteValidation" : false,
+        "otherValidation" : true
+      }
+    }
+  }, {
+    "variantType" : "DEL",
+    "genomicAssemblyAccession" : "GRCh37.p13",
+    "contigGenBankAccession" : "CM000667.1",
+    "strand" : "+",
+    "start" : 149741530,
+    "startCi" : {
+      "lowerBound" : -5,
+      "upperBound" : 10
+    },
+    "end" : 149744897,
+    "endCi" : {
+      "lowerBound" : -10,
+      "upperBound" : 20
+    },
+    "changeLength" : -3367,
+    "id" : "symbolic_DEL",
+    "md5Hex" : "94f38002744f2dfdbad129153880603f",
+    "ref" : "N",
+    "alt" : "<DEL>",
+    "variantValidation" : {
+      "validationContext" : "STRUCTURAL",
+      "validationMetadata" : {
+        "variantMetadataContext" : "STRUCTURAL",
+        "snippet" : "",
+        "variantClass" : "structural",
+        "pathomechanism" : "intronic deletion",
+        "cosegregation" : true,
+        "comparability" : false
+      }
+    }
+  }, {
+    "variantType" : "BND",
+    "genomicAssemblyAccession" : "GRCh37.p13",
+    "leftContigGenBankAccession" : "CM000671.1",
+    "leftStrand" : "+",
+    "leftStart" : 133359000,
+    "leftStartCi" : {
+      "lowerBound" : -5,
+      "upperBound" : 15
+    },
+    "leftEnd" : 133359000,
+    "leftId" : "left",
+    "rightContigGenBankAccession" : "CM000675.1",
+    "rightStrand" : "+",
+    "rightStart" : 32300000,
+    "rightEnd" : 32300000,
+    "rightId" : "right",
+    "eventId" : "symbolic_breakend",
+    "md5Hex" : "ab671d73cb3a1ba57d3a31889c4d29cc",
+    "ref" : "G",
+    "alt" : "ACGT",
+    "variantValidation" : {
+      "validationContext" : "STRUCTURAL",
+      "validationMetadata" : {
+        "variantMetadataContext" : "STRUCTURAL",
+        "snippet" : "",
+        "variantClass" : "structural",
+        "pathomechanism" : "intronic deletion",
+        "cosegregation" : true,
+        "comparability" : false
+      }
+    }
+  } ],
+  "individuals" : [ {
+    "id" : "abc",
+    "age" : "P10Y20D",
+    "diseases" : [ {
+      "diseaseIdentifier" : {
+        "diseaseId" : "OMIM:219700",
+        "diseaseName" : "CYSTIC FIBROSIS; CF"
+      },
+      "isExcluded" : false
+    } ],
+    "genotypes" : [ {
+      "variantId" : "94f38002744f2dfdbad129153880603f",
+      "genotype" : "HETEROZYGOUS"
+    }, {
+      "variantId" : "ab671d73cb3a1ba57d3a31889c4d29cc",
+      "genotype" : "HETEROZYGOUS"
+    }, {
+      "variantId" : "bfed08fc27778a1587dcaebc2b455718",
+      "genotype" : "HOMOZYGOUS_ALTERNATE"
+    }, {
+      "variantId" : "c9dda67d707ab3c69142d891d6a0a4e1",
+      "genotype" : "HOMOZYGOUS_ALTERNATE"
+    }, {
+      "variantId" : "f2e88a99810ce259880f744fbbddc0f3",
+      "genotype" : "HETEROZYGOUS"
+    } ],
+    "phenotypicFeatures" : [ {
+      "termId" : "HP:0002110",
+      "isExcluded" : false,
+      "observationAge" : {
+        "onset" : "P0D",
+        "resolution" : "P10Y20D"
+      }
+    }, {
+      "termId" : "HP:0000822",
+      "isExcluded" : true,
+      "observationAge" : {
+        "onset" : "P0D",
+        "resolution" : "P10Y20D"
+      }
+    } ],
+    "sex" : "MALE"
+  }, {
+    "id" : "def",
+    "age" : "P15Y2M4D",
+    "diseases" : [ {
+      "diseaseIdentifier" : {
+        "diseaseId" : "OMIM:219700",
+        "diseaseName" : "CYSTIC FIBROSIS; CF"
+      },
+      "isExcluded" : true
+    } ],
+    "genotypes" : [ {
+      "variantId" : "94f38002744f2dfdbad129153880603f",
+      "genotype" : "HETEROZYGOUS"
+    }, {
+      "variantId" : "ab671d73cb3a1ba57d3a31889c4d29cc",
+      "genotype" : "HOMOZYGOUS_ALTERNATE"
+    }, {
+      "variantId" : "bfed08fc27778a1587dcaebc2b455718",
+      "genotype" : "HOMOZYGOUS_ALTERNATE"
+    }, {
+      "variantId" : "c9dda67d707ab3c69142d891d6a0a4e1",
+      "genotype" : "HOMOZYGOUS_REFERENCE"
+    }, {
+      "variantId" : "f2e88a99810ce259880f744fbbddc0f3",
+      "genotype" : "HOMOZYGOUS_REFERENCE"
+    } ],
+    "phenotypicFeatures" : [ {
+      "termId" : "HP:0000822",
+      "isExcluded" : false,
+      "observationAge" : {
+        "onset" : "P0D",
+        "resolution" : "P15Y2M4D"
+      }
+    }, {
+      "termId" : "HP:0002110",
+      "isExcluded" : true,
+      "observationAge" : {
+        "onset" : "P0D",
+        "resolution" : "P15Y2M4D"
+      }
+    } ],
+    "sex" : "FEMALE"
+  } ]
+}

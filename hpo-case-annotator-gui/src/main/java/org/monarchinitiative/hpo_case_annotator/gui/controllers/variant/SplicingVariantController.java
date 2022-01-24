@@ -12,6 +12,8 @@ import javafx.stage.Window;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -27,6 +29,8 @@ import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSy
  * Created by Daniel Danis.
  */
 public final class SplicingVariantController extends AbstractVariantController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SplicingVariantController.class);
 
     // ******************** FXML elements, injected by FXMLLoader ********************************** //
     // ************************* Variant *********************************** //
@@ -111,8 +115,8 @@ public final class SplicingVariantController extends AbstractVariantController {
      * Create instance of this class which acts as a controller from MVC pattern.
      */
     @Inject
-    public SplicingVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
-        super(elementValues, hostServices);
+    public SplicingVariantController(HostServicesWrapper hostServices, GuiElementValues elementValues) {
+        super(hostServices, elementValues);
     }
 
 
@@ -124,8 +128,8 @@ public final class SplicingVariantController extends AbstractVariantController {
         varChromosomeComboBox.getItems().addAll(elementValues.getChromosome());
         // add text formatter to impose constraint on the field
         varPositionTextField.setTextFormatter(makeTextFormatter(varPositionTextField, POSITIVE_INTEGER_REGEXP));
-        varReferenceTextField.setTextFormatter(makeTextFormatter(varReferenceTextField, ALLELE_REGEXP));
-        varAlternateTextField.setTextFormatter(makeTextFormatter(varAlternateTextField, ALLELE_REGEXP));
+        varReferenceTextField.setTextFormatter(makeTextFormatter(varReferenceTextField, NONEMPTY_ALLELE_REGEXP));
+        varAlternateTextField.setTextFormatter(makeTextFormatter(varAlternateTextField, NONEMPTY_ALLELE_REGEXP));
         varSnippetTextField.setTextFormatter(makeTextFormatter(varSnippetTextField, SNIPPET_REGEXP));
         varGenotypeComboBox.getItems().addAll(Arrays.stream(Genotype.values()).filter(g -> !g.equals(Genotype.UNRECOGNIZED)).collect(Collectors.toList()));
         varClassComboBox.getItems().addAll(elementValues.getVariantClass());
@@ -193,12 +197,7 @@ public final class SplicingVariantController extends AbstractVariantController {
 
     @Override
     public Variant getData() {
-        int pos;
-        try {
-            pos = Integer.parseInt(varPositionTextField.getText());
-        } catch (NumberFormatException nfe) {
-            pos = 0;
-        }
+        int pos = parseIntOrGetDefaultValue(varPositionTextField::getText, -1);
 
         return Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.FamilyStudyController">
+   <stylesheets>
+      <URL value="@base.css" />
+      <URL value="@study.css" />
+   </stylesheets>
+   <children>
+      <Label styleClass="title" text="Family study" />
+      <VBox id="study-id-box" fillWidth="false">
+         <children>
+            <Label styleClass="h2" text="Family study ID" />
+            <TextField id="study-id-text-field" fx:id="studyIdTextField" />
+         </children>
+      </VBox>
+      <VBox VBox.vgrow="ALWAYS">
+         <children>
+            <TabPane id="family-study-content" side="LEFT">
+               <tabs>
+                  <Tab closable="false" text="Publication">
+                     <content>
+                        <fx:include fx:id="publication" source="Publication.fxml" />
+                     </content>
+                  </Tab>
+                  <Tab closable="false" text="Variants">
+                     <content>
+                        <fx:include fx:id="variantSummary" source="VariantSummary.fxml" />
+                     </content>
+                  </Tab>
+                  <Tab closable="false" text="Pedigree">
+                     <content>
+                        <fx:include fx:id="pedigree" source="Pedigree.fxml" />
+                     </content>
+                  </Tab>
+                  <Tab closable="false" text="Metadata">
+                     <content>
+                        <fx:include fx:id="studyMetadata" source="Metadata.fxml" />
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
+         </children>
+      </VBox>
+   </children>
+</VBox>

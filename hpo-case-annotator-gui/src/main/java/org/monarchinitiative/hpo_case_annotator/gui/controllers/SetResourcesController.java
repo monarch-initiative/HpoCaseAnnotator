@@ -1,17 +1,19 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.monarchinitiative.hpo_case_annotator.core.io.Downloader;
 import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
-import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
-import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblyDownloader;
+import org.monarchinitiative.hpo_case_annotator.core.reference.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
+import org.monarchinitiative.hpo_case_annotator.gui.io.Downloader;
+import org.monarchinitiative.hpo_case_annotator.gui.io.GenomeAssemblyDownloader;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 import org.monarchinitiative.phenol.base.PhenolException;
@@ -24,8 +26,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Consumer;
 
 /**
  * This class is the controller of the setResources dialog. The user performs initial setup of the
@@ -45,8 +49,6 @@ public final class SetResourcesController {
     private final File appHomeDir;
 
     private final ExecutorService executorService;
-
-    private final Stage primaryStage;
 
     private final GenomeAssemblies assemblies;
 
@@ -84,18 +86,33 @@ public final class SetResourcesController {
     private Label hg19GenomeLabel;
 
     @FXML
+    private Label hg18LiftoverLabel;
+
+    @FXML
+    private Label hg19LiftoverLabel;
+
+    @FXML
     private TextField biocuratorIDTextField;
 
 
     @Inject
     SetResourcesController(OptionalResources optionalResources, Properties properties, @Named("appHomeDir") File appHomeDir,
-                           ExecutorService executorService, @Named("primaryStage") Stage primaryStage, GenomeAssemblies assemblies) {
+                           ExecutorService executorService, GenomeAssemblies assemblies) {
         this.optionalResources = optionalResources;
         this.properties = properties;
         this.appHomeDir = appHomeDir;
         this.executorService = executorService;
-        this.primaryStage = primaryStage;
         this.assemblies = assemblies;
+        initializeAppHomeDir();
+    }
+
+    private void initializeAppHomeDir() {
+        File liftoverDir = appHomeDir.toPath().resolve(OptionalResources.DEFAULT_LIFTOVER_FOLDER).toFile();
+        if (!liftoverDir.isDirectory()) {
+            if (!liftoverDir.mkdirs()) {
+                LOGGER.warn("Unable to initialize directory for liftover chain files");
+            }
+        }
     }
 
 
@@ -117,7 +134,7 @@ public final class SetResourcesController {
                 ? optionalResources.getDiseaseCaseDir()
                 : new File(System.getProperty("user.home"));
 
-        File curatedDir = PopUps.selectDirectory(primaryStage, initial, "Set directory for curated files.");
+        File curatedDir = PopUps.selectDirectory((Stage) hg19ProgressIndicator.getScene().getWindow(), initial, "Set directory for curated files.");
         if (curatedDir != null) {
             optionalResources.setDiseaseCaseDir(curatedDir);
             curatedFilesDirLabel.setText(curatedDir.getAbsolutePath());
@@ -148,7 +165,7 @@ public final class SetResourcesController {
                     entrezGeneLabel.setText(target.getAbsolutePath());
                 } catch (IOException e) {
                     LOGGER.warn(e.getMessage());
-                    PopUps.showException("Download Entrez gene file", "Error occured", String.format("Error during parsing of Entrez gene file at '%s'",
+                    PopUps.showException("Download Entrez gene file", "Error occurred", String.format("Error during parsing of Entrez gene file at '%s'",
                             target.getAbsolutePath()), e);
                 }
                 return;
@@ -221,7 +238,7 @@ public final class SetResourcesController {
         try {
             url = new URL(properties.getProperty("hp.obo.url"));
         } catch (MalformedURLException e) {
-            PopUps.showException("Download HPO obo file", "Error occured", String.format("Malformed URL: %s",
+            PopUps.showException("Download HPO obo file", "Error occurred", String.format("Malformed URL: %s",
                     properties.getProperty("hp.obo.url")), e);
             LOGGER.error(String.format("Malformed URL: %s", properties.getProperty("hp.obo.url")), e);
             return;
@@ -254,7 +271,8 @@ public final class SetResourcesController {
     /**
      * Initialize elements of this controller.
      */
-    public void initialize() {
+    @FXML
+    private void initialize() {
         if (assemblies.hasFastaForAssembly(GenomeAssembly.GRCH_37)) {
             File hg19Assembly = assemblies.getAssemblyMap().get(GenomeAssembly.GRCH_37).toFile();
             if (notNullAndValidFasta(hg19Assembly)) {
@@ -301,6 +319,23 @@ public final class SetResourcesController {
                 ? optionalResources.getDiseaseCaseDir().getAbsolutePath()
                 : "unset");
         biocuratorIDTextField.textProperty().bindBidirectional(optionalResources.biocuratorIdProperty());
+
+        // Liftover
+        Path liftoverFolder = appHomeDir.toPath().resolve(OptionalResources.DEFAULT_LIFTOVER_FOLDER);
+        // hg18
+        File hg18 = liftoverFolder.resolve("hg18ToHg38.over.chain.gz").toFile();
+        if (hg18.isFile()) {
+            hg18LiftoverLabel.setText(hg18.getAbsolutePath());
+        } else {
+            hg18LiftoverLabel.setText("unset");
+        }
+        // hg38
+        File hg19 = liftoverFolder.resolve("hg19ToHg38.over.chain.gz").toFile();
+        if (hg19.isFile()) {
+            hg19LiftoverLabel.setText(hg19.getAbsolutePath());
+        } else {
+            hg19LiftoverLabel.setText("unset");
+        }
     }
 
 
@@ -312,7 +347,7 @@ public final class SetResourcesController {
             chooser.setInitialDirectory(appHomeDir);
             chooser.setTitle("Save hg19 fasta as");
             chooser.setInitialFileName(GenomeAssembly.GRCH_37 + ".fa");
-            File target = chooser.showSaveDialog(primaryStage);
+            File target = chooser.showSaveDialog(hg19ProgressIndicator.getScene().getWindow());
             if (target == null) return;
 
             GenomeAssemblyDownloader downloader = new GenomeAssemblyDownloader(url, target);
@@ -352,7 +387,7 @@ public final class SetResourcesController {
             chooser.setInitialDirectory(appHomeDir);
             chooser.setTitle("Save hg38 fasta as");
             chooser.setInitialFileName(GenomeAssembly.GRCH_38 + ".fa");
-            File target = chooser.showSaveDialog(primaryStage);
+            File target = chooser.showSaveDialog(hg19ProgressIndicator.getScene().getWindow());
             if (target == null) return;
 
 
@@ -392,7 +427,7 @@ public final class SetResourcesController {
         chooser.setInitialFileName(GenomeAssembly.GRCH_37 + ".fa");
 
         while (true) { // loop until we get proper FASTA file
-            File target = chooser.showOpenDialog(primaryStage);
+            File target = chooser.showOpenDialog(hg19ProgressIndicator.getScene().getWindow());
             if (target == null) break;
             else if (!target.isFile()) { // we need to get path to a file
                 PopUps.showInfoMessage("Provide path to valid FASTA file", String.format("'%s' - not a file", target.getAbsolutePath()));
@@ -416,7 +451,7 @@ public final class SetResourcesController {
         chooser.setInitialFileName(GenomeAssembly.GRCH_38.toString() + ".fa");
 
         while (true) { // loop until we get proper FASTA file
-            File target = chooser.showOpenDialog(primaryStage);
+            File target = chooser.showOpenDialog(hg19ProgressIndicator.getScene().getWindow());
             if (target == null) break;
             else if (!target.isFile()) { // we need to get path to a file
                 PopUps.showInfoMessage("Provide path to valid FASTA file", String.format("'%s' - not a file", target.getAbsolutePath()));
@@ -429,5 +464,28 @@ public final class SetResourcesController {
                 break;
             }
         }
+    }
+
+    @FXML
+    public void downloadLiftoverChainFiles() {
+        try {
+            URL hg18ToHg38 = new URL(properties.getProperty("hg18.hg38.chain.url"));
+            downloadChainFile(hg18ToHg38, hg18LiftoverLabel::setText);
+
+            URL hg19ToHg38 = new URL(properties.getProperty("hg19.hg38.chain.url"));
+            downloadChainFile(hg19ToHg38, hg19LiftoverLabel::setText);
+        } catch (MalformedURLException e) {
+            PopUps.showException("Download liftover chains", "Error occurred", "Malformed URL", e);
+            LOGGER.error("Malformed URL: {}", e.getMessage());
+        }
+    }
+
+    private void downloadChainFile(URL url, Consumer<String> notify) {
+        String file = new File(url.getFile()).getName();
+        Path target = appHomeDir.toPath().resolve(OptionalResources.DEFAULT_LIFTOVER_FOLDER).resolve(file);
+        EventHandler<WorkerStateEvent> eventHandler = e -> notify.accept(target.toAbsolutePath().toString());
+        Task<Void> task = new Downloader(url, target.toFile());
+        task.setOnSucceeded(eventHandler);
+        executorService.submit(task);
     }
 }

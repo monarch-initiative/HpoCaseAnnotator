@@ -1,18 +1,32 @@
 package org.monarchinitiative.hpo_case_annotator.gui;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Injector;
 import com.google.inject.Provides;
-import com.google.inject.name.Names;
 import javafx.application.HostServices;
-import javafx.stage.Stage;
-import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
-import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembliesSerializer;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataController;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.MainController;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.SetResourcesController;
+import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverAdapter;
+import org.monarchinitiative.hpo_case_annotator.core.reference.*;
+import org.monarchinitiative.hpo_case_annotator.forms.*;
+import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.disease.DiseaseStatusController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeBrowserController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeEntryController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypicFeatureController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypicFeaturesTableController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.BreakendController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfBreakendVariantController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSequenceVariantController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSymbolicVariantController;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.*;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.*;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
+import org.monarchinitiative.svart.GenomicAssemblies;
+import org.monarchinitiative.svart.GenomicAssembly;
+import org.monarchinitiative.svart.GenomicRegion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,9 +36,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -43,27 +55,16 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
     private static final String GUI_ELEMENTS_VALUES = "gui-elements-values.yml";
 
-    /**
-     * This is the {@link Stage} which is provided by JavaFX and registered into the Spring container in the
-     * {@link Main#start(Stage)} method.
-     */
-    private final Stage primaryStage;
-
     private final HostServices hostServices;
 
 
-    HpoCaseAnnotatorModule(Stage primaryStage, HostServices hostServices) {
-        this.primaryStage = primaryStage;
+    HpoCaseAnnotatorModule(HostServices hostServices) {
         this.hostServices = hostServices;
     }
 
 
     @Override
     protected void configure() {
-        bind(Stage.class)
-                .annotatedWith(Names.named("primaryStage"))
-                .toInstance(primaryStage);
-
         bind(HostServicesWrapper.class)
                 .toInstance(HostServicesWrapper.wrap(hostServices));
 
@@ -84,8 +85,106 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
         bind(SplicingVariantController.class);
         bind(IntrachromosomalVariantController.class);
         bind(BreakpointVariantController.class);
+        bind(LiftoverController.class);
+
+        bind(FamilyStudyController.class);
+        bind(PublicationController.class);
+
+        // variant
+        bind(BreakendController.class);
+
+        // individual
+        bind(PedigreeMemberController.class);
+        bind(DiseaseStatusController.class);
+        bind(PhenotypeEntryController.class);
+        bind(OntologyTreeBrowserController.class);
+        bind(PhenotypicFeatureController.class);
+        bind(PhenotypicFeaturesTableController.class);
+
+        // metadata
+        bind(StudyMetadataController.class);
     }
 
+    @Provides
+    public VcfBreakendVariantController vcfBreakendVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
+        return new VcfBreakendVariantController(genomicAssemblyRegistry);
+    }
+
+    @Provides
+    public VcfSymbolicVariantController vcfSymbolicVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
+        return new VcfSymbolicVariantController(genomicAssemblyRegistry);
+    }
+
+    @Provides
+    public VcfSequenceVariantController vcfSequenceVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
+        return new VcfSequenceVariantController(genomicAssemblyRegistry);
+    }
+
+    @Provides
+    public VariantSummaryController variantSummaryController(HCAControllerFactory hcaControllerFactory) {
+        return new VariantSummaryController(hcaControllerFactory);
+    }
+
+    @Provides
+    public PedigreeController pedigreeController(HCAControllerFactory hcaControllerFactory) {
+        return new PedigreeController(hcaControllerFactory);
+    }
+
+    @Provides
+    public PhenotypeBrowserController phenotypeBrowserController(HCAControllerFactory hcaControllerFactory) {
+        return new PhenotypeBrowserController(hcaControllerFactory);
+    }
+
+    @Provides
+    public DeprecatedGenomicAssemblyRegistry genomicAssemblyRegistry() {
+        // TODO - get a real one
+        GenomicAssemblyService hg19 = new GenomicAssemblyService() {
+            @Override
+            public GenomicAssembly genomicAssembly() {
+                return GenomicAssemblies.GRCh37p13();
+            }
+
+            @Override
+            public Optional<StrandedSequence> referenceSequence(GenomicRegion query) {
+                return Optional.empty();
+            }
+
+            @Override
+            public void close() throws Exception {
+
+            }
+        };
+        GenomicAssemblyService hg38 = new GenomicAssemblyService() {
+            @Override
+            public GenomicAssembly genomicAssembly() {
+                return GenomicAssemblies.GRCh38p13();
+            }
+
+            @Override
+            public Optional<StrandedSequence> referenceSequence(GenomicRegion query) {
+                return Optional.empty();
+            }
+
+            @Override
+            public void close() throws Exception {
+
+            }
+        };
+
+        List<GenomicAssemblyService> genomicAssemblyServices = List.of(hg19, hg38);
+        return genomicAssemblyServices::stream;
+    }
+
+    @Provides
+    public HCAControllerFactory hcaControllerFactory(Injector injector) {
+        return injector::getInstance;
+    }
+
+    @Provides
+    public LiftOverAdapter liftOverAdapter(@Named("liftoverDir") File liftoverDir) {
+        LOGGER.warn("Creating Liftover adapter");
+        return LiftOverAdapter.ofChainFolder(liftoverDir);
+    }
 
     @Provides
     @Singleton
@@ -178,6 +277,12 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
     // ----------------------------------------- FILES -----------------------------------------------------------------
 
+    @Provides
+    @Named("liftoverDir")
+    @Singleton
+    public File liftoverDir(@Named("appHomeDir") File appHomeDir) {
+        return new File(appHomeDir, OptionalResources.DEFAULT_LIFTOVER_FOLDER);
+    }
 
     /**
      * Get path to parent directory of the JAR file (or classes). Note, this is <em>NOT</em> the path to the JAR file.
@@ -237,7 +342,7 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
     @Provides
     @Named("appHomeDir")
     @Singleton
-    private File appHomeDir(@Named("appVersion") String appVersion) throws IOException {
+    public File appHomeDir(@Named("appVersion") String appVersion) throws IOException {
         String osName = System.getProperty("os.name").toLowerCase();
         // we want to have one resource directory for release version and another for snapshots
         String suffix = appVersion.endsWith("-SNAPSHOT") ? "-SNAPSHOT" : "";
@@ -274,21 +379,21 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
     @Provides
     @Named("appNameVersion")
-    private String appNameVersion(@Named("appVersion") String appVersion, @Named("appName") String appName) {
+    public String appNameVersion(@Named("appVersion") String appVersion, @Named("appName") String appName) {
         return String.format("%s : %s", appName, appVersion);
     }
 
 
     @Provides
     @Named("appVersion")
-    private String appVersion() {
+    public String appVersion() {
         // this property is set in Play#init()
         return System.getProperty(Main.HCA_VERSION_PROP_KEY);
     }
 
     @Provides
     @Named("appName")
-    private String appName() {
+    public String appName() {
         // this property is set in Play#init()
         return System.getProperty(Main.HCA_NAME_KEY);
     }

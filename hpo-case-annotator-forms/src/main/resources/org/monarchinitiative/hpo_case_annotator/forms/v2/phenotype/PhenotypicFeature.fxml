@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox id="phenotypic-feature-box" fx:id="phenotypicFeatureBox" alignment="CENTER_LEFT" stylesheets="@phenotypic-feature.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypicFeatureController">
+    <children>
+        <VBox styleClass="column" VBox.vgrow="SOMETIMES">
+            <children>
+            <Label styleClass="h3" text="Phenotype feature" />
+            <VBox id="phenotypic-feature-column" styleClass="column">
+               <children>
+                  <VBox styleClass="column">
+                     <children>
+                        <Label text="ID" />
+                            <Label id="term-id" fx:id="termIdLabel" wrapText="true" />
+                     </children>
+                  </VBox>
+                  <VBox styleClass="column">
+                     <children>
+                        <Label text="Name" />
+                            <Label id="term-name" fx:id="nameLabel" wrapText="true" />
+                     </children>
+                  </VBox>
+                  <VBox styleClass="column" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label text="Definition" />
+                            <Label id="term-definition" fx:id="termDefinitionLabel" textAlignment="JUSTIFY" textOverrun="WORD_ELLIPSIS" wrapText="true" />
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            </children>
+        </VBox>
+        <Separator VBox.vgrow="NEVER" />
+        <VBox styleClass="column">
+            <children>
+                <Label styleClass="h3" text="Status" />
+                <RadioButton fx:id="presentRadioButton" mnemonicParsing="false" text="Present" />
+                <RadioButton fx:id="absentRadioButton" mnemonicParsing="false" text="Excluded" />
+            </children>
+        </VBox>
+        <Separator VBox.vgrow="NEVER" />
+        <VBox styleClass="column">
+            <children>
+                <VBox>
+                    <children>
+                        <Label styleClass="h3" text="Onset" />
+                        <fx:include fx:id="onsetAge" source="../AgeVertical.fxml" />
+                    </children>
+                </VBox>
+                <VBox>
+                    <children>
+                        <Label styleClass="h3" text="Resolution" />
+                        <fx:include fx:id="resolutionAge" source="../AgeVertical.fxml" />
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </children>
+</VBox>

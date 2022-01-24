@@ -10,6 +10,8 @@ import javafx.scene.layout.HBox;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -26,6 +28,7 @@ import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSy
  */
 public final class SomaticVariantController extends AbstractVariantController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SomaticVariantController.class);
 
     // ******************** FXML elements, injected by FXMLLoader ********************************** //
     @FXML
@@ -97,8 +100,8 @@ public final class SomaticVariantController extends AbstractVariantController {
      * Create instance of this class which acts as a controller from MVC pattern.
      */
     @Inject
-    public SomaticVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
-        super(elementValues,hostServices);
+    public SomaticVariantController(HostServicesWrapper hostServices, GuiElementValues elementValues) {
+        super(hostServices, elementValues);
     }
 
 
@@ -107,8 +110,8 @@ public final class SomaticVariantController extends AbstractVariantController {
         chromosomeComboBox.getItems().addAll(elementValues.getChromosome());
         // add text formatter to impose constraint on the field
         positionTextField.setTextFormatter(makeTextFormatter(positionTextField, POSITIVE_INTEGER_REGEXP));
-        referenceTextField.setTextFormatter(makeTextFormatter(referenceTextField, ALLELE_REGEXP));
-        alternateTextField.setTextFormatter(makeTextFormatter(alternateTextField, ALLELE_REGEXP));
+        referenceTextField.setTextFormatter(makeTextFormatter(referenceTextField, NONEMPTY_ALLELE_REGEXP));
+        alternateTextField.setTextFormatter(makeTextFormatter(alternateTextField, NONEMPTY_ALLELE_REGEXP));
         snippetTextField.setTextFormatter(makeTextFormatter(snippetTextField, SNIPPET_REGEXP));
         genotypeComboBox.getItems().addAll(Arrays.stream(Genotype.values()).filter(g -> !g.equals(Genotype.UNRECOGNIZED)).collect(Collectors.toList()));
         variantClassComboBox.getItems().addAll(elementValues.getVariantClass());
@@ -164,12 +167,7 @@ public final class SomaticVariantController extends AbstractVariantController {
 
     @Override
     public Variant getData() {
-        int pos;
-        try {
-            pos = Integer.parseInt(positionTextField.getText());
-        } catch (NumberFormatException nfe) {
-            pos = 0;
-        }
+        int pos = parseIntOrGetDefaultValue(positionTextField::getText, -1);;
 
         return Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()

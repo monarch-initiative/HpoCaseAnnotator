@@ -2,8 +2,6 @@ package org.monarchinitiative.hpo_case_annotator.cli.cmd;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import org.monarchinitiative.hpo_case_annotator.cli.converters.FirstXml2XmlModelConverter;
-import org.monarchinitiative.hpo_case_annotator.cli.converters.Xml2JsonModelConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,18 +58,18 @@ public class ConvertCommand extends AbstractNamedCommand {
 
         try {
             switch (operationName) {
-                case "xml2json": {
-                    LOGGER.info("Running {} operation", operationName);
-                    Xml2JsonModelConverter modelConverter = new Xml2JsonModelConverter(sourceDir, destDir);
-                    modelConverter.run();
-                    break;
-                }
-                case "firstxml2xml": {
-                    LOGGER.info("Running {} operation", operationName);
-                    FirstXml2XmlModelConverter modelConverter = new FirstXml2XmlModelConverter(sourceDir, destDir);
-                    modelConverter.run();
-                    break;
-                }
+//                case "xml2json": {
+//                    LOGGER.info("Running {} operation", operationName);
+//                    Xml2JsonModelConverter modelConverter = new Xml2JsonModelConverter(sourceDir, destDir);
+//                    modelConverter.run();
+//                    break;
+//                }
+//                case "firstxml2xml": {
+//                    LOGGER.info("Running {} operation", operationName);
+//                    FirstXml2XmlModelConverter modelConverter = new FirstXml2XmlModelConverter(sourceDir, destDir);
+//                    modelConverter.run();
+//                    break;
+//                }
                 default:
                     LOGGER.info("Unknown operation: {}", operationName);
                     System.exit(1);
@@ -81,5 +79,6 @@ public class ConvertCommand extends AbstractNamedCommand {
             System.exit(1);
         }
 
+        LOGGER.warn("This command is temporarily disabled");
     }
 }

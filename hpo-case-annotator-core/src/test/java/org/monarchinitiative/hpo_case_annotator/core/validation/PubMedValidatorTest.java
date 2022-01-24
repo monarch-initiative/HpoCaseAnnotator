@@ -1,11 +1,11 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 // TODO - implement tests
-@Ignore
+@Disabled
 public class PubMedValidatorTest {
 
     /**
@@ -14,7 +14,7 @@ public class PubMedValidatorTest {
     private PubMedValidator validator;
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 //        File file = TestResources.TEST_MODEL_FILE_DIR;
 //        ModelParser parser = new XMLModelParser(file);

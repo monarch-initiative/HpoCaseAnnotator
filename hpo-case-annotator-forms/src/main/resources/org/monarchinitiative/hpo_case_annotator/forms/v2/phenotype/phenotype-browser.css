@@ -1,0 +1,12 @@
+RadioButton {
+    -fx-padding: 5px;
+}
+
+TextField {
+    -fx-pref-height: 30;
+}
+
+
+ComboBox {
+    -fx-pref-height: 30;
+}

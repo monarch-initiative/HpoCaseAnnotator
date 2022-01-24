@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Label?>
+<?import org.controlsfx.control.SearchableComboBox?>
+<?import java.net.URL?>
+<VBox styleClass="age-vertical" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.AgeController">
+    <stylesheets>
+        <URL value="@base.css" />
+        <URL value="@age.css" />
+    </stylesheets>
+   <children>
+       <HBox alignment="CENTER_LEFT">
+           <children>
+               <TextField fx:id="yearsTextField" promptText="18" HBox.hgrow="ALWAYS" />
+               <Label text="years" HBox.hgrow="NEVER" />
+           </children>
+       </HBox>
+       <HBox alignment="CENTER_LEFT">
+           <children>
+               <SearchableComboBox fx:id="monthsComboBox" promptText="0" HBox.hgrow="ALWAYS" />
+               <Label text="months" HBox.hgrow="NEVER" />
+           </children>
+       </HBox>
+       <HBox alignment="CENTER_LEFT">
+           <children>
+               <SearchableComboBox fx:id="daysComboBox" promptText="0" HBox.hgrow="ALWAYS" />
+               <Label text="days" HBox.hgrow="NEVER" />
+           </children>
+       </HBox>
+   </children>
+</VBox>

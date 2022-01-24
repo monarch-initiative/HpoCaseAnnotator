@@ -1,14 +1,18 @@
 package org.monarchinitiative.hpo_case_annotator.gui.controllers.variant;
 
+import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Window;
+import org.monarchinitiative.hpo_case_annotator.core.reference.GenomeAssemblies;
+import org.monarchinitiative.hpo_case_annotator.core.reference.SequenceDao;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
@@ -18,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSyntaxValidator.*;
@@ -31,6 +37,9 @@ import static org.monarchinitiative.hpo_case_annotator.core.validation.VariantSy
 public final class MendelianVariantController extends AbstractVariantController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MendelianVariantController.class);
+
+    // we fetch +-10bp bases for a variant during snippet generation
+    private static final int GENERATED_SNIPPET_PADDING = 10;
 
     // ******************** FXML elements, injected by FXMLLoader ********************************** //
     @FXML
@@ -56,6 +65,7 @@ public final class MendelianVariantController extends AbstractVariantController 
 
     @FXML
     private TextField snippetTextField;
+    private final GenomeAssemblies genomeAssemblies;
 
     @FXML
     private ComboBox<Genotype> genotypeComboBox;
@@ -100,24 +110,32 @@ public final class MendelianVariantController extends AbstractVariantController 
     private ComboBox<String> otherEffectComboBox;
 
     // ******************** FXML elements ********************************** //
-
+    private final ExecutorService executorService;
+    @FXML
+    public Button generateSnippetButton;
 
     /**
      * Create instance of this class which acts as a controller from MVC pattern.
      */
     @Inject
-    public MendelianVariantController(GuiElementValues elementValues, HostServicesWrapper hostServices) {
-        super(elementValues, hostServices);
+    public MendelianVariantController(GuiElementValues elementValues,
+                                      HostServicesWrapper hostServices,
+                                      GenomeAssemblies genomeAssemblies,
+                                      ExecutorService executorService) {
+        super(hostServices, elementValues);
+        this.genomeAssemblies = genomeAssemblies;
+        this.executorService = executorService;
     }
 
 
-    public void initialize() {
+    @FXML
+    private void initialize() {
         genomeBuildComboBox.getItems().addAll(elementValues.getGenomeBuild());
         chromosomeComboBox.getItems().addAll(elementValues.getChromosome());
         // add text formatter to impose constraint on the field
         positionTextField.setTextFormatter(makeTextFormatter(positionTextField, POSITIVE_INTEGER_REGEXP));
-        referenceTextField.setTextFormatter(makeTextFormatter(referenceTextField, ALLELE_REGEXP));
-        alternateTextField.setTextFormatter(makeTextFormatter(alternateTextField, ALLELE_REGEXP));
+        referenceTextField.setTextFormatter(makeTextFormatter(referenceTextField, NONEMPTY_ALLELE_REGEXP));
+        alternateTextField.setTextFormatter(makeTextFormatter(alternateTextField, NONEMPTY_ALLELE_REGEXP));
         snippetTextField.setTextFormatter(makeTextFormatter(snippetTextField, SNIPPET_REGEXP));
         genotypeComboBox.getItems().addAll(Arrays.stream(Genotype.values()).filter(g -> !g.equals(Genotype.UNRECOGNIZED)).collect(Collectors.toList()));
         variantClassComboBox.getItems().addAll(elementValues.getVariantClass());
@@ -134,6 +152,18 @@ public final class MendelianVariantController extends AbstractVariantController 
         decorateWithTooltipOnFocus(referenceTextField, "Representation of reference allele in VCF style");
         decorateWithTooltipOnFocus(alternateTextField, "Representation of alternate allele in VCF style");
         decorateWithTooltipOnFocus(snippetTextField, "Snippet of nucleotide sequence near variant, e.g. 'ACGT[A/C]ACTG'");
+        decorateWithTooltipOnFocus(generateSnippetButton, "Generate snippet if the FASTA file is present");
+
+        // enable
+        BooleanBinding allDataForSnippetGenerationIsPresent = Bindings.createBooleanBinding(
+                () -> genomeAssemblies.hasFastaForAssembly(genomeBuildComboBox.getValue())
+                        && chromosomeComboBox.getValue() != null
+                        && POSITIVE_INTEGER_REGEXP.matcher(positionTextField.getText()).matches()
+                        && NONEMPTY_ALLELE_REGEXP.matcher(referenceTextField.getText()).matches()
+                        && NONEMPTY_ALLELE_REGEXP.matcher(alternateTextField.getText()).matches(),
+                genomeBuildComboBox.valueProperty(), chromosomeComboBox.valueProperty(), positionTextField.textProperty(),
+                referenceTextField.textProperty(), alternateTextField.textProperty());
+        generateSnippetButton.disableProperty().bind(allDataForSnippetGenerationIsPresent.not());
     }
 
     @Override
@@ -169,12 +199,7 @@ public final class MendelianVariantController extends AbstractVariantController 
 
     @Override
     public Variant getData() {
-        int pos;
-        try {
-            pos = Integer.parseInt(positionTextField.getText());
-        } catch (NumberFormatException nfe) {
-            pos = 0;
-        }
+        int pos = parseIntOrGetDefaultValue(positionTextField::getText, -1);
 
         return Variant.newBuilder()
                 .setVariantPosition(VariantPosition.newBuilder()
@@ -209,9 +234,11 @@ public final class MendelianVariantController extends AbstractVariantController 
     public Binding<String> variantTitleBinding() {
         return Bindings.createStringBinding(() -> {
                     if (isComplete()) {
+                        String ref = referenceTextField.getText().length() > 10 ? referenceTextField.getText().substring(0, 10) + "..." : referenceTextField.getText();
+                        String alt = alternateTextField.getText().length() > 10 ? alternateTextField.getText().substring(0, 10) + "..." : alternateTextField.getText();
                         return String.format("Mendelian variant: %s %s:%s%s>%s",
                                 genomeBuildComboBox.getValue(), chromosomeComboBox.getValue(), positionTextField.getText(),
-                                referenceTextField.getText(), alternateTextField.getText());
+                                ref, alt);
                     } else {
                         return "Mendelian variant: INCOMPLETE: " + validationResults.get(0).getMessage();
                     }
@@ -259,5 +286,32 @@ public final class MendelianVariantController extends AbstractVariantController 
         GenomeAssembly assembly = genomeBuildComboBox.getValue() == null ? GenomeAssembly.UNKNOWN_GENOME_ASSEMBLY : genomeBuildComboBox.getValue();
         Window window = getAccessionsButton.getScene().getWindow();
         VariantUtil.geneAccessionNumberGrabber(entrezId, assembly, hostServices, window);
+    }
+
+    @FXML
+    public void generateSnippetAction() {
+        Runnable generateSnippet = () -> {
+            if (LOGGER.isDebugEnabled())
+                LOGGER.debug("Generating snippet for `{}:{}:{}{}>{}`",
+                        genomeBuildComboBox.getValue(), chromosomeComboBox.getValue(), positionTextField.getText(), referenceTextField.getText(), alternateTextField.getText());
+
+            Optional<SequenceDao> sdOpt = genomeAssemblies.getSequenceDaoForAssembly(genomeBuildComboBox.getValue());
+            if (!sdOpt.isPresent()) {
+                if (LOGGER.isWarnEnabled())
+                    LOGGER.warn("Genome assembly `{}` is missing even though it should be present", genomeBuildComboBox.getValue());
+                return;
+            }
+            SequenceDao sequenceDao = sdOpt.get();
+            int variantPos = Integer.parseInt(positionTextField.getText());
+
+            int upstreamStart = variantPos - GENERATED_SNIPPET_PADDING - 1;
+            String upstreamSeq = sequenceDao.fetchSequence(chromosomeComboBox.getValue(), upstreamStart, upstreamStart + GENERATED_SNIPPET_PADDING);
+            int downstreamStart = variantPos + referenceTextField.getText().length() - 1;
+            String downstreamSeq = sequenceDao.fetchSequence(chromosomeComboBox.getValue(), downstreamStart, downstreamStart + GENERATED_SNIPPET_PADDING);
+
+            String snippet = upstreamSeq + '[' + referenceTextField.getText() + '/' + alternateTextField.getText() + ']' + downstreamSeq;
+            Platform.runLater(() -> snippetTextField.setText(snippet));
+        };
+        executorService.submit(generateSnippet);
     }
 }

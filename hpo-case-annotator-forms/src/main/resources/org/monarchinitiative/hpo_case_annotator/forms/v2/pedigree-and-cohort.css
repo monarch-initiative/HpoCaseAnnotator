@@ -1,0 +1,23 @@
+TabPane {
+    -fx-tab-min-width: 80px;
+    -fx-tab-min-height: 30px;
+}
+
+.summary-tab {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+Tab {
+    -fx-font-size: 14px;
+}
+
+.section TabPane {
+    -fx-border-color: rgba(128, 128, 128, 0.5);
+    -fx-border-style: dotted;
+    -fx-border-width: 1px;
+}
+
+#members-tab-pane {
+    /* Do not remove, used in app/Main */
+}

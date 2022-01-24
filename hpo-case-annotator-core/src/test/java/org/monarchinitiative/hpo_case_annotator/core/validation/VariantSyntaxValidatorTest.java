@@ -1,24 +1,25 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.monarchinitiative.hpo_case_annotator.core.DiseaseCaseModelExample;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;
+import org.monarchinitiative.hpo_case_annotator.test.TestData;
 
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
 
 public class VariantSyntaxValidatorTest {
 
     private VariantSyntaxValidator validator;
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         validator = new VariantSyntaxValidator();
     }
@@ -146,10 +147,10 @@ public class VariantSyntaxValidatorTest {
 
     @Test
     public void structuralVariant() {
-        Variant variant = DiseaseCaseModelExample.exampleStructuralVariant();
+        Variant variant = TestData.V1.comprehensiveCase().getVariant(3);
 
         List<ValidationResult> results = validator.validate(variant);
 
-        assertThat(results.size(), is(0));
+        assertThat(results, is(empty()));
     }
 }

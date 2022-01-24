@@ -5,12 +5,10 @@ import com.google.inject.Provides;
 import javafx.application.HostServices;
 import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
 import org.monarchinitiative.hpo_case_annotator.core.io.OMIMParser;
-import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssemblies;
-import org.monarchinitiative.hpo_case_annotator.core.refgenome.GenomeAssembliesSerializer;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.DiseaseCaseDataController;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValues;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.GuiElementValuesTest;
-import org.monarchinitiative.hpo_case_annotator.gui.controllers.ShowValidationResultsController;
+import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverAdapter;
+import org.monarchinitiative.hpo_case_annotator.core.reference.GenomeAssemblies;
+import org.monarchinitiative.hpo_case_annotator.core.reference.GenomeAssembliesSerializer;
+import org.monarchinitiative.hpo_case_annotator.gui.controllers.*;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.IntrachromosomalVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.MendelianVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.SomaticVariantController;
@@ -61,6 +59,8 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
 
         bind(ShowValidationResultsController.class);
 
+        bind(LiftoverController.class);
+
         bind(ResourceBundle.class)
                 .toInstance(ResourceBundle.getBundle(Main.class.getName()));
 
@@ -92,9 +92,6 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
     @Singleton
     public OptionalResources optionalResources() throws IOException, PhenolException, URISyntaxException {
         OptionalResources optionalResources = new OptionalResources();
-//        final String file = TestHpoCaseAnnotatorModule.class.getResource("models").getFile();
-//        final File diseaseCaseDir = new File(file);
-//        optionalResources.setDiseaseCaseDir(diseaseCaseDir);
 
         // read Ontology
         try (InputStream is = TestHpoCaseAnnotatorModule.class.getResourceAsStream("/resource_files/HP.obo")) {
@@ -119,6 +116,11 @@ public class TestHpoCaseAnnotatorModule extends AbstractModule {
         return optionalResources;
     }
 
+    @Provides
+    @Singleton
+    public LiftOverAdapter liftOverAdapter() {
+        return LiftOverAdapter.ofChains(new File(TestHpoCaseAnnotatorModule.class.getResource("/resource_files/hg19ToHg38.over.chain.gz").getFile()));
+    }
 
     @Provides
     @Singleton

@@ -1,0 +1,74 @@
+
+RadioButton {
+    -fx-padding: 10px 0px 5px 0px;
+}
+
+Separator {
+    -fx-padding: 0px 5px 0px 5px;
+}
+
+ListView {
+    -fx-min-height: 46px;
+    -fx-pref-height: 115px;
+}
+
+Button {
+    -fx-padding: 5px 0px 5px 0px;
+    -fx-min-height: 30px;
+    -fx-min-width: 120px;
+}
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+.row > #id-column {
+    -fx-max-width: 400px;
+}
+
+.row > #age-column {
+    -fx-max-width: 200px;
+}
+
+.row > #sex-column {
+    -fx-max-width: 200px;
+}
+
+.column > HBox {
+    -fx-padding: 10px 0px 5px 0px;
+}
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+#id-column > HBox {
+    -fx-min-height: 40px;
+}
+
+#id-column > HBox > Label {
+    -fx-padding: 0px 0px 0px 5px;
+    -fx-min-width: 90px;
+    -fx-min-height: 30px;
+}
+
+#id-column > HBox > TextField {
+    -fx-min-width: 90px;
+    -fx-min-height: 30px;
+}
+
+#id-column > HBox > {
+    -fx-padding: 0px 0px 0px 5px;
+}
+
+#phenotype-description-box {
+    -fx-min-height: 40px;
+}
+
+.sub-section {
+    -fx-padding: 5px;
+    -fx-min-width: 520px;
+    -fx-pref-width: 920px;
+    -fx-max-width: 920px;
+    -fx-min-height: 200px;
+
+    -fx-border-color: rgba(185, 185, 185, 0.55);
+    -fx-border-style: dashed;
+    -fx-border-width: 1px;
+}

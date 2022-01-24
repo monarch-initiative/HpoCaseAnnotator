@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tab?>
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.CohortStudyController" >
+    <stylesheets>
+        <URL value="@base.css" />
+        <URL value="@study.css" />
+    </stylesheets>
+    <children>
+        <Label styleClass="title" text="Cohort study" />
+        <VBox id="study-id-box" fillWidth="false">
+            <children>
+                <Label styleClass="h2" text="Cohort study ID" />
+                <TextField id="study-id-text-field" fx:id="studyIdTextField" />
+            </children>
+        </VBox>
+        <VBox VBox.vgrow="ALWAYS">
+            <children>
+                <TabPane id="family-study-content" side="LEFT">
+                    <tabs>
+                        <Tab closable="false" text="Publication">
+                            <content>
+                                <fx:include fx:id="publication" source="Publication.fxml" />
+                            </content>
+                        </Tab>
+                        <Tab closable="false" text="Variants">
+                            <content>
+                                <fx:include fx:id="variantSummary" source="VariantSummary.fxml" />
+                            </content>
+                        </Tab>
+                        <Tab closable="false" text="Cohort">
+                            <content>
+                                <fx:include fx:id="cohort" source="Cohort.fxml" />
+                            </content>
+                        </Tab>
+                        <Tab closable="false" text="Metadata">
+                            <content>
+                                <fx:include fx:id="studyMetadata" source="Metadata.fxml" />
+                            </content>
+                        </Tab>
+                    </tabs>
+                </TabPane>
+            </children>
+        </VBox>
+    </children>
+</VBox>

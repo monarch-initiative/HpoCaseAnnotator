@@ -1,15 +1,15 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.monarchinitiative.hpo_case_annotator.core.DiseaseCaseModelExample;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
+import org.monarchinitiative.hpo_case_annotator.test.TestData;
 
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 
 public class CompletenessValidatorTest {
@@ -20,7 +20,7 @@ public class CompletenessValidatorTest {
     private CompletenessValidator validator;
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         validator = new CompletenessValidator();
     }
@@ -69,9 +69,7 @@ public class CompletenessValidatorTest {
 
     @Test
     public void validateCaseWithVariant() {
-        DiseaseCase diseaseCase = DiseaseCase.newBuilder()
-                .addVariant(DiseaseCaseModelExample.makeVariantWithSplicingValidation())
-                .build();
+        DiseaseCase diseaseCase = TestData.V1.comprehensiveCase();
 
         final List<ValidationResult> results = validator.validate(diseaseCase);
 

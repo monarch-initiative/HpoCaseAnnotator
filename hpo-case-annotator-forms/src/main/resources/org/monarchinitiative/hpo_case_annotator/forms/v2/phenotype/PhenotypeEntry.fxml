@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeEntryController">
+   <stylesheets>
+      <URL value="@../base.css" />
+      <URL value="@phenotype-entry.css" />
+   </stylesheets>
+   <children>
+      <HBox VBox.vgrow="ALWAYS">
+         <children>
+            <VBox fx:id="ontologyTreeBox" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label styleClass="h2" text="HPO hierarchy" />
+                  <VBox id="tree-box" styleClass="column" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label styleClass="h3" text="Search for phenotypes" />
+                        <TextField fx:id="searchTextField" onAction="#searchTextFieldAction" />
+                        <fx:include fx:id="ontologyTreeBrowser" source="../ontotree/OntologyTreeBrowser.fxml" VBox.vgrow="ALWAYS" />
+                        <Button fx:id="addButton" mnemonicParsing="false" onAction="#addButtonAction" text="Add" />
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            <VBox HBox.hgrow="ALWAYS">
+               <children>
+                  <VBox>
+                     <children>
+                        <Label styleClass="h2" text="Time course defaults" />
+                        <VBox>
+                           <children>
+                              <Label styleClass="h3" text="Onset" />
+                              <fx:include fx:id="onsetAge" source="../AgeHorizontal.fxml" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label styleClass="h3" text="Resolution" />
+                              <fx:include fx:id="resolutionAge" source="../AgeHorizontal.fxml" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+                  <VBox>
+                     <children>
+                        <Label styleClass="h2" text="Phenotype features of the individual" />
+                        <fx:include fx:id="phenotypicFeaturesTable" source="PhenotypicFeaturesTable.fxml" VBox.vgrow="ALWAYS" />
+                        <HBox alignment="CENTER_RIGHT" styleClass="edit-row">
+                           <children>
+                              <Button fx:id="removeButton" disable="true" mnemonicParsing="false" onAction="#removeButtonAction" styleClass="remove-item" text="-" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            <VBox HBox.hgrow="SOMETIMES">
+               <children>
+                  <Label styleClass="h2" text="Phenotype feature" />
+                  <fx:include fx:id="phenotypicFeature" source="PhenotypicFeature.fxml" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox styleClass="edit-row">
+         <children>
+            <Pane HBox.hgrow="ALWAYS" />
+            <Button defaultButton="true" mnemonicParsing="false" onAction="#okButtonAction" styleClass="ok-button" text="OK" />
+         </children>
+      </HBox>
+
+   </children>
+</VBox>

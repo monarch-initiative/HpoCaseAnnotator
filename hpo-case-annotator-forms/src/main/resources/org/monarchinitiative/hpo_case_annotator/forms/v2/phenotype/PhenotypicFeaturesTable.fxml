@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox id="phenotypicFeaturesTable" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypicFeaturesTableController">
+    <children>
+        <TableView fx:id="termsTableView" editable="true" onMouseClicked="#termTableOnMouseClicked" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="termIdTableColumn" editable="false" maxWidth="-1.0" minWidth="120.0" prefWidth="-1.0" resizable="false" text="Term ID" />
+                <TableColumn fx:id="excludedTableColumn" editable="false" minWidth="75.0" prefWidth="75.0" text="Excluded" />
+                <TableColumn fx:id="onsetTableColumn" editable="false" minWidth="90.0" prefWidth="90.0" text="Onset" />
+                <TableColumn fx:id="resolutionTableColumn" editable="false" minWidth="90.0" prefWidth="90.0" text="Resolution" />
+            </columns>
+            <placeholder>
+                <Label>No phenotype features to display.</Label>
+            </placeholder>
+        </TableView>
+    </children>
+</VBox>

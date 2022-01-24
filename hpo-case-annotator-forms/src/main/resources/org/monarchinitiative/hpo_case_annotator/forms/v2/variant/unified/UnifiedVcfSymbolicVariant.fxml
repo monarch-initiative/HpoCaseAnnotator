@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import org.controlsfx.control.*?>
+
+<VBox prefHeight="320.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.variant.unified.UnifiedVcfSymbolicVariantController">
+    <children>
+        <HBox style="-fx-background-color: #e3e3e3;" VBox.vgrow="NEVER">
+            <children>
+                <Label text="VCF symbolic variant">
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                    <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </HBox.margin>
+                </Label>
+            </children>
+            <VBox.margin>
+                <Insets bottom="5.0" top="5.0" />
+            </VBox.margin>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" VBox.vgrow="NEVER">
+            <VBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </VBox.margin>
+            <children>
+                <VBox alignment="CENTER_LEFT" minHeight="50.0" minWidth="250.0" HBox.hgrow="NEVER">
+                    <children>
+                        <Label text="Genome build" underline="true">
+                            <font>
+                                <Font name="System Italic" size="14.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </VBox.margin>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="5.0" VBox.vgrow="NEVER">
+                            <children>
+                                <RadioButton fx:id="hg18RadioButton" disable="true" mnemonicParsing="false" text="hg18" />
+                                <RadioButton fx:id="hg19RadioButton" disable="true" mnemonicParsing="false" text="GRCh37" />
+                                <RadioButton fx:id="hg38RadioButton" disable="true" mnemonicParsing="false" text="GRCh38" />
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </VBox.margin>
+                            <padding>
+                                <Insets top="5.0" />
+                            </padding>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <VBox alignment="CENTER_LEFT" minHeight="50.0" minWidth="150.0" HBox.hgrow="NEVER">
+                    <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" text="Contig" underline="true">
+                            <VBox.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </VBox.margin>
+                            <font>
+                                <Font name="System Italic" size="14.0" />
+                            </font>
+                        </Label>
+                        <SearchableComboBox fx:id="contigComboBox" prefWidth="150.0">
+                            <VBox.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </VBox.margin>
+                        </SearchableComboBox>
+                    </children>
+                </VBox>
+
+            </children>
+        </HBox>
+        <Separator prefWidth="200.0" />
+        <HBox alignment="CENTER_LEFT" prefWidth="400.0">
+            <children>
+            <VBox alignment="CENTER_LEFT" prefWidth="200.0">
+               <children>
+                      <Label text="Start coordinate" underline="true">
+                          <font>
+                              <Font name="System Italic" size="14.0" />
+                          </font>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                      </Label>
+                      <TextField fx:id="startTextField" promptText="e.g. 10001">
+                          <font>
+                              <Font size="14.0" />
+                          </font>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                      </TextField>
+               </children>
+            </VBox>
+                <VBox alignment="CENTER_LEFT" prefWidth="200.0">
+                    <children>
+                        <Label text="End coordinate" underline="true">
+                            <font>
+                                <Font name="System Italic" size="14.0" />
+                            </font>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                        </Label>
+                        <TextField fx:id="endTextField" promptText="e.g. 20000">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                        </TextField>
+                    </children>
+                </VBox>
+            </children>
+            <VBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </VBox.margin>
+        </HBox>
+        <Separator prefWidth="200.0" />
+        <VBox prefWidth="100.0">
+            <children>
+                <Label text="Alleles" underline="true">
+                    <font>
+                        <Font name="System Italic" size="14.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </VBox.margin>
+                </Label>
+                <VBox>
+                    <children>
+                        <HBox alignment="CENTER_LEFT">
+                            <children>
+                                <Label minWidth="80.0" text="Reference">
+                                    <HBox.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    </HBox.margin>
+                                </Label>
+                                <TextField fx:id="referenceTextField" promptText="e.g. N" HBox.hgrow="SOMETIMES">
+                                    <HBox.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    </HBox.margin>
+                                </TextField>
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                            <children>
+                                <Label alignment="CENTER" minWidth="80.0" text="Alternative">
+                                    <HBox.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    </HBox.margin>
+                                </Label>
+                        <SearchableComboBox fx:id="altComboBox" HBox.hgrow="SOMETIMES">
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </SearchableComboBox>
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </VBox.margin>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+            <VBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </VBox.margin>
+        </VBox>
+    </children>
+</VBox>

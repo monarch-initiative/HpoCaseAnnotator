@@ -20,12 +20,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.core.publication.PubMedSummaryRetriever;
+import org.monarchinitiative.hpo_case_annotator.core.publication.PublicationDataFormat;
+import org.monarchinitiative.hpo_case_annotator.core.publication.PublicationDataParser;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.AbstractVariantController;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
 import org.monarchinitiative.hpo_case_annotator.gui.util.WidthAwareTextFields;
+import org.monarchinitiative.hpo_case_annotator.model.ModelUtils;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
-import org.monarchinitiative.hpo_case_annotator.model.utils.ModelUtils;
 import org.monarchinitiative.hpotextmining.gui.controller.HpoTextMining;
 import org.monarchinitiative.hpotextmining.gui.controller.Main;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
@@ -357,7 +359,9 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
         FutureTask<Void> task = new FutureTask<>(() -> {
             String pmid = pmidTextField.getText();
             try {
-                PubMedSummaryRetriever retriever = PubMedSummaryRetriever.defaultInstance();
+                PubMedSummaryRetriever<Publication> retriever = PubMedSummaryRetriever.<Publication>builder()
+                        .publicationDataParser(PublicationDataParser.forV1PublicationFormat(PublicationDataFormat.EUTILS))
+                        .build();
                 Publication publication = retriever.getPublication(pmid);
                 Platform.runLater(() -> this.publication.set(publication));
             } catch (IOException e) {
@@ -544,44 +548,31 @@ public final class DiseaseCaseDataController extends AbstractDiseaseCaseDataCont
 
     @Override
     public DiseaseCase getData() {
-        Gene gene;
-        if (entrezIDTextField.getText().isEmpty() || geneSymbolTextField.getText().isEmpty()) {
-            gene = Gene.getDefaultInstance();
-        } else {
-            try {
-                gene = Gene.newBuilder()
-                        .setEntrezId(Integer.parseInt(entrezIDTextField.getText()))
-                        .setSymbol(geneSymbolTextField.getText())
-                        .build();
-            } catch (NumberFormatException nfe) {
-                LOGGER.warn("Not valid integer/entrez id: {}", entrezIDTextField.getText());
-                gene = Gene.getDefaultInstance();
-            }
+        int entrezId;
+        try {
+            entrezId = Integer.parseInt(entrezIDTextField.getText());
+        } catch (NumberFormatException nfe) {
+            LOGGER.warn("Not valid integer/entrez id: {}", entrezIDTextField.getText());
+            entrezId = -1;
         }
 
-        Disease disease;
-        if (diseaseDatabaseComboBox.getValue() == null || diseaseDatabaseComboBox.getValue().isEmpty() ||
-                diseaseIDTextField.getText().isEmpty() || diseaseNameTextField.getText().isEmpty()) {
-            disease = Disease.getDefaultInstance();
-        } else {
-            disease = Disease.newBuilder()
+        Gene gene = Gene.newBuilder()
+                .setEntrezId(entrezId)
+                .setSymbol(geneSymbolTextField.getText())
+                .build();
+
+
+        Disease disease = Disease.newBuilder()
                     .setDatabase(diseaseDatabaseComboBox.getValue())
                     .setDiseaseId(diseaseIDTextField.getText())
                     .setDiseaseName(diseaseNameTextField.getText())
                     .build();
-        }
 
-        FamilyInfo familyInfo;
-        if (probandFamilyTextField.getText().isEmpty() || ageTextField.getText().isEmpty()
-                || sexComboBox.getValue() == null) {
-            familyInfo = FamilyInfo.getDefaultInstance();
-        } else {
-            familyInfo = FamilyInfo.newBuilder()
+        FamilyInfo familyInfo = FamilyInfo.newBuilder()
                     .setAge(ageTextField.getText())
                     .setFamilyOrProbandId(probandFamilyTextField.getText())
                     .setSex(sexComboBox.getValue())
                     .build();
-        }
 
         return DiseaseCase.newBuilder()
                 .setPublication(publication.get())
