@@ -1,9 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.core.liftover;
 
-import htsjdk.samtools.util.Interval;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,22 +24,21 @@ public class LiftOverAdapterTest {
 
     @Test
     public void liftGrch37ToGrch38_SURF1() {
-        Interval interval = new Interval("chr9", 136_223_175, 136_223_180);
-        Optional<Interval> liftedOptional = instance.liftOver(interval, GenomeAssembly.HG_19, GenomeAssembly.HG_38);
+        LiftOverService.ContigPosition position = new LiftOverService.ContigPosition("chr9", 136_223_175);
+        Optional<LiftOverService.ContigPosition> liftedOptional = instance.liftOver(position, "GRCh37.p13", "GRCh38.p13");
 
         assertThat(liftedOptional.isPresent(), is(true));
 
-        Interval lifted = liftedOptional.get();
-        assertThat(lifted.getContig(), is("chr9"));
-        assertThat(lifted.getStart(), is(133_356_320));
-        assertThat(lifted.getEnd(), is(133_356_325));
+        LiftOverService.ContigPosition lifted = liftedOptional.get();
+        assertThat(lifted.contig(), is("chr9"));
+        assertThat(lifted.position(), is(133_356_320));
     }
 
     @Test
     public void failDueToMissingChain() {
-        Interval anyInterval = new Interval("chr1", 100, 200);
+        LiftOverService.ContigPosition anyPosition = new LiftOverService.ContigPosition("chr9", 136_223_175);
 
-        Optional<Interval> liftedOptional = instance.liftOver(anyInterval, GenomeAssembly.GRCH_38, GenomeAssembly.HG_18);
+        Optional<LiftOverService.ContigPosition> liftedOptional = instance.liftOver(anyPosition, "GRCh38.p13", "GRCh37.p13");
         assertThat(liftedOptional.isPresent(), is(false));
     }
 }

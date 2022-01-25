@@ -5,7 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.Provides;
 import javafx.application.HostServices;
 import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverAdapter;
-import org.monarchinitiative.hpo_case_annotator.core.reference.*;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.*;
 import org.monarchinitiative.hpo_case_annotator.forms.*;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.*;

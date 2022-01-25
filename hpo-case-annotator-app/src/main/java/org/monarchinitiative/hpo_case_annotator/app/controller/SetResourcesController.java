@@ -21,8 +21,6 @@ import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicRemoteRe
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicRemoteResources;
 import org.monarchinitiative.hpo_case_annotator.app.util.GenomicLocalResourceValidator;
 import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
-import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblyService;
-import org.monarchinitiative.hpo_case_annotator.core.reference.InvalidFastaFileException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -398,20 +396,4 @@ public class SetResourcesController {
         }
     }
 
-    private static GenomicAssemblyService createGenomicAssemblyService(GenomicLocalResource resource) {
-        try {
-            return GenomicAssemblyService.of(resource.getAssemblyReport(), resource.getFasta(), resource.getFastaFai(), resource.getFastaDict());
-        } catch (InvalidFastaFileException e) {
-            Dialogs.showException("Error", "Error", "Unable to use downloaded genomic resources", e);
-            return null;
-        }
-    }
-
-    /**
-     * @param assemblyPath must not be <code>null</code>, must be a file and the name must have the <em>.fa</em> suffix.
-     * @return <code>true</code> if the {@link File} satisfies criteria stated above
-     */
-    private static boolean notNullAndValidFasta(File assemblyPath) {
-        return assemblyPath != null && assemblyPath.isFile() && assemblyPath.getName().endsWith(".fa");
-    }
 }

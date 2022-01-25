@@ -7,10 +7,9 @@ import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResource;
 import org.monarchinitiative.hpo_case_annotator.app.publication.PubmedPublicationBrowser;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblyService;
-import org.monarchinitiative.hpo_case_annotator.core.reference.InvalidFastaFileException;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.GenomicAssemblyService;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.InvalidFastaFileException;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
-import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverAdapter;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

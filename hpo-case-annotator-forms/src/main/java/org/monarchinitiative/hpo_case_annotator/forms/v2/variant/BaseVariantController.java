@@ -9,7 +9,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
-import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblyService;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.GenomicAssemblyService;
 import org.monarchinitiative.hpo_case_annotator.forms.ComponentController;
 import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataException;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Utils;

@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.core.reference;
+package org.monarchinitiative.hpo_case_annotator.core.reference.genome;
 
 import htsjdk.samtools.SAMException;
 import htsjdk.samtools.SAMSequenceDictionary;

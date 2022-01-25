@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.core.reference;
+package org.monarchinitiative.hpo_case_annotator.core.reference.genome;
 
 import org.monarchinitiative.svart.GenomicAssembly;
 import org.monarchinitiative.svart.GenomicRegion;

@@ -1,7 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.forms;
 
-import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblyService;
-import org.monarchinitiative.hpo_case_annotator.core.reference.StrandedSequence;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.GenomicAssemblyService;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.StrandedSequence;
 import org.monarchinitiative.svart.GenomicAssembly;
 import org.monarchinitiative.svart.GenomicRegion;
 import org.slf4j.Logger;
