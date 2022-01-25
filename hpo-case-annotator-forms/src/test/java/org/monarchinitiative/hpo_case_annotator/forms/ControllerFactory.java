@@ -44,21 +44,6 @@ public class ControllerFactory implements HCAControllerFactory {
             return new VariantSummaryController(this);
         }
 
-        // unified
-        /*
-        else if (clz.equals(UnifiedCuratedVariantController.class)) {
-            return new UnifiedCuratedVariantController();
-        } else if (clz.equals(UnifiedVcfSequenceVariantController.class)) {
-            return new UnifiedVcfSequenceVariantController(genomicAssemblyRegistry);
-        } else if (clz.equals(UnifiedVcfSymbolicVariantController.class)) {
-            return new UnifiedVcfSymbolicVariantController(genomicAssemblyRegistry);
-        } else if (clz.equals(UnifiedVcfBreakendVariantController.class)) {
-            return new UnifiedVcfBreakendVariantController(genomicAssemblyRegistry);
-        } else if (clz.equals(UnifiedBreakendController.class)) {
-            return new UnifiedBreakendController();
-        }
-        */
-
         // various
         else if (clz.equals(AgeController.class)) {
             return new AgeController();
@@ -76,7 +61,7 @@ public class ControllerFactory implements HCAControllerFactory {
         } else if (clz.equals(SelectableOntologyTreeController.class)) {
             return new SelectableOntologyTreeController();
         } else if (clz.equals(PhenotypeBrowserController.class)) {
-            return new PhenotypeBrowserController(this);
+            return new PhenotypeBrowserController<>(this);
         } else if (clz.equals(OntologyTreeBrowserController.class)) {
             return new OntologyTreeBrowserController();
         }
