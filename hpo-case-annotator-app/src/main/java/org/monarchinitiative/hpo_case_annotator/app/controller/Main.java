@@ -21,6 +21,7 @@ import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.StudyType;
 import org.monarchinitiative.hpo_case_annotator.app.publication.PublicationBrowser;
 import org.monarchinitiative.hpo_case_annotator.convert.ConversionCodecs;
+import org.monarchinitiative.hpo_case_annotator.forms.liftover.LiftoverController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.disease.DiseaseStatusController;
 import org.monarchinitiative.hpo_case_annotator.model.convert.ModelTransformationException;
 import org.monarchinitiative.hpo_case_annotator.app.io.PubmedIO;
@@ -706,8 +707,26 @@ public class Main {
 
     @FXML
     private void liftoverAction(ActionEvent e) {
-        // TODO - implement
-        Dialogs.showInfoDialog("Sorry", null, "Not yet implemented");
+        try {
+            FXMLLoader loader = new FXMLLoader(LiftoverController.class.getResource("Liftover.fxml"));
+            loader.setControllerFactory(controllerFactory);
+
+            Parent parent = loader.load();
+            LiftoverController controller = loader.getController();
+            controller.liftoverServiceProperty().bind(optionalResources.liftoverServiceProperty());
+
+            Stage stage = new Stage();
+            stage.initOwner(getOwnerWindow());
+            stage.initModality(Modality.NONE);
+            stage.setTitle("Liftover contig position");
+            stage.setScene(new Scene(parent));
+            stage.show();
+            controller.liftoverServiceProperty().unbind();
+        } catch (IOException ex) {
+            Dialogs.showErrorDialog("Error", "Error occurred while opening the LiftOver window.", SEE_LOG_FOR_MORE_DETAILS);
+            LOGGER.warn("Unable to display liftover dialog: {}", ex.getCause().getMessage());
+        }
+
         e.consume();
     }
 

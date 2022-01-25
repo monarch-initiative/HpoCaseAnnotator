@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox styleClass="column" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.liftover.LiftoverController">
+    <stylesheets>
+        <URL value="@../base.css" />
+        <URL value="@liftover.css" />
+    </stylesheets>
+    <children>
+      <HBox>
+         <children>
+            <VBox styleClass="column" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label styleClass="h2" text="Input" />
+                      <VBox alignment="CENTER_LEFT" styleClass="column">
+                          <children>
+                              <Label styleClass="h3" text="Source" />
+                              <ComboBox fx:id="sourceAssembly" maxWidth="1.7976931348623157E308" />
+                          </children>
+                      </VBox>
+                      <VBox alignment="CENTER_LEFT" styleClass="column">
+                          <children>
+                              <Label styleClass="h3" text="Target" />
+                              <ComboBox fx:id="targetAssembly" maxWidth="1.7976931348623157E308" />
+                          </children>
+                      </VBox>
+                      <VBox alignment="CENTER_LEFT" styleClass="column">
+                          <children>
+                              <Label styleClass="h3" text="Contig" />
+                              <ComboBox fx:id="sourceContig" maxWidth="1.7976931348623157E308" />
+                          </children>
+                      </VBox>
+                      <VBox alignment="CENTER_LEFT" styleClass="column">
+                          <children>
+                              <Label styleClass="h3" text="Position" />
+                              <TextField fx:id="sourcePosition" />
+                          </children>
+                      </VBox>
+               </children>
+            </VBox>
+            <Separator orientation="VERTICAL" prefHeight="200.0" />
+            <VBox styleClass="column" HBox.hgrow="ALWAYS">
+               <children>
+                      <Label styleClass="h2" text="Result" />
+                  <VBox styleClass="column">
+                     <children>
+                        <Label styleClass="h3" text="Contig" />
+                        <Label fx:id="resultContigLabel" />
+                     </children>
+                  </VBox>
+                  <VBox styleClass="column">
+                     <children>
+                        <Label styleClass="h3" text="Position" />
+                            <TextField fx:id="resultPosition" editable="false" />
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <Separator prefWidth="200.0" />
+      <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" />
+    </children>
+</VBox>

@@ -27,6 +27,10 @@ public class ResourcePaths {
 
     public static final String ENTREZ_GENE_PATH_PROPERTY = "entrez.gene.path";
 
+    public static final String LIFTOVER_CHAIN_PATHS_PROPERTY = "liftover.chain.paths";
+
+    public static final String LIFTOVER_CHAIN_PATH_SEPARATOR = ";";
+
     public static final String DEFAULT_LIFTOVER_FOLDER = "liftover";
 
     private ResourcePaths() {

@@ -25,7 +25,7 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
     private static final String DEFAULT_PARENTAL_ID = "";
     private static final V1toV2Codec INSTANCE = new V1toV2Codec();
     private static final Map<GenomeAssembly, GenomicAssembly> ASSEMBLIES = Map.of(
-            GenomeAssembly.NCBI_36, GenomicAssembly.readAssembly(Objects.requireNonNull(V1toV2Codec.class.getResourceAsStream("GCF_000001405.12_NCBI36_assembly_report.txt"), "Missing genome hg18 assembly report file. Contact developers")),
+            GenomeAssembly.NCBI_36, GenomicAssembly.readAssembly(Objects.requireNonNull(V1toV2Codec.class.getResourceAsStream("org/monarchinitiative/hpo_case_annotator/model/GCF_000001405.12_NCBI36_assembly_report.txt"), "Missing genome hg18 assembly report file. Contact developers")),
             GenomeAssembly.GRCH_37, GenomicAssemblies.GRCh37p13(),
             GenomeAssembly.GRCH_38, GenomicAssemblies.GRCh38p13()
     );

@@ -178,9 +178,8 @@ public class SetResourcesController {
                     optionalResources.setSymbol2entrezId(parser.getSymbol2entrezId());
                     optionalResources.setEntrezPath(target);
                 } catch (IOException ex) {
-                    LOGGER.warn(ex.getMessage());
-                    Dialogs.showException("Download Entrez gene file", "Error occurred", String.format("Error during parsing of Entrez gene file at '%s'",
-                            target.getAbsolutePath()), ex);
+                    Dialogs.showWarningDialog("Download Entrez gene file", "Error occurred", String.format("Error during parsing of Entrez gene file at '%s'", target.getAbsolutePath()));
+                    LOGGER.warn("Error during parsing of Entrez gene file at '{}'", target.getAbsolutePath(), ex);
                 }
                 return;
             }
@@ -190,9 +189,8 @@ public class SetResourcesController {
         try {
             entrezGeneUrl = new URL(entrezGeneUrlString);
         } catch (MalformedURLException ex) {
-            Dialogs.showException("Download Entrez gene file", "Error occured",
-                    String.format("Malformed URL: %s", entrezGeneUrlString), ex);
-            LOGGER.error(String.format("Malformed URL: %s", entrezGeneUrlString), ex);
+            Dialogs.showWarningDialog("Download Entrez gene file", "Error occured", String.format("Malformed URL: %s", entrezGeneUrlString));
+            LOGGER.warn("Malformed URL: {}", entrezGeneUrlString, ex);
             return;
         }
 
@@ -209,9 +207,8 @@ public class SetResourcesController {
                 optionalResources.setSymbol2entrezId(parser.getSymbol2entrezId());
                 optionalResources.setEntrezPath(target);
             } catch (IOException ex) {
-                LOGGER.warn(ex.getMessage());
-                Dialogs.showException("Download Entrez gene file", "Error occured", String.format("Error during parsing of Entrez gene file at '%s'",
-                        target.getAbsolutePath()), ex);
+                Dialogs.showWarningDialog("Download Entrez gene file", "Error occured", String.format("Error during parsing of Entrez gene file at '%s'", target.getAbsolutePath()));
+                LOGGER.warn("Error during parsing of Entrez gene file at '{}'", target.getAbsolutePath(), ex);
             }
         });
         task.setOnFailed(event -> {
@@ -250,8 +247,8 @@ public class SetResourcesController {
         try {
             url = new URL(urlString);
         } catch (MalformedURLException ex) {
-            Dialogs.showException("Download HPO obo file", "Error occurred", String.format("Malformed URL: %s", urlString), ex);
-            LOGGER.error("Malformed URL: {}", urlString, ex);
+            Dialogs.showWarningDialog("Download HPO obo file", "Error occurred", String.format("Malformed URL: %s", urlString));
+            LOGGER.warn("Malformed URL: {}", urlString, ex);
             return;
         }
         Task<Void> task = new Downloader(url, target);
@@ -382,15 +379,17 @@ public class SetResourcesController {
             urls.add(new URL(hcaProperties.liftover().hg18ToHg38Url()));
             urls.add(new URL(hcaProperties.liftover().hg19ToHg38Url()));
         } catch (MalformedURLException ex) {
-            Dialogs.showException("Download liftover chains", "Error occurred", "Malformed URL", ex);
-            LOGGER.error("Malformed URL: {}", ex.getMessage());
+            Dialogs.showWarningDialog("Download liftover chains", "Malformed URL", "See log for more details");
+            LOGGER.warn("Malformed URL: {}", ex.getMessage());
             return;
         }
+        Path liftoverFolder = appHomeDir.toPath().resolve(ResourcePaths.DEFAULT_LIFTOVER_FOLDER);
         for (URL url : urls) {
             String file = new File(url.getFile()).getName();
-            Path target = appHomeDir.toPath().resolve(ResourcePaths.DEFAULT_LIFTOVER_FOLDER).resolve(file);
+            Path target = liftoverFolder.resolve(file);
 
             Task<Void> task = new Downloader(url, target.toFile());
+            task.setOnSucceeded(we -> optionalResources.liftoverChainFiles().add(target.toFile()));
             executorService.submit(task);
             try {
                 Thread.sleep(100);

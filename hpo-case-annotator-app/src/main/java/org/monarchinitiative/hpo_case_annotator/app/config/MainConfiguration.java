@@ -78,12 +78,6 @@ public class MainConfiguration {
     }
 
     @Bean
-    public LiftOverAdapter liftOverAdapter(File liftoverDir) {
-        LOGGER.debug("Creating Liftover adapter from chain files located at '{}'", liftoverDir.getAbsolutePath());
-        return LiftOverAdapter.ofChainFolder(liftoverDir);
-    }
-
-    @Bean
     public ExecutorService executorService() {
         int nThreads = Runtime.getRuntime().availableProcessors();
         LOGGER.debug("Creating executor with {} threads", nThreads);

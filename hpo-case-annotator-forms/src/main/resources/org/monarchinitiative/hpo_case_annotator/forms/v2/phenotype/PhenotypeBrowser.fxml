@@ -7,7 +7,7 @@
 <VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeBrowserController">
     <stylesheets>
-        <URL value="@../base.css"/>
+        <URL value="@../../base.css"/>
         <URL value="@phenotype-browser.css"/>
     </stylesheets>
     <children>

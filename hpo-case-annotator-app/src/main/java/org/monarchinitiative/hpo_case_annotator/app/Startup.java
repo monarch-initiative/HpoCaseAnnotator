@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -85,6 +86,8 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
 
             readEntrezGenes(resourceProperties.getProperty(ResourcePaths.ENTREZ_GENE_PATH_PROPERTY));
 
+            readLiftover(resourceProperties.getProperty(ResourcePaths.LIFTOVER_CHAIN_PATHS_PROPERTY));
+
             readHpo(resourceProperties.getProperty(ResourcePaths.ONTOLOGY_PATH_PROPERTY));
             LOGGER.info("Startup complete");
         } catch (IOException e) {
@@ -145,6 +148,15 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
             optionalResources.setEntrezPath(entrezGenesFile);
         } else {
             LOGGER.info("Skipping loading Entrez genes since the location is unset");
+        }
+    }
+
+    private void readLiftover(String liftoverChains) {
+        if (liftoverChains != null) {
+            List<File> chainFiles = Arrays.stream(liftoverChains.split(ResourcePaths.LIFTOVER_CHAIN_PATH_SEPARATOR))
+                    .map(File::new)
+                    .toList();
+            optionalResources.liftoverChainFiles().setAll(chainFiles);
         }
     }
 

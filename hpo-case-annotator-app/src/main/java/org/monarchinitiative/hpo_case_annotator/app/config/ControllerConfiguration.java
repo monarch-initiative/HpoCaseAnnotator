@@ -4,6 +4,7 @@ import org.monarchinitiative.hpo_case_annotator.app.controller.StatusBarControll
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.*;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
+import org.monarchinitiative.hpo_case_annotator.forms.liftover.LiftoverController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.disease.DiseaseStatusController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualController;
@@ -189,5 +190,11 @@ public class ControllerConfiguration {
     @Scope("prototype")
     public StatusBarController statusBarController() {
         return new StatusBarController();
+    }
+
+    @Bean
+    @Scope("prototype")
+    public LiftoverController liftoverController() {
+        return new LiftoverController();
     }
 }

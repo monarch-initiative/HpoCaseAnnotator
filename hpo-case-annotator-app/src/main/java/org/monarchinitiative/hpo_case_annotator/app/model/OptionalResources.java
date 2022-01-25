@@ -8,9 +8,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.monarchinitiative.hpo_case_annotator.app.controller.Loaders;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResources;
+import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverAdapter;
+import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverService;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Gene;
 import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseIdentifier;
@@ -21,7 +24,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -46,6 +48,8 @@ public class OptionalResources {
     private final ObjectProperty<File> entrezPath = new SimpleObjectProperty<>(this, "entrezPath");
     private final ObjectProperty<GenomicLocalResources> genomicLocalResources = new SimpleObjectProperty<>(this, "genomicResources", new GenomicLocalResources());
     private final ObjectProperty<GenomicAssemblyRegistry> genomicAssemblyRegistry = new SimpleObjectProperty<>(this, "genomicAssemblyRegistry", new GenomicAssemblyRegistry());
+    private final ObservableList<File> liftoverChainFiles = FXCollections.observableList(new LinkedList<>());
+    private final ObjectProperty<LiftOverService> liftoverService = new SimpleObjectProperty<>(this, "liftoverService");
 
     // default value does not harm here
     private final StringProperty biocuratorId = new SimpleStringProperty(this, "biocuratorId", "");
@@ -77,6 +81,15 @@ public class OptionalResources {
         this.diseaseCaseDirIsInitialized = Bindings.createBooleanBinding(() -> getDiseaseCaseDir() != null && getDiseaseCaseDir().isDirectory(),
                 diseaseCaseDirProperty());
         ontologyPath.addListener(loadOntologyWhenFileIsValid());
+        liftoverChainFiles.addListener(initializeLiftoverServiceWhenFolderIsValid());
+    }
+
+    private ListChangeListener<? super File> initializeLiftoverServiceWhenFolderIsValid() {
+        return change -> {
+            while (change.next()) {
+                liftoverService.set(LiftOverAdapter.ofChains(change.getList().toArray(File[]::new)));
+            }
+        };
     }
 
     private ChangeListener<File> loadOntologyWhenFileIsValid() {
@@ -292,4 +305,11 @@ public class OptionalResources {
         return symbol2entrezId;
     }
 
+    public ObservableList<File> liftoverChainFiles() {
+        return liftoverChainFiles;
+    }
+
+    public ObjectProperty<LiftOverService> liftoverServiceProperty() {
+        return liftoverService;
+    }
 }

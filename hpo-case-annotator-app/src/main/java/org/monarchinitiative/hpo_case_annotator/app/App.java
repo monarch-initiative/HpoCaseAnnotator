@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.app;
 
 import javafx.application.Application;
-import javafx.application.HostServices;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,7 +21,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -30,6 +28,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 @EnableConfigurationProperties({
@@ -103,6 +102,12 @@ public class App extends Application {
         if (optionalResources.getDiseaseCaseDir() != null) {
             resourceProperties.setProperty(ResourcePaths.DISEASE_CASE_DIR_PROPERTY, optionalResources.getDiseaseCaseDir().getAbsolutePath());
         }
+
+        String liftoverChains = optionalResources.liftoverChainFiles().stream()
+                .map(File::getAbsolutePath)
+                .collect(Collectors.joining(ResourcePaths.LIFTOVER_CHAIN_PATH_SEPARATOR));
+        resourceProperties.setProperty(ResourcePaths.LIFTOVER_CHAIN_PATHS_PROPERTY, liftoverChains);
+
         if (optionalResources.getBiocuratorId() != null) {
             resourceProperties.setProperty(ResourcePaths.BIOCURATOR_ID_PROPERTY, optionalResources.getBiocuratorId());
         }
