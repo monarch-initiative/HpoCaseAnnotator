@@ -5,7 +5,7 @@ import javafx.beans.binding.ObjectBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-import org.monarchinitiative.hpo_case_annotator.core.reference.genome.DeprecatedGenomicAssemblyRegistry;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.obsoleted.DeprecatedGenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

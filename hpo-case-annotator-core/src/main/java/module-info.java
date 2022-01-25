@@ -12,4 +12,5 @@ module org.monarchinitiative.hca.core {
     exports org.monarchinitiative.hpo_case_annotator.core.reference;
     exports org.monarchinitiative.hpo_case_annotator.core.validation;
     exports org.monarchinitiative.hpo_case_annotator.core.reference.genome;
+    exports org.monarchinitiative.hpo_case_annotator.core.reference.genome.obsoleted; // TODO - remove
 }

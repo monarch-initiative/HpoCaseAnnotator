@@ -6,7 +6,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import org.monarchinitiative.hpo_case_annotator.core.reference.genome.DeprecatedGenomicAssemblyRegistry;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.obsoleted.DeprecatedGenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.core.reference.genome.GenomicAssemblyService;
 
 import java.util.Objects;

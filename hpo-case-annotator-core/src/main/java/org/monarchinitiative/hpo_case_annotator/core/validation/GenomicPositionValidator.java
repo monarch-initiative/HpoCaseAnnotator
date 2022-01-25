@@ -1,7 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.core.validation;
 
-import org.monarchinitiative.hpo_case_annotator.core.reference.genome.GenomeAssemblies;
-import org.monarchinitiative.hpo_case_annotator.core.reference.genome.SequenceDao;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.obsoleted.GenomeAssemblies;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.obsoleted.SequenceDao;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.VariantPosition;

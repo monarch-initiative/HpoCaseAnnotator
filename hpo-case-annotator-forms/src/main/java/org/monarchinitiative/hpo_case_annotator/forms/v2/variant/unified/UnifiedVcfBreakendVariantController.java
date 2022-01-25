@@ -4,7 +4,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.core.reference.genome.DeprecatedGenomicAssemblyRegistry;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.obsoleted.DeprecatedGenomicAssemblyRegistry;
 
 public class UnifiedVcfBreakendVariantController extends UnifiedBaseVariantController<ObservableBreakendVariant> {
 

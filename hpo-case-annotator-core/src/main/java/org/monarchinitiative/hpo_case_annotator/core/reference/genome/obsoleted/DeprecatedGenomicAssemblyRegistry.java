@@ -1,11 +1,15 @@
-package org.monarchinitiative.hpo_case_annotator.core.reference.genome;
+package org.monarchinitiative.hpo_case_annotator.core.reference.genome.obsoleted;
 
 
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.GenomicAssemblyService;
 import org.monarchinitiative.svart.GenomicAssembly;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * @deprecated in favor of {@link org.monarchinitiative.hpo_case_annotator.core.reference.genome.GenomicAssemblyRegistry}.
+ */
 @Deprecated
 public interface DeprecatedGenomicAssemblyRegistry {
 

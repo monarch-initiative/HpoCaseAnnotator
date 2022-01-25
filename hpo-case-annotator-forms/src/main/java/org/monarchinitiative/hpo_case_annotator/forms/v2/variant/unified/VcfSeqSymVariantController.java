@@ -2,7 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.v2.variant.unified;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
-import org.monarchinitiative.hpo_case_annotator.core.reference.genome.DeprecatedGenomicAssemblyRegistry;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.obsoleted.DeprecatedGenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
 import org.monarchinitiative.svart.Contig;
 import org.slf4j.Logger;

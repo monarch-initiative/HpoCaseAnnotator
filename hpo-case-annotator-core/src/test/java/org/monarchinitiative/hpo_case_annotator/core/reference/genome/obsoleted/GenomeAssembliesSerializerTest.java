@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.core.reference.genome;
+package org.monarchinitiative.hpo_case_annotator.core.reference.genome.obsoleted;
 
 import org.junit.jupiter.api.Test;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
