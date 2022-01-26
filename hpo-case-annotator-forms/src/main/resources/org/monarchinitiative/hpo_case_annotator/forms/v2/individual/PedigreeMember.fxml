@@ -28,7 +28,7 @@
                                                 </HBox>
                                                 <HBox alignment="CENTER_LEFT">
                                                     <children>
-                                                        <Label text="Parental ID" />
+                                                        <Label text="Paternal ID" />
                                                         <TextField fx:id="paternalIdTextField" promptText="I:2" HBox.hgrow="SOMETIMES" />
                                                     </children>
                                                 </HBox>
