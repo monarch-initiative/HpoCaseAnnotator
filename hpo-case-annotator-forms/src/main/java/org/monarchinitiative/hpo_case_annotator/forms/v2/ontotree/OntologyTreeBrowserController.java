@@ -42,7 +42,7 @@ public class OntologyTreeBrowserController extends BaseOntologyTreeBrowser {
             TreeItem<SimpleOntologyTreeTerm> item = ontologyTreeView.getSelectionModel().getSelectedItem();
             return (item == null)
                     ? null
-                    : item.getValue().term().getId();
+                    : item.getValue().term().id();
         }, ontologyTreeView.getSelectionModel().selectedItemProperty());
     }
 
@@ -95,7 +95,7 @@ public class OntologyTreeBrowserController extends BaseOntologyTreeBrowser {
             while (!path.empty()) {
                 TermId current = path.pop();
                 for (TreeItem<SimpleOntologyTreeTerm> child : children) {
-                    if (child.getValue().term().getId().equals(current)) {
+                    if (child.getValue().term().id().equals(current)) {
                         child.setExpanded(true);
                         target = child;
                         children = child.getChildren();

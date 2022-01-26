@@ -76,7 +76,7 @@ public class SelectableOntologyTreeController extends BaseOntologyTreeBrowser {
             while (!stack.empty()) {
                 TermId current = stack.pop();
                 for (TreeItem<SelectableOntologyTreeTerm> child : children) {
-                    if (child.getValue().term().getId().equals(current)) {
+                    if (child.getValue().term().id().equals(current)) {
                         child.setExpanded(true);
                         target = child;
                         children = child.getChildren();
