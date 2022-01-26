@@ -26,13 +26,13 @@ abstract class OntologyTreeItemBase<T extends OntologyTreeTermBase> extends Tree
 
     @Override
     public boolean isLeaf() {
-        return OntologyAlgorithm.getChildTerms(ontology, getValue().term().getId(), false).isEmpty();
+        return OntologyAlgorithm.getChildTerms(ontology, getValue().term().id(), false).isEmpty();
     }
 
     @Override
     public ObservableList<TreeItem<T>> getChildren() {
         if (children == null) {
-            children = OntologyAlgorithm.getChildTerms(ontology, getValue().term().getId(), false).stream()
+            children = OntologyAlgorithm.getChildTerms(ontology, getValue().term().id(), false).stream()
                     .map(ontology.getTermMap()::get)
                     .sorted(Comparator.comparing(Term::getName))
                     .map(term -> treeItemForTerm(ontology, term))

@@ -23,7 +23,7 @@ public class PhenotypeSuggestionProvider implements Callback<AutoCompletionBindi
             else {
                 for (Term term : novel.getTerms()) {
                     if (!term.isObsolete()) {
-                        TermId id = term.getId();
+                        TermId id = term.id();
                         String name = term.getName();
                         nameToTermId.put(name, id);
                     }
