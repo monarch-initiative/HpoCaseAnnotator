@@ -1,6 +1,8 @@
-# Hpo Case Annotator GUI
+[![CI CD](https://github.com/monarch-initiative/HpoCaseAnnotator/actions/workflows/maven.yml/badge.svg)](https://github.com/monarch-initiative/HpoCaseAnnotator/actions/workflows/maven.yml/badge.svg)
 
-Hpo Case Annotator (HCA) GUI is Java app created with aim to make the biocuration of published pathogenic human variants easier.
+# Hpo Case Annotator
+
+Hpo Case Annotator (HCA) is Java app created with aim to make the biocuration of published pathogenic human variants easier.
 
 ### Building & installation
 Running *HCA* requires *Java 16* or better, the app is built with *Maven*.
