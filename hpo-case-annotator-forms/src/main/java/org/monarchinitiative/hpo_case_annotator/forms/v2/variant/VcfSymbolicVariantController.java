@@ -9,7 +9,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.hpo_case_annotator.forms.util.VariantTypeStringConverter;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
-import org.monarchinitiative.svart.Variant;
+import org.monarchinitiative.svart.GenomicVariant;
 import org.monarchinitiative.svart.VariantType;
 
 import java.util.Arrays;
@@ -59,7 +59,7 @@ public class VcfSymbolicVariantController extends VcfSeqSymVariantController {
         int end = FormUtils.processFormattedInteger(endTextField.getText());
         int changeLength = calculateChangeLength(altComboBox.getValue(), start, end);
 
-        Variant variant = Variant.of(getContig(),
+        GenomicVariant variant = GenomicVariant.of(getContig(),
                 getVariantId(),
                 VCF_STRAND,
                 VCF_COORDINATE_SYSTEM,

@@ -1,6 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.core.liftover;
 
-import org.monarchinitiative.svart.GenomicAssembly;
+import org.monarchinitiative.svart.assembly.GenomicAssembly;
 
 import java.util.List;
 import java.util.Optional;

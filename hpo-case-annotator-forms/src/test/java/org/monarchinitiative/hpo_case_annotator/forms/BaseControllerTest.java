@@ -5,7 +5,7 @@ import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierSer
 import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;
-import org.monarchinitiative.svart.GenomicAssemblies;
+import org.monarchinitiative.svart.assembly.GenomicAssemblies;
 
 import java.io.File;
 import java.util.List;

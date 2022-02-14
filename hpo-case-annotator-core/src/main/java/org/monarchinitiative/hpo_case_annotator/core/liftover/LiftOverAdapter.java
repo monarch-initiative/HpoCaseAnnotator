@@ -4,7 +4,8 @@ import htsjdk.samtools.liftover.LiftOver;
 import htsjdk.samtools.util.Interval;
 import org.monarchinitiative.hpo_case_annotator.model.Hg18GenomicAssembly;
 import org.monarchinitiative.hpo_case_annotator.model.proto.GenomeAssembly;
-import org.monarchinitiative.svart.*;
+import org.monarchinitiative.svart.assembly.GenomicAssemblies;
+import org.monarchinitiative.svart.assembly.GenomicAssembly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

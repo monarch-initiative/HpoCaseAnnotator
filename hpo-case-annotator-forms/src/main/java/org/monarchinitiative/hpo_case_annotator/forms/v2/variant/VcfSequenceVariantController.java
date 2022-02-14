@@ -7,7 +7,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataExcept
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
-import org.monarchinitiative.svart.Variant;
+import org.monarchinitiative.svart.GenomicVariant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +51,7 @@ public class VcfSequenceVariantController extends VcfSeqSymVariantController {
     public CuratedVariant getComponent() throws InvalidComponentDataException {
         int pos = FormUtils.processFormattedInteger(positionTextField.getText());
 
-        Variant variant = Variant.of(getContig(),
+        GenomicVariant variant = GenomicVariant.of(getContig(),
                 getVariantId(),
                 VCF_STRAND,
                 VCF_COORDINATE_SYSTEM,
