@@ -6,11 +6,11 @@ import org.monarchinitiative.svart.*;
 import java.util.Objects;
 
 record CuratedVariantDefault(String genomicAssembly,
-                             Variant variant,
+                             GenomicVariant variant,
                              VariantMetadata variantMetadata) implements CuratedVariant {
 
     CuratedVariantDefault(String genomicAssembly,
-                          Variant variant,
+                          GenomicVariant variant,
                           VariantMetadata variantMetadata) {
         this.genomicAssembly = Objects.requireNonNull(genomicAssembly, "Genomic assembly must not be null");
         this.variant = Objects.requireNonNull(variant, "Variant must not be null");
@@ -18,7 +18,7 @@ record CuratedVariantDefault(String genomicAssembly,
     }
 
     static CuratedVariantDefault of(String genomicAssembly,
-                                    Variant variant,
+                                    GenomicVariant variant,
                                     VariantMetadata variantMetadata) {
         return new CuratedVariantDefault(genomicAssembly, variant, variantMetadata);
     }

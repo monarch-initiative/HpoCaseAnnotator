@@ -6,6 +6,8 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.*;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.monarchinitiative.svart.*;
+import org.monarchinitiative.svart.assembly.GenomicAssemblies;
+import org.monarchinitiative.svart.assembly.GenomicAssembly;
 
 import java.time.Instant;
 import java.time.Period;
@@ -57,7 +59,7 @@ class V2 {
                 "TF_GENEID_TEST",
                 "down",
                 "in vitro mRNA expression assay");
-        Variant variant = Variant.of(HG19.contigByName("9"),
+        GenomicVariant variant = GenomicVariant.of(HG19.contigByName("9"),
                 "mendelian",
                 Strand.POSITIVE,
                 Coordinates.of(CoordinateSystem.zeroBased(), 123_737_056, 123_737_057),
@@ -81,7 +83,7 @@ class V2 {
                 78,
                 100
         );
-        Variant variant = Variant.of(HG19.contigByName("9"),
+        GenomicVariant variant = GenomicVariant.of(HG19.contigByName("9"),
                 "somatic",
                 Strand.POSITIVE,
                 Coordinates.of(CoordinateSystem.zeroBased(), 123_737_056, 123_737_057),
@@ -110,7 +112,7 @@ class V2 {
                 true,
                 false,
                 true);
-        Variant variant = Variant.of(HG19.contigByName("9"),
+        GenomicVariant variant = GenomicVariant.of(HG19.contigByName("9"),
                 "splicing",
                 Strand.POSITIVE,
                 Coordinates.of(CoordinateSystem.zeroBased(), 123_737_056, 123_737_057),
@@ -126,7 +128,7 @@ class V2 {
                 "intronic deletion",
                 true,
                 false);
-        Variant variant = Variant.of(HG19.contigByName("5"),
+        GenomicVariant variant = GenomicVariant.of(HG19.contigByName("5"),
                 "symbolic_DEL",
                 Strand.POSITIVE,
                 Coordinates.of(CoordinateSystem.zeroBased(), 149_741_530, ConfidenceInterval.of(-5, 10), 149_744_897, ConfidenceInterval.of(-10, 20)),
@@ -137,11 +139,11 @@ class V2 {
     }
 
     private static CuratedVariant symbolicBreakendVariant() {
-        Breakend left = Breakend.of(HG19.contigByName("9"),
+        GenomicBreakend left = GenomicBreakend.of(HG19.contigByName("9"),
                 "left",
                 Strand.POSITIVE,
                 Coordinates.of(CoordinateSystem.zeroBased(), 133_359_000, ConfidenceInterval.of(-5, 15), 133_359_000, ConfidenceInterval.precise()));
-        Breakend right = Breakend.of(HG19.contigByName("13"),
+        GenomicBreakend right = GenomicBreakend.of(HG19.contigByName("13"),
                 "right",
                 Strand.POSITIVE,
                 Coordinates.of(CoordinateSystem.zeroBased(), 32_300_000, 32_300_000));
@@ -151,7 +153,7 @@ class V2 {
                 "intronic deletion",
                 true,
                 false);
-        Variant variant = Variant.of("symbolic_breakend", left, right, "G", "ACGT");
+        GenomicVariant variant = GenomicVariant.of("symbolic_breakend", left, right, "G", "ACGT");
         return CuratedVariant.of(HG19.name(), variant, metadata);
     }
 

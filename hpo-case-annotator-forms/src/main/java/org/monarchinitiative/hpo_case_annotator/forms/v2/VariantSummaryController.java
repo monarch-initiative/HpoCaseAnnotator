@@ -23,7 +23,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSymbolicVari
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.svart.CoordinateSystem;
 import org.monarchinitiative.svart.Strand;
-import org.monarchinitiative.svart.Variant;
+import org.monarchinitiative.svart.GenomicVariant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -159,7 +159,7 @@ public class VariantSummaryController {
                 .ifPresent(edited -> variantTableView.getItems().set(index, edited));
     }
 
-    private static VariantNotation resolveVariantNotation(Variant variant) {
+    private static VariantNotation resolveVariantNotation(GenomicVariant variant) {
         if (variant.isBreakend()) {
             return VariantNotation.BREAKEND;
         } else if (variant.isSymbolic()) {

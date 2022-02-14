@@ -14,8 +14,8 @@ public class Convert {
     }
 
     public static Optional<ObservableSeqSymVariant> toObservableSeqSymVariant(CuratedVariant curatedVariant) {
-        Variant variant = curatedVariant.variant();
-        if (variant instanceof BreakendVariant)
+        GenomicVariant variant = curatedVariant.variant();
+        if (variant instanceof GenomicBreakendVariant)
             return Optional.empty();
 
         ObservableSeqSymVariant osv = new ObservableSeqSymVariant();
@@ -43,9 +43,9 @@ public class Convert {
     }
 
     public static Optional<ObservableBreakendVariant> toObservableBreakendVariant(CuratedVariant curatedVariant) {
-        if (!(curatedVariant.variant() instanceof BreakendVariant))
+        if (!(curatedVariant.variant() instanceof GenomicBreakendVariant))
             return Optional.empty();
-        BreakendVariant variant = (BreakendVariant) curatedVariant.variant();
+        GenomicBreakendVariant variant = (GenomicBreakendVariant) curatedVariant.variant();
 
 
         // TODO

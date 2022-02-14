@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadata;
-import org.monarchinitiative.svart.Breakend;
-import org.monarchinitiative.svart.BreakendVariant;
+import org.monarchinitiative.svart.GenomicBreakend;
+import org.monarchinitiative.svart.GenomicBreakendVariant;
 import org.monarchinitiative.svart.CoordinateSystem;
 
 import java.io.IOException;
@@ -26,8 +26,8 @@ public class CuratedVariantSerializer extends StdSerializer<CuratedVariant> {
         gen.writeStartObject();
         gen.writeStringField("variantType", curatedVariant.variantType().toString());
         gen.writeStringField("genomicAssemblyAccession", curatedVariant.genomicAssembly());
-        if (curatedVariant.variant() instanceof BreakendVariant bv) {
-            Breakend left = bv.left();
+        if (curatedVariant.variant() instanceof GenomicBreakendVariant bv) {
+            GenomicBreakend left = bv.left();
             gen.writeStringField("leftContigGenBankAccession", left.contig().genBankAccession());
             gen.writeStringField("leftStrand", left.strand().toString());
             gen.writeNumberField("leftStart", left.startWithCoordinateSystem(CoordinateSystem.zeroBased()));
@@ -38,7 +38,7 @@ public class CuratedVariantSerializer extends StdSerializer<CuratedVariant> {
                 gen.writeObjectField("leftEndCi", left.endConfidenceInterval());
             gen.writeStringField("leftId", left.id());
 
-            Breakend right = bv.right();
+            GenomicBreakend right = bv.right();
             gen.writeStringField("rightContigGenBankAccession", right.contig().genBankAccession());
             gen.writeStringField("rightStrand", right.strand().toString());
             gen.writeNumberField("rightStart", right.startWithCoordinateSystem(CoordinateSystem.zeroBased()));
