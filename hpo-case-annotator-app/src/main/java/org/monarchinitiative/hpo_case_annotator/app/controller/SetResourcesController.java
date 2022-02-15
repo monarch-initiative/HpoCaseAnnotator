@@ -336,20 +336,6 @@ public class SetResourcesController {
     }
 
 
-    /**
-     * Open DirChooser and ask user to provide a directory where curated files will be stored.
-     */
-    @FXML
-    private void setCuratedDirButtonAction(ActionEvent e) {
-        e.consume();
-        File initial = optionalResources.getDiseaseCaseDir() != null && optionalResources.getDiseaseCaseDir().isDirectory()
-                ? optionalResources.getDiseaseCaseDir()
-                : new File(System.getProperty("user.home"));
-
-        File curatedDir = Dialogs.selectDirectory((Stage) hg19ProgressIndicator.getScene().getWindow(), initial, "Set directory for curated files.");
-        optionalResources.setDiseaseCaseDir(curatedDir);
-    }
-
     @FXML
     private void downloadLiftoverChainFiles(ActionEvent e) {
         e.consume();
@@ -375,6 +361,20 @@ public class SetResourcesController {
             } catch (InterruptedException ignored) {
             }
         }
+    }
+
+    /**
+     * Open DirChooser and ask user to provide a directory where curated files will be stored.
+     */
+    @FXML
+    private void setCuratedDirButtonAction(ActionEvent e) {
+        e.consume();
+        File initial = optionalResources.getDiseaseCaseDir() != null && optionalResources.getDiseaseCaseDir().isDirectory()
+                ? optionalResources.getDiseaseCaseDir()
+                : new File(System.getProperty("user.home"));
+
+        File curatedDir = Dialogs.selectDirectory((Stage) hg19ProgressIndicator.getScene().getWindow(), initial, "Set directory for curated files.");
+        optionalResources.setDiseaseCaseDir(curatedDir);
     }
 
 }
