@@ -19,7 +19,7 @@ Label {
 }
 
 .age-horizontal SearchableComboBox {
-    -fx-max-width: 60px;
+    -fx-max-width: 80px;
     -fx-min-height: 30px;
 }
 
