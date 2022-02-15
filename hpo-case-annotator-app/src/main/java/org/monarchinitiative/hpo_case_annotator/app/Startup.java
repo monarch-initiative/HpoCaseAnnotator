@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -79,17 +80,29 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
 
             setupGenomicAssemblyRegistry();
 
+            setupFunctionalAnnotationRegistry();
+
             setCuratedFilesFolder(resourceProperties.getProperty(ResourcePaths.DISEASE_CASE_DIR_PROPERTY));
 
             readOmim("/data/omim.tsv");
 
-            readEntrezGenes(resourceProperties.getProperty(ResourcePaths.ENTREZ_GENE_PATH_PROPERTY));
+            readLiftover(resourceProperties.getProperty(ResourcePaths.LIFTOVER_CHAIN_PATHS_PROPERTY));
 
             readHpo(resourceProperties.getProperty(ResourcePaths.ONTOLOGY_PATH_PROPERTY));
             LOGGER.info("Startup complete");
         } catch (IOException e) {
             LOGGER.warn("Error during startup: {}", e.getMessage(), e);
         }
+    }
+
+    private void setupFunctionalAnnotationRegistry() {
+        String hg19 = resourceProperties.getProperty(ResourcePaths.HG19_JANNOVAR_CACHE_PATH);
+        if (hg19 != null)
+            optionalResources.getFunctionalAnnotationResources().setHg19JannovarPath(Paths.get(hg19));
+
+        String hg38 = resourceProperties.getProperty(ResourcePaths.HG38_JANNOVAR_CACHE_PATH);
+        if (hg38 != null)
+            optionalResources.getFunctionalAnnotationResources().setHg38JannovarPath(Paths.get(hg38));
     }
 
     private void setupGenomicAssemblyRegistry() {
@@ -133,18 +146,12 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
         }
     }
 
-    private void readEntrezGenes(String entrezPath) throws IOException {
-        if (entrezPath != null && new File(entrezPath).isFile()) {
-            File entrezGenesFile = new File(entrezPath);
-            LOGGER.debug("Loading Entrez genes from file '{}'", entrezGenesFile.getAbsolutePath());
-            EntrezParser entrezParser = new EntrezParser(entrezGenesFile);
-            entrezParser.readFile();
-            optionalResources.setEntrezId2symbol(entrezParser.getEntrezId2symbol());
-            optionalResources.setSymbol2entrezId(entrezParser.getSymbol2entrezId());
-            optionalResources.setEntrezId2gene(entrezParser.getEntrezMap());
-            optionalResources.setEntrezPath(entrezGenesFile);
-        } else {
-            LOGGER.info("Skipping loading Entrez genes since the location is unset");
+    private void readLiftover(String liftoverChains) {
+        if (liftoverChains != null) {
+            List<File> chainFiles = Arrays.stream(liftoverChains.split(ResourcePaths.LIFTOVER_CHAIN_PATH_SEPARATOR))
+                    .map(File::new)
+                    .toList();
+            optionalResources.liftoverChainFiles().setAll(chainFiles);
         }
     }
 

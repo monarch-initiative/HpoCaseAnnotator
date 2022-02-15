@@ -6,17 +6,17 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblyService;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.GenomicAssemblyService;
 import org.monarchinitiative.hpo_case_annotator.forms.ComponentController;
 import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataException;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
-import org.monarchinitiative.svart.Breakend;
+import org.monarchinitiative.svart.GenomicBreakend;
 import org.monarchinitiative.svart.Contig;
 import org.monarchinitiative.svart.CoordinateSystem;
 import org.monarchinitiative.svart.Strand;
 
-public class BreakendController implements ComponentController<Breakend> {
+public class BreakendController implements ComponentController<GenomicBreakend> {
 
     private final ObjectProperty<GenomicAssemblyService> assemblyService = new SimpleObjectProperty<>(null, "assemblyService");
     @FXML
@@ -48,7 +48,7 @@ public class BreakendController implements ComponentController<Breakend> {
 
 
     @Override
-    public void presentComponent(Breakend breakend) {
+    public void presentComponent(GenomicBreakend breakend) {
         contigComboBox.setValue(breakend.contig());
         positionTextField.setText(String.valueOf(breakend.startWithCoordinateSystem(CoordinateSystem.oneBased())));
         idTextField.setText(breakend.id());
@@ -56,8 +56,8 @@ public class BreakendController implements ComponentController<Breakend> {
     }
 
     @Override
-    public Breakend getComponent() throws InvalidComponentDataException {
+    public GenomicBreakend getComponent() throws InvalidComponentDataException {
         int start = FormUtils.processFormattedInteger(positionTextField.getText());
-        return Breakend.of(contigComboBox.getValue(), idTextField.getText(), isPositiveStrandCheckBox.isSelected() ? Strand.POSITIVE : Strand.NEGATIVE, CoordinateSystem.oneBased(), start, start - 1);
+        return GenomicBreakend.of(contigComboBox.getValue(), idTextField.getText(), isPositiveStrandCheckBox.isSelected() ? Strand.POSITIVE : Strand.NEGATIVE, CoordinateSystem.oneBased(), start, start - 1);
     }
 }

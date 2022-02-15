@@ -11,110 +11,118 @@
     </stylesheets>
     <children>
         <Label styleClass="title" text="Initialize resources" />
-      <VBox styleClass="column">
-         <children>
+        <VBox styleClass="column">
+            <children>
                 <Label styleClass="h2" text="Reference genomes" wrapText="true" />
-            <VBox>
-               <children>
-                  <HBox alignment="CENTER_LEFT" styleClass="row">
-                     <children>
-                            <Label styleClass="h3" text="hg19" />
-                            <Label fx:id="hg19GenomeLabel" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                            <Button mnemonicParsing="false" onAction="#setPathToHg19ButtonAction" text="Set path" />
-                            <Button mnemonicParsing="false" onAction="#downloadHg19RefGenomeButtonAction" text="Download" />
-                            <ProgressIndicator fx:id="hg19ProgressIndicator" progress="0.0" />
-                     </children>
-                  </HBox>
-                  <HBox styleClass="row">
-                     <children>
-                            <Label fx:id="hg19ProgressLabel" textFill="#909090" HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-            <VBox>
-               <children>
-                  <HBox alignment="CENTER_LEFT" styleClass="row">
-                     <children>
-                            <Label styleClass="h3" text="hg38" />
-                            <Label fx:id="hg38GenomeLabel" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                            <Button mnemonicParsing="false" onAction="#setPathToHg38ButtonAction" text="Set path" />
-                            <Button mnemonicParsing="false" onAction="#downloadHg38RefGenomeButtonAction" text="Download" />
-                            <ProgressIndicator fx:id="hg38ProgressIndicator" progress="0.0" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT" styleClass="row">
-                     <children>
-                            <Label fx:id="hg38ProgressLabel" textFill="#909090" />
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-         </children>
-      </VBox>
-      <Separator />
-      <VBox styleClass="column">
-         <children>
-            <HBox alignment="CENTER_LEFT" styleClass="row">
-               <children>
-                      <Label styleClass="h2" text="Human Phenotype Ontology" wrapText="true" />
-                      <Label fx:id="hpOboLabel" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                      <Button mnemonicParsing="false" onAction="#downloadHPOFileButtonAction" text="Download" />
-                      <ProgressIndicator fx:id="hpoProgressIndicator" progress="0.0" />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <Separator />
-      <VBox styleClass="column">
-         <children>
-            <HBox alignment="CENTER_LEFT" styleClass="row">
-               <children>
-                      <Label styleClass="h2" text="Entrez genes" wrapText="true" />
-                      <Label fx:id="entrezGeneLabel" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                      <Button mnemonicParsing="false" onAction="#downloadEntrezGenesButtonAction" text="Download" />
-                      <ProgressIndicator fx:id="entrezProgressIndicator" progress="0.0" />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <Separator />
-      <VBox styleClass="column">
-         <children>
-            <HBox alignment="CENTER_LEFT" styleClass="row">
-               <children>
-                      <Label styleClass="h2" text="Curated files directory" wrapText="true" />
-                      <Label fx:id="curatedFilesDirLabel" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                      <Button mnemonicParsing="false" onAction="#setCuratedDirButtonAction" text="Set path" />
-                  <Pane styleClass="progress-bar-placeholder" />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <Separator />
-      <VBox styleClass="column">
-         <children>
-            <HBox alignment="CENTER_LEFT" styleClass="row">
-               <children>
-                      <Label styleClass="h2" text="Liftover chain files" />
-                  <Pane HBox.hgrow="ALWAYS" />
-                      <Button mnemonicParsing="false" onAction="#downloadLiftoverChainFiles" text="Download" />
-                  <Pane styleClass="progress-bar-placeholder" />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <Separator />
-      <VBox styleClass="column">
-         <children>
-            <HBox alignment="CENTER_LEFT" styleClass="row">
-               <children>
-                      <Label styleClass="h2" text="Biocurator ID" />
-                      <TextField fx:id="biocuratorIDTextField" promptText="enter your curator ID here" />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-        <fx:include fx:id="statusBar" source="StatusBar.fxml" />
+                <VBox>
+                    <children>
+                        <HBox alignment="CENTER_LEFT" styleClass="row">
+                            <children>
+                                <Label styleClass="h3" text="hg19" />
+                                <Label fx:id="hg19GenomeLabel" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                                <Button mnemonicParsing="false" onAction="#setPathToHg19ButtonAction" text="Set path" />
+                                <Button mnemonicParsing="false" onAction="#downloadHg19RefGenomeButtonAction" text="Download" />
+                                <ProgressIndicator fx:id="hg19ProgressIndicator" progress="0.0" />
+                            </children>
+                        </HBox>
+                        <HBox styleClass="row">
+                            <children>
+                                <Label fx:id="hg19ProgressLabel" textFill="#909090" HBox.hgrow="ALWAYS" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+                <VBox>
+                    <children>
+                        <HBox alignment="CENTER_LEFT" styleClass="row">
+                            <children>
+                                <Label styleClass="h3" text="hg38" />
+                                <Label fx:id="hg38GenomeLabel" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                                <Button mnemonicParsing="false" onAction="#setPathToHg38ButtonAction" text="Set path" />
+                                <Button mnemonicParsing="false" onAction="#downloadHg38RefGenomeButtonAction" text="Download" />
+                                <ProgressIndicator fx:id="hg38ProgressIndicator" progress="0.0" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" styleClass="row">
+                            <children>
+                                <Label fx:id="hg38ProgressLabel" textFill="#909090" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+        <Separator />
+        <VBox styleClass="column">
+            <children>
+                <Label styleClass="h2" text="Jannovar transcript databases (functional annotation)" wrapText="true" />
+                <HBox alignment="CENTER_LEFT" styleClass="row">
+                    <children>
+                        <Label styleClass="h3" text="hg19" />
+                        <Label fx:id="hg19JannovarLabel" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#setPathToHg19JannovarButtonAction" text="Set path" />
+                        <Pane styleClass="progress-bar-placeholder" />
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" styleClass="row">
+                    <children>
+                        <Label styleClass="h3" text="hg38" />
+                        <Label fx:id="hg38JannovarLabel" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#setPathToHg38JannovarButtonAction" text="Set path" />
+                        <Pane styleClass="progress-bar-placeholder" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+        <Separator />
+        <VBox styleClass="column">
+            <children>
+                <Label styleClass="h2" text="Human Phenotype Ontology" wrapText="true" />
+                <HBox alignment="CENTER_LEFT" styleClass="row">
+                    <children>
+                        <Label fx:id="hpOboLabel" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#downloadHPOFileButtonAction" text="Download" />
+                        <ProgressIndicator fx:id="hpoProgressIndicator" progress="0.0" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+        <Separator />
+        <VBox styleClass="column">
+            <children>
+                <Label styleClass="h2" text="Liftover chain files" />
+                <HBox alignment="CENTER_LEFT" styleClass="row">
+                    <children>
+                        <ListView fx:id="liftoverChainPathsListView" prefHeight="60.0" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#downloadLiftoverChainFiles" text="Download" />
+                        <Pane styleClass="progress-bar-placeholder" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+        <Separator />
+        <VBox styleClass="column">
+            <children>
+                <Label styleClass="h2" text="Curated files directory" wrapText="true" />
+                <HBox alignment="CENTER_LEFT" styleClass="row">
+                    <children>
+                        <Label fx:id="curatedFilesDirLabel" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#setCuratedDirButtonAction" text="Set path" />
+                        <Pane styleClass="progress-bar-placeholder" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+        <Separator />
+        <VBox styleClass="column">
+            <children>
+                <Label styleClass="h2" text="Biocurator ID" />
+                <HBox alignment="CENTER_LEFT" styleClass="row">
+                    <children>
+                        <TextField fx:id="biocuratorIDTextField" promptText="enter your curator ID here" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
     </children>
 </VBox>

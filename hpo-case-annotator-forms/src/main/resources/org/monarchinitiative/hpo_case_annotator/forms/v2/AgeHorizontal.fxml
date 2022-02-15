@@ -7,7 +7,7 @@
 
 <HBox alignment="CENTER_LEFT" styleClass="age-horizontal" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.AgeController">
     <stylesheets>
-        <URL value="@base.css" />
+        <URL value="@../base.css" />
         <URL value="@age.css" />
     </stylesheets>
     <children>

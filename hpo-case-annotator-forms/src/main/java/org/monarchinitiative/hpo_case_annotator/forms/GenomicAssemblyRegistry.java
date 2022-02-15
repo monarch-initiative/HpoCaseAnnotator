@@ -2,7 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.forms;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import org.monarchinitiative.hpo_case_annotator.core.reference.GenomicAssemblyService;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.GenomicAssemblyService;
 
 public class GenomicAssemblyRegistry {
 

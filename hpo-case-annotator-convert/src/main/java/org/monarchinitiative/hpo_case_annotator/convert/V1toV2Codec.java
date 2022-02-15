@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.convert;
 
+import org.monarchinitiative.hpo_case_annotator.model.Hg18GenomicAssembly;
 import org.monarchinitiative.hpo_case_annotator.model.convert.Codec;
 import org.monarchinitiative.hpo_case_annotator.model.convert.ModelTransformationException;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
@@ -13,7 +14,10 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.*;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.monarchinitiative.svart.*;
+import org.monarchinitiative.svart.assembly.GenomicAssemblies;
+import org.monarchinitiative.svart.assembly.GenomicAssembly;
 
+import java.text.NumberFormat;
 import java.time.Instant;
 import java.time.Period;
 import java.time.format.DateTimeParseException;
@@ -21,11 +25,11 @@ import java.util.*;
 
 class V1toV2Codec implements Codec<DiseaseCase, Study> {
 
-    private static final String DEFAULT_VARIANT_ID = "";
+    private static final NumberFormat NF = NumberFormat.getNumberInstance(Locale.US);
     private static final String DEFAULT_PARENTAL_ID = "";
     private static final V1toV2Codec INSTANCE = new V1toV2Codec();
     private static final Map<GenomeAssembly, GenomicAssembly> ASSEMBLIES = Map.of(
-            GenomeAssembly.NCBI_36, GenomicAssembly.readAssembly(Objects.requireNonNull(V1toV2Codec.class.getResourceAsStream("GCF_000001405.12_NCBI36_assembly_report.txt"), "Missing genome hg18 assembly report file. Contact developers")),
+            GenomeAssembly.NCBI_36, Hg18GenomicAssembly.hg18GenomicAssembly(),
             GenomeAssembly.GRCH_37, GenomicAssemblies.GRCh37p13(),
             GenomeAssembly.GRCH_38, GenomicAssemblies.GRCh38p13()
     );
@@ -71,16 +75,23 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         ConfidenceInterval startCi = ConfidenceInterval.of(variantPosition.getCiBeginOne(), variantPosition.getCiBeginTwo());
         Coordinates coordinates = Coordinates.of(CoordinateSystem.oneBased(), variantPosition.getPos(), startCi, variantPosition.getPos(), startCi);
 
-        VariantMetadata variantMetadata = parseVariantMetadata(variant);
 
         // The assembly will not be null, as it is null-checked in `parseContig` method above
         GenomicAssembly assembly = ASSEMBLIES.get(variantPosition.getGenomeAssembly());
-        org.monarchinitiative.svart.Variant v = org.monarchinitiative.svart.Variant.of(contig,
-                DEFAULT_VARIANT_ID,
+        String variantId = createIntrachromosomalVariantId(variantPosition.getGenomeAssembly(),
+                contig.name(),
+                coordinates.start(),
+                coordinates.end(),
+                variantPosition.getRefAllele(),
+                variantPosition.getAltAllele());
+        GenomicVariant v = GenomicVariant.of(contig,
+                variantId,
                 Strand.POSITIVE,
                 coordinates,
                 variantPosition.getRefAllele(),
                 variantPosition.getAltAllele());
+
+        VariantMetadata variantMetadata = parseVariantMetadata(variant);
         return CuratedVariant.of(assembly.name(), v, variantMetadata);
     }
 
@@ -112,18 +123,25 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
             case CNV, STR, TRA, BND, UNKNOWN, NON_STRUCTURAL, UNRECOGNIZED -> throw new ModelTransformationException("Unexpected SV type for symbolic variant: " + variant.getSvType());
         };
 
-        VariantMetadata variantMetadata = parseVariantMetadata(variant);
-        org.monarchinitiative.svart.Variant v = org.monarchinitiative.svart.Variant.of(contig,
-                DEFAULT_VARIANT_ID,
+        String altAllele = String.format("<%s>", variantPosition.getAltAllele());
+        String variantId = createIntrachromosomalVariantId(variantPosition.getGenomeAssembly(),
+                contig.name(),
+                coordinates.start(),
+                coordinates.end(),
+                variantPosition.getRefAllele(),
+                altAllele);
+
+        GenomicVariant v = GenomicVariant.of(contig,
+                variantId,
                 Strand.POSITIVE,
                 coordinates,
                 variantPosition.getRefAllele(),
-                String.format("<%s>", variantPosition.getAltAllele()),
+                altAllele,
                 changeLength);
 
         // The assembly will not be null, as it is null-checked in `parseContig` method above
         GenomicAssembly assembly = ASSEMBLIES.get(variantPosition.getGenomeAssembly());
-
+        VariantMetadata variantMetadata = parseVariantMetadata(variant);
         return CuratedVariant.of(assembly.name(), v, variantMetadata);
     }
 
@@ -142,9 +160,13 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         Coordinates leftCoordinates = Coordinates.of(CoordinateSystem.zeroBased(),
                 variantPosition.getPos(), leftCi,
                 variantPosition.getPos(), leftCi);
-        Breakend left = Breakend.of(leftContig,
-                DEFAULT_VARIANT_ID,
-                directionToStrand(variantPosition.getContigDirection()),
+        Strand leftStrand = directionToStrand(variantPosition.getContigDirection());
+        GenomicBreakend left = GenomicBreakend.of(leftContig,
+                createBreakendId(variantPosition.getGenomeAssembly(),
+                        leftContig.name(),
+                        leftStrand,
+                        leftCoordinates.start()),
+                leftStrand,
                 leftCoordinates);
 
         // right breakend
@@ -153,13 +175,25 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         Coordinates rightCoordinates = Coordinates.of(CoordinateSystem.zeroBased(),
                 variantPosition.getPos2(), rightCi,
                 variantPosition.getPos2(), rightCi);
-        Breakend right = Breakend.of(rightContig,
-                DEFAULT_VARIANT_ID,
-                directionToStrand(variantPosition.getContig2Direction()),
+        Strand rightStrand = directionToStrand(variantPosition.getContig2Direction());
+        GenomicBreakend right = GenomicBreakend.of(rightContig,
+                createBreakendId(variantPosition.getGenomeAssembly(),
+                        rightContig.name(),
+                        rightStrand,
+                        rightCoordinates.start()),
+                rightStrand,
                 rightCoordinates);
 
-        VariantMetadata variantMetadata = parseVariantMetadata(variant);
-        org.monarchinitiative.svart.Variant v = org.monarchinitiative.svart.Variant.of(DEFAULT_VARIANT_ID,
+        // assemble breakend variant
+        String variantId = createBreakendVariantId(variantPosition.getGenomeAssembly(),
+                leftContig.name(),
+                leftCoordinates.start(),
+                rightContig.name(),
+                rightCoordinates.start(),
+                variantPosition.getRefAllele(),
+                variantPosition.getAltAllele());
+
+        GenomicVariant v = GenomicVariant.of(variantId,
                 left,
                 right,
                 variantPosition.getRefAllele(),
@@ -167,6 +201,7 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
 
         // The assembly will not be null, as it is null-checked in `parseContig` method above
         GenomicAssembly assembly = ASSEMBLIES.get(variantPosition.getGenomeAssembly());
+        VariantMetadata variantMetadata = parseVariantMetadata(variant);
         return CuratedVariant.of(assembly.name(), v, variantMetadata);
     }
 
@@ -228,6 +263,18 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
             case NO_CSS -> SplicingVariantMetadata.CrypticSpliceSiteType.NO_CSS;
             case UNRECOGNIZED -> throw new ModelTransformationException("Unknown cryptic splice site type `" + crypticSpliceSiteType + "`");
         };
+    }
+
+    private static String createIntrachromosomalVariantId(GenomeAssembly assembly, String contig, int start, int end, String ref, String alt) {
+        return String.join("-", assembly.name(), contig, NF.format(start), NF.format(end), ref, alt);
+    }
+
+    private static String createBreakendId(GenomeAssembly assembly, String contig, Strand strand, int pos) {
+        return String.join("-", assembly.name(), contig, NF.format(pos), strand.isPositive() ? "[+]" : "[-]");
+    }
+
+    private static String createBreakendVariantId(GenomeAssembly assembly, String leftContig, int leftPos, String rightContig, int rightPos, String ref, String alt) {
+        return String.join("-", assembly.name(), leftContig, NF.format(leftPos), rightContig, NF.format(rightPos), ref, alt);
     }
 
     private static List<CuratedVariant> transformVariants(List<Variant> variantList) throws ModelTransformationException {

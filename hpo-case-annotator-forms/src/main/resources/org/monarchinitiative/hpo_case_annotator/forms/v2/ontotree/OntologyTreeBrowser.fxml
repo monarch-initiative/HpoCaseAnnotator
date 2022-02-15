@@ -7,7 +7,7 @@
 <VBox fx:id="ontologyBrowserBox" alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController">
     <stylesheets>
-        <URL value="@../base.css"/>
+        <URL value="@../../base.css"/>
         <URL value="@ontology-tree.css"/>
     </stylesheets>
     <children>

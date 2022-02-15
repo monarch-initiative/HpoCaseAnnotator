@@ -8,7 +8,7 @@
 <VBox styleClass="section" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfBreakendVariantController">
     <stylesheets>
         <URL value="@variant.css" />
-        <URL value="@../base.css" />
+        <URL value="@../../base.css" />
     </stylesheets>
     <children>
           <Label styleClass="h2" text="VCF breakend variant" />

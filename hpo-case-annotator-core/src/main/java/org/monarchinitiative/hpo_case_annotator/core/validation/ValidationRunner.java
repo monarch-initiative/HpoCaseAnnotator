@@ -2,7 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.core.validation;
 
 
 import com.google.protobuf.Message;
-import org.monarchinitiative.hpo_case_annotator.core.reference.GenomeAssemblies;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.obsoleted.GenomeAssemblies;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Publication;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;

@@ -9,18 +9,18 @@ import org.monarchinitiative.hpo_case_annotator.io.ModelParser;
 import org.monarchinitiative.hpo_case_annotator.io.v2.json.deserialize.*;
 import org.monarchinitiative.hpo_case_annotator.io.v2.json.deserialize.variant.*;
 import org.monarchinitiative.hpo_case_annotator.io.v2.json.serialize.*;
+import org.monarchinitiative.hpo_case_annotator.model.Hg18GenomicAssembly;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.*;
 import org.monarchinitiative.svart.ConfidenceInterval;
-import org.monarchinitiative.svart.GenomicAssemblies;
-import org.monarchinitiative.svart.GenomicAssembly;
+import org.monarchinitiative.svart.assembly.GenomicAssemblies;
+import org.monarchinitiative.svart.assembly.GenomicAssembly;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
-import java.util.Objects;
 
 public class JsonStudyParser implements ModelParser<Study> {
 
@@ -28,7 +28,7 @@ public class JsonStudyParser implements ModelParser<Study> {
 
     private static final JsonStudyParser INSTANCE = of(
             // hg18
-            GenomicAssembly.readAssembly(Objects.requireNonNull(JsonStudyParser.class.getResourceAsStream("GCF_000001405.12_NCBI36_assembly_report.txt"), "Missing genome hg18 assembly report file. Contact developers")),
+            Hg18GenomicAssembly.hg18GenomicAssembly(),
             // hg19
             GenomicAssemblies.GRCh37p13(),
             // hg38

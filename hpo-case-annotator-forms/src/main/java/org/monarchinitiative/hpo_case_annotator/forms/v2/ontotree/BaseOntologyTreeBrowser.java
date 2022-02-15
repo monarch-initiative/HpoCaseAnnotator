@@ -30,7 +30,7 @@ public class BaseOntologyTreeBrowser {
         Set<TermId> parents = ontology.getParentTermIds(termId); //getTermParents(term);
         while (parents.size() != 0) {
             TermId parent = parents.iterator().next();
-            path.add(ontology.getTermMap().get(parent).getId());
+            path.add(ontology.getTermMap().get(parent).id());
             parents = ontology.getParentTermIds(parent);
         }
         return path;

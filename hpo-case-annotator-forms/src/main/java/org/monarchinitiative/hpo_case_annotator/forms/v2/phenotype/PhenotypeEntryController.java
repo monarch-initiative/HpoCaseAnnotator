@@ -65,6 +65,8 @@ public class PhenotypeEntryController {
         phenotypicFeatureController.ontologyProperty().bind(ontology);
 
         TextFields.bindAutoCompletion(searchTextField, suggestionProvider);
+
+        removeButton.disableProperty().bind(phenotypicFeaturesTableController.selectedPhenotypeDescription().isNull());
     }
 
     @FXML
@@ -89,16 +91,14 @@ public class PhenotypeEntryController {
 
     @FXML
     private void removeButtonAction() {
-        ObservableList<Integer> selectedIndices = phenotypicFeaturesTableController.getSelectionModel().getSelectedIndices();
-        for (int idx : selectedIndices) {
-            phenotypicFeaturesTableController.observablePhenotypeDescriptions().remove(idx);
-        }
+        ObservableList<ObservablePhenotypicFeature> selectedIndices = phenotypicFeaturesTableController.getSelectionModel().getSelectedItems();
+        phenotypicFeaturesTableController.observablePhenotypeDescriptions().removeAll(selectedIndices);
     }
 
     @FXML
     private void searchTextFieldAction() {
         String text = searchTextField.getText();
-        LOGGER.info("Searching for `{}`", text);
+        LOGGER.debug("Searching for `{}`", text);
         suggestionProvider.termIdForName(text)
                 .ifPresent(termId -> ontologyTreeBrowserController.navigateToTermId(termId));
     }

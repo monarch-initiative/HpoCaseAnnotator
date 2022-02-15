@@ -15,11 +15,14 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.cache.HgvsVaria
 public class ControllerFactory implements HCAControllerFactory {
 
     private final GenomicAssemblyRegistry genomicAssemblyRegistry;
+    private final FunctionalAnnotationRegistry functionalAnnotationRegistry;
     private final GeneIdentifierService geneIdentifierService;
 
     public ControllerFactory(GenomicAssemblyRegistry genomicAssemblyRegistry,
+                             FunctionalAnnotationRegistry functionalAnnotationRegistry,
                              GeneIdentifierService geneIdentifierService) {
         this.genomicAssemblyRegistry = genomicAssemblyRegistry;
+        this.functionalAnnotationRegistry = functionalAnnotationRegistry;
         this.geneIdentifierService = geneIdentifierService;
     }
 
@@ -31,11 +34,11 @@ public class ControllerFactory implements HCAControllerFactory {
     public Object call(Class<?> clz) {
         // variant
         if (clz.equals(VcfSequenceVariantController.class)) {
-            return new VcfSequenceVariantController(genomicAssemblyRegistry);
+            return new VcfSequenceVariantController(genomicAssemblyRegistry, functionalAnnotationRegistry);
         } else if (clz.equals(VcfSymbolicVariantController.class)) {
-            return new VcfSymbolicVariantController(genomicAssemblyRegistry);
+            return new VcfSymbolicVariantController(genomicAssemblyRegistry, functionalAnnotationRegistry);
         } else if (clz.equals(VcfBreakendVariantController.class)) {
-            return new VcfBreakendVariantController(genomicAssemblyRegistry);
+            return new VcfBreakendVariantController(genomicAssemblyRegistry, functionalAnnotationRegistry);
         } else if (clz.equals(BreakendController.class)) {
             return new BreakendController();
         } else if (clz.equals(HgvsVariantController.class)) {
@@ -43,21 +46,6 @@ public class ControllerFactory implements HCAControllerFactory {
         } else if (clz.equals(VariantSummaryController.class)) {
             return new VariantSummaryController(this);
         }
-
-        // unified
-        /*
-        else if (clz.equals(UnifiedCuratedVariantController.class)) {
-            return new UnifiedCuratedVariantController();
-        } else if (clz.equals(UnifiedVcfSequenceVariantController.class)) {
-            return new UnifiedVcfSequenceVariantController(genomicAssemblyRegistry);
-        } else if (clz.equals(UnifiedVcfSymbolicVariantController.class)) {
-            return new UnifiedVcfSymbolicVariantController(genomicAssemblyRegistry);
-        } else if (clz.equals(UnifiedVcfBreakendVariantController.class)) {
-            return new UnifiedVcfBreakendVariantController(genomicAssemblyRegistry);
-        } else if (clz.equals(UnifiedBreakendController.class)) {
-            return new UnifiedBreakendController();
-        }
-        */
 
         // various
         else if (clz.equals(AgeController.class)) {
@@ -76,7 +64,7 @@ public class ControllerFactory implements HCAControllerFactory {
         } else if (clz.equals(SelectableOntologyTreeController.class)) {
             return new SelectableOntologyTreeController();
         } else if (clz.equals(PhenotypeBrowserController.class)) {
-            return new PhenotypeBrowserController(this);
+            return new PhenotypeBrowserController<>(this);
         } else if (clz.equals(OntologyTreeBrowserController.class)) {
             return new OntologyTreeBrowserController();
         }

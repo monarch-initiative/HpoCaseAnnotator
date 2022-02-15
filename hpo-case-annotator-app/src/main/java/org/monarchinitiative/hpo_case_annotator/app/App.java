@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.app;
 
 import javafx.application.Application;
-import javafx.application.HostServices;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,6 +12,7 @@ import javafx.stage.WindowEvent;
 import org.monarchinitiative.hpo_case_annotator.app.config.*;
 import org.monarchinitiative.hpo_case_annotator.app.dialogs.Dialogs;
 import org.monarchinitiative.hpo_case_annotator.app.controller.Main;
+import org.monarchinitiative.hpo_case_annotator.app.model.FunctionalAnnotationResources;
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResource;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResources;
@@ -22,7 +22,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -30,6 +29,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 @EnableConfigurationProperties({
@@ -94,15 +94,29 @@ public class App extends Application {
                     .ifPresent(refGenomePath -> resourceProperties.setProperty(ResourcePaths.HG38_FASTA_PATH_PROPETY, refGenomePath));
         }
 
+        FunctionalAnnotationResources functionalAnnotationResources = optionalResources.getFunctionalAnnotationResources();
+        if (functionalAnnotationResources != null) {
+            Path hg19JannovarPath = functionalAnnotationResources.getHg19JannovarPath();
+            if (hg19JannovarPath != null)
+                resourceProperties.setProperty(ResourcePaths.HG19_JANNOVAR_CACHE_PATH, hg19JannovarPath.toAbsolutePath().toString());
+            Path hg38JannovarPath = functionalAnnotationResources.getHg38JannovarPath();
+            if (hg38JannovarPath != null)
+                resourceProperties.setProperty(ResourcePaths.HG38_JANNOVAR_CACHE_PATH, hg38JannovarPath.toAbsolutePath().toString());
+        }
+
         if (optionalResources.getOntologyPath() != null) {
             resourceProperties.setProperty(ResourcePaths.ONTOLOGY_PATH_PROPERTY, optionalResources.getOntologyPath().getAbsolutePath());
-        }
-        if (optionalResources.getEntrezPath() != null) {
-            resourceProperties.setProperty(ResourcePaths.ENTREZ_GENE_PATH_PROPERTY, optionalResources.getEntrezPath().getAbsolutePath());
         }
         if (optionalResources.getDiseaseCaseDir() != null) {
             resourceProperties.setProperty(ResourcePaths.DISEASE_CASE_DIR_PROPERTY, optionalResources.getDiseaseCaseDir().getAbsolutePath());
         }
+
+        String liftoverChains = optionalResources.liftoverChainFiles().stream()
+                .map(File::getAbsolutePath)
+                .collect(Collectors.joining(ResourcePaths.LIFTOVER_CHAIN_PATH_SEPARATOR));
+        if (!liftoverChains.isBlank())
+            resourceProperties.setProperty(ResourcePaths.LIFTOVER_CHAIN_PATHS_PROPERTY, liftoverChains);
+
         if (optionalResources.getBiocuratorId() != null) {
             resourceProperties.setProperty(ResourcePaths.BIOCURATOR_ID_PROPERTY, optionalResources.getBiocuratorId());
         }

@@ -5,7 +5,10 @@ import com.google.inject.Injector;
 import com.google.inject.Provides;
 import javafx.application.HostServices;
 import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverAdapter;
-import org.monarchinitiative.hpo_case_annotator.core.reference.*;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.*;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.obsoleted.DeprecatedGenomicAssemblyRegistry;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.obsoleted.GenomeAssemblies;
+import org.monarchinitiative.hpo_case_annotator.core.reference.genome.obsoleted.GenomeAssembliesSerializer;
 import org.monarchinitiative.hpo_case_annotator.forms.*;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
@@ -24,8 +27,8 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSymbolicVari
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.*;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.*;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
-import org.monarchinitiative.svart.GenomicAssemblies;
-import org.monarchinitiative.svart.GenomicAssembly;
+import org.monarchinitiative.svart.assembly.GenomicAssemblies;
+import org.monarchinitiative.svart.assembly.GenomicAssembly;
 import org.monarchinitiative.svart.GenomicRegion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,17 +110,17 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
     @Provides
     public VcfBreakendVariantController vcfBreakendVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
-        return new VcfBreakendVariantController(genomicAssemblyRegistry);
+        return new VcfBreakendVariantController(genomicAssemblyRegistry, null);
     }
 
     @Provides
     public VcfSymbolicVariantController vcfSymbolicVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
-        return new VcfSymbolicVariantController(genomicAssemblyRegistry);
+        return new VcfSymbolicVariantController(genomicAssemblyRegistry, null);
     }
 
     @Provides
     public VcfSequenceVariantController vcfSequenceVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
-        return new VcfSequenceVariantController(genomicAssemblyRegistry);
+        return new VcfSequenceVariantController(genomicAssemblyRegistry, null);
     }
 
     @Provides

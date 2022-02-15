@@ -57,6 +57,8 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual> exte
     private PhenotypicFeatureController phenotypicFeatureController;
 
     @FXML
+    private Button textMiningButton;
+    @FXML
     private Button addPhenotypeFeatureButton;
     @FXML
     private Button removePhenotypeFeatureButton;
@@ -76,6 +78,8 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual> exte
         // phenotypic feature is disabled when no phenotypic feature is selected
         phenotypicFeatureController.disableProperty().bind(phenotypicFeaturesTableController.getSelectionModel().selectedItemProperty().isNull());
         phenotypicFeatureController.dataProperty().bind(phenotypicFeaturesTableController.selectedPhenotypeDescription());
+
+//        textMiningButton.disableProperty().bind(ontology.isNull());
 
         removePhenotypeFeatureButton.disableProperty().bind(phenotypicFeaturesTableController.getSelectionModel().selectedItemProperty().isNull());
     }
@@ -168,4 +172,57 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual> exte
     public ObjectProperty<T> dataProperty() {
         return individual;
     }
+
+
+    @FXML
+    private void textMiningButtonAction(ActionEvent e) {
+        e.consume();
+
+        /*
+        try {
+            URL sciGraphServerUrl = new URL("https://scigraph-ontology.monarchinitiative.org/scigraph/annotations/complete");
+            Set<Main.PhenotypeTerm> phenotypeTerms = phenotypicFeaturesTableController.observablePhenotypeDescriptions().stream()
+                    .map(toPhenotypeTerm())
+                    .flatMap(Optional::stream)
+                    .collect(Collectors.toSet());
+
+            HpoTextMining mining = HpoTextMining.builder()
+                    .withSciGraphUrl(sciGraphServerUrl)
+                    .withPhenotypeTerms(phenotypeTerms)
+                    .withOntology(ontology.get()) // should not be null since the button is enabled only when the ontology is set
+                    .build();
+
+            Parent parent = mining.getMainParent();
+            Stage stage = new Stage();
+            stage.initOwner(ontologyTreeBrowser.getScene().getWindow());
+            stage.setTitle("Mine phenotype features");
+            stage.setScene(new Scene(parent));
+            stage.initStyle(StageStyle.DECORATED);
+            stage.showAndWait();
+
+            Set<Main.PhenotypeTerm> approved = mining.getApprovedTerms();
+            System.err.println("Approved:");
+            approved.forEach(System.err::println);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        */
+    }
+
+    /*
+    private Function<ObservablePhenotypicFeature, Optional<Main.PhenotypeTerm>> toPhenotypeTerm() {
+        return opf -> {
+            Ontology ontology = this.ontology.get();
+            if (ontology == null)
+                return Optional.empty();
+
+            Term term = ontology.getTermMap().get(opf.getTermId());
+            if (term == null)
+                return Optional.empty();
+
+            return Optional.of(new Main.PhenotypeTerm(term, !opf.isExcluded()));
+        };
+    }
+     */
 }
