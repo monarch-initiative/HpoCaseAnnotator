@@ -175,7 +175,7 @@ public class Main {
         var cohortStudy = new CommandLinksDialog.CommandLinksButtonType("Cohort study", "Enter data about several unrelated individuals.", false);
         CommandLinksDialog dialog = new CommandLinksDialog(individualStudy, familyStudy, cohortStudy);
         dialog.setTitle("New study");
-        dialog.setHeaderText("Select study type.");
+        dialog.setHeaderText("Select study type");
         dialog.setContentText("HCA supports the following study types:");
         Optional<ButtonType> buttonType = dialog.showAndWait();
 
@@ -507,7 +507,7 @@ public class Main {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Fetch publication from PubMed");
         dialog.setHeaderText("Enter PMID number");
-        dialog.setContentText("E.g. 34289339");
+        dialog.setContentText("E.g. 18023225");
         dialog.initOwner(getOwnerWindow());
         TextFormatter<Integer> formatter = new TextFormatter<>(new IntegerStringConverter());
         dialog.getEditor().setTextFormatter(formatter);
