@@ -37,15 +37,12 @@ public class OptionalResources {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OptionalResources.class);
 
-    private final BooleanBinding entrezIsMissing;
-
     private final BooleanBinding omimIsMissing;
 
     private final BooleanBinding diseaseCaseDirIsInitialized;
 
     private final ObjectProperty<File> diseaseCaseDir = new SimpleObjectProperty<>(this, "diseaseCaseDir");
     private final ObjectProperty<File> ontologyPath = new SimpleObjectProperty<>(this, "ontologyPath");
-    private final ObjectProperty<File> entrezPath = new SimpleObjectProperty<>(this, "entrezPath");
     private final ObjectProperty<GenomicLocalResources> genomicLocalResources = new SimpleObjectProperty<>(this, "genomicResources", new GenomicLocalResources());
     private final ObjectProperty<GenomicAssemblyRegistry> genomicAssemblyRegistry = new SimpleObjectProperty<>(this, "genomicAssemblyRegistry", new GenomicAssemblyRegistry());
     private final ObjectProperty<FunctionalAnnotationResources> functionalAnnotationResources = new SimpleObjectProperty<>(this, "functionalAnnotationResources", new FunctionalAnnotationResources());
@@ -57,12 +54,6 @@ public class OptionalResources {
 
     private final ObjectProperty<Ontology> ontology = new SimpleObjectProperty<>(this, "ontology");
 
-    private final ObjectProperty<Map<Integer, Gene>> entrezId2gene = new SimpleObjectProperty<>(this, "entrezId2gene");
-
-    private final ObjectProperty<Map<String, String>> entrezId2symbol = new SimpleObjectProperty<>(this, "entrezId2symbol");
-
-    private final ObjectProperty<Map<String, String>> symbol2entrezId = new SimpleObjectProperty<>(this, "symbol2entrezId");
-
     private final ObservableList<DiseaseIdentifier> diseaseIdentifiers = FXCollections.observableList(new LinkedList<>());
 
     @Deprecated
@@ -72,9 +63,6 @@ public class OptionalResources {
     private final ObjectProperty<Map<String, String>> canonicalName2mimid = new SimpleObjectProperty<>(this,"canonicalName2mimid");
 
     public OptionalResources() {
-        this.entrezIsMissing = Bindings.createBooleanBinding(() -> Stream.of(entrezId2geneProperty(),
-                entrezId2symbolProperty(), symbol2entrezIdProperty()).anyMatch(op -> op.get() == null),
-                entrezId2geneProperty(), entrezId2symbolProperty(), symbol2entrezIdProperty());
         this.omimIsMissing = Bindings.createBooleanBinding(() -> Stream.of(mimid2canonicalNameProperty(),
                 canonicalName2mimidProperty()).anyMatch(op -> op.get() == null),
                 mimid2canonicalNameProperty(), canonicalName2mimidProperty());
@@ -159,19 +147,6 @@ public class OptionalResources {
         return ontologyPath;
     }
 
-    public File getEntrezPath() {
-        return entrezPath.get();
-    }
-
-
-    public void setEntrezPath(File entrezPath) {
-        this.entrezPath.set(entrezPath);
-    }
-
-    public ObjectProperty<File> entrezPathProperty() {
-        return entrezPath;
-    }
-
     public Boolean getOmimIsMissing() {
         return omimIsMissing.get();
     }
@@ -215,46 +190,6 @@ public class OptionalResources {
         return diseaseIdentifiers;
     }
 
-    public Boolean getEntrezIsMissing() {
-        return entrezIsMissing.get();
-    }
-
-
-    public BooleanBinding entrezIsMissingProperty() {
-        return entrezIsMissing;
-    }
-
-
-    public Map<Integer, Gene> getEntrezId2gene() {
-        return entrezId2gene.get();
-    }
-
-
-    public void setEntrezId2gene(Map<Integer, Gene> entrezId2gene) {
-        this.entrezId2gene.set(entrezId2gene);
-    }
-
-
-    public ObjectProperty<Map<Integer, Gene>> entrezId2geneProperty() {
-        return entrezId2gene;
-    }
-
-
-    public Map<String, String> getEntrezId2symbol() {
-        return entrezId2symbol.get();
-    }
-
-
-    public void setEntrezId2symbol(Map<String, String> entrezId2symbol) {
-        this.entrezId2symbol.set(entrezId2symbol);
-    }
-
-
-    public ObjectProperty<Map<String, String>> entrezId2symbolProperty() {
-        return entrezId2symbol;
-    }
-
-
     public File getDiseaseCaseDir() {
         return diseaseCaseDir.get();
     }
@@ -297,21 +232,6 @@ public class OptionalResources {
 
     public ObjectProperty<Ontology> ontologyProperty() {
         return ontology;
-    }
-
-
-    public Map<String, String> getSymbol2entrezId() {
-        return symbol2entrezId.get();
-    }
-
-
-    public void setSymbol2entrezId(Map<String, String> symbol2entrezId) {
-        this.symbol2entrezId.set(symbol2entrezId);
-    }
-
-
-    public ObjectProperty<Map<String, String>> symbol2entrezIdProperty() {
-        return symbol2entrezId;
     }
 
     public ObservableList<File> liftoverChainFiles() {

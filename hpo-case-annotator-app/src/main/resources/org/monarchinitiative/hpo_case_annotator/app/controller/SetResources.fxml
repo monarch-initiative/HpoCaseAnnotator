@@ -92,19 +92,6 @@
          <children>
             <HBox alignment="CENTER_LEFT" styleClass="row">
                <children>
-                      <Label styleClass="h2" text="Entrez genes" wrapText="true" />
-                      <Label fx:id="entrezGeneLabel" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                      <Button mnemonicParsing="false" onAction="#downloadEntrezGenesButtonAction" text="Download" />
-                      <ProgressIndicator fx:id="entrezProgressIndicator" progress="0.0" />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <Separator />
-      <VBox styleClass="column">
-         <children>
-            <HBox alignment="CENTER_LEFT" styleClass="row">
-               <children>
                       <Label styleClass="h2" text="Curated files directory" wrapText="true" />
                       <Label fx:id="curatedFilesDirLabel" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                       <Button mnemonicParsing="false" onAction="#setCuratedDirButtonAction" text="Set path" />

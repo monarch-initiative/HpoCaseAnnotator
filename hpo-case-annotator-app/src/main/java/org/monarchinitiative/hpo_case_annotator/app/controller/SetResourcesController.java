@@ -89,12 +89,6 @@ public class SetResourcesController {
     private ProgressIndicator hpoProgressIndicator;
 
     @FXML
-    private Label entrezGeneLabel;
-
-    @FXML
-    private ProgressIndicator entrezProgressIndicator;
-
-    @FXML
     private Label curatedFilesDirLabel;
 
     @FXML
@@ -141,7 +135,6 @@ public class SetResourcesController {
         hg38JannovarLabel.textProperty().bind(optionalResources.getFunctionalAnnotationResources().hg38JannovarPathProperty().asString());
 
         hpOboLabel.textProperty().bind(optionalResources.ontologyPathProperty().asString());
-        entrezGeneLabel.textProperty().bind(optionalResources.entrezPathProperty().asString());
         curatedFilesDirLabel.textProperty().bind(optionalResources.diseaseCaseDirProperty().asString());
 
         // TODO - report location of liftover chain files
@@ -149,83 +142,131 @@ public class SetResourcesController {
         biocuratorIDTextField.textProperty().bindBidirectional(optionalResources.biocuratorIdProperty());
     }
 
-    /**
-     * Open DirChooser and ask user to provide a directory where curated files will be stored.
-     */
     @FXML
-    private void setCuratedDirButtonAction(ActionEvent e) {
+    private void downloadHg19RefGenomeButtonAction(ActionEvent e) {
         e.consume();
-        File initial = optionalResources.getDiseaseCaseDir() != null && optionalResources.getDiseaseCaseDir().isDirectory()
-                ? optionalResources.getDiseaseCaseDir()
-                : new File(System.getProperty("user.home"));
+        FileChooser chooser = new FileChooser();
+        chooser.setInitialDirectory(appHomeDir);
+        chooser.setTitle("Save hg19 fasta as");
+        chooser.setInitialFileName("hg19.fa");
+        File target = chooser.showSaveDialog(hg19ProgressIndicator.getScene().getWindow());
 
-        File curatedDir = Dialogs.selectDirectory((Stage) hg19ProgressIndicator.getScene().getWindow(), initial, "Set directory for curated files.");
-        optionalResources.setDiseaseCaseDir(curatedDir);
+        Optional<GenomicLocalResource> paths = GenomicLocalResource.createFromFastaPath(target);
+        paths.map(createDownloader(genomicRemoteResources.getHg19()))
+                .map(dwn -> {
+                    hg19ProgressIndicator.progressProperty().unbind();
+                    hg19ProgressIndicator.progressProperty().bind(dwn.progressProperty());
+                    hg19ProgressLabel.textProperty().unbind();
+                    hg19ProgressLabel.textProperty().bind(dwn.messageProperty());
+
+                    dwn.setOnSucceeded(event -> optionalResources.getGenomicLocalResources().setHg19(paths.get()));
+                    dwn.setOnFailed(event -> optionalResources.getGenomicLocalResources().setHg19(null));
+                    dwn.setOnCancelled(event -> optionalResources.getGenomicLocalResources().setHg19(null));
+                    return dwn;
+                })
+                .ifPresent(executorService::submit);
+
     }
 
-    /**
-     * Download entrez gene file to the app home directory.
-     */
+    private Function<GenomicLocalResource, GenomeAssemblyDownloader> createDownloader(GenomicRemoteResource resource) {
+        return genomicAssemblyPaths -> new GenomeAssemblyDownloader(resource.genomeUrl(), resource.assemblyReportUrl(), genomicAssemblyPaths);
+    }
+
     @FXML
-    private void downloadEntrezGenesButtonAction(ActionEvent e) {
+    private void setPathToHg19ButtonAction(ActionEvent e) {
         e.consume();
-        File target = new File(appHomeDir, ResourcePaths.DEFAULT_ENTREZ_FILE_NAME);
-        if (target.isFile()) {
-            boolean response = Dialogs.getBooleanFromUser("Download Entrez gene file",
-                    "Entrez file already exists at the target location",
-                    "Overwrite?")
-                    .map(bt -> bt.equals(ButtonType.OK))
-                    .orElse(false);
-            if (!response) { // re-loading the old file
-                try {
-                    EntrezParser parser = new EntrezParser(target);
-                    parser.readFile();
-                    optionalResources.setEntrezId2gene(parser.getEntrezMap());
-                    optionalResources.setEntrezId2symbol(parser.getEntrezId2symbol());
-                    optionalResources.setSymbol2entrezId(parser.getSymbol2entrezId());
-                    optionalResources.setEntrezPath(target);
-                } catch (IOException ex) {
-                    Dialogs.showWarningDialog("Download Entrez gene file", "Error occurred", String.format("Error during parsing of Entrez gene file at '%s'", target.getAbsolutePath()));
-                    LOGGER.warn("Error during parsing of Entrez gene file at '{}'", target.getAbsolutePath(), ex);
-                }
-                return;
-            }
-        }
-        String entrezGeneUrlString = hcaProperties.entrezGeneUrl();
-        URL entrezGeneUrl;
+        FileChooser chooser = new FileChooser();
+        chooser.setInitialDirectory(appHomeDir);
+        chooser.setTitle("Select local hg19 FASTA file");
+        chooser.setInitialFileName("hg19.fa");
+
+        File fastaPath = chooser.showOpenDialog(hg19ProgressIndicator.getScene().getWindow());
+
+        GenomicLocalResourceValidator validator = GenomicLocalResourceValidator.of(statusBarController::showMessage);
         try {
-            entrezGeneUrl = new URL(entrezGeneUrlString);
-        } catch (MalformedURLException ex) {
-            Dialogs.showWarningDialog("Download Entrez gene file", "Error occured", String.format("Malformed URL: %s", entrezGeneUrlString));
-            LOGGER.warn("Malformed URL: {}", entrezGeneUrlString, ex);
-            return;
+            GenomicLocalResource.createFromFastaPath(fastaPath)
+                    .flatMap(local -> validator.verify(local, genomicRemoteResources.getHg19()))
+                    .ifPresent(optionalResources.getGenomicLocalResources()::setHg19);
+        } catch (Exception ex) {
+            Dialogs.showErrorDialog("Error", "Unable to use selected genome build", "See log for more details");
+            LOGGER.error("Unable to use selected genome build: {}", ex.getMessage(), ex);
         }
 
-        Task<Void> task = new Downloader(entrezGeneUrl, target);
-        entrezProgressIndicator.progressProperty().unbind();
-        entrezProgressIndicator.progressProperty().bind(task.progressProperty());
-
-        task.setOnSucceeded(event -> {
-            try {
-                EntrezParser parser = new EntrezParser(target);
-                parser.readFile();
-                optionalResources.setEntrezId2gene(parser.getEntrezMap());
-                optionalResources.setEntrezId2symbol(parser.getEntrezId2symbol());
-                optionalResources.setSymbol2entrezId(parser.getSymbol2entrezId());
-                optionalResources.setEntrezPath(target);
-            } catch (IOException ex) {
-                Dialogs.showWarningDialog("Download Entrez gene file", "Error occured", String.format("Error during parsing of Entrez gene file at '%s'", target.getAbsolutePath()));
-                LOGGER.warn("Error during parsing of Entrez gene file at '{}'", target.getAbsolutePath(), ex);
-            }
-        });
-        task.setOnFailed(event -> {
-            optionalResources.setEntrezId2gene(null);
-            optionalResources.setEntrezId2symbol(null);
-            optionalResources.setSymbol2entrezId(null);
-            optionalResources.setEntrezPath(null);
-        });
-        executorService.submit(task);
     }
+
+    @FXML
+    private void downloadHg38RefGenomeButtonAction(ActionEvent e) {
+        e.consume();
+        FileChooser chooser = new FileChooser();
+        chooser.setInitialDirectory(appHomeDir);
+        chooser.setTitle("Save hg38 fasta as");
+        chooser.setInitialFileName("hg38.fa");
+        File fastaPath = chooser.showSaveDialog(hg38ProgressIndicator.getScene().getWindow());
+
+        Optional<GenomicLocalResource> paths = GenomicLocalResource.createFromFastaPath(fastaPath);
+        paths.map(createDownloader(genomicRemoteResources.getHg38()))
+                .map(dwn -> {
+                    hg38ProgressIndicator.progressProperty().unbind();
+                    hg38ProgressIndicator.progressProperty().bind(dwn.progressProperty());
+                    hg38ProgressLabel.textProperty().unbind();
+                    hg38ProgressLabel.textProperty().bind(dwn.messageProperty());
+
+                    dwn.setOnSucceeded(event -> optionalResources.getGenomicLocalResources().setHg38(paths.get()));
+                    dwn.setOnFailed(event -> optionalResources.getGenomicLocalResources().setHg38(null));
+                    dwn.setOnCancelled(event -> optionalResources.getGenomicLocalResources().setHg38(null));
+                    return dwn;
+                })
+                .ifPresent(executorService::submit);
+    }
+
+    @FXML
+    private void setPathToHg38ButtonAction(ActionEvent e) {
+        e.consume();
+        FileChooser chooser = new FileChooser();
+        chooser.setInitialDirectory(appHomeDir);
+        chooser.setTitle("Select local hg38 FASTA file");
+        chooser.setInitialFileName("hg38.fa");
+
+        File fastaPath = chooser.showOpenDialog(hg38ProgressIndicator.getScene().getWindow());
+
+        GenomicLocalResourceValidator validator = GenomicLocalResourceValidator.of(statusBarController::showMessage);
+
+        try {
+            GenomicLocalResource.createFromFastaPath(fastaPath)
+                    .flatMap(local -> validator.verify(local, genomicRemoteResources.getHg38()))
+                    .ifPresent(optionalResources.getGenomicLocalResources()::setHg38);
+        } catch (Exception ex) {
+            Dialogs.showErrorDialog("Error", "Unable to use selected genome build", "See log for more details");
+            LOGGER.error("Unable to use selected genome build: {}", ex.getMessage(), ex);
+        }
+    }
+
+    @FXML
+    private void setPathToHg19JannovarButtonAction(ActionEvent e) {
+        e.consume();
+        FileChooser chooser = new FileChooser();
+        chooser.setInitialDirectory(appHomeDir);
+        chooser.setTitle("Select Jannovar transcript database for hg19");
+
+        File databasePath = chooser.showOpenDialog(hg19JannovarLabel.getScene().getWindow());
+
+        if (databasePath != null)
+            optionalResources.getFunctionalAnnotationResources().setHg19JannovarPath(databasePath.toPath());
+    }
+
+    @FXML
+    private void setPathToHg38JannovarButtonAction(ActionEvent e) {
+        e.consume();
+        FileChooser chooser = new FileChooser();
+        chooser.setInitialDirectory(appHomeDir);
+        chooser.setTitle("Select Jannovar transcript database for hg38");
+
+        File databasePath = chooser.showOpenDialog(hg38JannovarLabel.getScene().getWindow());
+
+        if (databasePath != null)
+            optionalResources.getFunctionalAnnotationResources().setHg38JannovarPath(databasePath.toPath());
+    }
+
 
     /**
      * Download HP.obo file to the data directory if the path to data directory has been set.
@@ -236,8 +277,8 @@ public class SetResourcesController {
         File target = new File(appHomeDir, ResourcePaths.DEFAULT_HPO_FILE_NAME);
         if (target.isFile()) {
             boolean overwrite = Dialogs.getBooleanFromUser("Download HPO",
-                    "HPO file already exists at the target location",
-                    "Overwrite?")
+                            "HPO file already exists at the target location",
+                            "Overwrite?")
                     .map(bt -> bt.equals(ButtonType.OK))
                     .orElse(false);
             if (!overwrite) {
@@ -277,105 +318,20 @@ public class SetResourcesController {
         executorService.submit(task);
     }
 
+
+    /**
+     * Open DirChooser and ask user to provide a directory where curated files will be stored.
+     */
     @FXML
-    private void downloadHg19RefGenomeButtonAction(ActionEvent e) {
+    private void setCuratedDirButtonAction(ActionEvent e) {
         e.consume();
-        FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(appHomeDir);
-        chooser.setTitle("Save hg19 fasta as");
-        chooser.setInitialFileName("hg19.fa");
-        File target = chooser.showSaveDialog(hg19ProgressIndicator.getScene().getWindow());
+        File initial = optionalResources.getDiseaseCaseDir() != null && optionalResources.getDiseaseCaseDir().isDirectory()
+                ? optionalResources.getDiseaseCaseDir()
+                : new File(System.getProperty("user.home"));
 
-        Optional<GenomicLocalResource> paths = GenomicLocalResource.createFromFastaPath(target);
-        paths.map(createDownloader(genomicRemoteResources.getHg19()))
-                .map(dwn -> {
-                    hg19ProgressIndicator.progressProperty().unbind();
-                    hg19ProgressIndicator.progressProperty().bind(dwn.progressProperty());
-                    hg19ProgressLabel.textProperty().unbind();
-                    hg19ProgressLabel.textProperty().bind(dwn.messageProperty());
-
-                    dwn.setOnSucceeded(event -> optionalResources.getGenomicLocalResources().setHg19(paths.get()));
-                    dwn.setOnFailed(event -> optionalResources.getGenomicLocalResources().setHg19(null));
-                    dwn.setOnCancelled(event -> optionalResources.getGenomicLocalResources().setHg19(null));
-                    return dwn;
-                })
-                .ifPresent(executorService::submit);
-
+        File curatedDir = Dialogs.selectDirectory((Stage) hg19ProgressIndicator.getScene().getWindow(), initial, "Set directory for curated files.");
+        optionalResources.setDiseaseCaseDir(curatedDir);
     }
-
-    private Function<GenomicLocalResource, GenomeAssemblyDownloader> createDownloader(GenomicRemoteResource resource) {
-        return genomicAssemblyPaths -> new GenomeAssemblyDownloader(resource.genomeUrl(), resource.assemblyReportUrl(), genomicAssemblyPaths);
-    }
-
-    @FXML
-    private void downloadHg38RefGenomeButtonAction(ActionEvent e) {
-        e.consume();
-        FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(appHomeDir);
-        chooser.setTitle("Save hg38 fasta as");
-        chooser.setInitialFileName("hg38.fa");
-        File fastaPath = chooser.showSaveDialog(hg38ProgressIndicator.getScene().getWindow());
-
-        Optional<GenomicLocalResource> paths = GenomicLocalResource.createFromFastaPath(fastaPath);
-        paths.map(createDownloader(genomicRemoteResources.getHg38()))
-                .map(dwn -> {
-                    hg38ProgressIndicator.progressProperty().unbind();
-                    hg38ProgressIndicator.progressProperty().bind(dwn.progressProperty());
-                    hg38ProgressLabel.textProperty().unbind();
-                    hg38ProgressLabel.textProperty().bind(dwn.messageProperty());
-
-                    dwn.setOnSucceeded(event -> optionalResources.getGenomicLocalResources().setHg38(paths.get()));
-                    dwn.setOnFailed(event -> optionalResources.getGenomicLocalResources().setHg38(null));
-                    dwn.setOnCancelled(event -> optionalResources.getGenomicLocalResources().setHg38(null));
-                    return dwn;
-                })
-                .ifPresent(executorService::submit);
-    }
-
-    @FXML
-    private void setPathToHg19ButtonAction(ActionEvent e) {
-        e.consume();
-        FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(appHomeDir);
-        chooser.setTitle("Select local hg19 FASTA file");
-        chooser.setInitialFileName("hg19.fa");
-
-        File fastaPath = chooser.showOpenDialog(hg19ProgressIndicator.getScene().getWindow());
-
-        GenomicLocalResourceValidator validator = GenomicLocalResourceValidator.of(statusBarController::showMessage);
-        try {
-            GenomicLocalResource.createFromFastaPath(fastaPath)
-                    .flatMap(local -> validator.verify(local, genomicRemoteResources.getHg19()))
-                    .ifPresent(optionalResources.getGenomicLocalResources()::setHg19);
-        } catch (Exception ex) {
-            Dialogs.showErrorDialog("Error", "Unable to use selected genome build", "See log for more details");
-            LOGGER.error("Unable to use selected genome build: {}", ex.getMessage(), ex);
-        }
-
-    }
-
-    @FXML
-    private void setPathToHg38ButtonAction(ActionEvent e) {
-        e.consume();
-        FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(appHomeDir);
-        chooser.setTitle("Select local hg38 FASTA file");
-        chooser.setInitialFileName("hg38.fa");
-
-        File fastaPath = chooser.showOpenDialog(hg38ProgressIndicator.getScene().getWindow());
-
-        GenomicLocalResourceValidator validator = GenomicLocalResourceValidator.of(statusBarController::showMessage);
-
-        try {
-            GenomicLocalResource.createFromFastaPath(fastaPath)
-                    .flatMap(local -> validator.verify(local, genomicRemoteResources.getHg38()))
-                    .ifPresent(optionalResources.getGenomicLocalResources()::setHg38);
-        } catch (Exception ex) {
-            Dialogs.showErrorDialog("Error", "Unable to use selected genome build", "See log for more details");
-            LOGGER.error("Unable to use selected genome build: {}", ex.getMessage(), ex);
-        }
-    }
-
 
     @FXML
     private void downloadLiftoverChainFiles(ActionEvent e) {
@@ -405,29 +361,4 @@ public class SetResourcesController {
         }
     }
 
-    @FXML
-    private void setPathToHg19JannovarButtonAction(ActionEvent e) {
-        e.consume();
-        FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(appHomeDir);
-        chooser.setTitle("Select Jannovar transcript database for hg19");
-
-        File databasePath = chooser.showOpenDialog(hg19JannovarLabel.getScene().getWindow());
-
-        if (databasePath != null)
-            optionalResources.getFunctionalAnnotationResources().setHg19JannovarPath(databasePath.toPath());
-    }
-
-    @FXML
-    private void setPathToHg38JannovarButtonAction(ActionEvent e) {
-        e.consume();
-        FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(appHomeDir);
-        chooser.setTitle("Select Jannovar transcript database for hg38");
-
-        File databasePath = chooser.showOpenDialog(hg38JannovarLabel.getScene().getWindow());
-
-        if (databasePath != null)
-            optionalResources.getFunctionalAnnotationResources().setHg38JannovarPath(databasePath.toPath());
-    }
 }

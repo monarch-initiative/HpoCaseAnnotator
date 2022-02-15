@@ -107,9 +107,6 @@ public class App extends Application {
         if (optionalResources.getOntologyPath() != null) {
             resourceProperties.setProperty(ResourcePaths.ONTOLOGY_PATH_PROPERTY, optionalResources.getOntologyPath().getAbsolutePath());
         }
-        if (optionalResources.getEntrezPath() != null) {
-            resourceProperties.setProperty(ResourcePaths.ENTREZ_GENE_PATH_PROPERTY, optionalResources.getEntrezPath().getAbsolutePath());
-        }
         if (optionalResources.getDiseaseCaseDir() != null) {
             resourceProperties.setProperty(ResourcePaths.DISEASE_CASE_DIR_PROPERTY, optionalResources.getDiseaseCaseDir().getAbsolutePath());
         }

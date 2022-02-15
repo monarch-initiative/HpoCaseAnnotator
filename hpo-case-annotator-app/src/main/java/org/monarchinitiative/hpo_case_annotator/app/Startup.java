@@ -86,8 +86,6 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
 
             readOmim("/data/omim.tsv");
 
-            readEntrezGenes(resourceProperties.getProperty(ResourcePaths.ENTREZ_GENE_PATH_PROPERTY));
-
             readLiftover(resourceProperties.getProperty(ResourcePaths.LIFTOVER_CHAIN_PATHS_PROPERTY));
 
             readHpo(resourceProperties.getProperty(ResourcePaths.ONTOLOGY_PATH_PROPERTY));
@@ -145,21 +143,6 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
         try (InputStream is = Startup.class.getResourceAsStream(omimPath)) {
             List<DiseaseIdentifier> identifiers = OMIMParser.loadDiseaseIdentifiers(is, StandardCharsets.UTF_8);
             optionalResources.diseaseIdentifiers().setAll(identifiers);
-        }
-    }
-
-    private void readEntrezGenes(String entrezPath) throws IOException {
-        if (entrezPath != null && new File(entrezPath).isFile()) {
-            File entrezGenesFile = new File(entrezPath);
-            LOGGER.debug("Loading Entrez genes from file '{}'", entrezGenesFile.getAbsolutePath());
-            EntrezParser entrezParser = new EntrezParser(entrezGenesFile);
-            entrezParser.readFile();
-            optionalResources.setEntrezId2symbol(entrezParser.getEntrezId2symbol());
-            optionalResources.setSymbol2entrezId(entrezParser.getSymbol2entrezId());
-            optionalResources.setEntrezId2gene(entrezParser.getEntrezMap());
-            optionalResources.setEntrezPath(entrezGenesFile);
-        } else {
-            LOGGER.info("Skipping loading Entrez genes since the location is unset");
         }
     }
 
