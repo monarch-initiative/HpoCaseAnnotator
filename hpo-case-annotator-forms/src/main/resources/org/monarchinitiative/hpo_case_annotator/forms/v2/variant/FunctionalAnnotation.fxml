@@ -6,7 +6,7 @@
 <VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.variant.FunctionalAnnotationController">
     <children>
 
-        <Label styleClass="h2" text="Functional annotation" />
+        <Label styleClass="h2" text="Functional annotations" />
         <TableView fx:id="functionalAnnotationTableView" maxWidth="1.7976931348623157E308">
             <columns>
                 <TableColumn fx:id="geneTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Gene" />
