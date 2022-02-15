@@ -16,7 +16,7 @@ public class FunctionalAnnotationController {
     @FXML
     private TableColumn<FunctionalAnnotation, String> transcriptTableColumn;
     @FXML
-    private TableColumn<FunctionalAnnotation, String> annotationTableColumn;
+    private TableColumn<FunctionalAnnotation, String> hgvsAnnotationTableColumn;
     @FXML
     private TableColumn<FunctionalAnnotation, String> effectsTableColumn;
 
@@ -24,7 +24,7 @@ public class FunctionalAnnotationController {
     private void initialize() {
         geneTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().geneSymbol()));
         transcriptTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().txAccession()));
-        annotationTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().nucleotideAnnotation() + " " + cdf.getValue().proteinAnnotation()));
+        hgvsAnnotationTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().nucleotideAnnotation() + " " + cdf.getValue().proteinAnnotation()));
         effectsTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(String.join(", ", cdf.getValue().effect())));
     }
 

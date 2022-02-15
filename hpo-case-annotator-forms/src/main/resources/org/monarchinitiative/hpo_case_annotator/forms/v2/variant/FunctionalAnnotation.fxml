@@ -11,7 +11,7 @@
             <columns>
                 <TableColumn fx:id="geneTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Gene" />
                 <TableColumn fx:id="transcriptTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="140.0" prefWidth="-1.0" text="Transcript" />
-                <TableColumn fx:id="annotationTableColumn" editable="false" maxWidth="-1.0" minWidth="250.0" prefWidth="250.0" text="Annotation" />
+                <TableColumn fx:id="hgvsAnnotationTableColumn" editable="false" maxWidth="-1.0" minWidth="250.0" prefWidth="250.0" text="HGVS annotation" />
                 <TableColumn fx:id="effectsTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="250.0" prefWidth="-1.0" text="Effects" />
             </columns>
             <placeholder>
