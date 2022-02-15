@@ -507,7 +507,7 @@ public class Main {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Fetch publication from PubMed");
         dialog.setHeaderText("Enter PMID number");
-        dialog.setContentText("E.g. 34289339");
+        dialog.setContentText("E.g. 18023225");
         dialog.initOwner(getOwnerWindow());
         TextFormatter<Integer> formatter = new TextFormatter<>(new IntegerStringConverter());
         dialog.getEditor().setTextFormatter(formatter);
