@@ -1,12 +1,10 @@
 package org.monarchinitiative.hpo_case_annotator.app.controller;
 
+import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -20,13 +18,12 @@ import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalRes
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicRemoteResource;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicRemoteResources;
 import org.monarchinitiative.hpo_case_annotator.app.util.GenomicLocalResourceValidator;
-import org.monarchinitiative.hpo_case_annotator.core.io.EntrezParser;
+import org.monarchinitiative.hpo_case_annotator.app.util.FileListCell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -92,6 +89,9 @@ public class SetResourcesController {
     private Label curatedFilesDirLabel;
 
     @FXML
+    private ListView<File> liftoverChainPathsListView;
+
+    @FXML
     private TextField biocuratorIDTextField;
 
     @FXML
@@ -137,7 +137,8 @@ public class SetResourcesController {
         hpOboLabel.textProperty().bind(optionalResources.ontologyPathProperty().asString());
         curatedFilesDirLabel.textProperty().bind(optionalResources.diseaseCaseDirProperty().asString());
 
-        // TODO - report location of liftover chain files
+        liftoverChainPathsListView.setCellFactory(FileListCell.of());
+        Bindings.bindContent(liftoverChainPathsListView.getItems(), optionalResources.liftoverChainFiles());
 
         biocuratorIDTextField.textProperty().bindBidirectional(optionalResources.biocuratorIdProperty());
     }
@@ -336,7 +337,6 @@ public class SetResourcesController {
     @FXML
     private void downloadLiftoverChainFiles(ActionEvent e) {
         e.consume();
-        // TODO - add progress report & notification
         List<URL> urls = new ArrayList<>();
         try {
             urls.add(new URL(hcaProperties.liftover().hg18ToHg38Url()));
