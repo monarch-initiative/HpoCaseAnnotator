@@ -124,6 +124,5 @@
                 </HBox>
             </children>
         </VBox>
-        <fx:include fx:id="statusBar" source="StatusBar.fxml" />
     </children>
 </VBox>

@@ -1,11 +1,11 @@
 package org.monarchinitiative.hpo_case_annotator.app.controller;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo_case_annotator.app.config.HcaProperties;
@@ -94,12 +94,6 @@ public class SetResourcesController {
     @FXML
     private TextField biocuratorIDTextField;
 
-    @FXML
-    private HBox statusBar;
-
-    @FXML
-    private StatusBarController statusBarController;
-
     public SetResourcesController(OptionalResources optionalResources,
                                   GenomicRemoteResources genomicRemoteResources,
                                   HcaProperties hcaProperties,
@@ -128,18 +122,40 @@ public class SetResourcesController {
      */
     @FXML
     private void initialize() {
-        hg19GenomeLabel.textProperty().bind(optionalResources.getGenomicLocalResources().getHg19().fastaProperty().asString());
-        hg38GenomeLabel.textProperty().bind(optionalResources.getGenomicLocalResources().getHg38().fastaProperty().asString());
+        // reference genomes
+        StringBinding hg19Path = Bindings.createStringBinding(() -> {
+                    GenomicLocalResource hg19 = optionalResources.getGenomicLocalResources().getHg19();
+                    if (hg19 == null) return "";
 
+                    Path fasta = hg19.getFasta();
+                    return fasta == null ? "" : fasta.toAbsolutePath().toString();
+                },
+                optionalResources.getGenomicLocalResources().hg19Property());
+        hg19GenomeLabel.textProperty().bind(hg19Path);
+        StringBinding hg38Path = Bindings.createStringBinding(() -> {
+                    GenomicLocalResource hg38 = optionalResources.getGenomicLocalResources().getHg38();
+                    if (hg38 == null) return "";
+                    Path fasta = hg38.getFasta();
+                    return fasta == null ? "" : fasta.toAbsolutePath().toString();
+                },
+                optionalResources.getGenomicLocalResources().hg38Property());
+        hg38GenomeLabel.textProperty().bind(hg38Path);
+
+        // Jannovar databases
         hg19JannovarLabel.textProperty().bind(optionalResources.getFunctionalAnnotationResources().hg19JannovarPathProperty().asString());
         hg38JannovarLabel.textProperty().bind(optionalResources.getFunctionalAnnotationResources().hg38JannovarPathProperty().asString());
 
+        // HPO
         hpOboLabel.textProperty().bind(optionalResources.ontologyPathProperty().asString());
+
+        // Curated files folder
         curatedFilesDirLabel.textProperty().bind(optionalResources.diseaseCaseDirProperty().asString());
 
+        // Liftover chains
         liftoverChainPathsListView.setCellFactory(FileListCell.of());
         Bindings.bindContent(liftoverChainPathsListView.getItems(), optionalResources.liftoverChainFiles());
 
+        // Biocurator
         biocuratorIDTextField.textProperty().bindBidirectional(optionalResources.biocuratorIdProperty());
     }
 
@@ -183,11 +199,11 @@ public class SetResourcesController {
 
         File fastaPath = chooser.showOpenDialog(hg19ProgressIndicator.getScene().getWindow());
 
-        GenomicLocalResourceValidator validator = GenomicLocalResourceValidator.of(statusBarController::showMessage);
+        GenomicLocalResourceValidator validator = GenomicLocalResourceValidator.of(LOGGER::info);
         try {
             GenomicLocalResource.createFromFastaPath(fastaPath)
                     .flatMap(local -> validator.verify(local, genomicRemoteResources.getHg19()))
-                    .ifPresent(optionalResources.getGenomicLocalResources()::setHg19);
+                    .ifPresent(resource -> optionalResources.getGenomicLocalResources().setHg19(resource));
         } catch (Exception ex) {
             Dialogs.showErrorDialog("Error", "Unable to use selected genome build", "See log for more details");
             LOGGER.error("Unable to use selected genome build: {}", ex.getMessage(), ex);
@@ -230,12 +246,12 @@ public class SetResourcesController {
 
         File fastaPath = chooser.showOpenDialog(hg38ProgressIndicator.getScene().getWindow());
 
-        GenomicLocalResourceValidator validator = GenomicLocalResourceValidator.of(statusBarController::showMessage);
+        GenomicLocalResourceValidator validator = GenomicLocalResourceValidator.of(LOGGER::info);
 
         try {
             GenomicLocalResource.createFromFastaPath(fastaPath)
                     .flatMap(local -> validator.verify(local, genomicRemoteResources.getHg38()))
-                    .ifPresent(optionalResources.getGenomicLocalResources()::setHg38);
+                    .ifPresent(resource -> optionalResources.getGenomicLocalResources().setHg38(resource));
         } catch (Exception ex) {
             Dialogs.showErrorDialog("Error", "Unable to use selected genome build", "See log for more details");
             LOGGER.error("Unable to use selected genome build: {}", ex.getMessage(), ex);
