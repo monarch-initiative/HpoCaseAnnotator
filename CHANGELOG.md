@@ -5,11 +5,13 @@
 Major:
 - implement `v2` model that is better aligned with phenopackets
 - redesign UI to support curation of cohorts and families 
+- show functional annotations when submitting variant
 
 Minor:
 - add Liftover widget
 - generate snippet for long variants
 - use `phenopacket-schema v1.0.0` when exporting phenopackets
+- use `svart v2.0.0` to work with variants
 
 ### v1.0.14
 
