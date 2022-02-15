@@ -130,7 +130,7 @@ public class LiftOverAdapter implements LiftOverService {
                 Optional<String> from = decodeAssembly(matcher.group("from"));
                 Optional<String> to = decodeAssembly(matcher.group("to"));
                 if (from.isPresent() && to.isPresent()) {
-                    LOGGER.debug("Found chain to liftover coordinates from '{}' to '{}'", from, to);
+                    LOGGER.debug("Found chain to liftover coordinates from '{}' to '{}'", from.get(), to.get());
                     resultMap.computeIfAbsent(from.get(), k -> new HashMap<>())
                             .put(to.get(), new LiftOver(chainFile));
                 }
