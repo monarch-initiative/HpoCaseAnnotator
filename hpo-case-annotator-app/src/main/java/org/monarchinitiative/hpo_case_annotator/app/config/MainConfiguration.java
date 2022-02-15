@@ -7,16 +7,20 @@ import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResource;
 import org.monarchinitiative.hpo_case_annotator.app.publication.PubmedPublicationBrowser;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
+import org.monarchinitiative.hpo_case_annotator.core.reference.functional.JannovarFunctionalAnnotationService;
 import org.monarchinitiative.hpo_case_annotator.core.reference.genome.GenomicAssemblyService;
 import org.monarchinitiative.hpo_case_annotator.core.reference.genome.InvalidFastaFileException;
+import org.monarchinitiative.hpo_case_annotator.forms.FunctionalAnnotationRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
+import org.monarchinitiative.hpo_case_annotator.model.HpoCaseAnnotatorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -58,6 +62,13 @@ public class MainConfiguration {
             LOGGER.warn("Error while setting genomic assembly service: ", e);
             return null;
         }
+    }
+
+    @Bean
+    public FunctionalAnnotationRegistry functionalAnnotationRegistry() throws HpoCaseAnnotatorException {
+        FunctionalAnnotationRegistry functionalAnnotationRegistry = new FunctionalAnnotationRegistry();
+        // TODO - run on background thread
+        return functionalAnnotationRegistry;
     }
 
     @Bean

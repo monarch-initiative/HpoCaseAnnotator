@@ -15,11 +15,14 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.cache.HgvsVaria
 public class ControllerFactory implements HCAControllerFactory {
 
     private final GenomicAssemblyRegistry genomicAssemblyRegistry;
+    private final FunctionalAnnotationRegistry functionalAnnotationRegistry;
     private final GeneIdentifierService geneIdentifierService;
 
     public ControllerFactory(GenomicAssemblyRegistry genomicAssemblyRegistry,
+                             FunctionalAnnotationRegistry functionalAnnotationRegistry,
                              GeneIdentifierService geneIdentifierService) {
         this.genomicAssemblyRegistry = genomicAssemblyRegistry;
+        this.functionalAnnotationRegistry = functionalAnnotationRegistry;
         this.geneIdentifierService = geneIdentifierService;
     }
 
@@ -31,11 +34,11 @@ public class ControllerFactory implements HCAControllerFactory {
     public Object call(Class<?> clz) {
         // variant
         if (clz.equals(VcfSequenceVariantController.class)) {
-            return new VcfSequenceVariantController(genomicAssemblyRegistry);
+            return new VcfSequenceVariantController(genomicAssemblyRegistry, functionalAnnotationRegistry);
         } else if (clz.equals(VcfSymbolicVariantController.class)) {
-            return new VcfSymbolicVariantController(genomicAssemblyRegistry);
+            return new VcfSymbolicVariantController(genomicAssemblyRegistry, functionalAnnotationRegistry);
         } else if (clz.equals(VcfBreakendVariantController.class)) {
-            return new VcfBreakendVariantController(genomicAssemblyRegistry);
+            return new VcfBreakendVariantController(genomicAssemblyRegistry, functionalAnnotationRegistry);
         } else if (clz.equals(BreakendController.class)) {
             return new BreakendController();
         } else if (clz.equals(HgvsVariantController.class)) {

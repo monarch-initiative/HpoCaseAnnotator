@@ -19,8 +19,9 @@ public class BaseControllerTest {
     public static final Ontology ONTOLOGY = OntologyLoader.loadOntology(LOCAL_ONTOLOGY_OBO);
 
     public static final GenomicAssemblyRegistry GENOMIC_ASSEMBLY_REGISTRY = createGenomicAssemblyRegistry();
+    public static final FunctionalAnnotationRegistry FUNCTIONAL_ANNOTATION_REGISTRY = new FunctionalAnnotationRegistry();
     public static final GeneIdentifierService GENE_IDENTIFIER_SERVICE = makeGeneIdService();
-    public static final ControllerFactory CONTROLLER_FACTORY = new ControllerFactory(GENOMIC_ASSEMBLY_REGISTRY, GENE_IDENTIFIER_SERVICE);
+    public static final ControllerFactory CONTROLLER_FACTORY = new ControllerFactory(GENOMIC_ASSEMBLY_REGISTRY, FUNCTIONAL_ANNOTATION_REGISTRY, GENE_IDENTIFIER_SERVICE);
 
     private static GenomicAssemblyRegistry createGenomicAssemblyRegistry() {
         GenomicAssemblyRegistry genomicAssemblyRegistry = new GenomicAssemblyRegistry();

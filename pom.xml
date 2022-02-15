@@ -37,6 +37,7 @@
         <htsjdk.version>2.24.1</htsjdk.version>
         <spring.version>4.3.8.RELEASE</spring.version>
         <guice.version>5.0.1</guice.version>
+        <guava.version>31.0.1-jre</guava.version>
         <protobuf.version>3.19.3</protobuf.version>
         <hpotextmining.version>0.2.8</hpotextmining.version>
 
@@ -96,7 +97,16 @@
                         <groupId>org.testng</groupId>
                         <artifactId>testing</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>com.google.guava</groupId>
+                        <artifactId>guava</artifactId>
+                    </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.samtools</groupId>

@@ -11,6 +11,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.controlsfx.dialog.CommandLinksDialog;
 import org.monarchinitiative.hpo_case_annotator.forms.ComponentController;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
@@ -132,6 +133,7 @@ public class VariantSummaryController {
             stage.setTitle(notation.label());
             stage.initOwner(variantTableView.getScene().getWindow());
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.DECORATED);
             stage.setScene(new Scene(parent));
             stage.showAndWait();
 

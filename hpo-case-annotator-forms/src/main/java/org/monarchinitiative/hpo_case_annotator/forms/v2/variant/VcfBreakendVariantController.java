@@ -1,8 +1,10 @@
 package org.monarchinitiative.hpo_case_annotator.forms.v2.variant;
 
+import javafx.beans.Observable;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import org.monarchinitiative.hpo_case_annotator.forms.FunctionalAnnotationRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataException;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
@@ -10,6 +12,8 @@ import org.monarchinitiative.svart.GenomicBreakendVariant;
 import org.monarchinitiative.svart.GenomicVariant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class VcfBreakendVariantController extends BaseVariantController {
 
@@ -31,8 +35,9 @@ public class VcfBreakendVariantController extends BaseVariantController {
     @FXML
     private TextField insertedSequenceTextField;
 
-    public VcfBreakendVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
-        super(genomicAssemblyRegistry);
+    public VcfBreakendVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry,
+                                        FunctionalAnnotationRegistry functionalAnnotationRegistry) {
+        super(genomicAssemblyRegistry, functionalAnnotationRegistry);
     }
 
     @FXML
@@ -41,6 +46,12 @@ public class VcfBreakendVariantController extends BaseVariantController {
         leftBreakendController.assemblyServiceProperty().bind(assemblyService);
         rightBreakendController.assemblyServiceProperty().bind(assemblyService);
 
+    }
+
+    @Override
+    protected List<Observable> variantInputFields() {
+        // TODO - implement
+        return List.of();
     }
 
     @Override

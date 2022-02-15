@@ -1,13 +1,17 @@
 package org.monarchinitiative.hpo_case_annotator.forms.v2.variant;
 
+import javafx.beans.Observable;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import org.monarchinitiative.hpo_case_annotator.forms.FunctionalAnnotationRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
 import org.monarchinitiative.svart.Contig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * The controller manages contig for sequence and symbolic variants.
@@ -28,8 +32,9 @@ public abstract class VcfSeqSymVariantController extends BaseVariantController {
         FormUtils.initializeContigComboBox(contigComboBox, assemblyService);
     }
 
-    protected VcfSeqSymVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
-        super(genomicAssemblyRegistry);
+    protected VcfSeqSymVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry,
+                                         FunctionalAnnotationRegistry functionalAnnotationRegistry) {
+        super(genomicAssemblyRegistry, functionalAnnotationRegistry);
     }
 
     protected void setContig(Contig contig) {
@@ -46,5 +51,10 @@ public abstract class VcfSeqSymVariantController extends BaseVariantController {
 
     protected String getVariantId() {
         return idTextField.getText();
+    }
+
+    @Override
+    protected List<Observable> variantInputFields() {
+        return List.of(contigComboBox.valueProperty());
     }
 }

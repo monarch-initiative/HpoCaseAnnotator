@@ -110,17 +110,17 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
 
     @Provides
     public VcfBreakendVariantController vcfBreakendVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
-        return new VcfBreakendVariantController(genomicAssemblyRegistry);
+        return new VcfBreakendVariantController(genomicAssemblyRegistry, null);
     }
 
     @Provides
     public VcfSymbolicVariantController vcfSymbolicVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
-        return new VcfSymbolicVariantController(genomicAssemblyRegistry);
+        return new VcfSymbolicVariantController(genomicAssemblyRegistry, null);
     }
 
     @Provides
     public VcfSequenceVariantController vcfSequenceVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
-        return new VcfSequenceVariantController(genomicAssemblyRegistry);
+        return new VcfSequenceVariantController(genomicAssemblyRegistry, null);
     }
 
     @Provides

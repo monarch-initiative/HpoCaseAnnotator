@@ -5,7 +5,9 @@ import de.charite.compbio.jannovar.annotation.builders.AnnotationBuilderOptions;
 import de.charite.compbio.jannovar.data.JannovarData;
 import de.charite.compbio.jannovar.data.JannovarDataSerializer;
 import de.charite.compbio.jannovar.data.ReferenceDictionary;
+import de.charite.compbio.jannovar.data.SerializationException;
 import de.charite.compbio.jannovar.reference.PositionType;
+import org.monarchinitiative.hpo_case_annotator.model.HpoCaseAnnotatorException;
 import org.monarchinitiative.svart.CoordinateSystem;
 import org.monarchinitiative.svart.GenomicVariant;
 import org.monarchinitiative.svart.Strand;
@@ -23,8 +25,12 @@ public class JannovarFunctionalAnnotationService implements FunctionalAnnotation
     private final ReferenceDictionary referenceDictionary;
     private final VariantAnnotator variantAnnotator;
 
-    public static JannovarFunctionalAnnotationService of(Path jannovarCache) throws Exception {
-        return new JannovarFunctionalAnnotationService(new JannovarDataSerializer(jannovarCache.toString()).load());
+    public static JannovarFunctionalAnnotationService of(Path jannovarCache) throws HpoCaseAnnotatorException {
+        try {
+            return new JannovarFunctionalAnnotationService(new JannovarDataSerializer(jannovarCache.toString()).load());
+        } catch (SerializationException e) {
+            throw new HpoCaseAnnotatorException(e);
+        }
     }
 
     private JannovarFunctionalAnnotationService(JannovarData jannovarData) {
@@ -47,7 +53,8 @@ public class JannovarFunctionalAnnotationService implements FunctionalAnnotation
         try {
             annotations = variantAnnotator.buildAnnotations(contig, variant.startOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()), variant.ref(), variant.alt(), PositionType.ONE_BASED);
         } catch (AnnotationException e) {
-            LOGGER.warn("Error while annotating variant: {}", e.getMessage(), e);
+            if (!(e instanceof InvalidGenomeVariant))
+                LOGGER.warn("Error while annotating variant: {}", e.getMessage(), e);
             return List.of();
         }
         return annotations.getAnnotations().stream()
