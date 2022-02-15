@@ -11,6 +11,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.controlsfx.dialog.CommandLinksDialog;
 import org.monarchinitiative.hpo_case_annotator.forms.ComponentController;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
@@ -23,7 +24,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSymbolicVari
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.svart.CoordinateSystem;
 import org.monarchinitiative.svart.Strand;
-import org.monarchinitiative.svart.Variant;
+import org.monarchinitiative.svart.GenomicVariant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -132,6 +133,7 @@ public class VariantSummaryController {
             stage.setTitle(notation.label());
             stage.initOwner(variantTableView.getScene().getWindow());
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.DECORATED);
             stage.setScene(new Scene(parent));
             stage.showAndWait();
 
@@ -159,7 +161,7 @@ public class VariantSummaryController {
                 .ifPresent(edited -> variantTableView.getItems().set(index, edited));
     }
 
-    private static VariantNotation resolveVariantNotation(Variant variant) {
+    private static VariantNotation resolveVariantNotation(GenomicVariant variant) {
         if (variant.isBreakend()) {
             return VariantNotation.BREAKEND;
         } else if (variant.isSymbolic()) {

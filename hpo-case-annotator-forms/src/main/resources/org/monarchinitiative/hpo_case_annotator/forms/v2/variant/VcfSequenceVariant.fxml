@@ -11,89 +11,101 @@
         <URL value="@variant.css" />
         <URL value="@../../base.css" />
     </stylesheets>
-    <children>
-        <Label styleClass="h2" text="VCF sequence variant" />
-        <HBox alignment="CENTER_LEFT" styleClass="row">
-            <children>
-                <VBox alignment="CENTER_LEFT" styleClass="column" HBox.hgrow="ALWAYS">
-                    <children>
-                        <Label styleClass="h3" text="Genome build" />
-                        <HBox alignment="CENTER_LEFT" VBox.vgrow="NEVER">
-                            <children>
-                                <RadioButton fx:id="hg18RadioButton" disable="true" mnemonicParsing="false" text="hg18" />
-                                <RadioButton fx:id="hg19RadioButton" disable="true" mnemonicParsing="false" text="GRCh37" />
-                                <RadioButton fx:id="hg38RadioButton" disable="true" mnemonicParsing="false" text="GRCh38" />
-                            </children>
-                        </HBox>
-                    </children>
-                </VBox>
-                <VBox alignment="CENTER_LEFT" styleClass="column" HBox.hgrow="ALWAYS">
-                    <children>
-                        <Label styleClass="h3" text="Contig" />
-                        <SearchableComboBox fx:id="contigComboBox" disable="true" />
-                    </children>
-                </VBox>
-            </children>
-        </HBox>
-        <Separator />
-        <HBox alignment="CENTER_LEFT" layoutX="15.0" layoutY="137.0" styleClass="row">
-            <children>
-                <Label text="Id">
-                    <styleClass>
-                        <String fx:value="h3" />
-                        <String fx:value="label" />
-                    </styleClass>
-                </Label>
-                <TextField fx:id="idTextField" promptText="e.g. rs123456" HBox.hgrow="NEVER" />
-            </children>
-        </HBox>
-        <Separator />
-        <HBox alignment="CENTER_LEFT" styleClass="row">
-            <children>
-            <VBox styleClass="column">
-               <children>
-                  <Label styleClass="h3" text="Coordinates" />
-                  <HBox alignment="CENTER_LEFT">
-                     <children>
-                            <Label text="Position" />
-                            <TextField fx:id="positionTextField" promptText="e.g. 12345" />
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-            </children>
-        </HBox>
-        <Separator />
-        <HBox styleClass="row">
-            <children>
-                <VBox styleClass="column" HBox.hgrow="ALWAYS">
-                    <children>
-                        <Label styleClass="h3" text="Alleles" />
-                        <VBox>
-                            <children>
-                                <HBox alignment="CENTER_LEFT">
-                                    <children>
-                                        <Label text="Reference" />
-                                        <TextField fx:id="referenceTextField" promptText="e.g. C" HBox.hgrow="SOMETIMES" />
-                                    </children>
-                                </HBox>
-                                <HBox alignment="CENTER_LEFT">
-                                    <children>
-                                        <Label text="Alternative" />
-                                        <TextField fx:id="alternativeTextField" promptText="e.g. A" HBox.hgrow="SOMETIMES" />
-                                    </children>
-                                </HBox>
-                            </children>
+   <children>
+      <HBox VBox.vgrow="ALWAYS">
+          <children>
+            <VBox>
+                <children>
+                    <Label styleClass="h2" text="VCF sequence variant" />
+                    <HBox alignment="CENTER_LEFT" styleClass="row">
+                        <children>
+                            <VBox alignment="CENTER_LEFT" styleClass="column" HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label styleClass="h3" text="Genome build" />
+                                    <HBox alignment="CENTER_LEFT" VBox.vgrow="NEVER">
+                                        <children>
+                                            <RadioButton fx:id="hg18RadioButton" disable="true" mnemonicParsing="false" text="hg18" />
+                                            <RadioButton fx:id="hg19RadioButton" disable="true" mnemonicParsing="false" text="GRCh37" />
+                                            <RadioButton fx:id="hg38RadioButton" disable="true" mnemonicParsing="false" text="GRCh38" />
+                                        </children>
+                                    </HBox>
+                                </children>
+                            </VBox>
+                            <VBox alignment="CENTER_LEFT" styleClass="column" HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label styleClass="h3" text="Contig" />
+                                    <SearchableComboBox fx:id="contigComboBox" disable="true" />
+                                </children>
+                            </VBox>
+                        </children>
+                    </HBox>
+                    <Separator />
+                    <HBox alignment="CENTER_LEFT" layoutX="15.0" layoutY="137.0" styleClass="row">
+                        <children>
+                            <Label text="Id">
+                                <styleClass>
+                                    <String fx:value="h3" />
+                                    <String fx:value="label" />
+                                </styleClass>
+                            </Label>
+                            <TextField fx:id="idTextField" promptText="e.g. rs123456" HBox.hgrow="NEVER" />
+                        </children>
+                    </HBox>
+                    <Separator />
+                    <HBox alignment="CENTER_LEFT" styleClass="row">
+                        <children>
+                        <VBox styleClass="column">
+                           <children>
+                              <Label styleClass="h3" text="Coordinates" />
+                              <HBox alignment="CENTER_LEFT">
+                                 <children>
+                                        <Label text="Position" />
+                                        <TextField fx:id="positionTextField" promptText="e.g. 133357815" />
+                                 </children>
+                              </HBox>
+                           </children>
                         </VBox>
-                    </children>
-                </VBox>
-            </children>
-        </HBox>
+                        </children>
+                    </HBox>
+                    <Separator />
+                    <HBox styleClass="row">
+                        <children>
+                            <VBox styleClass="column" HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label styleClass="h3" text="Alleles" />
+                                    <VBox>
+                                        <children>
+                                            <HBox alignment="CENTER_LEFT">
+                                                <children>
+                                                    <Label text="Reference" />
+                                                    <TextField fx:id="referenceTextField" promptText="e.g. G" HBox.hgrow="SOMETIMES" />
+                                                </children>
+                                            </HBox>
+                                            <HBox alignment="CENTER_LEFT">
+                                                <children>
+                                                    <Label text="Alternative" />
+                                                    <TextField fx:id="alternativeTextField" promptText="e.g. A" HBox.hgrow="SOMETIMES" />
+                                                </children>
+                                            </HBox>
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </VBox>
+                        </children>
+                    </HBox>
+                </children>
+            </VBox>
+            <Separator orientation="VERTICAL" HBox.hgrow="NEVER" />
+            <VBox HBox.hgrow="SOMETIMES">
+                <fx:include fx:id="functionalAnnotation" source="FunctionalAnnotation.fxml" />
+            </VBox>
+         </children>
+      </HBox>
         <HBox styleClass="row">
             <children>
                 <Pane HBox.hgrow="ALWAYS" />
                 <Button defaultButton="true" mnemonicParsing="false" onAction="#okButtonAction" styleClass="ok-button" text="OK" />
             </children>
         </HBox>
-    </children>
+   </children>
 </VBox>

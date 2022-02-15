@@ -11,16 +11,13 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualCo
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualVariantSummaryController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
+import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.*;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeEntryController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypicFeatureController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypicFeaturesTableController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.BreakendController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfBreakendVariantController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSequenceVariantController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSymbolicVariantController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -83,26 +80,35 @@ public class ControllerConfiguration {
 
     @Bean
     @Scope("prototype")
-    public VcfSequenceVariantController vcfSequenceVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
-        return new VcfSequenceVariantController(genomicAssemblyRegistry);
+    public VcfSequenceVariantController vcfSequenceVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry,
+                                                                     FunctionalAnnotationRegistry functionalAnnotationRegistry) {
+        return new VcfSequenceVariantController(genomicAssemblyRegistry, functionalAnnotationRegistry);
     }
 
     @Bean
     @Scope("prototype")
-    public VcfSymbolicVariantController vcfSymbolicVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
-        return new VcfSymbolicVariantController(genomicAssemblyRegistry);
+    public VcfSymbolicVariantController vcfSymbolicVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry,
+                                                                     FunctionalAnnotationRegistry functionalAnnotationRegistry) {
+        return new VcfSymbolicVariantController(genomicAssemblyRegistry, functionalAnnotationRegistry);
     }
 
     @Bean
     @Scope("prototype")
-    public VcfBreakendVariantController vcfBreakendVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
-        return new VcfBreakendVariantController(genomicAssemblyRegistry);
+    public VcfBreakendVariantController vcfBreakendVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry,
+                                                                     FunctionalAnnotationRegistry functionalAnnotationRegistry) {
+        return new VcfBreakendVariantController(genomicAssemblyRegistry, functionalAnnotationRegistry);
     }
 
     @Bean
     @Scope("prototype")
     public BreakendController breakendController() {
         return new BreakendController();
+    }
+
+    @Bean
+    @Scope("prototype")
+    public FunctionalAnnotationController functionalAnnotationController() {
+        return new FunctionalAnnotationController();
     }
 
     /* *****************************************  Individual controllers   ***************************************** */

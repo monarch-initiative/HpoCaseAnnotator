@@ -80,6 +80,8 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
 
             setupGenomicAssemblyRegistry();
 
+            setupFunctionalAnnotationRegistry();
+
             setCuratedFilesFolder(resourceProperties.getProperty(ResourcePaths.DISEASE_CASE_DIR_PROPERTY));
 
             readOmim("/data/omim.tsv");
@@ -93,6 +95,16 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
         } catch (IOException e) {
             LOGGER.warn("Error during startup: {}", e.getMessage(), e);
         }
+    }
+
+    private void setupFunctionalAnnotationRegistry() {
+        String hg19 = resourceProperties.getProperty(ResourcePaths.HG19_JANNOVAR_CACHE_PATH);
+        if (hg19 != null)
+            optionalResources.getFunctionalAnnotationResources().setHg19JannovarPath(Paths.get(hg19));
+
+        String hg38 = resourceProperties.getProperty(ResourcePaths.HG38_JANNOVAR_CACHE_PATH);
+        if (hg38 != null)
+            optionalResources.getFunctionalAnnotationResources().setHg38JannovarPath(Paths.get(hg38));
     }
 
     private void setupGenomicAssemblyRegistry() {

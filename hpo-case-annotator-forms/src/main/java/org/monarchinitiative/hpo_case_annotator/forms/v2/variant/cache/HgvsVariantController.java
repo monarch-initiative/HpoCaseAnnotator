@@ -1,6 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.forms.v2.variant.cache;
 
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -8,7 +7,6 @@ import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifier;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.unified.ObservableSeqSymVariant;
 
 import java.util.List;
 import java.util.Map;
@@ -49,11 +47,5 @@ public class HgvsVariantController {
                 }
             }
         });
-    }
-
-    public ChangeListener<ObservableSeqSymVariant> variantChangeListener() {
-        return (obs, old, novel) -> {
-            // TODO - implement
-        };
     }
 }

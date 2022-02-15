@@ -52,6 +52,28 @@
             </VBox>
          </children>
       </VBox>
+        <Separator />
+      <VBox styleClass="column">
+          <children>
+              <Label styleClass="h2" text="Jannovar transcript databases (functional annotation)" wrapText="true" />
+              <HBox alignment="CENTER_LEFT" styleClass="row">
+                  <children>
+                      <Label styleClass="h3" text="hg19" />
+                      <Label fx:id="hg19JannovarLabel" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                      <Button mnemonicParsing="false" onAction="#setPathToHg19JannovarButtonAction" text="Set path" />
+                      <Pane styleClass="progress-bar-placeholder" />
+                  </children>
+              </HBox>
+              <HBox alignment="CENTER_LEFT" styleClass="row">
+                  <children>
+                      <Label styleClass="h3" text="hg38" />
+                      <Label fx:id="hg38JannovarLabel" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                      <Button mnemonicParsing="false" onAction="#setPathToHg38JannovarButtonAction" text="Set path" />
+                      <Pane styleClass="progress-bar-placeholder" />
+                  </children>
+              </HBox>
+          </children>
+      </VBox>
       <Separator />
       <VBox styleClass="column">
          <children>

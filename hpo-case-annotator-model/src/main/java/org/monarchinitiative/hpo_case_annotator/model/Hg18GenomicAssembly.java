@@ -1,6 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.model;
 
-import org.monarchinitiative.svart.GenomicAssembly;
+import org.monarchinitiative.svart.assembly.GenomicAssembly;
 
 import java.util.Objects;
 

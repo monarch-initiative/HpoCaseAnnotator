@@ -11,6 +11,8 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.Struct
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.monarchinitiative.svart.*;
+import org.monarchinitiative.svart.assembly.GenomicAssemblies;
+import org.monarchinitiative.svart.assembly.GenomicAssembly;
 
 import java.time.Period;
 import java.util.List;
@@ -56,7 +58,7 @@ public class V1toV2CodecTest {
 
         // sequence
         assertThat(variants.get(0), equalTo(CuratedVariant.of("GRCh37.p13",
-                org.monarchinitiative.svart.Variant.of(GRCH37.contigByName("9"),
+                GenomicVariant.of(GRCH37.contigByName("9"),
                         "GRCH_37-9-123,737,057-123,737,057-C-G",
                         Strand.POSITIVE,
                         CoordinateSystem.oneBased(),
@@ -78,7 +80,7 @@ public class V1toV2CodecTest {
                         "in vitro mRNA expression assay"))));
         // symbolic
         assertThat(variants.get(3), equalTo(CuratedVariant.of("GRCh37.p13",
-                org.monarchinitiative.svart.Variant.of(GRCH37.contigByName("5"),
+                GenomicVariant.of(GRCH37.contigByName("5"),
                         "GRCH_37-5-149,741,531-149,744,897-N-<DEL>",
                         Strand.POSITIVE,
                         Coordinates.of(CoordinateSystem.oneBased(),
@@ -93,8 +95,8 @@ public class V1toV2CodecTest {
 
         // breakend
         assertThat(variants.get(4), equalTo(CuratedVariant.of("GRCh37.p13",
-                org.monarchinitiative.svart.Variant.of("GRCH_37-9-133,359,000-13-32,300,000-G-",
-                        Breakend.of(GRCH37.contigByName("9"),
+                GenomicVariant.of("GRCH_37-9-133,359,000-13-32,300,000-G-",
+                        GenomicBreakend.of(GRCH37.contigByName("9"),
                                 "GRCH_37-9-133,359,000-[+]",
                                 Strand.POSITIVE,
                                 Coordinates.of(CoordinateSystem.zeroBased(),
@@ -102,7 +104,7 @@ public class V1toV2CodecTest {
                                         ConfidenceInterval.of(-5, 10),
                                         133_359_000,
                                         ConfidenceInterval.of(-5, 10))),
-                        Breakend.of(GRCH37.contigByName("13"),
+                        GenomicBreakend.of(GRCH37.contigByName("13"),
                                 "GRCH_37-13-32,300,000-[+]",
                                 Strand.POSITIVE,
                                 Coordinates.of(CoordinateSystem.zeroBased(),

@@ -7,22 +7,22 @@ import org.monarchinitiative.svart.*;
 public interface CuratedVariant {
 
     static CuratedVariant of(String genomicAssembly,
-                             Variant variant,
+                             GenomicVariant variant,
                              VariantMetadata variantMetadata) {
         return CuratedVariantDefault.of(genomicAssembly, variant, variantMetadata);
     }
 
     String genomicAssembly();
 
-    Variant variant();
+    GenomicVariant variant();
 
     VariantMetadata variantMetadata();
 
     default String md5Hex() {
         String id;
-        if (variant() instanceof BreakendVariant bv) {
-            Breakend left = bv.left();
-            Breakend right = bv.right();
+        if (variant() instanceof GenomicBreakendVariant bv) {
+            GenomicBreakend left = bv.left();
+            GenomicBreakend right = bv.right();
             id = String.join("-",
                     genomicAssembly(),
                     left.contigName(),
@@ -90,7 +90,7 @@ public interface CuratedVariant {
     }
 
     default String id() {
-        if (variant() instanceof BreakendVariant bv) {
+        if (variant() instanceof GenomicBreakendVariant bv) {
             return bv.eventId();
         } else {
             return variant().id();

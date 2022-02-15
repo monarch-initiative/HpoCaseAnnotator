@@ -1,20 +1,20 @@
 package org.monarchinitiative.hpo_case_annotator.forms.v2.variant;
 
+import javafx.beans.Observable;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import org.monarchinitiative.hpo_case_annotator.forms.FunctionalAnnotationRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataException;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.hpo_case_annotator.forms.util.VariantTypeStringConverter;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
-import org.monarchinitiative.svart.Variant;
+import org.monarchinitiative.svart.GenomicVariant;
 import org.monarchinitiative.svart.VariantType;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Set;
+import java.util.*;
 
 public class VcfSymbolicVariantController extends VcfSeqSymVariantController {
 
@@ -29,8 +29,9 @@ public class VcfSymbolicVariantController extends VcfSeqSymVariantController {
     @FXML
     private ComboBox<VariantType> altComboBox;
 
-    public VcfSymbolicVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
-        super(genomicAssemblyRegistry);
+    public VcfSymbolicVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry,
+                                        FunctionalAnnotationRegistry functionalAnnotationRegistry) {
+        super(genomicAssemblyRegistry, functionalAnnotationRegistry);
     }
 
     @FXML
@@ -39,6 +40,19 @@ public class VcfSymbolicVariantController extends VcfSeqSymVariantController {
         startTextField.setTextFormatter(Formats.numberFormatter());
         endTextField.setTextFormatter(Formats.numberFormatter());
         initializeAltVariantTypes();
+    }
+
+    @Override
+    protected List<Observable> variantInputFields() {
+        // TODO - decide what to do with symbolic variants
+        // Then enable functional annotation pane
+//        LinkedList<Observable> observables = new LinkedList<>(super.variantInputFields());
+//        observables.add(startTextField.textProperty());
+//        observables.add(endTextField.textProperty());
+//        observables.add(referenceTextField.textProperty());
+//        observables.add(altComboBox.valueProperty());
+//        return observables;
+        return List.of();
     }
 
 
@@ -59,7 +73,7 @@ public class VcfSymbolicVariantController extends VcfSeqSymVariantController {
         int end = FormUtils.processFormattedInteger(endTextField.getText());
         int changeLength = calculateChangeLength(altComboBox.getValue(), start, end);
 
-        Variant variant = Variant.of(getContig(),
+        GenomicVariant variant = GenomicVariant.of(getContig(),
                 getVariantId(),
                 VCF_STRAND,
                 VCF_COORDINATE_SYSTEM,

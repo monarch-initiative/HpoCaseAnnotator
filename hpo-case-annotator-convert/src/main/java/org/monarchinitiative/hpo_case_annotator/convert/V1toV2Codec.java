@@ -14,6 +14,8 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.*;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.monarchinitiative.svart.*;
+import org.monarchinitiative.svart.assembly.GenomicAssemblies;
+import org.monarchinitiative.svart.assembly.GenomicAssembly;
 
 import java.text.NumberFormat;
 import java.time.Instant;
@@ -82,7 +84,7 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
                 coordinates.end(),
                 variantPosition.getRefAllele(),
                 variantPosition.getAltAllele());
-        org.monarchinitiative.svart.Variant v = org.monarchinitiative.svart.Variant.of(contig,
+        GenomicVariant v = GenomicVariant.of(contig,
                 variantId,
                 Strand.POSITIVE,
                 coordinates,
@@ -129,7 +131,7 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
                 variantPosition.getRefAllele(),
                 altAllele);
 
-        org.monarchinitiative.svart.Variant v = org.monarchinitiative.svart.Variant.of(contig,
+        GenomicVariant v = GenomicVariant.of(contig,
                 variantId,
                 Strand.POSITIVE,
                 coordinates,
@@ -159,7 +161,7 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
                 variantPosition.getPos(), leftCi,
                 variantPosition.getPos(), leftCi);
         Strand leftStrand = directionToStrand(variantPosition.getContigDirection());
-        Breakend left = Breakend.of(leftContig,
+        GenomicBreakend left = GenomicBreakend.of(leftContig,
                 createBreakendId(variantPosition.getGenomeAssembly(),
                         leftContig.name(),
                         leftStrand,
@@ -174,7 +176,7 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
                 variantPosition.getPos2(), rightCi,
                 variantPosition.getPos2(), rightCi);
         Strand rightStrand = directionToStrand(variantPosition.getContig2Direction());
-        Breakend right = Breakend.of(rightContig,
+        GenomicBreakend right = GenomicBreakend.of(rightContig,
                 createBreakendId(variantPosition.getGenomeAssembly(),
                         rightContig.name(),
                         rightStrand,
@@ -191,7 +193,7 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
                 variantPosition.getRefAllele(),
                 variantPosition.getAltAllele());
 
-        org.monarchinitiative.svart.Variant v = org.monarchinitiative.svart.Variant.of(variantId,
+        GenomicVariant v = GenomicVariant.of(variantId,
                 left,
                 right,
                 variantPosition.getRefAllele(),

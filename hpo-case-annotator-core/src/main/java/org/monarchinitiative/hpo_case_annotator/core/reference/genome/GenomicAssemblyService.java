@@ -1,6 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.core.reference.genome;
 
-import org.monarchinitiative.svart.GenomicAssembly;
+import org.monarchinitiative.svart.assembly.GenomicAssembly;
 import org.monarchinitiative.svart.GenomicRegion;
 
 import java.nio.file.Path;

@@ -10,6 +10,7 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadata;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadataContext;
 import org.monarchinitiative.svart.*;
+import org.monarchinitiative.svart.assembly.GenomicAssembly;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -52,7 +53,7 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
         VariantMetadata variantMetadata = codec.treeToValue(node.get("variantValidation"), VariantMetadata.class);
 
         String variantType = node.get("variantType").asText();
-        Variant variant;
+        GenomicVariant variant;
         if (variantType.equals("BND")) {
             // breakend variant
 
@@ -70,7 +71,7 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
                     leftStartCi,
                     node.get("leftEnd").asInt(),
                     leftEndCi);
-            Breakend left = Breakend.of(leftContigOptional.get(), leftId, leftStrand, leftCoordinates);
+            GenomicBreakend left = GenomicBreakend.of(leftContigOptional.get(), leftId, leftStrand, leftCoordinates);
 
             // right
             String rightContigGenBankAccession = node.get("rightContigGenBankAccession").asText();
@@ -86,10 +87,10 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
                     rightStartCi,
                     node.get("rightEnd").asInt(),
                     rightEndCi);
-            Breakend right = Breakend.of(rightContigOptional.get(), rightId, rightStrand, rightCoordinates);
+            GenomicBreakend right = GenomicBreakend.of(rightContigOptional.get(), rightId, rightStrand, rightCoordinates);
 
             String eventId = node.get("eventId").asText();
-            variant = Variant.of(eventId,
+            variant = GenomicVariant.of(eventId,
                     left,
                     right,
                     ref,
@@ -111,7 +112,7 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
             int changeLength = node.get("changeLength").asInt();
 
             if (VariantType.isSymbolic(ref, alt)) {
-                variant = Variant.of(contigOptional.get(),
+                variant = GenomicVariant.of(contigOptional.get(),
                         id,
                         strand,
                         coordinates,
@@ -119,7 +120,7 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
                         alt,
                         changeLength);
             } else {
-                variant = Variant.of(contigOptional.get(),
+                variant = GenomicVariant.of(contigOptional.get(),
                         id,
                         strand,
                         coordinates,
