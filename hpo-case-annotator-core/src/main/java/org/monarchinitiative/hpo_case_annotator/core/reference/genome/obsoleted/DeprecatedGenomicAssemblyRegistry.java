@@ -2,7 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.core.reference.genome.obsoleted
 
 
 import org.monarchinitiative.hpo_case_annotator.core.reference.genome.GenomicAssemblyService;
-import org.monarchinitiative.svart.GenomicAssembly;
+import org.monarchinitiative.svart.assembly.GenomicAssembly;
 
 import java.util.Optional;
 import java.util.stream.Stream;

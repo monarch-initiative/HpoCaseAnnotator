@@ -1,7 +1,9 @@
 module org.monarchinitiative.hca.core {
     requires transitive org.monarchinitiative.hca.model;
+    requires transitive org.monarchitiative.svart;
 
     requires htsjdk;
+    requires jannovar.core;
     requires com.google.protobuf;
     requires org.slf4j;
 
