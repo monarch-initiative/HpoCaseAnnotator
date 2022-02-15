@@ -114,7 +114,8 @@ public class App extends Application {
         String liftoverChains = optionalResources.liftoverChainFiles().stream()
                 .map(File::getAbsolutePath)
                 .collect(Collectors.joining(ResourcePaths.LIFTOVER_CHAIN_PATH_SEPARATOR));
-        resourceProperties.setProperty(ResourcePaths.LIFTOVER_CHAIN_PATHS_PROPERTY, liftoverChains);
+        if (!liftoverChains.isBlank())
+            resourceProperties.setProperty(ResourcePaths.LIFTOVER_CHAIN_PATHS_PROPERTY, liftoverChains);
 
         if (optionalResources.getBiocuratorId() != null) {
             resourceProperties.setProperty(ResourcePaths.BIOCURATOR_ID_PROPERTY, optionalResources.getBiocuratorId());
