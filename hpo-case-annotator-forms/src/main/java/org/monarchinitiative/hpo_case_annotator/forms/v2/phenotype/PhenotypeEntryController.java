@@ -98,7 +98,7 @@ public class PhenotypeEntryController {
     @FXML
     private void searchTextFieldAction() {
         String text = searchTextField.getText();
-        LOGGER.info("Searching for `{}`", text);
+        LOGGER.debug("Searching for `{}`", text);
         suggestionProvider.termIdForName(text)
                 .ifPresent(termId -> ontologyTreeBrowserController.navigateToTermId(termId));
     }
