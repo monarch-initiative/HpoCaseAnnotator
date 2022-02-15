@@ -12,6 +12,7 @@ import javafx.stage.WindowEvent;
 import org.monarchinitiative.hpo_case_annotator.app.config.*;
 import org.monarchinitiative.hpo_case_annotator.app.dialogs.Dialogs;
 import org.monarchinitiative.hpo_case_annotator.app.controller.Main;
+import org.monarchinitiative.hpo_case_annotator.app.model.FunctionalAnnotationResources;
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResource;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResources;
@@ -91,6 +92,16 @@ public class App extends Application {
                     .ifPresent(refGenomePath -> resourceProperties.setProperty(ResourcePaths.HG19_FASTA_PATH_PROPETY, refGenomePath));
             createReferenceGenomeFastaPath(localResources.getHg38())
                     .ifPresent(refGenomePath -> resourceProperties.setProperty(ResourcePaths.HG38_FASTA_PATH_PROPETY, refGenomePath));
+        }
+
+        FunctionalAnnotationResources functionalAnnotationResources = optionalResources.getFunctionalAnnotationResources();
+        if (functionalAnnotationResources != null) {
+            Path hg19JannovarPath = functionalAnnotationResources.getHg19JannovarPath();
+            if (hg19JannovarPath != null)
+                resourceProperties.setProperty(ResourcePaths.HG19_JANNOVAR_CACHE_PATH, hg19JannovarPath.toAbsolutePath().toString());
+            Path hg38JannovarPath = functionalAnnotationResources.getHg38JannovarPath();
+            if (hg38JannovarPath != null)
+                resourceProperties.setProperty(ResourcePaths.HG38_JANNOVAR_CACHE_PATH, hg38JannovarPath.toAbsolutePath().toString());
         }
 
         if (optionalResources.getOntologyPath() != null) {

@@ -60,29 +60,25 @@ public class SetResourcesController {
     private final ExecutorService executorService;
 
     @FXML
-    public ProgressIndicator hg19ProgressIndicator;
+    private ProgressIndicator hg19ProgressIndicator;
 
     @FXML
-    public ProgressIndicator hg38ProgressIndicator;
+    private Label hg19ProgressLabel;
 
     @FXML
-    public ProgressIndicator hpoProgressIndicator;
+    private ProgressIndicator hg38ProgressIndicator;
 
     @FXML
-    public ProgressIndicator entrezProgressIndicator;
+    private Label hg38ProgressLabel;
 
     @FXML
-    public Label hg19ProgressLabel;
+    private Label hg19JannovarLabel;
 
     @FXML
-    public Label hg38ProgressLabel;
+    private Label hg38JannovarLabel;
 
     @FXML
-    private HBox statusBar;
-
-    @FXML
-    private StatusBarController statusBarController;
-
+    private Label hg19GenomeLabel;
     @FXML
     private Label hg38GenomeLabel;
 
@@ -90,17 +86,25 @@ public class SetResourcesController {
     private Label hpOboLabel;
 
     @FXML
+    private ProgressIndicator hpoProgressIndicator;
+
+    @FXML
     private Label entrezGeneLabel;
+
+    @FXML
+    private ProgressIndicator entrezProgressIndicator;
 
     @FXML
     private Label curatedFilesDirLabel;
 
     @FXML
-    private Label hg19GenomeLabel;
-
-    @FXML
     private TextField biocuratorIDTextField;
 
+    @FXML
+    private HBox statusBar;
+
+    @FXML
+    private StatusBarController statusBarController;
 
     public SetResourcesController(OptionalResources optionalResources,
                                   GenomicRemoteResources genomicRemoteResources,
@@ -133,9 +137,14 @@ public class SetResourcesController {
         hg19GenomeLabel.textProperty().bind(optionalResources.getGenomicLocalResources().getHg19().fastaProperty().asString());
         hg38GenomeLabel.textProperty().bind(optionalResources.getGenomicLocalResources().getHg38().fastaProperty().asString());
 
+        hg19JannovarLabel.textProperty().bind(optionalResources.getFunctionalAnnotationResources().hg19JannovarPathProperty().asString());
+        hg38JannovarLabel.textProperty().bind(optionalResources.getFunctionalAnnotationResources().hg38JannovarPathProperty().asString());
+
         hpOboLabel.textProperty().bind(optionalResources.ontologyPathProperty().asString());
         entrezGeneLabel.textProperty().bind(optionalResources.entrezPathProperty().asString());
         curatedFilesDirLabel.textProperty().bind(optionalResources.diseaseCaseDirProperty().asString());
+
+        // TODO - report location of liftover chain files
 
         biocuratorIDTextField.textProperty().bindBidirectional(optionalResources.biocuratorIdProperty());
     }
@@ -396,4 +405,29 @@ public class SetResourcesController {
         }
     }
 
+    @FXML
+    private void setPathToHg19JannovarButtonAction(ActionEvent e) {
+        e.consume();
+        FileChooser chooser = new FileChooser();
+        chooser.setInitialDirectory(appHomeDir);
+        chooser.setTitle("Select Jannovar transcript database for hg19");
+
+        File databasePath = chooser.showOpenDialog(hg19JannovarLabel.getScene().getWindow());
+
+        if (databasePath != null)
+            optionalResources.getFunctionalAnnotationResources().setHg19JannovarPath(databasePath.toPath());
+    }
+
+    @FXML
+    private void setPathToHg38JannovarButtonAction(ActionEvent e) {
+        e.consume();
+        FileChooser chooser = new FileChooser();
+        chooser.setInitialDirectory(appHomeDir);
+        chooser.setTitle("Select Jannovar transcript database for hg38");
+
+        File databasePath = chooser.showOpenDialog(hg38JannovarLabel.getScene().getWindow());
+
+        if (databasePath != null)
+            optionalResources.getFunctionalAnnotationResources().setHg38JannovarPath(databasePath.toPath());
+    }
 }

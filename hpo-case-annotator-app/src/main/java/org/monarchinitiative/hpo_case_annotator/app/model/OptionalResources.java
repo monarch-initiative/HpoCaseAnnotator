@@ -48,6 +48,7 @@ public class OptionalResources {
     private final ObjectProperty<File> entrezPath = new SimpleObjectProperty<>(this, "entrezPath");
     private final ObjectProperty<GenomicLocalResources> genomicLocalResources = new SimpleObjectProperty<>(this, "genomicResources", new GenomicLocalResources());
     private final ObjectProperty<GenomicAssemblyRegistry> genomicAssemblyRegistry = new SimpleObjectProperty<>(this, "genomicAssemblyRegistry", new GenomicAssemblyRegistry());
+    private final ObjectProperty<FunctionalAnnotationResources> functionalAnnotationResources = new SimpleObjectProperty<>(this, "functionalAnnotationResources", new FunctionalAnnotationResources());
     private final ObservableList<File> liftoverChainFiles = FXCollections.observableList(new LinkedList<>());
     private final ObjectProperty<LiftOverService> liftoverService = new SimpleObjectProperty<>(this, "liftoverService");
 
@@ -134,6 +135,14 @@ public class OptionalResources {
 
     public void setGenomicAssemblyRegistry(GenomicAssemblyRegistry genomicAssemblyRegistry) {
         this.genomicAssemblyRegistry.set(genomicAssemblyRegistry);
+    }
+
+    public FunctionalAnnotationResources getFunctionalAnnotationResources() {
+        return functionalAnnotationResources.get();
+    }
+
+    public ObjectProperty<FunctionalAnnotationResources> functionalAnnotationResourcesProperty() {
+        return functionalAnnotationResources;
     }
 
     public File getOntologyPath() {

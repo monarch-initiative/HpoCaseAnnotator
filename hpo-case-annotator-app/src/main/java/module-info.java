@@ -4,6 +4,7 @@ module org.monarchinitiative.hca.app {
     requires org.monarchinitiative.hca.convert;
 
     requires org.monarchinitiative.phenol.io;
+    requires jannovar.core;
 
     requires spring.boot;
     requires spring.context;

@@ -65,9 +65,47 @@ public class MainConfiguration {
     }
 
     @Bean
-    public FunctionalAnnotationRegistry functionalAnnotationRegistry() throws HpoCaseAnnotatorException {
+    public FunctionalAnnotationRegistry functionalAnnotationRegistry(OptionalResources optionalResources,
+                                                                     ExecutorService executorService) {
         FunctionalAnnotationRegistry functionalAnnotationRegistry = new FunctionalAnnotationRegistry();
-        // TODO - run on background thread
+        // hg19
+        optionalResources.getFunctionalAnnotationResources().hg19JannovarPathProperty()
+                .addListener((obs, old, novel) -> {
+                    if (novel != null) {
+                        Runnable task = () -> {
+                            try {
+                                JannovarFunctionalAnnotationService service = JannovarFunctionalAnnotationService.of(novel);
+                                functionalAnnotationRegistry.setHg19Service(service);
+                            } catch (HpoCaseAnnotatorException e) {
+                                LOGGER.warn("Error during deserialization of Jannovar cache at {}: {}", novel.toAbsolutePath(), e.getMessage(), e);
+                                functionalAnnotationRegistry.setHg19Service(null);
+                            }
+                        };
+                        executorService.submit(task);
+                    } else {
+                        functionalAnnotationRegistry.setHg19Service(null);
+                    }
+                });
+
+        // hg38
+        optionalResources.getFunctionalAnnotationResources().hg38JannovarPathProperty()
+                .addListener((obs, old, novel) -> {
+                    if (novel != null) {
+                        Runnable task = () -> {
+                            try {
+                                JannovarFunctionalAnnotationService service = JannovarFunctionalAnnotationService.of(novel);
+                                functionalAnnotationRegistry.setHg38Service(service);
+                            } catch (HpoCaseAnnotatorException e) {
+                                LOGGER.warn("Error during deserialization of Jannovar cache at {}: {}", novel.toAbsolutePath(), e.getMessage(), e);
+                                functionalAnnotationRegistry.setHg38Service(null);
+                            }
+                        };
+                        executorService.submit(task);
+                    } else {
+                        functionalAnnotationRegistry.setHg38Service(null);
+                    }
+                });
+
         return functionalAnnotationRegistry;
     }
 

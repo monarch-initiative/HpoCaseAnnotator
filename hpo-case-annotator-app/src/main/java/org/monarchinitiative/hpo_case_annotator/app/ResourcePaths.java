@@ -20,6 +20,9 @@ public class ResourcePaths {
     public static final String HG19_FASTA_PATH_PROPETY = "hg19.fasta.path";
     public static final String HG38_FASTA_PATH_PROPETY = "hg38.fasta.path";
 
+    public static final String HG19_JANNOVAR_CACHE_PATH = "hg19.jannovar.path";
+    public static final String HG38_JANNOVAR_CACHE_PATH = "hg38.jannovar.path";
+
     /**
      * Use this name to save HPO file on the local filesystem.
      */
