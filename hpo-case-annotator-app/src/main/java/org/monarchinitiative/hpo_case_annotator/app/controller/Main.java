@@ -175,7 +175,7 @@ public class Main {
         var cohortStudy = new CommandLinksDialog.CommandLinksButtonType("Cohort study", "Enter data about several unrelated individuals.", false);
         CommandLinksDialog dialog = new CommandLinksDialog(individualStudy, familyStudy, cohortStudy);
         dialog.setTitle("New study");
-        dialog.setHeaderText("Select study type.");
+        dialog.setHeaderText("Select study type");
         dialog.setContentText("HCA supports the following study types:");
         Optional<ButtonType> buttonType = dialog.showAndWait();
 

@@ -41,8 +41,17 @@ public class PublicationController extends BindingDataController<ObservablePubli
     }
 
     private StringBinding createPublicationSummary() {
-        return Bindings.createStringBinding(() ->
-                        String.format("%s\n\n%s\n\n%s, %s, %s", titleTextField.getText(), authorsTextField.getText(), journalTextField.getText(), yearTextField.getText(), pmidTextField.getText()),
+        return Bindings.createStringBinding(() -> {
+                    String text = titleTextField.getText();
+
+                    String authors = authorsTextField.getText();
+                    String journal = journalTextField.getText();
+                    String year = yearTextField.getText();
+                    String pmid = pmidTextField.getText();
+                    return String.format("%s\n\n%s\n\n%s, %s, %s",
+                            text == null ? "" : text,
+                            authors == null ? "" : authors, journal, year, pmid);
+                },
                 titleTextField.textProperty(), authorsTextField.textProperty(), journalTextField.textProperty(), yearTextField.textProperty(), pmidTextField.textProperty());
     }
 
