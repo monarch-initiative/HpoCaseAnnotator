@@ -31,6 +31,14 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+/**
+ * Include the following into the VM options when running HpoCaseAnnotator within an IDE:
+ * <p>
+ * <code>
+ *   --add-reads org.monarchinitiative.hca.app=ALL-UNNAMED --add-exports=javafx.base/com.sun.javafx.event=org.controlsfx.controls --add-opens javafx.graphics/com.sun.javafx.sg.prism=ALL-UNNAMED --add-opens javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED --add-opens javafx.graphics/com.sun.javafx.util=ALL-UNNAMED --add-opens javafx.base/com.sun.javafx.logging=ALL-UNNAMED
+ * </code>
+ * </p>
+ */
 @SpringBootApplication
 @EnableConfigurationProperties({
         HcaProperties.class,
