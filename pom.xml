@@ -26,7 +26,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>16</java.version>
+        <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
@@ -41,7 +41,7 @@
         <protobuf.version>3.19.3</protobuf.version>
         <hpotextmining.version>0.2.8</hpotextmining.version>
 
-        <javafx.version>${java.version}</javafx.version>
+        <javafx.version>${java.version}.0.2</javafx.version>
         <controlsfx.version>11.1.0</controlsfx.version>
 
         <commons-compress.version>1.21</commons-compress.version>
