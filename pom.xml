@@ -31,7 +31,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <jannovar.version>0.36</jannovar.version>
-        <phenopacket.version>1.0.0</phenopacket.version>
+        <phenopacket.version>2.0.1</phenopacket.version>
         <phenol.version>2.0.0-RC1</phenol.version>
         <svart.version>2.0.0-RC1</svart.version>
         <htsjdk.version>2.24.1</htsjdk.version>
