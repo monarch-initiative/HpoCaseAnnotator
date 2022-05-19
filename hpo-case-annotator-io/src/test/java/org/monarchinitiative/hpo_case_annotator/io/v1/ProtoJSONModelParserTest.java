@@ -2,6 +2,8 @@ package org.monarchinitiative.hpo_case_annotator.io.v1;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
 
@@ -18,6 +20,7 @@ import java.util.Objects;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+@DisabledOnOs(OS.WINDOWS)
 public class ProtoJSONModelParserTest {
 
     @Test
