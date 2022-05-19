@@ -3,8 +3,6 @@ package org.monarchinitiative.hpo_case_annotator.io.v2.json;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 import org.monarchinitiative.hpo_case_annotator.model.v2.CohortStudy;
 import org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
@@ -19,7 +17,6 @@ import java.util.stream.Collectors;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-@DisabledOnOs(OS.WINDOWS)
 public class JsonStudyParserTest {
 
     private static String readInputStream(InputStream is) throws IOException {
