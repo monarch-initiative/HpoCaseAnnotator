@@ -5,7 +5,7 @@
 Hpo Case Annotator (HCA) is Java app created with aim to make the biocuration of published pathogenic human variants easier.
 
 ### Building & installation
-Running *HCA* requires *Java 16* or better, the app is built with *Maven*.
+Running *HCA* requires *Java 17* or better, the app is built with *Maven*.
 
 - **build** - building a the *distribution ZIP archive* requires running:
 
@@ -28,7 +28,8 @@ java -jar hpo-case-annotator-app-2.0.0.jar
 Some buttons and fields are disabled after the first start of the GUI. You have to download some resources in order to enable all the functions. Click on `File > Settings > Initialize resources` menu and:
 
 - download reference genome files
-- download HPO and *Entrez genes* files
+- download Human Phenotype Ontology file
+- set paths to Jannovar transcript caches
 - set the path to *curated files directory*, where the data for a project will be stored
 - download *Liftover chain files*
 - set your **biocurator ID**
