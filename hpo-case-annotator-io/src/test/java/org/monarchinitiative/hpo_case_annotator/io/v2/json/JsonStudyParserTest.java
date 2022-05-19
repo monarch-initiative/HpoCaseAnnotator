@@ -22,7 +22,7 @@ public class JsonStudyParserTest {
     private static String readInputStream(InputStream is) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             return reader.lines()
-                    .collect(Collectors.joining(System.lineSeparator()));
+                    .collect(Collectors.joining("\n"));
         }
     }
 
