@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.monarchinitiative.hpo_case_annotator.model.v2.EditHistory;
 import org.monarchinitiative.hpo_case_annotator.model.v2.StudyMetadata;
 
@@ -15,6 +17,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
+@DisabledOnOs(OS.WINDOWS)
 public class StudyMetadataSerializerTest {
 
     private static final Version VERSION = new Version(1, 0, 0, null, null, null);

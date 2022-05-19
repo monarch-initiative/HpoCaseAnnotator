@@ -3,6 +3,8 @@ package org.monarchinitiative.hpo_case_annotator.io.v2.json.deserialize;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.monarchinitiative.hpo_case_annotator.model.v2.EditHistory;
 import org.monarchinitiative.hpo_case_annotator.model.v2.StudyMetadata;
 
@@ -12,6 +14,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
+@DisabledOnOs(OS.WINDOWS)
 public class StudyMetadataDeserializerTest {
 
 
