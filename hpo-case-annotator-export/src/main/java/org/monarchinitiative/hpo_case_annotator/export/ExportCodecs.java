@@ -1,8 +1,9 @@
 package org.monarchinitiative.hpo_case_annotator.export;
 
+import com.google.protobuf.Message;
 import org.monarchinitiative.hpo_case_annotator.model.convert.Codec;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.phenopackets.schema.v1.Phenopacket;
+import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +19,12 @@ public final class ExportCodecs {
         // private no-op
     }
 
-    public static Codec<DiseaseCase, Phenopacket> diseaseCasePhenopacketCodec() {
-        return new DiseaseCaseToV1PhenopacketCodec();
+    public static Codec<DiseaseCase, Message> diseaseCasePhenopacketCodec() {
+        return DiseaseCaseToV1PhenopacketCodec.instance();
+    }
+
+    public static Codec<Study, Message> familyStudyToFamilyCodec() {
+        return StudyToV2PhenopacketCodec.instance();
     }
 
     /**

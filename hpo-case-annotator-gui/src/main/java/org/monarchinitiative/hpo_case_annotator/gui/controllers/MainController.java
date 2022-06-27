@@ -2,6 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.gui.controllers;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Injector;
+import com.google.protobuf.Message;
 import com.google.protobuf.util.JsonFormat;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
@@ -571,7 +572,8 @@ public final class MainController {
         File where = PopUps.selectDirectory((Stage) contentTabPane.getScene().getWindow(), optionalResources.getDiseaseCaseDir(),
                 "Select export directory");
 
-        Codec<DiseaseCase, Phenopacket> codec = ExportCodecs.diseaseCasePhenopacketCodec();
+        // TODO - allow selecting v2 phenopacket, make it a default choice later
+        Codec<DiseaseCase, Message> codec = ExportCodecs.diseaseCasePhenopacketCodec();
 
         if (where != null) {
             int counter = 0;
@@ -580,7 +582,7 @@ public final class MainController {
                 String fileName = ModelUtils.getFileNameWithSampleId(model) + ".json";
                 File target = new File(where, fileName);
                 try (BufferedWriter writer = Files.newBufferedWriter(target.toPath())) {
-                    Phenopacket packet = codec.encode(model);
+                    Message packet = codec.encode(model);
                     LOGGER.trace("Writing phenopacket to '{}'", target);
                     String jsonString = PRINTER.print(packet);
                     writer.write(jsonString);
@@ -632,10 +634,11 @@ public final class MainController {
             filechooser.setSelectedExtensionFilter(jsonFormat);
 
             File where = filechooser.showSaveDialog(contentTabPane.getScene().getWindow());
-            Codec<DiseaseCase, Phenopacket> codec = ExportCodecs.diseaseCasePhenopacketCodec();
+            // TODO - allow selecting v2 phenopacket, make it a default choice later
+            Codec<DiseaseCase, Message> codec = ExportCodecs.diseaseCasePhenopacketCodec();
             if (where != null) {
                 try (BufferedWriter writer = Files.newBufferedWriter(where.toPath())) {
-                    final Phenopacket packet = codec.encode(diseaseCase);
+                    Message packet = codec.encode(diseaseCase);
                     String jsonString = PRINTER.print(packet);
                     writer.write(jsonString);
                 } catch (IOException e) {
