@@ -39,4 +39,4 @@ jobs:
           distribution: 'adopt'
       # Runs a set of commands using the runners shell
       - name: Build with Maven
-        run: ./mvnw --batch-mode --update-snapshots verify
+        run: ./mvnw -Pdev --batch-mode --update-snapshots verify
