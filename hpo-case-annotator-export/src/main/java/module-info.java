@@ -1,7 +1,7 @@
 module org.monarchinitiative.hca.export {
     requires transitive org.monarchinitiative.hca.model;
 
-    requires transitive phenopacket.schema;
+    requires transitive org.phenopackets.schema;
     requires org.phenopacket.tools.builder;
 
     requires org.apache.commons.codec;
