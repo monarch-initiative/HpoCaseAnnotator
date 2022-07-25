@@ -42,12 +42,12 @@ public class FamilyStudyControllerTest extends BaseControllerTest {
     @Test
     public void test(FxRobot robot) throws Exception {
         ObservableFamilyStudy familyStudy = new ObservableFamilyStudy();
-        Convert.toObservableFamilyStudy(TestData.V2.comprehensiveFamilyStudy(), familyStudy);
+        familyStudy.update(TestData.V2.comprehensiveFamilyStudy());
 
         Platform.runLater(() -> controller.setData(familyStudy));
 
         robot.sleep(15, TimeUnit.SECONDS);
 
-        System.err.println(Convert.toFamilyStudy(controller.getData()));
+        System.err.println(controller.getData());
     }
 }

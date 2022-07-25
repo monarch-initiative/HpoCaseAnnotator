@@ -88,7 +88,7 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual> exte
     protected void bind(T individual) {
         individualDetailController.idProperty().bind(individual.idProperty());
         individualDetailController.sexProperty().bind(individual.sexProperty().asString());
-        individualDetailController.ageLabel().bind(individual.getAge().period().asString());
+        individualDetailController.ageLabel().bind(individual.getObservableAge().period().asString());
         Bindings.bindContentBidirectional(phenotypicFeaturesTableController.observablePhenotypeDescriptions(), individual.phenotypicFeatures());
     }
 

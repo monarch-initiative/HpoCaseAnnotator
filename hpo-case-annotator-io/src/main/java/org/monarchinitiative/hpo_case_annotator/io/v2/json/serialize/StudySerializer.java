@@ -10,7 +10,6 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 
 import java.io.IOException;
-import java.util.Comparator;
 
 public class StudySerializer extends StdSerializer<Study> {
 
@@ -26,24 +25,21 @@ public class StudySerializer extends StdSerializer<Study> {
     public void serialize(Study study, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
 
-        gen.writeStringField("id", study.id());
-        gen.writeObjectField("studyMetadata", study.studyMetadata());
-        gen.writeObjectField("publication", study.publication());
+        gen.writeStringField("id", study.getId());
+        gen.writeObjectField("studyMetadata", study.getStudyMetadata());
+        gen.writeObjectField("publication", study.getPublication());
 
         gen.writeArrayFieldStart("variants");
-        for (CuratedVariant variant : study.variants())
+        for (CuratedVariant variant : study.getVariants())
             gen.writeObject(variant);
         gen.writeEndArray();
 
         if (study instanceof FamilyStudy familyStudy) {
-            gen.writeObjectField("pedigree", familyStudy.pedigree());
+            gen.writeObjectField("pedigree", familyStudy.getPedigree());
         } else if (study instanceof CohortStudy cohortStudy) {
             gen.writeArrayFieldStart("individuals");
-            for (Individual individual : cohortStudy.members()
-                    .sorted(Comparator.comparing(Individual::id))
-                    .toList()) {
+            for (Individual individual : cohortStudy.getMembers())
                 gen.writeObject(individual);
-            }
             gen.writeEndArray();
         }
 

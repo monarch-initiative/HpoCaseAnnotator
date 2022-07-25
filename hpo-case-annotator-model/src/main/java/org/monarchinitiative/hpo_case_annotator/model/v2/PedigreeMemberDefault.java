@@ -2,7 +2,6 @@ package org.monarchinitiative.hpo_case_annotator.model.v2;
 
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 
-import java.time.Period;
 import java.util.*;
 
 class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember {
@@ -15,10 +14,10 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
                                   String paternalId,
                                   String maternalId,
                                   boolean isProband,
-                                  Set<PhenotypicFeature> phenotypicFeatures,
+                                  List<PhenotypicFeature> phenotypicFeatures,
                                   List<DiseaseStatus> diseases,
                                   Map<String, Genotype> genotypes,
-                                  Period age,
+                                  Age age,
                                   Sex sex) {
         super(id, phenotypicFeatures, diseases, genotypes, age, sex);
         this.paternalId = paternalId;
@@ -30,17 +29,17 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
                                     String paternalId,
                                     String maternalId,
                                     boolean isProband,
-                                    Collection<PhenotypicFeature> phenotypicFeatures,
-                                    List<DiseaseStatus> diseases,
+                                    Collection<? extends PhenotypicFeature> phenotypicFeatures,
+                                    List<? extends DiseaseStatus> diseases,
                                     Map<String, Genotype> genotypes,
-                                    Period age,
+                                    Age age,
                                     Sex sex) {
         // wrap the collections
         return new PedigreeMemberDefault(Objects.requireNonNull(id, "Individual ID must not be null"),
                 paternalId,
                 maternalId,
                 isProband,
-                Set.copyOf(Objects.requireNonNull(phenotypicFeatures, "Phenotypic observations must not be null")),
+                List.copyOf(Objects.requireNonNull(phenotypicFeatures, "Phenotypic observations must not be null")),
                 List.copyOf(Objects.requireNonNull(diseases, "Diseases must not be null")),
                 Map.copyOf(Objects.requireNonNull(genotypes, "Genotypes must not be null")),
                 age,
@@ -48,12 +47,12 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
     }
 
     @Override
-    public Optional<String> paternalId() {
+    public Optional<String> getPaternalId() {
         return Optional.ofNullable(paternalId);
     }
 
     @Override
-    public Optional<String> maternalId() {
+    public Optional<String> getMaternalId() {
         return Optional.ofNullable(maternalId);
     }
 

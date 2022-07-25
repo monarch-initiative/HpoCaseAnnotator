@@ -44,10 +44,10 @@ public class StudyMetadataDeserializerTest {
 
         StudyMetadata studyMetadata = objectMapper.readValue(payload, StudyMetadata.class);
 
-        assertThat(studyMetadata.freeText(), equalTo("Two Tunisian neonates presented with low birth weight, disproportionate short stature, microcephaly and facial dysmorphism including dolichocephaly, round face and bilateral corneal opacity.\n" +
+        assertThat(studyMetadata.getFreeText(), equalTo("Two Tunisian neonates presented with low birth weight, disproportionate short stature, microcephaly and facial dysmorphism including dolichocephaly, round face and bilateral corneal opacity.\n" +
                 "gDNA, mRNA and minigene analysis revealed heterozygosity for mutation NM_194318.3:c.597-2A>G, which disrupts the 3'ss and causes out-of-frame exon skipping/PTC at the protein level."));
-        assertThat(studyMetadata.createdBy(), equalTo(EditHistory.of("BB:walt", "2.0.0", Instant.parse("2021-01-01T12:00:00Z"))));
-        assertThat(studyMetadata.modifiedBy(), equalTo(List.of(
+        assertThat(studyMetadata.getCreatedBy(), equalTo(EditHistory.of("BB:walt", "2.0.0", Instant.parse("2021-01-01T12:00:00Z"))));
+        assertThat(studyMetadata.getModifiedBy(), equalTo(List.of(
                 EditHistory.of("BB:skyler", "2.0.1", Instant.parse("2021-01-02T12:00:00Z")),
                 EditHistory.of("BB:jesse", "2.0.2", Instant.parse("2021-01-03T12:00:00Z"))
         )));

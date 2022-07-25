@@ -8,6 +8,7 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.Varian
 import org.monarchinitiative.svart.GenomicBreakend;
 import org.monarchinitiative.svart.GenomicBreakendVariant;
 import org.monarchinitiative.svart.CoordinateSystem;
+import org.monarchinitiative.svart.GenomicVariant;
 
 import java.io.IOException;
 
@@ -25,8 +26,8 @@ public class CuratedVariantSerializer extends StdSerializer<CuratedVariant> {
     public void serialize(CuratedVariant curatedVariant, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
         gen.writeStringField("variantType", curatedVariant.variantType().toString());
-        gen.writeStringField("genomicAssemblyAccession", curatedVariant.genomicAssembly());
-        if (curatedVariant.variant() instanceof GenomicBreakendVariant bv) {
+        gen.writeStringField("genomicAssemblyAccession", curatedVariant.getGenomicAssembly());
+        if (curatedVariant.getVariant() instanceof GenomicBreakendVariant bv) {
             GenomicBreakend left = bv.left();
             gen.writeStringField("leftContigGenBankAccession", left.contig().genBankAccession());
             gen.writeStringField("leftStrand", left.strand().toString());
@@ -51,24 +52,25 @@ public class CuratedVariantSerializer extends StdSerializer<CuratedVariant> {
 
             gen.writeStringField("eventId", bv.eventId());
         } else {
-            gen.writeStringField("contigGenBankAccession", curatedVariant.contig().genBankAccession());
-            gen.writeStringField("strand", curatedVariant.strand().toString());
-            gen.writeNumberField("start", curatedVariant.startWithCoordinateSystem(CoordinateSystem.zeroBased()));
-            if (!curatedVariant.coordinates().startConfidenceInterval().isPrecise())
-                gen.writeObjectField("startCi", curatedVariant.coordinates().startConfidenceInterval());
-            gen.writeNumberField("end", curatedVariant.endWithCoordinateSystem(CoordinateSystem.zeroBased()));
-            if (!curatedVariant.coordinates().endConfidenceInterval().isPrecise())
-                gen.writeObjectField("endCi", curatedVariant.coordinates().endConfidenceInterval());
+            GenomicVariant v = curatedVariant.getVariant();
+            gen.writeStringField("contigGenBankAccession", v.contig().genBankAccession());
+            gen.writeStringField("strand", v.strand().toString());
+            gen.writeNumberField("start", v.startWithCoordinateSystem(CoordinateSystem.zeroBased()));
+            if (!v.coordinates().startConfidenceInterval().isPrecise())
+                gen.writeObjectField("startCi", v.coordinates().startConfidenceInterval());
+            gen.writeNumberField("end", v.endWithCoordinateSystem(CoordinateSystem.zeroBased()));
+            if (!v.coordinates().endConfidenceInterval().isPrecise())
+                gen.writeObjectField("endCi", v.coordinates().endConfidenceInterval());
             gen.writeNumberField("changeLength", curatedVariant.changeLength());
             gen.writeStringField("id", curatedVariant.id());
         }
         gen.writeStringField("md5Hex", curatedVariant.md5Hex());
-        gen.writeStringField("ref", curatedVariant.ref());
-        gen.writeStringField("alt", curatedVariant.alt());
+        gen.writeStringField("ref", curatedVariant.getVariant().ref());
+        gen.writeStringField("alt", curatedVariant.getVariant().alt());
 
         // validation
         gen.writeObjectFieldStart("variantValidation");
-        VariantMetadata variantMetadata = curatedVariant.variantMetadata();
+        VariantMetadata variantMetadata = curatedVariant.getVariantMetadata();
         gen.writeStringField("validationContext", variantMetadata.getVariantMetadataContext().toString());
         gen.writeObjectField("validationMetadata", variantMetadata); // metadata have default serializers
         gen.writeEndObject();

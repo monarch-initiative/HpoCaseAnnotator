@@ -52,12 +52,12 @@ public class VcfSequenceVariantController extends VcfSeqSymVariantController {
      */
     @Override
     public void presentComponent(CuratedVariant variant) {
-        setGenomicAssembly(variant.genomicAssembly());
-        setContig(variant.contig());
+        setGenomicAssembly(variant.getGenomicAssembly());
+        setContig(variant.getVariant().contig());
         setVariantId(variant.id());
-        positionTextField.setText(String.valueOf(variant.startOnStrandWithCoordinateSystem(VCF_STRAND, VCF_COORDINATE_SYSTEM)));
-        referenceTextField.setText(variant.ref());
-        alternativeTextField.setText(variant.alt());
+        positionTextField.setText(String.valueOf(variant.getVariant().startOnStrandWithCoordinateSystem(VCF_STRAND, VCF_COORDINATE_SYSTEM)));
+        referenceTextField.setText(variant.getVariant().ref());
+        alternativeTextField.setText(variant.getVariant().alt());
     }
 
     @Override

@@ -8,10 +8,13 @@ public interface EditHistory {
         return new EditHistoryDefault(curatorId, softwareVersion, timestamp);
     }
 
-    String curatorId();
+    String getCuratorId();
 
-    String softwareVersion();
+    /**
+     * @return version of the curation software (e.g. {@code 1.0.2}).
+     */
+    String getSoftwareVersion();
 
-    Instant timestamp();
+    Instant getTimestamp();
 
 }

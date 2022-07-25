@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-abstract class BaseIndividualController<T extends BaseObservableIndividual> extends VariantAwareBindingController<T> {
+abstract class BaseIndividualController<T extends BaseObservableIndividual<?>> extends VariantAwareBindingController<T> {
 
     private final ToggleGroup sexToggleGroup = new ToggleGroup();
 
@@ -138,7 +138,7 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual> exte
         Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatuses());
 
         // genotypes
-        Bindings.bindContentBidirectional(individualVariantSummaryController.genotypes(), individual.genotypes());
+        Bindings.bindContentBidirectional(individualVariantSummaryController.genotypes(), individual.getGenotypes());
     }
 
     @Override
@@ -158,7 +158,7 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual> exte
         Bindings.unbindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatuses());
 
         // genotypes
-        Bindings.unbindContentBidirectional(individualVariantSummaryController.genotypes(), individual.genotypes());
+        Bindings.unbindContentBidirectional(individualVariantSummaryController.genotypes(), individual.getGenotypes());
     }
 
 }

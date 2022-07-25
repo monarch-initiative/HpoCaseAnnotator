@@ -2,19 +2,15 @@ package org.monarchinitiative.hpo_case_annotator.forms.v2.variant;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.core.reference.functional.FunctionalAnnotation;
 import org.monarchinitiative.hpo_case_annotator.core.reference.functional.FunctionalAnnotationService;
 import org.monarchinitiative.hpo_case_annotator.forms.FunctionalAnnotationRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
@@ -31,7 +27,6 @@ import org.monarchinitiative.svart.Strand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -78,7 +73,7 @@ public abstract class BaseVariantController implements ComponentController<Curat
             FunctionalAnnotationService annotationService = functionalAnnotationService.get();
             if (annotationService != null) {
                 try {
-                    GenomicVariant variant = getComponent().variant();
+                    GenomicVariant variant = getComponent().getVariant();
                     functionalAnnotationController.functionalAnnotations().setAll(annotationService.annotate(variant));
                 } catch (Exception e) {
                     LOGGER.debug("Incomplete component: {}", e.getMessage());

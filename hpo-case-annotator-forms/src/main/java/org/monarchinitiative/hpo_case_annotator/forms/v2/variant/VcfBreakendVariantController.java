@@ -56,8 +56,8 @@ public class VcfBreakendVariantController extends BaseVariantController {
 
     @Override
     public void presentComponent(CuratedVariant variant) {
-        if (variant.variant() instanceof GenomicBreakendVariant bv) {
-            setGenomicAssembly(variant.genomicAssembly());
+        if (variant.getVariant() instanceof GenomicBreakendVariant bv) {
+            setGenomicAssembly(variant.getGenomicAssembly());
             eventIdTextField.setText(bv.eventId());
             leftBreakendController.presentComponent(bv.left());
             rightBreakendController.presentComponent(bv.right());

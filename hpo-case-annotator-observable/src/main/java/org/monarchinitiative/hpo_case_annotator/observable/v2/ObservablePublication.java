@@ -4,8 +4,10 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.monarchinitiative.hpo_case_annotator.model.v2.Publication;
+import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
-public class ObservablePublication {
+public class ObservablePublication implements Publication, Updateable<Publication> {
     private final StringProperty authors = new SimpleStringProperty(this, "authors");
     private final StringProperty title = new SimpleStringProperty(this, "title");
     private final StringProperty journal = new SimpleStringProperty(this, "journal");
@@ -14,6 +16,7 @@ public class ObservablePublication {
     private final StringProperty pages = new SimpleStringProperty(this, "pages");
     private final StringProperty pmid = new SimpleStringProperty(this, "pmid");
 
+    @Override
     public String getAuthors() {
         return authors.get();
     }
@@ -26,6 +29,7 @@ public class ObservablePublication {
         return authors;
     }
 
+    @Override
     public String getTitle() {
         return title.get();
     }
@@ -38,6 +42,7 @@ public class ObservablePublication {
         return title;
     }
 
+    @Override
     public String getJournal() {
         return journal.get();
     }
@@ -50,6 +55,7 @@ public class ObservablePublication {
         return journal;
     }
 
+    @Override
     public int getYear() {
         return year.get();
     }
@@ -62,6 +68,7 @@ public class ObservablePublication {
         return year;
     }
 
+    @Override
     public String getVolume() {
         return volume.get();
     }
@@ -74,6 +81,7 @@ public class ObservablePublication {
         return volume;
     }
 
+    @Override
     public String getPages() {
         return pages.get();
     }
@@ -86,6 +94,7 @@ public class ObservablePublication {
         return pages;
     }
 
+    @Override
     public String getPmid() {
         return pmid.get();
     }
@@ -96,5 +105,26 @@ public class ObservablePublication {
 
     public StringProperty pmidProperty() {
         return pmid;
+    }
+
+    @Override
+    public void update(Publication data) {
+        if (data == null) {
+            authors.set(null);
+            title.set(null);
+            journal.set(null);
+            year.set(-1);
+            volume.set(null);
+            pages.set(null);
+            pmid.set(null);
+        } else {
+            authors.set(data.getAuthors());
+            title.set(data.getTitle());
+            journal.set(data.getJournal());
+            year.set(data.getYear());
+            volume.set(data.getVolume());
+            pages.set(data.getPages());
+            pmid.set(data.getPmid());
+        }
     }
 }

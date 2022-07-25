@@ -22,20 +22,20 @@ public class IndividualSerializer extends StdSerializer<Individual> {
     }
 
     static void writeIndividualFields(Individual individual, JsonGenerator gen) throws IOException {
-        gen.writeStringField("id", individual.id());
+        gen.writeStringField("id", individual.getId());
 
-        if (individual.age().isPresent()) // age
-            gen.writeStringField("age", individual.age().get().toString());
+        if (individual.getAge().isPresent()) // age
+            gen.writeObjectField("age", individual.getAge().get());
         else
             gen.writeNullField("age");
 
         gen.writeArrayFieldStart("diseases");
-        for (DiseaseStatus diseaseStatus : individual.diseases())
+        for (DiseaseStatus diseaseStatus : individual.getDiseases())
             gen.writeObject(diseaseStatus);
         gen.writeEndArray();
 
         gen.writeArrayFieldStart("genotypes");
-        for (Map.Entry<String, Genotype> entry : individual.genotypes().entrySet().stream()
+        for (Map.Entry<String, Genotype> entry : individual.getGenotypes().entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
                 .toList()) {
             gen.writeStartObject();
@@ -46,11 +46,11 @@ public class IndividualSerializer extends StdSerializer<Individual> {
         gen.writeEndArray();
 
         gen.writeArrayFieldStart("phenotypicFeatures");
-        for (PhenotypicFeature phenotypicFeature : individual.phenotypicFeatures().toList())
+        for (PhenotypicFeature phenotypicFeature : individual.getPhenotypicFeatures())
             gen.writeObject(phenotypicFeature);
         gen.writeEndArray();
 
-        gen.writeObjectField("sex", individual.sex());
+        gen.writeObjectField("sex", individual.getSex());
     }
 
     @Override

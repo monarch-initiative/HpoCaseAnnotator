@@ -3,20 +3,17 @@ package org.monarchinitiative.hpo_case_annotator.model.v2;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 
-import java.time.Period;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 public interface Individual {
 
     static Individual of(String id,
-                         Collection<PhenotypicFeature> phenotypicFeatures,
+                         List<PhenotypicFeature> phenotypicFeatures,
                          List<DiseaseStatus> diseases,
                          Map<String, Genotype> genotypes,
-                         Period age,
+                         Age age,
                          Sex sex) {
         return IndividualDefault.of(id,
                 phenotypicFeatures,
@@ -29,23 +26,23 @@ public interface Individual {
     /**
      * @return String with ID of the individual within the publication.
      */
-    String id();
+    String getId();
 
     /**
      * @return proband age at the time of the report.
      */
-    Optional<Period> age();
+    Optional<Age> getAge();
 
-    Stream<PhenotypicFeature> phenotypicFeatures();
+    List<? extends PhenotypicFeature> getPhenotypicFeatures();
 
-    List<DiseaseStatus> diseases();
+    List<? extends DiseaseStatus> getDiseases();
 
     /**
      * @return map linking {@link CuratedVariant#md5Hex()} to the {@link Genotype} observed in this individual.
      */
-    Map<String, Genotype> genotypes();
+    Map<String, Genotype> getGenotypes();
 
-    Sex sex();
+    Sex getSex();
 
     int hashCode();
 
@@ -53,9 +50,12 @@ public interface Individual {
 
     // ---------------------------------------------------------------------
 
+    /**
+     * @return {@code true} if at least one disease is indicated to be present in the {@link Individual}.
+     */
     default boolean isAffected() {
-        return diseases().stream()
-                .anyMatch(d -> !d.isExcluded());
+        return getDiseases().stream()
+                .anyMatch(DiseaseStatus::isPresent);
     }
 
 }

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.Convert;
+import org.monarchinitiative.hpo_case_annotator.model.v2.PedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
@@ -47,9 +47,11 @@ public class PhenotypeBrowserControllerTest extends BaseControllerTest {
     public void showIt(FxRobot robot) {
         FamilyStudy study = TestData.V2.comprehensiveFamilyStudy();
         ObjectProperty<ObservablePedigreeMember> individual = new SimpleObjectProperty<>();
-        study.members().findFirst()
-                .map(Convert::toObservablePedigreeMember)
-                .ifPresent(individual::set);
+        if (study.getMembers().isEmpty())
+            throw new IllegalArgumentException("Test cannot work without at least one individual");
+
+        PedigreeMember member = study.getMembers().get(0);
+        controller.getData().update(member);
 
         Platform.runLater(() -> controller.setOntology(ONTOLOGY));
         Platform.runLater(() -> controller.dataProperty().bind(individual));

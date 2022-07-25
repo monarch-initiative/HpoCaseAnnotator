@@ -8,7 +8,7 @@ import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudy;
 
-public abstract class StudyController<T extends ObservableStudy> extends BindingDataController<T> {
+public abstract class StudyController<T extends ObservableStudy<?>> extends BindingDataController<T> {
 
     @FXML
     private TextField studyIdTextField;

@@ -4,7 +4,6 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
 
 public interface FamilyStudy extends Study {
 
@@ -16,14 +15,14 @@ public interface FamilyStudy extends Study {
         return new FamilyStudyDefault(id, publication, variants, pedigree, studyMetadata);
     }
 
-    Pedigree pedigree();
+    Pedigree getPedigree();
 
     // Individual (Family)
     // - Map<variant_id, genotype>
     // - phenotype time course
 
-    default Stream<? extends PedigreeMember> members() {
-        return pedigree().members();
+    default List<? extends PedigreeMember> getMembers() {
+        return getPedigree().getMembers();
     }
 
     // Variant(s)
@@ -38,17 +37,18 @@ public interface FamilyStudy extends Study {
 
     // Phenotype(s)
     //
-    default List<PhenotypicFeature> phenotypicFeatures() {
-        return members()
-                .flatMap(Individual::phenotypicFeatures)
+    default List<? extends PhenotypicFeature> phenotypicFeatures() {
+        return getMembers().stream()
+                .map(Individual::getPhenotypicFeatures)
+                .flatMap(Collection::stream)
                 .distinct()
                 .toList();
     }
 
     // Disease(s)
-    default List<DiseaseStatus> diseases() {
-        return members()
-                .map(Individual::diseases)
+    default List<? extends DiseaseStatus> diseases() {
+        return getMembers().stream()
+                .map(Individual::getDiseases)
                 .flatMap(Collection::stream)
                 .toList();
     }

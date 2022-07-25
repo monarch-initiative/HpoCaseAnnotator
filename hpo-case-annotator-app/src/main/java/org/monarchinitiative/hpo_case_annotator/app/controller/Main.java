@@ -200,14 +200,14 @@ public class Main {
         };
     }
 
-    private static ObservableStudy studyForStudyType(StudyType studyType) {
+    private static Study studyForStudyType(StudyType studyType) {
         return switch (studyType) {
             case FAMILY -> new ObservableFamilyStudy();
             case COHORT -> new ObservableCohortStudy();
         };
     }
 
-    private <T extends ObservableStudy> void addStudy(URL fxmlUrl, StudyWrapper<T> wrapper) {
+    private <T extends Study> void addStudy(URL fxmlUrl, StudyWrapper<T> wrapper) {
         try {
             FXMLLoader loader = new FXMLLoader(fxmlUrl);
             loader.setControllerFactory(controllerFactory);
@@ -215,8 +215,8 @@ public class Main {
             Tab tab = new Tab();
             tab.setContent(loader.load());
 
-            StudyController<T> controller = loader.getController();
-            controller.setData(wrapper.study());
+            StudyController<ObservableStudy<T>> controller = loader.getController();
+            controller.getData().update(wrapper.study());
 
             tab.textProperty().bind(controller.getData().idProperty());
             tab.setOnCloseRequest(e -> removeStudy(studiesTabPane.getTabs().indexOf(tab)));
@@ -251,7 +251,7 @@ public class Main {
             return;
 
         for (File file : files) {
-            readStudy(file).flatMap(Convert::toObservableStudy)
+            readStudy(file)
                     .ifPresent(observableStudy -> studyTypeForStudy(observableStudy)
                             .flatMap(Main::controllerUrlForStudyType)
                             .ifPresent(url -> addStudy(url, StudyWrapper.of(observableStudy, file.toPath())))
@@ -296,10 +296,10 @@ public class Main {
         return Optional.ofNullable(study);
     }
 
-    private static Optional<StudyType> studyTypeForStudy(ObservableStudy study) {
-        if (study instanceof ObservableFamilyStudy) {
+    private static Optional<StudyType> studyTypeForStudy(Study study) {
+        if (study instanceof FamilyStudy) {
             return Optional.of(StudyType.FAMILY);
-        } else if (study instanceof ObservableCohortStudy) {
+        } else if (study instanceof CohortStudy) {
             return Optional.of(StudyType.COHORT);
         } else {
             return Optional.empty();
@@ -333,7 +333,7 @@ public class Main {
                 return Optional.empty();
             }
         } else if (data instanceof ObservableStudy study) {
-            return Convert.toStudy(study);
+            return Optional.of(study);
         } else {
             LOGGER.warn("Unknown study class: `{}`", data.getClass());
             return Optional.empty();
@@ -342,12 +342,11 @@ public class Main {
 
     private boolean saveV2Study(Study study, Path path) {
         if (path == null) {
-            path = askForPath(study.id());
+            path = askForPath(study.getId());
         }
 
         if (path == null) // the user canceled
             return false;
-
         try {
             ModelParsers.V2.jsonParser().write(study, path);
             return true;
@@ -478,9 +477,9 @@ public class Main {
     }
 
     private static Optional<StudyType> studyTypeForData(Object data) {
-        if (data instanceof ObservableFamilyStudy || data instanceof FamilyStudy) {
+        if (data instanceof FamilyStudy) {
             return Optional.of(StudyType.FAMILY);
-        } else if (data instanceof ObservableCohortStudy || data instanceof CohortStudy) {
+        } else if (data instanceof CohortStudy) {
             return Optional.of(StudyType.COHORT);
         } else {
             LOGGER.warn("Unknown study data class: {}", data.getClass());
@@ -521,7 +520,7 @@ public class Main {
 
                 getCurrentStudyData().ifPresent(data -> {
                     if (data instanceof ObservableStudy study) {
-                        Convert.toObservablePublication(publication, study.getPublication());
+                        study.getPublication().update(publication);
                     } else {
                         // TODO - support?
                         Dialogs.showWarningDialog("Sorry", "PubMed import is not supported for v1 model", null);
@@ -588,7 +587,7 @@ public class Main {
         e.consume();
     }
 
-    private <T extends BaseObservableIndividual> void editPhenotypeFeatures(ObjectBinding<T> individual) {
+    private <T extends BaseObservableIndividual<?>> void editPhenotypeFeatures(ObjectBinding<T> individual) {
         try {
             FXMLLoader loader = new FXMLLoader(PhenotypeBrowserController.class.getResource("PhenotypeBrowser.fxml"));
             loader.setControllerFactory(controllerFactory);
@@ -616,7 +615,7 @@ public class Main {
         }
     }
 
-    private Function<Object, Optional<? extends ObjectBinding<? extends BaseObservableIndividual>>> getBaseObservableIndividualBinding() {
+    private Function<Object, Optional<? extends ObjectBinding<? extends BaseObservableIndividual<?>>>> getBaseObservableIndividualBinding() {
         return data -> {
             Tab selectedStudyTab = studiesTabPane.getSelectionModel().getSelectedItem();
             if (data instanceof ObservableFamilyStudy || data instanceof ObservableCohortStudy) {
@@ -631,12 +630,9 @@ public class Main {
 
 
                 if (data instanceof ObservableFamilyStudy study) {
-                    return Optional.of(Bindings.valueAt(study.getPedigree().members(), tabIdx - 1));
-                } else if (data instanceof ObservableCohortStudy study) {
-                    // I really want to have this branch for clarity
-                    return Optional.of(Bindings.valueAt(study.members(), tabIdx - 1));
+                    return Optional.of(Bindings.valueAt(study.getObservablePedigree().membersList(), tabIdx - 1));
                 } else {
-                    return Optional.empty();
+                    return Optional.of(Bindings.valueAt(((ObservableCohortStudy) data).observableMembers(), tabIdx - 1));
                 }
             } else {
                 Dialogs.showInfoDialog("Sorry", String.format("Working with '%s' is not yet implemented", data.getClass().getName()), null);
@@ -654,7 +650,7 @@ public class Main {
         e.consume();
     }
 
-    private <T extends BaseObservableIndividual> void editDisease(ObjectBinding<T> individual) {
+    private <T extends BaseObservableIndividual<?>> void editDisease(ObjectBinding<T> individual) {
         try {
             FXMLLoader loader = new FXMLLoader(DiseaseStatusController.class.getResource("DiseaseStatus.fxml"));
             loader.setControllerFactory(controllerFactory);

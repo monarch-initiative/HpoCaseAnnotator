@@ -10,7 +10,6 @@ import org.monarchinitiative.svart.assembly.GenomicAssemblies;
 import org.monarchinitiative.svart.assembly.GenomicAssembly;
 
 import java.time.Instant;
-import java.time.Period;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,7 @@ class V2 {
 
     private static Publication getPublication() {
         return Publication.of(
-                List.of("Beygó J", "Buiting K", "Seland S", "Lüdecke HJ", "Hehr U", "Lich C", "Prager B", "Lohmann DR", "Wieczorek D"),
+                String.join(", ", List.of("Beygó J", "Buiting K", "Seland S", "Lüdecke HJ", "Hehr U", "Lich C", "Prager B", "Lohmann DR", "Wieczorek D")),
                 "First Report of a Single Exon Deletion in TCOF1 Causing Treacher Collins Syndrome",
                 "Mol Syndromol",
                 2012,
@@ -169,8 +168,8 @@ class V2 {
                 symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS);
 
         List<PhenotypicFeature> phenotypes = List.of(
-                PhenotypicFeature.of(TermId.of("HP:0002110"), false, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D"))), // Bronchiectasis
-                PhenotypicFeature.of(TermId.of("HP:0000822"), true, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D"))) // Hypertension
+                PhenotypicFeature.of(TermId.of("HP:0000822"), true, AgeRange.sinceBirthUntilAge(Age.ofYearsMonthsDays(10, 5, 4))), // Hypertension
+                PhenotypicFeature.of(TermId.of("HP:0002110"), false, AgeRange.sinceBirthUntilAge(Age.ofYearsMonthsDays(10, 5, 4))) // Bronchiectasis
         );
 
 
@@ -178,7 +177,7 @@ class V2 {
                 List.of(PedigreeMember.of("FAM:001",
                         "FAM:002",
                         null,
-                        true, phenotypes, diseases, genotypes, Period.parse("P10Y5M4D"),
+                        true, phenotypes, diseases, genotypes, Age.ofYearsMonthsDays(10, 5, 4),
                         Sex.MALE))
         );
     }
@@ -188,27 +187,27 @@ class V2 {
         // abc
         Individual abc = Individual.of("abc",
                 List.of(
-                        PhenotypicFeature.of(TermId.of("HP:0002110"), false, AgeRange.sinceBirthUntilAge(Period.parse("P10Y0M20D"))), // Bronchiectasis
-                        PhenotypicFeature.of(TermId.of("HP:0000822"), true, AgeRange.sinceBirthUntilAge(Period.parse("P10Y0M20D"))) // Hypertension
+                        PhenotypicFeature.of(TermId.of("HP:0000822"), true, AgeRange.sinceBirthUntilAge(Age.ofYearsMonthsDays(10, 0, 20))), // Hypertension
+                        PhenotypicFeature.of(TermId.of("HP:0002110"), false, AgeRange.sinceBirthUntilAge(Age.ofYearsMonthsDays(10, 0, 20))) // Bronchiectasis
                 ), List.of(DiseaseStatus.of(diseaseIdentifier, false)), Map.of(
                         mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
                         somaticVariant().md5Hex(), Genotype.HETEROZYGOUS,
                         splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
                         symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS,
-                        symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS), Period.of(10, 0, 20),
+                        symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS), Age.ofYearsMonthsDays(10, 0, 20),
                 Sex.MALE);
 
         // def
         Individual def = Individual.of("def",
                 List.of(
-                        PhenotypicFeature.of(TermId.of("HP:0002110"), true, AgeRange.sinceBirthUntilAge(Period.parse("P15Y2M4D"))), // Bronchiectasis
-                        PhenotypicFeature.of(TermId.of("HP:0000822"), false, AgeRange.sinceBirthUntilAge(Period.parse("P15Y2M4D"))) // Hypertension
+                        PhenotypicFeature.of(TermId.of("HP:0000822"), false, AgeRange.sinceBirthUntilAge(Age.ofYearsMonthsDays(15, 2, 4))), // Hypertension
+                        PhenotypicFeature.of(TermId.of("HP:0002110"), true, AgeRange.sinceBirthUntilAge(Age.ofYearsMonthsDays(15, 2, 4))) // Bronchiectasis
                 ), List.of(DiseaseStatus.of(diseaseIdentifier, true)), Map.of(
                         mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE,
                         somaticVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE,
                         splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
                         symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS,
-                        symbolicBreakendVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE), Period.of(15, 2, 4),
+                        symbolicBreakendVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE), Age.ofYearsMonthsDays(15, 2, 4),
                 Sex.FEMALE);
 
         return List.of(abc, def);

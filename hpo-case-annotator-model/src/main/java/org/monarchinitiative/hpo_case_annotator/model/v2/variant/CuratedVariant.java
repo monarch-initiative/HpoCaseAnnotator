@@ -12,19 +12,20 @@ public interface CuratedVariant {
         return CuratedVariantDefault.of(genomicAssembly, variant, variantMetadata);
     }
 
-    String genomicAssembly();
+    String getGenomicAssembly();
 
-    GenomicVariant variant();
+    GenomicVariant getVariant();
 
-    VariantMetadata variantMetadata();
+    VariantMetadata getVariantMetadata();
 
     default String md5Hex() {
         String id;
-        if (variant() instanceof GenomicBreakendVariant bv) {
+        GenomicVariant variant = getVariant();
+        if (variant instanceof GenomicBreakendVariant bv) {
             GenomicBreakend left = bv.left();
             GenomicBreakend right = bv.right();
             id = String.join("-",
-                    genomicAssembly(),
+                    getGenomicAssembly(),
                     left.contigName(),
                     // For breakends, start == end in 0-based CS, no need to hash both.
                     String.valueOf(left.startWithCoordinateSystem(CoordinateSystem.zeroBased())),
@@ -35,74 +36,32 @@ public interface CuratedVariant {
                     bv.alt());
         } else {
             id = String.join("-",
-                    genomicAssembly(),
-                    contig().name(),
-                    String.valueOf(startWithCoordinateSystem(CoordinateSystem.zeroBased())),
-                    String.valueOf(endWithCoordinateSystem(CoordinateSystem.zeroBased())),
-                    ref(),
-                    alt());
+                    getGenomicAssembly(),
+                    variant.contig().name(),
+                    String.valueOf(variant.startWithCoordinateSystem(CoordinateSystem.zeroBased())),
+                    String.valueOf(variant.endWithCoordinateSystem(CoordinateSystem.zeroBased())),
+                    variant.ref(),
+                    variant.alt());
         }
         return MD5Digest.digest(id);
     }
 
-    default Contig contig() {
-        return variant().contig();
-    }
-
-    default Strand strand() {
-        return variant().strand();
-    }
-
-    default Coordinates coordinates() {
-        return variant().coordinates();
-    }
-
-    default int start() {
-        return coordinates().start();
-    }
-
-    default int startWithCoordinateSystem(CoordinateSystem target) {
-        return variant().startWithCoordinateSystem(target);
-    }
-
-    default int startOnStrandWithCoordinateSystem(Strand strand, CoordinateSystem coordinateSystem) {
-        return variant().startOnStrandWithCoordinateSystem(strand, coordinateSystem);
-    }
-
-    default int end() {
-        return coordinates().end();
-    }
-
-    default int endWithCoordinateSystem(CoordinateSystem target) {
-        return variant().endWithCoordinateSystem(target);
-    }
-
-    default int endOnStrandWithCoordinateSystem(Strand strand, CoordinateSystem coordinateSystem) {
-        return variant().endOnStrandWithCoordinateSystem(strand, coordinateSystem);
-    }
-
-    default String ref() {
-        return variant().ref();
-    }
-
-    default String alt() {
-        return variant().alt();
-    }
+    // ************************************** DERIVED METHODS ******************************************************** *
 
     default String id() {
-        if (variant() instanceof GenomicBreakendVariant bv) {
+        if (getVariant() instanceof GenomicBreakendVariant bv) {
             return bv.eventId();
         } else {
-            return variant().id();
+            return getVariant().id();
         }
     }
 
     default int changeLength() {
-        return variant().changeLength();
+        return getVariant().changeLength();
     }
 
     default VariantType variantType() {
-        return variant().variantType();
+        return getVariant().variantType();
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -4,8 +4,12 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.monarchinitiative.hpo_case_annotator.model.v2.PedigreeMember;
+import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
-public class ObservablePedigreeMember extends BaseObservableIndividual {
+import java.util.Optional;
+
+public class ObservablePedigreeMember extends BaseObservableIndividual<PedigreeMember> implements PedigreeMember, Updateable<PedigreeMember> {
 
     private final StringProperty paternalId = new SimpleStringProperty(this, "paternalId");
     private final StringProperty maternalId = new SimpleStringProperty(this, "maternalId");
@@ -13,7 +17,6 @@ public class ObservablePedigreeMember extends BaseObservableIndividual {
 
     public ObservablePedigreeMember() {
     }
-
 
     public ObservablePedigreeMember(Builder builder) {
         super(builder);
@@ -23,8 +26,9 @@ public class ObservablePedigreeMember extends BaseObservableIndividual {
 
     }
 
-    public String getPaternalId() {
-        return paternalId.get();
+    @Override
+    public Optional<String> getPaternalId() {
+        return Optional.ofNullable(paternalId.get());
     }
 
     public void setPaternalId(String paternalId) {
@@ -35,8 +39,9 @@ public class ObservablePedigreeMember extends BaseObservableIndividual {
         return paternalId;
     }
 
-    public String getMaternalId() {
-        return maternalId.get();
+    @Override
+    public Optional<String> getMaternalId() {
+        return Optional.ofNullable(maternalId.get());
     }
 
     public void setMaternalId(String maternalId) {
@@ -47,6 +52,7 @@ public class ObservablePedigreeMember extends BaseObservableIndividual {
         return maternalId;
     }
 
+    @Override
     public boolean isProband() {
         return proband.get();
     }
@@ -57,6 +63,20 @@ public class ObservablePedigreeMember extends BaseObservableIndividual {
 
     public BooleanProperty probandProperty() {
         return proband;
+    }
+
+    @Override
+    public void update(PedigreeMember data) {
+        super.update(data);
+        if (data == null) {
+            setPaternalId(null);
+            setMaternalId(null);
+            setProband(false);
+        } else {
+            setPaternalId(data.getPaternalId().orElse(null));
+            setMaternalId(data.getMaternalId().orElse(null));
+            setProband(data.isProband());
+        }
     }
 
     public static Builder builder() {

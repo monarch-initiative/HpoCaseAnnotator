@@ -1,11 +1,14 @@
 package org.monarchinitiative.hpo_case_annotator.model.v2;
 
-import java.time.Period;
-
-record AgeRangeSingular(Period onset) implements AgeRange {
+record AgeRangeSingular(Age onset) implements AgeRange {
 
     @Override
-    public Period resolution() {
+    public Age getOnset() {
+        return onset;
+    }
+
+    @Override
+    public Age getResolution() {
         return onset;
     }
 

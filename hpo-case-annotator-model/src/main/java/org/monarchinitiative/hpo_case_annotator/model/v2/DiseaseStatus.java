@@ -6,7 +6,8 @@ public interface DiseaseStatus {
         return new DiseaseStatusDefault(diseaseId, isExcluded);
     }
 
-    DiseaseIdentifier diseaseId();
+    DiseaseIdentifier getDiseaseId();
+
     /**
      * @return <code>true</code> if presence of the disease was excluded
      */

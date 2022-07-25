@@ -58,13 +58,13 @@ public class VcfSymbolicVariantController extends VcfSeqSymVariantController {
 
     @Override
     public void presentComponent(CuratedVariant variant) {
-        setGenomicAssembly(variant.genomicAssembly());
-        setContig(variant.contig());
+        setGenomicAssembly(variant.getGenomicAssembly());
+        setContig(variant.getVariant().contig());
         setVariantId(variant.id());
-        startTextField.setText(String.valueOf(variant.startOnStrandWithCoordinateSystem(VCF_STRAND, VCF_COORDINATE_SYSTEM)));
-        endTextField.setText(String.valueOf(variant.endOnStrandWithCoordinateSystem(VCF_STRAND, VCF_COORDINATE_SYSTEM)));
-        referenceTextField.setText(variant.ref());
-        altComboBox.setValue(VariantType.parseType(variant.ref(), variant.alt()));
+        startTextField.setText(String.valueOf(variant.getVariant().startOnStrandWithCoordinateSystem(VCF_STRAND, VCF_COORDINATE_SYSTEM)));
+        endTextField.setText(String.valueOf(variant.getVariant().endOnStrandWithCoordinateSystem(VCF_STRAND, VCF_COORDINATE_SYSTEM)));
+        referenceTextField.setText(variant.getVariant().ref());
+        altComboBox.setValue(VariantType.parseType(variant.getVariant().ref(), variant.getVariant().alt()));
     }
 
     @Override

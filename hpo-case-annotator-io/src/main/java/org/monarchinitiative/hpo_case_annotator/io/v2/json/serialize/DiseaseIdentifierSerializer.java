@@ -21,8 +21,8 @@ public class DiseaseIdentifierSerializer extends StdSerializer<DiseaseIdentifier
     public void serialize(DiseaseIdentifier diseaseIdentifier, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
 
-        gen.writeStringField("diseaseId", diseaseIdentifier.diseaseId().getValue());
-        gen.writeStringField("diseaseName", diseaseIdentifier.diseaseName());
+        gen.writeStringField("diseaseId", diseaseIdentifier.id().getValue());
+        gen.writeStringField("diseaseName", diseaseIdentifier.getDiseaseName());
 
         gen.writeEndObject();
     }

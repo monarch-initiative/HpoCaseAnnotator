@@ -7,12 +7,13 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
+import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
 import java.util.*;
 
-public class BaseObservableIndividual {
+public abstract class BaseObservableIndividual<T extends Individual> implements Individual, Updateable<T> {
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
     private final ObjectProperty<ObservableAge> age = new SimpleObjectProperty<>(this, "age", new ObservableAge());
@@ -21,7 +22,7 @@ public class BaseObservableIndividual {
     private final ObservableList<ObservableDiseaseStatus> diseaseStates = FXCollections.observableList(new LinkedList<>());
     private final ObservableMap<String, Genotype> genotypes = FXCollections.observableHashMap();
 
-    public BaseObservableIndividual() {
+    protected BaseObservableIndividual() {
     }
 
     protected BaseObservableIndividual(Builder<?> builder) {
@@ -35,6 +36,7 @@ public class BaseObservableIndividual {
         this.genotypes.putAll(builder.genotypes);
     }
 
+    @Override
     public String getId() {
         return id.get();
     }
@@ -47,7 +49,36 @@ public class BaseObservableIndividual {
         return id;
     }
 
-    public ObservableAge getAge() {
+    @Override
+    public List<? extends PhenotypicFeature> getPhenotypicFeatures() {
+        return phenotypicFeatures;
+    }
+
+    public ObservableList<ObservablePhenotypicFeature> getObservablePhenotypicFeatures() {
+        return phenotypicFeatures;
+    }
+
+
+    @Override
+    public List<? extends DiseaseStatus> getDiseases() {
+        return diseaseStates;
+    }
+
+    public ObservableList<ObservableDiseaseStatus> getObservableDiseases() {
+        return diseaseStates;
+    }
+
+    @Override
+    public ObservableMap<String, Genotype> getGenotypes() {
+        return genotypes;
+    }
+
+    @Override
+    public Optional<Age> getAge() {
+        return Optional.ofNullable(age.get());
+    }
+
+    public ObservableAge getObservableAge() {
         return age.get();
     }
 
@@ -59,6 +90,7 @@ public class BaseObservableIndividual {
         return age;
     }
 
+    @Override
     public Sex getSex() {
         return sex.get();
     }
@@ -79,8 +111,26 @@ public class BaseObservableIndividual {
         return diseaseStates;
     }
 
-    public ObservableMap<String, Genotype> genotypes() {
-        return genotypes;
+    @Override
+    public <U extends T> void update(U data) {
+        if (data == null) {
+            setId(null);
+            getObservableAge().update(null);
+            setSex(null);
+            getPhenotypicFeatures().clear();
+            getDiseases().clear();
+            getGenotypes().clear();
+        } else {
+            setId(data.getId());
+            getObservableAge().update(data.getAge().orElse(null));
+            setSex(data.getSex());
+            Updateable.updateObservableList(data.getPhenotypicFeatures(), getObservablePhenotypicFeatures(), ObservablePhenotypicFeature::new);
+            Updateable.updateObservableList(data.getDiseases(), getObservableDiseases(), ObservableDiseaseStatus::new);
+
+            // We should be OK with the simple replacement as Genotype is not observable.
+            getGenotypes().clear();
+            getGenotypes().putAll(data.getGenotypes());
+        }
     }
 
     @Override

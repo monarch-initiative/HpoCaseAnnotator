@@ -2,24 +2,22 @@ package org.monarchinitiative.hpo_case_annotator.model.v2;
 
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 
-import java.time.Period;
 import java.util.*;
-import java.util.stream.Stream;
 
 class IndividualDefault implements Individual {
 
     private final String id;
-    private final Set<PhenotypicFeature> phenotypicFeatures;
+    private final List<PhenotypicFeature> phenotypicFeatures;
     private final List<DiseaseStatus> diseases;
     private final Map<String, Genotype> genotypes;
-    private final Period age;
+    private final Age age;
     private final Sex sex;
 
     protected IndividualDefault(String id,
-                                Set<PhenotypicFeature> phenotypicFeatures,
+                                List<PhenotypicFeature> phenotypicFeatures,
                                 List<DiseaseStatus> diseases,
                                 Map<String, Genotype> genotypes,
-                                Period age,
+                                Age age,
                                 Sex sex) {
         // assume that null checks has been made
         this.id = id;
@@ -31,14 +29,14 @@ class IndividualDefault implements Individual {
     }
 
     static IndividualDefault of(String id,
-                                Collection<PhenotypicFeature> phenotypicFeatures,
+                                List<PhenotypicFeature> phenotypicFeatures,
                                 List<DiseaseStatus> diseases,
                                 Map<String, Genotype> genotypes,
-                                Period age,
+                                Age age,
                                 Sex sex) {
         return new IndividualDefault(
                 Objects.requireNonNull(id, "Individual ID must not be null"),
-                Set.copyOf(Objects.requireNonNull(phenotypicFeatures, "Phenotypes must not be null")),
+                Objects.requireNonNull(phenotypicFeatures, "Phenotypes must not be null"),
                 Objects.requireNonNull(diseases, "Diseases must not be null"),
                 Objects.requireNonNull(genotypes, "Genotypes must not be null"),
                 age,
@@ -47,32 +45,32 @@ class IndividualDefault implements Individual {
     }
 
     @Override
-    public String id() {
+    public String getId() {
         return id;
     }
 
     @Override
-    public Optional<Period> age() {
+    public Optional<Age> getAge() {
         return Optional.ofNullable(age);
     }
 
     @Override
-    public Stream<PhenotypicFeature> phenotypicFeatures() {
-        return phenotypicFeatures.stream();
+    public List<? extends PhenotypicFeature> getPhenotypicFeatures() {
+        return phenotypicFeatures;
     }
 
     @Override
-    public List<DiseaseStatus> diseases() {
+    public List<? extends DiseaseStatus> getDiseases() {
         return diseases;
     }
 
     @Override
-    public Map<String, Genotype> genotypes() {
+    public Map<String, Genotype> getGenotypes() {
         return genotypes;
     }
 
     @Override
-    public Sex sex() {
+    public Sex getSex() {
         return sex;
     }
 

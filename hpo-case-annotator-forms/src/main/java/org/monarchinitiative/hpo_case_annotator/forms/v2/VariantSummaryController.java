@@ -75,12 +75,12 @@ public class VariantSummaryController {
         variantTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         idTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().id()));
-        genomicAssemblyTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().genomicAssembly()));
-        contigTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().contig().name()));
-        startTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().startOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
-        endTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().endOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
-        refTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().ref()));
-        altTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().alt()));
+        genomicAssemblyTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getGenomicAssembly()));
+        contigTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getVariant().contigName()));
+        startTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getVariant().startOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
+        endTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getVariant().endOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
+        refTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getVariant().ref()));
+        altTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getVariant().alt()));
 
         // remove button is disabled when there are no variants in the table
         removeVariantButton.disableProperty().bind(variantTableView.getSelectionModel().selectedItemProperty().isNull());
@@ -149,14 +149,14 @@ public class VariantSummaryController {
     private void removeVariantButtonAction() {
         int selectedIndex = variantTableView.getSelectionModel().getSelectedIndex();
         CuratedVariant v = variantTableView.getItems().remove(selectedIndex);
-        LOGGER.info("Removed variant {}:{}:{}{}>{}", v.id(), v.contig().name(), v.startWithCoordinateSystem(CoordinateSystem.oneBased()), v.ref(), v.alt());
+        LOGGER.info("Removed variant {}:{}:{}{}>{}", v.id(), v.getVariant().contigName(), v.getVariant().startWithCoordinateSystem(CoordinateSystem.oneBased()), v.getVariant().ref(), v.getVariant().alt());
     }
 
     @FXML
     private void editButtonAction() {
         int index = variantTableView.getSelectionModel().getSelectedIndex();
         CuratedVariant variant = variantTableView.getItems().get(index);
-        VariantNotation notation = resolveVariantNotation(variant.variant());
+        VariantNotation notation = resolveVariantNotation(variant.getVariant());
         addEditVariant(notation, variant)
                 .ifPresent(edited -> variantTableView.getItems().set(index, edited));
     }
@@ -185,7 +185,7 @@ public class VariantSummaryController {
         if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
             int index = variantTableView.getSelectionModel().getSelectedIndex();
             CuratedVariant selectedItem = variantTableView.getItems().get(index);
-            addEditVariant(resolveVariantNotation(selectedItem.variant()), selectedItem)
+            addEditVariant(resolveVariantNotation(selectedItem.getVariant()), selectedItem)
                     .ifPresent(edited -> variantTableView.getItems().set(index, edited));
 
             e.consume();

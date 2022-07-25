@@ -23,4 +23,19 @@ record CuratedVariantDefault(String genomicAssembly,
         return new CuratedVariantDefault(genomicAssembly, variant, variantMetadata);
     }
 
+    @Override
+    public String getGenomicAssembly() {
+        return genomicAssembly;
+    }
+
+    @Override
+    public GenomicVariant getVariant() {
+        return variant;
+    }
+
+    @Override
+    public VariantMetadata getVariantMetadata() {
+        return variantMetadata;
+    }
+
 }

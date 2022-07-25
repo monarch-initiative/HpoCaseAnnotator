@@ -18,7 +18,6 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.DiseaseTableController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualDetailController;
 import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseIdentifier;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.Convert;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableDiseaseStatus;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
@@ -28,7 +27,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 
-public class DiseaseStatusController<T extends BaseObservableIndividual> extends BindingDataController<T> {
+public class DiseaseStatusController<T extends BaseObservableIndividual<?>> extends BindingDataController<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseStatusController.class);
     private final ObjectProperty<T> individual = new SimpleObjectProperty<>(this, "individual");
@@ -82,7 +81,7 @@ public class DiseaseStatusController<T extends BaseObservableIndividual> extends
     protected void bind(T individual) {
         individualDetailController.idProperty().bind(individual.idProperty());
         individualDetailController.sexProperty().bind(individual.sexProperty().asString());
-        individualDetailController.ageLabel().bind(individual.getAge().period().asString());
+        individualDetailController.ageLabel().bind(individual.getObservableAge().period().asString());
         Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatuses());
     }
 
@@ -135,7 +134,7 @@ public class DiseaseStatusController<T extends BaseObservableIndividual> extends
     private Consumer<DiseaseIdentifier> addDiseaseIdentifier() {
         return di -> {
             ObservableDiseaseStatus ods = new ObservableDiseaseStatus();
-            Convert.toObservableDiseaseIdentifier(di, ods.getDiseaseIdentifier());
+            ods.getDiseaseId().update(di);
             diseaseTableController.diseaseStatuses().add(ods);
         };
     }

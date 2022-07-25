@@ -25,13 +25,13 @@ public class PedigreeMemberSerializer extends StdSerializer<PedigreeMember> {
         IndividualSerializer.writeIndividualFields(pedigreeMember, gen);
 
         // then the bits related to PedigreeMember
-        if (pedigreeMember.paternalId().isPresent()) // paternalId
-            gen.writeStringField("paternalId", pedigreeMember.paternalId().get());
+        if (pedigreeMember.getPaternalId().isPresent()) // paternalId
+            gen.writeStringField("paternalId", pedigreeMember.getPaternalId().get());
         else
             gen.writeNullField("paternalId");
 
-        if (pedigreeMember.maternalId().isPresent()) // maternalId
-            gen.writeStringField("maternalId", pedigreeMember.maternalId().get());
+        if (pedigreeMember.getMaternalId().isPresent()) // maternalId
+            gen.writeStringField("maternalId", pedigreeMember.getMaternalId().get());
         else
             gen.writeNullField("maternalId");
 

@@ -377,7 +377,7 @@ public final class MainController {
             // user might have selected to save the model elsewhere, here we reflect the update
             dcdc.setCurrentModelPath(actualPath);
         } else if (controller instanceof FamilyStudyController fsc) {
-            Study study = Convert.toFamilyStudy(fsc.getData());
+            Study study = fsc.getData();
             LOGGER.info("Saving V2 study");
             // TODO - implement
         }

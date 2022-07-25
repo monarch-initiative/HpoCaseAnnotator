@@ -42,10 +42,6 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
     }
 
     private static Publication transformPublication(org.monarchinitiative.hpo_case_annotator.model.proto.Publication publication) throws ModelTransformationException {
-        List<String> authors = Arrays.stream(publication.getAuthorList().split(","))
-                .map(String::trim)
-                .toList();
-
         int year;
         try {
             year = Integer.parseInt(publication.getYear());
@@ -53,7 +49,7 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
             throw new ModelTransformationException("Invalid publication year: " + publication.getYear());
         }
 
-        return Publication.of(authors, publication.getTitle(), publication.getJournal(), year, publication.getVolume(), publication.getPages(), publication.getPmid());
+        return Publication.of(publication.getAuthorList(), publication.getTitle(), publication.getJournal(), year, publication.getVolume(), publication.getPages(), publication.getPmid());
     }
 
     private static StudyMetadata transformMetadata(String metadata, Biocurator biocurator, String softwareVersion) {
@@ -291,10 +287,11 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
                                               List<OntologyClass> phenotypes,
                                               List<Variant> variants,
                                               List<CuratedVariant> curatedVariants) throws ModelTransformationException {
-        // we only have a single person in the v1 cases
-        Period age;
+        // Me only have a single person in the v1 cases.
+        Age age;
         try {
-            age = Period.parse(familyInfo.getAge());
+            Period period = Period.parse(familyInfo.getAge()).normalized();
+            age = Age.ofYearsMonthsDays(period.getYears(), period.getMonths(), period.getDays());
         } catch (DateTimeParseException e) {
             throw new ModelTransformationException(e);
         }
@@ -330,7 +327,7 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         };
     }
 
-    private static List<PhenotypicFeature> transformPhenotypes(Period age, List<OntologyClass> phenotypeList) {
+    private static List<PhenotypicFeature> transformPhenotypes(Age age, List<OntologyClass> phenotypeList) {
         List<PhenotypicFeature> phenotypes = new ArrayList<>(phenotypeList.size());
         for (OntologyClass phenotype : phenotypeList) {
             phenotypes.add(PhenotypicFeature.of(TermId.of(phenotype.getId()), phenotype.getNotObserved(), AgeRange.sinceBirthUntilAge(age)));

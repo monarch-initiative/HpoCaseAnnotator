@@ -13,7 +13,7 @@ public interface DiseaseIdentifierService {
 
     default List<String> diseaseIds() {
         return diseaseIdentifiers()
-                .map(DiseaseIdentifier::diseaseId)
+                .map(DiseaseIdentifier::getDiseaseId)
                 .map(TermId::getValue)
                 .distinct()
                 .toList();
@@ -21,20 +21,20 @@ public interface DiseaseIdentifierService {
 
     default List<String> diseaseNames() {
         return diseaseIdentifiers()
-                .map(DiseaseIdentifier::diseaseName)
+                .map(DiseaseIdentifier::getDiseaseName)
                 .distinct()
                 .toList();
     }
 
     default Optional<DiseaseIdentifier> diseaseIdentifierForDiseaseId(TermId diseaseId) {
         return diseaseIdentifiers()
-                .filter(di -> di.diseaseId().equals(diseaseId))
+                .filter(di -> di.getDiseaseId().equals(diseaseId))
                 .findAny();
     }
 
     default Optional<DiseaseIdentifier> diseaseIdentifierForDiseaseName(String name) {
         return diseaseIdentifiers()
-                .filter(di -> di.diseaseName().equals(name))
+                .filter(di -> di.getDiseaseName().equals(name))
                 .findAny();
     }
 }

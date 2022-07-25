@@ -27,7 +27,7 @@ public class CohortStudyController extends StudyController<ObservableCohortStudy
         super.bind(study);
 
         Bindings.bindContent(cohortController.curatedVariants(), variantSummaryController.curatedVariants());
-        Bindings.bindContentBidirectional(cohortController.members(), study.members());
+        Bindings.bindContentBidirectional(cohortController.members(), study.observableMembers());
     }
 
     @Override
@@ -35,7 +35,7 @@ public class CohortStudyController extends StudyController<ObservableCohortStudy
         super.unbind(study);
 
         Bindings.unbindContent(cohortController.curatedVariants(), variantSummaryController.curatedVariants());
-        Bindings.unbindContentBidirectional(cohortController.members(), study.members());
+        Bindings.unbindContentBidirectional(cohortController.members(), study.observableMembers());
     }
 
     @Override

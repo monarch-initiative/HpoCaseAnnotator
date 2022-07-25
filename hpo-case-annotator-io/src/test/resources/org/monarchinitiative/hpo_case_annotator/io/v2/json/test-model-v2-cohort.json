@@ -214,15 +214,15 @@
       "genotype" : "HETEROZYGOUS"
     } ],
     "phenotypicFeatures" : [ {
-      "termId" : "HP:0002110",
-      "isExcluded" : false,
+      "termId" : "HP:0000822",
+      "isExcluded" : true,
       "observationAge" : {
         "onset" : "P0D",
         "resolution" : "P10Y20D"
       }
     }, {
-      "termId" : "HP:0000822",
-      "isExcluded" : true,
+      "termId" : "HP:0002110",
+      "isExcluded" : false,
       "observationAge" : {
         "onset" : "P0D",
         "resolution" : "P10Y20D"

@@ -19,8 +19,8 @@ public class DiseaseTableController {
 
     @FXML
     private void initialize() {
-        diseaseIdTableColumn.setCellValueFactory(cdf -> cdf.getValue().getDiseaseIdentifier().diseaseIdProperty().asString());
-        diseaseNameTableColumn.setCellValueFactory(cdf -> cdf.getValue().getDiseaseIdentifier().diseaseNameProperty());
+        diseaseIdTableColumn.setCellValueFactory(cdf -> cdf.getValue().getDiseaseId().diseaseIdProperty().asString());
+        diseaseNameTableColumn.setCellValueFactory(cdf -> cdf.getValue().getDiseaseId().diseaseNameProperty());
         isExcludedTableColumn.setCellValueFactory(cdf -> cdf.getValue().excludedProperty());
         isExcludedTableColumn.setCellFactory(CheckBoxTableCell.forTableColumn(isExcludedTableColumn));
     }

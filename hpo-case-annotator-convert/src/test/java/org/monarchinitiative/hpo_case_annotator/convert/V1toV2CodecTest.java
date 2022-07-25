@@ -14,7 +14,6 @@ import org.monarchinitiative.svart.*;
 import org.monarchinitiative.svart.assembly.GenomicAssemblies;
 import org.monarchinitiative.svart.assembly.GenomicAssembly;
 
-import java.time.Period;
 import java.util.List;
 import java.util.Map;
 
@@ -33,8 +32,9 @@ public class V1toV2CodecTest {
         Study study = instance.encode(comprehensiveCase);
 
         // Test publication
-        assertThat(study.publication(), equalTo(Publication.of(
-                List.of("Beygó J", "Buiting K", "Seland S", "Lüdecke HJ", "Hehr U", "Lich C", "Prager B", "Lohmann DR", "Wieczorek D"),
+        List<String> authors = List.of("Beygó J", "Buiting K", "Seland S", "Lüdecke HJ", "Hehr U", "Lich C", "Prager B", "Lohmann DR", "Wieczorek D");
+        assertThat(study.getPublication(), equalTo(Publication.of(
+                String.join(", ", authors),
                 "First Report of a Single Exon Deletion in TCOF1 Causing Treacher Collins Syndrome",
                 "Mol Syndromol",
                 2012,
@@ -43,17 +43,17 @@ public class V1toV2CodecTest {
                 "22712005")));
 
         // Test metadata
-        StudyMetadata metadata = study.studyMetadata();
+        StudyMetadata metadata = study.getStudyMetadata();
         String freeText = """
                 Authors are describing a mutations in CFTR exon 13 that appears to contain two 3'CSS utilization of which is increased when there is a mutation in ESE element present in exon 13 (Figure 2.).
                                 
                 The 3'CSS whose coordinates are recorded in variants is the dominant one (Figure 2. D, D248). However, there exists also another (D195) which has coordinates: 117232182, 3 splice site, CAATTTAG|TGCAGAAA .""";
-        assertThat(metadata.freeText(), equalTo(freeText));
-        assertThat(metadata.createdBy().curatorId(), equalTo("HPO:walterwhite"));
-        assertThat(metadata.modifiedBy(), is(empty()));
+        assertThat(metadata.getFreeText(), equalTo(freeText));
+        assertThat(metadata.getCreatedBy().getCuratorId(), equalTo("HPO:walterwhite"));
+        assertThat(metadata.getModifiedBy(), is(empty()));
 
         // Test variants
-        List<CuratedVariant> variants = study.variants();
+        List<? extends CuratedVariant> variants = study.getVariants();
         assertThat(variants, hasSize(5));
 
         // sequence
@@ -118,13 +118,13 @@ public class V1toV2CodecTest {
         // Test members
         assertThat(study, instanceOf(FamilyStudy.class));
         FamilyStudy familyStudy = (FamilyStudy) study;
-        List<? extends PedigreeMember> members = familyStudy.members().toList();
+        List<? extends PedigreeMember> members = familyStudy.getMembers();
         assertThat(members, hasSize(1));
         assertThat(members.get(0), equalTo(PedigreeMember.of("FAM:001", "", "",
                 true,
                 List.of(
-                        PhenotypicFeature.of(TermId.of("HP:1234567"), false, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D"))),
-                        PhenotypicFeature.of(TermId.of("HP:9876543"), true, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D")))
+                        PhenotypicFeature.of(TermId.of("HP:1234567"), false, AgeRange.sinceBirthUntilAge(Age.ofYearsMonthsDays(10, 5, 4))),
+                        PhenotypicFeature.of(TermId.of("HP:9876543"), true, AgeRange.sinceBirthUntilAge(Age.ofYearsMonthsDays(10, 5, 4)))
                 ),
                 List.of(DiseaseStatus.of(DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF"), false)),
                 Map.of(
@@ -133,7 +133,7 @@ public class V1toV2CodecTest {
                         "bfed08fc27778a1587dcaebc2b455718", Genotype.HOMOZYGOUS_ALTERNATE, // sequence, splicing variant
                         "94f38002744f2dfdbad129153880603f", Genotype.HETEROZYGOUS, // symbolic deletion
                         "52665ac160d15a5b235e470935d8b1ab", Genotype.HETEROZYGOUS), // breakend variant
-                Period.parse("P10Y5M4D"),
+                Age.ofYearsMonthsDays(10, 5, 4),
                 Sex.MALE)));
     }
 }

@@ -6,17 +6,21 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
+import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
 import java.util.LinkedList;
+import java.util.List;
 
-public class ObservableStudy {
+public abstract class ObservableStudy<T extends Study> implements Study, Updateable<T> {
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
     private final ObjectProperty<ObservablePublication> publication = new SimpleObjectProperty<>(this, "publication", new ObservablePublication());
     private final ObservableList<CuratedVariant> variants = FXCollections.observableList(new LinkedList<>());
     private final ObjectProperty<ObservableStudyMetadata> studyMetadata = new SimpleObjectProperty<>(this, "studyMetadata", new ObservableStudyMetadata());
 
+    @Override
     public String getId() {
         return id.get();
     }
@@ -29,6 +33,7 @@ public class ObservableStudy {
         return id;
     }
 
+    @Override
     public ObservablePublication getPublication() {
         return publication.get();
     }
@@ -45,6 +50,12 @@ public class ObservableStudy {
         return variants;
     }
 
+    @Override
+    public List<? extends CuratedVariant> getVariants() {
+        return variants;
+    }
+
+    @Override
     public ObservableStudyMetadata getStudyMetadata() {
         return studyMetadata.get();
     }
@@ -55,5 +66,21 @@ public class ObservableStudy {
 
     public ObjectProperty<ObservableStudyMetadata> studyMetadataProperty() {
         return studyMetadata;
+    }
+
+    @Override
+    public <U extends T> void update(U data) {
+        if (data == null) {
+            setId(null);
+            publication.get().update(null);
+            variants.clear();
+            studyMetadata.get().update(null);
+        } else {
+            setId(data.getId());
+            publication.get().update(data.getPublication());
+            // TODO - finish when we have observable variants.
+//            Updateable.updateObservableList(data.getVariants(), variants, Obser);
+            studyMetadata.get().update(data.getStudyMetadata());
+        }
     }
 }

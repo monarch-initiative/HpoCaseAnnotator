@@ -23,7 +23,7 @@ public class PhenotypicFeatureSerializer extends StdSerializer<PhenotypicFeature
 
         gen.writeStringField("termId", value.termId().getValue());
         gen.writeBooleanField("isExcluded", value.isExcluded());
-        gen.writeObjectField("observationAge", value.observationAge());
+        gen.writeObjectField("observationAge", value.getObservationAge());
 
         gen.writeEndObject();
     }

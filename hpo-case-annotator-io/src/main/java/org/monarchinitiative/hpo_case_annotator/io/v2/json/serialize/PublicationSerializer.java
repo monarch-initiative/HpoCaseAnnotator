@@ -21,18 +21,15 @@ public class PublicationSerializer extends StdSerializer<Publication> {
     public void serialize(Publication publication, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
         // authors
-        gen.writeArrayFieldStart("authors");
-        for (String author : publication.authors())
-            gen.writeString(author);
-        gen.writeEndArray();
+        gen.writeStringField("authors", publication.getAuthors());
 
         // title, journal, year, volume, pages, pmid
-        gen.writeStringField("title", publication.title());
-        gen.writeStringField("journal", publication.journal());
-        gen.writeNumberField("year", publication.year());
-        gen.writeStringField("volume", publication.volume());
-        gen.writeStringField("pages", publication.pages());
-        gen.writeStringField("pmid", publication.pmid());
+        gen.writeStringField("title", publication.getTitle());
+        gen.writeStringField("journal", publication.getJournal());
+        gen.writeNumberField("year", publication.getYear());
+        gen.writeStringField("volume", publication.getVolume());
+        gen.writeStringField("pages", publication.getPages());
+        gen.writeStringField("pmid", publication.getPmid());
 
         gen.writeEndObject();
     }
