@@ -127,4 +127,17 @@ public class ObservablePublication implements Publication, Updateable<Publicatio
             pmid.set(data.getPmid());
         }
     }
+
+    @Override
+    public String toString() {
+        return "ObservablePublication{" +
+                "authors=" + authors.get() +
+                ", title=" + title.get() +
+                ", journal=" + journal.get() +
+                ", year=" + year.get() +
+                ", volume=" + volume.get() +
+                ", pages=" + pages.get() +
+                ", pmid=" + pmid.get() +
+                '}';
+    }
 }

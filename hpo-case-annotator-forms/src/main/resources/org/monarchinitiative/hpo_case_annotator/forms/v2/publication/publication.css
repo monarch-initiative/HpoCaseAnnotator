@@ -1,0 +1,16 @@
+.title {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+.journal {
+    -fx-font-style: italic;
+}
+
+.content * {
+    -fx-padding: 0px 0px 5px 0px;
+}
+
+.details Label {
+    -fx-padding: 0px 5px 0px 0px;
+}

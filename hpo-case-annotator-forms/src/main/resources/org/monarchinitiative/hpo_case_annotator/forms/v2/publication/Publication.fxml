@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox stylesheets="@publication.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.publication.PublicationController">
+    <children>
+        <HBox alignment="TOP_RIGHT">
+            <children>
+                <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#editPublicationAction" text="Button">
+                    <graphic>
+                        <ImageView preserveRatio="true">
+                            <Image url="@../../icons/pencil.png" />
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </children>
+        </HBox>
+        <VBox styleClass="content">
+            <children>
+                <Label fx:id="title" styleClass="title" text="Interpretable prioritization of splice variants in diagnostic next-generation sequencing" />
+                <Label fx:id="authors" text="Danis D, Jacobsen JOB, Carmody LC, Gargano MA, McMurry JA, Hegde A, Haendel MA, Valentini G, Smedley D, Robinson PN" />
+                <HBox styleClass="details" alignment="CENTER_LEFT">
+                    <children>
+                        <Label fx:id="journal" styleClass="journal" text="Am J Hum Genet" />
+                        <Label fx:id="year" text="2021" />
+                        <Label fx:id="volume" text="108(9)" />
+                        <Label fx:id="pages" text="1564-1577" />
+                        <Hyperlink fx:id="pmid" text="34289339" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</VBox>

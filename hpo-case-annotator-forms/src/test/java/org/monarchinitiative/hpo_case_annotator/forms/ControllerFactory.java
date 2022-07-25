@@ -93,6 +93,8 @@ public class ControllerFactory implements HCAControllerFactory {
             return new PublicationController();
         } else if (clz.equals(StudyMetadataController.class)) {
             return new StudyMetadataController();
+        } else if (clz.equals(org.monarchinitiative.hpo_case_annotator.forms.v2.publication.PublicationController.class)) {
+            return new org.monarchinitiative.hpo_case_annotator.forms.v2.publication.PublicationController();
         } else {
             throw new RuntimeException("Unknown controller " + clz);
         }
