@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<ScrollPane stylesheets="@../base.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.monarchinitiative.hpo_case_annotator.forms.nvo.FamilyStudyController">
+<?import javafx.scene.image.Image?>
+<ScrollPane stylesheets="@../base.css" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.monarchinitiative.hpo_case_annotator.forms.nvo.CohortStudyController">
     <content>
         <VBox>
             <children>
@@ -17,7 +19,7 @@
                         <Label styleClass="h1" text="Family study">
                             <graphic>
                                 <ImageView preserveRatio="true">
-                                    <Image url="@../icons/pedigree.png"/>
+                                    <Image url="@../icons/cohort.png"/>
                                 </ImageView>
                             </graphic>
                         </Label>
@@ -25,8 +27,8 @@
                 </HBox>
                 <VBox>
                     <children>
-                        <Label styleClass="h2" text="Publication"/>
-                        <fx:include fx:id="publication" source="../v2/publication/Publication.fxml"/>
+                        <Label styleClass="h2" text="Publication" />
+                        <fx:include fx:id="publication" source="../v2/publication/Publication.fxml" />
                     </children>
                 </VBox>
             </children>
