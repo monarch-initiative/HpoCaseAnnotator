@@ -1,16 +1,15 @@
-package org.monarchinitiative.hpo_case_annotator.forms.v2.nvo;
+package org.monarchinitiative.hpo_case_annotator.forms.v2.pedigree;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
-import org.monarchinitiative.hpo_case_annotator.forms.nvo.FamilyStudyController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilyStudy;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
 import org.testfx.api.FxRobot;
@@ -19,18 +18,22 @@ import org.testfx.framework.junit5.Start;
 
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
+
 @Disabled
 @ExtendWith(ApplicationExtension.class)
-public class FamilyStudyControllerTest extends BaseControllerTest {
+public class PedigreeControllerTest extends BaseControllerTest {
 
-    private FamilyStudyController controller;
+    private PedigreeController controller;
 
     @Start
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(FamilyStudyController.class.getResource("FamilyStudy.fxml"));
+        FXMLLoader loader = new FXMLLoader(PedigreeController.class.getResource("Pedigree.fxml"));
         loader.setControllerFactory(CONTROLLER_FACTORY);
 
-        ScrollPane parent = loader.load();
+        Parent parent = loader.load();
         controller = loader.getController();
 
         Scene scene = new Scene(parent, 1200, 900);
@@ -41,14 +44,15 @@ public class FamilyStudyControllerTest extends BaseControllerTest {
 
     @Test
     public void test(FxRobot robot) throws Exception {
-        ObservableFamilyStudy familyStudy = new ObservableFamilyStudy();
-        familyStudy.update(TestData.V2.comprehensiveFamilyStudy());
+        ObservableFamilyStudy study = new ObservableFamilyStudy();
+        study.update(TestData.V2.comprehensiveFamilyStudy());
 
-        Platform.runLater(() -> controller.setData(familyStudy));
+        Platform.runLater(() -> controller.setData(study.getObservablePedigree()));
 
-        robot.sleep(10, TimeUnit.SECONDS);
+        robot.sleep(30, TimeUnit.SECONDS);
 
         System.err.println(controller.getData());
     }
+
 
 }

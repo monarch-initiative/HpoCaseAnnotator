@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
 <VBox stylesheets="@publication.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.publication.PublicationController">
@@ -10,7 +9,7 @@
             <children>
                 <VBox HBox.hgrow="SOMETIMES">
                     <children>
-                        <Label fx:id="title" styleClass="title" text="Interpretable prioritization of splice variants in diagnostic next-generation sequencing" />
+                        <Label fx:id="title" styleClass="h3" text="Interpretable prioritization of splice variants in diagnostic next-generation sequencing" />
                         <Label fx:id="authors" text="Danis D, Jacobsen JOB, Carmody LC, Gargano MA, McMurry JA, Hegde A, Haendel MA, Valentini G, Smedley D, Robinson PN" />
                         <HBox alignment="CENTER_LEFT" styleClass="details">
                             <children>
@@ -23,13 +22,7 @@
                         </HBox>
                     </children>
                 </VBox>
-                <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#editPublicationAction" text="Button" HBox.hgrow="NEVER">
-                    <graphic>
-                        <ImageView preserveRatio="true">
-                            <Image url="@../../icons/pencil.png" />
-                        </ImageView>
-                    </graphic>
-                </Button>
+                <Button styleClass="edit-button" mnemonicParsing="false" onAction="#editPublicationAction" />
             </children>
         </HBox>
 

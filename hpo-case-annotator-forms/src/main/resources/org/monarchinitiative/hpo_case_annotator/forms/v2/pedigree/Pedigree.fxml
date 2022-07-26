@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox stylesheets="@pedigree.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.pedigree.PedigreeController">
+    <children>
+        <Label styleClass="h3" text="Summary"/>
+        <Label fx:id="summary"/>
+        <Label styleClass="h3" text="Pedigree members"/>
+        <ListView fx:id="members">
+            <placeholder>
+                <Label text="No pedigree members" />
+            </placeholder>
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding>
+        </ListView>
+    </children>
+</VBox>

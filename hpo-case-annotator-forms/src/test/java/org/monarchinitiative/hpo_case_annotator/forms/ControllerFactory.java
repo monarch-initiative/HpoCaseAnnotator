@@ -92,6 +92,8 @@ public class ControllerFactory implements HCAControllerFactory {
         // New View option
         else if (clz.equals(FamilyStudyController.class)) {
             return new FamilyStudyController();
+        } else if (clz.equals(org.monarchinitiative.hpo_case_annotator.forms.v2.pedigree.PedigreeController.class)) {
+            return new org.monarchinitiative.hpo_case_annotator.forms.v2.pedigree.PedigreeController();
         }
 
         // publication & metadata

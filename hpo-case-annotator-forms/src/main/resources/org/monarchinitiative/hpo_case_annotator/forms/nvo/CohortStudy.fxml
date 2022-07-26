@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -16,7 +13,7 @@
             <children>
                 <HBox>
                     <children>
-                        <Label styleClass="h1" text="Family study">
+                        <Label styleClass="h1" text="Cohort study">
                             <graphic>
                                 <ImageView preserveRatio="true">
                                     <Image url="@../icons/cohort.png"/>

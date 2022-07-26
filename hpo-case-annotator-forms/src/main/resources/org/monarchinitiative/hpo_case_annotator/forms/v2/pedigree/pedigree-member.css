@@ -1,0 +1,43 @@
+.credential-row {
+    -fx-padding: 5px 0px 2px 0px;
+}
+
+NamedLabel {
+    -fx-padding: 15px 0px 2px 0px;
+    -fx-pref-width: 80px;
+}
+
+ImageView {
+    -fx-padding: 15px;
+}
+
+#phenotype-tabs .tab-header-area .tab {
+    -fx-alignment: center;
+    -fx-pref-height: 180;
+    -fx-pref-width: 100;
+    -fx-background-color: white;
+    -fx-border-color: transparent black black transparent;
+    -fx-border-width: 0 1px 5px 0;
+}
+
+#phenotype-tabs .tab-header-background {
+    -fx-background-color: grey;
+    -fx-border-color: transparent #4b4b4b transparent transparent;
+    -fx-border-width: 0 0 5px 0;
+}
+
+#phenotype-tabs .headers-region {
+    -fx-border-color: transparent transparent transparent grey;
+    -fx-border-width: 1px;
+}
+
+#hpo-terms-table .column-header-background {
+    -fx-border-color: grey;
+    -fx-border-width: 0 0 5px 0;
+}
+
+#hpo-terms-table .column-header {
+    -fx-background-color: white;
+    -fx-border-color: grey;
+    -fx-border-width: 0 1px 0 1px;
+}
