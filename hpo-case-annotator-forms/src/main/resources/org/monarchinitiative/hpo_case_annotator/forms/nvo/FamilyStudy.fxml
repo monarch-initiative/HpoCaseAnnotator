@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<ScrollPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.nvo.FamilyStudyController">
+   <content>
+      <VBox stylesheets="@../base.css">
+         <children>
+             <VBox>
+                 <children>
+                     <Label styleClass="h1" text="Publication" />
+                     <fx:include fx:id="publication" source="../v2/publication/Publication.fxml" />
+                 </children>
+             </VBox>
+         </children>
+      </VBox>
+   </content>
+</ScrollPane>

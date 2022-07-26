@@ -4,7 +4,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
@@ -26,7 +25,7 @@ public class PublicationController extends BindingDataController<ObservablePubli
     @FXML
     private Label pages;
     @FXML
-    private Hyperlink pmid;
+    private Label pmid;
 
     @Override
     public ObjectProperty<ObservablePublication> dataProperty() {

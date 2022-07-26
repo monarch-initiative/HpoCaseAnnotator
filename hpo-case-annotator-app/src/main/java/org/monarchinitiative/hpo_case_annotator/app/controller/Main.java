@@ -215,10 +215,16 @@ public class Main {
             Tab tab = new Tab();
             tab.setContent(loader.load());
 
-            StudyController<ObservableStudy<T>> controller = loader.getController();
-            controller.getData().update(wrapper.study());
+            if (wrapper.study() instanceof FamilyStudy fs) {
+                StudyController<ObservableFamilyStudy> controller = loader.getController();
+                controller.getData().update(fs);
+                tab.textProperty().bind(controller.getData().idProperty());
+            } else if (wrapper.study() instanceof CohortStudy cs) {
+                StudyController<ObservableCohortStudy> controller = loader.getController();
+                controller.getData().update(cs);
+                tab.textProperty().bind(controller.getData().idProperty());
+            }
 
-            tab.textProperty().bind(controller.getData().idProperty());
             tab.setOnCloseRequest(e -> removeStudy(studiesTabPane.getTabs().indexOf(tab)));
 
             studiesTabPane.getTabs().add(tab);

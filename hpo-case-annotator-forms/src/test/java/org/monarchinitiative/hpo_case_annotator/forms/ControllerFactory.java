@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.forms;
 
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierService;
+import org.monarchinitiative.hpo_case_annotator.forms.nvo.FamilyStudyController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualController;
@@ -76,8 +77,8 @@ public class ControllerFactory implements HCAControllerFactory {
             return new IndividualVariantSummaryController();
         } else if (clz.equals(PedigreeController.class)) {
             return new PedigreeController(this);
-        } else if (clz.equals(FamilyStudyController.class)) {
-            return new FamilyStudyController();
+        } else if (clz.equals(org.monarchinitiative.hpo_case_annotator.forms.v2.FamilyStudyController.class)) {
+            return new org.monarchinitiative.hpo_case_annotator.forms.v2.FamilyStudyController();
         } else if (clz.equals(PedigreeMemberController.class)) {
             return new PedigreeMemberController();
         } else if (clz.equals(IndividualDetailController.class)) {
@@ -86,6 +87,11 @@ public class ControllerFactory implements HCAControllerFactory {
             return new CohortController(this);
         } else if (clz.equals(CohortStudyController.class)) {
             return new CohortStudyController();
+        }
+
+        // New View option
+        else if (clz.equals(FamilyStudyController.class)) {
+            return new FamilyStudyController();
         }
 
         // publication & metadata

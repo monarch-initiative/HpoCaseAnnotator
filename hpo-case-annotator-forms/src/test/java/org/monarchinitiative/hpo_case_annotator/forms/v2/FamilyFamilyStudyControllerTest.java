@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 @Disabled("GUI tests are run manually")
 @ExtendWith(ApplicationExtension.class)
-public class FamilyStudyControllerTest extends BaseControllerTest {
+public class FamilyFamilyStudyControllerTest extends BaseControllerTest {
 
     private FamilyStudyController controller;
 

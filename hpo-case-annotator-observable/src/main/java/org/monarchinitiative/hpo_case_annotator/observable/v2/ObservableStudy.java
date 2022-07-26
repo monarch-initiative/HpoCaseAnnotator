@@ -13,7 +13,7 @@ import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class ObservableStudy<T extends Study> implements Study, Updateable<T> {
+public abstract class ObservableStudy implements Study {
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
     private final ObjectProperty<ObservablePublication> publication = new SimpleObjectProperty<>(this, "publication", new ObservablePublication());
@@ -68,8 +68,9 @@ public abstract class ObservableStudy<T extends Study> implements Study, Updatea
         return studyMetadata;
     }
 
-    @Override
-    public <U extends T> void update(U data) {
+
+
+    public <U extends Study> void updateStudy(U data) {
         if (data == null) {
             setId(null);
             publication.get().update(null);
@@ -82,5 +83,15 @@ public abstract class ObservableStudy<T extends Study> implements Study, Updatea
 //            Updateable.updateObservableList(data.getVariants(), variants, Obser);
             studyMetadata.get().update(data.getStudyMetadata());
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ObservableStudy{" +
+                "id=" + id +
+                ", publication=" + publication +
+                ", variants=" + variants +
+                ", studyMetadata=" + studyMetadata +
+                '}';
     }
 }

@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class ObservableCohortStudy extends ObservableStudy<CohortStudy> implements CohortStudy, Updateable<CohortStudy> {
+public class ObservableCohortStudy extends ObservableStudy implements CohortStudy, Updateable<CohortStudy> {
 
     private final ObservableList<ObservableIndividual> members = FXCollections.observableList(new LinkedList<>());
 
@@ -25,7 +25,7 @@ public class ObservableCohortStudy extends ObservableStudy<CohortStudy> implemen
 
     @Override
     public <U extends CohortStudy> void update(U data) {
-        super.update(data);
+        updateStudy(data);
         if (data == null)
             members.clear();
         else
