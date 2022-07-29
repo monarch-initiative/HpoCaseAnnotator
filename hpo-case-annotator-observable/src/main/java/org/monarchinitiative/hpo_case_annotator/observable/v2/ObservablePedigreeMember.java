@@ -4,12 +4,13 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
 import org.monarchinitiative.hpo_case_annotator.model.v2.PedigreeMember;
-import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
+import org.monarchinitiative.hpo_case_annotator.model.v2.PhenotypicFeature;
 
 import java.util.Optional;
 
-public class ObservablePedigreeMember extends BaseObservableIndividual<PedigreeMember> implements PedigreeMember, Updateable<PedigreeMember> {
+public class ObservablePedigreeMember extends BaseObservableIndividual<PedigreeMember> implements PedigreeMember {
 
     private final StringProperty paternalId = new SimpleStringProperty(this, "paternalId");
     private final StringProperty maternalId = new SimpleStringProperty(this, "maternalId");
@@ -73,20 +74,6 @@ public class ObservablePedigreeMember extends BaseObservableIndividual<PedigreeM
         return proband;
     }
 
-    @Override
-    public void update(PedigreeMember data) {
-        super.update(data);
-        if (data == null) {
-            setPaternalId(null);
-            setMaternalId(null);
-            setProband(false);
-        } else {
-            setPaternalId(data.getPaternalId().orElse(null));
-            setMaternalId(data.getMaternalId().orElse(null));
-            setProband(data.isProband());
-        }
-    }
-
     public static Builder builder() {
         return new Builder();
     }
@@ -94,10 +81,16 @@ public class ObservablePedigreeMember extends BaseObservableIndividual<PedigreeM
     @Override
     public String toString() {
         return "ObservablePedigreeMember{" +
-                "paternalId=" + paternalId.get() +
+                "id=" + getId() +
+                ", paternalId=" + paternalId.get() +
                 ", maternalId=" + maternalId.get() +
                 ", proband=" + proband.get() +
-                "} " + super.toString();
+                ", age=" + getObservableAge() +
+                ", sex=" + getSex() +
+                ", phenotypicFeatures=" + getPhenotypicFeatures().stream().map(PhenotypicFeature::toString).toList() +
+                ", diseaseStates=" + getDiseaseStates().stream().map(DiseaseStatus::toString).toList() +
+                ", genotypes=" + getGenotypes().get() +
+                "}";
     }
 
     public static class Builder extends BaseObservableIndividual.Builder<Builder> {

@@ -42,7 +42,7 @@ public class PedigreeMemberDeserializer extends StdDeserializer<PedigreeMember> 
                 maternalId,
                 isProband,
                 individual.getPhenotypicFeatures(),
-                individual.getDiseases(),
+                individual.getDiseaseStates(),
                 individual.getGenotypes(),
                 individual.getAge().isEmpty() ? null : individual.getAge().get(),
                 individual.getSex());

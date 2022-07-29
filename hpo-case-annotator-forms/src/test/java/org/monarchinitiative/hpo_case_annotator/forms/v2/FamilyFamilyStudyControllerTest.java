@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.Convert;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilyStudy;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
 import org.testfx.api.FxRobot;
@@ -41,8 +40,7 @@ public class FamilyFamilyStudyControllerTest extends BaseControllerTest {
 
     @Test
     public void test(FxRobot robot) throws Exception {
-        ObservableFamilyStudy familyStudy = new ObservableFamilyStudy();
-        familyStudy.update(TestData.V2.comprehensiveFamilyStudy());
+        ObservableFamilyStudy familyStudy = new ObservableFamilyStudy(TestData.V2.comprehensiveFamilyStudy());
 
         Platform.runLater(() -> controller.setData(familyStudy));
 

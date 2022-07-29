@@ -5,13 +5,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.monarchinitiative.hpo_case_annotator.model.v2.EditHistory;
 import org.monarchinitiative.hpo_case_annotator.model.v2.StudyMetadata;
-import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.Supplier;
-
-public class ObservableStudyMetadata implements StudyMetadata, Updateable<StudyMetadata> {
+public class ObservableStudyMetadata implements StudyMetadata {
     private final StringProperty freeText = new SimpleStringProperty(this, "freeText");
     private final ObjectProperty<ObservableEditHistory> createdBy = new SimpleObjectProperty<>(this, "createdBy");
     private final ListProperty<ObservableEditHistory> modifiedBy = new SimpleListProperty<>(this, "modifiedBy", FXCollections.observableArrayList());
@@ -72,16 +67,11 @@ public class ObservableStudyMetadata implements StudyMetadata, Updateable<StudyM
     }
 
     @Override
-    public void update(StudyMetadata data) {
-        if (data == null) {
-            freeText.set(null);
-            createdBy.get().update(null);
-            modifiedBy.clear();
-        } else {
-            freeText.set(data.getFreeText());
-            createdBy.get().update(data.getCreatedBy());
-            Updateable.updateObservableList(data.getModifiedBy(), modifiedBy, ObservableEditHistory::new);
-        }
-
+    public String toString() {
+        return "ObservableStudyMetadata{" +
+                "freeText=" + freeText.get() +
+                ", createdBy=" + createdBy.get() +
+                ", modifiedBy=" + modifiedBy.get() +
+                '}';
     }
 }

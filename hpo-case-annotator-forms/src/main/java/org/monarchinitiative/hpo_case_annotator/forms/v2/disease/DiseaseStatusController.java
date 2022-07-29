@@ -18,6 +18,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.DiseaseTableController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualDetailController;
 import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseIdentifier;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableDiseaseIdentifier;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableDiseaseStatus;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
@@ -82,7 +83,7 @@ public class DiseaseStatusController<T extends BaseObservableIndividual<?>> exte
         individualDetailController.idProperty().bind(individual.idProperty());
         individualDetailController.sexProperty().bind(individual.sexProperty().asString());
         individualDetailController.ageLabel().bind(individual.getObservableAge().period().asString());
-        Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.getObservableDiseases());
+        Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatesProperty());
     }
 
     @Override
@@ -90,7 +91,7 @@ public class DiseaseStatusController<T extends BaseObservableIndividual<?>> exte
         individualDetailController.idProperty().unbind();
         individualDetailController.sexProperty().unbind();
         individualDetailController.ageLabel().unbind();
-        Bindings.unbindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.getObservableDiseases());
+        Bindings.unbindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatesProperty());
     }
 
     @FXML
@@ -133,8 +134,9 @@ public class DiseaseStatusController<T extends BaseObservableIndividual<?>> exte
 
     private Consumer<DiseaseIdentifier> addDiseaseIdentifier() {
         return di -> {
+            ObservableDiseaseIdentifier odi = new ObservableDiseaseIdentifier(di);
             ObservableDiseaseStatus ods = new ObservableDiseaseStatus();
-            ods.getDiseaseId().update(di);
+            ods.setDiseaseId(odi);
             diseaseTableController.diseaseStatuses().add(ods);
         };
     }

@@ -44,8 +44,7 @@ public class PedigreeControllerTest extends BaseControllerTest {
 
     @Test
     public void test(FxRobot robot) throws Exception {
-        ObservableFamilyStudy study = new ObservableFamilyStudy();
-        study.update(TestData.V2.comprehensiveFamilyStudy());
+        ObservableFamilyStudy study = new ObservableFamilyStudy(TestData.V2.comprehensiveFamilyStudy());
 
         Platform.runLater(() -> controller.setData(study.getPedigree()));
 

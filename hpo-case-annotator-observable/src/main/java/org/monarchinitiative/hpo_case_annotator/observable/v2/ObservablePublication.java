@@ -2,9 +2,8 @@ package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
 import javafx.beans.property.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Publication;
-import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
-public class ObservablePublication implements Publication, Updateable<Publication> {
+public class ObservablePublication implements Publication {
     private final StringProperty authors = new SimpleStringProperty(this, "authors");
     private final StringProperty title = new SimpleStringProperty(this, "title");
     private final StringProperty journal = new SimpleStringProperty(this, "journal");
@@ -117,27 +116,6 @@ public class ObservablePublication implements Publication, Updateable<Publicatio
 
     public StringProperty pmidProperty() {
         return pmid;
-    }
-
-    @Override
-    public void update(Publication data) {
-        if (data == null) {
-            authors.set(null);
-            title.set(null);
-            journal.set(null);
-            year.set(-1);
-            volume.set(null);
-            pages.set(null);
-            pmid.set(null);
-        } else {
-            authors.set(data.getAuthors());
-            title.set(data.getTitle());
-            journal.set(data.getJournal());
-            year.set(data.getYear());
-            volume.set(data.getVolume());
-            pages.set(data.getPages());
-            pmid.set(data.getPmid());
-        }
     }
 
     @Override

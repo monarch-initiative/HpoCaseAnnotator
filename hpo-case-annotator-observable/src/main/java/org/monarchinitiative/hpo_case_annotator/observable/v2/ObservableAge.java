@@ -4,11 +4,10 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Age;
-import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
 import java.time.Period;
 
-public class ObservableAge implements Age, Updateable<Age> {
+public class ObservableAge implements Age {
 
     private final BooleanProperty gestational = new SimpleBooleanProperty(this, "gestational");
     // Years, months, weeks, and days are nullabe, hence ObjectProperty
@@ -111,19 +110,6 @@ public class ObservableAge implements Age, Updateable<Age> {
 
     public ObjectBinding<Period> period() {
         return period;
-    }
-
-    @Override
-    public void update(Age data) {
-        if (data == null) {
-            setYears(null);
-            setMonths(null);
-            setDays(null);
-        } else {
-            setYears(data.getYears());
-            setMonths(data.getMonths());
-            setDays(data.getDays());
-        }
     }
 
     @Override

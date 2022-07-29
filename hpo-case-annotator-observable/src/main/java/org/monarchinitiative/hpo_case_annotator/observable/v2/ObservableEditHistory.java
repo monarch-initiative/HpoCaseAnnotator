@@ -5,11 +5,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.monarchinitiative.hpo_case_annotator.model.v2.EditHistory;
-import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
 import java.time.Instant;
 
-public class ObservableEditHistory implements EditHistory, Updateable<EditHistory> {
+public class ObservableEditHistory implements EditHistory {
 
     private final StringProperty curatorId = new SimpleStringProperty(this, "curatorId");
     private final StringProperty softwareVersion = new SimpleStringProperty(this, "softwareVersion");
@@ -68,15 +67,11 @@ public class ObservableEditHistory implements EditHistory, Updateable<EditHistor
     }
 
     @Override
-    public void update(EditHistory data) {
-        if (data == null) {
-            setCuratorId(null);
-            setSoftwareVersion(null);
-            setTimestamp(null);
-        } else {
-            setCuratorId(data.getCuratorId());
-            setSoftwareVersion(data.getSoftwareVersion());
-            setTimestamp(data.getTimestamp());
-        }
+    public String toString() {
+        return "ObservableEditHistory{" +
+                "curatorId=" + curatorId.get() +
+                ", softwareVersion=" + softwareVersion.get() +
+                ", timestamp=" + timestamp.get() +
+                '}';
     }
 }

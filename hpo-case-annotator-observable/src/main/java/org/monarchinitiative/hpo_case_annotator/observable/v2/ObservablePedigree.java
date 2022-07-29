@@ -6,11 +6,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Pedigree;
 import org.monarchinitiative.hpo_case_annotator.model.v2.PedigreeMember;
-import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
-import java.util.List;
-
-public class ObservablePedigree implements Pedigree, Updateable<Pedigree> {
+public class ObservablePedigree implements Pedigree {
     private final ListProperty<ObservablePedigreeMember> members = new SimpleListProperty<>(this, "members", FXCollections.observableArrayList());
 
     public ObservablePedigree() {
@@ -39,10 +36,9 @@ public class ObservablePedigree implements Pedigree, Updateable<Pedigree> {
     }
 
     @Override
-    public <U extends Pedigree> void update(U data) {
-        if (data == null)
-            members.clear();
-        else
-            Updateable.updateObservableList(data.getMembers(), members, ObservablePedigreeMember::new);
+    public String toString() {
+        return "ObservablePedigree{" +
+                "members=" + members.get() +
+                '}';
     }
 }

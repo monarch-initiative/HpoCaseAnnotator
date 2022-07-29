@@ -2,12 +2,9 @@ package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
-import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public abstract class ObservableStudy implements Study {
@@ -82,28 +79,13 @@ public abstract class ObservableStudy implements Study {
         return studyMetadata;
     }
 
-    public <U extends Study> void updateStudy(U data) {
-        if (data == null) {
-            setId(null);
-            publication.get().update(null);
-            variants.clear();
-            studyMetadata.get().update(null);
-        } else {
-            setId(data.getId());
-            publication.get().update(data.getPublication());
-            // TODO - finish when we have observable variants.
-//            Updateable.updateObservableList(data.getVariants(), variants, Obser);
-            studyMetadata.get().update(data.getStudyMetadata());
-        }
-    }
-
     @Override
     public String toString() {
         return "ObservableStudy{" +
-                "id=" + id +
-                ", publication=" + publication +
-                ", variants=" + variants +
-                ", studyMetadata=" + studyMetadata +
+                "id=" + id.get() +
+                ", publication=" + publication.get() +
+                ", variants=" + variants.get() +
+                ", studyMetadata=" + studyMetadata.get() +
                 '}';
     }
 }

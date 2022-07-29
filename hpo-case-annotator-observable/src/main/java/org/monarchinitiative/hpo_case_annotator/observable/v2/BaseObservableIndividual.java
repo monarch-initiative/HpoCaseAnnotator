@@ -2,13 +2,13 @@ package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
-import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
 import java.util.*;
 
-public abstract class BaseObservableIndividual<T extends Individual> implements Individual, Updateable<T> {
+public abstract class BaseObservableIndividual<T extends Individual> implements Individual {
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
     private final ObjectProperty<ObservableAge> observableAge = new SimpleObjectProperty<>(this, "observableAge");
@@ -40,7 +40,7 @@ public abstract class BaseObservableIndividual<T extends Individual> implements 
             for (PhenotypicFeature pf : individual.getPhenotypicFeatures())
                 phenotypicFeatures.add(new ObservablePhenotypicFeature(pf));
 
-            for (DiseaseStatus ds : individual.getDiseases())
+            for (DiseaseStatus ds : individual.getDiseaseStates())
                 diseaseStates.add(new ObservableDiseaseStatus(ds));
 
             genotypes.putAll(individual.getGenotypes());
@@ -71,12 +71,16 @@ public abstract class BaseObservableIndividual<T extends Individual> implements 
 
 
     @Override
-    public List<? extends DiseaseStatus> getDiseases() {
+    public ObservableList<? extends DiseaseStatus> getDiseaseStates() {
         return diseaseStates;
     }
 
-    public ListProperty<ObservableDiseaseStatus> getObservableDiseases() {
+    public ListProperty<ObservableDiseaseStatus> diseaseStatesProperty() {
         return diseaseStates;
+    }
+
+    public void setDiseaseStates(ObservableList<ObservableDiseaseStatus> diseaseStates) {
+        this.diseaseStates.set(diseaseStates);
     }
 
     @Override
@@ -115,36 +119,13 @@ public abstract class BaseObservableIndividual<T extends Individual> implements 
     }
 
     @Override
-    public <U extends T> void update(U data) {
-        if (data == null) {
-            setId(null);
-            getObservableAge().update(null);
-            setSex(null);
-            getPhenotypicFeatures().clear();
-            getDiseases().clear();
-            getGenotypes().clear();
-        } else {
-            setId(data.getId());
-//            if (observableAge.get() == null)
-//            getObservableAge().update(data.getAge().orElse(null));
-            setSex(data.getSex());
-            Updateable.updateObservableList(data.getPhenotypicFeatures(), getObservablePhenotypicFeatures(), ObservablePhenotypicFeature::new);
-            Updateable.updateObservableList(data.getDiseases(), getObservableDiseases(), ObservableDiseaseStatus::new);
-
-            // We should be OK with the simple replacement as Genotype is not observable.
-            getGenotypes().clear();
-            getGenotypes().putAll(data.getGenotypes());
-        }
-    }
-
-    @Override
     public String toString() {
         return "BaseObservableIndividual{" +
                 "id=" + id.get() +
                 ", age=" + observableAge.get() +
                 ", sex=" + sex.get() +
-                ", phenotypicFeatures=" + phenotypicFeatures.get() +
-                ", diseaseStates=" + diseaseStates.get() +
+                ", phenotypicFeatures=" + phenotypicFeatures.stream().map(PhenotypicFeature::toString).toList() +
+                ", diseaseStates=" + diseaseStates.get().stream().map(DiseaseStatus::toString).toList() +
                 ", genotypes=" + genotypes.get() +
                 '}';
     }

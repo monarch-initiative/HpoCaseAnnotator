@@ -217,11 +217,11 @@ public class Main {
 
             if (wrapper.study() instanceof FamilyStudy fs) {
                 StudyController<ObservableFamilyStudy> controller = loader.getController();
-                controller.getData().update(fs);
+                controller.setData(new ObservableFamilyStudy(fs));
                 tab.textProperty().bind(controller.getData().idProperty());
             } else if (wrapper.study() instanceof CohortStudy cs) {
                 StudyController<ObservableCohortStudy> controller = loader.getController();
-                controller.getData().update(cs);
+                controller.setData(new ObservableCohortStudy(cs));
                 tab.textProperty().bind(controller.getData().idProperty());
             }
 
@@ -526,7 +526,7 @@ public class Main {
 
                 getCurrentStudyData().ifPresent(data -> {
                     if (data instanceof ObservableStudy study) {
-                        study.getPublication().update(publication);
+                        study.setPublication(new ObservablePublication(publication));
                     } else {
                         // TODO - support?
                         Dialogs.showWarningDialog("Sorry", "PubMed import is not supported for v1 model", null);

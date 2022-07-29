@@ -60,7 +60,7 @@ class IndividualDefault implements Individual {
     }
 
     @Override
-    public List<? extends DiseaseStatus> getDiseases() {
+    public List<? extends DiseaseStatus> getDiseaseStates() {
         return diseases;
     }
 

@@ -6,14 +6,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.monarchinitiative.hpo_case_annotator.model.v2.CohortStudy;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Individual;
-import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
-import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Stream;
-
-public class ObservableCohortStudy extends ObservableStudy implements CohortStudy, Updateable<CohortStudy> {
+public class ObservableCohortStudy extends ObservableStudy implements CohortStudy {
 
     private final ListProperty<ObservableIndividual> members = new SimpleListProperty<>(this, "members", FXCollections.observableArrayList());
 
@@ -42,11 +36,13 @@ public class ObservableCohortStudy extends ObservableStudy implements CohortStud
     }
 
     @Override
-    public <U extends CohortStudy> void update(U data) {
-        updateStudy(data);
-        if (data == null)
-            members.clear();
-        else
-            Updateable.updateObservableList(data.getMembers(), members, ObservableIndividual::new);
+    public String toString() {
+        return "ObservableCohortStudy{" +
+                "id=" + getId() +
+                ", publication=" + getPublication() +
+                ", variants=" + getVariants() +
+                ", members=" + members.get() +
+                ", studyMetadata=" + getStudyMetadata() +
+                "} ";
     }
 }

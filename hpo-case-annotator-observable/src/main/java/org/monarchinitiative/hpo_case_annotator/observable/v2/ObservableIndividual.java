@@ -1,9 +1,8 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
 import org.monarchinitiative.hpo_case_annotator.model.v2.Individual;
-import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
-public class ObservableIndividual extends BaseObservableIndividual<Individual> implements Individual, Updateable<Individual> {
+public class ObservableIndividual extends BaseObservableIndividual<Individual> implements Individual {
 
     public ObservableIndividual() {
     }
@@ -14,11 +13,6 @@ public class ObservableIndividual extends BaseObservableIndividual<Individual> i
 
     public ObservableIndividual(Individual individual) {
         super(individual);
-    }
-
-    @Override
-    public void update(Individual data) {
-        super.update(data);
     }
 
     public static Builder builder() {

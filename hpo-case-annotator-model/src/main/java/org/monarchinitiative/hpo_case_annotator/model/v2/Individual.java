@@ -35,7 +35,7 @@ public interface Individual {
 
     List<? extends PhenotypicFeature> getPhenotypicFeatures();
 
-    List<? extends DiseaseStatus> getDiseases();
+    List<? extends DiseaseStatus> getDiseaseStates();
 
     /**
      * @return map linking {@link CuratedVariant#md5Hex()} to the {@link Genotype} observed in this individual.
@@ -54,7 +54,7 @@ public interface Individual {
      * @return {@code true} if at least one disease is indicated to be present in the {@link Individual}.
      */
     default boolean isAffected() {
-        return getDiseases().stream()
+        return getDiseaseStates().stream()
                 .anyMatch(DiseaseStatus::isPresent);
     }
 

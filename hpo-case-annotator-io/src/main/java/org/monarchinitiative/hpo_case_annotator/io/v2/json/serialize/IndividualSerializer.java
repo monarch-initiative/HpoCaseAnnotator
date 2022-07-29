@@ -30,7 +30,7 @@ public class IndividualSerializer extends StdSerializer<Individual> {
             gen.writeNullField("age");
 
         gen.writeArrayFieldStart("diseases");
-        for (DiseaseStatus diseaseStatus : individual.getDiseases())
+        for (DiseaseStatus diseaseStatus : individual.getDiseaseStates())
             gen.writeObject(diseaseStatus);
         gen.writeEndArray();
 

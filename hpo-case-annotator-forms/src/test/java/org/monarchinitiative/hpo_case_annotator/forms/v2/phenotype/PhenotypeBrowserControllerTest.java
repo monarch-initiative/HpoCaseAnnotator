@@ -50,8 +50,7 @@ public class PhenotypeBrowserControllerTest extends BaseControllerTest {
         if (study.getMembers().isEmpty())
             throw new IllegalArgumentException("Test cannot work without at least one individual");
 
-        PedigreeMember member = study.getMembers().get(0);
-        controller.getData().update(member);
+        controller.setData(new ObservablePedigreeMember(study.getMembers().get(0)));
 
         Platform.runLater(() -> controller.setOntology(ONTOLOGY));
         Platform.runLater(() -> controller.dataProperty().bind(individual));

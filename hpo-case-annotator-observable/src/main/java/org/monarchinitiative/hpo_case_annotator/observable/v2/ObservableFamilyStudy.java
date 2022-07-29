@@ -3,9 +3,9 @@ package org.monarchinitiative.hpo_case_annotator.observable.v2;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy;
-import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 
-public class ObservableFamilyStudy extends ObservableStudy implements FamilyStudy, Updateable<FamilyStudy> {
+public class ObservableFamilyStudy extends ObservableStudy implements FamilyStudy {
 
     private final ObjectProperty<ObservablePedigree> pedigree = new SimpleObjectProperty<>(this, "pedigree");
 
@@ -34,20 +34,11 @@ public class ObservableFamilyStudy extends ObservableStudy implements FamilyStud
     }
 
     @Override
-    public <U extends FamilyStudy> void update(U data) {
-        updateStudy(data);
-        if (data == null)
-            pedigree.get().update(null);
-        else
-            pedigree.get().update(data.getPedigree());
-    }
-
-    @Override
     public String toString() {
         return "ObservableFamilyStudy{" +
                 "id=" + getId() +
                 ", publication=" + getPublication() +
-                ", variants=" + getVariants() +
+                ", variants=" + getVariants().stream().map(CuratedVariant::toString).toList() +
                 ", pedigree=" + pedigree.get() +
                 ", studyMetadata=" + getStudyMetadata() +
                 "} ";

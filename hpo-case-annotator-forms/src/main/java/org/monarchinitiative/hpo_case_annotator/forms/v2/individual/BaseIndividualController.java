@@ -135,7 +135,7 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual<?>> e
         individual.getObservablePhenotypicFeatures().addListener(summarizePhenotypeCount);
 
         // diseases
-        Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.getObservableDiseases());
+        Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatesProperty());
 
         // genotypes
         Bindings.bindContentBidirectional(individualVariantSummaryController.genotypes(), individual.getGenotypes());
@@ -155,7 +155,7 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual<?>> e
         individual.getObservablePhenotypicFeatures().removeListener(summarizePhenotypeCount);
 
         // diseases
-        Bindings.unbindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.getObservableDiseases());
+        Bindings.unbindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatesProperty());
 
         // genotypes
         Bindings.unbindContentBidirectional(individualVariantSummaryController.genotypes(), individual.getGenotypes());

@@ -40,8 +40,7 @@ public class PublicationControllerTest extends BaseControllerTest {
 
     @Test
     public void test(FxRobot robot) throws Exception {
-        ObservableFamilyStudy familyStudy = new ObservableFamilyStudy();
-        familyStudy.update(TestData.V2.comprehensiveFamilyStudy());
+        ObservableFamilyStudy familyStudy = new ObservableFamilyStudy(TestData.V2.comprehensiveFamilyStudy());
 
         Platform.runLater(() -> controller.setData(familyStudy.getPublication()));
 

@@ -2,9 +2,8 @@ package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
 import javafx.beans.property.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
-import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
-public class ObservableDiseaseStatus implements DiseaseStatus, Updateable<DiseaseStatus> {
+public class ObservableDiseaseStatus implements DiseaseStatus {
 
     private final ObjectProperty<ObservableDiseaseIdentifier> diseaseId = new SimpleObjectProperty<>(this, "diseaseId");
     private final BooleanProperty excluded = new SimpleBooleanProperty(this, "excluded");
@@ -48,13 +47,10 @@ public class ObservableDiseaseStatus implements DiseaseStatus, Updateable<Diseas
     }
 
     @Override
-    public void update(DiseaseStatus data) {
-        if (data == null) {
-            diseaseId.get().update(null);
-            excluded.set(false);
-        } else {
-            diseaseId.get().update(data.getDiseaseId());
-            excluded.set(data.isExcluded());
-        }
+    public String toString() {
+        return "ObservableDiseaseStatus{" +
+                "diseaseId=" + diseaseId.get() +
+                ", excluded=" + excluded.get() +
+                '}';
     }
 }
