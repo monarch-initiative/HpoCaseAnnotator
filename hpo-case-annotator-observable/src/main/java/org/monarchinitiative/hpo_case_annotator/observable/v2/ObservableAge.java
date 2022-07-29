@@ -11,25 +11,24 @@ import java.time.Period;
 public class ObservableAge implements Age, Updateable<Age> {
 
     private final BooleanProperty gestational = new SimpleBooleanProperty(this, "gestational");
-    private final SimpleIntegerProperty years = new SimpleIntegerProperty(this, "years");
-    private final SimpleIntegerProperty months = new SimpleIntegerProperty(this, "months");
-    private final SimpleIntegerProperty weeks = new SimpleIntegerProperty(this, "weeks");
-    private final SimpleIntegerProperty days = new SimpleIntegerProperty(this, "days");
+    // Years, months, weeks, and days are nullabe, hence ObjectProperty
+    private final ObjectProperty<Integer> years = new SimpleObjectProperty<>(this, "years");
+    private final ObjectProperty<Integer> months = new SimpleObjectProperty<>(this, "months");
+    private final ObjectProperty<Integer> weeks = new SimpleObjectProperty<>(this, "weeks");
+    private final ObjectProperty<Integer> days = new SimpleObjectProperty<>(this, "days");
     private final ObjectBinding<Period> period = createPeriodBinding();
 
     public ObservableAge() {
     }
 
-    public ObservableAge(int years, int months, int days) {
-        this(false, years, months, 0, days);
-    }
-
-    public ObservableAge(boolean isGestational, int years, int months, int weeks, int days) {
-        this.gestational.set(isGestational);
-        this.years.set(years);
-        this.months.set(months);
-        this.weeks.set(weeks);
-        this.days.set(days);
+    public ObservableAge(Age age) {
+        if (age != null) {
+            gestational.set(age.isGestational());
+            years.set(age.getYears());
+            months.set(age.getMonths());
+            weeks.set(age.getWeeks());
+            days.set(age.getDays());
+        }
     }
 
     private ObjectBinding<Period> createPeriodBinding() {
@@ -67,7 +66,7 @@ public class ObservableAge implements Age, Updateable<Age> {
         this.years.setValue(years);
     }
 
-    public IntegerProperty yearsProperty() {
+    public ObjectProperty<Integer> yearsProperty() {
         return years;
     }
 
@@ -77,7 +76,7 @@ public class ObservableAge implements Age, Updateable<Age> {
     }
 
     public void setWeeks(Integer weeks) {
-        this.weeks.set(weeks);
+        this.weeks.setValue(weeks);
     }
 
     public ObjectProperty<Integer> weeksProperty() {
@@ -90,7 +89,7 @@ public class ObservableAge implements Age, Updateable<Age> {
     }
 
     public void setMonths(Integer months) {
-        this.months.set(months);
+        this.months.setValue(months);
     }
 
     public ObjectProperty<Integer> monthsProperty() {
@@ -103,7 +102,7 @@ public class ObservableAge implements Age, Updateable<Age> {
     }
 
     public void setDays(Integer days) {
-        this.days.set(days);
+        this.days.setValue(days);
     }
 
     public ObjectProperty<Integer> daysProperty() {

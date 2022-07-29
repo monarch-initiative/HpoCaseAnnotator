@@ -13,7 +13,7 @@ public interface Publication {
 
     String getJournal();
 
-    int getYear();
+    Integer getYear();
 
     String getVolume();
 

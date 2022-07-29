@@ -18,7 +18,7 @@ record PublicationDefault(String authors, String title, String journal,
     }
 
     @Override
-    public int getYear() {
+    public Integer getYear() {
         return year;
     }
 

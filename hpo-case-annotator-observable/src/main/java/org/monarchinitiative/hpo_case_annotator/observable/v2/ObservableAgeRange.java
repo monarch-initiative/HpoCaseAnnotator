@@ -7,8 +7,21 @@ import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
 public class ObservableAgeRange implements AgeRange, Updateable<AgeRange> {
 
-    private final ObjectProperty<ObservableAge> onset = new SimpleObjectProperty<>(this, "onset", new ObservableAge());
-    private final ObjectProperty<ObservableAge> resolution = new SimpleObjectProperty<>(this, "resolution", new ObservableAge());
+    private final ObjectProperty<ObservableAge> onset = new SimpleObjectProperty<>(this, "onset");
+    private final ObjectProperty<ObservableAge> resolution = new SimpleObjectProperty<>(this, "resolution");
+
+    public ObservableAgeRange() {
+    }
+
+    public ObservableAgeRange(AgeRange ageRange) {
+        if (ageRange != null) {
+            if (ageRange.getOnset() != null)
+                onset.set(new ObservableAge(ageRange.getOnset()));
+
+            if (ageRange.getResolution() != null)
+                resolution.set(new ObservableAge(ageRange.getResolution()));
+        }
+    }
 
     @Override
     public ObservableAge getOnset() {

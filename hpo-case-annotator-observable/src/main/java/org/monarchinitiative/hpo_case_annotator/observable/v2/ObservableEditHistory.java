@@ -15,6 +15,19 @@ public class ObservableEditHistory implements EditHistory, Updateable<EditHistor
     private final StringProperty softwareVersion = new SimpleStringProperty(this, "softwareVersion");
     private final ObjectProperty<Instant> timestamp = new SimpleObjectProperty<>(this, "timestamp");
 
+    public ObservableEditHistory() {
+    }
+
+    public ObservableEditHistory(EditHistory editHistory) {
+        if (editHistory != null) {
+            curatorId.set(editHistory.getCuratorId());
+            softwareVersion.set(editHistory.getSoftwareVersion());
+
+            if (editHistory.getTimestamp() != null)
+                timestamp.set(editHistory.getTimestamp());
+        }
+    }
+
     @Override
     public String getCuratorId() {
         return curatorId.get();

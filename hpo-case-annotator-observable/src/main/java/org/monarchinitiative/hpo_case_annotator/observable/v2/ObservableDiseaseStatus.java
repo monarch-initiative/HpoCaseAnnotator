@@ -6,8 +6,20 @@ import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
 public class ObservableDiseaseStatus implements DiseaseStatus, Updateable<DiseaseStatus> {
 
-    private final ObjectProperty<ObservableDiseaseIdentifier> diseaseId = new SimpleObjectProperty<>(this, "diseaseId", new ObservableDiseaseIdentifier());
+    private final ObjectProperty<ObservableDiseaseIdentifier> diseaseId = new SimpleObjectProperty<>(this, "diseaseId");
     private final BooleanProperty excluded = new SimpleBooleanProperty(this, "excluded");
+
+    public ObservableDiseaseStatus() {
+    }
+
+    public ObservableDiseaseStatus(DiseaseStatus diseaseStatus) {
+        if (diseaseStatus != null) {
+            if (diseaseStatus.getDiseaseId() != null)
+                diseaseId.set(new ObservableDiseaseIdentifier(diseaseStatus.getDiseaseId()));
+
+            excluded.set(diseaseStatus.isExcluded());
+        }
+    }
 
     @Override
     public ObservableDiseaseIdentifier getDiseaseId() {

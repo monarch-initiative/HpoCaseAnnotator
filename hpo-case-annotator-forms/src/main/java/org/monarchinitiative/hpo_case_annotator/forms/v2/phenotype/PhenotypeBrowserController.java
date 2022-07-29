@@ -115,7 +115,7 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual<?>> e
             controller.ontologyProperty().bind(ontology);
             Bindings.bindContentBidirectional(controller.observablePhenotypicFeatures(), phenotypicFeaturesTableController.observablePhenotypeDescriptions());
             // TODO - implement proper visit age form
-            ObjectProperty<ObservableAge> visitAge = new SimpleObjectProperty<>(new ObservableAge(0, 0, 0));
+            ObjectProperty<ObservableAge> visitAge = new SimpleObjectProperty<>(new ObservableAge());
             controller.onsetAge().bindBidirectional(visitAge);
             if (individual != null)
                 controller.resolutionAge().bindBidirectional(individual.observableAgeProperty());

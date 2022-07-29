@@ -1,9 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
@@ -16,9 +13,26 @@ import java.util.List;
 public abstract class ObservableStudy implements Study {
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
-    private final ObjectProperty<ObservablePublication> publication = new SimpleObjectProperty<>(this, "publication", new ObservablePublication());
-    private final ObservableList<CuratedVariant> variants = FXCollections.observableList(new LinkedList<>());
-    private final ObjectProperty<ObservableStudyMetadata> studyMetadata = new SimpleObjectProperty<>(this, "studyMetadata", new ObservableStudyMetadata());
+    private final ObjectProperty<ObservablePublication> publication = new SimpleObjectProperty<>(this, "publication");
+    private final ListProperty<CuratedVariant> variants = new SimpleListProperty<>(this, "variants", FXCollections.observableArrayList());
+    private final ObjectProperty<ObservableStudyMetadata> studyMetadata = new SimpleObjectProperty<>(this, "studyMetadata");
+
+    public ObservableStudy() {
+    }
+
+    public ObservableStudy(Study study) {
+        if (study != null) {
+            id.set(study.getId());
+
+            if (study.getPublication() != null)
+                publication.set(new ObservablePublication(study.getPublication()));
+
+            variants.addAll(study.getVariants()); // TODO - implement observable variant
+
+            if (study.getStudyMetadata() != null)
+                studyMetadata.set(new ObservableStudyMetadata(study.getStudyMetadata()));
+        }
+    }
 
     @Override
     public String getId() {
@@ -46,7 +60,7 @@ public abstract class ObservableStudy implements Study {
         return publication;
     }
 
-    public ObservableList<CuratedVariant> variants() {
+    public ListProperty<CuratedVariant> variants() {
         return variants;
     }
 
@@ -67,8 +81,6 @@ public abstract class ObservableStudy implements Study {
     public ObjectProperty<ObservableStudyMetadata> studyMetadataProperty() {
         return studyMetadata;
     }
-
-
 
     public <U extends Study> void updateStudy(U data) {
         if (data == null) {

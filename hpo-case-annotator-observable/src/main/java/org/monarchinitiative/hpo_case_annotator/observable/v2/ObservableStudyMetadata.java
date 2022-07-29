@@ -1,11 +1,9 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.monarchinitiative.hpo_case_annotator.model.v2.EditHistory;
 import org.monarchinitiative.hpo_case_annotator.model.v2.StudyMetadata;
 import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
@@ -15,8 +13,24 @@ import java.util.function.Supplier;
 
 public class ObservableStudyMetadata implements StudyMetadata, Updateable<StudyMetadata> {
     private final StringProperty freeText = new SimpleStringProperty(this, "freeText");
-    private final ObjectProperty<ObservableEditHistory> createdBy = new SimpleObjectProperty<>(this, "createdBy", new ObservableEditHistory());
-    private final ObservableList<ObservableEditHistory> modifiedBy = FXCollections.observableList(new LinkedList<>());
+    private final ObjectProperty<ObservableEditHistory> createdBy = new SimpleObjectProperty<>(this, "createdBy");
+    private final ListProperty<ObservableEditHistory> modifiedBy = new SimpleListProperty<>(this, "modifiedBy", FXCollections.observableArrayList());
+
+    public ObservableStudyMetadata() {
+    }
+
+    public ObservableStudyMetadata(StudyMetadata studyMetadata) {
+        if (studyMetadata != null) {
+            freeText.set(studyMetadata.getFreeText());
+            if (studyMetadata.getCreatedBy() != null)
+                createdBy.set(new ObservableEditHistory(studyMetadata.getCreatedBy()));
+
+            for (EditHistory modified : studyMetadata.getModifiedBy()) {
+                if (modified != null)
+                    modifiedBy.add(new ObservableEditHistory(modified));
+            }
+        }
+    }
 
     @Override
     public String getFreeText() {
@@ -46,6 +60,14 @@ public class ObservableStudyMetadata implements StudyMetadata, Updateable<StudyM
 
     @Override
     public ObservableList<ObservableEditHistory> getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(ObservableList<ObservableEditHistory> modifiedBy) {
+        this.modifiedBy.set(modifiedBy);
+    }
+
+    public ListProperty<ObservableEditHistory> modifiedByProperty() {
         return modifiedBy;
     }
 

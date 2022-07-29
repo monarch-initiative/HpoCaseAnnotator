@@ -25,6 +25,15 @@ public class ObservablePedigreeMember extends BaseObservableIndividual<PedigreeM
         proband.set(builder.isProband);
     }
 
+    public ObservablePedigreeMember(PedigreeMember pedigreeMember) {
+        super(pedigreeMember);
+        if (pedigreeMember != null) {
+            paternalId.set(pedigreeMember.getPaternalId().orElse(null));
+            maternalId.set(pedigreeMember.getMaternalId().orElse(null));
+            proband.set(pedigreeMember.isProband());
+        }
+    }
+
     @Override
     public Optional<String> getPaternalId() {
         return Optional.ofNullable(paternalId.get());

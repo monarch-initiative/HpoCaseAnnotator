@@ -12,7 +12,21 @@ public class ObservablePhenotypicFeature implements PhenotypicFeature, Updateabl
 
     private final ObjectProperty<TermId> termId = new SimpleObjectProperty<>(this, "termId");
     private final BooleanProperty excluded = new SimpleBooleanProperty(this, "excluded");
-    private final ObjectProperty<ObservableAgeRange> observationAge = new SimpleObjectProperty<>(this, "observationAge", new ObservableAgeRange());
+    private final ObjectProperty<ObservableAgeRange> observationAge = new SimpleObjectProperty<>(this, "observationAge");
+
+    public ObservablePhenotypicFeature() {
+    }
+
+    public ObservablePhenotypicFeature(PhenotypicFeature phenotypicFeature) {
+        if (phenotypicFeature != null) {
+            termId.set(phenotypicFeature.id());
+
+            excluded.set(phenotypicFeature.isExcluded());
+
+            if (phenotypicFeature.getObservationAge() != null)
+                observationAge.set(new ObservableAgeRange(phenotypicFeature.getObservationAge()));
+        }
+    }
 
     @Override
     public TermId id() {

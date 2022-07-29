@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+// TODO - this may need to be deprecated, we can go in favor of Bindings.select*
+@Deprecated
 public interface Updateable<T> {
 
+    @Deprecated
     <U extends T> void update(U data);
 
     /**

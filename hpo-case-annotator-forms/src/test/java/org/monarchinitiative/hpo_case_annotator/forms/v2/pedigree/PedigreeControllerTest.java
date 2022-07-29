@@ -47,7 +47,7 @@ public class PedigreeControllerTest extends BaseControllerTest {
         ObservableFamilyStudy study = new ObservableFamilyStudy();
         study.update(TestData.V2.comprehensiveFamilyStudy());
 
-        Platform.runLater(() -> controller.setData(study.getObservablePedigree()));
+        Platform.runLater(() -> controller.setData(study.getPedigree()));
 
         robot.sleep(30, TimeUnit.SECONDS);
 

@@ -3,14 +3,21 @@ package org.monarchinitiative.hpo_case_annotator.observable.v2;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy;
-import org.monarchinitiative.hpo_case_annotator.model.v2.Pedigree;
 import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
 public class ObservableFamilyStudy extends ObservableStudy implements FamilyStudy, Updateable<FamilyStudy> {
 
-    private final ObjectProperty<ObservablePedigree> pedigree = new SimpleObjectProperty<>(this, "pedigree", new ObservablePedigree());
+    private final ObjectProperty<ObservablePedigree> pedigree = new SimpleObjectProperty<>(this, "pedigree");
 
     public ObservableFamilyStudy() {
+    }
+
+    public ObservableFamilyStudy(FamilyStudy familyStudy) {
+        super(familyStudy);
+        if (familyStudy != null) {
+            if (familyStudy.getPedigree() != null)
+                pedigree.set(new ObservablePedigree(familyStudy.getPedigree()));
+        }
     }
 
     public void setPedigree(ObservablePedigree pedigree) {
@@ -22,11 +29,7 @@ public class ObservableFamilyStudy extends ObservableStudy implements FamilyStud
     }
 
     @Override
-    public Pedigree getPedigree() {
-        return pedigree.get();
-    }
-
-    public ObservablePedigree getObservablePedigree() {
+    public ObservablePedigree getPedigree() {
         return pedigree.get();
     }
 

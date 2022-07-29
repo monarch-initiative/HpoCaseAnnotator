@@ -636,9 +636,9 @@ public class Main {
 
 
                 if (data instanceof ObservableFamilyStudy study) {
-                    return Optional.of(Bindings.valueAt(study.getObservablePedigree().membersList(), tabIdx - 1));
+                    return Optional.of(Bindings.valueAt(study.getPedigree().membersProperty(), tabIdx - 1));
                 } else {
-                    return Optional.of(Bindings.valueAt(((ObservableCohortStudy) data).observableMembers(), tabIdx - 1));
+                    return Optional.of(Bindings.valueAt(((ObservableCohortStudy) data).membersProperty(), tabIdx - 1));
                 }
             } else {
                 Dialogs.showInfoDialog("Sorry", String.format("Working with '%s' is not yet implemented", data.getClass().getName()), null);

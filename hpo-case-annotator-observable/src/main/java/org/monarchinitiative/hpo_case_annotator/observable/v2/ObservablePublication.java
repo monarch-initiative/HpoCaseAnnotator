@@ -1,9 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Publication;
 import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
@@ -11,10 +8,25 @@ public class ObservablePublication implements Publication, Updateable<Publicatio
     private final StringProperty authors = new SimpleStringProperty(this, "authors");
     private final StringProperty title = new SimpleStringProperty(this, "title");
     private final StringProperty journal = new SimpleStringProperty(this, "journal");
-    private final IntegerProperty year = new SimpleIntegerProperty(this, "year");
+    private final ObjectProperty<Integer> year = new SimpleObjectProperty<>(this, "year");
     private final StringProperty volume = new SimpleStringProperty(this, "volume");
     private final StringProperty pages = new SimpleStringProperty(this, "pages");
     private final StringProperty pmid = new SimpleStringProperty(this, "pmid");
+
+    public ObservablePublication() {
+    }
+
+    public ObservablePublication(Publication publication) {
+        if (publication != null) {
+            authors.set(publication.getAuthors());
+            title.set(publication.getTitle());
+            journal.set(publication.getJournal());
+            year.set(publication.getYear());
+            volume.set(publication.getVolume());
+            pages.set(publication.getPages());
+            pmid.set(publication.getPmid());
+        }
+    }
 
     @Override
     public String getAuthors() {
@@ -56,7 +68,7 @@ public class ObservablePublication implements Publication, Updateable<Publicatio
     }
 
     @Override
-    public int getYear() {
+    public Integer getYear() {
         return year.get();
     }
 
@@ -64,7 +76,7 @@ public class ObservablePublication implements Publication, Updateable<Publicatio
         this.year.set(year);
     }
 
-    public IntegerProperty yearProperty() {
+    public ObjectProperty<Integer> yearProperty() {
         return year;
     }
 

@@ -13,6 +13,16 @@ public class ObservableDiseaseIdentifier implements DiseaseIdentifier, Updateabl
     private final ObjectProperty<TermId> diseaseId = new SimpleObjectProperty<>(this, "diseaseId");
     private final StringProperty diseaseName = new SimpleStringProperty(this, "diseaseName");
 
+    public ObservableDiseaseIdentifier() {
+    }
+
+    public ObservableDiseaseIdentifier(DiseaseIdentifier diseaseIdentifier) {
+        if (diseaseIdentifier != null) {
+            diseaseId.set(diseaseIdentifier.id());
+            diseaseName.set(diseaseIdentifier.getDiseaseName());
+        }
+    }
+
     @Override
     public TermId id() {
         return diseaseId.get();

@@ -12,6 +12,10 @@ public class ObservableIndividual extends BaseObservableIndividual<Individual> i
         super(builder);
     }
 
+    public ObservableIndividual(Individual individual) {
+        super(individual);
+    }
+
     @Override
     public void update(Individual data) {
         super.update(data);
