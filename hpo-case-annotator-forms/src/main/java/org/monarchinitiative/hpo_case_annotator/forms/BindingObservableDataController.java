@@ -3,7 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.forms;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 
-public abstract class BindingDataController<T> implements DataController<T> {
+public abstract class BindingObservableDataController<T> implements ObservableDataController<T> {
 
     @FXML
     protected void initialize() {

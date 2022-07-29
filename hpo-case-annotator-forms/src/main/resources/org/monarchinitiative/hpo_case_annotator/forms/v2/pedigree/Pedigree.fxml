@@ -10,7 +10,7 @@
     <children>
         <Label styleClass="h3" text="Summary" />
         <Label fx:id="summary" />
-        <Label styleClass="h3" text="Pedigree members" />
+        <Label styleClass="h3" text="Members" />
         <ListView fx:id="members">
             <placeholder>
                 <Label text="No pedigree members" />

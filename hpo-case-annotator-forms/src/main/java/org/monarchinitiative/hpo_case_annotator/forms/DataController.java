@@ -1,21 +1,17 @@
 package org.monarchinitiative.hpo_case_annotator.forms;
 
-import javafx.beans.property.ObjectProperty;
-
-/**
- * represents a case, either V1 or V2, or an observable component of the case.
- * @param <T>
- */
 public interface DataController<T> {
 
-    ObjectProperty<T> dataProperty();
+    /**
+     * @return {@link T} representing the actual state of the controller, possibly {@code null} value.
+     */
+    T getData();
 
-    default T getData() {
-        return dataProperty().get();
-    }
-
-    default void setData(T data) {
-        dataProperty().set(data);
-    }
+    /**
+     * Set data state of the controller.
+     *
+     * @param data instance of {@link T} or {@code null}.
+     */
+    void setData(T data);
 
 }

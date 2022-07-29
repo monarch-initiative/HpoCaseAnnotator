@@ -4,13 +4,18 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
-import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
 
-public class PublicationController extends BindingDataController<ObservablePublication> {
+import static javafx.beans.binding.Bindings.*;
 
-    private final ObjectProperty<ObservablePublication> publication = new SimpleObjectProperty<>(this, "publication", new ObservablePublication());
+public class PublicationController implements ObservableDataController<ObservablePublication> {
+
+    private final ObjectProperty<ObservablePublication> item = new SimpleObjectProperty<>();
 
     @FXML
     private Label title;
@@ -27,36 +32,37 @@ public class PublicationController extends BindingDataController<ObservablePubli
     @FXML
     private Label pmid;
 
+    @FXML
+    protected void initialize() {
+        title.textProperty().bind(selectString(item, "title"));
+        authors.textProperty().bind(selectString(item, "authors"));
+        journal.textProperty().bind(selectString(item, "journal"));
+        year.textProperty().bind(selectInteger(item, "year").asString());
+        volume.textProperty().bind(selectString(item, "volume"));
+        pages.textProperty().bind(selectString(item, "pages"));
+        pmid.textProperty().bind(selectString(item, "pmid"));
+    }
+
     @Override
     public ObjectProperty<ObservablePublication> dataProperty() {
-        return publication;
-    }
-
-    @Override
-    protected void bind(ObservablePublication data) {
-        title.textProperty().bind(data.titleProperty());
-        authors.textProperty().bind(data.authorsProperty());
-        journal.textProperty().bind(data.journalProperty());
-        year.textProperty().bind(data.yearProperty().asString());
-        volume.textProperty().bind(data.volumeProperty());
-        pages.textProperty().bind(data.pagesProperty());
-        pmid.textProperty().bind(data.pmidProperty());
-    }
-
-    @Override
-    protected void unbind(ObservablePublication data) {
-        title.textProperty().unbind();
-        authors.textProperty().unbind();
-        journal.textProperty().unbind();
-        year.textProperty().unbind();
-        volume.textProperty().unbind();
-        pages.textProperty().unbind();
-        pmid.textProperty().unbind();
+        return item;
     }
 
     @FXML
     private void editPublicationAction(ActionEvent e) {
-         // TODO - implement
+        PublicationEditable component = new PublicationEditable();
+        component.setInitialData(item.get());
+
+        Dialog<Boolean> dialog = new Dialog<>();
+        dialog.setHeaderText("Edit publication data:");
+        dialog.getDialogPane().setContent(component);
+        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.UPDATE_CANCEL_BUTTONS);
+        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
+
+        dialog.showAndWait()
+                .filter(i -> i)
+                .ifPresent(shouldUpdate -> item.set(component.getEditedData()));
+
         e.consume();
     }
 }

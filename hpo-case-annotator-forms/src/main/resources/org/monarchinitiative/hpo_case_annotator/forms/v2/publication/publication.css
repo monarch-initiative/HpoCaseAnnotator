@@ -9,3 +9,11 @@
 .details Label {
     -fx-padding: 0px 5px 0px 0px;
 }
+
+.publication-editable-box {
+    -fx-pref-width: 800px;
+}
+
+.publication-editable-box TextField {
+    -fx-pref-height: 30px;
+}

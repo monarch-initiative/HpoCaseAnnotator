@@ -6,12 +6,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.BindingObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
 
-public class AgeController extends BindingDataController<ObservableAge> {
+public class AgeController extends BindingObservableDataController<ObservableAge> {
 
     private final ObjectProperty<ObservableAge> age = new SimpleObjectProperty<>(this, "age", new ObservableAge());
     @FXML
@@ -36,16 +36,16 @@ public class AgeController extends BindingDataController<ObservableAge> {
 
     @Override
     protected void bind(ObservableAge age) {
-        yearsFormatter.valueProperty().bind(age.yearsProperty().asObject());
-        monthsComboBox.valueProperty().bindBidirectional(age.monthsProperty().asObject());
-        daysComboBox.valueProperty().bindBidirectional(age.daysProperty().asObject());
+        yearsFormatter.valueProperty().bind(age.yearsProperty());
+        monthsComboBox.valueProperty().bindBidirectional(age.monthsProperty());
+        daysComboBox.valueProperty().bindBidirectional(age.daysProperty());
     }
 
     @Override
     protected void unbind(ObservableAge age) {
-        yearsFormatter.valueProperty().unbindBidirectional(age.yearsProperty().asObject());
-        monthsComboBox.valueProperty().unbindBidirectional(age.monthsProperty().asObject());
-        daysComboBox.valueProperty().unbindBidirectional(age.daysProperty().asObject());
+        yearsFormatter.valueProperty().unbindBidirectional(age.yearsProperty());
+        monthsComboBox.valueProperty().unbindBidirectional(age.monthsProperty());
+        daysComboBox.valueProperty().unbindBidirectional(age.daysProperty());
     }
 
     @Override

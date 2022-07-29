@@ -5,11 +5,11 @@ import javafx.beans.binding.StringBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import org.monarchinitiative.hpo_case_annotator.forms.BaseBindingDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.BaseBindingObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigree;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 
-public class PedigreeController extends BaseBindingDataController<ObservablePedigree> {
+public class PedigreeController extends BaseBindingObservableDataController<ObservablePedigree> {
 
     @FXML
     private Label summary;
@@ -24,27 +24,22 @@ public class PedigreeController extends BaseBindingDataController<ObservablePedi
 
     @Override
     protected void bind(ObservablePedigree data) {
-        Bindings.bindContent(members.getItems(), data.membersList());
-        StringBinding summaryBinding = Bindings.createStringBinding(() -> pedigreeSummary(data), data.membersList());
+        members.itemsProperty().bindBidirectional(data.membersProperty());
+        StringBinding summaryBinding = Bindings.createStringBinding(() -> pedigreeSummary(data), data.membersProperty());
         summary.textProperty().bind(summaryBinding);
-    }
-
-    private static String pedigreeSummary(ObservablePedigree pedigree) {
-        return switch (pedigree.membersList().size()) {
-            case 0 -> "No individuals in the pedigree.";
-            case 1 -> "1 individual in the pedigree.";
-            default -> "%d individuals in the pedigree".formatted(pedigree.membersList().size());
-        };
     }
 
     @Override
     protected void unbind(ObservablePedigree data) {
-        Bindings.unbindContent(members.getItems(), data.membersList());
+        members.itemsProperty().unbindBidirectional(data.membersProperty());
         summary.textProperty().unbind();
     }
 
-    @Override
-    protected ObservablePedigree defaultInstance() {
-        return new ObservablePedigree();
+    private static String pedigreeSummary(ObservablePedigree pedigree) {
+        return switch (pedigree.membersProperty().size()) {
+            case 0 -> "No individuals in the pedigree.";
+            case 1 -> "1 individual in the pedigree.";
+            default -> "%d individuals in the pedigree".formatted(pedigree.membersProperty().size());
+        };
     }
 }

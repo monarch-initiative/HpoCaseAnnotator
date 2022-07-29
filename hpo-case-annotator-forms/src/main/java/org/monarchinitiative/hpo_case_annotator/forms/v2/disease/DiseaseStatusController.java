@@ -12,7 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.textfield.TextFields;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.BindingObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Utils;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.DiseaseTableController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualDetailController;
@@ -28,7 +28,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 
-public class DiseaseStatusController<T extends BaseObservableIndividual<?>> extends BindingDataController<T> {
+public class DiseaseStatusController<T extends BaseObservableIndividual<?>> extends BindingObservableDataController<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseStatusController.class);
     private final ObjectProperty<T> individual = new SimpleObjectProperty<>(this, "individual");

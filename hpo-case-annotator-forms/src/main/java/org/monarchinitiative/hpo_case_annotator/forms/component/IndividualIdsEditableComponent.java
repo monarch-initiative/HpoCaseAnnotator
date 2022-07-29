@@ -1,7 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.forms.component;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -17,7 +15,7 @@ public class IndividualIdsEditableComponent extends VBox implements DataEditCont
     // TODO - setup icon based on sex and proband status.
     private static final String DEFAULT_STYLECLASS = "individual-ids-component";
 
-    private final ObjectProperty<ObservablePedigreeMember> item = new SimpleObjectProperty<>();
+    private ObservablePedigreeMember item;
 
     @FXML
     private Label idLabel;
@@ -51,52 +49,38 @@ public class IndividualIdsEditableComponent extends VBox implements DataEditCont
     private void initialize() {
         sex.getItems().addAll(Sex.values());
         idLabel.textProperty().bind(individualId.textProperty());
-
-        item.addListener((obs, o, newPedigreeMember) -> {
-            if (newPedigreeMember == null)
-                clearForm();
-            else {
-                setPedigreeMemberData(newPedigreeMember);
-            }
-        });
-    }
-
-    private void setPedigreeMemberData(ObservablePedigreeMember member) {
-        individualId.setText(member.getId());
-        paternalId.setText(member.getPaternalId().orElse(null));
-        maternalId.setText(member.getMaternalId().orElse(null));
-        sex.setValue(member.getSex());
-        proband.setSelected(member.isProband());
-        ageComponent.setInitialData(member.getObservableAge());
-    }
-
-
-    private void clearForm() {
-        individualId.setText(null);
-        paternalId.setText(null);
-        maternalId.setText(null);
-
-        sex.setValue(null);
-        proband.setSelected(false);
-        ageComponent.setInitialData(null);
     }
 
     @Override
-    public void setInitialData(ObservablePedigreeMember item) {
-        this.item.set(item);
+    public void setInitialData(ObservablePedigreeMember data) {
+        if (data == null) {
+            individualId.setText(null);
+            paternalId.setText(null);
+            maternalId.setText(null);
+
+            sex.setValue(null);
+            proband.setSelected(false);
+            ageComponent.setInitialData(null);
+            item = new ObservablePedigreeMember();
+        } else {
+            individualId.setText(data.getId());
+            paternalId.setText(data.getPaternalId().orElse(null));
+            maternalId.setText(data.getMaternalId().orElse(null));
+            sex.setValue(data.getSex());
+            proband.setSelected(data.isProband());
+            ageComponent.setInitialData(data.getObservableAge());
+            item = data;
+        }
     }
 
     @Override
     public ObservablePedigreeMember getEditedData() {
-        ObservablePedigreeMember item = this.item.get();
-        if (item != null) {
-            item.setId(individualId.getText());
-            item.setPaternalId(paternalId.getText());
-            item.setMaternalId(maternalId.getText());
-            item.setSex(sex.getValue());
-            item.setProband(proband.isSelected());
-            item.setObservableAge(ageComponent.getEditedData());
-        }
+        item.setId(individualId.getText());
+        item.setPaternalId(paternalId.getText());
+        item.setMaternalId(maternalId.getText());
+        item.setSex(sex.getValue());
+        item.setProband(proband.isSelected());
+        item.setObservableAge(ageComponent.getEditedData());
 
         return item;
     }

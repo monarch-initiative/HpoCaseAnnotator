@@ -29,7 +29,7 @@ public class FamilyStudyController extends StudyController<ObservableFamilyStudy
         Bindings.bindContent(pedigreeController.curatedVariants(), variantSummaryController.curatedVariants());
         ObservablePedigree pedigree = study.getPedigree();
         if (pedigree != null)
-            Bindings.bindContentBidirectional(pedigreeController.members(), pedigree.membersList());
+            Bindings.bindContentBidirectional(pedigreeController.members(), pedigree.membersProperty());
     }
 
     @Override
@@ -39,7 +39,7 @@ public class FamilyStudyController extends StudyController<ObservableFamilyStudy
         Bindings.unbindContent(pedigreeController.curatedVariants(), variantSummaryController.curatedVariants());
         ObservablePedigree pedigree = study.getPedigree();
         if (pedigree != null)
-            Bindings.unbindContentBidirectional(pedigreeController.members(), pedigree.membersList());
+            Bindings.unbindContentBidirectional(pedigreeController.members(), pedigree.membersProperty());
     }
 
     @Override
