@@ -2,10 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Age;
 import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 
@@ -13,11 +10,11 @@ import java.time.Period;
 
 public class ObservableAge implements Age, Updateable<Age> {
 
-    private final BooleanProperty isGestational = new SimpleBooleanProperty(this, "isGestational");
-    private final ObjectProperty<Integer> years = new SimpleObjectProperty<>(this, "years", null);
-    private final ObjectProperty<Integer> months = new SimpleObjectProperty<>(this, "months", null);
-    private final ObjectProperty<Integer> weeks = new SimpleObjectProperty<>(this, "weeks", null);
-    private final ObjectProperty<Integer> days = new SimpleObjectProperty<>(this, "days", null);
+    private final BooleanProperty gestational = new SimpleBooleanProperty(this, "gestational");
+    private final SimpleIntegerProperty years = new SimpleIntegerProperty(this, "years");
+    private final SimpleIntegerProperty months = new SimpleIntegerProperty(this, "months");
+    private final SimpleIntegerProperty weeks = new SimpleIntegerProperty(this, "weeks");
+    private final SimpleIntegerProperty days = new SimpleIntegerProperty(this, "days");
     private final ObjectBinding<Period> period = createPeriodBinding();
 
     public ObservableAge() {
@@ -28,7 +25,7 @@ public class ObservableAge implements Age, Updateable<Age> {
     }
 
     public ObservableAge(boolean isGestational, int years, int months, int weeks, int days) {
-        this.isGestational.set(isGestational);
+        this.gestational.set(isGestational);
         this.years.set(years);
         this.months.set(months);
         this.weeks.set(weeks);
@@ -37,10 +34,10 @@ public class ObservableAge implements Age, Updateable<Age> {
 
     private ObjectBinding<Period> createPeriodBinding() {
         return Bindings.createObjectBinding(() -> {
-            Integer y = years.get();
+            int y = years.get();
             Integer m = months.get();
             Integer d = days.get();
-            if (y == null || m == null || d == null) {
+            if (m == null || d == null) {
                 return null;
             } else {
                 return Period.of(y, m, d);
@@ -50,15 +47,15 @@ public class ObservableAge implements Age, Updateable<Age> {
 
     @Override
     public boolean isGestational() {
-        return isGestational.get();
+        return gestational.get();
     }
 
     public void setGestational(boolean value) {
-        this.isGestational.set(value);
+        this.gestational.set(value);
     }
 
-    public BooleanProperty isGestationalProperty() {
-        return isGestational;
+    public BooleanProperty gestationalProperty() {
+        return gestational;
     }
 
     @Override
@@ -67,10 +64,10 @@ public class ObservableAge implements Age, Updateable<Age> {
     }
 
     public void setYears(Integer years) {
-        this.years.set(years);
+        this.years.setValue(years);
     }
 
-    public ObjectProperty<Integer> yearsProperty() {
+    public IntegerProperty yearsProperty() {
         return years;
     }
 
@@ -133,8 +130,10 @@ public class ObservableAge implements Age, Updateable<Age> {
     @Override
     public String toString() {
         return "ObservableAge{" +
-                "years=" + years.get() +
+                "isGestational=" + gestational.get() +
+                ", years=" + years.get() +
                 ", months=" + months.get() +
+                ", weeks=" + weeks.get() +
                 ", days=" + days.get() +
                 '}';
     }

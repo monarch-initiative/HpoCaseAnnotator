@@ -36,16 +36,16 @@ public class AgeController extends BindingDataController<ObservableAge> {
 
     @Override
     protected void bind(ObservableAge age) {
-        yearsFormatter.valueProperty().bindBidirectional(age.yearsProperty());
-        monthsComboBox.valueProperty().bindBidirectional(age.monthsProperty());
-        daysComboBox.valueProperty().bindBidirectional(age.daysProperty());
+        yearsFormatter.valueProperty().bind(age.yearsProperty().asObject());
+        monthsComboBox.valueProperty().bindBidirectional(age.monthsProperty().asObject());
+        daysComboBox.valueProperty().bindBidirectional(age.daysProperty().asObject());
     }
 
     @Override
     protected void unbind(ObservableAge age) {
-        yearsFormatter.valueProperty().unbindBidirectional(age.yearsProperty());
-        monthsComboBox.valueProperty().unbindBidirectional(age.monthsProperty());
-        daysComboBox.valueProperty().unbindBidirectional(age.daysProperty());
+        yearsFormatter.valueProperty().unbindBidirectional(age.yearsProperty().asObject());
+        monthsComboBox.valueProperty().unbindBidirectional(age.monthsProperty().asObject());
+        daysComboBox.valueProperty().unbindBidirectional(age.daysProperty().asObject());
     }
 
     @Override

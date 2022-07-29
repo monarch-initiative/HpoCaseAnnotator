@@ -11,7 +11,7 @@ module org.monarchinitiative.hca.forms {
     requires org.slf4j;
 
     exports org.monarchinitiative.hpo_case_annotator.forms;
-    exports org.monarchinitiative.hpo_case_annotator.forms.custom;
+    exports org.monarchinitiative.hpo_case_annotator.forms.component;
     exports org.monarchinitiative.hpo_case_annotator.forms.nvo;
     exports org.monarchinitiative.hpo_case_annotator.forms.liftover;
 
@@ -27,7 +27,7 @@ module org.monarchinitiative.hca.forms {
 
 
     opens org.monarchinitiative.hpo_case_annotator.forms to javafx.fxml, org.monarchinitiative.hca.app;
-    opens org.monarchinitiative.hpo_case_annotator.forms.custom to javafx.fxml;
+    opens org.monarchinitiative.hpo_case_annotator.forms.component to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.nvo to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.liftover to javafx.fxml, org.monarchinitiative.hca.app;
 

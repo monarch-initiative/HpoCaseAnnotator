@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class PhenotypeBrowserController<T extends BaseObservableIndividual> extends BindingDataController<T> {
+public class PhenotypeBrowserController<T extends BaseObservableIndividual<?>> extends BindingDataController<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PhenotypeBrowserController.class);
     private final HCAControllerFactory controllerFactory;
@@ -89,7 +89,7 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual> exte
         individualDetailController.idProperty().bind(individual.idProperty());
         individualDetailController.sexProperty().bind(individual.sexProperty().asString());
         individualDetailController.ageLabel().bind(individual.getObservableAge().period().asString());
-        Bindings.bindContentBidirectional(phenotypicFeaturesTableController.observablePhenotypeDescriptions(), individual.phenotypicFeatures());
+        Bindings.bindContentBidirectional(phenotypicFeaturesTableController.observablePhenotypeDescriptions(), individual.getObservablePhenotypicFeatures());
     }
 
     @Override
@@ -97,12 +97,12 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual> exte
         individualDetailController.idProperty().unbind();
         individualDetailController.sexProperty().unbind();
         individualDetailController.ageLabel().unbind();
-        Bindings.unbindContentBidirectional(phenotypicFeaturesTableController.observablePhenotypeDescriptions(), individual.phenotypicFeatures());
+        Bindings.unbindContentBidirectional(phenotypicFeaturesTableController.observablePhenotypeDescriptions(), individual.getObservablePhenotypicFeatures());
     }
 
     @FXML
     private void addPhenotypeFeatureButtonAction(ActionEvent e) {
-        BaseObservableIndividual individual = this.individual.get();
+        BaseObservableIndividual<?> individual = this.individual.get();
 
         try {
             // setup loader
@@ -118,7 +118,7 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual> exte
             ObjectProperty<ObservableAge> visitAge = new SimpleObjectProperty<>(new ObservableAge(0, 0, 0));
             controller.onsetAge().bindBidirectional(visitAge);
             if (individual != null)
-                controller.resolutionAge().bindBidirectional(individual.ageProperty());
+                controller.resolutionAge().bindBidirectional(individual.observableAgeProperty());
 
             // show stage
             Stage stage = new Stage();
@@ -133,7 +133,7 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual> exte
             Bindings.unbindContentBidirectional(controller.observablePhenotypicFeatures(), phenotypicFeaturesTableController.observablePhenotypeDescriptions());
             controller.onsetAge().unbindBidirectional(visitAge);
             if (individual != null)
-                controller.resolutionAge().unbindBidirectional(individual.ageProperty());
+                controller.resolutionAge().unbindBidirectional(individual.observableAgeProperty());
         } catch (IOException ex) {
             LOGGER.warn("Error while adding phenotype features: {}", ex.getMessage(), ex);
         }

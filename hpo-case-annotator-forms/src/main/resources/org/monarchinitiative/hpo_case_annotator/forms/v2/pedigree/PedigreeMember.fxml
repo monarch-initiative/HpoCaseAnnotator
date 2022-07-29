@@ -1,94 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.custom.NamedLabel?>
-<VBox stylesheets="@pedigree-member.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent?>
+
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.VBox"
+         stylesheets="@pedigree-member.css">
     <children>
-        <Label fx:id="id" style="-fx-font-weight: bold;" styleClass="h3" text="FAM:001"/>
         <VBox>
-            <children>
-                <Label styleClass="h4" text="Identifiers" VBox.vgrow="NEVER"/>
-                <HBox alignment="CENTER_LEFT" styleClass="credential-row" VBox.vgrow="NEVER">
-                    <children>
-                        <ImageView fx:id="individualIcon" preserveRatio="true" styleClass="card">
-                            <image>
-                                <Image url="@male.png"/>
-                            </image>
-                            <HBox.margin>
-                                <Insets bottom="5.0" left="5.0" right="15.0" top="5.0"/>
-                            </HBox.margin>
-                        </ImageView>
-                        <NamedLabel fx:id="paternalId" name="Paternal ID" text="FAM:002"/>
-                        <NamedLabel fx:id="maternalId" name="Maternal ID" text="FAM:003"/>
-                        <NamedLabel fx:id="sex" name="Sex" text="MALE"/>
-                        <NamedLabel fx:id="proband" name="Affected?" text="Yes"/>
-                    </children>
-                </HBox>
-            </children>
+            <HBox>
+                <children>
+                    <Label styleClass="h4" text="Identifiers" />
+                    <Pane HBox.hgrow="SOMETIMES" />
+                    <Button contentDisplay="GRAPHIC_ONLY" onAction="#editIdentifiersAction" styleClass="edit-button"/>
+                </children>
+            </HBox>
+            <IndividualIdsComponent fx:id="individualIdentifiers"/>
         </VBox>
         <VBox>
             <children>
-                <Label styleClass="h4" text="Phenotype"/>
-                <TabPane id="phenotype-tabs" side="LEFT" tabClosingPolicy="UNAVAILABLE">
+                <HBox>
+                    <children>
+                        <Label styleClass="h4" text="Phenotype" />
+                        <Pane HBox.hgrow="SOMETIMES" />
+                        <Button contentDisplay="GRAPHIC_ONLY" onAction="#editPhenotypeAction" styleClass="edit-button"/>
+                    </children>
+                </HBox>
+
+                <TabPane id="phenotype-tabs" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
-                        <Tab id="phenotype-features-tab" closable="false">
+                        <Tab id="phenotype-features-tab" closable="false" text="HPO terms">
                             <graphic>
-                                <HBox>
-                                    <children>
-                                        <ImageView preserveRatio="true" fitHeight="25">
-                                            <Image url="@hpo-logo-black.png"/>
-                                            <HBox.margin>
-                                                <Insets bottom="5.0" left="5.0" right="15.0" top="5.0"/>
-                                            </HBox.margin>
-                                        </ImageView>
-                                        <Label text="HPO terms"/>
-                                    </children>
-                                </HBox>
+                                <ImageView fitHeight="25" preserveRatio="true">
+                                    <Image url="@hpo-logo-black.png" />
+                                </ImageView>
                             </graphic>
                             <content>
                                 <TableView id="hpo-terms-table" fx:id="phenotypes">
                                     <columns>
-                                        <TableColumn fx:id="idColumn" editable="false" prefWidth="120.0" text="ID"/>
-                                        <TableColumn fx:id="labelColumn" editable="false" prefWidth="200.0"
-                                                     text="Label"/>
-                                        <TableColumn fx:id="statusColumn" editable="false" prefWidth="75.0"
-                                                     text="Status"/>
+                                        <TableColumn fx:id="idColumn" editable="false" prefWidth="120.0" text="ID" />
+                                        <TableColumn fx:id="labelColumn" editable="false" prefWidth="200.0" text="Label" />
+                                        <TableColumn fx:id="statusColumn" editable="false" prefWidth="75.0" text="Status" />
                                         <TableColumn editable="false" prefWidth="75.0" text="Temporal">
                                             <columns>
-                                                <TableColumn fx:id="onsetColumn" editable="false" prefWidth="75.0"
-                                                             text="Onset"/>
-                                                <TableColumn fx:id="resolutionColumn" editable="false" prefWidth="100.0"
-                                                             text="Resolution"/>
+                                                <TableColumn fx:id="onsetColumn" editable="false" prefWidth="75.0" text="Onset" />
+                                                <TableColumn fx:id="resolutionColumn" editable="false" prefWidth="100.0" text="Resolution" />
                                             </columns>
                                         </TableColumn>
-                                        <TableColumn fx:id="modifiersColumn" editable="false" prefWidth="75.0"
-                                                     text="Modifiers"/>
+                                        <TableColumn fx:id="modifiersColumn" editable="false" prefWidth="75.0" text="Modifiers" />
                                     </columns>
                                     <columnResizePolicy>
-                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                     </columnResizePolicy>
                                 </TableView>
                             </content>
                         </Tab>
-                        <Tab id="visits-tab" closable="false">
+                        <Tab id="visits-tab" closable="false" text="Visits">
                             <graphic>
-                                <HBox>
-                                    <children>
-                                        <ImageView preserveRatio="true" fitHeight="25">
-                                            <Image url="@calendar.png"/>
-                                            <HBox.margin>
-                                                <Insets bottom="5.0" left="5.0" right="15.0" top="5.0"/>
-                                            </HBox.margin>
-                                        </ImageView>
-                                        <Label text="Visits"/>
-                                    </children>
-                                </HBox>
+                                <ImageView fitHeight="25" preserveRatio="true">
+                                    <Image url="@calendar.png" />
+                                </ImageView>
                             </graphic>
                             <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                             </content>
                         </Tab>
                     </tabs>
@@ -96,4 +73,4 @@
             </children>
         </VBox>
     </children>
-</VBox>
+</fx:root>

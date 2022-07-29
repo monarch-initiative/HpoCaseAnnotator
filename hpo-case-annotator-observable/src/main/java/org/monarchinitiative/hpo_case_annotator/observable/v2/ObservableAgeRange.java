@@ -2,7 +2,6 @@ package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import org.monarchinitiative.hpo_case_annotator.model.v2.Age;
 import org.monarchinitiative.hpo_case_annotator.model.v2.AgeRange;
 import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
 

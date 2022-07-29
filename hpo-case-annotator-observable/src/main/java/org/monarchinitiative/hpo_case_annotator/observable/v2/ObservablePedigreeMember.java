@@ -13,7 +13,7 @@ public class ObservablePedigreeMember extends BaseObservableIndividual<PedigreeM
 
     private final StringProperty paternalId = new SimpleStringProperty(this, "paternalId");
     private final StringProperty maternalId = new SimpleStringProperty(this, "maternalId");
-    private final BooleanProperty proband = new SimpleBooleanProperty(this, "isProband");
+    private final BooleanProperty proband = new SimpleBooleanProperty(this, "proband");
 
     public ObservablePedigreeMember() {
     }
@@ -23,7 +23,6 @@ public class ObservablePedigreeMember extends BaseObservableIndividual<PedigreeM
         paternalId.set(builder.parentalId);
         maternalId.set(builder.maternalId);
         proband.set(builder.isProband);
-
     }
 
     @Override

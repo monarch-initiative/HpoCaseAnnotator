@@ -7,7 +7,7 @@
     <children>
         <HBox styleClass="content">
             <children>
-                <VBox HBox.hgrow="SOMETIMES">
+                <VBox>
                     <children>
                         <Label fx:id="title" styleClass="h3" text="Interpretable prioritization of splice variants in diagnostic next-generation sequencing" />
                         <Label fx:id="authors" text="Danis D, Jacobsen JOB, Carmody LC, Gargano MA, McMurry JA, Hegde A, Haendel MA, Valentini G, Smedley D, Robinson PN" />
@@ -22,7 +22,8 @@
                         </HBox>
                     </children>
                 </VBox>
-                <Button styleClass="edit-button" mnemonicParsing="false" onAction="#editPublicationAction" />
+                <Pane HBox.hgrow="SOMETIMES" />
+                <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#editPublicationAction" styleClass="edit-button" />
             </children>
         </HBox>
 

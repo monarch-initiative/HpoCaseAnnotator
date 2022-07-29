@@ -1,12 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 import org.monarchinitiative.hpo_case_annotator.observable.Updateable;
@@ -16,20 +11,20 @@ import java.util.*;
 public abstract class BaseObservableIndividual<T extends Individual> implements Individual, Updateable<T> {
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
-    private final ObjectProperty<ObservableAge> age = new SimpleObjectProperty<>(this, "age", new ObservableAge());
+    private final ObjectProperty<ObservableAge> observableAge = new SimpleObjectProperty<>(this, "observableAge");
     private final ObjectProperty<Sex> sex = new SimpleObjectProperty<>(this, "sex", Sex.UNKNOWN);
-    private final ObservableList<ObservablePhenotypicFeature> phenotypicFeatures = FXCollections.observableList(new LinkedList<>());
-    private final ObservableList<ObservableDiseaseStatus> diseaseStates = FXCollections.observableList(new LinkedList<>());
-    private final ObservableMap<String, Genotype> genotypes = FXCollections.observableHashMap();
+    private final ListProperty<ObservablePhenotypicFeature> phenotypicFeatures = new SimpleListProperty<>(this, "phenotypicFeatures", FXCollections.observableArrayList());
+    private final ListProperty<ObservableDiseaseStatus> diseaseStates = new SimpleListProperty<>(this, "diseaseStates", FXCollections.observableArrayList());
+    private final MapProperty<String, Genotype> genotypes = new SimpleMapProperty<>(this, "genotypes", FXCollections.observableHashMap());
 
     protected BaseObservableIndividual() {
     }
 
     protected BaseObservableIndividual(Builder<?> builder) {
         this.id.set(builder.id);
-        this.age.get().setYears(builder.age.getYears());
-        this.age.get().setMonths(builder.age.getMonths());
-        this.age.get().setDays(builder.age.getDays());
+        this.observableAge.get().setYears(builder.age.getYears());
+        this.observableAge.get().setMonths(builder.age.getMonths());
+        this.observableAge.get().setDays(builder.age.getDays());
         this.sex.set(builder.sex);
         this.phenotypicFeatures.addAll(builder.phenotypicFeatures);
         this.diseaseStates.addAll(builder.diseaseStates);
@@ -54,7 +49,7 @@ public abstract class BaseObservableIndividual<T extends Individual> implements 
         return phenotypicFeatures;
     }
 
-    public ObservableList<ObservablePhenotypicFeature> getObservablePhenotypicFeatures() {
+    public ListProperty<ObservablePhenotypicFeature> getObservablePhenotypicFeatures() {
         return phenotypicFeatures;
     }
 
@@ -64,30 +59,30 @@ public abstract class BaseObservableIndividual<T extends Individual> implements 
         return diseaseStates;
     }
 
-    public ObservableList<ObservableDiseaseStatus> getObservableDiseases() {
+    public ListProperty<ObservableDiseaseStatus> getObservableDiseases() {
         return diseaseStates;
     }
 
     @Override
-    public ObservableMap<String, Genotype> getGenotypes() {
+    public MapProperty<String, Genotype> getGenotypes() {
         return genotypes;
     }
 
     @Override
     public Optional<Age> getAge() {
-        return Optional.ofNullable(age.get());
+        return Optional.ofNullable(observableAge.get());
     }
 
     public ObservableAge getObservableAge() {
-        return age.get();
+        return observableAge.get();
     }
 
-    public void setAge(ObservableAge age) {
-        this.age.set(age);
+    public void setObservableAge(ObservableAge age) {
+        this.observableAge.set(age);
     }
 
-    public ObjectProperty<ObservableAge> ageProperty() {
-        return age;
+    public ObjectProperty<ObservableAge> observableAgeProperty() {
+        return observableAge;
     }
 
     @Override
@@ -101,14 +96,6 @@ public abstract class BaseObservableIndividual<T extends Individual> implements 
 
     public ObjectProperty<Sex> sexProperty() {
         return sex;
-    }
-
-    public ObservableList<ObservablePhenotypicFeature> phenotypicFeatures() {
-        return phenotypicFeatures;
-    }
-
-    public ObservableList<ObservableDiseaseStatus> diseaseStatuses() {
-        return diseaseStates;
     }
 
     @Override
@@ -137,11 +124,11 @@ public abstract class BaseObservableIndividual<T extends Individual> implements 
     public String toString() {
         return "BaseObservableIndividual{" +
                 "id=" + id.get() +
-                ", age=" + age.get() +
+                ", age=" + observableAge.get() +
                 ", sex=" + sex.get() +
-                ", phenotypicFeatures=" + phenotypicFeatures +
-                ", diseaseStates=" + diseaseStates +
-                ", genotypes=" + genotypes +
+                ", phenotypicFeatures=" + phenotypicFeatures.get() +
+                ", diseaseStates=" + diseaseStates.get() +
+                ", genotypes=" + genotypes.get() +
                 '}';
     }
 

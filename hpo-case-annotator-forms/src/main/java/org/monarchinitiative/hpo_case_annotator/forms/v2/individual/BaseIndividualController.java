@@ -117,7 +117,7 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual<?>> e
         individualIdTextField.textProperty().bindBidirectional(individual.idProperty());
 
         // age
-        ageController.dataProperty().bindBidirectional(individual.ageProperty());
+        ageController.dataProperty().bindBidirectional(individual.observableAgeProperty());
 
         // sex
         if (individual.getSex() != null) {
@@ -131,11 +131,11 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual<?>> e
         individual.sexProperty().bind(sexBinding);
 
         // phenotype
-        summarizePhenotypeCount(individual.phenotypicFeatures());
-        individual.phenotypicFeatures().addListener(summarizePhenotypeCount);
+        summarizePhenotypeCount(individual.getObservablePhenotypicFeatures());
+        individual.getObservablePhenotypicFeatures().addListener(summarizePhenotypeCount);
 
         // diseases
-        Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatuses());
+        Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.getObservableDiseases());
 
         // genotypes
         Bindings.bindContentBidirectional(individualVariantSummaryController.genotypes(), individual.getGenotypes());
@@ -146,16 +146,16 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual<?>> e
         individualIdTextField.textProperty().unbindBidirectional(individual.idProperty());
 
         // age
-        ageController.dataProperty().unbindBidirectional(individual.ageProperty());
+        ageController.dataProperty().unbindBidirectional(individual.observableAgeProperty());
 
         // sex
         individual.sexProperty().unbind();
 
         // phenotype
-        individual.phenotypicFeatures().removeListener(summarizePhenotypeCount);
+        individual.getObservablePhenotypicFeatures().removeListener(summarizePhenotypeCount);
 
         // diseases
-        Bindings.unbindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatuses());
+        Bindings.unbindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.getObservableDiseases());
 
         // genotypes
         Bindings.unbindContentBidirectional(individualVariantSummaryController.genotypes(), individual.getGenotypes());

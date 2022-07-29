@@ -9,9 +9,12 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualVariantSummar
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.SelectableOntologyTreeController;
+import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.cache.HgvsVariantController;
+import org.monarchinitiative.hpo_case_annotator.forms.visits.VisitDetailController;
+import org.monarchinitiative.hpo_case_annotator.forms.visits.VisitsController;
 
 public class ControllerFactory implements HCAControllerFactory {
 
@@ -94,6 +97,12 @@ public class ControllerFactory implements HCAControllerFactory {
             return new FamilyStudyController();
         } else if (clz.equals(org.monarchinitiative.hpo_case_annotator.forms.v2.pedigree.PedigreeController.class)) {
             return new org.monarchinitiative.hpo_case_annotator.forms.v2.pedigree.PedigreeController();
+        } else if (clz.equals(IndividualIdsComponent.class)) {
+            return new IndividualIdsComponent();
+        } else if (clz.equals(VisitsController.class)) {
+            return new VisitsController();
+        } else if (clz.equals(VisitDetailController.class)) {
+            return new VisitDetailController();
         }
 
         // publication & metadata

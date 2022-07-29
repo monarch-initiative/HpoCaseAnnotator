@@ -1,9 +1,9 @@
-package org.monarchinitiative.hpo_case_annotator.forms.custom;
+package org.monarchinitiative.hpo_case_annotator.forms.component;
 
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Label;
 
-public class NamedLabel extends NamedBase<Label> {
+public class TitledLabel extends TitledBase<Label> {
 
     @Override
     protected Label getItem() {

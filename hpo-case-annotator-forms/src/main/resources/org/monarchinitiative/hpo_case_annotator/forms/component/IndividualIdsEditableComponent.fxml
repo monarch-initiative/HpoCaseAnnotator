@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+<fx:root alignment="CENTER_LEFT" stylesheets="@individual-ids-component.css" type="javafx.scene.layout.VBox"
+         xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <VBox>
+            <!-- Identifiers -->
+            <children>
+                <Label fx:id="idLabel" styleClass="h3" text="FAM:001"/>
+                <HBox alignment="CENTER_LEFT" styleClass="credential-row">
+                    <children>
+                        <TitledTextField fx:id="individualId" name="ID" promptText="e.g. I:1"/>
+                        <TitledTextField fx:id="paternalId" name="Paternal ID" promptText="e.g. II:1"/>
+                        <TitledTextField fx:id="maternalId" name="Maternal ID" promptText="e.g. II:2"/>
+                        <TitledComboBox fx:id="sex" name="Sex" value="MALE"/>
+                        <TitledCheckBox fx:id="proband" name="Proband?" selected="true"/>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+        <VBox>
+            <!-- Age -->
+            <children>
+                <Label styleClass="h3" text="Age"/>
+                <HBox>
+                    <children>
+                        <AgeEditableComponent fx:id="ageComponent"/>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</fx:root>

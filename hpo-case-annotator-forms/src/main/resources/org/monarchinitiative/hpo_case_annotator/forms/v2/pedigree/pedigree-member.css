@@ -1,20 +1,6 @@
-.credential-row {
-    -fx-padding: 5px 0px 2px 0px;
-}
-
-NamedLabel {
-    -fx-padding: 15px 0px 2px 0px;
-    -fx-pref-width: 80px;
-}
-
-ImageView {
-    -fx-padding: 15px;
-}
-
 #phenotype-tabs .tab-header-area .tab {
-    -fx-alignment: center;
-    -fx-pref-height: 180;
-    -fx-pref-width: 100;
+    -fx-pref-height: 40;
+    -fx-pref-width: 150;
     -fx-background-color: white;
     -fx-border-color: transparent black black transparent;
     -fx-border-width: 0 1px 5px 0;

@@ -82,7 +82,7 @@ public class DiseaseStatusController<T extends BaseObservableIndividual<?>> exte
         individualDetailController.idProperty().bind(individual.idProperty());
         individualDetailController.sexProperty().bind(individual.sexProperty().asString());
         individualDetailController.ageLabel().bind(individual.getObservableAge().period().asString());
-        Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatuses());
+        Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.getObservableDiseases());
     }
 
     @Override
@@ -90,7 +90,7 @@ public class DiseaseStatusController<T extends BaseObservableIndividual<?>> exte
         individualDetailController.idProperty().unbind();
         individualDetailController.sexProperty().unbind();
         individualDetailController.ageLabel().unbind();
-        Bindings.unbindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatuses());
+        Bindings.unbindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.getObservableDiseases());
     }
 
     @FXML
