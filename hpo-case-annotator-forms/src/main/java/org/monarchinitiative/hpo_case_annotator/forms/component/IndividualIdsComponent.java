@@ -18,8 +18,6 @@ import java.io.IOException;
 import static javafx.beans.binding.Bindings.*;
 
 public class IndividualIdsComponent extends VBox {
-
-    // TODO - setup icon based on proband and proband status.
     private static final String DEFAULT_STYLECLASS = "individual-ids-component";
     private final ObjectProperty<ObservableAge> age = new SimpleObjectProperty<>(new ObservableAge());
 
@@ -80,7 +78,7 @@ public class IndividualIdsComponent extends VBox {
                     if (w != null)
                         builder.append(", ")
                                 .append(w)
-                                .append(" months");
+                                .append(" weeks");
                 } else {
                     builder.append("Postnatal age");
                     Integer y = years.getValue();

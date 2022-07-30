@@ -11,8 +11,6 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigree
 import java.io.IOException;
 
 public class IndividualIdsEditableComponent extends VBox implements DataEditController<ObservablePedigreeMember> {
-
-    // TODO - setup icon based on sex and proband status.
     private static final String DEFAULT_STYLECLASS = "individual-ids-component";
 
     private ObservablePedigreeMember item;
