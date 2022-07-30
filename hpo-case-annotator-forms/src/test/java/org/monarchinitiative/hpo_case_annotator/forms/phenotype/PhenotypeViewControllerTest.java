@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.v2.publication;
+package org.monarchinitiative.hpo_case_annotator.forms.phenotype;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
-import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilyStudy;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
 import org.testfx.api.FxRobot;
@@ -21,16 +20,16 @@ import java.util.concurrent.TimeUnit;
 
 @Disabled
 @ExtendWith(ApplicationExtension.class)
-public class PublicationControllerTest extends BaseControllerTest {
+public class PhenotypeViewControllerTest extends BaseControllerTest {
 
-    private PublicationController controller;
+    private PhenotypeViewController controller;
 
     @Start
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(PublicationController.class.getResource("Publication.fxml"));
-        loader.setControllerFactory(CONTROLLER_FACTORY);
+        FXMLLoader loader = new FXMLLoader(PhenotypeViewController.class.getResource("PhenotypeView.fxml"));
 
         Parent parent = loader.load();
+        loader.setControllerFactory(CONTROLLER_FACTORY);
         controller = loader.getController();
 
         Scene scene = new Scene(parent, 1200, 900);
@@ -43,12 +42,11 @@ public class PublicationControllerTest extends BaseControllerTest {
     public void test(FxRobot robot) throws Exception {
         ObservableFamilyStudy familyStudy = new ObservableFamilyStudy(TestData.V2.comprehensiveFamilyStudy());
 
-        Platform.runLater(() -> controller.setData(familyStudy.getPublication()));
+        Platform.runLater(() -> controller.setInitialData(familyStudy.getPedigree().membersProperty().get(0)));
 
-        robot.sleep(10, TimeUnit.SECONDS);
+        robot.sleep(60, TimeUnit.SECONDS);
 
-        System.err.println(controller.getData());
+        System.err.println(controller.getEditedData());
     }
-
 
 }

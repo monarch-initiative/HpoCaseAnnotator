@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.forms;
 
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierService;
+import org.monarchinitiative.hpo_case_annotator.forms.component.AgeComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.nvo.FamilyStudyController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController;
@@ -95,14 +96,16 @@ public class ControllerFactory implements HCAControllerFactory {
         // New View option
         else if (clz.equals(FamilyStudyController.class)) {
             return new FamilyStudyController();
-        } else if (clz.equals(org.monarchinitiative.hpo_case_annotator.forms.v2.pedigree.PedigreeController.class)) {
-            return new org.monarchinitiative.hpo_case_annotator.forms.v2.pedigree.PedigreeController();
+        } else if (clz.equals(org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeController.class)) {
+            return new org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeController();
         } else if (clz.equals(IndividualIdsComponent.class)) {
             return new IndividualIdsComponent();
         } else if (clz.equals(VisitsController.class)) {
             return new VisitsController();
         } else if (clz.equals(VisitDetailController.class)) {
             return new VisitDetailController();
+        } else if (clz.equals(AgeComponent.class)) {
+            return new AgeComponent();
         }
 
         // publication & metadata
@@ -110,8 +113,8 @@ public class ControllerFactory implements HCAControllerFactory {
             return new PublicationController();
         } else if (clz.equals(StudyMetadataController.class)) {
             return new StudyMetadataController();
-        } else if (clz.equals(org.monarchinitiative.hpo_case_annotator.forms.v2.publication.PublicationController.class)) {
-            return new org.monarchinitiative.hpo_case_annotator.forms.v2.publication.PublicationController();
+        } else if (clz.equals(org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationController.class)) {
+            return new org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationController();
         } else {
             throw new RuntimeException("Unknown controller " + clz);
         }

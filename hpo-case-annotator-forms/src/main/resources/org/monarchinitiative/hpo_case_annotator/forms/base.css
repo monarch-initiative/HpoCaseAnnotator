@@ -1,22 +1,22 @@
 .root {
-    -fx-font-size: 12pt;
+    -fx-font-size: 11pt;
     -fx-font-family: "ui-sans-serif";
 }
 
 .title {
-    -fx-font-size: 2.2em;
+    -fx-font-size: 1.8em;
     -fx-font-weight: bold;
     -fx-padding: 15px 5px 5px 5px;
 }
 
 .h1 {
-    -fx-font-size: 1.8em;
+    -fx-font-size: 1.4em;
     -fx-font-weight: bold;
     -fx-padding: 15px 0px 5px 0px;
 }
 
 .h2 {
-    -fx-font-size: 1.4em;
+    -fx-font-size: 1.3em;
     -fx-font-style: italic;
     -fx-text-fill: #003688;
     -fx-effect: dropshadow(gaussian, #d7d7d7, 5, .5, 1, 1);

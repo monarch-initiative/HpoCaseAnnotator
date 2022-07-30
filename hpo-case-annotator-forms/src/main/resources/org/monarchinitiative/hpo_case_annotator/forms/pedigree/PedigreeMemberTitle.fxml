@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<fx:root type="javafx.scene.layout.HBox" xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@pedigree-member-title.css">
+    <children>
+        <ImageView fx:id="icon" preserveRatio="true" fitHeight="40"/>
+        <Pane/>
+        <Label id="probandIdLabel" fx:id="probandId" text="FAM:001"/>
+        <Pane/>
+        <Label id="summaryLabel" fx:id="summary"/>
+    </children>
+</fx:root>

@@ -3,8 +3,8 @@ package org.monarchinitiative.hpo_case_annotator.forms.nvo;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseBindingObservableDataController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.pedigree.PedigreeController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.publication.PublicationController;
+import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeController;
+import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilyStudy;
 
 

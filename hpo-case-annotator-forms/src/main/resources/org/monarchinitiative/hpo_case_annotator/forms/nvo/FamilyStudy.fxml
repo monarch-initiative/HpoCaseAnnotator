@@ -29,13 +29,13 @@
                 <VBox styleClass="section">
                     <children>
                         <Label styleClass="h2" text="Publication" />
-                        <fx:include fx:id="publication" source="../v2/publication/Publication.fxml" />
+                        <fx:include fx:id="publication" source="../publication/Publication.fxml" />
                     </children>
                 </VBox>
                 <VBox styleClass="section">
                     <children>
                         <Label styleClass="h2" text="Pedigree" />
-                        <fx:include fx:id="pedigree" source="../v2/pedigree/Pedigree.fxml" />
+                        <fx:include fx:id="pedigree" source="../pedigree/Pedigree.fxml" />
                     </children>
                 </VBox>
             </children>

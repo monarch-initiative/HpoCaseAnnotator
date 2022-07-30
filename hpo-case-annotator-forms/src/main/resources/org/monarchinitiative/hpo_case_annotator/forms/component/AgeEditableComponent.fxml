@@ -12,7 +12,7 @@
         <children>
             <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
                 <tabs>
-                    <Tab fx:id="postnatalTab" closable="false" text="Postnatal">
+                    <Tab fx:id="postnatalTab" closable="false">
                         <graphic>
                             <ImageView fitHeight="25" preserveRatio="true">
                                 <Image url="@person.png" />
@@ -28,7 +28,7 @@
                             </VBox>
                         </content>
                     </Tab>
-                    <Tab fx:id="gestationalTab" closable="false" text="Gestational">
+                    <Tab fx:id="gestationalTab" closable="false">
                         <graphic>
                             <ImageView fitHeight="25" preserveRatio="true">
                                 <Image url="@pregnant.png" />

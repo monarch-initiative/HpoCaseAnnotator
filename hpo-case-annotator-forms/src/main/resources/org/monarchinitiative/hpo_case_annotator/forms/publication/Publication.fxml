@@ -3,7 +3,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox stylesheets="@publication.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.publication.PublicationController">
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      stylesheets="@publication.css"
+      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationController">
     <children>
         <HBox styleClass="content">
             <children>

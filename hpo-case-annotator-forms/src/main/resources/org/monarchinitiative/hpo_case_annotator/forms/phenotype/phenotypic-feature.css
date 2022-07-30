@@ -1,0 +1,44 @@
+#box {
+    -fx-padding: 0px 0px 0px 10px;
+}
+
+RadioButton {
+    -fx-min-height: 30px;
+    -fx-min-width: 80px;
+}
+
+SearchableComboBox {
+    -fx-min-height: 30px;
+    -fx-min-width: 80px;
+    -fx-max-width: 150px;
+}
+
+TextField {
+    -fx-min-height: 30px;
+    -fx-min-width: 80px;
+    -fx-max-width: 150px;
+}
+
+Separator {
+    -fx-padding: 0px 5px 0px 5px;
+}
+
+#phenotypic-feature-column VBox {
+    -fx-padding: 10px 0px 0px 0px;
+}
+
+#term-id {
+    -fx-font-size: 10pt;
+    -fx-text-fill: #707070;
+    -fx-font-style: italic;
+}
+
+#term-name {
+    -fx-font-size: 10pt;
+    -fx-text-fill: #444444;
+}
+
+#term-definition {
+    -fx-font-size: 10pt;
+    -fx-max-width: 300px;
+}

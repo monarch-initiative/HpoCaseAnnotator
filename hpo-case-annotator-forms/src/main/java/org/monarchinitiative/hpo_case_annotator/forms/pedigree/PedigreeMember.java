@@ -1,32 +1,41 @@
-package org.monarchinitiative.hpo_case_annotator.forms.v2.pedigree;
+package org.monarchinitiative.hpo_case_annotator.forms.pedigree;
 
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableListValue;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsEditableComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
+import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import static javafx.beans.binding.Bindings.*;
-import static javafx.beans.binding.Bindings.selectString;
 
-public class PedigreeMember extends VBox {
+public class PedigreeMember extends TitledPane {
 
     private static final String DEFAULT_STYLECLASS = "pedigree-member";
-
+    private static final Map<Sex, Map<Boolean, Image>> SEX_AFFECTED_ICONS = loadSexAffectedIconsMap();
     private final ObjectProperty<ObservablePedigreeMember> item = new SimpleObjectProperty<>();
-
+    @FXML
+    private PedigreeMemberTitle pedigreeMemberTitle;
     @FXML
     private IndividualIdsComponent individualIdentifiers;
     @FXML
@@ -41,7 +50,6 @@ public class PedigreeMember extends VBox {
     private TableColumn<ObservablePhenotypicFeature, ObservableAge> onsetColumn;
     @FXML
     private TableColumn<ObservablePhenotypicFeature, ObservableAge> resolutionColumn;
-
     public PedigreeMember() {
         getStyleClass().add(DEFAULT_STYLECLASS);
         FXMLLoader loader = new FXMLLoader(PedigreeMember.class.getResource("PedigreeMember.fxml"));
@@ -56,8 +64,12 @@ public class PedigreeMember extends VBox {
 
     @FXML
     private void initialize() {
+        StringBinding individualId = nullableStringProperty(item, "id");
+        pedigreeMemberTitle.probandId.textProperty().bind(individualId);
+        pedigreeMemberTitle.icon.imageProperty().bind(createIndividualImageBinding());
+        pedigreeMemberTitle.summary.textProperty().bind(individualSummary());
         individualIdentifiers.individualIdProperty()
-                .bind(nullableStringProperty(item, "id"));
+                .bind(individualId);
         individualIdentifiers.paternalIdProperty()
                 .bind(nullableStringProperty(item, "paternalId"));
         individualIdentifiers.maternalIdProperty()
@@ -80,11 +92,55 @@ public class PedigreeMember extends VBox {
         phenotypes.itemsProperty().bind(select(item, "phenotypicFeatures"));
     }
 
+    private ObservableValue<? extends Image> createIndividualImageBinding() {
+        ObjectBinding<Sex> sex = select(item, "sex");
+        BooleanBinding isProband = selectBoolean(item, "proband");
+        return new ObjectBinding<>() {
+            {
+                bind(sex, isProband);
+            }
+
+            @Override
+            protected Image computeValue() {
+                boolean proband = isProband.get();
+                Sex s = sex.get() == null ? Sex.UNKNOWN : sex.get();
+
+                Map<Boolean, Image> sexMap = SEX_AFFECTED_ICONS.get(s);
+                return (sexMap == null)
+                        ? null
+                        : sexMap.get(proband);
+            }
+        };
+    }
+
     private static StringBinding nullableStringProperty(ObjectProperty<?> property, String propertyId) {
         // 2 select statements but can't be done better.
         return when(select(property, propertyId).isNotNull())
                 .then(selectString(property, propertyId))
                 .otherwise("N/A");
+    }
+
+    private StringBinding individualSummary() {
+        ObjectBinding<ObservablePhenotypicFeature> features = select(item, "phenotypicFeatures");
+
+        return new StringBinding() {
+            {
+                bind(item, features);
+            }
+
+            @Override
+            protected String computeValue() {
+                ObservablePedigreeMember member = item.get();
+                if (member == null)
+                    return "";
+
+                return new StringBuilder()
+                        .append(member.getObservablePhenotypicFeatures().size()).append(" phenotype terms, ")
+                        .append(member.getDiseaseStates().size()).append(" disease states, ")
+                        .append(member.getGenotypes().size()).append(" genotypes")
+                        .toString();
+            }
+        };
     }
 
     @FXML
@@ -105,6 +161,7 @@ public class PedigreeMember extends VBox {
 
         e.consume();
     }
+
     @FXML
     private void editPhenotypeAction(ActionEvent e) {
         Dialog<Boolean> dialog = new Dialog<>();
@@ -114,7 +171,8 @@ public class PedigreeMember extends VBox {
         dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_CANCEL_BUTTONS);
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
         dialog.showAndWait()
-                .ifPresent(commit -> {});
+                .ifPresent(commit -> {
+                });
         e.consume();
     }
 
@@ -128,6 +186,26 @@ public class PedigreeMember extends VBox {
 
     public void setItem(ObservablePedigreeMember item) {
         this.item.set(item);
+    }
+
+    private static Map<Sex, Map<Boolean, Image>> loadSexAffectedIconsMap() {
+        Map<Boolean, Image> female = new HashMap<>();
+        female.put(true, loadImage("female-proband.png"));
+        female.put(false, loadImage("female.png"));
+
+        Map<Boolean, Image> male = new HashMap<>();
+        male.put(true, loadImage("male-proband.png"));
+        male.put(false, loadImage("male.png"));
+
+        return Map.of(Sex.MALE, male, Sex.FEMALE, female);
+    }
+
+    private static Image loadImage(String location) {
+        try (InputStream is = PedigreeMember.class.getResourceAsStream(location)) {
+            return new Image(is);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

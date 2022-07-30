@@ -25,7 +25,7 @@
                 <VBox>
                     <children>
                         <Label styleClass="h2" text="Publication" />
-                        <fx:include fx:id="publication" source="../v2/publication/Publication.fxml" />
+                        <fx:include fx:id="publication" source="../publication/Publication.fxml" />
                     </children>
                 </VBox>
             </children>

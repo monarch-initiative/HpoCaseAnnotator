@@ -45,7 +45,7 @@ public class FamilyStudyControllerTest extends BaseControllerTest {
 
         Platform.runLater(() -> controller.setData(familyStudy));
 
-        robot.sleep(10, TimeUnit.SECONDS);
+        robot.sleep(1, TimeUnit.MINUTES);
 
         System.err.println(controller.getData());
     }

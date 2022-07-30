@@ -17,7 +17,7 @@ abstract class TitledBase<T extends Control> extends VBox {
     TitledBase() {
         getStylesheets().add(STYLESHEET_LOCATION);
         getStyleClass().add("named-base");
-        name.getStyleClass().add("named-base-name");
+        name.getStyleClass().add("titled-base-name");
         item.getStyleClass().add("named-base-item");
 
         getChildren().addAll(name, item);

@@ -1,0 +1,17 @@
+Pane {
+    -fx-pref-width: 15px;
+}
+
+Label {
+    -fx-background-insets: 10px;
+}
+
+#probandIdLabel {
+    -fx-font-style: italic;
+    -fx-font-size: 1em;
+}
+
+#summaryLabel {
+    -fx-font-size: 1em;
+    -fx-fill: red;
+}

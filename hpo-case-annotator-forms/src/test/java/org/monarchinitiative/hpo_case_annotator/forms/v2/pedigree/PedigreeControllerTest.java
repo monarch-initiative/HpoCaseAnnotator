@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
+import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilyStudy;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
 import org.testfx.api.FxRobot;
@@ -17,10 +18,6 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import java.util.concurrent.TimeUnit;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
 
 @Disabled
 @ExtendWith(ApplicationExtension.class)

@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.v2.pedigree;
+package org.monarchinitiative.hpo_case_annotator.forms.pedigree;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
