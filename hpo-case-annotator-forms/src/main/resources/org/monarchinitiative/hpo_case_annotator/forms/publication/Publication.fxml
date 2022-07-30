@@ -24,8 +24,6 @@
                         </HBox>
                     </children>
                 </VBox>
-                <Pane HBox.hgrow="SOMETIMES" />
-                <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#editPublicationAction" styleClass="edit-button" />
             </children>
         </HBox>
 

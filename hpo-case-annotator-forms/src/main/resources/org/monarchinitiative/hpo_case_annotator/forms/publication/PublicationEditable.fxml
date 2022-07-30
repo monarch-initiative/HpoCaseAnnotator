@@ -1,20 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Separator?>
 
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
-         stylesheets="@publication.css"
          styleClass="publication-editable-box"
          type="javafx.scene.layout.VBox">
-
-    <TitledTextField fx:id="title" name="Title"/>
-    <TitledTextField fx:id="authors" name="Authors"/>
-    <TitledTextField fx:id="journal" name="Journal"/>
-    <TitledTextField fx:id="year" name="Year"/>
-    <TitledTextField fx:id="volume" name="Volume"/>
-    <TitledTextField fx:id="pages" name="Pages"/>
-    <TitledTextField fx:id="pmid" name="PMID"/>
+    <stylesheets>
+        <URL value="@publication.css"/>
+        <URL value="@../base.css"/>
+    </stylesheets>
+    <VBox styleClass="summary-area">
+        <children>
+            <fx:include fx:id="publication" source="Publication.fxml"/>
+        </children>
+    </VBox>
+    <Separator/>
+    <VBox styleClass="edit-area">
+        <children>
+            <TitledTextField fx:id="title" name="Title"/>
+            <TitledTextField fx:id="authors" name="Authors"/>
+            <TitledTextField fx:id="journal" name="Journal"/>
+            <TitledTextField fx:id="year" name="Year"/>
+            <TitledTextField fx:id="volume" name="Volume"/>
+            <TitledTextField fx:id="pages" name="Pages"/>
+            <TitledTextField fx:id="pmid" name="PMID"/>
+        </children>
+    </VBox>
 
 </fx:root>

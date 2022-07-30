@@ -14,6 +14,11 @@
     -fx-pref-width: 800px;
 }
 
-.publication-editable-box TextField {
+.publication-editable-box .edit-area TextField {
+    -fx-padding: 10 0 10 0;
     -fx-pref-height: 30px;
+}
+
+.publication-editable-box .summary-area {
+    -fx-padding: 10 0 10 0;
 }

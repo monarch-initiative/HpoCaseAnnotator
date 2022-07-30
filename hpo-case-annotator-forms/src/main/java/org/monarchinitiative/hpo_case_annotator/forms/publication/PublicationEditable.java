@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.DataEditController;
@@ -20,6 +21,10 @@ public class PublicationEditable extends VBox implements DataEditController<Obse
 
     private final ObjectProperty<ObservablePublication> item = new SimpleObjectProperty<>();
 
+    @FXML
+    private Parent publication;
+    @FXML
+    private PublicationController publicationController;
     @FXML
     private TitledTextField title;
     @FXML
@@ -51,6 +56,7 @@ public class PublicationEditable extends VBox implements DataEditController<Obse
 
     @FXML
     private void initialize() {
+        publicationController.dataProperty().bind(item);
         year.setTextFormatter(yearTextFormatter);
         item.addListener((obs, old, novel) -> {
             if (novel == null) {
