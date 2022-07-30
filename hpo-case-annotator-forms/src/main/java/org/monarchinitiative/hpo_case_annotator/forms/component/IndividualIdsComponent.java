@@ -20,9 +20,6 @@ import static javafx.beans.binding.Bindings.*;
 public class IndividualIdsComponent extends VBox {
     private static final String DEFAULT_STYLECLASS = "individual-ids-component";
     private final ObjectProperty<ObservableAge> age = new SimpleObjectProperty<>(new ObservableAge());
-
-    @FXML
-    private Label idLabel;
     @FXML
     private TitledLabel individualId;
     @FXML
@@ -51,8 +48,6 @@ public class IndividualIdsComponent extends VBox {
 
     @FXML
     private void initialize() {
-        idLabel.textProperty().bind(individualId.textProperty());
-
         ageSummary.textProperty().bind(ageSummaryBinding());
     }
 

@@ -37,7 +37,11 @@ public class PedigreeMember extends TitledPane {
     @FXML
     private PedigreeMemberTitle pedigreeMemberTitle;
     @FXML
+    private Button editIdentifiersButton;
+    @FXML
     private IndividualIdsComponent individualIdentifiers;
+    @FXML
+    private Button editPhenotypeButton;
     @FXML
     private TableView<ObservablePhenotypicFeature> phenotypes;
     @FXML
@@ -144,6 +148,16 @@ public class PedigreeMember extends TitledPane {
     }
 
     @FXML
+    private void identifiersSectionMouseEntered() {
+        editIdentifiersButton.setVisible(true);
+    }
+
+    @FXML
+    private void identifiersSectionMouseExited() {
+        editIdentifiersButton.setVisible(false);
+    }
+
+    @FXML
     private void editIdentifiersAction(ActionEvent e) {
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.titleProperty().bind(concat("Individual ID: ", nullableStringProperty(item, "id")));
@@ -160,6 +174,16 @@ public class PedigreeMember extends TitledPane {
                 .ifPresent(shouldUpdate -> item.set(component.getEditedData()));
 
         e.consume();
+    }
+
+    @FXML
+    private void phenotypesSectionMouseEntered() {
+        editPhenotypeButton.setVisible(true);
+    }
+
+    @FXML
+    private void phenotypesSectionMouseExited() {
+        editPhenotypeButton.setVisible(false);
     }
 
     @FXML

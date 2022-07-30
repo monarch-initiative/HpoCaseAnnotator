@@ -2,6 +2,7 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
@@ -11,7 +12,6 @@
             <VBox>
                 <!-- Identifiers -->
                 <children>
-                    <Label fx:id="idLabel" styleClass="h3" text="FAM:001"/>
                     <HBox alignment="CENTER_LEFT" styleClass="credential-row" VBox.vgrow="NEVER">
                         <children>
                             <TitledLabel fx:id="individualId" name="ID" text="I:1" />
@@ -23,10 +23,10 @@
                     </HBox>
                 </children>
             </VBox>
-            <!-- Age -->
+            <Separator/>
             <VBox>
+                <!-- Age -->
                 <children>
-                    <Label styleClass="h3" text="Age summary"/>
                     <Label fx:id="ageSummary"/>
                 </children>
             </VBox>
