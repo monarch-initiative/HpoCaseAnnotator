@@ -1,17 +1,15 @@
-Pane {
+#title-box {
+    -fx-alignment: center-left;
+}
+
+.spacer-pane {
     -fx-pref-width: 15px;
 }
 
-Label {
-    -fx-background-insets: 10px;
-}
-
 #probandIdLabel {
-    -fx-font-style: italic;
-    -fx-font-size: 1em;
+    -fx-font-weight: bold;
 }
 
 #summaryLabel {
-    -fx-font-size: 1em;
-    -fx-fill: red;
+
 }

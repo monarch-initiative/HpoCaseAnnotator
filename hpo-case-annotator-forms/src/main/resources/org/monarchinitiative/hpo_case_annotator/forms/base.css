@@ -3,16 +3,15 @@
     -fx-font-family: "ui-sans-serif";
 }
 
-.title {
+/*.title {
     -fx-font-size: 1.8em;
     -fx-font-weight: bold;
     -fx-padding: 15px 5px 5px 5px;
-}
+}*/
 
 .h1 {
     -fx-font-size: 1.4em;
     -fx-font-weight: bold;
-    -fx-padding: 15px 0px 5px 0px;
 }
 
 .h2 {
@@ -20,7 +19,6 @@
     -fx-font-style: italic;
     -fx-text-fill: #003688;
     -fx-effect: dropshadow(gaussian, #d7d7d7, 5, .5, 1, 1);
-    -fx-padding: 10px 0px 5px 0px;
 }
 
 .h3 {
@@ -30,22 +28,18 @@
 
 .h4 {
     -fx-font-size: 1.2em;
-    -fx-padding: 10px 0px 5px 5px;
 }
 
 .section {
     -fx-border-color: rgba(128, 128, 128, 0.5);
     -fx-border-style: dotted;
     -fx-border-width: 0px 0px 1px 0px;
-    -fx-padding: 15px 0px 0px 15px;
 }
 
 .row {
-    -fx-padding: 10px 0px 5px 0px;
 }
 
 .column {
-    -fx-padding: 0px 10px 0px 0px;
 }
 
 .add-item {

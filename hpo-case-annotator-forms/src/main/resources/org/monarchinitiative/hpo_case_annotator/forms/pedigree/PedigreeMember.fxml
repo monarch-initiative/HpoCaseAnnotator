@@ -8,7 +8,7 @@
 
 <fx:root xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
          type="javafx.scene.control.TitledPane" stylesheets="@pedigree-member.css"
-         animated="false" contentDisplay="GRAPHIC_ONLY" expanded="false">
+         id="titled-pane-box" expanded="false" contentDisplay="GRAPHIC_ONLY">
     <graphic>
         <PedigreeMemberTitle fx:id="pedigreeMemberTitle" />
     </graphic>
