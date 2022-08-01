@@ -6,9 +6,8 @@
     -fx-alignment: center-left;
 }
 
-#phenotype-tabs .tab-header-area .tab {
-    -fx-pref-height: 40;
-    -fx-pref-width: 150;
+#phenotype-tabs {
+    -fx-pref-height: 200;
 }
 
 #phenotype-tabs .tab-header-background {
@@ -21,4 +20,21 @@
 }
 
 #hpo-terms-table .column-header {
+}
+
+#diseases-table {
+    -fx-pref-height: 150;
+}
+
+#disease-status {
+    -fx-pref-width: 85;
+}
+
+#disease-id {
+    -fx-pref-width: 130;
+}
+
+#disease-name {
+    -fx-pref-width: 200;
+    -fx-max-width: 300;
 }

@@ -42,6 +42,10 @@
 .column {
 }
 
+.spacer-pane {
+    -fx-pref-width: 15px;
+}
+
 .add-item {
     -fx-pref-width: 30px;
     -fx-pref-height: 30px;

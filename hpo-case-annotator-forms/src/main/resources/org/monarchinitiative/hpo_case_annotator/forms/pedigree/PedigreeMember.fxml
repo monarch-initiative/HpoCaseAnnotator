@@ -6,7 +6,7 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.pedigree.*?>
 
-<fx:root xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="javafx.scene.control.TitledPane" stylesheets="@pedigree-member.css"
          id="titled-pane-box" expanded="false" contentDisplay="GRAPHIC_ONLY">
     <graphic>
@@ -27,17 +27,22 @@
                 </VBox>
                 <VBox>
                     <children>
-                        <Label styleClass="h4" text="Phenotype" />
+                        <Label styleClass="h4" text="Phenotype features" />
                         <StackPane onMouseEntered="#phenotypesSectionMouseEntered" onMouseExited="#phenotypesSectionMouseExited">
                             <children>
-                                <TabPane id="phenotype-tabs" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE">
+                                <TabPane id="phenotype-tabs" side="LEFT" tabClosingPolicy="UNAVAILABLE">
                                     <tabs>
-                                        <Tab id="phenotype-features-tab" closable="false" text="HPO terms">
+                                        <Tab id="phenotype-features-tab" closable="false">
                                             <graphic>
                                                 <ImageView fitHeight="25" preserveRatio="true">
                                                     <Image url="@../icons/hpo-logo-black.png" />
                                                 </ImageView>
                                             </graphic>
+                                            <tooltip>
+                                                <Tooltip>
+                                                    <text>HPO terms</text>
+                                                </Tooltip>
+                                            </tooltip>
                                             <content>
                                                 <TableView id="hpo-terms-table" fx:id="phenotypes">
                                                     <columns>
@@ -55,15 +60,23 @@
                                                     <columnResizePolicy>
                                                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                                     </columnResizePolicy>
+                                                    <placeholder>
+                                                        <Label text="No phenotype features" />
+                                                    </placeholder>
                                                 </TableView>
                                             </content>
                                         </Tab>
-                                        <Tab id="visits-tab" closable="false" text="Visits">
+                                        <Tab id="visits-tab" closable="false">
                                             <graphic>
                                                 <ImageView fitHeight="25" preserveRatio="true">
                                                     <Image url="@calendar.png" />
                                                 </ImageView>
                                             </graphic>
+                                            <tooltip>
+                                                <Tooltip>
+                                                    <text>Visits</text>
+                                                </Tooltip>
+                                            </tooltip>
                                             <content>
                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                                             </content>
@@ -71,6 +84,29 @@
                                     </tabs>
                                 </TabPane>
                                 <Button fx:id="editPhenotypeButton" contentDisplay="GRAPHIC_ONLY" onAction="#editPhenotypeAction" visible="false" styleClass="edit-button" StackPane.alignment="TOP_RIGHT"/>
+                            </children>
+                        </StackPane>
+                    </children>
+                </VBox>
+                <VBox>
+                    <children>
+                        <Label styleClass="h4" text="Diseases" />
+                        <StackPane onMouseEntered="#diseasesSectionMouseEntered" onMouseExited="#diseasesSectionMouseExited">
+                            <children>
+                                <TableView id="diseases-table" fx:id="diseaseTable">
+                                    <columns>
+                                        <TableColumn fx:id="diseaseStatusColumn" id="disease-status" editable="false" text="Status" />
+                                        <TableColumn fx:id="diseaseIdColumn" id="disease-id" editable="false" text="ID" />
+                                        <TableColumn fx:id="diseaseNameColumn" id="disease-name" editable="false" text="Name" />
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                    </columnResizePolicy>
+                                    <placeholder>
+                                        <Label text="No diseases"/>
+                                    </placeholder>
+                                </TableView>
+                                <Button fx:id="editDiseasesButton" contentDisplay="GRAPHIC_ONLY" onAction="#editDiseasesAction" visible="false" styleClass="edit-button" StackPane.alignment="TOP_RIGHT"/>
                             </children>
                         </StackPane>
                     </children>

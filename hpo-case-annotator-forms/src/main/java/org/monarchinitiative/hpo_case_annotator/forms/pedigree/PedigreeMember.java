@@ -5,9 +5,7 @@ import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableListValue;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +16,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsEdi
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableDiseaseStatus;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -54,6 +53,17 @@ public class PedigreeMember extends TitledPane {
     private TableColumn<ObservablePhenotypicFeature, ObservableAge> onsetColumn;
     @FXML
     private TableColumn<ObservablePhenotypicFeature, ObservableAge> resolutionColumn;
+    @FXML
+    private Button editDiseasesButton;
+    @FXML
+    private TableView<ObservableDiseaseStatus> diseaseTable;
+    @FXML
+    private TableColumn<ObservableDiseaseStatus, String> diseaseStatusColumn;
+    @FXML
+    private TableColumn<ObservableDiseaseStatus, TermId> diseaseIdColumn;
+    @FXML
+    private TableColumn<ObservableDiseaseStatus, String> diseaseNameColumn;
+
     public PedigreeMember() {
         getStyleClass().add(DEFAULT_STYLECLASS);
         FXMLLoader loader = new FXMLLoader(PedigreeMember.class.getResource("PedigreeMember.fxml"));
@@ -87,13 +97,20 @@ public class PedigreeMember extends TitledPane {
                         .then("Yes")
                         .otherwise("No"));
 
+        // Phenotypes table view
+        phenotypes.itemsProperty().bind(select(item, "phenotypicFeatures"));
         idColumn.setCellValueFactory(cdf -> cdf.getValue().termIdProperty());
         idColumn.setCellFactory(TermIdTableCell::new);
         statusColumn.setCellValueFactory(cdf -> when(cdf.getValue().excludedProperty()).then("Excluded").otherwise("Present"));
 
+        // Diseases table view
+        diseaseTable.itemsProperty().bind(select(item, "diseaseStates"));
+        diseaseStatusColumn.setCellValueFactory(cdf -> when(cdf.getValue().excludedProperty()).then("Excluded").otherwise("Present"));
+        diseaseIdColumn.setCellValueFactory(cdf -> select(cdf.getValue(), "diseaseId", "diseaseId")); // Yeah, twice.
+        diseaseIdColumn.setCellFactory(TermIdTableCell::new);
+        diseaseNameColumn.setCellValueFactory(cdf -> select(cdf.getValue(), "diseaseId", "diseaseName"));
 
-        // TODO - bind phenotype terms, diseases, genotypes
-        phenotypes.itemsProperty().bind(select(item, "phenotypicFeatures"));
+        // TODO - bind genotypes
     }
 
     private ObservableValue<? extends Image> createIndividualImageBinding() {
@@ -197,6 +214,22 @@ public class PedigreeMember extends TitledPane {
         dialog.showAndWait()
                 .ifPresent(commit -> {
                 });
+        e.consume();
+    }
+
+    @FXML
+    private void diseasesSectionMouseEntered() {
+        editDiseasesButton.setVisible(true);
+    }
+
+    @FXML
+    private void diseasesSectionMouseExited() {
+        editDiseasesButton.setVisible(false);
+    }
+
+    @FXML
+    private void editDiseasesAction(ActionEvent e) {
+        new Alert(Alert.AlertType.INFORMATION, "Not yet implemented", ButtonType.OK).showAndWait();
         e.consume();
     }
 

@@ -2,10 +2,6 @@
     -fx-alignment: center-left;
 }
 
-.spacer-pane {
-    -fx-pref-width: 15px;
-}
-
 #probandIdLabel {
     -fx-font-weight: bold;
 }
