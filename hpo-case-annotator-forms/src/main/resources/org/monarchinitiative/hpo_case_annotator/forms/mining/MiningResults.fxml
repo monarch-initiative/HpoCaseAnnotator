@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<fx:root styleClass="mining-results-box" stylesheets="@mining-results.css" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+      <SplitPane dividerPositions="0.6" VBox.vgrow="ALWAYS">
+        <items>
+            <AnchorPane>
+                <children>
+                    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <children>
+                            <Label text="Text mining results" />
+                            <TextFlow id="text-flow-area" fx:id="textFlow" VBox.vgrow="ALWAYS" />
+                        </children>
+                    </VBox>
+                </children>
+            </AnchorPane>
+            <AnchorPane>
+                <children>
+                    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <children>
+                            <Label text="Vetted phenotypic features" />
+                            <ListView fx:id="vettedPhenotypicFeatures" VBox.vgrow="ALWAYS" />
+                        </children>
+                    </VBox>
+                </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+    </children>
+</fx:root>

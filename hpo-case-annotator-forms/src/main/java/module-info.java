@@ -24,6 +24,7 @@ module org.monarchinitiative.hca.forms {
 
     opens org.monarchinitiative.hpo_case_annotator.forms to javafx.fxml, org.monarchinitiative.hca.app;
     opens org.monarchinitiative.hpo_case_annotator.forms.liftover to javafx.fxml, org.monarchinitiative.hca.app;
+    opens org.monarchinitiative.hpo_case_annotator.forms.mining to javafx.fxml;
 
     opens org.monarchinitiative.hpo_case_annotator.forms.v2 to javafx.fxml, org.monarchinitiative.hca.app;
     opens org.monarchinitiative.hpo_case_annotator.forms.v2.disease to javafx.fxml, org.monarchinitiative.hca.app;
