@@ -1,4 +1,4 @@
-Label {
+.tm-title {
     -fx-font-size: 1.2em;
     -fx-text-fill: navy;
     -fx-effect: dropshadow(gaussian, #858585, 5, .5, 1, 1);
@@ -7,8 +7,4 @@ Label {
 .mining-results-box {
     -fx-pref-width: 600;
     -fx-pref-height: 400;
-}
-
-#text-flow-area {
-    -fx-border-color: blue;
 }

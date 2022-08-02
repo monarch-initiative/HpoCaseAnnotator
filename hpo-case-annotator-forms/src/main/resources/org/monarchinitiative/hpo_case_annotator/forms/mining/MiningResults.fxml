@@ -4,7 +4,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<fx:root styleClass="mining-results-box" stylesheets="@mining-results.css" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.VBox"
+         stylesheets="@mining-results.css"
+         styleClass="mining-results-box" >
     <children>
       <SplitPane dividerPositions="0.6" VBox.vgrow="ALWAYS">
         <items>
@@ -12,8 +15,8 @@
                 <children>
                     <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                         <children>
-                            <Label text="Text mining results" />
-                            <TextFlow id="text-flow-area" fx:id="textFlow" VBox.vgrow="ALWAYS" />
+                            <Label styleClass="tm-title" text="Text mining results" />
+                            <TextFlow fx:id="textFlow" VBox.vgrow="ALWAYS" />
                         </children>
                     </VBox>
                 </children>
@@ -22,8 +25,12 @@
                 <children>
                     <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                         <children>
-                            <Label text="Vetted phenotypic features" />
-                            <ListView fx:id="vettedPhenotypicFeatures" VBox.vgrow="ALWAYS" />
+                            <Label styleClass="tm-title" text="Vetted phenotypic features" />
+                            <ListView fx:id="vettedPhenotypicFeatures" VBox.vgrow="ALWAYS" >
+                                <placeholder>
+                                    <Label text="No vetted features yet"/>
+                                </placeholder>
+                            </ListView>
                         </children>
                     </VBox>
                 </children>
