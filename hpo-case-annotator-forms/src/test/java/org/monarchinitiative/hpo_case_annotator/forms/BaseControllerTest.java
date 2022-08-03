@@ -7,16 +7,16 @@ import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.monarchinitiative.svart.assembly.GenomicAssemblies;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
 public class BaseControllerTest {
 
-    // TODO - remove
-    public static final File LOCAL_ONTOLOGY_OBO = new File("/home/ielis/data/ontologies/hpo/2021-06-08/hp.json");
+    private static final Path TEST_BASE_DIR = Path.of("src/test/resources/org/monarchinitiative/hpo_case_annotator/forms");
+    private static final Path HPO_MODULE_PATH = TEST_BASE_DIR.resolve("hp.module.json");
 
-    public static final Ontology ONTOLOGY = OntologyLoader.loadOntology(LOCAL_ONTOLOGY_OBO);
+    public static final Ontology HPO = OntologyLoader.loadOntology(HPO_MODULE_PATH.toFile());
 
     public static final GenomicAssemblyRegistry GENOMIC_ASSEMBLY_REGISTRY = createGenomicAssemblyRegistry();
     public static final FunctionalAnnotationRegistry FUNCTIONAL_ANNOTATION_REGISTRY = new FunctionalAnnotationRegistry();

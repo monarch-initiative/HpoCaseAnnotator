@@ -51,7 +51,7 @@ public class PhenotypeBrowserControllerTest extends BaseControllerTest {
                 .map(Convert::toObservablePedigreeMember)
                 .ifPresent(individual::set);
 
-        Platform.runLater(() -> controller.setOntology(ONTOLOGY));
+        Platform.runLater(() -> controller.setOntology(HPO));
         Platform.runLater(() -> controller.dataProperty().bind(individual));
 
         robot.sleep(20, TimeUnit.SECONDS);
