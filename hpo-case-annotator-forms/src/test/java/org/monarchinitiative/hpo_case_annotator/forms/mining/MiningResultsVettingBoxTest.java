@@ -48,16 +48,16 @@ public class MiningResultsVettingBoxTest {
     }
 
     private TextMiningResults getExampleTestResults() {
-        // Based on text in https://pubmed.ncbi.nlm.nih.gov/30808312/, but updated to negate `Macroscopic hematuria`.
+        // Based on text in https://pubmed.ncbi.nlm.nih.gov/30808312/, but updated to contain terms from HPO module.
         String originalText = """
-                The patient was a 14-year-old boy presenting with muscle weakness from 3 years of age without any family history. Six months before admission, he developed recurrent gross hematuria, three bouts in total, without presence of blood clots in the urine.
+                The patient was a 14-year-old boy presenting with abnormality of hands from 3 years of age without any family history. Six months before admission, he developed slender fingers, three bouts in total, without presence of arachnodactyly.
                 Next-generation sequencing of his whole-exome was performed. The result of sequencing revealed a de novo heterozygous G-to-A nucleotide substitution at position 877 in exon 10 of the COL6A1 gene.
                 After treatment, the hematuria healed, but the muscle weakness failed to improve.
                 """;
         List<MinedTerm> minedTerms = List.of(
-                makeMinedTerm("HP:0001324", 50, 50+15, false), // Muscle weakness
-                makeMinedTerm("HP:0002907", 156, 156+25, false), // Hematuria (recurrent gross hematuria)
-                makeMinedTerm("HP:0012587", 205, 205+44, true) // Macroscopic hematuria (without presence of blood clots in the urine)
+                makeMinedTerm("HP:0002817", 50, 50+20, false), // Abnormality of the upper limb (abnormality of hands)
+                makeMinedTerm("HP:0001238", 161, 161+15, false), // Slender finger (slender fingers)
+                makeMinedTerm("HP:0001166", 220, 220+14, true) // Arachnodactyly (arachnodactyly)
                 );
         return new SimpleTextMiningResults(originalText, minedTerms);
     }
