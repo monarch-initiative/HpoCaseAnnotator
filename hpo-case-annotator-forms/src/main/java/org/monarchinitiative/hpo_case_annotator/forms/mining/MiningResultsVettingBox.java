@@ -4,12 +4,18 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class MiningResultsVettingBox extends VBox {
@@ -45,6 +51,30 @@ public class MiningResultsVettingBox extends VBox {
     private void bind(TextMiningResults results) {
         /* TODO - implement
         */
+        String sourceText = results.sourceText();
+        List<MinedTerm> sortedTerms = results.minedTerms().stream().sorted(Comparator.comparingInt(MinedTerm::start)).toList();
+        List<Text> textList = new ArrayList<>();
+        int start = 0;
+        for (MinedTerm term : sortedTerms) {
+            int termStart = term.start();
+            int termEnd = term.end();
+            if (start < termStart) {
+                Text subText = new Text(sourceText.substring(start, termStart));
+                textList.add(subText);
+            }
+            Text minedText = new Text(sourceText.substring(termStart, termEnd));
+            minedText.setFill(Color.RED);
+            textList.add(minedText);
+            if (termEnd <= sourceText.length()) {
+                start = termEnd;
+            }
+        }
+        if (start < sourceText.length()) {
+            Text endText = new Text(sourceText.substring(start));
+            textList.add(endText);
+        }
+        textFlow.getChildren().addAll(textList);
+
     }
 
     private void unbind(TextMiningResults results) {
