@@ -24,10 +24,7 @@ public class IndividualSerializer extends StdSerializer<Individual> {
     static void writeIndividualFields(Individual individual, JsonGenerator gen) throws IOException {
         gen.writeStringField("id", individual.getId());
 
-        if (individual.getAge().isPresent()) // age
-            gen.writeObjectField("age", individual.getAge().get());
-        else
-            gen.writeNullField("age");
+        gen.writeObjectField("age", individual.getAge());
 
         gen.writeArrayFieldStart("diseases");
         for (DiseaseStatus diseaseStatus : individual.getDiseaseStates())

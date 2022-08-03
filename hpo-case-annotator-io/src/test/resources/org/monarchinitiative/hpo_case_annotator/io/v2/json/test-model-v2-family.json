@@ -18,7 +18,7 @@
     } ]
   },
   "publication" : {
-    "authors" : [ "Beygó J", "Buiting K", "Seland S", "Lüdecke HJ", "Hehr U", "Lich C", "Prager B", "Lohmann DR", "Wieczorek D" ],
+    "authors" : "Beygó J, Buiting K, Seland S, Lüdecke HJ, Hehr U, Lich C, Prager B, Lohmann DR, Wieczorek D",
     "title" : "First Report of a Single Exon Deletion in TCOF1 Causing Treacher Collins Syndrome",
     "journal" : "Mol Syndromol",
     "year" : 2012,
@@ -190,7 +190,14 @@
   "pedigree" : {
     "members" : [ {
       "id" : "FAM:001",
-      "age" : "P10Y5M4D",
+      "age" : {
+        "timeCase" : "AGE",
+        "age" : {
+          "years" : 10,
+          "months" : 5,
+          "days" : 4
+        }
+      },
       "diseases" : [ {
         "diseaseIdentifier" : {
           "diseaseId" : "OMIM:219700",
@@ -217,17 +224,34 @@
       "phenotypicFeatures" : [ {
         "termId" : "HP:0000822",
         "isExcluded" : true,
-        "observationAge" : {
-          "onset" : "P0D",
-          "resolution" : "P10Y5M4D"
-        }
+        "onset" : {
+          "timeCase" : "AGE",
+          "age" : {
+            "years" : 4,
+            "months" : 6,
+            "days" : null
+          }
+        },
+        "resolution" : null
       }, {
         "termId" : "HP:0002110",
         "isExcluded" : false,
-        "observationAge" : {
-          "onset" : "P0D",
-          "resolution" : "P10Y5M4D"
-        }
+        "onset" : {
+          "timeCase" : "AGE_RANGE",
+          "ageRange" : {
+            "start" : {
+              "years" : 10,
+              "months" : null,
+              "days" : null
+            },
+            "end" : {
+              "years" : 10,
+              "months" : 6,
+              "days" : null
+            }
+          }
+        },
+        "resolution" : null
       } ],
       "sex" : "MALE",
       "paternalId" : "FAM:002",

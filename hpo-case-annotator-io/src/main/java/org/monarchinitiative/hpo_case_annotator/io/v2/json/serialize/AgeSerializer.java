@@ -7,6 +7,8 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.Age;
 
 import java.io.IOException;
 
+import static org.monarchinitiative.hpo_case_annotator.io.v2.json.serialize.Util.writeNullableNumber;
+
 public class AgeSerializer extends StdSerializer<Age> {
 
     public AgeSerializer() {
@@ -20,11 +22,11 @@ public class AgeSerializer extends StdSerializer<Age> {
     @Override
     public void serialize(Age age, JsonGenerator gen, SerializerProvider serializerProvider) throws IOException {
         gen.writeStartObject();
-        gen.writeBooleanField("isGestational", age.isGestational());
-        gen.writeNumberField("years", age.getYears());
-        gen.writeNumberField("months", age.getMonths());
-        gen.writeNumberField("weeks", age.getWeeks());
-        gen.writeNumberField("days", age.getDays());
+
+        writeNullableNumber(gen, "years", age.getYears());
+        writeNullableNumber(gen, "months", age.getMonths());
+        writeNullableNumber(gen, "days", age.getDays());
+
         gen.writeEndObject();
     }
 }

@@ -31,9 +31,9 @@ public class AgeRangeDeserializer extends StdDeserializer<AgeRange> {
 
         // First, read the current version where Age is a first class citizen of the HCA data model.
         try {
-            Age onset = codec.treeToValue(node.get("onset"), Age.class);
-            Age resolution = codec.treeToValue(node.get("resolution"), Age.class);
-            return AgeRange.of(onset, resolution);
+            Age start = codec.treeToValue(node.get("start"), Age.class);
+            Age end = codec.treeToValue(node.get("end"), Age.class);
+            return AgeRange.of(start, end);
         } catch (Exception e) {
             // Alternatively, try to parse the raw periods (obsolete).
             try {

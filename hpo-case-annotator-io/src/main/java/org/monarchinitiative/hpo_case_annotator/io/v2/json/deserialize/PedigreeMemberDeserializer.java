@@ -44,7 +44,7 @@ public class PedigreeMemberDeserializer extends StdDeserializer<PedigreeMember> 
                 individual.getPhenotypicFeatures(),
                 individual.getDiseaseStates(),
                 individual.getGenotypes(),
-                individual.getAge().isEmpty() ? null : individual.getAge().get(),
+                individual.getAge() == null ? null : individual.getAge(),
                 individual.getSex());
     }
 }

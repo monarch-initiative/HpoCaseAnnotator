@@ -167,17 +167,19 @@ class V2 {
                 symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS,
                 symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS);
 
+        TimeElement hypertensionOnset = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(4, 6, null), null, null);
+        TimeElement bronchiectasisOnset = TimeElement.of(TimeElement.TimeElementCase.AGE_RANGE, null, null, AgeRange.of(Age.of(10, null, null), Age.of(10, 6, null)), null);
         List<PhenotypicFeature> phenotypes = List.of(
-                PhenotypicFeature.of(TermId.of("HP:0000822"), true, AgeRange.sinceBirthUntilAge(Age.ofYearsMonthsDays(10, 5, 4))), // Hypertension
-                PhenotypicFeature.of(TermId.of("HP:0002110"), false, AgeRange.sinceBirthUntilAge(Age.ofYearsMonthsDays(10, 5, 4))) // Bronchiectasis
+                PhenotypicFeature.of(TermId.of("HP:0000822"), true, hypertensionOnset, null), // Hypertension
+                PhenotypicFeature.of(TermId.of("HP:0002110"), false, bronchiectasisOnset, null) // Bronchiectasis
         );
 
-
+        TimeElement age = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(10, 5, 4), null, null);
         return Pedigree.of(
                 List.of(PedigreeMember.of("FAM:001",
                         "FAM:002",
                         null,
-                        true, phenotypes, diseases, genotypes, Age.ofYearsMonthsDays(10, 5, 4),
+                        true, phenotypes, diseases, genotypes, age,
                         Sex.MALE))
         );
     }
@@ -185,29 +187,46 @@ class V2 {
     private static Collection<? extends Individual> getCohortMembers() {
         DiseaseIdentifier diseaseIdentifier = DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF");
         // abc
+        // The phenotypic features are nonsense, just for testing.
+        TimeElement abcHypertensionOnset = TimeElement.of(TimeElement.TimeElementCase.GESTATIONAL_AGE, GestationalAge.of(38, 3), null, null, null);
+        TimeElement abcBronchiectasisOnset = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(10, 0, 20), null, null);
+        TimeElement abcAge = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(14, null, null), null, null);
         Individual abc = Individual.of("abc",
                 List.of(
-                        PhenotypicFeature.of(TermId.of("HP:0000822"), true, AgeRange.sinceBirthUntilAge(Age.ofYearsMonthsDays(10, 0, 20))), // Hypertension
-                        PhenotypicFeature.of(TermId.of("HP:0002110"), false, AgeRange.sinceBirthUntilAge(Age.ofYearsMonthsDays(10, 0, 20))) // Bronchiectasis
-                ), List.of(DiseaseStatus.of(diseaseIdentifier, false)), Map.of(
+                        PhenotypicFeature.of(TermId.of("HP:0000822"), true, abcHypertensionOnset, null), // Hypertension
+                        PhenotypicFeature.of(TermId.of("HP:0002110"), false, abcBronchiectasisOnset, null) // Bronchiectasis
+                ),
+                List.of(DiseaseStatus.of(diseaseIdentifier, false)),
+                Map.of(
                         mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
                         somaticVariant().md5Hex(), Genotype.HETEROZYGOUS,
                         splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
                         symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS,
-                        symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS), Age.ofYearsMonthsDays(10, 0, 20),
+                        symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS),
+                abcAge,
                 Sex.MALE);
 
         // def
+        // Onset somewhere in the 16th year of life.
+        Age start = Age.of(15, null, null);
+        Age end = Age.of(16, null, null);
+        TimeElement defHypertensionOnset = TimeElement.of(TimeElement.TimeElementCase.AGE_RANGE, null, null, AgeRange.of(start, end), null);
+        TermId adultOnset = TermId.of("HP:0003581");
+        TimeElement defBronchiectasisOnset = TimeElement.of(TimeElement.TimeElementCase.ONTOLOGY_CLASS, null, null, null, adultOnset);
+        TimeElement defAge = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(25, null, null), null, null);
         Individual def = Individual.of("def",
                 List.of(
-                        PhenotypicFeature.of(TermId.of("HP:0000822"), false, AgeRange.sinceBirthUntilAge(Age.ofYearsMonthsDays(15, 2, 4))), // Hypertension
-                        PhenotypicFeature.of(TermId.of("HP:0002110"), true, AgeRange.sinceBirthUntilAge(Age.ofYearsMonthsDays(15, 2, 4))) // Bronchiectasis
-                ), List.of(DiseaseStatus.of(diseaseIdentifier, true)), Map.of(
+                        PhenotypicFeature.of(TermId.of("HP:0000822"), false, defHypertensionOnset, null), // Hypertension
+                        PhenotypicFeature.of(TermId.of("HP:0002110"), true, defBronchiectasisOnset, null) // Bronchiectasis
+                ),
+                List.of(DiseaseStatus.of(diseaseIdentifier, true)),
+                Map.of(
                         mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE,
                         somaticVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE,
                         splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
                         symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS,
-                        symbolicBreakendVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE), Age.ofYearsMonthsDays(15, 2, 4),
+                        symbolicBreakendVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE),
+                defAge,
                 Sex.FEMALE);
 
         return List.of(abc, def);

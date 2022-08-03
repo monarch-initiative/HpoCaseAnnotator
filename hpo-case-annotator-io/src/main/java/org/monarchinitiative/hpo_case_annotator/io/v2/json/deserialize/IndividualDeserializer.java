@@ -28,7 +28,8 @@ public class IndividualDeserializer extends StdDeserializer<Individual> {
 
         String id = node.get("id").asText();
 
-        Age age = AgeDeserializer.parseAge(codec, node.get("age"));
+        // TODO - can fail due to age being previously stored as `Age`
+        TimeElement age = codec.treeToValue(node.get("age"), TimeElement.class);
 
         List<DiseaseStatus> diseaseStatuses = new LinkedList<>();
         Iterator<JsonNode> diseasesIterator = node.get("diseases").elements();

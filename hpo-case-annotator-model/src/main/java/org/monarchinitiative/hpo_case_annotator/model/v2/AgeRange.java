@@ -17,17 +17,10 @@ public interface AgeRange {
      * @throws IllegalArgumentException if <code>endAge</code> is after <code>startAge</code>
      */
     static AgeRange of(Age startAge, Age endAge) {
-        if (startAge.getYears().equals(endAge.getYears())
-                && startAge.getMonths().equals(endAge.getMonths())
-                && startAge.getDays().equals(endAge.getDays()))
+        if (startAge.equals(endAge))
             return point(startAge);
 
-        if (startAge.getYears() < endAge.getYears()
-                || startAge.getMonths() < endAge.getMonths()
-                || startAge.getDays() < endAge.getDays())
-            return new AgeRangeDefault(startAge, endAge);
-
-        throw new IllegalArgumentException("End age must be after start! Start: " + startAge + ", End: " + endAge);
+        return new AgeRangeDefault(startAge, endAge);
     }
 
     /**

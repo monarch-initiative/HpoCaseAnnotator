@@ -18,7 +18,7 @@
     } ]
   },
   "publication" : {
-    "authors" : [ "Beygó J", "Buiting K", "Seland S", "Lüdecke HJ", "Hehr U", "Lich C", "Prager B", "Lohmann DR", "Wieczorek D" ],
+    "authors" : "Beygó J, Buiting K, Seland S, Lüdecke HJ, Hehr U, Lich C, Prager B, Lohmann DR, Wieczorek D",
     "title" : "First Report of a Single Exon Deletion in TCOF1 Causing Treacher Collins Syndrome",
     "journal" : "Mol Syndromol",
     "year" : 2012,
@@ -189,7 +189,14 @@
   } ],
   "individuals" : [ {
     "id" : "abc",
-    "age" : "P10Y20D",
+    "age" : {
+      "timeCase" : "AGE",
+      "age" : {
+        "years" : 14,
+        "months" : null,
+        "days" : null
+      }
+    },
     "diseases" : [ {
       "diseaseIdentifier" : {
         "diseaseId" : "OMIM:219700",
@@ -216,22 +223,38 @@
     "phenotypicFeatures" : [ {
       "termId" : "HP:0000822",
       "isExcluded" : true,
-      "observationAge" : {
-        "onset" : "P0D",
-        "resolution" : "P10Y20D"
-      }
+      "onset" : {
+        "timeCase" : "GESTATIONAL_AGE",
+        "gestationalAge" : {
+          "weeks" : 38,
+          "days" : 3
+        }
+      },
+      "resolution" : null
     }, {
       "termId" : "HP:0002110",
       "isExcluded" : false,
-      "observationAge" : {
-        "onset" : "P0D",
-        "resolution" : "P10Y20D"
-      }
+      "onset" : {
+        "timeCase" : "AGE",
+        "age" : {
+          "years" : 10,
+          "months" : 0,
+          "days" : 20
+        }
+      },
+      "resolution" : null
     } ],
     "sex" : "MALE"
   }, {
     "id" : "def",
-    "age" : "P15Y2M4D",
+    "age" : {
+      "timeCase" : "AGE",
+      "age" : {
+        "years" : 25,
+        "months" : null,
+        "days" : null
+      }
+    },
     "diseases" : [ {
       "diseaseIdentifier" : {
         "diseaseId" : "OMIM:219700",
@@ -258,17 +281,30 @@
     "phenotypicFeatures" : [ {
       "termId" : "HP:0000822",
       "isExcluded" : false,
-      "observationAge" : {
-        "onset" : "P0D",
-        "resolution" : "P15Y2M4D"
-      }
+      "onset" : {
+        "timeCase" : "AGE_RANGE",
+        "ageRange" : {
+          "start" : {
+            "years" : 15,
+            "months" : null,
+            "days" : null
+          },
+          "end" : {
+            "years" : 16,
+            "months" : null,
+            "days" : null
+          }
+        }
+      },
+      "resolution" : null
     }, {
       "termId" : "HP:0002110",
       "isExcluded" : true,
-      "observationAge" : {
-        "onset" : "P0D",
-        "resolution" : "P15Y2M4D"
-      }
+      "onset" : {
+        "timeCase" : "ONTOLOGY_CLASS",
+        "ontologyClass" : "HP:0003581"
+      },
+      "resolution" : null
     } ],
     "sex" : "FEMALE"
   } ]
