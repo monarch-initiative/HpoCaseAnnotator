@@ -17,7 +17,7 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
                                   List<PhenotypicFeature> phenotypicFeatures,
                                   List<DiseaseStatus> diseases,
                                   Map<String, Genotype> genotypes,
-                                  Age age,
+                                  TimeElement age,
                                   Sex sex) {
         super(id, phenotypicFeatures, diseases, genotypes, age, sex);
         this.paternalId = paternalId;
@@ -32,7 +32,7 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
                                     Collection<? extends PhenotypicFeature> phenotypicFeatures,
                                     List<? extends DiseaseStatus> diseases,
                                     Map<String, Genotype> genotypes,
-                                    Age age,
+                                    TimeElement age,
                                     Sex sex) {
         // wrap the collections
         return new PedigreeMemberDefault(Objects.requireNonNull(id, "Individual ID must not be null"),

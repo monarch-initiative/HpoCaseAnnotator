@@ -11,23 +11,15 @@ public interface AgeRange {
     }
 
     /**
-     * @param reportedAge reported age of the individual
-     * @return range to represent timespan starting at birth and ending at the <code>reportedAge</code>
-     */
-    static AgeRange sinceBirthUntilAge(Age reportedAge) {
-        return of(Age.ZERO, reportedAge);
-    }
-
-    /**
      * @param startAge start age (inclusive)
      * @param endAge   end age (exclusive)
      * @return range to represent timespan starting at <code>startAge</code> and ending at <code>endAge</code>
      * @throws IllegalArgumentException if <code>endAge</code> is after <code>startAge</code>
      */
     static AgeRange of(Age startAge, Age endAge) {
-        if (startAge.getYears() == endAge.getYears()
-                && startAge.getMonths() == endAge.getMonths()
-                && startAge.getDays() == endAge.getDays())
+        if (startAge.getYears().equals(endAge.getYears())
+                && startAge.getMonths().equals(endAge.getMonths())
+                && startAge.getDays().equals(endAge.getDays()))
             return point(startAge);
 
         if (startAge.getYears() < endAge.getYears()
@@ -41,11 +33,11 @@ public interface AgeRange {
     /**
      * @return onset age (inclusive)
      */
-    Age getOnset();
+    Age getStart();
 
     /**
      * @return resolution age (exclusive)
      */
-    Age getResolution();
+    Age getEnd();
 
 }

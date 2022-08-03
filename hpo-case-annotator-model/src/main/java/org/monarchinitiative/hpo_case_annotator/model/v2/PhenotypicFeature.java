@@ -6,8 +6,8 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 // Roughly corresponds to PhenotypicFeature of Phenopackets v2
 public interface PhenotypicFeature extends Identified {
 
-    static PhenotypicFeature of(TermId termId, boolean isExcluded, AgeRange observationAge) {
-        return new PhenotypicFeatureDefault(termId, isExcluded, observationAge);
+    static PhenotypicFeature of(TermId termId, boolean isExcluded, TimeElement onset, TimeElement resolution) {
+        return new PhenotypicFeatureDefault(termId, isExcluded, onset, resolution);
     }
 
     @Deprecated(forRemoval = true)
@@ -17,7 +17,14 @@ public interface PhenotypicFeature extends Identified {
 
     boolean isExcluded();
 
-    AgeRange getObservationAge();
+    TimeElement getOnset();
+
+    TimeElement getResolution();
+
+    @Deprecated(forRemoval = true)
+    default AgeRange getObservationAge() {
+        throw new RuntimeException("Should not be used");
+    }
 
     // TODO - we may add other attributes like severity, onset/offset
 

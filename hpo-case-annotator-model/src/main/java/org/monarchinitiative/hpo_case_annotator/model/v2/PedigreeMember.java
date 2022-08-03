@@ -16,7 +16,7 @@ public interface PedigreeMember extends Individual {
                              Collection<? extends PhenotypicFeature> phenotypicFeatures,
                              List<? extends DiseaseStatus> diseases,
                              Map<String, Genotype> genotypes,
-                             Age age,
+                             TimeElement age,
                              Sex sex) {
         return PedigreeMemberDefault.of(id,
                 paternalId,

@@ -13,7 +13,7 @@ public interface Individual {
                          List<PhenotypicFeature> phenotypicFeatures,
                          List<DiseaseStatus> diseases,
                          Map<String, Genotype> genotypes,
-                         Age age,
+                         TimeElement age,
                          Sex sex) {
         return IndividualDefault.of(id,
                 phenotypicFeatures,
@@ -29,9 +29,9 @@ public interface Individual {
     String getId();
 
     /**
-     * @return proband age at the time of the report.
+     * @return proband age at the time of the report or {@code null} if not known.
      */
-    Optional<Age> getAge();
+    TimeElement getAge();
 
     List<? extends PhenotypicFeature> getPhenotypicFeatures();
 

@@ -10,14 +10,14 @@ class IndividualDefault implements Individual {
     private final List<PhenotypicFeature> phenotypicFeatures;
     private final List<DiseaseStatus> diseases;
     private final Map<String, Genotype> genotypes;
-    private final Age age;
+    private final TimeElement age;
     private final Sex sex;
 
     protected IndividualDefault(String id,
                                 List<PhenotypicFeature> phenotypicFeatures,
                                 List<DiseaseStatus> diseases,
                                 Map<String, Genotype> genotypes,
-                                Age age,
+                                TimeElement age,
                                 Sex sex) {
         // assume that null checks has been made
         this.id = id;
@@ -32,7 +32,7 @@ class IndividualDefault implements Individual {
                                 List<PhenotypicFeature> phenotypicFeatures,
                                 List<DiseaseStatus> diseases,
                                 Map<String, Genotype> genotypes,
-                                Age age,
+                                TimeElement age,
                                 Sex sex) {
         return new IndividualDefault(
                 Objects.requireNonNull(id, "Individual ID must not be null"),
@@ -50,8 +50,8 @@ class IndividualDefault implements Individual {
     }
 
     @Override
-    public Optional<Age> getAge() {
-        return Optional.ofNullable(age);
+    public TimeElement getAge() {
+        return age;
     }
 
     @Override
