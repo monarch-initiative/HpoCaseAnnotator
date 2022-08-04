@@ -7,6 +7,7 @@ import javafx.beans.property.StringProperty;
 import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
 import org.monarchinitiative.hpo_case_annotator.model.v2.PedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.model.v2.PhenotypicFeature;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 
 import java.util.Optional;
 
@@ -78,7 +79,7 @@ public class ObservablePedigreeMember extends BaseObservableIndividual<PedigreeM
                 ", sex=" + getSex() +
                 ", phenotypicFeatures=" + getPhenotypicFeatures().stream().map(PhenotypicFeature::toString).toList() +
                 ", diseaseStates=" + getDiseaseStates().stream().map(DiseaseStatus::toString).toList() +
-                ", genotypes=" + getGenotypes().get() +
+                ", genotypes=" + getGenotypes().stream().map(VariantGenotype::toString).toList() +
                 "}";
     }
 

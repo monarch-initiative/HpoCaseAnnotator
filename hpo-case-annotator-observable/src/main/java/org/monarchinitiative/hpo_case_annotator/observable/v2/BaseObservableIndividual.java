@@ -4,7 +4,7 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 
 import java.util.*;
 
@@ -15,7 +15,7 @@ public abstract class BaseObservableIndividual<T extends Individual> implements 
     private final ObjectProperty<Sex> sex = new SimpleObjectProperty<>(this, "sex");
     private final ListProperty<ObservablePhenotypicFeature> phenotypicFeatures = new SimpleListProperty<>(this, "phenotypicFeatures", FXCollections.observableArrayList());
     private final ListProperty<ObservableDiseaseStatus> diseaseStates = new SimpleListProperty<>(this, "diseaseStates", FXCollections.observableArrayList());
-    private final MapProperty<String, Genotype> genotypes = new SimpleMapProperty<>(this, "genotypes", FXCollections.observableHashMap());
+    private final ListProperty<ObservableVariantGenotype> genotypes = new SimpleListProperty<>(this, "genotypes", FXCollections.observableArrayList(ObservableVariantGenotype.EXTRACTOR));
 
     protected BaseObservableIndividual() {
     }
@@ -32,7 +32,9 @@ public abstract class BaseObservableIndividual<T extends Individual> implements 
             for (DiseaseStatus ds : individual.getDiseaseStates())
                 diseaseStates.add(new ObservableDiseaseStatus(ds));
 
-            genotypes.putAll(individual.getGenotypes());
+            for (VariantGenotype vg : individual.getGenotypes())
+                genotypes.add(new ObservableVariantGenotype(vg));
+
         }
     }
 
@@ -73,7 +75,15 @@ public abstract class BaseObservableIndividual<T extends Individual> implements 
     }
 
     @Override
-    public MapProperty<String, Genotype> getGenotypes() {
+    public ObservableList<ObservableVariantGenotype> getGenotypes() {
+        return genotypes;
+    }
+
+    public void setGenotypes(ObservableList<ObservableVariantGenotype> genotypes) {
+        this.genotypes.set(genotypes);
+    }
+
+    public ListProperty<ObservableVariantGenotype> genotypesProperty() {
         return genotypes;
     }
 

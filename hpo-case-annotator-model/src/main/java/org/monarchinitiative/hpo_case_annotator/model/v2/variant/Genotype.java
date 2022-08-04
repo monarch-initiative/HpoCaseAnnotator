@@ -23,4 +23,13 @@ public enum Genotype {
         return name;
     }
 
+    public static Genotype parseCode(String value) {
+        return switch (value) {
+            case "0/1" -> HETEROZYGOUS;
+            case "1/1" -> HOMOZYGOUS_ALTERNATE;
+            case "0/0" -> HOMOZYGOUS_REFERENCE;
+            case "1" -> HEMIZYGOUS;
+            default -> UNKNOWN;
+        };
+    }
 }

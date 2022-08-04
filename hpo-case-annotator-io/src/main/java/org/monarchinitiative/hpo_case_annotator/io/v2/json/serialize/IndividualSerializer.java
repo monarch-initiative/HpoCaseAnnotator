@@ -6,10 +6,9 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Individual;
 import org.monarchinitiative.hpo_case_annotator.model.v2.PhenotypicFeature;
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class IndividualSerializer extends StdSerializer<Individual> {
 
@@ -32,12 +31,10 @@ public class IndividualSerializer extends StdSerializer<Individual> {
         gen.writeEndArray();
 
         gen.writeArrayFieldStart("genotypes");
-        for (Map.Entry<String, Genotype> entry : individual.getGenotypes().entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .toList()) {
+        for (VariantGenotype vg : individual.getGenotypes()) {
             gen.writeStartObject();
-            gen.writeStringField("variantId", entry.getKey());
-            gen.writeStringField("genotype", entry.getValue().toString());
+            gen.writeStringField("variantId", vg.getId());
+            gen.writeStringField("genotype", vg.getGenotype().toString());
             gen.writeEndObject();
         }
         gen.writeEndArray();

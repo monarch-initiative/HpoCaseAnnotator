@@ -1,25 +1,22 @@
 package org.monarchinitiative.hpo_case_annotator.forms.pedigree;
 
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.ObjectBinding;
-import javafx.beans.binding.StringBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.binding.*;
+import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.image.Image;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsEditableComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
+import org.monarchinitiative.hpo_case_annotator.forms.component.age.ObservableTimeElementTableCell;
+import org.monarchinitiative.hpo_case_annotator.forms.util.GenotypeStringConverter;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableDiseaseStatus;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.*;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
@@ -54,9 +51,11 @@ public class PedigreeMember {
     @FXML
     private TableColumn<ObservablePhenotypicFeature, String> statusColumn;
     @FXML
-    private TableColumn<ObservablePhenotypicFeature, ObservableAge> onsetColumn;
+    private TableColumn<ObservablePhenotypicFeature, ObservableTimeElement> onsetColumn;
     @FXML
-    private TableColumn<ObservablePhenotypicFeature, ObservableAge> resolutionColumn;
+    private TableColumn<ObservablePhenotypicFeature, ObservableTimeElement> resolutionColumn;
+    @FXML
+    private TableColumn<ObservablePhenotypicFeature, String> modifiersColumn;
     @FXML
     private Button editDiseasesButton;
     @FXML
@@ -67,7 +66,24 @@ public class PedigreeMember {
     private TableColumn<ObservableDiseaseStatus, TermId> diseaseIdColumn;
     @FXML
     private TableColumn<ObservableDiseaseStatus, String> diseaseNameColumn;
-
+    @FXML
+    private TableView<ObservableVariantGenotype> genotypesTable;
+    @FXML
+    private TableColumn<ObservableVariantGenotype, Genotype> genotypeTableColumn;
+    @FXML
+    private TableColumn<ObservableVariantGenotype, String> variantIdTableColumn;
+    @FXML
+    private TableColumn<ObservableVariantGenotype, String> genomicAssemblyTableColumn;
+    @FXML
+    private TableColumn<ObservableVariantGenotype, String> contigTableColumn;
+    @FXML
+    private TableColumn<ObservableVariantGenotype, String> startTableColumn;
+    @FXML
+    private TableColumn<ObservableVariantGenotype, String> endTableColumn;
+    @FXML
+    private TableColumn<ObservableVariantGenotype, String> refTableColumn;
+    @FXML
+    private TableColumn<ObservableVariantGenotype, String> altTableColumn;
 
     /**
      * @param termSource a function to get ahold of {@link TermId} details. The function returns {@code null}
@@ -104,6 +120,10 @@ public class PedigreeMember {
         idColumn.setCellFactory(TermIdTableCell::new);
         labelColumn.setCellValueFactory(labelCellValueFactory(termSource));
         statusColumn.setCellValueFactory(cdf -> when(cdf.getValue().excludedProperty()).then("Excluded").otherwise("Present"));
+        onsetColumn.setCellFactory(tc -> new ObservableTimeElementTableCell<>());
+        onsetColumn.setCellValueFactory(cdf -> cdf.getValue().onsetProperty());
+        resolutionColumn.setCellFactory(tc -> new ObservableTimeElementTableCell<>());
+        resolutionColumn.setCellValueFactory(cdf -> cdf.getValue().resolutionProperty());
 
         // Diseases table view
         diseaseTable.itemsProperty().bind(select(item, "diseaseStates"));
@@ -112,7 +132,20 @@ public class PedigreeMember {
         diseaseIdColumn.setCellFactory(TermIdTableCell::new);
         diseaseNameColumn.setCellValueFactory(cdf -> select(cdf.getValue(), "diseaseId", "diseaseName"));
 
-        // TODO - bind genotypes
+        // Genotypes table view
+        genotypeTableColumn.setCellValueFactory(cdf -> cdf.getValue().genotypeProperty());
+        genotypeTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(GenotypeStringConverter.getInstance(), Genotype.values()));
+
+        variantIdTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getId()));
+        // TODO - populate the rest of the colums
+//        genomicAssemblyTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getGenomicAssembly()));
+//        contigTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getVariant().contigName()));
+//        startTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getCuratedVariant().getVariant().startOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
+//        endTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getCuratedVariant().getVariant().endOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
+//        refTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getVariant().ref()));
+//        altTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getVariant().alt()));
+
+        genotypesTable.itemsProperty().bind(select(item, "genotypes"));
     }
 
     private ObservableValue<? extends Image> createIndividualImageBinding() {
@@ -217,8 +250,8 @@ public class PedigreeMember {
     @FXML
     private void editPhenotypeAction(ActionEvent e) {
         Dialog<Boolean> dialog = new Dialog<>();
-        dialog.titleProperty().bind(concat("Individual ID: ", nullableStringProperty(item, "id")));
         dialog.setHeaderText("Edit phenotype terms");
+        dialog.titleProperty().bind(concat("Individual ID: ", nullableStringProperty(item, "id")));
         dialog.getDialogPane().setContent(new Label("Sorry, not yet implemented"));
         dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_CANCEL_BUTTONS);
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
@@ -240,7 +273,10 @@ public class PedigreeMember {
 
     @FXML
     private void editDiseasesAction(ActionEvent e) {
-        new Alert(Alert.AlertType.INFORMATION, "Not yet implemented", ButtonType.OK).showAndWait();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Not yet implemented", ButtonType.OK);
+        alert.setTitle("Edit diseases");
+        alert.setHeaderText("Sorry");
+        alert.showAndWait();
         e.consume();
     }
 
@@ -256,6 +292,7 @@ public class PedigreeMember {
         this.item.set(item);
     }
 
+    // TODO - move to an Util class with lazy loading.
     private static Map<Sex, Map<Boolean, Image>> loadSexAffectedIconsMap() {
         Map<Boolean, Image> female = new HashMap<>();
         female.put(true, loadImage("female-proband.png"));

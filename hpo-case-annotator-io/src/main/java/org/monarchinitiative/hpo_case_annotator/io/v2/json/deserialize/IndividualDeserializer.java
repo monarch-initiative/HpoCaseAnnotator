@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 
 import java.io.IOException;
 import java.util.*;
@@ -37,11 +38,11 @@ public class IndividualDeserializer extends StdDeserializer<Individual> {
             diseaseStatuses.add(codec.treeToValue(diseasesIterator.next(), DiseaseStatus.class));
         }
 
-        Map<String, Genotype> genotypeMap = new HashMap<>();
+        List<VariantGenotype> genotypes = new ArrayList<>();
         Iterator<JsonNode> genotypesIterator = node.get("genotypes").elements();
         while (genotypesIterator.hasNext()) {
             JsonNode genotypeNode = genotypesIterator.next();
-            genotypeMap.put(genotypeNode.get("variantId").asText(), Genotype.valueOf(genotypeNode.get("genotype").asText()));
+            genotypes.add(VariantGenotype.of(genotypeNode.get("variantId").asText(), Genotype.valueOf(genotypeNode.get("genotype").asText())));
         }
 
         List<PhenotypicFeature> phenotypicFeatures = new LinkedList<>();
@@ -55,7 +56,7 @@ public class IndividualDeserializer extends StdDeserializer<Individual> {
         return Individual.of(id,
                 phenotypicFeatures,
                 diseaseStatuses,
-                genotypeMap,
+                genotypes,
                 age,
                 sex);
     }

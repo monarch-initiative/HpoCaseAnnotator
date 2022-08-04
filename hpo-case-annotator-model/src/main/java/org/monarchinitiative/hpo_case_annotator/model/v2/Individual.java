@@ -2,17 +2,16 @@ package org.monarchinitiative.hpo_case_annotator.model.v2;
 
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 public interface Individual {
 
     static Individual of(String id,
                          List<PhenotypicFeature> phenotypicFeatures,
                          List<DiseaseStatus> diseases,
-                         Map<String, Genotype> genotypes,
+                         List<VariantGenotype> genotypes,
                          TimeElement age,
                          Sex sex) {
         return IndividualDefault.of(id,
@@ -38,9 +37,9 @@ public interface Individual {
     List<? extends DiseaseStatus> getDiseaseStates();
 
     /**
-     * @return map linking {@link CuratedVariant#md5Hex()} to the {@link Genotype} observed in this individual.
+     * @return list linking {@link CuratedVariant#md5Hex()} to the {@link Genotype} observed in this individual.
      */
-    Map<String, Genotype> getGenotypes();
+    List<? extends VariantGenotype> getGenotypes();
 
     Sex getSex();
 

@@ -1,6 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.model.v2;
 
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 
 import java.util.*;
 
@@ -9,14 +9,14 @@ class IndividualDefault implements Individual {
     private final String id;
     private final List<PhenotypicFeature> phenotypicFeatures;
     private final List<DiseaseStatus> diseases;
-    private final Map<String, Genotype> genotypes;
+    private final List<VariantGenotype> genotypes;
     private final TimeElement age;
     private final Sex sex;
 
     protected IndividualDefault(String id,
                                 List<PhenotypicFeature> phenotypicFeatures,
                                 List<DiseaseStatus> diseases,
-                                Map<String, Genotype> genotypes,
+                                List<VariantGenotype> genotypes,
                                 TimeElement age,
                                 Sex sex) {
         // assume that null checks has been made
@@ -31,7 +31,7 @@ class IndividualDefault implements Individual {
     static IndividualDefault of(String id,
                                 List<PhenotypicFeature> phenotypicFeatures,
                                 List<DiseaseStatus> diseases,
-                                Map<String, Genotype> genotypes,
+                                List<VariantGenotype> genotypes,
                                 TimeElement age,
                                 Sex sex) {
         return new IndividualDefault(
@@ -65,7 +65,7 @@ class IndividualDefault implements Individual {
     }
 
     @Override
-    public Map<String, Genotype> getGenotypes() {
+    public List<VariantGenotype> getGenotypes() {
         return genotypes;
     }
 

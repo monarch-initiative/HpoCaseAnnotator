@@ -11,6 +11,7 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.*;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.monarchinitiative.svart.*;
@@ -297,11 +298,11 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
             throw new ModelTransformationException(e);
         }
 
-        Map<String, Genotype> genotypes = new HashMap<>(variants.size());
+        List<VariantGenotype> genotypes = new ArrayList<>(variants.size());
         for (int i = 0; i < variants.size(); i++) {
             String hex = curatedVariants.get(i).md5Hex();
             Genotype genotype = transformGenotype(variants.get(i).getGenotype());
-            genotypes.put(hex, genotype);
+            genotypes.add(VariantGenotype.of(hex, genotype));
         }
 
         // here we only can assume that the proband had all the features since birth

@@ -1,6 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.model.v2;
 
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 
 import java.util.*;
 
@@ -16,7 +16,7 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
                                   boolean isProband,
                                   List<PhenotypicFeature> phenotypicFeatures,
                                   List<DiseaseStatus> diseases,
-                                  Map<String, Genotype> genotypes,
+                                  List<VariantGenotype> genotypes,
                                   TimeElement age,
                                   Sex sex) {
         super(id, phenotypicFeatures, diseases, genotypes, age, sex);
@@ -31,7 +31,7 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
                                     boolean isProband,
                                     Collection<? extends PhenotypicFeature> phenotypicFeatures,
                                     List<? extends DiseaseStatus> diseases,
-                                    Map<String, Genotype> genotypes,
+                                    List<? extends VariantGenotype> genotypes,
                                     TimeElement age,
                                     Sex sex) {
         // wrap the collections
@@ -41,7 +41,7 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
                 isProband,
                 List.copyOf(Objects.requireNonNull(phenotypicFeatures, "Phenotypic observations must not be null")),
                 List.copyOf(Objects.requireNonNull(diseases, "Diseases must not be null")),
-                Map.copyOf(Objects.requireNonNull(genotypes, "Genotypes must not be null")),
+                List.copyOf(Objects.requireNonNull(genotypes, "Genotypes must not be null")),
                 age,
                 Objects.requireNonNull(sex, "Sex must not be null"));
     }

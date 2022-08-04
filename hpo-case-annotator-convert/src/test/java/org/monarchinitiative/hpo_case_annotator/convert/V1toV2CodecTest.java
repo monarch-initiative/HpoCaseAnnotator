@@ -6,6 +6,7 @@ import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.MendelianVariantMetadata;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.StructuralVariantMetadata;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
@@ -15,7 +16,6 @@ import org.monarchinitiative.svart.assembly.GenomicAssemblies;
 import org.monarchinitiative.svart.assembly.GenomicAssembly;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -128,12 +128,12 @@ public class V1toV2CodecTest {
                         PhenotypicFeature.of(TermId.of("HP:9876543"), true, null, null)
                 ),
                 List.of(DiseaseStatus.of(DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF"), false)),
-                Map.of(
-                        "c9dda67d707ab3c69142d891d6a0a4e1", Genotype.HOMOZYGOUS_ALTERNATE, // sequence, mendelian variant
-                        "f2e88a99810ce259880f744fbbddc0f3", Genotype.HETEROZYGOUS, // sequence, somatic variant
-                        "bfed08fc27778a1587dcaebc2b455718", Genotype.HOMOZYGOUS_ALTERNATE, // sequence, splicing variant
-                        "94f38002744f2dfdbad129153880603f", Genotype.HETEROZYGOUS, // symbolic deletion
-                        "52665ac160d15a5b235e470935d8b1ab", Genotype.HETEROZYGOUS), // breakend variant
+                List.of(
+                        VariantGenotype.of("c9dda67d707ab3c69142d891d6a0a4e1", Genotype.HOMOZYGOUS_ALTERNATE), // sequence, mendelian variant
+                        VariantGenotype.of("f2e88a99810ce259880f744fbbddc0f3", Genotype.HETEROZYGOUS), // sequence, somatic variant
+                        VariantGenotype.of("bfed08fc27778a1587dcaebc2b455718", Genotype.HOMOZYGOUS_ALTERNATE), // sequence, splicing variant
+                        VariantGenotype.of("94f38002744f2dfdbad129153880603f", Genotype.HETEROZYGOUS), // symbolic deletion
+                        VariantGenotype.of("52665ac160d15a5b235e470935d8b1ab", Genotype.HETEROZYGOUS)), // breakend variant
                 age,
                 Sex.MALE)));
     }

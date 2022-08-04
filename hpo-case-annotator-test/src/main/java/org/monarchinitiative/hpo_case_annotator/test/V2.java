@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.test;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.*;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.monarchinitiative.svart.*;
@@ -12,7 +13,6 @@ import org.monarchinitiative.svart.assembly.GenomicAssembly;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 class V2 {
 
@@ -160,12 +160,12 @@ class V2 {
         DiseaseIdentifier diseaseIdentifier = DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF");
         List<DiseaseStatus> diseases = List.of(DiseaseStatus.of(diseaseIdentifier , false));
 
-        Map<String, Genotype> genotypes = Map.of(
-                mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
-                somaticVariant().md5Hex(), Genotype.HETEROZYGOUS,
-                splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
-                symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS,
-                symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS);
+        List<VariantGenotype> genotypes = List.of(
+                VariantGenotype.of(mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE),
+                VariantGenotype.of(somaticVariant().md5Hex(), Genotype.HETEROZYGOUS),
+                VariantGenotype.of(splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE),
+                VariantGenotype.of(symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS),
+                VariantGenotype.of(symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS));
 
         TimeElement hypertensionOnset = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(4, 6, null), null, null);
         TimeElement bronchiectasisOnset = TimeElement.of(TimeElement.TimeElementCase.AGE_RANGE, null, null, AgeRange.of(Age.of(10, null, null), Age.of(10, 6, null)), null);
@@ -197,12 +197,12 @@ class V2 {
                         PhenotypicFeature.of(TermId.of("HP:0002110"), false, abcBronchiectasisOnset, null) // Bronchiectasis
                 ),
                 List.of(DiseaseStatus.of(diseaseIdentifier, false)),
-                Map.of(
-                        mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
-                        somaticVariant().md5Hex(), Genotype.HETEROZYGOUS,
-                        splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
-                        symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS,
-                        symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS),
+                List.of(
+                        VariantGenotype.of(mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE),
+                        VariantGenotype.of(somaticVariant().md5Hex(), Genotype.HETEROZYGOUS),
+                        VariantGenotype.of(splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE),
+                        VariantGenotype.of(symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS),
+                        VariantGenotype.of(symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS)),
                 abcAge,
                 Sex.MALE);
 
@@ -220,12 +220,12 @@ class V2 {
                         PhenotypicFeature.of(TermId.of("HP:0002110"), true, defBronchiectasisOnset, null) // Bronchiectasis
                 ),
                 List.of(DiseaseStatus.of(diseaseIdentifier, true)),
-                Map.of(
-                        mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE,
-                        somaticVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE,
-                        splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
-                        symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS,
-                        symbolicBreakendVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE),
+                List.of(
+                        VariantGenotype.of(mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE),
+                        VariantGenotype.of(somaticVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE),
+                        VariantGenotype.of(splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE),
+                        VariantGenotype.of(symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS),
+                        VariantGenotype.of(symbolicBreakendVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE)),
                 defAge,
                 Sex.FEMALE);
 

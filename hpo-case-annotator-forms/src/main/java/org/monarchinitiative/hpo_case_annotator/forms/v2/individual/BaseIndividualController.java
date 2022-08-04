@@ -139,7 +139,7 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual<?>> e
         Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatesProperty());
 
         // genotypes
-        Bindings.bindContentBidirectional(individualVariantSummaryController.genotypes(), individual.getGenotypes());
+        Bindings.bindContentBidirectional(individualVariantSummaryController.genotypesList(), individual.getGenotypes());
     }
 
     @Override
