@@ -5,7 +5,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementC
 import org.monarchinitiative.hpo_case_annotator.forms.nvo.FamilyStudyController;
 import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree;
 import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMember;
-import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeViewController;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeView;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualController;
@@ -103,13 +103,13 @@ public class ControllerFactory implements HCAControllerFactory {
         } else if (clz.equals(Pedigree.class)) {
             return new Pedigree(this);
         } else if (clz.equals(PedigreeMember.class)) {
-            return new PedigreeMember(termId -> hpo.getTermMap().get(termId));
+            return new PedigreeMember(termId -> hpo.getTermMap().get(termId), this);
         } else if (clz.equals(IndividualIdsComponent.class)) {
             return new IndividualIdsComponent();
         } else if (clz.equals(TimeElementComponent.class)) {
             return new TimeElementComponent();
-        } else if (clz.equals(PhenotypeViewController.class)) {
-            return new PhenotypeViewController(termId -> hpo.getTermMap().get(termId));
+        } else if (clz.equals(PhenotypeView.class)) {
+            return new PhenotypeView(termId -> hpo.getTermMap().get(termId));
         }
 
         // publication & metadata

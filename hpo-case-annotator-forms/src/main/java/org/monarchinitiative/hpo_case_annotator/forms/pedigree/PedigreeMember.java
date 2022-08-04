@@ -1,18 +1,28 @@
 package org.monarchinitiative.hpo_case_annotator.forms.pedigree;
 
-import javafx.beans.binding.*;
-import javafx.beans.property.*;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.image.Image;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsEditableComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.ObservableTimeElementTableCell;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeView;
+import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.forms.util.GenotypeStringConverter;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
@@ -33,6 +43,7 @@ public class PedigreeMember {
 
     private static final Map<Sex, Map<Boolean, Image>> SEX_AFFECTED_ICONS = loadSexAffectedIconsMap();
     private final Function<TermId, Term> termSource;
+    private final HCAControllerFactory controllerFactory;
     private final ObjectProperty<ObservablePedigreeMember> item = new SimpleObjectProperty<>();
     @FXML
     private PedigreeMemberTitle pedigreeMemberTitle;
@@ -86,10 +97,12 @@ public class PedigreeMember {
     private TableColumn<ObservableVariantGenotype, String> altTableColumn;
 
     /**
-     * @param termSource a function to get ahold of {@link TermId} details. The function returns {@code null}
-     *                   for unknown {@link TermId}s.
+     * @param termSource        a function to get ahold of {@link TermId} details. The function returns {@code null}
+     *                          for unknown {@link TermId}s.
+     * @param controllerFactory controller factory for preparing controllers for app sub-elements.
      */
-    public PedigreeMember(Function<TermId, Term> termSource) {
+    public PedigreeMember(Function<TermId, Term> termSource, HCAControllerFactory controllerFactory) {
+        this.controllerFactory = controllerFactory;
         this.termSource = Objects.requireNonNull(termSource);
     }
 
@@ -222,8 +235,8 @@ public class PedigreeMember {
     @FXML
     private void editIdentifiersAction(ActionEvent e) {
         Dialog<Boolean> dialog = new Dialog<>();
-        dialog.titleProperty().bind(concat("Individual ID: ", nullableStringProperty(item, "id")));
         dialog.setHeaderText("Edit identifiers");
+        dialog.titleProperty().bind(concat("Individual ID: ", nullableStringProperty(item, "id")));
         IndividualIdsEditableComponent component = new IndividualIdsEditableComponent();
         component.setInitialData(item.getValue());
 
@@ -232,7 +245,9 @@ public class PedigreeMember {
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
 
         dialog.showAndWait()
-                .ifPresent(shouldUpdate -> {if (shouldUpdate) component.commit();});
+                .ifPresent(shouldUpdate -> {
+                    if (shouldUpdate) component.commit();
+                });
 
         e.consume();
     }
@@ -250,13 +265,28 @@ public class PedigreeMember {
     @FXML
     private void editPhenotypeAction(ActionEvent e) {
         Dialog<Boolean> dialog = new Dialog<>();
+        // TODO - make the dialog resizable
+        dialog.initOwner(pedigreeMemberTitle.getParent().getScene().getWindow());
+        dialog.initStyle(StageStyle.DECORATED);
         dialog.setHeaderText("Edit phenotype terms");
         dialog.titleProperty().bind(concat("Individual ID: ", nullableStringProperty(item, "id")));
-        dialog.getDialogPane().setContent(new Label("Sorry, not yet implemented"));
+        FXMLLoader loader = new FXMLLoader(PhenotypeView.class.getResource("PhenotypeView.fxml"));
+        loader.setControllerFactory(controllerFactory);
+        Parent view;
+        PhenotypeView controller;
+        try {
+            view = loader.load();
+            controller = loader.getController();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        controller.setInitialData(item.get()); // TODO - check non null?
+        dialog.getDialogPane().setContent(view);
         dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_CANCEL_BUTTONS);
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
         dialog.showAndWait()
-                .ifPresent(commit -> {
+                .ifPresent(shouldCommit -> {
+                    if (shouldCommit) controller.commit();
                 });
         e.consume();
     }

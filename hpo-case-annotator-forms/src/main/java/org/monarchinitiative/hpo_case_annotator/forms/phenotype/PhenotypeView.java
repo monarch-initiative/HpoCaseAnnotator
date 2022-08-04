@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.forms.phenotype;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -14,7 +15,7 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 import java.util.Objects;
 import java.util.function.Function;
 
-public class PhenotypeViewController implements DataEditController<ObservablePedigreeMember> {
+public class PhenotypeView implements DataEditController<ObservablePedigreeMember> {
 
     private final Function<TermId, Term> termSource;
 
@@ -25,13 +26,15 @@ public class PhenotypeViewController implements DataEditController<ObservablePed
     @FXML
     private TableColumn<ObservablePhenotypicFeature, TermId> termIdColumn;
     @FXML
+    private TableColumn<ObservablePhenotypicFeature, String> termLabel;
+    @FXML
     private PhenotypicFeature phenotypicFeature;
 
     /**
      * @param termSource a function to get ahold of {@link TermId} details. The function returns {@code null}
      *                   for unknown {@link TermId}s.
      */
-    public PhenotypeViewController(Function<TermId, Term> termSource) {
+    public PhenotypeView(Function<TermId, Term> termSource) {
         this.termSource = Objects.requireNonNull(termSource);
     }
 
@@ -39,8 +42,14 @@ public class PhenotypeViewController implements DataEditController<ObservablePed
     private void initialize() {
         phenotypeTerms.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         termIdColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().id()));
+        termLabel.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(getTermLabel(cdf)));
 
         phenotypicFeature.dataProperty().bind(phenotypeTerms.getSelectionModel().selectedItemProperty());
+    }
+
+    private String getTermLabel(TableColumn.CellDataFeatures<ObservablePhenotypicFeature, String> cdf) {
+        Term term = termSource.apply(cdf.getValue().id());
+        return term == null ? null : term.getName();
     }
 
     @Override

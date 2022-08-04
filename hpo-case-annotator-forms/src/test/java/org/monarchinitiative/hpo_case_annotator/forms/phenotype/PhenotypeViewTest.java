@@ -21,13 +21,13 @@ import java.util.concurrent.TimeUnit;
 
 @Disabled
 @ExtendWith(ApplicationExtension.class)
-public class PhenotypeViewControllerTest extends BaseControllerTest {
+public class PhenotypeViewTest extends BaseControllerTest {
 
-    private PhenotypeViewController controller;
+    private PhenotypeView controller;
 
     @Start
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(PhenotypeViewController.class.getResource("PhenotypeView.fxml"));
+        FXMLLoader loader = new FXMLLoader(PhenotypeView.class.getResource("PhenotypeView.fxml"));
 
         Parent parent = loader.load();
         loader.setControllerFactory(CONTROLLER_FACTORY);
