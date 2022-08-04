@@ -287,11 +287,12 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
                                               List<OntologyClass> phenotypes,
                                               List<Variant> variants,
                                               List<CuratedVariant> curatedVariants) throws ModelTransformationException {
-        // Me only have a single person in the v1 cases.
-        Age age;
+        // We have at most single person in the v1 cases.
+        TimeElement age;
         try {
             Period period = Period.parse(familyInfo.getAge()).normalized();
-            age = Age.ofYearsMonthsDays(period.getYears(), period.getMonths(), period.getDays());
+            Age a = Age.ofYearsMonthsDays(period.getYears(), period.getMonths(), period.getDays());
+            age = TimeElement.of(TimeElement.TimeElementCase.AGE, null, a, null, null);
         } catch (DateTimeParseException e) {
             throw new ModelTransformationException(e);
         }
@@ -304,7 +305,7 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         }
 
         // here we only can assume that the proband had all the features since birth
-        List<PhenotypicFeature> observations = transformPhenotypes(age, phenotypes);
+        List<PhenotypicFeature> observations = transformPhenotypes(phenotypes);
 
         PedigreeMember member = PedigreeMember.of(familyInfo.getFamilyOrProbandId(),
                 DEFAULT_PARENTAL_ID,
@@ -327,11 +328,13 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         };
     }
 
-    private static List<PhenotypicFeature> transformPhenotypes(Age age, List<OntologyClass> phenotypeList) {
+    private static List<PhenotypicFeature> transformPhenotypes(List<OntologyClass> phenotypeList) {
         List<PhenotypicFeature> phenotypes = new ArrayList<>(phenotypeList.size());
-        for (OntologyClass phenotype : phenotypeList) {
-            phenotypes.add(PhenotypicFeature.of(TermId.of(phenotype.getId()), phenotype.getNotObserved(), AgeRange.sinceBirthUntilAge(age)));
-        }
+
+        for (OntologyClass phenotype : phenotypeList)
+            // We do not have onset, and we certainly do not have the resolution.
+            phenotypes.add(PhenotypicFeature.of(TermId.of(phenotype.getId()), phenotype.getNotObserved(), null, null));
+
         return phenotypes;
     }
 

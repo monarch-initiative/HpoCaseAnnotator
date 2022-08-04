@@ -120,11 +120,12 @@ public class V1toV2CodecTest {
         FamilyStudy familyStudy = (FamilyStudy) study;
         List<? extends PedigreeMember> members = familyStudy.getMembers();
         assertThat(members, hasSize(1));
+        TimeElement age = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.ofYearsMonthsDays(10, 5, 4), null, null);
         assertThat(members.get(0), equalTo(PedigreeMember.of("FAM:001", "", "",
                 true,
                 List.of(
-                        PhenotypicFeature.of(TermId.of("HP:1234567"), false, AgeRange.sinceBirthUntilAge(Age.ofYearsMonthsDays(10, 5, 4))),
-                        PhenotypicFeature.of(TermId.of("HP:9876543"), true, AgeRange.sinceBirthUntilAge(Age.ofYearsMonthsDays(10, 5, 4)))
+                        PhenotypicFeature.of(TermId.of("HP:1234567"), false, null, null),
+                        PhenotypicFeature.of(TermId.of("HP:9876543"), true, null, null)
                 ),
                 List.of(DiseaseStatus.of(DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF"), false)),
                 Map.of(
@@ -133,7 +134,7 @@ public class V1toV2CodecTest {
                         "bfed08fc27778a1587dcaebc2b455718", Genotype.HOMOZYGOUS_ALTERNATE, // sequence, splicing variant
                         "94f38002744f2dfdbad129153880603f", Genotype.HETEROZYGOUS, // symbolic deletion
                         "52665ac160d15a5b235e470935d8b1ab", Genotype.HETEROZYGOUS), // breakend variant
-                Age.ofYearsMonthsDays(10, 5, 4),
+                age,
                 Sex.MALE)));
     }
 }
