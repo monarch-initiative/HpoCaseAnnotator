@@ -7,7 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Dialog;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseBindingObservableDataController;
-import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeController;
+import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree;
 import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationController;
 import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationEditable;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
@@ -25,7 +25,7 @@ public class FamilyStudyController extends BaseBindingObservableDataController<O
     @FXML
     private Parent pedigree;
     @FXML
-    private PedigreeController pedigreeController;
+    private Pedigree pedigreeController;
 
     @Override
     protected void bind(ObservableFamilyStudy data) {

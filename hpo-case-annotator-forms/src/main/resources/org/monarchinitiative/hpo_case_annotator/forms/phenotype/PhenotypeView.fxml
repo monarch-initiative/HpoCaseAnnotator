@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
+<?import java.net.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.*?>
 
-<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeature?>
-
-<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeViewController">
     <stylesheets>
-        <URL value="@../base.css"/>
-        <URL value="@phenotype-view.css"/>
+        <URL value="@../base.css" />
+        <URL value="@phenotype-view.css" />
     </stylesheets>
    <children>
-      <SplitPane VBox.vgrow="ALWAYS">
+      <SplitPane dividerPositions="0.5" VBox.vgrow="ALWAYS">
         <items>
             <AnchorPane>
                 <children>
-                    <VBox>
+                    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                         <TableView fx:id="phenotypeTerms">
                             <columns>
-                                <TableColumn fx:id="termIdColumn" text="Abc"/>
+                                <TableColumn fx:id="termIdColumn" text="ID" />
                             </columns>
                         </TableView>
                     </VBox>
@@ -28,7 +27,7 @@
             </AnchorPane>
             <AnchorPane id="phenotype-feature-pane">
                 <children>
-                    <PhenotypicFeature fx:id="phenotypicFeature"/>
+                    <PhenotypicFeature fx:id="phenotypicFeature" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                 </children>
             </AnchorPane>
         </items>

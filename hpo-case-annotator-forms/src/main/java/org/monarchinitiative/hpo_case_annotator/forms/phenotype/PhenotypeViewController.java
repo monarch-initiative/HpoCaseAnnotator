@@ -8,9 +8,15 @@ import javafx.scene.control.TableView;
 import org.monarchinitiative.hpo_case_annotator.forms.DataEditController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
+import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
+import java.util.Objects;
+import java.util.function.Function;
+
 public class PhenotypeViewController implements DataEditController<ObservablePedigreeMember> {
+
+    private final Function<TermId, Term> termSource;
 
     private ObservablePedigreeMember item;
 
@@ -21,6 +27,13 @@ public class PhenotypeViewController implements DataEditController<ObservablePed
     @FXML
     private PhenotypicFeature phenotypicFeature;
 
+    /**
+     * @param termSource a function to get ahold of {@link TermId} details. The function returns {@code null}
+     *                   for unknown {@link TermId}s.
+     */
+    public PhenotypeViewController(Function<TermId, Term> termSource) {
+        this.termSource = Objects.requireNonNull(termSource);
+    }
 
     @FXML
     private void initialize() {

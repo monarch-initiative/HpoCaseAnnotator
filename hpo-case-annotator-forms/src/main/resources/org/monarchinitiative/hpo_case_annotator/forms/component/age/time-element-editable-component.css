@@ -1,0 +1,7 @@
+.entries * {
+    -fx-max-width: 190px;
+}
+
+ComboBox {
+    -fx-max-width: 200;
+}

@@ -1,6 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.forms.component;
 
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
@@ -11,15 +10,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
+import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
 
 import java.io.IOException;
 
 import static javafx.beans.binding.Bindings.*;
 
 public class IndividualIdsComponent extends VBox {
-    private static final String DEFAULT_STYLECLASS = "individual-ids-component";
-    private final ObjectProperty<ObservableAge> age = new SimpleObjectProperty<>(new ObservableAge());
+    private final ObjectProperty<ObservableTimeElement> age = new SimpleObjectProperty<>();
     @FXML
     private TitledLabel individualId;
     @FXML
@@ -34,7 +33,6 @@ public class IndividualIdsComponent extends VBox {
     private Label ageSummary;
 
     public IndividualIdsComponent() {
-        getStyleClass().add(DEFAULT_STYLECLASS);
         FXMLLoader loader = new FXMLLoader(IndividualIdsComponent.class.getResource("IndividualIdsComponent.fxml"));
         loader.setRoot(this);
         loader.setController(this);
@@ -52,14 +50,16 @@ public class IndividualIdsComponent extends VBox {
     }
 
     private ObservableValue<String> ageSummaryBinding() {
-        BooleanBinding isGestational = selectBoolean(age, "gestational");
-        ObjectBinding<Integer> years = select(age, "years");
-        ObjectBinding<Integer> months = select(age, "months");
-        ObjectBinding<Integer> weeks = select(age, "weeks");
-        ObjectBinding<Integer> days = select(age, "days");
+        ObjectBinding<TimeElement.TimeElementCase> timeElementCase = select(age, "timeElementCase");
+        ObjectBinding<Integer> ageYears = select(age, "age", "years");
+        ObjectBinding<Integer> ageMonths = select(age, "age", "months");
+        ObjectBinding<Integer> ageDays = select(age, "age", "days");
+
+        ObjectBinding<Integer> gestationalWeeks = select(age, "gestationalAge", "weeks");
+        ObjectBinding<Integer> gestationalDays = select(age, "gestationalAge", "days");
         return new StringBinding() {
             {
-                bind(age, isGestational, years, months, weeks, days);
+                bind(age, timeElementCase, ageYears, ageMonths, ageDays, gestationalWeeks, gestationalDays);
             }
             @Override
             protected String computeValue() {
@@ -67,31 +67,43 @@ public class IndividualIdsComponent extends VBox {
                     return "Not provided";
 
                 StringBuilder builder = new StringBuilder();
-                if (isGestational.get()) {
-                    builder.append("Gestational age");
-                    Integer w = weeks.getValue();
-                    if (w != null)
-                        builder.append(", ")
-                                .append(w)
-                                .append(" weeks");
-                } else {
-                    builder.append("Postnatal age");
-                    Integer y = years.getValue();
-                    if (y != null)
-                        builder.append(", ")
-                                .append(y)
-                                .append(" years");
-                    Integer m = months.getValue();
-                    if (m != null)
-                        builder.append(", ")
-                                .append(m)
-                                .append(" months");
+                switch (timeElementCase.getValue()) {
+                    case GESTATIONAL_AGE -> {
+                        builder.append("Gestational age");
+                        Integer gw = gestationalWeeks.getValue();
+                        if (gw != null)
+                            builder.append(": ")
+                                    .append(gw)
+                                    .append(" weeks");
+                        Integer gd = gestationalDays.getValue();
+                        if (gd != null)
+                            builder.append(", ")
+                                    .append(gd)
+                                    .append(" days");
+                    }
+                    case AGE -> {
+                        builder.append("Age");
+                        Integer ay = ageYears.getValue();
+                        if (ay != null)
+                            builder.append(": ")
+                                    .append(ay)
+                                    .append(" years");
+                        Integer am = ageMonths.getValue();
+                        if (am != null)
+                            builder.append(", ")
+                                    .append(am)
+                                    .append(" months");
+                        Integer ad = ageDays.getValue();
+                        if (ad != null)
+                            builder.append(", ")
+                                    .append(ad)
+                                    .append(" days");
+                    }
+                    case AGE_RANGE ->
+                            builder.append("Using age range to represent individual's age is not supported.");
+                    case ONTOLOGY_CLASS ->
+                            builder.append("Using ontology class to represent individual's age is not supported.");
                 }
-                Integer d = days.getValue();
-                if (d != null)
-                    builder.append(", ")
-                            .append(d)
-                            .append(" days");
 
                 return builder.toString();
             }
@@ -119,7 +131,7 @@ public class IndividualIdsComponent extends VBox {
     public StringProperty sexProperty() {
         return sex.textProperty();
     }
-    public ObjectProperty<ObservableAge> ageProperty() {
+    public ObjectProperty<ObservableTimeElement> ageProperty() {
         return age;
     }
     public StringProperty probandProperty() {

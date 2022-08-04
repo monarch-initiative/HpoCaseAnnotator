@@ -92,12 +92,14 @@ public class PhenotypicFeatureController extends BindingObservableDataController
         feature.excludedProperty().bind(phenotypicFeatureIsExcluded);
 
         // observation onset & resolution
-        ObservableAgeRange ageRange = feature.getObservationAge();
+        // TODO - fix or discard
+//        ObservableAgeRange ageRange = feature.getObservationAge();
         // onset
-        if (ageRange != null) {
-        onsetAgeController.dataProperty().bindBidirectional(ageRange.onsetProperty());
-        resolutionAgeController.dataProperty().bindBidirectional(ageRange.resolutionProperty());
-        }
+        // TODO - fix or discard
+//        if (ageRange != null) {
+//        onsetAgeController.dataProperty().bindBidirectional(ageRange.onsetProperty());
+//        resolutionAgeController.dataProperty().bindBidirectional(ageRange.resolutionProperty());
+//        }
     }
 
     @Override
@@ -112,11 +114,12 @@ public class PhenotypicFeatureController extends BindingObservableDataController
 
 
         // onset & resolution
-        ObservableAgeRange ageRange = feature.getObservationAge();
-        if (ageRange != null) {
-            onsetAgeController.dataProperty().unbindBidirectional(ageRange.onsetProperty());
-            resolutionAgeController.dataProperty().unbindBidirectional(ageRange.resolutionProperty());
-        }
+        // TODO - fix or discard
+//        ObservableAgeRange ageRange = feature.getObservationAge();
+//        if (ageRange != null) {
+//            onsetAgeController.dataProperty().unbindBidirectional(ageRange.onsetProperty());
+//            resolutionAgeController.dataProperty().unbindBidirectional(ageRange.resolutionProperty());
+//        }
     }
 
     private String getLabelForTerm(TermId termId) {

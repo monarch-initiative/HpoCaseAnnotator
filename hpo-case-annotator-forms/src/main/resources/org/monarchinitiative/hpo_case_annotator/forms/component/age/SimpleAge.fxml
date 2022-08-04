@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.HBox">
+    <children>
+        <TitledLabel fx:id="years" name="Years" text="5" />
+        <TitledLabel fx:id="months" name="Months" text="2" />
+        <TitledLabel fx:id="days" name="Days" text="1" />
+    </children>
+</fx:root>

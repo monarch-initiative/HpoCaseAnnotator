@@ -117,7 +117,8 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual<?>> e
         individualIdTextField.textProperty().bindBidirectional(individual.idProperty());
 
         // age
-        ageController.dataProperty().bindBidirectional(individual.observableAgeProperty());
+        // TODO - fix or discard
+//        ageController.dataProperty().bindBidirectional(individual.observableAgeProperty());
 
         // sex
         if (individual.getSex() != null) {
@@ -146,7 +147,8 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual<?>> e
         individualIdTextField.textProperty().unbindBidirectional(individual.idProperty());
 
         // age
-        ageController.dataProperty().unbindBidirectional(individual.observableAgeProperty());
+        // TODO - fix or discard
+//        ageController.dataProperty().unbindBidirectional(individual.observableAgeProperty());
 
         // sex
         individual.sexProperty().unbind();

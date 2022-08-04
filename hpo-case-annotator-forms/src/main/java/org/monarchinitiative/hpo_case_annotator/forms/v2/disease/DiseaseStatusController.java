@@ -82,7 +82,8 @@ public class DiseaseStatusController<T extends BaseObservableIndividual<?>> exte
     protected void bind(T individual) {
         individualDetailController.idProperty().bind(individual.idProperty());
         individualDetailController.sexProperty().bind(individual.sexProperty().asString());
-        individualDetailController.ageLabel().bind(individual.getObservableAge().period().asString());
+        // TODO - fix or discard
+//        individualDetailController.ageLabel().bind(individual.getObservableAge().period().asString());
         Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatesProperty());
     }
 

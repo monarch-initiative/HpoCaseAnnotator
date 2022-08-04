@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
-import org.monarchinitiative.hpo_case_annotator.model.v2.PedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
@@ -52,7 +51,7 @@ public class PhenotypeBrowserControllerTest extends BaseControllerTest {
 
         controller.setData(new ObservablePedigreeMember(study.getMembers().get(0)));
 
-        Platform.runLater(() -> controller.setOntology(ONTOLOGY));
+        Platform.runLater(() -> controller.setOntology(HPO));
         Platform.runLater(() -> controller.dataProperty().bind(individual));
 
         robot.sleep(20, TimeUnit.SECONDS);

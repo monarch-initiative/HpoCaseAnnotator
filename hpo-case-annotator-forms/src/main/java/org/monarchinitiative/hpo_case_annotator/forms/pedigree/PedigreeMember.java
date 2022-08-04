@@ -4,13 +4,14 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsEditableComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
@@ -19,19 +20,22 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableDiseaseStatus;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
+import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 
 import static javafx.beans.binding.Bindings.*;
 
-public class PedigreeMember extends TitledPane {
+public class PedigreeMember {
 
-    private static final String DEFAULT_STYLECLASS = "pedigree-member";
     private static final Map<Sex, Map<Boolean, Image>> SEX_AFFECTED_ICONS = loadSexAffectedIconsMap();
+    private final Function<TermId, Term> termSource;
     private final ObjectProperty<ObservablePedigreeMember> item = new SimpleObjectProperty<>();
     @FXML
     private PedigreeMemberTitle pedigreeMemberTitle;
@@ -64,16 +68,13 @@ public class PedigreeMember extends TitledPane {
     @FXML
     private TableColumn<ObservableDiseaseStatus, String> diseaseNameColumn;
 
-    public PedigreeMember() {
-        getStyleClass().add(DEFAULT_STYLECLASS);
-        FXMLLoader loader = new FXMLLoader(PedigreeMember.class.getResource("PedigreeMember.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-        try {
-            loader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+    /**
+     * @param termSource a function to get ahold of {@link TermId} details. The function returns {@code null}
+     *                   for unknown {@link TermId}s.
+     */
+    public PedigreeMember(Function<TermId, Term> termSource) {
+        this.termSource = Objects.requireNonNull(termSource);
     }
 
     @FXML
@@ -91,7 +92,7 @@ public class PedigreeMember extends TitledPane {
         individualIdentifiers.sexProperty()
                 .bind(select(item, "sex").asString());
         individualIdentifiers.ageProperty()
-                .bind(select(item, "observableAge"));
+                .bind(select(item, "age"));
         individualIdentifiers.probandProperty()
                 .bind(when(selectBoolean(item, "proband"))
                         .then("Yes")
@@ -101,6 +102,7 @@ public class PedigreeMember extends TitledPane {
         phenotypes.itemsProperty().bind(select(item, "phenotypicFeatures"));
         idColumn.setCellValueFactory(cdf -> cdf.getValue().termIdProperty());
         idColumn.setCellFactory(TermIdTableCell::new);
+        labelColumn.setCellValueFactory(labelCellValueFactory(termSource));
         statusColumn.setCellValueFactory(cdf -> when(cdf.getValue().excludedProperty()).then("Excluded").otherwise("Present"));
 
         // Diseases table view
@@ -131,6 +133,16 @@ public class PedigreeMember extends TitledPane {
                         ? null
                         : sexMap.get(proband);
             }
+        };
+    }
+
+    private static Callback<TableColumn.CellDataFeatures<ObservablePhenotypicFeature, String>, ObservableValue<String>> labelCellValueFactory(Function<TermId, Term> termSource) {
+        return cdf -> {
+            Term term = termSource.apply(cdf.getValue().getTermId());
+            if (term == null)
+                return null;
+            else
+                return new ReadOnlyStringWrapper(term.getName());
         };
     }
 

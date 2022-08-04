@@ -4,15 +4,15 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataController;
-import org.monarchinitiative.hpo_case_annotator.forms.component.AgeComponent;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAgeRange;
+import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementEditableComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
@@ -43,13 +43,9 @@ public class PhenotypicFeature extends VBox implements ObservableDataController<
     @FXML
     private RadioButton absentRadioButton;
     @FXML
-    private VBox onsetComponent;
+    private TimeElementComponent onsetComponent;
     @FXML
-    private AgeComponent onsetComponentController;
-    @FXML
-    private VBox resolutionComponent;
-    @FXML
-    private AgeComponent resolutionComponentController;
+    private TimeElementComponent resolutionComponent;
 
     private BooleanBinding phenotypicFeatureIsExcluded;
 
@@ -108,12 +104,8 @@ public class PhenotypicFeature extends VBox implements ObservableDataController<
         feature.excludedProperty().bind(phenotypicFeatureIsExcluded);
 
         // observation onset & resolution
-        ObservableAgeRange ageRange = feature.getObservationAge();
-        // onset
-        if (ageRange != null) {
-        onsetComponentController.dataProperty().bind(ageRange.onsetProperty());
-        resolutionComponentController.dataProperty().bind(ageRange.resolutionProperty());
-        }
+        onsetComponent.dataProperty().bind(feature.onsetProperty());
+        resolutionComponent.dataProperty().bind(feature.resolutionProperty());
     }
 
     protected void unbind(ObservablePhenotypicFeature feature) {
@@ -121,16 +113,25 @@ public class PhenotypicFeature extends VBox implements ObservableDataController<
         termIdLabel.setText(null);
         nameLabel.setText(null);
         termDefinitionLabel.setText(null);
+    }
 
-        // status
-        feature.excludedProperty().unbind();
+    private void editOnset(ActionEvent event) {
+        // TODO - does this work?
+        Dialog<Boolean> dialog = new Dialog<>();
+//        dialog.titleProperty().bind(concat("Individual ID: ", nullableStringProperty(item, "id")));
+        dialog.setHeaderText("Edit phenotypic feature");
+        TimeElementEditableComponent edit = new TimeElementEditableComponent();
+        edit.setInitialData(item.get().getOnset());
 
-        // onset & resolution
-        ObservableAgeRange ageRange = feature.getObservationAge();
-        if (ageRange != null) {
-            onsetComponentController.dataProperty().unbind();
-            resolutionComponentController.dataProperty().unbind();
-        }
+        dialog.getDialogPane().setContent(edit);
+        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.UPDATE_CANCEL_BUTTONS);
+        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
+
+        dialog.showAndWait()
+                .filter(i -> i)
+                .ifPresent(shouldUpdate -> item.getValue().setOnset(edit.getEditedData()));
+
+        event.consume();
     }
 
     private String getLabelForTerm(TermId termId) {

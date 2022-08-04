@@ -40,10 +40,12 @@ public class PhenotypicFeaturesTableController {
         excludedTableColumn.setCellValueFactory(cd -> cd.getValue().excludedProperty());
         excludedTableColumn.setCellFactory(CheckBoxTableCell.forTableColumn(excludedTableColumn));
 
-        onsetTableColumn.setCellValueFactory(cd -> cd.getValue().getObservationAge().getOnset().period());
+        // TODO - implement or discard
+//        onsetTableColumn.setCellValueFactory(cd -> cd.getValue().getObservationAge().getOnset().period());
         onsetTableColumn.setCellFactory(PeriodTableCell.of());
 
-        resolutionTableColumn.setCellValueFactory(cd -> cd.getValue().getObservationAge().getResolution().period());
+        // TODO - implement or discard
+//        resolutionTableColumn.setCellValueFactory(cd -> cd.getValue().getObservationAge().getResolution().period());
         resolutionTableColumn.setCellFactory(PeriodTableCell.of());
 
         termsTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);

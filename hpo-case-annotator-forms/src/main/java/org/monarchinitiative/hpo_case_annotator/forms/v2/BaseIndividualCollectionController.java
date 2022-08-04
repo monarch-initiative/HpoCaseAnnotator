@@ -72,7 +72,8 @@ public abstract class BaseIndividualCollectionController<INDIVIDUAL extends Base
     @FXML
     protected void initialize() {
         idTableColumn.setCellValueFactory(cdf -> cdf.getValue().idProperty());
-        ageTableColumn.setCellValueFactory(cdf -> cdf.getValue().getObservableAge().period());
+        // TODO - fix or discard
+//        ageTableColumn.setCellValueFactory(cdf -> cdf.getValue().getObservableAge().period());
         ageTableColumn.setCellFactory(PeriodTableCell.of());
         sexTableColumn.setCellValueFactory(cdf -> cdf.getValue().sexProperty());
         sexTableColumn.setCellFactory(SexTableCell.of());

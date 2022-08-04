@@ -3,8 +3,11 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
-<fx:root alignment="CENTER_LEFT" stylesheets="@individual-ids-component.css" type="javafx.scene.layout.VBox"
-         xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementEditableComponent?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.VBox"
+         alignment="CENTER_LEFT" stylesheets="@individual-ids-component.css">
     <children>
         <VBox>
             <!-- Identifiers -->
@@ -27,7 +30,7 @@
                 <Label styleClass="h3" text="Age"/>
                 <HBox>
                     <children>
-                        <AgeEditableComponent fx:id="ageComponent"/>
+                        <TimeElementEditableComponent fx:id="ageComponent" HBox.hgrow="ALWAYS"/>
                     </children>
                 </HBox>
             </children>

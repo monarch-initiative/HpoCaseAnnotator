@@ -1,19 +1,31 @@
 package org.monarchinitiative.hpo_case_annotator.forms.pedigree;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.layout.Region;
+import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 
+import java.io.IOException;
 
 class ObservablePedigreeMemberListCell extends ListCell<ObservablePedigreeMember> {
 
-    private final PedigreeMember pedigreeMember = new PedigreeMember();
+    private final Region pedigreeMemberGraphic;
 
-    ObservablePedigreeMemberListCell(ListView<ObservablePedigreeMember> lv) {
+    ObservablePedigreeMemberListCell(HCAControllerFactory controllerFactory) {
         setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        FXMLLoader loader = new FXMLLoader(PedigreeMember.class.getResource("PedigreeMember.fxml"));
+        loader.setControllerFactory(controllerFactory);
+        PedigreeMember pedigreeMember;
+        try {
+            pedigreeMemberGraphic = loader.load();
+            pedigreeMember = loader.getController();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        pedigreeMemberGraphic.prefWidthProperty().bind(maxWidthProperty());
         pedigreeMember.itemProperty().bindBidirectional(itemProperty());
-        pedigreeMember.prefWidthProperty().bind(maxWidthProperty());
     }
 
     @Override
@@ -22,7 +34,7 @@ class ObservablePedigreeMemberListCell extends ListCell<ObservablePedigreeMember
         if (empty || item == null) {
             setGraphic(null);
         } else {
-            setGraphic(pedigreeMember);
+            setGraphic(pedigreeMemberGraphic);
         }
     }
 }

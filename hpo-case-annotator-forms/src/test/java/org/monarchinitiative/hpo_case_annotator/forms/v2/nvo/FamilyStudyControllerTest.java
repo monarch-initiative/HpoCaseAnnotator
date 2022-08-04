@@ -35,6 +35,7 @@ public class FamilyStudyControllerTest extends BaseControllerTest {
 
         Scene scene = new Scene(parent, 1200, 900);
         stage.setScene(scene);
+        stage.setTitle("Family study test");
         stage.initStyle(StageStyle.DECORATED);
         stage.show();
     }

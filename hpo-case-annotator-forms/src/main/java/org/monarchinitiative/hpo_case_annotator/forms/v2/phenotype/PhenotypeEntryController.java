@@ -77,8 +77,9 @@ public class PhenotypeEntryController {
 
         ObservablePhenotypicFeature feature = new ObservablePhenotypicFeature();
         feature.setTermId(ontologyTreeBrowserController.getSelectedTermId());
-        copyObservableAge(onsetAgeController.getData(), feature.getObservationAge().getOnset());
-        copyObservableAge(resolutionAgeController.getData(), feature.getObservationAge().getResolution());
+        // TODO - implement or delete the entire class.
+//        copyObservableAge(onsetAgeController.getData(), feature.getObservationAge().getOnset());
+//        copyObservableAge(resolutionAgeController.getData(), feature.getObservationAge().getResolution());
         phenotypicFeaturesTableController.observablePhenotypeDescriptions()
                 .add(feature);
     }

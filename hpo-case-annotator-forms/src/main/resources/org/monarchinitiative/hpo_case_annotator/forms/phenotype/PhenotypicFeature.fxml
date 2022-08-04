@@ -2,28 +2,30 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent?>
 
-<fx:root id="box" type="javafx.scene.layout.VBox" stylesheets="@phenotypic-feature.css"
-         xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" >
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.VBox" stylesheets="@phenotypic-feature.css"
+         id="box">
     <children>
-        <VBox styleClass="column" VBox.vgrow="SOMETIMES">
+        <VBox VBox.vgrow="SOMETIMES">
             <children>
             <Label styleClass="h3" text="Phenotype feature" />
             <VBox id="phenotypic-feature-column" styleClass="column">
                <children>
-                  <VBox styleClass="column">
+                  <VBox>
                      <children>
                         <Label text="ID" />
                             <Label id="term-id" fx:id="termIdLabel" wrapText="true" />
                      </children>
                   </VBox>
-                  <VBox styleClass="column">
+                  <VBox>
                      <children>
                         <Label text="Name" />
                             <Label id="term-name" fx:id="nameLabel" wrapText="true" />
                      </children>
                   </VBox>
-                  <VBox styleClass="column" VBox.vgrow="ALWAYS">
+                  <VBox VBox.vgrow="ALWAYS">
                      <children>
                         <Label text="Definition" />
                             <Label id="term-definition" fx:id="termDefinitionLabel" textAlignment="JUSTIFY" textOverrun="WORD_ELLIPSIS" wrapText="true" />
@@ -34,7 +36,7 @@
             </children>
         </VBox>
         <Separator VBox.vgrow="NEVER" />
-        <VBox styleClass="column">
+        <VBox>
             <children>
                 <Label styleClass="h3" text="Status" />
                 <RadioButton fx:id="presentRadioButton" mnemonicParsing="false" text="Present" />
@@ -42,18 +44,18 @@
             </children>
         </VBox>
         <Separator VBox.vgrow="NEVER" />
-        <VBox styleClass="column">
+        <VBox>
             <children>
                 <VBox>
                     <children>
                         <Label styleClass="h3" text="Onset" />
-                        <fx:include source="../component/AgeComponent.fxml" fx:id="onsetComponent"/>
+                        <TimeElementComponent fx:id="onsetComponent"/>
                     </children>
                 </VBox>
                 <VBox>
                     <children>
                         <Label styleClass="h3" text="Resolution" />
-                        <fx:include source="../component/AgeComponent.fxml" fx:id="resolutionComponent"/>
+                        <TimeElementComponent fx:id="resolutionComponent"/>
                     </children>
                 </VBox>
             </children>

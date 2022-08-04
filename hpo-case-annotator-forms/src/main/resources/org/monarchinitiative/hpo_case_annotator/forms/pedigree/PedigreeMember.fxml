@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.pedigree.*?>
 
-<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.control.TitledPane" stylesheets="@pedigree-member.css"
-         id="titled-pane-box" expanded="false" contentDisplay="GRAPHIC_ONLY">
+<TitledPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMember"
+            stylesheets="@pedigree-member.css"
+            id="titled-pane-box" contentDisplay="GRAPHIC_ONLY">
     <graphic>
         <PedigreeMemberTitle fx:id="pedigreeMemberTitle" />
     </graphic>
@@ -19,8 +19,8 @@
                     <children>
                         <StackPane onMouseEntered="#identifiersSectionMouseEntered" onMouseExited="#identifiersSectionMouseExited">
                             <children>
-                                <IndividualIdsComponent fx:id="individualIdentifiers" StackPane.alignment="CENTER"/>
-                                <Button fx:id="editIdentifiersButton" onAction="#editIdentifiersAction" contentDisplay="GRAPHIC_ONLY" styleClass="edit-button" StackPane.alignment="TOP_RIGHT"/>
+                                <IndividualIdsComponent fx:id="individualIdentifiers" StackPane.alignment="CENTER" />
+                                <Button fx:id="editIdentifiersButton" contentDisplay="GRAPHIC_ONLY" onAction="#editIdentifiersAction" styleClass="edit-button" StackPane.alignment="TOP_RIGHT" />
                             </children>
                         </StackPane>
                     </children>
@@ -30,60 +30,27 @@
                         <Label styleClass="h4" text="Phenotype features" />
                         <StackPane onMouseEntered="#phenotypesSectionMouseEntered" onMouseExited="#phenotypesSectionMouseExited">
                             <children>
-                                <TabPane id="phenotype-tabs" side="LEFT" tabClosingPolicy="UNAVAILABLE">
-                                    <tabs>
-                                        <Tab id="phenotype-features-tab" closable="false">
-                                            <graphic>
-                                                <ImageView fitHeight="25" preserveRatio="true">
-                                                    <Image url="@../icons/hpo-logo-black.png" />
-                                                </ImageView>
-                                            </graphic>
-                                            <tooltip>
-                                                <Tooltip>
-                                                    <text>HPO terms</text>
-                                                </Tooltip>
-                                            </tooltip>
-                                            <content>
-                                                <TableView id="hpo-terms-table" fx:id="phenotypes">
-                                                    <columns>
-                                                        <TableColumn fx:id="idColumn" editable="false" prefWidth="120.0" text="ID" />
-                                                        <TableColumn fx:id="labelColumn" editable="false" prefWidth="200.0" text="Label" />
-                                                        <TableColumn fx:id="statusColumn" editable="false" prefWidth="75.0" text="Status" />
-                                                        <TableColumn editable="false" prefWidth="75.0" text="Temporal">
-                                                            <columns>
-                                                                <TableColumn fx:id="onsetColumn" editable="false" prefWidth="75.0" text="Onset" />
-                                                                <TableColumn fx:id="resolutionColumn" editable="false" prefWidth="100.0" text="Resolution" />
-                                                            </columns>
-                                                        </TableColumn>
-                                                        <TableColumn fx:id="modifiersColumn" editable="false" prefWidth="75.0" text="Modifiers" />
-                                                    </columns>
-                                                    <columnResizePolicy>
-                                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                                    </columnResizePolicy>
-                                                    <placeholder>
-                                                        <Label text="No phenotype features" />
-                                                    </placeholder>
-                                                </TableView>
-                                            </content>
-                                        </Tab>
-                                        <Tab id="visits-tab" closable="false">
-                                            <graphic>
-                                                <ImageView fitHeight="25" preserveRatio="true">
-                                                    <Image url="@calendar.png" />
-                                                </ImageView>
-                                            </graphic>
-                                            <tooltip>
-                                                <Tooltip>
-                                                    <text>Visits</text>
-                                                </Tooltip>
-                                            </tooltip>
-                                            <content>
-                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                                            </content>
-                                        </Tab>
-                                    </tabs>
-                                </TabPane>
-                                <Button fx:id="editPhenotypeButton" contentDisplay="GRAPHIC_ONLY" onAction="#editPhenotypeAction" visible="false" styleClass="edit-button" StackPane.alignment="TOP_RIGHT"/>
+                                <TableView id="hpo-terms-table" fx:id="phenotypes">
+                                    <columns>
+                                        <TableColumn fx:id="idColumn" editable="false" prefWidth="120.0" text="ID" />
+                                        <TableColumn fx:id="labelColumn" editable="false" prefWidth="200.0" text="Label" />
+                                        <TableColumn fx:id="statusColumn" editable="false" prefWidth="75.0" text="Status" />
+                                        <TableColumn editable="false" prefWidth="75.0" text="Temporal">
+                                            <columns>
+                                                <TableColumn fx:id="onsetColumn" editable="false" prefWidth="75.0" text="Onset" />
+                                                <TableColumn fx:id="resolutionColumn" editable="false" prefWidth="100.0" text="Resolution" />
+                                            </columns>
+                                        </TableColumn>
+                                        <TableColumn fx:id="modifiersColumn" editable="false" prefWidth="75.0" text="Modifiers" />
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                    </columnResizePolicy>
+                                    <placeholder>
+                                        <Label text="No phenotype features" />
+                                    </placeholder>
+                                </TableView>
+                                <Button fx:id="editPhenotypeButton" contentDisplay="GRAPHIC_ONLY" onAction="#editPhenotypeAction" styleClass="edit-button" visible="false" StackPane.alignment="TOP_RIGHT" />
                             </children>
                         </StackPane>
                     </children>
@@ -95,18 +62,18 @@
                             <children>
                                 <TableView id="diseases-table" fx:id="diseaseTable">
                                     <columns>
-                                        <TableColumn fx:id="diseaseStatusColumn" id="disease-status" editable="false" text="Status" />
-                                        <TableColumn fx:id="diseaseIdColumn" id="disease-id" editable="false" text="ID" />
-                                        <TableColumn fx:id="diseaseNameColumn" id="disease-name" editable="false" text="Name" />
+                                        <TableColumn id="disease-status" fx:id="diseaseStatusColumn" editable="false" text="Status" />
+                                        <TableColumn id="disease-id" fx:id="diseaseIdColumn" editable="false" text="ID" />
+                                        <TableColumn id="disease-name" fx:id="diseaseNameColumn" editable="false" text="Name" />
                                     </columns>
                                     <columnResizePolicy>
                                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                     </columnResizePolicy>
                                     <placeholder>
-                                        <Label text="No diseases"/>
+                                        <Label text="No diseases" />
                                     </placeholder>
                                 </TableView>
-                                <Button fx:id="editDiseasesButton" contentDisplay="GRAPHIC_ONLY" onAction="#editDiseasesAction" visible="false" styleClass="edit-button" StackPane.alignment="TOP_RIGHT"/>
+                                <Button fx:id="editDiseasesButton" contentDisplay="GRAPHIC_ONLY" onAction="#editDiseasesAction" styleClass="edit-button" visible="false" StackPane.alignment="TOP_RIGHT" />
                             </children>
                         </StackPane>
                     </children>
@@ -114,4 +81,4 @@
             </children>
         </VBox>
     </content>
-</fx:root>
+</TitledPane>

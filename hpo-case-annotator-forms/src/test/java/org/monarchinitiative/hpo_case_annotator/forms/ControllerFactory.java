@@ -1,8 +1,11 @@
 package org.monarchinitiative.hpo_case_annotator.forms;
 
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.forms.component.AgeComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.nvo.FamilyStudyController;
+import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree;
+import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMember;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeViewController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualController;
@@ -14,21 +17,22 @@ import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsCom
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.cache.HgvsVariantController;
-import org.monarchinitiative.hpo_case_annotator.forms.visits.VisitDetailController;
-import org.monarchinitiative.hpo_case_annotator.forms.visits.VisitsController;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 public class ControllerFactory implements HCAControllerFactory {
 
     private final GenomicAssemblyRegistry genomicAssemblyRegistry;
     private final FunctionalAnnotationRegistry functionalAnnotationRegistry;
     private final GeneIdentifierService geneIdentifierService;
+    private final Ontology hpo;
 
     public ControllerFactory(GenomicAssemblyRegistry genomicAssemblyRegistry,
                              FunctionalAnnotationRegistry functionalAnnotationRegistry,
-                             GeneIdentifierService geneIdentifierService) {
+                             GeneIdentifierService geneIdentifierService, Ontology hpo) {
         this.genomicAssemblyRegistry = genomicAssemblyRegistry;
         this.functionalAnnotationRegistry = functionalAnnotationRegistry;
         this.geneIdentifierService = geneIdentifierService;
+        this.hpo = hpo;
     }
 
     public Object getController(Class<?> clz) {
@@ -96,16 +100,16 @@ public class ControllerFactory implements HCAControllerFactory {
         // New View option
         else if (clz.equals(FamilyStudyController.class)) {
             return new FamilyStudyController();
-        } else if (clz.equals(org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeController.class)) {
-            return new org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeController();
+        } else if (clz.equals(Pedigree.class)) {
+            return new Pedigree(this);
+        } else if (clz.equals(PedigreeMember.class)) {
+            return new PedigreeMember(termId -> hpo.getTermMap().get(termId));
         } else if (clz.equals(IndividualIdsComponent.class)) {
             return new IndividualIdsComponent();
-        } else if (clz.equals(VisitsController.class)) {
-            return new VisitsController();
-        } else if (clz.equals(VisitDetailController.class)) {
-            return new VisitDetailController();
-        } else if (clz.equals(AgeComponent.class)) {
-            return new AgeComponent();
+        } else if (clz.equals(TimeElementComponent.class)) {
+            return new TimeElementComponent();
+        } else if (clz.equals(PhenotypeViewController.class)) {
+            return new PhenotypeViewController(termId -> hpo.getTermMap().get(termId));
         }
 
         // publication & metadata

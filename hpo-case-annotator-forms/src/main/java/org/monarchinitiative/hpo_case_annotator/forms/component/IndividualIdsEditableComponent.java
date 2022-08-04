@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.DataEditController;
+import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementEditableComponent;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 
@@ -28,7 +29,7 @@ public class IndividualIdsEditableComponent extends VBox implements DataEditCont
     @FXML
     private TitledCheckBox proband;
     @FXML
-    private AgeEditableComponent ageComponent;
+    private TimeElementEditableComponent ageComponent;
 
     public IndividualIdsEditableComponent() {
         getStyleClass().add(DEFAULT_STYLECLASS);
@@ -66,7 +67,7 @@ public class IndividualIdsEditableComponent extends VBox implements DataEditCont
             maternalId.setText(data.getMaternalId().orElse(null));
             sex.setValue(data.getSex());
             proband.setSelected(data.isProband());
-            ageComponent.setInitialData(data.getObservableAge());
+            ageComponent.setInitialData(data.getAge());
             item = data;
         }
     }
@@ -78,7 +79,7 @@ public class IndividualIdsEditableComponent extends VBox implements DataEditCont
         item.setMaternalId(maternalId.getText());
         item.setSex(sex.getValue());
         item.setProband(proband.isSelected());
-        item.setObservableAge(ageComponent.getEditedData());
+        item.setAge(ageComponent.getEditedData());
 
         return item;
     }

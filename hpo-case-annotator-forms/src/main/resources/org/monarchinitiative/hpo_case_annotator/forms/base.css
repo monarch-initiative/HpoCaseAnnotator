@@ -87,6 +87,12 @@
     -fx-background-radius: 30px;
 }
 
+.clear-button {
+    -fx-graphic: url("icons/clear.png");
+    -fx-content-display: graphic-only;
+    -fx-background-radius: 30px;
+}
+
 .card {
     -fx-border-color: black;
     -fx-border-insets: 15px;

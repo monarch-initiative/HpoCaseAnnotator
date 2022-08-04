@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
-import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeController;
+import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilyStudy;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
 import org.testfx.api.FxRobot;
@@ -21,13 +21,13 @@ import java.util.concurrent.TimeUnit;
 
 @Disabled
 @ExtendWith(ApplicationExtension.class)
-public class PedigreeControllerTest extends BaseControllerTest {
+public class PedigreeTest extends BaseControllerTest {
 
-    private PedigreeController controller;
+    private Pedigree controller;
 
     @Start
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(PedigreeController.class.getResource("Pedigree.fxml"));
+        FXMLLoader loader = new FXMLLoader(Pedigree.class.getResource("Pedigree.fxml"));
         loader.setControllerFactory(CONTROLLER_FACTORY);
 
         Parent parent = loader.load();

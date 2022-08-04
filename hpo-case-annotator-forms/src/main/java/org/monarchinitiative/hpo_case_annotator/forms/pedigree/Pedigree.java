@@ -6,20 +6,26 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseBindingObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigree;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 
-public class PedigreeController extends BaseBindingObservableDataController<ObservablePedigree> {
+public class Pedigree extends BaseBindingObservableDataController<ObservablePedigree> {
 
+    private final HCAControllerFactory controllerFactory;
     @FXML
     private Label summary;
     @FXML
     private ListView<ObservablePedigreeMember> members;
 
+    public Pedigree(HCAControllerFactory controllerFactory) {
+        this.controllerFactory = controllerFactory;
+    }
+
     @Override
     protected void initialize() {
         super.initialize();
-        members.setCellFactory(ObservablePedigreeMemberListCell::new);
+        members.setCellFactory(lv -> new ObservablePedigreeMemberListCell(controllerFactory));
     }
 
     @Override

@@ -32,8 +32,9 @@ public class PhenotypeViewControllerTest extends BaseControllerTest {
         loader.setControllerFactory(CONTROLLER_FACTORY);
         controller = loader.getController();
 
-        Scene scene = new Scene(parent, 1200, 900);
+        Scene scene = new Scene(parent);
         stage.setScene(scene);
+        stage.setTitle("Phenotype view test");
         stage.initStyle(StageStyle.DECORATED);
         stage.show();
     }

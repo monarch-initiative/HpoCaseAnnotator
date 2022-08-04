@@ -88,7 +88,8 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual<?>> e
     protected void bind(T individual) {
         individualDetailController.idProperty().bind(individual.idProperty());
         individualDetailController.sexProperty().bind(individual.sexProperty().asString());
-        individualDetailController.ageLabel().bind(individual.getObservableAge().period().asString());
+        // TODO - fix or discard
+//        individualDetailController.ageLabel().bind(individual.getObservableAge().period().asString());
         Bindings.bindContentBidirectional(phenotypicFeaturesTableController.observablePhenotypeDescriptions(), individual.getObservablePhenotypicFeatures());
     }
 
@@ -117,8 +118,9 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual<?>> e
             // TODO - implement proper visit age form
             ObjectProperty<ObservableAge> visitAge = new SimpleObjectProperty<>(new ObservableAge());
             controller.onsetAge().bindBidirectional(visitAge);
-            if (individual != null)
-                controller.resolutionAge().bindBidirectional(individual.observableAgeProperty());
+            // TODO - fix or discard
+//            if (individual != null)
+//                controller.resolutionAge().bindBidirectional(individual.observableAgeProperty());
 
             // show stage
             Stage stage = new Stage();
@@ -132,8 +134,9 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual<?>> e
             controller.ontologyProperty().unbind();
             Bindings.unbindContentBidirectional(controller.observablePhenotypicFeatures(), phenotypicFeaturesTableController.observablePhenotypeDescriptions());
             controller.onsetAge().unbindBidirectional(visitAge);
-            if (individual != null)
-                controller.resolutionAge().unbindBidirectional(individual.observableAgeProperty());
+            // TODO - fix or discard
+//            if (individual != null)
+//                controller.resolutionAge().unbindBidirectional(individual.observableAgeProperty());
         } catch (IOException ex) {
             LOGGER.warn("Error while adding phenotype features: {}", ex.getMessage(), ex);
         }
