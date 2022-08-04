@@ -1,7 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.forms.publication;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,7 +17,7 @@ public class PublicationEditable extends VBox implements DataEditController<Obse
 
     private static final String DEFAULT_STYLECLASS = "publication-editable";
 
-    private final ObjectProperty<ObservablePublication> item = new SimpleObjectProperty<>();
+    private ObservablePublication item;
 
     @FXML
     private Parent publication;
@@ -56,46 +54,30 @@ public class PublicationEditable extends VBox implements DataEditController<Obse
 
     @FXML
     private void initialize() {
-        publicationController.dataProperty().bind(item);
         year.setTextFormatter(yearTextFormatter);
-        item.addListener((obs, old, novel) -> {
-            if (novel == null) {
-                title.setText(null);
-                authors.setText(null);
-                journal.setText(null);
-                year.setText(null);
-                volume.setText(null);
-                pages.setText(null);
-                pmid.setText(null);
-            } else {
-                title.setText(novel.getTitle());
-                authors.setText(novel.getAuthors());
-                journal.setText(novel.getJournal());
-                yearTextFormatter.setValue(novel.getYear());
-                volume.setText(novel.getVolume());
-                pages.setText(novel.getPages());
-                pmid.setText(novel.getPmid());
-            }
-        });
     }
 
     @Override
     public void setInitialData(ObservablePublication data) {
-        item.set(Objects.requireNonNullElseGet(data, ObservablePublication::new));
+        item = Objects.requireNonNull(data);
+        publicationController.setData(item);
+        title.setText(data.getTitle());
+        authors.setText(data.getAuthors());
+        journal.setText(data.getJournal());
+        yearTextFormatter.setValue(data.getYear());
+        volume.setText(data.getVolume());
+        pages.setText(data.getPages());
+        pmid.setText(data.getPmid());
     }
 
     @Override
-    public ObservablePublication getEditedData() {
-        ObservablePublication op = item.get();
-
-        op.setTitle(title.getText());
-        op.setAuthors(authors.getText());
-        op.setJournal(journal.getText());
-        op.setYear(yearTextFormatter.getValue());
-        op.setVolume(volume.getText());
-        op.setPages(pages.getText());
-        op.setPmid(pmid.getText());
-
-        return op;
+    public void commit() {
+        item.setTitle(title.getText());
+        item.setAuthors(authors.getText());
+        item.setJournal(journal.getText());
+        item.setYear(yearTextFormatter.getValue());
+        item.setVolume(volume.getText());
+        item.setPages(pages.getText());
+        item.setPmid(pmid.getText());
     }
 }

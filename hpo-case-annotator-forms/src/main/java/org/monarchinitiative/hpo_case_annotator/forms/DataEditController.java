@@ -4,6 +4,5 @@ public interface DataEditController<T> {
 
     void setInitialData(T data);
 
-    T getEditedData();
-
+    void commit();
 }

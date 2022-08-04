@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilyStudy;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
@@ -43,11 +44,15 @@ public class PhenotypeViewControllerTest extends BaseControllerTest {
     public void test(FxRobot robot) throws Exception {
         ObservableFamilyStudy familyStudy = new ObservableFamilyStudy(TestData.V2.comprehensiveFamilyStudy());
 
-        Platform.runLater(() -> controller.setInitialData(familyStudy.getPedigree().membersProperty().get(0)));
+        ObservablePedigreeMember member = familyStudy.getPedigree().membersProperty().get(0);
+        Platform.runLater(() -> controller.setInitialData(member));
 
         robot.sleep(60, TimeUnit.SECONDS);
 
-        System.err.println(controller.getEditedData());
+        System.err.println(member);
+        Platform.runLater(() -> controller.commit());
+        robot.sleep(1, TimeUnit.SECONDS);
+        System.err.println(member);
     }
 
 }

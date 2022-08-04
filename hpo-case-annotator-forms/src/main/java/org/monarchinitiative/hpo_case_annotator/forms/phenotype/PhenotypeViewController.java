@@ -45,18 +45,12 @@ public class PhenotypeViewController implements DataEditController<ObservablePed
 
     @Override
     public void setInitialData(ObservablePedigreeMember data) {
-        if (data == null) {
-            item = new ObservablePedigreeMember();
-        } else {
-            phenotypeTerms.getItems().addAll(data.getObservablePhenotypicFeatures());
-        }
-        item = data;
+        item = Objects.requireNonNull(data);
+        phenotypeTerms.getItems().addAll(data.getObservablePhenotypicFeatures());
     }
 
     @Override
-    public ObservablePedigreeMember getEditedData() {
-
-
-        return item;
+    public void commit() {
+        // TODO - implement
     }
 }

@@ -10,6 +10,7 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class IndividualIdsEditableComponent extends VBox implements DataEditController<ObservablePedigreeMember> {
     private static final String DEFAULT_STYLECLASS = "individual-ids-component";
@@ -52,36 +53,25 @@ public class IndividualIdsEditableComponent extends VBox implements DataEditCont
 
     @Override
     public void setInitialData(ObservablePedigreeMember data) {
-        if (data == null) {
-            individualId.setText(null);
-            paternalId.setText(null);
-            maternalId.setText(null);
+        item = Objects.requireNonNull(data);
 
-            sex.setValue(null);
-            proband.setSelected(false);
-            ageComponent.setInitialData(null);
-            item = new ObservablePedigreeMember();
-        } else {
-            individualId.setText(data.getId());
-            paternalId.setText(data.getPaternalId().orElse(null));
-            maternalId.setText(data.getMaternalId().orElse(null));
-            sex.setValue(data.getSex());
-            proband.setSelected(data.isProband());
-            ageComponent.setInitialData(data.getAge());
-            item = data;
-        }
+        individualId.setText(data.getId());
+        paternalId.setText(data.getPaternalId().orElse(null));
+        maternalId.setText(data.getMaternalId().orElse(null));
+        sex.setValue(data.getSex());
+        proband.setSelected(data.isProband());
+        ageComponent.setInitialData(data.getAge());
+
     }
 
     @Override
-    public ObservablePedigreeMember getEditedData() {
+    public void commit() {
         item.setId(individualId.getText());
         item.setPaternalId(paternalId.getText());
         item.setMaternalId(maternalId.getText());
         item.setSex(sex.getValue());
         item.setProband(proband.isSelected());
-        item.setAge(ageComponent.getEditedData());
-
-        return item;
+        ageComponent.commit();
     }
 
 }

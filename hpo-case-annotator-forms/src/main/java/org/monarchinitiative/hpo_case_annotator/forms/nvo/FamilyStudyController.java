@@ -51,8 +51,7 @@ public class FamilyStudyController extends BaseBindingObservableDataController<O
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
 
         dialog.showAndWait()
-                .filter(i -> i)
-                .ifPresent(shouldUpdate -> publicationController.setData(component.getEditedData()));
+                .ifPresent(shouldUpdate -> {if (shouldUpdate) component.commit();});
 
         e.consume();
     }

@@ -128,8 +128,7 @@ public class PhenotypicFeature extends VBox implements ObservableDataController<
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
 
         dialog.showAndWait()
-                .filter(i -> i)
-                .ifPresent(shouldUpdate -> item.getValue().setOnset(edit.getEditedData()));
+                .ifPresent(shouldUpdate -> {if (shouldUpdate) edit.commit();});
 
         event.consume();
     }

@@ -199,8 +199,7 @@ public class PedigreeMember {
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
 
         dialog.showAndWait()
-                .filter(i -> i)
-                .ifPresent(shouldUpdate -> item.set(component.getEditedData()));
+                .ifPresent(shouldUpdate -> {if (shouldUpdate) component.commit();});
 
         e.consume();
     }
