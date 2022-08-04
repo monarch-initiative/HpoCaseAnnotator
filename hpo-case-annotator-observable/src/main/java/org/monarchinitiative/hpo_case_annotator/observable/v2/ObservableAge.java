@@ -1,63 +1,28 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Age;
 
-import java.time.Period;
-
 public class ObservableAge implements Age {
 
-    private final BooleanProperty gestational = new SimpleBooleanProperty(this, "gestational");
-    // Years, months, weeks, and days are nullabe, hence ObjectProperty
+    // Years, months, and days are nullabe, hence ObjectProperty.
     private final ObjectProperty<Integer> years = new SimpleObjectProperty<>(this, "years");
     private final ObjectProperty<Integer> months = new SimpleObjectProperty<>(this, "months");
-    private final ObjectProperty<Integer> weeks = new SimpleObjectProperty<>(this, "weeks");
     private final ObjectProperty<Integer> days = new SimpleObjectProperty<>(this, "days");
-    private final ObjectBinding<Period> period = createPeriodBinding();
 
     public ObservableAge() {
     }
 
     public ObservableAge(Age age) {
         if (age != null) {
-            gestational.set(age.isGestational());
             years.set(age.getYears());
             months.set(age.getMonths());
-            weeks.set(age.getWeeks());
             days.set(age.getDays());
         }
     }
 
-    private ObjectBinding<Period> createPeriodBinding() {
-        return Bindings.createObjectBinding(() -> {
-            int y = years.get();
-            Integer m = months.get();
-            Integer d = days.get();
-            if (m == null || d == null) {
-                return null;
-            } else {
-                return Period.of(y, m, d);
-            }
-        }, years, months, days);
-    }
-
     @Override
-    public boolean isGestational() {
-        return gestational.get();
-    }
-
-    public void setGestational(boolean value) {
-        this.gestational.set(value);
-    }
-
-    public BooleanProperty gestationalProperty() {
-        return gestational;
-    }
-
-    @Override
-    public int getYears() {
+    public Integer getYears() {
         return years.get();
     }
 
@@ -70,20 +35,7 @@ public class ObservableAge implements Age {
     }
 
     @Override
-    public int getWeeks() {
-        return weeks.get();
-    }
-
-    public void setWeeks(Integer weeks) {
-        this.weeks.setValue(weeks);
-    }
-
-    public ObjectProperty<Integer> weeksProperty() {
-        return weeks;
-    }
-
-    @Override
-    public int getMonths() {
+    public Integer getMonths() {
         return months.get();
     }
 
@@ -96,7 +48,7 @@ public class ObservableAge implements Age {
     }
 
     @Override
-    public int getDays() {
+    public Integer getDays() {
         return days.get();
     }
 
@@ -108,17 +60,11 @@ public class ObservableAge implements Age {
         return days;
     }
 
-    public ObjectBinding<Period> period() {
-        return period;
-    }
-
     @Override
     public String toString() {
         return "ObservableAge{" +
-                "isGestational=" + gestational.get() +
-                ", years=" + years.get() +
+                "years=" + years.get() +
                 ", months=" + months.get() +
-                ", weeks=" + weeks.get() +
                 ", days=" + days.get() +
                 '}';
     }

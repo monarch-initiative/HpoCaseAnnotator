@@ -11,7 +11,8 @@ public class ObservablePhenotypicFeature implements PhenotypicFeature {
 
     private final ObjectProperty<TermId> termId = new SimpleObjectProperty<>(this, "termId");
     private final BooleanProperty excluded = new SimpleBooleanProperty(this, "excluded");
-    private final ObjectProperty<ObservableAgeRange> observationAge = new SimpleObjectProperty<>(this, "observationAge");
+    private final ObjectProperty<ObservableTimeElement> onset = new SimpleObjectProperty<>(this, "onset");
+    private final ObjectProperty<ObservableTimeElement> resolution = new SimpleObjectProperty<>(this, "resolution");
 
     public ObservablePhenotypicFeature() {
     }
@@ -22,8 +23,11 @@ public class ObservablePhenotypicFeature implements PhenotypicFeature {
 
             excluded.set(phenotypicFeature.isExcluded());
 
-            if (phenotypicFeature.getObservationAge() != null)
-                observationAge.set(new ObservableAgeRange(phenotypicFeature.getObservationAge()));
+            if (phenotypicFeature.getOnset() != null)
+                onset.set(new ObservableTimeElement(phenotypicFeature.getOnset()));
+
+            if (phenotypicFeature.getResolution() != null)
+                resolution.set(new ObservableTimeElement(phenotypicFeature.getResolution()));
         }
     }
 
@@ -58,12 +62,29 @@ public class ObservablePhenotypicFeature implements PhenotypicFeature {
     }
 
     @Override
-    public ObservableAgeRange getObservationAge() {
-        return observationAge.get();
+    public ObservableTimeElement getOnset() {
+        return onset.get();
     }
 
-    public void setObservationAge(ObservableAgeRange observationAge) {
-        this.observationAge.set(observationAge);
+    public void setOnset(ObservableTimeElement onset) {
+        this.onset.set(onset);
+    }
+
+    public ObjectProperty<ObservableTimeElement> onsetProperty() {
+        return onset;
+    }
+
+    @Override
+    public ObservableTimeElement getResolution() {
+        return resolution.get();
+    }
+
+    public void setResolution(ObservableTimeElement resolution) {
+        this.resolution.set(resolution);
+    }
+
+    public ObjectProperty<ObservableTimeElement> resolutionProperty() {
+        return resolution;
     }
 
     @Override
@@ -71,7 +92,8 @@ public class ObservablePhenotypicFeature implements PhenotypicFeature {
         return "ObservablePhenotypicFeature{" +
                 "termId=" + termId.get() +
                 ", excluded=" + excluded.get() +
-                ", observationAge=" + observationAge.get() +
+                ", onset=" + onset.get() +
+                ", resolution=" + resolution.get() +
                 '}';
     }
 }

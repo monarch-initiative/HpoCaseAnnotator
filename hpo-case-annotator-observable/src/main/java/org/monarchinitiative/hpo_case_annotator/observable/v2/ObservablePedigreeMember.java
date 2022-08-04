@@ -19,13 +19,6 @@ public class ObservablePedigreeMember extends BaseObservableIndividual<PedigreeM
     public ObservablePedigreeMember() {
     }
 
-    public ObservablePedigreeMember(Builder builder) {
-        super(builder);
-        paternalId.set(builder.parentalId);
-        maternalId.set(builder.maternalId);
-        proband.set(builder.isProband);
-    }
-
     public ObservablePedigreeMember(PedigreeMember pedigreeMember) {
         super(pedigreeMember);
         if (pedigreeMember != null) {
@@ -74,10 +67,6 @@ public class ObservablePedigreeMember extends BaseObservableIndividual<PedigreeM
         return proband;
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
     @Override
     public String toString() {
         return "ObservablePedigreeMember{" +
@@ -85,49 +74,12 @@ public class ObservablePedigreeMember extends BaseObservableIndividual<PedigreeM
                 ", paternalId=" + paternalId.get() +
                 ", maternalId=" + maternalId.get() +
                 ", proband=" + proband.get() +
-                ", age=" + getObservableAge() +
+                ", age=" + getAge() +
                 ", sex=" + getSex() +
                 ", phenotypicFeatures=" + getPhenotypicFeatures().stream().map(PhenotypicFeature::toString).toList() +
                 ", diseaseStates=" + getDiseaseStates().stream().map(DiseaseStatus::toString).toList() +
                 ", genotypes=" + getGenotypes().get() +
                 "}";
-    }
-
-    public static class Builder extends BaseObservableIndividual.Builder<Builder> {
-
-        private String parentalId;
-        private String maternalId;
-        private boolean isProband;
-
-        protected Builder() {
-            super();
-        }
-
-        public Builder setParentalId(String parentalId) {
-            this.parentalId = parentalId;
-            return self();
-        }
-
-        public Builder setMaternalId(String maternalId) {
-            this.maternalId = maternalId;
-            return self();
-        }
-
-        public Builder setProband(boolean proband) {
-            isProband = proband;
-            return self();
-        }
-
-        @Override
-        protected Builder self() {
-            return this;
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public ObservablePedigreeMember build() {
-            return new ObservablePedigreeMember(this);
-        }
     }
 
 }
