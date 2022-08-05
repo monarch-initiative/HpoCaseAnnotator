@@ -206,19 +206,19 @@
         "isExcluded" : false
       } ],
       "genotypes" : [ {
-        "variantId" : "c9dda67d707ab3c69142d891d6a0a4e1",
+        "variantMd5Hex" : "c9dda67d707ab3c69142d891d6a0a4e1",
         "genotype" : "HOMOZYGOUS_ALTERNATE"
       }, {
-        "variantId" : "f2e88a99810ce259880f744fbbddc0f3",
+        "variantMd5Hex" : "f2e88a99810ce259880f744fbbddc0f3",
         "genotype" : "HETEROZYGOUS"
       }, {
-        "variantId" : "bfed08fc27778a1587dcaebc2b455718",
+        "variantMd5Hex" : "bfed08fc27778a1587dcaebc2b455718",
         "genotype" : "HOMOZYGOUS_ALTERNATE"
       }, {
-        "variantId" : "94f38002744f2dfdbad129153880603f",
+        "variantMd5Hex" : "94f38002744f2dfdbad129153880603f",
         "genotype" : "HETEROZYGOUS"
       }, {
-        "variantId" : "ab671d73cb3a1ba57d3a31889c4d29cc",
+        "variantMd5Hex" : "ab671d73cb3a1ba57d3a31889c4d29cc",
         "genotype" : "HETEROZYGOUS"
       } ],
       "phenotypicFeatures" : [ {

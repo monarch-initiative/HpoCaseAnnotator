@@ -11,7 +11,7 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype
 public class ObservableVariantGenotype implements VariantGenotype, Observable {
 
     static final Callback<ObservableVariantGenotype, Observable[]> EXTRACTOR = ovg -> new Observable[]{ovg.genotype};
-    private String id;
+    private String md5Hex;
     private final ObjectProperty<Genotype> genotype = new SimpleObjectProperty<>(this, "genotype");
 
     public ObservableVariantGenotype() {
@@ -19,18 +19,18 @@ public class ObservableVariantGenotype implements VariantGenotype, Observable {
 
     public ObservableVariantGenotype(VariantGenotype variantGenotype) {
         if (variantGenotype != null) {
-            id = variantGenotype.getId();
+            md5Hex = variantGenotype.getMd5Hex();
             genotype.set(variantGenotype.getGenotype());
         }
     }
 
     @Override
-    public String getId() {
-        return id;
+    public String getMd5Hex() {
+        return md5Hex;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setMd5Hex(String md5Hex) {
+        this.md5Hex = md5Hex;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ObservableVariantGenotype implements VariantGenotype, Observable {
     @Override
     public String toString() {
         return "ObservableVariantGenotype{" +
-                "id='" + id + '\'' +
+                "md5Hex='" + md5Hex + '\'' +
                 ", genotype=" + genotype.get() +
                 '}';
     }

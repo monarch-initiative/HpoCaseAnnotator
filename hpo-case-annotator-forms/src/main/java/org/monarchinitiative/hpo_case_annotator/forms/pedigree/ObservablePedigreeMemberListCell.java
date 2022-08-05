@@ -27,7 +27,7 @@ class ObservablePedigreeMemberListCell extends ListCell<ObservablePedigreeMember
             throw new RuntimeException(e);
         }
         pedigreeMemberGraphic.prefWidthProperty().bind(maxWidthProperty());
-        pedigreeMember.itemProperty().bindBidirectional(itemProperty());
+        pedigreeMember.itemProperty().bind(itemProperty());
         pedigreeMember.variantsProperty().bind(variants);
     }
 

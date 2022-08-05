@@ -6,6 +6,7 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,18 +32,22 @@ import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.monarchinitiative.svart.CoordinateSystem;
 import org.monarchinitiative.svart.Strand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static javafx.beans.binding.Bindings.*;
 
 public class PedigreeMember {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PedigreeMember.class);
     private static final Map<Sex, Map<Boolean, Image>> SEX_AFFECTED_ICONS = loadSexAffectedIconsMap();
     private final Function<TermId, Term> termSource;
     private final HCAControllerFactory controllerFactory;
@@ -68,8 +73,8 @@ public class PedigreeMember {
     private TableColumn<ObservablePhenotypicFeature, ObservableTimeElement> onsetColumn;
     @FXML
     private TableColumn<ObservablePhenotypicFeature, ObservableTimeElement> resolutionColumn;
-    @FXML
-    private TableColumn<ObservablePhenotypicFeature, String> modifiersColumn;
+//    @FXML
+//    private TableColumn<ObservablePhenotypicFeature, String> modifiersColumn;
     @FXML
     private Button editDiseasesButton;
     @FXML
@@ -114,7 +119,7 @@ public class PedigreeMember {
         StringBinding individualId = nullableStringProperty(item, "id");
         pedigreeMemberTitle.probandId.textProperty().bind(individualId);
         pedigreeMemberTitle.icon.imageProperty().bind(createIndividualImageBinding());
-        pedigreeMemberTitle.summary.textProperty().bind(individualSummary());
+        pedigreeMemberTitle.summary.textProperty().bind(individualSummary(item));
         individualIdentifiers.individualIdProperty()
                 .bind(individualId);
         individualIdentifiers.paternalIdProperty()
@@ -160,19 +165,56 @@ public class PedigreeMember {
         refTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getVariant().ref()));
         altTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getVariant().alt()));
 
+        variants.addListener(handleAddingAndRemovingVariant(item));
         genotypesTable.itemsProperty().bind(variants);
     }
 
     private static ObservableValue<Genotype> extractGenotype(String variantMd5Hex, ObjectProperty<ObservablePedigreeMember> member) {
-        // TODO - implement properly. We must track adding and removal of the variants in the pedigree member.
         ObservablePedigreeMember m = member.get();
         if (m == null)
             return null;
+
         return m.getGenotypes().stream()
-                .filter(g -> g.getId().equals(variantMd5Hex))
+                .filter(g -> g.getMd5Hex().equals(variantMd5Hex))
                 .findFirst()
                 .map(ObservableVariantGenotype::genotypeProperty)
                 .orElse(null);
+    }
+
+    private static ListChangeListener<? super CuratedVariant> handleAddingAndRemovingVariant(ObjectProperty<ObservablePedigreeMember> item) {
+        return change -> {
+            ObservablePedigreeMember member = item.get();
+            if (member == null)
+                // Nothing to do
+                return;
+
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    for (CuratedVariant cv : change.getAddedSubList()) {
+                        if (member.getGenotypes().stream().anyMatch(ovg -> ovg.getMd5Hex().equals(cv.md5Hex()))) {
+                            LOGGER.warn("Adding variant but the individual already has a genotype: {}", cv.md5Hex());
+                        } else {
+                            ObservableVariantGenotype vg = new ObservableVariantGenotype();
+                            vg.setMd5Hex(cv.md5Hex());
+                            vg.setGenotype(Genotype.UNSET);
+                            member.getGenotypes().add(vg);
+                        }
+                    }
+                } else if (change.wasRemoved()) {
+                    for (CuratedVariant cv : change.getRemoved()) {
+                        Optional<ObservableVariantGenotype> opt = member.getGenotypes().stream()
+                                .filter(ovg -> ovg.getMd5Hex().equals(cv.md5Hex()))
+                                .findFirst();
+                        if (opt.isPresent())
+                            member.getGenotypes().remove(opt.get());
+                        else
+                            LOGGER.warn("Removed variant without genotype: {}", cv.md5Hex());
+                    }
+                } else {
+                    LOGGER.info("Variant change: {}", change);
+                }
+            }
+        };
     }
 
     private ObservableValue<? extends Image> createIndividualImageBinding() {
@@ -213,7 +255,7 @@ public class PedigreeMember {
                 .otherwise("N/A");
     }
 
-    private StringBinding individualSummary() {
+    private static StringBinding individualSummary(ObjectProperty<ObservablePedigreeMember> item) {
         ObjectBinding<ObservablePhenotypicFeature> features = select(item, "phenotypicFeatures");
 
         return new StringBinding() {

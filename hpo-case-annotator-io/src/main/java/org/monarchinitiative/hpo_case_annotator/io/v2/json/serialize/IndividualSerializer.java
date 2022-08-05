@@ -33,7 +33,7 @@ public class IndividualSerializer extends StdSerializer<Individual> {
         gen.writeArrayFieldStart("genotypes");
         for (VariantGenotype vg : individual.getGenotypes()) {
             gen.writeStartObject();
-            gen.writeStringField("variantId", vg.getId());
+            gen.writeStringField("variantMd5Hex", vg.getMd5Hex());
             gen.writeStringField("genotype", vg.getGenotype().toString());
             gen.writeEndObject();
         }

@@ -1,22 +1,22 @@
 package org.monarchinitiative.hpo_case_annotator.model.v2.variant;
 
 /**
- * A tuple for mapping variant ID to a particular genotype in an individual.
+ * A tuple for mapping variant MD5 hash to a particular genotype in an individual.
  */
 public interface VariantGenotype {
 
-    static VariantGenotype of(String id, Genotype genotype) {
-        return new VariantGenotypeDefault(id, genotype);
+    static VariantGenotype of(String md5Hex, Genotype genotype) {
+        return new VariantGenotypeDefault(md5Hex, genotype);
     }
 
     /**
-     * @return get variant ID.
+     * @return get variant MD5 hash.
      */
-    String getId();
+    String getMd5Hex();
 
     /**
      *
-     * @return get {@link Genotype} of the variant with given {@code id}.
+     * @return get {@link Genotype} of the variant with given {@code md5Hex}.
      */
     Genotype getGenotype();
 
