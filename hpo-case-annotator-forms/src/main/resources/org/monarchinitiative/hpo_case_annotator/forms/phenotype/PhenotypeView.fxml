@@ -3,7 +3,6 @@
 <?import java.net.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent?>
 
 <VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
@@ -17,7 +16,8 @@
         <items>
             <AnchorPane>
                 <children>
-                    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                         <children>
                             <Label styleClass="h2" text="Credentials"/>
                             <IndividualIdsComponent fx:id="individualIds"/>
@@ -40,7 +40,9 @@
             </AnchorPane>
             <AnchorPane id="phenotype-feature-pane">
                 <children>
-                    <PhenotypicFeature fx:id="phenotypicFeature" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                    <fx:include fx:id="phenotypicFeature" source="PhenotypicFeature.fxml"
+                                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                 </children>
             </AnchorPane>
         </items>

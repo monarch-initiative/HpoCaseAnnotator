@@ -6,6 +6,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.nvo.FamilyStudyController;
 import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree;
 import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeView;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeature;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualController;
@@ -111,6 +112,8 @@ public class ControllerFactory implements HCAControllerFactory {
             return new TimeElementComponent();
         } else if (clz.equals(PhenotypeView.class)) {
             return new PhenotypeView(termId -> hpo.getTermMap().get(termId));
+        } else if (clz.equals(PhenotypicFeature.class)) {
+            return new PhenotypicFeature(termId -> hpo.getTermMap().get(termId));
         }
 
         // publication & metadata

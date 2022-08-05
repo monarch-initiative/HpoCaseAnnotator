@@ -4,61 +4,63 @@
 <?import javafx.scene.layout.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent?>
 
-<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.VBox" stylesheets="@phenotypic-feature.css"
-         id="box">
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeature"
+      stylesheets="@phenotypic-feature.css"
+      id="box">
     <children>
-        <VBox VBox.vgrow="SOMETIMES">
-            <children>
-            <Label styleClass="h3" text="Phenotype feature" />
-            <VBox id="phenotypic-feature-column" styleClass="column">
-               <children>
-                  <VBox>
-                     <children>
-                        <Label text="ID" />
-                            <Label id="term-id" fx:id="termIdLabel" wrapText="true" />
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label text="Name" />
-                            <Label id="term-name" fx:id="nameLabel" wrapText="true" />
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label text="Definition" />
-                            <Label id="term-definition" fx:id="termDefinitionLabel" textAlignment="JUSTIFY" textOverrun="WORD_ELLIPSIS" wrapText="true" />
-                     </children>
-                  </VBox>
-               </children>
-            </VBox>
-            </children>
-        </VBox>
-        <Separator VBox.vgrow="NEVER" />
         <VBox>
             <children>
-                <Label styleClass="h3" text="Status" />
-                <RadioButton fx:id="presentRadioButton" mnemonicParsing="false" text="Present" />
-                <RadioButton fx:id="absentRadioButton" mnemonicParsing="false" text="Excluded" />
+                <Label styleClass="h3" text="Phenotype feature"/>
+                <VBox id="phenotypic-feature-column" styleClass="column">
+                    <children>
+                        <VBox>
+                            <children>
+                                <Label text="ID"/>
+                                <Label id="term-id" fx:id="termIdLabel" wrapText="true"/>
+                            </children>
+                        </VBox>
+                        <VBox>
+                            <children>
+                                <Label text="Name"/>
+                                <Label id="term-name" fx:id="nameLabel" wrapText="true"/>
+                            </children>
+                        </VBox>
+                        <VBox>
+                            <children>
+                                <Label text="Definition"/>
+                                <Label id="term-definition" fx:id="termDefinitionLabel" textAlignment="JUSTIFY"
+                                       textOverrun="WORD_ELLIPSIS" wrapText="true"/>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
             </children>
         </VBox>
-        <Separator VBox.vgrow="NEVER" />
+        <Separator VBox.vgrow="NEVER"/>
+        <VBox>
+            <children>
+                <Label styleClass="h3" text="Status"/>
+                <RadioButton fx:id="presentRadioButton" mnemonicParsing="false" text="Present"/>
+                <RadioButton fx:id="absentRadioButton" mnemonicParsing="false" text="Excluded"/>
+            </children>
+        </VBox>
+        <Separator VBox.vgrow="NEVER"/>
         <VBox>
             <children>
                 <VBox>
                     <children>
-                        <Label styleClass="h3" text="Onset" />
+                        <Label styleClass="h3" text="Onset"/>
                         <TimeElementComponent fx:id="onsetComponent"/>
                     </children>
                 </VBox>
                 <VBox>
                     <children>
-                        <Label styleClass="h3" text="Resolution" />
+                        <Label styleClass="h3" text="Resolution"/>
                         <TimeElementComponent fx:id="resolutionComponent"/>
                     </children>
                 </VBox>
             </children>
         </VBox>
     </children>
-</fx:root>
+</VBox>

@@ -29,8 +29,8 @@ public class PhenotypeViewTest extends BaseControllerTest {
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(PhenotypeView.class.getResource("PhenotypeView.fxml"));
 
-        Parent parent = loader.load();
         loader.setControllerFactory(CONTROLLER_FACTORY);
+        Parent parent = loader.load();
         controller = loader.getController();
 
         Scene scene = new Scene(parent);

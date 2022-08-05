@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.phenotype;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -33,7 +34,9 @@ public class PhenotypeView implements DataEditController<ObservablePedigreeMembe
     @FXML
     private TableColumn<ObservablePhenotypicFeature, String> termLabel;
     @FXML
-    private PhenotypicFeature phenotypicFeature;
+    private Parent phenotypicFeature;
+    @FXML
+    private PhenotypicFeature phenotypicFeatureController;
 
     /**
      * @param termSource a function to get ahold of {@link TermId} details. The function returns {@code null}
@@ -45,11 +48,11 @@ public class PhenotypeView implements DataEditController<ObservablePedigreeMembe
 
     @FXML
     private void initialize() {
-        phenotypeTerms.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         termIdColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().id()));
         termLabel.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(getTermLabel(cdf)));
 
-        phenotypicFeature.dataProperty().bind(phenotypeTerms.getSelectionModel().selectedItemProperty());
+        phenotypeTerms.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        phenotypicFeatureController.dataProperty().bind(phenotypeTerms.getSelectionModel().selectedItemProperty());
     }
 
     private String getTermLabel(TableColumn.CellDataFeatures<ObservablePhenotypicFeature, String> cdf) {

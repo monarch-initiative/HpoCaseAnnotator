@@ -2,34 +2,24 @@ package org.monarchinitiative.hpo_case_annotator.forms.phenotype;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.BaseBindingObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementEditableComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
-import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.Optional;
+import java.util.Objects;
+import java.util.function.Function;
 
-public class PhenotypicFeature extends VBox implements ObservableDataController<ObservablePhenotypicFeature> {
+public class PhenotypicFeature extends BaseBindingObservableDataController<ObservablePhenotypicFeature> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PhenotypicFeature.class);
-
-    private final ObjectProperty<ObservablePhenotypicFeature> item = new SimpleObjectProperty<>();
-    private final ObjectProperty<Ontology> ontology = new SimpleObjectProperty<>();
-
+    private final Function<TermId, Term> termSource;
     private final ToggleGroup presenceStatusToggleGroup = new ToggleGroup();
 
     @FXML
@@ -49,29 +39,17 @@ public class PhenotypicFeature extends VBox implements ObservableDataController<
 
     private BooleanBinding phenotypicFeatureIsExcluded;
 
-    public PhenotypicFeature() {
-        FXMLLoader loader = new FXMLLoader(PhenotypicFeature.class.getResource("PhenotypicFeature.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-
-        try {
-            loader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public PhenotypicFeature(Function<TermId, Term> termSource) {
+        this.termSource = Objects.requireNonNull(termSource);
     }
 
     @FXML
     protected void initialize() {
+        super.initialize();
         presentRadioButton.setToggleGroup(presenceStatusToggleGroup);
         absentRadioButton.setToggleGroup(presenceStatusToggleGroup);
 
         phenotypicFeatureIsExcluded = preparePhenotypicFeatureIsExcludedBinding();
-
-        item.addListener((obs, old, novel) -> {
-            if (old != null) unbind(old);
-            if (novel != null) bind(novel);
-        });
     }
 
     private BooleanBinding preparePhenotypicFeatureIsExcludedBinding() {
@@ -88,13 +66,13 @@ public class PhenotypicFeature extends VBox implements ObservableDataController<
         }, presenceStatusToggleGroup.selectedToggleProperty());
     }
 
-//    @Override
+    @Override
     protected void bind(ObservablePhenotypicFeature feature) {
         // term id & label
         termIdLabel.setText(feature.getTermId().getValue());
-//        nameLabel.setText(getLabelForTerm(feature.getTermId()));
-//        termDefinitionLabel.setText(getDefinitionForTermId(feature.getTermId()));
-//
+        nameLabel.setText(getLabelForTerm(feature.getTermId()));
+        termDefinitionLabel.setText(getDefinitionForTermId(feature.getTermId()));
+
         // status
         if (feature.isExcluded()) {
             presenceStatusToggleGroup.selectToggle(absentRadioButton);
@@ -108,6 +86,7 @@ public class PhenotypicFeature extends VBox implements ObservableDataController<
         resolutionComponent.dataProperty().bind(feature.resolutionProperty());
     }
 
+    @Override
     protected void unbind(ObservablePhenotypicFeature feature) {
         // term id & label
         termIdLabel.setText(null);
@@ -117,58 +96,34 @@ public class PhenotypicFeature extends VBox implements ObservableDataController<
 
     private void editOnset(ActionEvent event) {
         // TODO - does this work?
-        Dialog<Boolean> dialog = new Dialog<>();
+//        Dialog<Boolean> dialog = new Dialog<>();
 //        dialog.titleProperty().bind(concat("Individual ID: ", nullableStringProperty(item, "id")));
-        dialog.setHeaderText("Edit phenotypic feature");
-        TimeElementEditableComponent edit = new TimeElementEditableComponent();
-        edit.setInitialData(item.get().getOnset());
+//        dialog.setHeaderText("Edit phenotypic feature");
+//        TimeElementEditableComponent edit = new TimeElementEditableComponent();
+//        edit.setInitialData(item.get().getOnset());
 
-        dialog.getDialogPane().setContent(edit);
-        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.UPDATE_CANCEL_BUTTONS);
-        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
-
-        dialog.showAndWait()
-                .ifPresent(shouldUpdate -> {if (shouldUpdate) edit.commit();});
+//        dialog.getDialogPane().setContent(edit);
+//        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.UPDATE_CANCEL_BUTTONS);
+//        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
+//
+//        dialog.showAndWait()
+//                .ifPresent(shouldUpdate -> {if (shouldUpdate) edit.commit();});
 
         event.consume();
     }
 
     private String getLabelForTerm(TermId termId) {
-        return getOntologyOptional()
-                .flatMap(ontology -> getTerm(ontology, termId))
-                .map(Term::getName)
-                .orElse(null);
-    }
-
-    private Optional<Ontology> getOntologyOptional() {
-        return Optional.ofNullable(ontology.get());
-    }
-
-    private static Optional<Term> getTerm(Ontology ontology, TermId termId) {
-        return Optional.ofNullable(ontology.getTermMap().get(termId));
+        Term term = termSource.apply(termId);
+        if (term == null)
+            return "N/A";
+        return term.getName();
     }
 
     private String getDefinitionForTermId(TermId termId) {
-        return getOntologyOptional()
-                .flatMap(ontology -> getTerm(ontology, termId))
-                .map(Term::getDefinition)
-                .orElse(null);
+        Term term = termSource.apply(termId);
+        if (term == null)
+            return "N/A";
+        return term.getDefinition();
     }
 
-    public Ontology getOntology() {
-        return ontology.get();
-    }
-
-    public void setOntology(Ontology ontology) {
-        this.ontology.set(ontology);
-    }
-
-    public ObjectProperty<Ontology> ontologyProperty() {
-        return ontology;
-    }
-
-    @Override
-    public ObjectProperty<ObservablePhenotypicFeature> dataProperty() {
-        return item;
-    }
 }
