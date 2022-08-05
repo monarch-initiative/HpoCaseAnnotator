@@ -6,7 +6,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseBindingObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -21,17 +23,18 @@ public class PhenotypicFeature extends BaseBindingObservableDataController<Obser
     private static final Logger LOGGER = LoggerFactory.getLogger(PhenotypicFeature.class);
     private final Function<TermId, Term> termSource;
     private final ToggleGroup presenceStatusToggleGroup = new ToggleGroup();
-
     @FXML
-    private Label termIdLabel;
+    private TitledLabel termId;
     @FXML
-    private Label nameLabel;
+    private TitledLabel name;
     @FXML
-    private Label termDefinitionLabel;
+    private TitledLabel definition;
     @FXML
     private RadioButton presentRadioButton;
     @FXML
     private RadioButton absentRadioButton;
+    @FXML
+    private Button editTemporalFields;
     @FXML
     private TimeElementComponent onsetComponent;
     @FXML
@@ -50,6 +53,8 @@ public class PhenotypicFeature extends BaseBindingObservableDataController<Obser
         absentRadioButton.setToggleGroup(presenceStatusToggleGroup);
 
         phenotypicFeatureIsExcluded = preparePhenotypicFeatureIsExcludedBinding();
+
+        editTemporalFields.disableProperty().bind(data.isNull());
     }
 
     private BooleanBinding preparePhenotypicFeatureIsExcludedBinding() {
@@ -69,9 +74,9 @@ public class PhenotypicFeature extends BaseBindingObservableDataController<Obser
     @Override
     protected void bind(ObservablePhenotypicFeature feature) {
         // term id & label
-        termIdLabel.setText(feature.getTermId().getValue());
-        nameLabel.setText(getLabelForTerm(feature.getTermId()));
-        termDefinitionLabel.setText(getDefinitionForTermId(feature.getTermId()));
+        termId.setText(feature.getTermId().getValue());
+        name.setText(getLabelForTerm(feature.getTermId()));
+        definition.setText(getDefinitionForTermId(feature.getTermId()));
 
         // status
         if (feature.isExcluded()) {
@@ -89,27 +94,9 @@ public class PhenotypicFeature extends BaseBindingObservableDataController<Obser
     @Override
     protected void unbind(ObservablePhenotypicFeature feature) {
         // term id & label
-        termIdLabel.setText(null);
-        nameLabel.setText(null);
-        termDefinitionLabel.setText(null);
-    }
-
-    private void editOnset(ActionEvent event) {
-        // TODO - does this work?
-//        Dialog<Boolean> dialog = new Dialog<>();
-//        dialog.titleProperty().bind(concat("Individual ID: ", nullableStringProperty(item, "id")));
-//        dialog.setHeaderText("Edit phenotypic feature");
-//        TimeElementEditableComponent edit = new TimeElementEditableComponent();
-//        edit.setInitialData(item.get().getOnset());
-
-//        dialog.getDialogPane().setContent(edit);
-//        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.UPDATE_CANCEL_BUTTONS);
-//        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
-//
-//        dialog.showAndWait()
-//                .ifPresent(shouldUpdate -> {if (shouldUpdate) edit.commit();});
-
-        event.consume();
+        termId.setText(null);
+        name.setText(null);
+        definition.setText(null);
     }
 
     private String getLabelForTerm(TermId termId) {
@@ -126,4 +113,21 @@ public class PhenotypicFeature extends BaseBindingObservableDataController<Obser
         return term.getDefinition();
     }
 
+    @FXML
+    private void editTemporalFieldsAction(ActionEvent e) {
+        Dialog<Boolean> dialog = new Dialog<>();
+        dialog.setResizable(true);
+        dialog.setHeaderText("Edit phenotypic feature");
+        EditTemporalFields etf = new EditTemporalFields();
+        etf.setInitialData(data.get());
+
+        dialog.getDialogPane().setContent(etf);
+        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.UPDATE_CANCEL_BUTTONS);
+        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
+
+        dialog.showAndWait()
+                .ifPresent(shouldUpdate -> {if (shouldUpdate) etf.commit();});
+
+        e.consume();
+    }
 }

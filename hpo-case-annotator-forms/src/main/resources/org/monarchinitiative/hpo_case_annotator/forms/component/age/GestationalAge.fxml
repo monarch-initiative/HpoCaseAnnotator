@@ -16,7 +16,11 @@
                 </ImageView>
             </graphic>
         </Label>
-        <TitledLabel fx:id="gestationalWeeks" name="Weeks" text="4" />
-        <TitledLabel fx:id="gestationalDays" name="Days" text="3" />
+        <HBox>
+            <children>
+                <TitledLabel fx:id="gestationalWeeks" name="Weeks" text="4" />
+                <TitledLabel fx:id="gestationalDays" name="Days" text="3" />
+            </children>
+        </HBox>
     </children>
 </fx:root>

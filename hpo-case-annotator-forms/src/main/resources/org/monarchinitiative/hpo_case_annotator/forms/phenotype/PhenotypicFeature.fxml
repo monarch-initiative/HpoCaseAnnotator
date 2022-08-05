@@ -2,12 +2,13 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
 
 <VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeature"
-      stylesheets="@phenotypic-feature.css"
-      id="box">
+      stylesheets="@phenotypic-feature.css">
     <children>
         <VBox>
             <children>
@@ -16,28 +17,24 @@
                     <children>
                         <VBox>
                             <children>
-                                <Label text="ID"/>
-                                <Label id="term-id" fx:id="termIdLabel" wrapText="true"/>
+                                <TitledLabel name="ID" id="term-id" fx:id="termId"/>
                             </children>
                         </VBox>
                         <VBox>
                             <children>
-                                <Label text="Name"/>
-                                <Label id="term-name" fx:id="nameLabel" wrapText="true"/>
+                                <TitledLabel name="Label" id="term-name" fx:id="name"/>
                             </children>
                         </VBox>
                         <VBox>
                             <children>
-                                <Label text="Definition"/>
-                                <Label id="term-definition" fx:id="termDefinitionLabel" textAlignment="JUSTIFY"
-                                       textOverrun="WORD_ELLIPSIS" wrapText="true"/>
+                                <TitledLabel name="Definition" id="term-definition" fx:id="definition"/>
                             </children>
                         </VBox>
                     </children>
                 </VBox>
             </children>
         </VBox>
-        <Separator VBox.vgrow="NEVER"/>
+        <Separator/>
         <VBox>
             <children>
                 <Label styleClass="h3" text="Status"/>
@@ -45,21 +42,39 @@
                 <RadioButton fx:id="absentRadioButton" mnemonicParsing="false" text="Excluded"/>
             </children>
         </VBox>
-        <Separator VBox.vgrow="NEVER"/>
+        <Separator/>
         <VBox>
             <children>
-                <VBox>
+                <Label styleClass="h3" text="Temporal"/>
+                <StackPane VBox.vgrow="ALWAYS">
                     <children>
-                        <Label styleClass="h3" text="Onset"/>
-                        <TimeElementComponent fx:id="onsetComponent"/>
+                        <VBox>
+                            <children>
+                                <VBox>
+                                    <children>
+                                        <Label styleClass="h4" text="Onset"/>
+                                        <TimeElementComponent fx:id="onsetComponent"/>
+                                    </children>
+                                </VBox>
+                                <VBox>
+                                    <children>
+                                        <Label styleClass="h4" text="Resolution"/>
+                                        <TimeElementComponent fx:id="resolutionComponent"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                        <Button fx:id="editTemporalFields" onAction="#editTemporalFieldsAction"
+                                styleClass="edit-button" StackPane.alignment="TOP_RIGHT"/>
                     </children>
-                </VBox>
-                <VBox>
-                    <children>
-                        <Label styleClass="h3" text="Resolution"/>
-                        <TimeElementComponent fx:id="resolutionComponent"/>
-                    </children>
-                </VBox>
+                </StackPane>
+            </children>
+        </VBox>
+        <Separator/>
+        <VBox>
+            <children>
+                <Label styleClass="h3" text="Modifiers"/>
+                <Text text="Not yet implemented" style="-fx-fill: red"/>
             </children>
         </VBox>
     </children>

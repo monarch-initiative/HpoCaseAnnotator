@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms.component.age;
 
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -16,6 +17,7 @@ import static javafx.beans.binding.Bindings.*;
 
 public class TimeElementComponent extends VBox implements ObservableDataController<ObservableTimeElement> {
 
+    private static Label NO_AGE_PLACEHOLDER;
     private final ObjectProperty<ObservableTimeElement> data = new SimpleObjectProperty<>();
 
     @FXML
@@ -24,15 +26,14 @@ public class TimeElementComponent extends VBox implements ObservableDataControll
     private final Age age;
     private final AgeRange ageRange;
     private final OntologyClassAge ontologyClassAge;
-    private final Label noAgePlaceholder;
+
 
     public TimeElementComponent() {
+        NO_AGE_PLACEHOLDER = new Label("N/A");
         gestationalAge = new GestationalAge();
         age = new Age();
         ageRange = new AgeRange();
         ontologyClassAge = new OntologyClassAge();
-        noAgePlaceholder = new Label("N/A");
-        noAgePlaceholder.setStyle("-fx-text-fill: darkgrey");
 
         FXMLLoader loader = new FXMLLoader(TimeElementComponent.class.getResource("TimeElementComponent.fxml"));
         loader.setRoot(this);
@@ -50,7 +51,7 @@ public class TimeElementComponent extends VBox implements ObservableDataControll
             ObservableTimeElement novel = data.get();
             if (novel == null) {
                 box.setDisable(true);
-                setContent(noAgePlaceholder);
+                setContent(NO_AGE_PLACEHOLDER);
             } else {
                 box.setDisable(false);
                 switch (novel.getTimeElementCase()) {
@@ -62,20 +63,20 @@ public class TimeElementComponent extends VBox implements ObservableDataControll
             }
         });
 
-        gestationalAge.weeksProperty().bind(selectInteger(data, "gestationalAge", "weeks").asString());
-        gestationalAge.daysProperty().bind(selectInteger(data, "gestationalAge", "days").asString());
+        gestationalAge.weeksProperty().bind(toIntegerOrShowPlaceholderIfNull(data, "gestationalAge", "weeks"));
+        gestationalAge.daysProperty().bind(toIntegerOrShowPlaceholderIfNull(data, "gestationalAge", "days"));
 
-        age.yearsProperty().bind(selectInteger(data, "age", "years").asString());
-        age.monthsProperty().bind(selectInteger(data, "age", "months").asString());
-        age.daysProperty().bind(selectInteger(data, "age", "days").asString());
+        age.yearsProperty().bind(toIntegerOrShowPlaceholderIfNull(data, "age", "years"));
+        age.monthsProperty().bind(toIntegerOrShowPlaceholderIfNull(data, "age", "months"));
+        age.daysProperty().bind(toIntegerOrShowPlaceholderIfNull(data, "age", "days"));
 
-        ageRange.startYearsProperty().bind(selectInteger(data, "ageRange", "start", "years").asString());
-        ageRange.startMonthsProperty().bind(selectInteger(data, "ageRange", "start", "months").asString());
-        ageRange.startDaysProperty().bind(selectInteger(data, "ageRange", "start", "days").asString());
+        ageRange.startYearsProperty().bind(toIntegerOrShowPlaceholderIfNull(data, "ageRange", "start", "years"));
+        ageRange.startMonthsProperty().bind(toIntegerOrShowPlaceholderIfNull(data, "ageRange", "start", "months"));
+        ageRange.startDaysProperty().bind(toIntegerOrShowPlaceholderIfNull(data, "ageRange", "start", "days"));
 
-        ageRange.endYearsProperty().bind(selectInteger(data, "ageRange", "end", "years").asString());
-        ageRange.endMonthsProperty().bind(selectInteger(data, "ageRange", "end", "months").asString());
-        ageRange.endDaysProperty().bind(selectInteger(data, "ageRange", "end", "days").asString());
+        ageRange.endYearsProperty().bind(toIntegerOrShowPlaceholderIfNull(data, "ageRange", "end", "years"));
+        ageRange.endMonthsProperty().bind(toIntegerOrShowPlaceholderIfNull(data, "ageRange", "end", "months"));
+        ageRange.endDaysProperty().bind(toIntegerOrShowPlaceholderIfNull(data, "ageRange", "end", "days"));
 
         ontologyClassAge.termIdProperty().bind(select(data, "ontologyClass"));
     }
@@ -88,6 +89,12 @@ public class TimeElementComponent extends VBox implements ObservableDataControll
     @Override
     public ObjectProperty<ObservableTimeElement> dataProperty() {
         return data;
+    }
+
+    private static StringBinding toIntegerOrShowPlaceholderIfNull(ObjectProperty<ObservableTimeElement> property, String... path) {
+        return when(select(property, path).isNull())
+                .then("N/A")
+                .otherwise(select(property, path).asString());
     }
 
 }

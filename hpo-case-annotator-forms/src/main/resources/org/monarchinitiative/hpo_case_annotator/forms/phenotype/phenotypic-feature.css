@@ -1,6 +1,3 @@
-#box {
-    -fx-padding: 0px 0px 0px 10px;
-}
 
 RadioButton {
     -fx-min-height: 30px;
@@ -17,14 +14,6 @@ TextField {
     -fx-min-height: 30px;
     -fx-min-width: 80px;
     -fx-max-width: 150px;
-}
-
-Separator {
-    -fx-padding: 0px 5px 0px 5px;
-}
-
-#phenotypic-feature-column VBox {
-    -fx-padding: 10px 0px 0px 0px;
 }
 
 #term-id {

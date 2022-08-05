@@ -53,6 +53,7 @@ public class PhenotypeView implements DataEditController<ObservablePedigreeMembe
 
         phenotypeTerms.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         phenotypicFeatureController.dataProperty().bind(phenotypeTerms.getSelectionModel().selectedItemProperty());
+        phenotypicFeature.disableProperty().bind(phenotypeTerms.getSelectionModel().selectedItemProperty().isNull());
     }
 
     private String getTermLabel(TableColumn.CellDataFeatures<ObservablePhenotypicFeature, String> cdf) {

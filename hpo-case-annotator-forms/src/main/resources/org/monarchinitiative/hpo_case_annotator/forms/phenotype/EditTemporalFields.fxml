@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.*?>
+
+<fx:root stylesheets="@edit-temporal-fields.css" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <HBox>
+            <children>
+                <TitledLabel fx:id="termId" name="ID" />
+                <TitledLabel fx:id="termLabel" name="Name" />
+                <TitledLabel fx:id="termDefinition" name="Definition" />
+            </children>
+        </HBox>
+        <HBox>
+            <VBox id="onset-box" HBox.hgrow="SOMETIMES">
+                <children>
+                    <CheckBox fx:id="onsetIsUnknown" selected="true" text="Onset is unknown" />
+                    <TimeElementEditableComponent fx:id="onsetComponent" disable="true" />
+                </children>
+            </VBox>
+            <VBox id="resolution-box" HBox.hgrow="SOMETIMES">
+                <children>
+                    <CheckBox fx:id="resolutionIsUnknown" selected="true" text="Resolution is unknown" />
+                    <TimeElementEditableComponent fx:id="resolutionComponent" disable="true" />
+                </children>
+            </VBox>
+        </HBox>
+    </children>
+</fx:root>
