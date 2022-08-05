@@ -8,7 +8,7 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype
 
 import java.util.*;
 
-public abstract class BaseObservableIndividual<T extends Individual> implements Individual {
+public abstract class BaseObservableIndividual implements Individual {
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
     private final ObjectProperty<ObservableTimeElement> age = new SimpleObjectProperty<>(this, "age");
@@ -20,7 +20,7 @@ public abstract class BaseObservableIndividual<T extends Individual> implements 
     protected BaseObservableIndividual() {
     }
 
-    protected BaseObservableIndividual(T individual) {
+    protected BaseObservableIndividual(Individual individual) {
         if (individual != null) {
             id.set(individual.getId());
             age.set(new ObservableTimeElement(individual.getAge()));

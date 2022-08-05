@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-abstract class BaseIndividualController<T extends BaseObservableIndividual<?>> extends VariantAwareBindingController<T> {
+abstract class BaseIndividualController<T extends BaseObservableIndividual> extends VariantAwareBindingController<T> {
 
     private final ToggleGroup sexToggleGroup = new ToggleGroup();
 

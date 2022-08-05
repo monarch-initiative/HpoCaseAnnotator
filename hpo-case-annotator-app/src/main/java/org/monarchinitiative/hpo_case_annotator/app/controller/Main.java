@@ -593,7 +593,7 @@ public class Main {
         e.consume();
     }
 
-    private <T extends BaseObservableIndividual<?>> void editPhenotypeFeatures(ObjectBinding<T> individual) {
+    private <T extends BaseObservableIndividual> void editPhenotypeFeatures(ObjectBinding<T> individual) {
         try {
             FXMLLoader loader = new FXMLLoader(PhenotypeBrowserController.class.getResource("PhenotypeBrowser.fxml"));
             loader.setControllerFactory(controllerFactory);
@@ -621,7 +621,7 @@ public class Main {
         }
     }
 
-    private Function<Object, Optional<? extends ObjectBinding<? extends BaseObservableIndividual<?>>>> getBaseObservableIndividualBinding() {
+    private Function<Object, Optional<? extends ObjectBinding<? extends BaseObservableIndividual>>> getBaseObservableIndividualBinding() {
         return data -> {
             Tab selectedStudyTab = studiesTabPane.getSelectionModel().getSelectedItem();
             if (data instanceof ObservableFamilyStudy || data instanceof ObservableCohortStudy) {
@@ -656,7 +656,7 @@ public class Main {
         e.consume();
     }
 
-    private <T extends BaseObservableIndividual<?>> void editDisease(ObjectBinding<T> individual) {
+    private <T extends BaseObservableIndividual> void editDisease(ObjectBinding<T> individual) {
         try {
             FXMLLoader loader = new FXMLLoader(DiseaseStatusController.class.getResource("DiseaseStatus.fxml"));
             loader.setControllerFactory(controllerFactory);

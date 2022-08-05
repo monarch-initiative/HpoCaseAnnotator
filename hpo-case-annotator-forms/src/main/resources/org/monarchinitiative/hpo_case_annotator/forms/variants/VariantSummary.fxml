@@ -3,10 +3,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox styleClass="section" stylesheets="@variant-summary.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.v2.VariantSummaryController">
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary"
+      stylesheets="@variant-summary.css">
     <children>
-        <Label styleClass="h1" text="Variant summary" />
-        <TableView fx:id="variantTableView" onMouseClicked="#variantTableViewOnMouseClicked" VBox.vgrow="ALWAYS">
+        <TableView fx:id="variantTable" onMouseClicked="#variantTableViewOnMouseClicked" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="idTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="ID" />
                 <TableColumn fx:id="genomicAssemblyTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Assembly" />

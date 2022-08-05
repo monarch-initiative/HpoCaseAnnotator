@@ -26,7 +26,7 @@
                         </Label>
                     </children>
                 </HBox>
-                <VBox styleClass="section">
+                <VBox VBox.vgrow="NEVER" >
                     <children>
                         <Label styleClass="h2" text="Publication" />
                         <StackPane onMouseEntered="#publicationSectionMouseEntered" onMouseExited="#publicationSectionMouseExited">
@@ -37,10 +37,16 @@
                         </StackPane>
                     </children>
                 </VBox>
-                <VBox VBox.vgrow="ALWAYS" styleClass="section">
+                <VBox >
                     <children>
                         <Label styleClass="h2" text="Pedigree" />
                         <fx:include VBox.vgrow="ALWAYS" fx:id="pedigree" source="../pedigree/Pedigree.fxml" />
+                    </children>
+                </VBox>
+                <VBox >
+                    <children>
+                        <Label styleClass="h2" text="Variants"/>
+                        <fx:include fx:id="variantSummary" source="../variants/VariantSummary.fxml"/>
                     </children>
                 </VBox>
             </children>

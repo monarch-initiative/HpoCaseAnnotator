@@ -11,7 +11,7 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype
 
 import java.util.Optional;
 
-public class ObservablePedigreeMember extends BaseObservableIndividual<PedigreeMember> implements PedigreeMember {
+public class ObservablePedigreeMember extends BaseObservableIndividual implements PedigreeMember {
 
     private final StringProperty paternalId = new SimpleStringProperty(this, "paternalId");
     private final StringProperty maternalId = new SimpleStringProperty(this, "maternalId");

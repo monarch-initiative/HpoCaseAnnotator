@@ -18,6 +18,7 @@ module org.monarchinitiative.hca.forms {
     exports org.monarchinitiative.hpo_case_annotator.forms.publication;
     exports org.monarchinitiative.hpo_case_annotator.forms.nvo;
     exports org.monarchinitiative.hpo_case_annotator.forms.liftover;
+    exports org.monarchinitiative.hpo_case_annotator.forms.variants;
 
     exports org.monarchinitiative.hpo_case_annotator.forms.v2;
     exports org.monarchinitiative.hpo_case_annotator.forms.v2.disease;
@@ -36,6 +37,7 @@ module org.monarchinitiative.hca.forms {
     opens org.monarchinitiative.hpo_case_annotator.forms.publication to javafx.fxml, org.monarchinitiative.hca.app;
     opens org.monarchinitiative.hpo_case_annotator.forms.nvo to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.liftover to javafx.fxml, org.monarchinitiative.hca.app;
+    opens org.monarchinitiative.hpo_case_annotator.forms.variants to javafx.fxml, org.monarchinitiative.hca.app;
 
     opens org.monarchinitiative.hpo_case_annotator.forms.v2 to javafx.fxml, org.monarchinitiative.hca.app;
     opens org.monarchinitiative.hpo_case_annotator.forms.v2.disease to javafx.fxml, org.monarchinitiative.hca.app;

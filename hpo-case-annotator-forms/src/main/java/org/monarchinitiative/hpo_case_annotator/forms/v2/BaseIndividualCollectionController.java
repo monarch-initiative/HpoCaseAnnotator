@@ -41,12 +41,12 @@ import java.util.List;
  *     <li>clicking Ctrl+W closes the active member tab</li>
  * </ul>
  */
-public abstract class BaseIndividualCollectionController<INDIVIDUAL extends BaseObservableIndividual<?>, CONTROLLER extends VariantAwareBindingController<INDIVIDUAL>> {
+public abstract class BaseIndividualCollectionController<INDIVIDUAL extends BaseObservableIndividual, CONTROLLER extends VariantAwareBindingController<INDIVIDUAL>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseIndividualCollectionController.class);
 
     // This list is not supposed to be modified directly. The elements are added/removed in VariantSummaryController
-    private final ObservableList<CuratedVariant> curatedVariants = FXCollections.observableList(new LinkedList<>());
+    private final ObservableList<CuratedVariant> curatedVariants = FXCollections.observableArrayList();
 
     private final HCAControllerFactory controllerFactory;
 

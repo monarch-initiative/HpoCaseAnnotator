@@ -17,6 +17,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsCom
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.cache.HgvsVariantController;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 public class ControllerFactory implements HCAControllerFactory {
@@ -52,8 +53,8 @@ public class ControllerFactory implements HCAControllerFactory {
             return new BreakendController();
         } else if (clz.equals(HgvsVariantController.class)) {
             return new HgvsVariantController(geneIdentifierService);
-        } else if (clz.equals(VariantSummaryController.class)) {
-            return new VariantSummaryController(this);
+        } else if (clz.equals(VariantSummary.class)) {
+            return new VariantSummary(this);
         }
 
         // various

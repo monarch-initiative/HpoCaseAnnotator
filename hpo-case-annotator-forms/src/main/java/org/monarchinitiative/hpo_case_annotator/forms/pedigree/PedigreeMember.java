@@ -3,11 +3,9 @@ package org.monarchinitiative.hpo_case_annotator.forms.pedigree;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,12 +21,16 @@ import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsEdi
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.ObservableTimeElementTableCell;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeView;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
+import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.hpo_case_annotator.forms.util.GenotypeStringConverter;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.*;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
+import org.monarchinitiative.svart.CoordinateSystem;
+import org.monarchinitiative.svart.Strand;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +46,7 @@ public class PedigreeMember {
     private static final Map<Sex, Map<Boolean, Image>> SEX_AFFECTED_ICONS = loadSexAffectedIconsMap();
     private final Function<TermId, Term> termSource;
     private final HCAControllerFactory controllerFactory;
+    private final ListProperty<CuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ObjectProperty<ObservablePedigreeMember> item = new SimpleObjectProperty<>();
     @FXML
     private PedigreeMemberTitle pedigreeMemberTitle;
@@ -78,23 +81,23 @@ public class PedigreeMember {
     @FXML
     private TableColumn<ObservableDiseaseStatus, String> diseaseNameColumn;
     @FXML
-    private TableView<ObservableVariantGenotype> genotypesTable;
+    private TableView<CuratedVariant> genotypesTable;
     @FXML
-    private TableColumn<ObservableVariantGenotype, Genotype> genotypeTableColumn;
+    private TableColumn<CuratedVariant, Genotype> genotypeTableColumn;
     @FXML
-    private TableColumn<ObservableVariantGenotype, String> variantIdTableColumn;
+    private TableColumn<CuratedVariant, String> variantIdTableColumn;
     @FXML
-    private TableColumn<ObservableVariantGenotype, String> genomicAssemblyTableColumn;
+    private TableColumn<CuratedVariant, String> genomicAssemblyTableColumn;
     @FXML
-    private TableColumn<ObservableVariantGenotype, String> contigTableColumn;
+    private TableColumn<CuratedVariant, String> contigTableColumn;
     @FXML
-    private TableColumn<ObservableVariantGenotype, String> startTableColumn;
+    private TableColumn<CuratedVariant, String> startTableColumn;
     @FXML
-    private TableColumn<ObservableVariantGenotype, String> endTableColumn;
+    private TableColumn<CuratedVariant, String> endTableColumn;
     @FXML
-    private TableColumn<ObservableVariantGenotype, String> refTableColumn;
+    private TableColumn<CuratedVariant, String> refTableColumn;
     @FXML
-    private TableColumn<ObservableVariantGenotype, String> altTableColumn;
+    private TableColumn<CuratedVariant, String> altTableColumn;
 
     /**
      * @param termSource        a function to get ahold of {@link TermId} details. The function returns {@code null}
@@ -146,19 +149,30 @@ public class PedigreeMember {
         diseaseNameColumn.setCellValueFactory(cdf -> select(cdf.getValue(), "diseaseId", "diseaseName"));
 
         // Genotypes table view
-        genotypeTableColumn.setCellValueFactory(cdf -> cdf.getValue().genotypeProperty());
+        genotypeTableColumn.setCellValueFactory(cdf -> extractGenotype(cdf.getValue().md5Hex(), item));
         genotypeTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(GenotypeStringConverter.getInstance(), Genotype.values()));
 
-        variantIdTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getId()));
-        // TODO - populate the rest of the colums
-//        genomicAssemblyTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getGenomicAssembly()));
-//        contigTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getVariant().contigName()));
-//        startTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getCuratedVariant().getVariant().startOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
-//        endTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getCuratedVariant().getVariant().endOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
-//        refTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getVariant().ref()));
-//        altTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getVariant().alt()));
+        variantIdTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().id()));
+        genomicAssemblyTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getGenomicAssembly()));
+        contigTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getVariant().contigName()));
+        startTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getVariant().startOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
+        endTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getVariant().endOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
+        refTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getVariant().ref()));
+        altTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getVariant().alt()));
 
-        genotypesTable.itemsProperty().bind(select(item, "genotypes"));
+        genotypesTable.itemsProperty().bind(variants);
+    }
+
+    private static ObservableValue<Genotype> extractGenotype(String variantMd5Hex, ObjectProperty<ObservablePedigreeMember> member) {
+        // TODO - implement properly. We must track adding and removal of the variants in the pedigree member.
+        ObservablePedigreeMember m = member.get();
+        if (m == null)
+            return null;
+        return m.getGenotypes().stream()
+                .filter(g -> g.getId().equals(variantMd5Hex))
+                .findFirst()
+                .map(ObservableVariantGenotype::genotypeProperty)
+                .orElse(null);
     }
 
     private ObservableValue<? extends Image> createIndividualImageBinding() {
@@ -314,12 +328,8 @@ public class PedigreeMember {
         return item;
     }
 
-    public ObservablePedigreeMember getItem() {
-        return item.get();
-    }
-
-    public void setItem(ObservablePedigreeMember item) {
-        this.item.set(item);
+    public ListProperty<CuratedVariant> variantsProperty() {
+        return variants;
     }
 
     // TODO - move to an Util class with lazy loading.

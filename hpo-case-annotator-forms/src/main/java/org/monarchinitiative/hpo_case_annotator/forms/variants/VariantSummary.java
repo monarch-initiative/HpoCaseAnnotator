@@ -1,5 +1,6 @@
-package org.monarchinitiative.hpo_case_annotator.forms.v2;
+package org.monarchinitiative.hpo_case_annotator.forms.variants;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -37,14 +38,14 @@ import java.util.Optional;
  * {@link org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy} or for
  * {@link org.monarchinitiative.hpo_case_annotator.model.v2.CohortStudy}.
  */
-public class VariantSummaryController {
+public class VariantSummary {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(VariantSummaryController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VariantSummary.class);
 
     private final HCAControllerFactory controllerFactory;
 
     @FXML
-    private TableView<CuratedVariant> variantTableView;
+    private TableView<CuratedVariant> variantTable;
     @FXML
     private TableColumn<CuratedVariant, String> idTableColumn;
     @FXML
@@ -66,13 +67,13 @@ public class VariantSummaryController {
     @FXML
     private Button editButton;
 
-    public VariantSummaryController(HCAControllerFactory controllerFactory) {
+    public VariantSummary(HCAControllerFactory controllerFactory) {
         this.controllerFactory = controllerFactory;
     }
 
     @FXML
     private void initialize() {
-        variantTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        variantTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         idTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().id()));
         genomicAssemblyTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getGenomicAssembly()));
@@ -83,8 +84,8 @@ public class VariantSummaryController {
         altTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getVariant().alt()));
 
         // remove button is disabled when there are no variants in the table
-        removeVariantButton.disableProperty().bind(variantTableView.getSelectionModel().selectedItemProperty().isNull());
-        editButton.disableProperty().bind(variantTableView.getSelectionModel().selectedItemProperty().isNull());
+        removeVariantButton.disableProperty().bind(variantTable.getSelectionModel().selectedItemProperty().isNull());
+        editButton.disableProperty().bind(variantTable.getSelectionModel().selectedItemProperty().isNull());
 
     }
 
@@ -109,7 +110,7 @@ public class VariantSummaryController {
                         return Optional.empty();
                     }
                 }).flatMap(notation -> addEditVariant(notation, null))
-                .ifPresent(variantTableView.getItems()::add);
+                .ifPresent(variantTable.getItems()::add);
     }
 
     private Optional<CuratedVariant> addEditVariant(VariantNotation notation, CuratedVariant variant) {
@@ -131,7 +132,7 @@ public class VariantSummaryController {
             // setup stage
             Stage stage = new Stage();
             stage.setTitle(notation.label());
-            stage.initOwner(variantTableView.getScene().getWindow());
+            stage.initOwner(variantTable.getScene().getWindow());
             stage.initModality(Modality.NONE);
             stage.initStyle(StageStyle.DECORATED);
             stage.setScene(new Scene(parent));
@@ -147,18 +148,18 @@ public class VariantSummaryController {
 
     @FXML
     private void removeVariantButtonAction() {
-        int selectedIndex = variantTableView.getSelectionModel().getSelectedIndex();
-        CuratedVariant v = variantTableView.getItems().remove(selectedIndex);
+        int selectedIndex = variantTable.getSelectionModel().getSelectedIndex();
+        CuratedVariant v = variantTable.getItems().remove(selectedIndex);
         LOGGER.info("Removed variant {}:{}:{}{}>{}", v.id(), v.getVariant().contigName(), v.getVariant().startWithCoordinateSystem(CoordinateSystem.oneBased()), v.getVariant().ref(), v.getVariant().alt());
     }
 
     @FXML
     private void editButtonAction() {
-        int index = variantTableView.getSelectionModel().getSelectedIndex();
-        CuratedVariant variant = variantTableView.getItems().get(index);
+        int index = variantTable.getSelectionModel().getSelectedIndex();
+        CuratedVariant variant = variantTable.getItems().get(index);
         VariantNotation notation = resolveVariantNotation(variant.getVariant());
         addEditVariant(notation, variant)
-                .ifPresent(edited -> variantTableView.getItems().set(index, edited));
+                .ifPresent(edited -> variantTable.getItems().set(index, edited));
     }
 
     private static VariantNotation resolveVariantNotation(GenomicVariant variant) {
@@ -171,8 +172,16 @@ public class VariantSummaryController {
         }
     }
 
+    /**
+     * @deprecated use {@link #variants()} instead.
+     */
+    @Deprecated(forRemoval = true)
     public ObservableList<CuratedVariant> curatedVariants() {
-        return variantTableView.getItems();
+        return variantTable.getItems();
+    }
+
+    public ObjectProperty<ObservableList<CuratedVariant>> variants() {
+        return variantTable.itemsProperty();
     }
 
     /**
@@ -183,10 +192,10 @@ public class VariantSummaryController {
     @FXML
     private void variantTableViewOnMouseClicked(MouseEvent e) {
         if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
-            int index = variantTableView.getSelectionModel().getSelectedIndex();
-            CuratedVariant selectedItem = variantTableView.getItems().get(index);
+            int index = variantTable.getSelectionModel().getSelectedIndex();
+            CuratedVariant selectedItem = variantTable.getItems().get(index);
             addEditVariant(resolveVariantNotation(selectedItem.getVariant()), selectedItem)
-                    .ifPresent(edited -> variantTableView.getItems().set(index, edited));
+                    .ifPresent(edited -> variantTable.getItems().set(index, edited));
 
             e.consume();
         }

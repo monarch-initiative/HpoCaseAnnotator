@@ -28,7 +28,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 
-public class DiseaseStatusController<T extends BaseObservableIndividual<?>> extends BindingObservableDataController<T> {
+public class DiseaseStatusController<T extends BaseObservableIndividual> extends BindingObservableDataController<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseStatusController.class);
     private final ObjectProperty<T> individual = new SimpleObjectProperty<>(this, "individual");

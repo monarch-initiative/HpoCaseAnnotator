@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class PhenotypeBrowserController<T extends BaseObservableIndividual<?>> extends BindingObservableDataController<T> {
+public class PhenotypeBrowserController<T extends BaseObservableIndividual> extends BindingObservableDataController<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PhenotypeBrowserController.class);
     private final HCAControllerFactory controllerFactory;
@@ -103,7 +103,7 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual<?>> e
 
     @FXML
     private void addPhenotypeFeatureButtonAction(ActionEvent e) {
-        BaseObservableIndividual<?> individual = this.individual.get();
+        BaseObservableIndividual individual = this.individual.get();
 
         try {
             // setup loader

@@ -2,17 +2,23 @@ package org.monarchinitiative.hpo_case_annotator.forms.pedigree;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseBindingObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigree;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 
 public class Pedigree extends BaseBindingObservableDataController<ObservablePedigree> {
 
     private final HCAControllerFactory controllerFactory;
+    private final ListProperty<CuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
     @FXML
     private Label summary;
     @FXML
@@ -25,7 +31,7 @@ public class Pedigree extends BaseBindingObservableDataController<ObservablePedi
     @Override
     protected void initialize() {
         super.initialize();
-        members.setCellFactory(lv -> new ObservablePedigreeMemberListCell(controllerFactory));
+        members.setCellFactory(lv -> new ObservablePedigreeMemberListCell(controllerFactory, variants));
     }
 
     @Override
@@ -39,6 +45,10 @@ public class Pedigree extends BaseBindingObservableDataController<ObservablePedi
     protected void unbind(ObservablePedigree data) {
         members.itemsProperty().unbindBidirectional(data.membersProperty());
         summary.textProperty().unbind();
+    }
+
+    public ListProperty<CuratedVariant> variantsProperty() {
+        return variants;
     }
 
     private static String pedigreeSummary(ObservablePedigree pedigree) {
