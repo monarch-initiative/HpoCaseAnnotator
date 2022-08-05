@@ -321,11 +321,11 @@ public class PedigreeMember {
     @FXML
     private void editPhenotypeAction(ActionEvent e) {
         Dialog<Boolean> dialog = new Dialog<>();
-        // TODO - make the dialog resizable
         dialog.initOwner(pedigreeMemberTitle.getParent().getScene().getWindow());
         dialog.initStyle(StageStyle.DECORATED);
-        dialog.setHeaderText("Edit phenotype terms");
-        dialog.titleProperty().bind(concat("Individual ID: ", nullableStringProperty(item, "id")));
+        dialog.titleProperty().bind(concat("Edit phenotype features for ", nullableStringProperty(item, "id")));
+        dialog.setResizable(true);
+
         FXMLLoader loader = new FXMLLoader(PhenotypeView.class.getResource("PhenotypeView.fxml"));
         loader.setControllerFactory(controllerFactory);
         Parent view;
