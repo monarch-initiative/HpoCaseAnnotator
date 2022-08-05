@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent?>
 
 <VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeView">
@@ -17,18 +18,23 @@
             <AnchorPane>
                 <children>
                     <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                        <TableView fx:id="phenotypeTerms">
-                            <columns>
-                                <TableColumn fx:id="termIdColumn" text="ID" />
-                                <TableColumn fx:id="termLabel" text="Label" />
-                            </columns>
-                            <columnResizePolicy>
-                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                            </columnResizePolicy>
-                            <placeholder>
-                                <Label text="No phenotype features yet" />
-                            </placeholder>
-                        </TableView>
+                        <children>
+                            <Label styleClass="h2" text="Credentials"/>
+                            <IndividualIdsComponent fx:id="individualIds"/>
+                            <Label styleClass="h2" text="Phenotype features"/>
+                            <TableView fx:id="phenotypeTerms">
+                                <columns>
+                                    <TableColumn fx:id="termIdColumn" text="ID" />
+                                    <TableColumn fx:id="termLabel" text="Label" />
+                                </columns>
+                                <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                </columnResizePolicy>
+                                <placeholder>
+                                    <Label text="No phenotype features yet" />
+                                </placeholder>
+                            </TableView>
+                        </children>
                     </VBox>
                 </children>
             </AnchorPane>

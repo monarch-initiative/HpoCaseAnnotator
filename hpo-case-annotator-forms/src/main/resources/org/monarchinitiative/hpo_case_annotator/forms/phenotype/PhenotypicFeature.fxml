@@ -25,7 +25,7 @@
                             <Label id="term-name" fx:id="nameLabel" wrapText="true" />
                      </children>
                   </VBox>
-                  <VBox VBox.vgrow="ALWAYS">
+                  <VBox>
                      <children>
                         <Label text="Definition" />
                             <Label id="term-definition" fx:id="termDefinitionLabel" textAlignment="JUSTIFY" textOverrun="WORD_ELLIPSIS" wrapText="true" />

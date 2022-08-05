@@ -7,6 +7,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.monarchinitiative.hpo_case_annotator.forms.DataEditController;
+import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
 import org.monarchinitiative.phenol.ontology.data.Term;
@@ -15,12 +16,16 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 import java.util.Objects;
 import java.util.function.Function;
 
+import static javafx.beans.binding.Bindings.when;
+
 public class PhenotypeView implements DataEditController<ObservablePedigreeMember> {
 
     private final Function<TermId, Term> termSource;
 
     private ObservablePedigreeMember item;
 
+    @FXML
+    private IndividualIdsComponent individualIds;
     @FXML
     private TableView<ObservablePhenotypicFeature> phenotypeTerms;
     @FXML
@@ -55,7 +60,15 @@ public class PhenotypeView implements DataEditController<ObservablePedigreeMembe
     @Override
     public void setInitialData(ObservablePedigreeMember data) {
         item = Objects.requireNonNull(data);
-        phenotypeTerms.getItems().addAll(data.getObservablePhenotypicFeatures());
+
+        individualIds.individualIdProperty().bind(item.idProperty());
+        individualIds.paternalIdProperty().bind(item.paternalIdProperty());
+        individualIds.maternalIdProperty().bind(item.maternalIdProperty());
+        individualIds.ageProperty().bind(item.ageProperty());
+        individualIds.sexProperty().bind(item.sexProperty().asString());
+        individualIds.probandProperty().bind(when(item.probandProperty()).then("Yes").otherwise("No"));
+
+        phenotypeTerms.getItems().addAll(item.getObservablePhenotypicFeatures());
     }
 
     @Override
