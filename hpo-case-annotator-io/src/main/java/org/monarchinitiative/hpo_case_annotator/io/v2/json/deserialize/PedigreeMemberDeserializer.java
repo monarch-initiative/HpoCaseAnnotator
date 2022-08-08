@@ -45,6 +45,7 @@ public class PedigreeMemberDeserializer extends StdDeserializer<PedigreeMember> 
                 individual.getDiseaseStates(),
                 individual.getGenotypes(),
                 individual.getAge() == null ? null : individual.getAge(),
+                individual.getVitalStatus(),
                 individual.getSex());
     }
 }

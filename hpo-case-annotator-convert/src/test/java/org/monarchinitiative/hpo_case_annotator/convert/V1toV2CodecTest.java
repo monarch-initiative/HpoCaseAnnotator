@@ -136,6 +136,7 @@ public class V1toV2CodecTest {
                         VariantGenotype.of("94f38002744f2dfdbad129153880603f", Genotype.HETEROZYGOUS), // symbolic deletion
                         VariantGenotype.of("52665ac160d15a5b235e470935d8b1ab", Genotype.HETEROZYGOUS)), // breakend variant
                 age,
+                VitalStatus.of(VitalStatus.Status.UNKNOWN, null),
                 Sex.MALE)));
     }
 }

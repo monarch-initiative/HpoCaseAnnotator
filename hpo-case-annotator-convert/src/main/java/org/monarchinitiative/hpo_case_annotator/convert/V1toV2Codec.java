@@ -28,6 +28,7 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
 
     private static final NumberFormat NF = NumberFormat.getNumberInstance(Locale.US);
     private static final String DEFAULT_PARENTAL_ID = "";
+    private static final VitalStatus DEFAULT_VITAL_STATUS = VitalStatus.of(VitalStatus.Status.UNKNOWN, null);
     private static final V1toV2Codec INSTANCE = new V1toV2Codec();
     private static final Map<GenomeAssembly, GenomicAssembly> ASSEMBLIES = Map.of(
             GenomeAssembly.NCBI_36, Hg18GenomicAssembly.hg18GenomicAssembly(),
@@ -298,7 +299,7 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         try {
             Period period = Period.parse(familyInfo.getAge()).normalized();
             Age a = Age.ofYearsMonthsDays(period.getYears(), period.getMonths(), period.getDays());
-            age = TimeElement.of(TimeElement.TimeElementCase.AGE, null, a, null, null);
+            age = TimeElement.age(a);
         } catch (DateTimeParseException e) {
             throw new ModelTransformationException(e);
         }
@@ -317,6 +318,7 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
                 DEFAULT_PARENTAL_ID,
                 DEFAULT_PARENTAL_ID,
                 true, observations, List.of(transformDisease(disease)), genotypes, age,
+                DEFAULT_VITAL_STATUS,
                 // by definition as we only store probands in v1 model
                 transformSex(familyInfo.getSex()));
 

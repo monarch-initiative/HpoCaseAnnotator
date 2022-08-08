@@ -13,12 +13,14 @@ public interface Individual {
                          List<DiseaseStatus> diseases,
                          List<VariantGenotype> genotypes,
                          TimeElement age,
+                         VitalStatus vitalStatus,
                          Sex sex) {
         return IndividualDefault.of(id,
                 phenotypicFeatures,
                 diseases,
                 genotypes,
                 age,
+                vitalStatus,
                 sex);
     }
 
@@ -32,6 +34,13 @@ public interface Individual {
      */
     TimeElement getAge();
 
+    /**
+     * @return proband's vital status or {@code null} if not known.
+     */
+    VitalStatus getVitalStatus();
+
+    Sex getSex();
+
     List<? extends PhenotypicFeature> getPhenotypicFeatures();
 
     List<? extends DiseaseStatus> getDiseaseStates();
@@ -40,8 +49,6 @@ public interface Individual {
      * @return list linking {@link CuratedVariant#md5Hex()} to the {@link Genotype} observed in this individual.
      */
     List<? extends VariantGenotype> getGenotypes();
-
-    Sex getSex();
 
     int hashCode();
 

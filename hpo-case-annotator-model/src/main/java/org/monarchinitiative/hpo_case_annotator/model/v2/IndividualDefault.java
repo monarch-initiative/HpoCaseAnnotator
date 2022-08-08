@@ -11,6 +11,7 @@ class IndividualDefault implements Individual {
     private final List<DiseaseStatus> diseases;
     private final List<VariantGenotype> genotypes;
     private final TimeElement age;
+    private final VitalStatus vitalStatus;
     private final Sex sex;
 
     protected IndividualDefault(String id,
@@ -18,6 +19,7 @@ class IndividualDefault implements Individual {
                                 List<DiseaseStatus> diseases,
                                 List<VariantGenotype> genotypes,
                                 TimeElement age,
+                                VitalStatus vitalStatus,
                                 Sex sex) {
         // assume that null checks has been made
         this.id = id;
@@ -25,6 +27,7 @@ class IndividualDefault implements Individual {
         this.diseases = diseases;
         this.genotypes = genotypes;
         this.age = age;
+        this.vitalStatus = vitalStatus;
         this.sex = sex;
     }
 
@@ -33,6 +36,7 @@ class IndividualDefault implements Individual {
                                 List<DiseaseStatus> diseases,
                                 List<VariantGenotype> genotypes,
                                 TimeElement age,
+                                VitalStatus vitalStatus,
                                 Sex sex) {
         return new IndividualDefault(
                 Objects.requireNonNull(id, "Individual ID must not be null"),
@@ -40,6 +44,7 @@ class IndividualDefault implements Individual {
                 Objects.requireNonNull(diseases, "Diseases must not be null"),
                 Objects.requireNonNull(genotypes, "Genotypes must not be null"),
                 age,
+                vitalStatus,
                 Objects.requireNonNull(sex, "Sex must not be null")
         );
     }
@@ -52,6 +57,11 @@ class IndividualDefault implements Individual {
     @Override
     public TimeElement getAge() {
         return age;
+    }
+
+    @Override
+    public VitalStatus getVitalStatus() {
+        return vitalStatus;
     }
 
     @Override
@@ -79,12 +89,12 @@ class IndividualDefault implements Individual {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IndividualDefault that = (IndividualDefault) o;
-        return Objects.equals(id, that.id) && Objects.equals(phenotypicFeatures, that.phenotypicFeatures) && Objects.equals(diseases, that.diseases) && Objects.equals(genotypes, that.genotypes) && Objects.equals(age, that.age) && sex == that.sex;
+        return Objects.equals(id, that.id) && Objects.equals(phenotypicFeatures, that.phenotypicFeatures) && Objects.equals(diseases, that.diseases) && Objects.equals(genotypes, that.genotypes) && Objects.equals(age, that.age)  && Objects.equals(vitalStatus, that.vitalStatus) && sex == that.sex;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, phenotypicFeatures, diseases, genotypes, age, sex);
+        return Objects.hash(id, phenotypicFeatures, diseases, genotypes, age, vitalStatus, sex);
     }
 
     @Override
@@ -95,6 +105,7 @@ class IndividualDefault implements Individual {
                 ", diseases=" + diseases +
                 ", genotypes=" + genotypes +
                 ", age=" + age +
+                ", vitalStatus=" + vitalStatus +
                 ", sex=" + sex +
                 '}';
     }

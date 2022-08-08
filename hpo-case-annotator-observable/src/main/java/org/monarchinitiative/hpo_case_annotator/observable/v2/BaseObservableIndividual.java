@@ -12,6 +12,7 @@ public abstract class BaseObservableIndividual implements Individual {
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
     private final ObjectProperty<ObservableTimeElement> age = new SimpleObjectProperty<>(this, "age");
+    private final ObjectProperty<ObservableVitalStatus> vitalStatus = new SimpleObjectProperty<>(this, "vitalStatus");
     private final ObjectProperty<Sex> sex = new SimpleObjectProperty<>(this, "sex");
     private final ListProperty<ObservablePhenotypicFeature> phenotypicFeatures = new SimpleListProperty<>(this, "phenotypicFeatures", FXCollections.observableArrayList());
     private final ListProperty<ObservableDiseaseStatus> diseaseStates = new SimpleListProperty<>(this, "diseaseStates", FXCollections.observableArrayList());
@@ -101,6 +102,19 @@ public abstract class BaseObservableIndividual implements Individual {
     }
 
     @Override
+    public VitalStatus getVitalStatus() {
+        return vitalStatus.get();
+    }
+
+    public void setVitalStatus(ObservableVitalStatus vitalStatus) {
+        this.vitalStatus.set(vitalStatus);
+    }
+
+    public ObjectProperty<ObservableVitalStatus> vitalStatusProperty() {
+        return vitalStatus;
+    }
+
+    @Override
     public Sex getSex() {
         return sex.get();
     }
@@ -118,6 +132,7 @@ public abstract class BaseObservableIndividual implements Individual {
         return "BaseObservableIndividual{" +
                 "id=" + id.get() +
                 ", age=" + age.get() +
+                ", vitalStatus=" + vitalStatus.get() +
                 ", sex=" + sex.get() +
                 ", phenotypicFeatures=" + phenotypicFeatures.stream().map(PhenotypicFeature::toString).toList() +
                 ", diseaseStates=" + diseaseStates.get().stream().map(DiseaseStatus::toString).toList() +

@@ -36,6 +36,10 @@ public class IndividualDeserializer extends StdDeserializer<Individual> {
         // TODO - can fail due to age being previously stored as `Age`
         TimeElement age = codec.treeToValue(node.get("age"), TimeElement.class);
 
+        VitalStatus vitalStatus = node.has("vitalStatus")
+                ? codec.treeToValue(node.get("vitalStatus"), VitalStatus.class)
+                : VitalStatus.of(VitalStatus.Status.UNKNOWN, null);
+
         List<DiseaseStatus> diseaseStatuses = new LinkedList<>();
         Iterator<JsonNode> diseasesIterator = node.get("diseases").elements();
         while (diseasesIterator.hasNext()) {
@@ -72,6 +76,7 @@ public class IndividualDeserializer extends StdDeserializer<Individual> {
                 diseaseStatuses,
                 genotypes,
                 age,
+                vitalStatus,
                 sex);
     }
 }

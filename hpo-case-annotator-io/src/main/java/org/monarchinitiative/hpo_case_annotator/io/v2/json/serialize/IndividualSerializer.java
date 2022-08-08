@@ -24,6 +24,7 @@ public class IndividualSerializer extends StdSerializer<Individual> {
         gen.writeStringField("id", individual.getId());
 
         gen.writeObjectField("age", individual.getAge());
+        gen.writeObjectField("vitalStatus", individual.getVitalStatus());
 
         gen.writeArrayFieldStart("diseases");
         for (DiseaseStatus diseaseStatus : individual.getDiseaseStates())

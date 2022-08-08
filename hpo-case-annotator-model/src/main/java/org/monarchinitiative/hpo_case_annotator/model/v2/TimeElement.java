@@ -9,6 +9,18 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
  */
 public interface TimeElement {
 
+    static TimeElement gestationalAge(GestationalAge gestationalAge) {
+        return of(TimeElementCase.GESTATIONAL_AGE, gestationalAge, null, null, null);
+    }
+
+    static TimeElement age(Age age) {
+        return of(TimeElementCase.AGE, null, age, null, null);
+    }
+
+    static TimeElement ageRange(AgeRange ageRange) {
+        return of(TimeElementCase.AGE_RANGE, null, null, ageRange, null);
+    }
+
     static TimeElement of(
             TimeElementCase timeElementCase,
             GestationalAge gestationalAge,

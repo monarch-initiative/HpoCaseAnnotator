@@ -18,8 +18,9 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
                                   List<DiseaseStatus> diseases,
                                   List<VariantGenotype> genotypes,
                                   TimeElement age,
+                                  VitalStatus vitalStatus,
                                   Sex sex) {
-        super(id, phenotypicFeatures, diseases, genotypes, age, sex);
+        super(id, phenotypicFeatures, diseases, genotypes, age, vitalStatus, sex);
         this.paternalId = paternalId;
         this.maternalId = maternalId;
         this.isProband = isProband;
@@ -33,6 +34,7 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
                                     List<? extends DiseaseStatus> diseases,
                                     List<? extends VariantGenotype> genotypes,
                                     TimeElement age,
+                                    VitalStatus vitalStatus,
                                     Sex sex) {
         // wrap the collections
         return new PedigreeMemberDefault(Objects.requireNonNull(id, "Individual ID must not be null"),
@@ -43,6 +45,7 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
                 List.copyOf(Objects.requireNonNull(diseases, "Diseases must not be null")),
                 List.copyOf(Objects.requireNonNull(genotypes, "Genotypes must not be null")),
                 age,
+                vitalStatus,
                 Objects.requireNonNull(sex, "Sex must not be null"));
     }
 

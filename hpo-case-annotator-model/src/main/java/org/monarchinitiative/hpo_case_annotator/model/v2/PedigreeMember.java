@@ -16,6 +16,7 @@ public interface PedigreeMember extends Individual {
                              List<? extends DiseaseStatus> diseases,
                              List<? extends VariantGenotype> genotypes,
                              TimeElement age,
+                             VitalStatus vitalStatus,
                              Sex sex) {
         return PedigreeMemberDefault.of(id,
                 paternalId,
@@ -25,6 +26,7 @@ public interface PedigreeMember extends Individual {
                 diseases,
                 genotypes,
                 age,
+                vitalStatus,
                 sex);
     }
 

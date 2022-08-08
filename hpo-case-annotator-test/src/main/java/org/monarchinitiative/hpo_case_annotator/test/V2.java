@@ -175,11 +175,13 @@ class V2 {
         );
 
         TimeElement age = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(10, 5, 4), null, null);
+        VitalStatus vitalStatus = VitalStatus.of(VitalStatus.Status.ALIVE, null);
         return Pedigree.of(
                 List.of(PedigreeMember.of("FAM:001",
                         "FAM:002",
                         null,
                         true, phenotypes, diseases, genotypes, age,
+                        vitalStatus,
                         Sex.MALE))
         );
     }
@@ -191,6 +193,7 @@ class V2 {
         TimeElement abcHypertensionOnset = TimeElement.of(TimeElement.TimeElementCase.GESTATIONAL_AGE, GestationalAge.of(38, 3), null, null, null);
         TimeElement abcBronchiectasisOnset = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(10, 0, 20), null, null);
         TimeElement abcAge = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(14, null, null), null, null);
+        VitalStatus abcVitalStatus = VitalStatus.of(VitalStatus.Status.ALIVE, null);
         Individual abc = Individual.of("abc",
                 List.of(
                         PhenotypicFeature.of(TermId.of("HP:0000822"), "Hypertension", true, abcHypertensionOnset, null), // Hypertension
@@ -204,6 +207,7 @@ class V2 {
                         VariantGenotype.of(symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS),
                         VariantGenotype.of(symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS)),
                 abcAge,
+                abcVitalStatus,
                 Sex.MALE);
 
         // def
@@ -214,6 +218,7 @@ class V2 {
         TermId adultOnset = TermId.of("HP:0003581");
         TimeElement defBronchiectasisOnset = TimeElement.of(TimeElement.TimeElementCase.ONTOLOGY_CLASS, null, null, null, adultOnset);
         TimeElement defAge = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(25, null, null), null, null);
+        VitalStatus defVitalStatus = VitalStatus.of(VitalStatus.Status.DECEASED, TimeElement.age(Age.of(35, null, null)));
         Individual def = Individual.of("def",
                 List.of(
                         PhenotypicFeature.of(TermId.of("HP:0000822"), "Hypertension", false, defHypertensionOnset, null), // Hypertension
@@ -227,6 +232,7 @@ class V2 {
                         VariantGenotype.of(symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS),
                         VariantGenotype.of(symbolicBreakendVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE)),
                 defAge,
+                defVitalStatus,
                 Sex.FEMALE);
 
         return List.of(abc, def);
