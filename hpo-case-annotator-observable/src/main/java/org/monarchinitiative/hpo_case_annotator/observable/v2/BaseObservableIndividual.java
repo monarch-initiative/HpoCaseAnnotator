@@ -25,6 +25,7 @@ public abstract class BaseObservableIndividual implements Individual {
         if (individual != null) {
             id.set(individual.getId());
             age.set(new ObservableTimeElement(individual.getAge()));
+            vitalStatus.set(new ObservableVitalStatus(individual.getVitalStatus()));
             sex.set(individual.getSex());
 
             for (PhenotypicFeature pf : individual.getPhenotypicFeatures())
@@ -102,7 +103,7 @@ public abstract class BaseObservableIndividual implements Individual {
     }
 
     @Override
-    public VitalStatus getVitalStatus() {
+    public ObservableVitalStatus getVitalStatus() {
         return vitalStatus.get();
     }
 

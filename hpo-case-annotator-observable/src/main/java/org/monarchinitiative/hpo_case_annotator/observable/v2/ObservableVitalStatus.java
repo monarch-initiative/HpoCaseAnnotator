@@ -2,13 +2,12 @@ package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
 import org.monarchinitiative.hpo_case_annotator.model.v2.VitalStatus;
 
 public class ObservableVitalStatus implements VitalStatus {
 
     private final ObjectProperty<Status> status = new SimpleObjectProperty<>(this, "status");
-    private final ObjectProperty<TimeElement> timeOfDeath = new SimpleObjectProperty<>(this, "timeOfDeath");
+    private final ObjectProperty<ObservableTimeElement> timeOfDeath = new SimpleObjectProperty<>(this, "timeOfDeath");
 
     public ObservableVitalStatus() {
     }
@@ -16,7 +15,9 @@ public class ObservableVitalStatus implements VitalStatus {
     public ObservableVitalStatus(VitalStatus vitalStatus) {
         if (vitalStatus != null) {
             status.set(vitalStatus.getStatus());
-            timeOfDeath.set(vitalStatus.getTimeOfDeath());
+
+            if (vitalStatus.getTimeOfDeath() != null)
+                timeOfDeath.set(new ObservableTimeElement(vitalStatus.getTimeOfDeath()));
         }
     }
 
@@ -34,15 +35,15 @@ public class ObservableVitalStatus implements VitalStatus {
     }
 
     @Override
-    public TimeElement getTimeOfDeath() {
+    public ObservableTimeElement getTimeOfDeath() {
         return timeOfDeath.get();
     }
 
-    public void setTimeOfDeath(TimeElement timeOfDeath) {
+    public void setTimeOfDeath(ObservableTimeElement timeOfDeath) {
         this.timeOfDeath.set(timeOfDeath);
     }
 
-    public ObjectProperty<TimeElement> timeOfDeathProperty() {
+    public ObjectProperty<ObservableTimeElement> timeOfDeathProperty() {
         return timeOfDeath;
     }
 

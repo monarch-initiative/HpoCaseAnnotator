@@ -3,6 +3,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Label?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          stylesheets="@individual-ids-component.css"
@@ -25,7 +26,18 @@
             <VBox>
                 <!-- Age -->
                 <children>
-                    <Label fx:id="ageSummary"/>
+                    <HBox alignment="CENTER_LEFT" styleClass="credential-row" VBox.vgrow="NEVER">
+                        <children>
+                            <Label fx:id="ageSummary"/>
+                            <TitledLabel fx:id="vitalStatus" name="Vital status" text="DECEASED"/>
+                            <VBox>
+                                <children>
+                                    <Label text="Time of death"/>
+                                    <TimeElementComponent fx:id="timeOfDeath"/>
+                                </children>
+                            </VBox>
+                        </children>
+                    </HBox>
                 </children>
             </VBox>
         </children>

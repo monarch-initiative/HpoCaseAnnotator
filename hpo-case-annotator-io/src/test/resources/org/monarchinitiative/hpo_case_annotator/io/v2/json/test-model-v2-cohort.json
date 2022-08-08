@@ -197,6 +197,10 @@
         "days" : null
       }
     },
+    "vitalStatus" : {
+      "status" : "ALIVE",
+      "timeOfDeath" : null
+    },
     "diseases" : [ {
       "diseaseIdentifier" : {
         "diseaseId" : "OMIM:219700",
@@ -222,6 +226,7 @@
     } ],
     "phenotypicFeatures" : [ {
       "termId" : "HP:0000822",
+      "label" : "Hypertension",
       "isExcluded" : true,
       "onset" : {
         "timeCase" : "GESTATIONAL_AGE",
@@ -233,6 +238,7 @@
       "resolution" : null
     }, {
       "termId" : "HP:0002110",
+      "label" : "Bronchiectasis",
       "isExcluded" : false,
       "onset" : {
         "timeCase" : "AGE",
@@ -253,6 +259,17 @@
         "years" : 25,
         "months" : null,
         "days" : null
+      }
+    },
+    "vitalStatus" : {
+      "status" : "DECEASED",
+      "timeOfDeath" : {
+        "timeCase" : "AGE",
+        "age" : {
+          "years" : 35,
+          "months" : null,
+          "days" : null
+        }
       }
     },
     "diseases" : [ {
@@ -280,6 +297,7 @@
     } ],
     "phenotypicFeatures" : [ {
       "termId" : "HP:0000822",
+      "label" : "Hypertension",
       "isExcluded" : false,
       "onset" : {
         "timeCase" : "AGE_RANGE",
@@ -299,6 +317,7 @@
       "resolution" : null
     }, {
       "termId" : "HP:0002110",
+      "label" : "Bronchiectasis",
       "isExcluded" : true,
       "onset" : {
         "timeCase" : "ONTOLOGY_CLASS",

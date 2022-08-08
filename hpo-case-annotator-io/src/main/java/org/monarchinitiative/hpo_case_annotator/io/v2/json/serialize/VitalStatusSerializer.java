@@ -20,7 +20,9 @@ public class VitalStatusSerializer extends StdSerializer<VitalStatus> {
 
     @Override
     public void serialize(VitalStatus value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+        gen.writeStartObject();
         gen.writeStringField("status", value.getStatus().name());
         gen.writeObjectField("timeOfDeath", value.getTimeOfDeath());
+        gen.writeEndObject();
     }
 }

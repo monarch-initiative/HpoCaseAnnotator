@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
 
@@ -31,6 +32,10 @@ public class IndividualIdsComponent extends VBox {
     private TitledLabel proband;
     @FXML
     private Label ageSummary;
+    @FXML
+    private TitledLabel vitalStatus;
+    @FXML
+    private TimeElementComponent timeOfDeath;
 
     public IndividualIdsComponent() {
         FXMLLoader loader = new FXMLLoader(IndividualIdsComponent.class.getResource("IndividualIdsComponent.fxml"));
@@ -136,6 +141,12 @@ public class IndividualIdsComponent extends VBox {
     }
     public StringProperty probandProperty() {
         return proband.textProperty();
+    }
+    public StringProperty vitalStatusProperty() {
+        return vitalStatus.textProperty();
+    }
+    public ObjectProperty<ObservableTimeElement> timeOfDeathProperty() {
+        return timeOfDeath.dataProperty();
     }
 
 }

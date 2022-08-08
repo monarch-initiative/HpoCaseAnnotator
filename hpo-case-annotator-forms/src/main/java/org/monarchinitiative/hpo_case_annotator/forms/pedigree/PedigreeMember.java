@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms.pedigree;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
@@ -24,6 +25,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.hpo_case_annotator.forms.util.GenotypeStringConverter;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
+import org.monarchinitiative.hpo_case_annotator.model.v2.VitalStatus;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.*;
@@ -108,6 +110,7 @@ public class PedigreeMember {
 
     @FXML
     private void initialize() {
+        // Individual credentials
         StringBinding individualId = nullableStringProperty(item, "id");
         pedigreeMemberTitle.probandId.textProperty().bind(individualId);
         pedigreeMemberTitle.icon.imageProperty().bind(createIndividualImageBinding());
@@ -126,6 +129,8 @@ public class PedigreeMember {
                 .bind(when(selectBoolean(item, "proband"))
                         .then("Yes")
                         .otherwise("No"));
+        individualIdentifiers.vitalStatusProperty().bind(select(item, "vitalStatus", "status").asString());
+        individualIdentifiers.timeOfDeathProperty().bind(select(item, "vitalStatus", "timeOfDeath"));
 
         // Phenotypes table view
         phenotypes.itemsProperty().bind(select(item, "phenotypicFeatures"));

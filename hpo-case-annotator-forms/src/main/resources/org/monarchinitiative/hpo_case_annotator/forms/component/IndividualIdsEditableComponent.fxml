@@ -20,6 +20,7 @@
                         <TitledTextField fx:id="maternalId" name="Maternal ID" promptText="e.g. II:2"/>
                         <TitledComboBox fx:id="sex" name="Sex" value="MALE"/>
                         <TitledCheckBox fx:id="proband" name="Proband?" selected="true"/>
+                        <VitalStatusEditableComponent fx:id="vitalStatusComponent"/>
                     </children>
                 </HBox>
             </children>

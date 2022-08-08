@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementEditableComponent?>
+
+<?import javafx.scene.control.CheckBox?>
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.HBox"
+         alignment="CENTER_LEFT" stylesheets="@vital-status-editable-component.css">
+    <children>
+        <TitledComboBox fx:id="vitalStatus" name="VitalStatus"/>
+        <VBox>
+            <children>
+                <CheckBox fx:id="timeOfDeathIsUnknown" selected="true" text="Time of death is unknown"/>
+                <TimeElementEditableComponent fx:id="timeOfDeathComponent" disable="true"/>
+            </children>
+        </VBox>
+    </children>
+</fx:root>

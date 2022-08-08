@@ -31,6 +31,8 @@ public class IndividualIdsEditableComponent extends VBox implements DataEditCont
     private TitledCheckBox proband;
     @FXML
     private TimeElementEditableComponent ageComponent;
+    @FXML
+    private VitalStatusEditableComponent vitalStatusComponent;
 
     public IndividualIdsEditableComponent() {
         getStyleClass().add(DEFAULT_STYLECLASS);
@@ -47,8 +49,8 @@ public class IndividualIdsEditableComponent extends VBox implements DataEditCont
 
     @FXML
     private void initialize() {
-        sex.getItems().addAll(Sex.values());
         idLabel.textProperty().bind(individualId.textProperty());
+        sex.getItems().addAll(Sex.values());
     }
 
     @Override
@@ -61,7 +63,7 @@ public class IndividualIdsEditableComponent extends VBox implements DataEditCont
         sex.setValue(data.getSex());
         proband.setSelected(data.isProband());
         ageComponent.setInitialData(data.getAge());
-
+        vitalStatusComponent.setInitialData(data.getVitalStatus());
     }
 
     @Override
@@ -72,6 +74,7 @@ public class IndividualIdsEditableComponent extends VBox implements DataEditCont
         item.setSex(sex.getValue());
         item.setProband(proband.isSelected());
         ageComponent.commit();
+        vitalStatusComponent.commit();
     }
 
 }

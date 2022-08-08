@@ -76,6 +76,7 @@ public class ObservablePedigreeMember extends BaseObservableIndividual implement
                 ", maternalId=" + maternalId.get() +
                 ", proband=" + proband.get() +
                 ", age=" + getAge() +
+                ", vitalStatus=" + getVitalStatus() +
                 ", sex=" + getSex() +
                 ", phenotypicFeatures=" + getPhenotypicFeatures().stream().map(PhenotypicFeature::toString).toList() +
                 ", diseaseStates=" + getDiseaseStates().stream().map(DiseaseStatus::toString).toList() +

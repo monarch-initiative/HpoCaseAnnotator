@@ -198,6 +198,10 @@
           "days" : 4
         }
       },
+      "vitalStatus" : {
+        "status" : "ALIVE",
+        "timeOfDeath" : null
+      },
       "diseases" : [ {
         "diseaseIdentifier" : {
           "diseaseId" : "OMIM:219700",
@@ -223,6 +227,7 @@
       } ],
       "phenotypicFeatures" : [ {
         "termId" : "HP:0000822",
+        "label" : "Hypertension",
         "isExcluded" : true,
         "onset" : {
           "timeCase" : "AGE",
@@ -235,6 +240,7 @@
         "resolution" : null
       }, {
         "termId" : "HP:0002110",
+        "label" : "Bronchiectasis",
         "isExcluded" : false,
         "onset" : {
           "timeCase" : "AGE_RANGE",
