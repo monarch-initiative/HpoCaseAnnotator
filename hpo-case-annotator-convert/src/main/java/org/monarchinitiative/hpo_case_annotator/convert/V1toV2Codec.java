@@ -34,6 +34,11 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
             GenomeAssembly.GRCH_37, GenomicAssemblies.GRCh37p13(),
             GenomeAssembly.GRCH_38, GenomicAssemblies.GRCh38p13()
     );
+    /**
+     * We do not have HPO ontology to add label at the moment and the label is not present in the v1 model.
+     * TODO - decide whether we need HPO to convert or if we keep using the placeholder below.
+     */
+    private static final String MISSING = "MISSING";
 
     private V1toV2Codec() {
     }
@@ -334,7 +339,7 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
 
         for (OntologyClass phenotype : phenotypeList)
             // We do not have onset, and we certainly do not have the resolution.
-            phenotypes.add(PhenotypicFeature.of(TermId.of(phenotype.getId()), phenotype.getNotObserved(), null, null));
+            phenotypes.add(PhenotypicFeature.of(TermId.of(phenotype.getId()), MISSING, phenotype.getNotObserved(), null, null));
 
         return phenotypes;
     }

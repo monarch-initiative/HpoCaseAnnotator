@@ -27,6 +27,10 @@ public class PhenotypicFeatureDeserializer extends StdDeserializer<PhenotypicFea
         JsonNode node = codec.readTree(jp);
 
         TermId termId = TermId.of(node.get("termId").asText());
+        String label = node.has("label")
+                ? node.get("label").asText()
+                : "MISSING";
+
         boolean isExcluded = node.get("isExcluded").asBoolean();
         TimeElement onset = codec.treeToValue(node.get("onset"), TimeElement.class);
         TimeElement resolution = codec.treeToValue(node.get("resolution"), TimeElement.class);
@@ -36,6 +40,6 @@ public class PhenotypicFeatureDeserializer extends StdDeserializer<PhenotypicFea
 //            onset = TimeElement.of(TimeElement.TimeElementCase.AGE_RANGE, null, null, observationAge, null);
 //        }
 
-        return PhenotypicFeature.of(termId, isExcluded, onset, resolution);
+        return PhenotypicFeature.of(termId, label, isExcluded, onset, resolution);
     }
 }

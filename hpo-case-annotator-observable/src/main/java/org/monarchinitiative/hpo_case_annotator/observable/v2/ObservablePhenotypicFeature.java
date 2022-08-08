@@ -9,7 +9,8 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 
 public class ObservablePhenotypicFeature implements PhenotypicFeature {
 
-    private final ObjectProperty<TermId> termId = new SimpleObjectProperty<>(this, "termId");
+    private TermId termId;
+    private String label;
     private final BooleanProperty excluded = new SimpleBooleanProperty(this, "excluded");
     private final ObjectProperty<ObservableTimeElement> onset = new SimpleObjectProperty<>(this, "onset");
     private final ObjectProperty<ObservableTimeElement> resolution = new SimpleObjectProperty<>(this, "resolution");
@@ -19,8 +20,8 @@ public class ObservablePhenotypicFeature implements PhenotypicFeature {
 
     public ObservablePhenotypicFeature(PhenotypicFeature phenotypicFeature) {
         if (phenotypicFeature != null) {
-            termId.set(phenotypicFeature.id());
-
+            termId = phenotypicFeature.id();
+            label = phenotypicFeature.getLabel();
             excluded.set(phenotypicFeature.isExcluded());
 
             if (phenotypicFeature.getOnset() != null)
@@ -33,19 +34,20 @@ public class ObservablePhenotypicFeature implements PhenotypicFeature {
 
     @Override
     public TermId id() {
-        return termId.get();
+        return termId;
     }
 
     public TermId getTermId() {
-        return termId.get();
+        return termId;
     }
 
     public void setTermId(TermId termId) {
-        this.termId.set(termId);
+        this.termId = termId;
     }
 
-    public ObjectProperty<TermId> termIdProperty() {
-        return termId;
+    @Override
+    public String getLabel() {
+        return label;
     }
 
     @Override
@@ -90,7 +92,8 @@ public class ObservablePhenotypicFeature implements PhenotypicFeature {
     @Override
     public String toString() {
         return "ObservablePhenotypicFeature{" +
-                "termId=" + termId.get() +
+                "termId=" + termId +
+                ", label=" + label +
                 ", excluded=" + excluded.get() +
                 ", onset=" + onset.get() +
                 ", resolution=" + resolution.get() +

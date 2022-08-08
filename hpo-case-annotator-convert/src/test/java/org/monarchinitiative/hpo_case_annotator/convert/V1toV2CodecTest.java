@@ -124,8 +124,9 @@ public class V1toV2CodecTest {
         assertThat(members.get(0), equalTo(PedigreeMember.of("FAM:001", "", "",
                 true,
                 List.of(
-                        PhenotypicFeature.of(TermId.of("HP:1234567"), false, null, null),
-                        PhenotypicFeature.of(TermId.of("HP:9876543"), true, null, null)
+                        // TODO - consider removing MISSING values
+                        PhenotypicFeature.of(TermId.of("HP:1234567"), "MISSING", false, null, null),
+                        PhenotypicFeature.of(TermId.of("HP:9876543"), "MISSING", true, null, null)
                 ),
                 List.of(DiseaseStatus.of(DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF"), false)),
                 List.of(

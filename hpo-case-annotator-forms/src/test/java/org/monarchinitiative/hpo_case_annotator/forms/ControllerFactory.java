@@ -105,7 +105,7 @@ public class ControllerFactory implements HCAControllerFactory {
         } else if (clz.equals(Pedigree.class)) {
             return new Pedigree(this);
         } else if (clz.equals(PedigreeMember.class)) {
-            return new PedigreeMember(termId -> hpo.getTermMap().get(termId), this);
+            return new PedigreeMember(this);
         } else if (clz.equals(IndividualIdsComponent.class)) {
             return new IndividualIdsComponent();
         } else if (clz.equals(TimeElementComponent.class)) {

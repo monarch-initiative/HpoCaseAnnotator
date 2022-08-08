@@ -75,7 +75,7 @@ public class PhenotypicFeature extends BaseBindingObservableDataController<Obser
     protected void bind(ObservablePhenotypicFeature feature) {
         // term id & label
         termId.setText(feature.getTermId().getValue());
-        name.setText(getLabelForTerm(feature.getTermId()));
+        name.setText(feature.getLabel());
         definition.setText(getDefinitionForTermId(feature.getTermId()));
 
         // status
@@ -97,13 +97,6 @@ public class PhenotypicFeature extends BaseBindingObservableDataController<Obser
         termId.setText(null);
         name.setText(null);
         definition.setText(null);
-    }
-
-    private String getLabelForTerm(TermId termId) {
-        Term term = termSource.apply(termId);
-        if (term == null)
-            return "N/A";
-        return term.getName();
     }
 
     private String getDefinitionForTermId(TermId termId) {

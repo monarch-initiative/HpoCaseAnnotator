@@ -158,7 +158,7 @@ class V2 {
 
     private static Pedigree getPedigree() {
         DiseaseIdentifier diseaseIdentifier = DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF");
-        List<DiseaseStatus> diseases = List.of(DiseaseStatus.of(diseaseIdentifier , false));
+        List<DiseaseStatus> diseases = List.of(DiseaseStatus.of(diseaseIdentifier, false));
 
         List<VariantGenotype> genotypes = List.of(
                 VariantGenotype.of(mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE),
@@ -170,8 +170,8 @@ class V2 {
         TimeElement hypertensionOnset = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(4, 6, null), null, null);
         TimeElement bronchiectasisOnset = TimeElement.of(TimeElement.TimeElementCase.AGE_RANGE, null, null, AgeRange.of(Age.of(10, null, null), Age.of(10, 6, null)), null);
         List<PhenotypicFeature> phenotypes = List.of(
-                PhenotypicFeature.of(TermId.of("HP:0000822"), true, hypertensionOnset, null), // Hypertension
-                PhenotypicFeature.of(TermId.of("HP:0002110"), false, bronchiectasisOnset, null) // Bronchiectasis
+                PhenotypicFeature.of(TermId.of("HP:0000822"), "Hypertension", true, hypertensionOnset, null), // Hypertension
+                PhenotypicFeature.of(TermId.of("HP:0002110"), "Bronchiectasis", false, bronchiectasisOnset, null) // Bronchiectasis
         );
 
         TimeElement age = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(10, 5, 4), null, null);
@@ -193,8 +193,8 @@ class V2 {
         TimeElement abcAge = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(14, null, null), null, null);
         Individual abc = Individual.of("abc",
                 List.of(
-                        PhenotypicFeature.of(TermId.of("HP:0000822"), true, abcHypertensionOnset, null), // Hypertension
-                        PhenotypicFeature.of(TermId.of("HP:0002110"), false, abcBronchiectasisOnset, null) // Bronchiectasis
+                        PhenotypicFeature.of(TermId.of("HP:0000822"), "Hypertension", true, abcHypertensionOnset, null), // Hypertension
+                        PhenotypicFeature.of(TermId.of("HP:0002110"), "Bronchiectasis", false, abcBronchiectasisOnset, null) // Bronchiectasis
                 ),
                 List.of(DiseaseStatus.of(diseaseIdentifier, false)),
                 List.of(
@@ -216,8 +216,8 @@ class V2 {
         TimeElement defAge = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(25, null, null), null, null);
         Individual def = Individual.of("def",
                 List.of(
-                        PhenotypicFeature.of(TermId.of("HP:0000822"), false, defHypertensionOnset, null), // Hypertension
-                        PhenotypicFeature.of(TermId.of("HP:0002110"), true, defBronchiectasisOnset, null) // Bronchiectasis
+                        PhenotypicFeature.of(TermId.of("HP:0000822"), "Hypertension", false, defHypertensionOnset, null), // Hypertension
+                        PhenotypicFeature.of(TermId.of("HP:0002110"), "Bronchiectasis", true, defBronchiectasisOnset, null) // Bronchiectasis
                 ),
                 List.of(DiseaseStatus.of(diseaseIdentifier, true)),
                 List.of(

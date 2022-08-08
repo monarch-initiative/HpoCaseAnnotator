@@ -18,7 +18,6 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.DiseaseTableController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualDetailController;
 import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseIdentifier;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableDiseaseIdentifier;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableDiseaseStatus;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
@@ -135,9 +134,8 @@ public class DiseaseStatusController<T extends BaseObservableIndividual> extends
 
     private Consumer<DiseaseIdentifier> addDiseaseIdentifier() {
         return di -> {
-            ObservableDiseaseIdentifier odi = new ObservableDiseaseIdentifier(di);
             ObservableDiseaseStatus ods = new ObservableDiseaseStatus();
-            ods.setDiseaseId(odi);
+            ods.setDiseaseId(new org.monarchinitiative.hpo_case_annotator.observable.v2.DiseaseIdentifier(di));
             diseaseTableController.diseaseStatuses().add(ods);
         };
     }

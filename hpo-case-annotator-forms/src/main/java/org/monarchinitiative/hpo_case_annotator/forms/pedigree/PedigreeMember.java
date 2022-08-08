@@ -15,7 +15,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.image.Image;
 import javafx.stage.StageStyle;
-import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsEditableComponent;
@@ -28,7 +27,6 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.*;
-import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.monarchinitiative.svart.CoordinateSystem;
 import org.monarchinitiative.svart.Strand;
@@ -39,9 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
 
 import static javafx.beans.binding.Bindings.*;
 
@@ -49,7 +45,6 @@ public class PedigreeMember {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PedigreeMember.class);
     private static final Map<Sex, Map<Boolean, Image>> SEX_AFFECTED_ICONS = loadSexAffectedIconsMap();
-    private final Function<TermId, Term> termSource;
     private final HCAControllerFactory controllerFactory;
     private final ListProperty<CuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ObjectProperty<ObservablePedigreeMember> item = new SimpleObjectProperty<>();
@@ -105,13 +100,10 @@ public class PedigreeMember {
     private TableColumn<CuratedVariant, String> altTableColumn;
 
     /**
-     * @param termSource        a function to get ahold of {@link TermId} details. The function returns {@code null}
-     *                          for unknown {@link TermId}s.
      * @param controllerFactory controller factory for preparing controllers for app sub-elements.
      */
-    public PedigreeMember(Function<TermId, Term> termSource, HCAControllerFactory controllerFactory) {
+    public PedigreeMember(HCAControllerFactory controllerFactory) {
         this.controllerFactory = controllerFactory;
-        this.termSource = Objects.requireNonNull(termSource);
     }
 
     @FXML
@@ -137,9 +129,9 @@ public class PedigreeMember {
 
         // Phenotypes table view
         phenotypes.itemsProperty().bind(select(item, "phenotypicFeatures"));
-        idColumn.setCellValueFactory(cdf -> cdf.getValue().termIdProperty());
+        idColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().id()));
         idColumn.setCellFactory(TermIdTableCell::new);
-        labelColumn.setCellValueFactory(labelCellValueFactory(termSource));
+        labelColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLabel()));
         statusColumn.setCellValueFactory(cdf -> when(cdf.getValue().excludedProperty()).then("Excluded").otherwise("Present"));
         onsetColumn.setCellFactory(tc -> new ObservableTimeElementTableCell<>());
         onsetColumn.setCellValueFactory(cdf -> cdf.getValue().onsetProperty());
@@ -235,16 +227,6 @@ public class PedigreeMember {
                         ? null
                         : sexMap.get(proband);
             }
-        };
-    }
-
-    private static Callback<TableColumn.CellDataFeatures<ObservablePhenotypicFeature, String>, ObservableValue<String>> labelCellValueFactory(Function<TermId, Term> termSource) {
-        return cdf -> {
-            Term term = termSource.apply(cdf.getValue().getTermId());
-            if (term == null)
-                return null;
-            else
-                return new ReadOnlyStringWrapper(term.getName());
         };
     }
 

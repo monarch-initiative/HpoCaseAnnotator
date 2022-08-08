@@ -5,7 +5,7 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
 
 public class ObservableDiseaseStatus implements DiseaseStatus {
 
-    private final ObjectProperty<ObservableDiseaseIdentifier> diseaseId = new SimpleObjectProperty<>(this, "diseaseId");
+    private DiseaseIdentifier diseaseId;
     private final BooleanProperty excluded = new SimpleBooleanProperty(this, "excluded");
 
     public ObservableDiseaseStatus() {
@@ -14,23 +14,19 @@ public class ObservableDiseaseStatus implements DiseaseStatus {
     public ObservableDiseaseStatus(DiseaseStatus diseaseStatus) {
         if (diseaseStatus != null) {
             if (diseaseStatus.getDiseaseId() != null)
-                diseaseId.set(new ObservableDiseaseIdentifier(diseaseStatus.getDiseaseId()));
+                diseaseId = new DiseaseIdentifier(diseaseStatus.getDiseaseId());
 
             excluded.set(diseaseStatus.isExcluded());
         }
     }
 
     @Override
-    public ObservableDiseaseIdentifier getDiseaseId() {
-        return diseaseId.get();
-    }
-
-    public void setDiseaseId(ObservableDiseaseIdentifier diseaseId) {
-        this.diseaseId.set(diseaseId);
-    }
-
-    public ObjectProperty<ObservableDiseaseIdentifier> diseaseIdProperty() {
+    public DiseaseIdentifier getDiseaseId() {
         return diseaseId;
+    }
+
+    public void setDiseaseId(DiseaseIdentifier diseaseId) {
+        this.diseaseId = diseaseId;
     }
 
     @Override
@@ -49,7 +45,7 @@ public class ObservableDiseaseStatus implements DiseaseStatus {
     @Override
     public String toString() {
         return "ObservableDiseaseStatus{" +
-                "diseaseId=" + diseaseId.get() +
+                "diseaseId=" + diseaseId +
                 ", excluded=" + excluded.get() +
                 '}';
     }

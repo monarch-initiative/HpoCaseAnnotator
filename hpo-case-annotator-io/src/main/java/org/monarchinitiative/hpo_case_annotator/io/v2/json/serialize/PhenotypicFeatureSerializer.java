@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import org.monarchinitiative.hpo_case_annotator.model.v2.PhenotypicFeature;
-import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
 
 import java.io.IOException;
 
@@ -23,6 +22,7 @@ public class PhenotypicFeatureSerializer extends StdSerializer<PhenotypicFeature
         gen.writeStartObject();
 
         gen.writeStringField("termId", value.id().getValue());
+        gen.writeStringField("label", value.getLabel());
         gen.writeBooleanField("isExcluded", value.isExcluded());
 
         gen.writeObjectField("onset", value.getOnset());

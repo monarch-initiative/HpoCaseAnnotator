@@ -6,14 +6,16 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 // Roughly corresponds to PhenotypicFeature of Phenopackets v2
 public interface PhenotypicFeature extends Identified {
 
-    static PhenotypicFeature of(TermId termId, boolean isExcluded, TimeElement onset, TimeElement resolution) {
-        return new PhenotypicFeatureDefault(termId, isExcluded, onset, resolution);
+    static PhenotypicFeature of(TermId termId, String label, boolean isExcluded, TimeElement onset, TimeElement resolution) {
+        return new PhenotypicFeatureDefault(termId, label, isExcluded, onset, resolution);
     }
 
     @Deprecated(forRemoval = true)
     default TermId termId() {
         return id();
     }
+
+    String getLabel();
 
     boolean isExcluded();
 
