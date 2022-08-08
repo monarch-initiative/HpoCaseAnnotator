@@ -6,7 +6,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Dialog;
+import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseBindingObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.metadata.Metadata;
 import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree;
 import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationController;
 import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationEditable;
@@ -18,19 +20,29 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilySt
 public class FamilyStudyController extends BaseBindingObservableDataController<ObservableFamilyStudy> {
 
     @FXML
+    private VBox publicationBox;
+    @FXML
     private Parent publication;
     @FXML
     private PublicationController publicationController;
     @FXML
     private Button editPublication;
     @FXML
+    private VBox pedigreeBox;
+    @FXML
     private Parent pedigree;
     @FXML
     private Pedigree pedigreeController;
     @FXML
+    private VBox variantsBox;
+    @FXML
     private Parent variantSummary;
     @FXML
     private VariantSummary variantSummaryController;
+    @FXML
+    private VBox metadataBox;
+    @FXML
+    private Metadata metadataSummary;
 
     @Override
     protected void initialize() {
@@ -43,6 +55,7 @@ public class FamilyStudyController extends BaseBindingObservableDataController<O
         publicationController.dataProperty().bindBidirectional(data.publicationProperty());
         pedigreeController.dataProperty().bindBidirectional(data.pedigreeProperty());
         variantSummaryController.variants().bindBidirectional(data.variants());
+        metadataSummary.dataProperty().bind(data.studyMetadataProperty());
     }
 
     @Override
@@ -50,6 +63,7 @@ public class FamilyStudyController extends BaseBindingObservableDataController<O
         publicationController.dataProperty().unbindBidirectional(data.publicationProperty());
         pedigreeController.dataProperty().unbindBidirectional(data.pedigreeProperty());
         variantSummaryController.variants().unbindBidirectional(data.variants());
+        metadataSummary.dataProperty().unbind();
     }
 
     @FXML
@@ -77,5 +91,29 @@ public class FamilyStudyController extends BaseBindingObservableDataController<O
     @FXML
     private void publicationSectionMouseExited() {
         editPublication.setVisible(false);
+    }
+
+    @FXML
+    private void publicationNavMouseClicked(ActionEvent e) {
+        publicationBox.requestFocus();
+        e.consume();
+    }
+
+    @FXML
+    private void pedigreeNavMouseClicked(ActionEvent e) {
+        pedigreeBox.requestFocus();
+        e.consume();
+    }
+
+    @FXML
+    private void variantsNavMouseClicked(ActionEvent e) {
+        variantsBox.requestFocus();
+        e.consume();
+    }
+
+    @FXML
+    private void metadataNavMouseClicked(ActionEvent e) {
+        metadataBox.requestFocus();
+        e.consume();
     }
 }

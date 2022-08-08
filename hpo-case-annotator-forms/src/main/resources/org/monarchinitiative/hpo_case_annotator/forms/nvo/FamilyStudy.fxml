@@ -4,10 +4,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.metadata.*?>
 
 <ScrollPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-        fx:controller="org.monarchinitiative.hpo_case_annotator.forms.nvo.FamilyStudyController"
-        fitToHeight="true" fitToWidth="true">
+            fx:controller="org.monarchinitiative.hpo_case_annotator.forms.nvo.FamilyStudyController"
+            id="study-box">
     <stylesheets>
         <URL value="@../base.css" />
         <URL value="@family-study.css" />
@@ -24,29 +25,43 @@
                                 </ImageView>
                             </graphic>
                         </Label>
+                        <HBox>
+                            <children>
+                                <Button onAction="#publicationNavMouseClicked" styleClass="nav-button" text="Publication" />
+                                <Button onAction="#pedigreeNavMouseClicked" styleClass="nav-button" text="Pedigree" />
+                                <Button onAction="#variantsNavMouseClicked" styleClass="nav-button" text="Variants" />
+                                <Button onAction="#metadataNavMouseClicked" styleClass="nav-button" text="Metadata" />
+                            </children>
+                        </HBox>
                     </children>
                 </HBox>
-                <VBox VBox.vgrow="NEVER" >
+                <VBox fx:id="publicationBox" VBox.vgrow="NEVER">
                     <children>
                         <Label styleClass="h2" text="Publication" />
                         <StackPane onMouseEntered="#publicationSectionMouseEntered" onMouseExited="#publicationSectionMouseExited">
                             <children>
                                 <fx:include fx:id="publication" source="../publication/Publication.fxml" StackPane.alignment="CENTER" />
-                                <Button fx:id="editPublication" onAction="#editPublicationAction" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" styleClass="edit-button" visible="false" StackPane.alignment="TOP_RIGHT" />
+                                <Button fx:id="editPublication" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#editPublicationAction" styleClass="edit-button" visible="false" StackPane.alignment="TOP_RIGHT" />
                             </children>
                         </StackPane>
                     </children>
                 </VBox>
-                <VBox >
+                <VBox fx:id="pedigreeBox">
                     <children>
                         <Label styleClass="h2" text="Pedigree" />
-                        <fx:include VBox.vgrow="ALWAYS" fx:id="pedigree" source="../pedigree/Pedigree.fxml" />
+                        <fx:include fx:id="pedigree" source="../pedigree/Pedigree.fxml" VBox.vgrow="ALWAYS" />
                     </children>
                 </VBox>
-                <VBox >
+                <VBox fx:id="variantsBox">
                     <children>
-                        <Label styleClass="h2" text="Variants"/>
-                        <fx:include fx:id="variantSummary" source="../variants/VariantSummary.fxml"/>
+                        <Label styleClass="h2" text="Variants" />
+                        <fx:include fx:id="variantSummary" source="../variants/VariantSummary.fxml" />
+                    </children>
+                </VBox>
+                <VBox fx:id="metadataBox">
+                    <children>
+                        <Label styleClass="h2" text="Metadata" />
+                        <Metadata fx:id="metadataSummary" />
                     </children>
                 </VBox>
             </children>
