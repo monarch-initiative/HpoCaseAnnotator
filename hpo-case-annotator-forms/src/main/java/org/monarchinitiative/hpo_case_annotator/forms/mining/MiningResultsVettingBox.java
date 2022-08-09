@@ -3,7 +3,11 @@ package org.monarchinitiative.hpo_case_annotator.forms.mining;
 import javafx.beans.binding.ListBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
@@ -11,21 +15,25 @@ import javafx.scene.text.TextFlow;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
-public class MiningResultsVettingBox extends VBox {
+public class MiningResultsVettingBox {
 
+    private final Ontology hpo;
     private final ObjectProperty<TextMiningResults> results = new SimpleObjectProperty<>();
-    private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
 
     @FXML
     private TextFlow textFlow;
     @FXML
-    private ListView<VettedPhenotypicFeature> vettedPhenotypicFeatures;
+    private TableView<VettedPhenotypicFeature> vettedPhenotypicFeatures;
+    @FXML
+    private TableColumn<VettedPhenotypicFeature, String> idColumn;
+    @FXML
+    private TableColumn<VettedPhenotypicFeature, String> nameColumn;
+    @FXML
+    private TableColumn<VettedPhenotypicFeature, Boolean> excludedColumn;
+    @FXML
+    private Label statusLabel;
 
     public MiningResultsVettingBox(Ontology hpo) {
         this.hpo = Objects.requireNonNull(hpo);
@@ -45,6 +53,9 @@ public class MiningResultsVettingBox extends VBox {
     private void bind(TextMiningResults results) {
         String sourceText = results.sourceText();
         List<MinedTerm> sortedTerms = results.minedTerms().stream().sorted(Comparator.comparingInt(MinedTerm::start)).toList();
+        ObservableList<ObservableMinedTerm> minedTerms = FXCollections.observableArrayList(ObservableMinedTerm.EXTRACTOR);
+        sortedTerms.forEach(term -> minedTerms.add(new ObservableMinedTerm(term.id(), hpo.getTermMap().get(term.id()).getName(), term.isNegated())));
+
         List<Text> textList = new ArrayList<>();
         int start = 0;
         for (MinedTerm term : sortedTerms) {
@@ -91,18 +102,6 @@ public class MiningResultsVettingBox extends VBox {
 
     public void setResults(TextMiningResults results) {
         this.results.set(results);
-    }
-
-    public Ontology getHpo() {
-        return hpo.get();
-    }
-
-    public ObjectProperty<Ontology> hpoProperty() {
-        return hpo;
-    }
-
-    public void setHpo(Ontology hpo) {
-        this.hpo.set(hpo);
     }
 
     /**

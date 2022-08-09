@@ -1,6 +1,8 @@
 package org.monarchinitiative.hpo_case_annotator.forms.mining;
 
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -26,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 @ExtendWith(ApplicationExtension.class)
 public class MiningResultsVettingBoxTest {
 
-    private MiningResultsVettingBox results;
+    private MiningResultsVettingBox controller;
 
     @Start
     public void start(Stage stage) throws Exception {
@@ -37,7 +39,7 @@ public class MiningResultsVettingBoxTest {
 
         Parent parent = loader.load();
 
-        Scene scene = new Scene(results);
+        Scene scene = new Scene(parent);
         stage.setScene(scene);
         stage.initStyle(StageStyle.DECORATED);
         stage.show();
@@ -46,11 +48,11 @@ public class MiningResultsVettingBoxTest {
     @Test
     public void showTheWidget(FxRobot robot) {
         robot.sleep(5, TimeUnit.SECONDS);
-        Platform.runLater(() -> results.setResults(getExampleTestResults()));
+        Platform.runLater(() -> controller.setResults(getExampleTestResults()));
 
         robot.sleep(60, TimeUnit.SECONDS);
 
-        System.err.println(results.getVettedPhenotypicFeatures());
+        System.err.println(controller.getVettedPhenotypicFeatures());
     }
 
     private TextMiningResults getExampleTestResults() {
