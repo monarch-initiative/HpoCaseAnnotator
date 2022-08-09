@@ -32,12 +32,14 @@ public class MinedText extends Text {
         tooltip.setGraphic(infoBox);
         tooltip.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         tooltip.getStyleClass().add("tooltip");
+        infoBox.getStyleClass().add("tooltip-box");
+        infoBox.getIdLabel().getStyleClass().add("id-label");
+        infoBox.getNameLabel().getStyleClass().add("name-label");
+        infoBox.getButtonBox().getStyleClass().add("tooltip-box");
         Tooltip.install(this, tooltip);
-        tooltip.show(this.getScene().getWindow());
-//        Point2D p = this.localToScene(0.0, 0.0);
-//        double xCoord = p.getX() + this.getScene().getX() + this.getScene().getWindow().getX();
-//        double yCoord = p.getY() + this.getScene().getY() + this.getScene().getWindow().getY() + 15;
-//        tooltip.show(this, xCoord, yCoord);
+        tooltip.show(getScene().getWindow());
+
+        minedTerm.reviewStatusProperty().addListener(obs -> tooltip.hide());
     }
 
     public ObservableMinedTerm getMinedTerm() {

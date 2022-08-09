@@ -25,6 +25,7 @@
                         <TableColumn prefWidth="75.0" text="Id" fx:id="idColumn"/>
                         <TableColumn prefWidth="75.0" text="Name" fx:id="nameColumn"/>
                         <TableColumn prefWidth="75.0" text="Excluded" fx:id="excludedColumn"/>
+                        <TableColumn prefWidth="75.0" text="Status" fx:id="statusColumn"/>
                     </columns>
                     <placeholder>
                         <Label text="No vetted features yet"/>

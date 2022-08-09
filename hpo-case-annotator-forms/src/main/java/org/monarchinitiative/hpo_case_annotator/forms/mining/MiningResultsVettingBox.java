@@ -25,13 +25,15 @@ public class MiningResultsVettingBox {
     @FXML
     private TextFlow textFlow;
     @FXML
-    private TableView<VettedPhenotypicFeature> vettedPhenotypicFeatures;
+    private TableView<ObservableMinedTerm> vettedPhenotypicFeatures;
     @FXML
-    private TableColumn<VettedPhenotypicFeature, String> idColumn;
+    private TableColumn<ObservableMinedTerm, String> idColumn;
     @FXML
-    private TableColumn<VettedPhenotypicFeature, String> nameColumn;
+    private TableColumn<ObservableMinedTerm, String> nameColumn;
     @FXML
-    private TableColumn<VettedPhenotypicFeature, Boolean> excludedColumn;
+    private TableColumn<ObservableMinedTerm, Boolean> excludedColumn;
+    @FXML
+    private TableColumn<ObservableMinedTerm, ReviewStatus> statusColumn;
     @FXML
     private Label statusLabel;
 
@@ -41,9 +43,10 @@ public class MiningResultsVettingBox {
 
     @FXML
     private void initialize() {
-        idColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().id().toString()));
+        idColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getTermId().toString()));
         nameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getLabel()));
-        excludedColumn.setCellValueFactory(cellData -> new ReadOnlyBooleanWrapper(cellData.getValue().isNegated()));
+        excludedColumn.setCellValueFactory(cellData -> cellData.getValue().isExcludedProperty());
+        statusColumn.setCellValueFactory(cellData -> cellData.getValue().reviewStatusProperty());
         results.addListener((obs, old, novel) -> {
             if (old != null) unbind(old);
             if (novel != null) bind(novel);
@@ -79,8 +82,7 @@ public class MiningResultsVettingBox {
         }
         textFlow.getChildren().addAll(textList);
 
-        ListBinding<VettedPhenotypicFeature> vettedList = makeListBinding(minedTerms);
-        vettedPhenotypicFeatures.itemsProperty().bind(vettedList);
+        vettedPhenotypicFeatures.setItems(minedTerms);
 
         StringBinding status = makeSummaryBinding(minedTerms);
         statusLabel.textProperty().bind(status);
@@ -109,7 +111,7 @@ public class MiningResultsVettingBox {
      *
      * @return the list of vetted phenotypic features.
      */
-    public List<VettedPhenotypicFeature> getVettedPhenotypicFeatures() {
+    public List<ObservableMinedTerm> getVettedPhenotypicFeatures() {
         return vettedPhenotypicFeatures.getItems();
     }
 

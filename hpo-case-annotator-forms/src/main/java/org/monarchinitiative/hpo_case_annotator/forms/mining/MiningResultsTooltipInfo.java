@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -27,6 +28,9 @@ public class MiningResultsTooltipInfo extends VBox {
     @FXML
     private Button rejectTermButton;
 
+    @FXML
+    private HBox buttonBox;
+
     public MiningResultsTooltipInfo(MinedText minedText) {
         this.minedText = minedText;
         FXMLLoader loader = new FXMLLoader(MiningResultsVettingBox.class.getResource("MiningResultsTooltipInfo.fxml"));
@@ -47,29 +51,35 @@ public class MiningResultsTooltipInfo extends VBox {
         String name = minedTerm.getLabel();
         idLabel.setText(id);
         nameLabel.setText(name);
+        excludedCheckBox.selectedProperty().bindBidirectional(minedTerm.isExcludedProperty());
+//        acceptTermButton.setTooltip(new Tooltip("Accept Term"));
+//        rejectTermButton.setTooltip(new Tooltip("Reject Term"));
     }
 
     public CheckBox getExcludedCheckBox() {
         return excludedCheckBox;
     }
 
+    public HBox getButtonBox() {
+        return buttonBox;
+    }
+
+    public Label getIdLabel() {
+        return idLabel;
+    }
+
+    public Label getNameLabel() {
+        return nameLabel;
+    }
+
     @FXML
     void acceptTermButtonAction() {
-        acceptTerm(true);
+        minedTerm.setReviewStatus(ReviewStatus.APPROVED);
     }
 
     @FXML
     void rejectTermButtonAction() {
-        acceptTerm(false);
+        minedTerm.setReviewStatus(ReviewStatus.REJECTED);
     }
 
-    void acceptTerm(boolean accept) {
-        if (accept) {
-            minedText.getStyleClass().add("accepted");
-        } else {
-            minedText.getStyleClass().remove("accepted");
-        }
-        minedText.getMinedTerm().isApprovedProperty().setValue(accept);
-        minedText.getTooltip().hide();
-    }
 }

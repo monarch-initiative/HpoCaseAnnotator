@@ -11,7 +11,10 @@
 
 .accepted {
     -fx-underline: true;
-    -fx-text-fill: red;
+}
+
+.rejected {
+    -fx-strikethrough: true;
 }
 
 .mined {
@@ -25,5 +28,18 @@
 }
 
 .tooltip {
-    -fx-font-size: 12;
+    -fx-font-size: 15;
+}
+
+.tooltip-box {
+    -fx-padding: 5 5 5 5;
+    -fx-spacing: 15;
+}
+
+.id-label {
+    -fx-text-fill: orange;
+}
+
+.name-label {
+    -fx-text-fill: deepskyblue;
 }
