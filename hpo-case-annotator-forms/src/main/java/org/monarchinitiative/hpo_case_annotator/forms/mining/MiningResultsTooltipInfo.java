@@ -19,7 +19,7 @@ public class MiningResultsTooltipInfo extends VBox {
     private Label nameLabel = new Label();
 
     @FXML
-    private final CheckBox excludedCheckBox = new CheckBox();
+    private CheckBox excludedCheckBox = new CheckBox();
 
     @FXML
     private Button acceptTermButton;
