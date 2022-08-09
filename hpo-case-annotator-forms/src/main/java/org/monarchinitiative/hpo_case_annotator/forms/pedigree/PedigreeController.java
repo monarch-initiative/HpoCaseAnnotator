@@ -5,7 +5,6 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -14,8 +13,12 @@ import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigree;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
-public class Pedigree extends BaseBindingObservableDataController<ObservablePedigree> {
+@Scope("prototype")
+@Controller("nvoPedigreeController") // TODO - rename
+public class PedigreeController extends BaseBindingObservableDataController<ObservablePedigree> {
 
     private final HCAControllerFactory controllerFactory;
     private final ListProperty<CuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
@@ -24,7 +27,7 @@ public class Pedigree extends BaseBindingObservableDataController<ObservablePedi
     @FXML
     private ListView<ObservablePedigreeMember> members;
 
-    public Pedigree(HCAControllerFactory controllerFactory) {
+    public PedigreeController(HCAControllerFactory controllerFactory) {
         this.controllerFactory = controllerFactory;
     }
 

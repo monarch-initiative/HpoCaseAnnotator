@@ -7,14 +7,17 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseBindingObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.metadata.Metadata;
-import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree;
-import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationController;
+import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeController;
+import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication;
 import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationEditable;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
-import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummaryController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilyStudy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
-
+@Scope("prototype")
+@Controller("nvoFamilyStudyController") // TODO - rename
 public class FamilyStudyController extends BaseBindingObservableDataController<ObservableFamilyStudy> {
 
     @FXML
@@ -22,9 +25,7 @@ public class FamilyStudyController extends BaseBindingObservableDataController<O
     @FXML
     private Label publicationLabel;
     @FXML
-    private Parent publication;
-    @FXML
-    private PublicationController publicationController;
+    private Publication publication;
     @FXML
     private Button editPublication;
     @FXML
@@ -32,13 +33,13 @@ public class FamilyStudyController extends BaseBindingObservableDataController<O
     @FXML
     private Parent pedigree;
     @FXML
-    private Pedigree pedigreeController;
+    private PedigreeController pedigreeController;
     @FXML
     private Label variantsLabel;
     @FXML
     private Parent variantSummary;
     @FXML
-    private VariantSummary variantSummaryController;
+    private VariantSummaryController variantSummaryController;
     @FXML
     private Label metadataLabel;
     @FXML
@@ -52,7 +53,7 @@ public class FamilyStudyController extends BaseBindingObservableDataController<O
 
     @Override
     protected void bind(ObservableFamilyStudy data) {
-        publicationController.dataProperty().bindBidirectional(data.publicationProperty());
+        publication.dataProperty().bindBidirectional(data.publicationProperty());
         pedigreeController.dataProperty().bindBidirectional(data.pedigreeProperty());
         variantSummaryController.variants().bindBidirectional(data.variants());
         metadataSummary.dataProperty().bind(data.studyMetadataProperty());
@@ -60,7 +61,7 @@ public class FamilyStudyController extends BaseBindingObservableDataController<O
 
     @Override
     protected void unbind(ObservableFamilyStudy data) {
-        publicationController.dataProperty().unbindBidirectional(data.publicationProperty());
+        publication.dataProperty().unbindBidirectional(data.publicationProperty());
         pedigreeController.dataProperty().unbindBidirectional(data.pedigreeProperty());
         variantSummaryController.variants().unbindBidirectional(data.variants());
         metadataSummary.dataProperty().unbind();
@@ -73,7 +74,7 @@ public class FamilyStudyController extends BaseBindingObservableDataController<O
         dialog.initOwner(studyScrollPane.getParent().getScene().getWindow());
 
         PublicationEditable component = new PublicationEditable();
-        component.setInitialData(publicationController.getData());
+        component.setInitialData(publication.getData());
         dialog.getDialogPane().setContent(component);
         dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.UPDATE_CANCEL_BUTTONS);
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));

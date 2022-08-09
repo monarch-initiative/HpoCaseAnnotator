@@ -14,13 +14,17 @@ import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
 import java.util.Objects;
 import java.util.function.Function;
 
-public class PhenotypicFeature extends BaseBindingObservableDataController<ObservablePhenotypicFeature> {
+@Scope("prototype")
+@Controller("nvoPhenotypicFeatureController") // TODO - rename
+public class PhenotypicFeatureController extends BaseBindingObservableDataController<ObservablePhenotypicFeature> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PhenotypicFeature.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PhenotypicFeatureController.class);
     private final Function<TermId, Term> termSource;
     private final ToggleGroup presenceStatusToggleGroup = new ToggleGroup();
     @FXML
@@ -42,7 +46,7 @@ public class PhenotypicFeature extends BaseBindingObservableDataController<Obser
 
     private BooleanBinding phenotypicFeatureIsExcluded;
 
-    public PhenotypicFeature(Function<TermId, Term> termSource) {
+    public PhenotypicFeatureController(Function<TermId, Term> termSource) {
         this.termSource = Objects.requireNonNull(termSource);
     }
 

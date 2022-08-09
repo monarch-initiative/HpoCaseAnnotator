@@ -9,8 +9,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.image.Image;
@@ -32,6 +30,8 @@ import org.monarchinitiative.svart.CoordinateSystem;
 import org.monarchinitiative.svart.Strand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,9 +41,11 @@ import java.util.Optional;
 
 import static javafx.beans.binding.Bindings.*;
 
-public class PedigreeMember {
+@Scope("prototype")
+@Controller("nvoPedigreeMemberController") // TODO - rename
+public class PedigreeMemberController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PedigreeMember.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PedigreeMemberController.class);
     private static final Map<Sex, Map<Boolean, Image>> SEX_AFFECTED_ICONS = loadSexAffectedIconsMap();
     private final HCAControllerFactory controllerFactory;
     private final ListProperty<CuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
@@ -102,7 +104,7 @@ public class PedigreeMember {
     /**
      * @param controllerFactory controller factory for preparing controllers for app sub-elements.
      */
-    public PedigreeMember(HCAControllerFactory controllerFactory) {
+    public PedigreeMemberController(HCAControllerFactory controllerFactory) {
         this.controllerFactory = controllerFactory;
     }
 
@@ -133,7 +135,7 @@ public class PedigreeMember {
         // Phenotypes table view
         phenotypes.itemsProperty().bind(select(item, "phenotypicFeatures"));
         idColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().id()));
-        idColumn.setCellFactory(TermIdTableCell::new);
+        idColumn.setCellFactory(column -> new TermIdTableCell<>());
         labelColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLabel()));
         statusColumn.setCellValueFactory(cdf -> when(cdf.getValue().excludedProperty()).then("Excluded").otherwise("Present"));
         onsetColumn.setCellFactory(tc -> new ObservableTimeElementTableCell<>());
@@ -145,7 +147,7 @@ public class PedigreeMember {
         diseaseTable.itemsProperty().bind(select(item, "diseaseStates"));
         diseaseStatusColumn.setCellValueFactory(cdf -> when(cdf.getValue().excludedProperty()).then("Excluded").otherwise("Present"));
         diseaseIdColumn.setCellValueFactory(cdf -> select(cdf.getValue(), "diseaseId", "diseaseId")); // Yeah, twice.
-        diseaseIdColumn.setCellFactory(TermIdTableCell::new);
+        diseaseIdColumn.setCellFactory(column -> new TermIdTableCell<>());
         diseaseNameColumn.setCellValueFactory(cdf -> select(cdf.getValue(), "diseaseId", "diseaseName"));
 
         // Genotypes table view
@@ -311,23 +313,14 @@ public class PedigreeMember {
         dialog.titleProperty().bind(concat("Edit phenotype features for ", nullableStringProperty(item, "id")));
         dialog.setResizable(true);
 
-        FXMLLoader loader = new FXMLLoader(PhenotypeView.class.getResource("PhenotypeView.fxml"));
-        loader.setControllerFactory(controllerFactory);
-        Parent view;
-        PhenotypeView controller;
-        try {
-            view = loader.load();
-            controller = loader.getController();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-        controller.setInitialData(item.get()); // TODO - check non null?
-        dialog.getDialogPane().setContent(view);
+        PhenotypeView phenotypeView = new PhenotypeView(controllerFactory);
+        phenotypeView.setInitialData(item.get()); // TODO - check non null?
+        dialog.getDialogPane().setContent(phenotypeView);
         dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_CANCEL_BUTTONS);
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
         dialog.showAndWait()
                 .ifPresent(shouldCommit -> {
-                    if (shouldCommit) controller.commit();
+                    if (shouldCommit) phenotypeView.commit();
                 });
         e.consume();
     }
@@ -373,7 +366,7 @@ public class PedigreeMember {
     }
 
     private static Image loadImage(String location) {
-        try (InputStream is = PedigreeMember.class.getResourceAsStream(location)) {
+        try (InputStream is = PedigreeMemberController.class.getResourceAsStream(location)) {
             return new Image(is);
         } catch (IOException e) {
             throw new RuntimeException(e);

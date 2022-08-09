@@ -13,22 +13,22 @@ import java.io.IOException;
 
 class ObservablePedigreeMemberListCell extends ListCell<ObservablePedigreeMember> {
 
-    private final Region pedigreeMemberGraphic;
+    private final Region graphic;
 
     ObservablePedigreeMemberListCell(HCAControllerFactory controllerFactory, ListProperty<CuratedVariant> variants) {
         setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        FXMLLoader loader = new FXMLLoader(PedigreeMember.class.getResource("PedigreeMember.fxml"));
+        FXMLLoader loader = new FXMLLoader(PedigreeMemberController.class.getResource("PedigreeMember.fxml"));
         loader.setControllerFactory(controllerFactory);
-        PedigreeMember pedigreeMember;
+        PedigreeMemberController controller;
         try {
-            pedigreeMemberGraphic = loader.load();
-            pedigreeMember = loader.getController();
+            graphic = loader.load();
+            controller = loader.getController();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        pedigreeMemberGraphic.prefWidthProperty().bind(maxWidthProperty());
-        pedigreeMember.itemProperty().bind(itemProperty());
-        pedigreeMember.variantsProperty().bind(variants);
+        graphic.prefWidthProperty().bind(maxWidthProperty());
+        controller.itemProperty().bind(itemProperty());
+        controller.variantsProperty().bind(variants);
     }
 
     @Override
@@ -37,7 +37,7 @@ class ObservablePedigreeMemberListCell extends ListCell<ObservablePedigreeMember
         if (empty || item == null) {
             setGraphic(null);
         } else {
-            setGraphic(pedigreeMemberGraphic);
+            setGraphic(graphic);
         }
     }
 }

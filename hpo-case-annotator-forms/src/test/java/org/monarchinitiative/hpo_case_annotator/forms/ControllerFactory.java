@@ -3,22 +3,21 @@ package org.monarchinitiative.hpo_case_annotator.forms;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.nvo.FamilyStudyController;
-import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree;
-import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMember;
+import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeController;
+import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMemberController;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeView;
-import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeature;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeatureController;
+import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualVariantSummaryController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.SelectableOntologyTreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.cache.HgvsVariantController;
-import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummaryController;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 public class ControllerFactory implements HCAControllerFactory {
@@ -54,8 +53,8 @@ public class ControllerFactory implements HCAControllerFactory {
             return new BreakendController();
         } else if (clz.equals(HgvsVariantController.class)) {
             return new HgvsVariantController(geneIdentifierService);
-        } else if (clz.equals(VariantSummary.class)) {
-            return new VariantSummary(this);
+        } else if (clz.equals(VariantSummaryController.class)) {
+            return new VariantSummaryController(this);
         }
 
         // various
@@ -64,8 +63,8 @@ public class ControllerFactory implements HCAControllerFactory {
         }
 
         // phenotypes
-        else if (clz.equals(PhenotypicFeatureController.class)) {
-            return new PhenotypicFeatureController();
+        else if (clz.equals(org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypicFeatureController.class)) {
+            return new org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypicFeatureController();
         } else if (clz.equals(PhenotypicFeaturesTableController.class)) {
             return new PhenotypicFeaturesTableController();
         } else if (clz.equals(TextMiningController.class)) {
@@ -85,12 +84,12 @@ public class ControllerFactory implements HCAControllerFactory {
             return new IndividualController();
         } else if (clz.equals(IndividualVariantSummaryController.class)) {
             return new IndividualVariantSummaryController();
-        } else if (clz.equals(PedigreeController.class)) {
-            return new PedigreeController(this);
+        } else if (clz.equals(org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController.class)) {
+            return new org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController(this);
         } else if (clz.equals(org.monarchinitiative.hpo_case_annotator.forms.v2.FamilyStudyController.class)) {
             return new org.monarchinitiative.hpo_case_annotator.forms.v2.FamilyStudyController();
-        } else if (clz.equals(PedigreeMemberController.class)) {
-            return new PedigreeMemberController();
+        } else if (clz.equals(org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController.class)) {
+            return new org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController();
         } else if (clz.equals(IndividualDetailController.class)) {
             return new IndividualDetailController();
         } else if (clz.equals(CohortController.class)) {
@@ -102,18 +101,18 @@ public class ControllerFactory implements HCAControllerFactory {
         // New View option
         else if (clz.equals(FamilyStudyController.class)) {
             return new FamilyStudyController();
-        } else if (clz.equals(Pedigree.class)) {
-            return new Pedigree(this);
-        } else if (clz.equals(PedigreeMember.class)) {
-            return new PedigreeMember(this);
+        } else if (clz.equals(PedigreeController.class)) {
+            return new PedigreeController(this);
+        } else if (clz.equals(PedigreeMemberController.class)) {
+            return new PedigreeMemberController(this);
         } else if (clz.equals(IndividualIdsComponent.class)) {
             return new IndividualIdsComponent();
         } else if (clz.equals(TimeElementComponent.class)) {
             return new TimeElementComponent();
         } else if (clz.equals(PhenotypeView.class)) {
-            return new PhenotypeView();
-        } else if (clz.equals(PhenotypicFeature.class)) {
-            return new PhenotypicFeature(termId -> hpo.getTermMap().get(termId));
+            return new PhenotypeView(this);
+        } else if (clz.equals(PhenotypicFeatureController.class)) {
+            return new PhenotypicFeatureController(termId -> hpo.getTermMap().get(termId));
         }
 
         // publication & metadata
@@ -121,8 +120,8 @@ public class ControllerFactory implements HCAControllerFactory {
             return new PublicationController();
         } else if (clz.equals(StudyMetadataController.class)) {
             return new StudyMetadataController();
-        } else if (clz.equals(org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationController.class)) {
-            return new org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationController();
+        } else if (clz.equals(Publication.class)) {
+            return new Publication();
         } else {
             throw new RuntimeException("Unknown controller " + clz);
         }

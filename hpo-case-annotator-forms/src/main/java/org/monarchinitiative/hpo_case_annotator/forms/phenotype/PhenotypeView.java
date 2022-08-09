@@ -3,22 +3,26 @@ package org.monarchinitiative.hpo_case_annotator.forms.phenotype;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.DataEditController;
+import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
+import java.io.IOException;
 import java.util.Objects;
 
 import static javafx.beans.binding.Bindings.select;
 import static javafx.beans.binding.Bindings.when;
 
-public class PhenotypeView implements DataEditController<ObservablePedigreeMember> {
+public class PhenotypeView extends VBox implements DataEditController<ObservablePedigreeMember> {
 
     private ObservablePedigreeMember item;
 
@@ -33,7 +37,20 @@ public class PhenotypeView implements DataEditController<ObservablePedigreeMembe
     @FXML
     private Parent phenotypicFeature;
     @FXML
-    private PhenotypicFeature phenotypicFeatureController;
+    private PhenotypicFeatureController phenotypicFeatureController;
+
+    public PhenotypeView(HCAControllerFactory controllerFactory) {
+        FXMLLoader loader = new FXMLLoader(PhenotypeView.class.getResource("PhenotypeView.fxml"));
+        loader.setRoot(this);
+        loader.setControllerFactory(controllerFactory);
+        loader.setController(this);
+
+        try {
+            loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @FXML
     private void initialize() {

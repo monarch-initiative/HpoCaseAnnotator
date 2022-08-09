@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.v2.publication;
+package org.monarchinitiative.hpo_case_annotator.forms.v2.pedigree;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
-import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationController;
+import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilyStudy;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
 import org.testfx.api.FxRobot;
@@ -21,13 +21,13 @@ import java.util.concurrent.TimeUnit;
 
 @Disabled
 @ExtendWith(ApplicationExtension.class)
-public class PublicationControllerTest extends BaseControllerTest {
+public class PedigreeControllerTest extends BaseControllerTest {
 
-    private PublicationController controller;
+    private PedigreeController controller;
 
     @Start
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(PublicationController.class.getResource("Publication.fxml"));
+        FXMLLoader loader = new FXMLLoader(PedigreeController.class.getResource("Pedigree.fxml"));
         loader.setControllerFactory(CONTROLLER_FACTORY);
 
         Parent parent = loader.load();
@@ -41,11 +41,11 @@ public class PublicationControllerTest extends BaseControllerTest {
 
     @Test
     public void test(FxRobot robot) throws Exception {
-        ObservableFamilyStudy familyStudy = new ObservableFamilyStudy(TestData.V2.comprehensiveFamilyStudy());
+        ObservableFamilyStudy study = new ObservableFamilyStudy(TestData.V2.comprehensiveFamilyStudy());
 
-        Platform.runLater(() -> controller.setData(familyStudy.getPublication()));
+        Platform.runLater(() -> controller.setData(study.getPedigree()));
 
-        robot.sleep(10, TimeUnit.SECONDS);
+        robot.sleep(30, TimeUnit.SECONDS);
 
         System.err.println(controller.getData());
     }

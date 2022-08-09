@@ -24,7 +24,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.BreakendControl
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfBreakendVariantController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSequenceVariantController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSymbolicVariantController;
-import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummaryController;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.*;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.*;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
@@ -125,8 +125,8 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
     }
 
     @Provides
-    public VariantSummary variantSummary(HCAControllerFactory hcaControllerFactory) {
-        return new VariantSummary(hcaControllerFactory);
+    public VariantSummaryController variantSummary(HCAControllerFactory hcaControllerFactory) {
+        return new VariantSummaryController(hcaControllerFactory);
     }
 
     @Provides

@@ -5,6 +5,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.metadata.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication?>
 
 <VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.monarchinitiative.hpo_case_annotator.forms.nvo.FamilyStudyController"
@@ -45,8 +46,7 @@
                                         <StackPane onMouseEntered="#publicationSectionMouseEntered"
                                                    onMouseExited="#publicationSectionMouseExited">
                                             <children>
-                                                <fx:include fx:id="publication" source="../publication/Publication.fxml"
-                                                            StackPane.alignment="CENTER"/>
+                                                <Publication fx:id="publication" StackPane.alignment="CENTER"/>
                                                 <Button fx:id="editPublication" contentDisplay="GRAPHIC_ONLY"
                                                         mnemonicParsing="false" onAction="#editPublicationAction"
                                                         styleClass="edit-button" visible="false"

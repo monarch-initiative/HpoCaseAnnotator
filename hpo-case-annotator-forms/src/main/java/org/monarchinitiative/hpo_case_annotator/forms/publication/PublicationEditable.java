@@ -20,9 +20,7 @@ public class PublicationEditable extends VBox implements DataEditController<Obse
     private ObservablePublication item;
 
     @FXML
-    private Parent publication;
-    @FXML
-    private PublicationController publicationController;
+    private Publication publication;
     @FXML
     private TitledTextField title;
     @FXML
@@ -60,7 +58,9 @@ public class PublicationEditable extends VBox implements DataEditController<Obse
     @Override
     public void setInitialData(ObservablePublication data) {
         item = Objects.requireNonNull(data);
-        publicationController.setData(item);
+
+        publication.setData(item);
+
         title.setText(data.getTitle());
         authors.setText(data.getAuthors());
         journal.setText(data.getJournal());

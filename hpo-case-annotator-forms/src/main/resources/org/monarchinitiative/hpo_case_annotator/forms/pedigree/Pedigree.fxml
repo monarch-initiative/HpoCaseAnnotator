@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree"
+      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeController"
       stylesheets="@pedigree.css">
     <children>
         <VBox styleClass="subsection">

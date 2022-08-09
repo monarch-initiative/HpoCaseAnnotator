@@ -3,13 +3,17 @@ package org.monarchinitiative.hpo_case_annotator.forms.publication;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
 
+import java.io.IOException;
+
 import static javafx.beans.binding.Bindings.*;
 
-public class PublicationController implements ObservableDataController<ObservablePublication> {
+public class Publication extends VBox implements ObservableDataController<ObservablePublication> {
 
     private final ObjectProperty<ObservablePublication> item = new SimpleObjectProperty<>();
 
@@ -27,6 +31,18 @@ public class PublicationController implements ObservableDataController<Observabl
     private Label pages;
     @FXML
     private Label pmid;
+
+    public Publication() {
+        FXMLLoader loader = new FXMLLoader(Publication.class.getResource("Publication.fxml"));
+        loader.setRoot(this);
+        loader.setController(this);
+
+        try {
+            loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @FXML
     protected void initialize() {

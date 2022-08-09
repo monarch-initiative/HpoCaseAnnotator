@@ -3,8 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationController"
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      type="javafx.scene.layout.VBox"
       stylesheets="@publication.css">
     <children>
         <Label fx:id="title" styleClass="h2" text="Interpretable prioritization of splice variants in diagnostic next-generation sequencing" />
@@ -19,4 +19,4 @@
             </children>
         </HBox>
     </children>
-</VBox>
+</fx:root>

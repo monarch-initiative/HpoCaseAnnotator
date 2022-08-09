@@ -28,6 +28,8 @@ import org.monarchinitiative.svart.Strand;
 import org.monarchinitiative.svart.GenomicVariant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 import java.net.URL;
@@ -38,9 +40,11 @@ import java.util.Optional;
  * {@link org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy} or for
  * {@link org.monarchinitiative.hpo_case_annotator.model.v2.CohortStudy}.
  */
-public class VariantSummary {
+@Scope("prototype")
+@Controller("nvoVariantSummary") // TODO - rename
+public class VariantSummaryController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(VariantSummary.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VariantSummaryController.class);
 
     private final HCAControllerFactory controllerFactory;
 
@@ -67,7 +71,7 @@ public class VariantSummary {
     @FXML
     private Button editButton;
 
-    public VariantSummary(HCAControllerFactory controllerFactory) {
+    public VariantSummaryController(HCAControllerFactory controllerFactory) {
         this.controllerFactory = controllerFactory;
     }
 

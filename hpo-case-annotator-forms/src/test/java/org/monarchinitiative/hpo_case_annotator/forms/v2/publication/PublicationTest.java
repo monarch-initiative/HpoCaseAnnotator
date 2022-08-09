@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.v2.pedigree;
+package org.monarchinitiative.hpo_case_annotator.forms.v2.publication;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
-import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree;
+import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilyStudy;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
 import org.testfx.api.FxRobot;
@@ -21,13 +21,13 @@ import java.util.concurrent.TimeUnit;
 
 @Disabled
 @ExtendWith(ApplicationExtension.class)
-public class PedigreeTest extends BaseControllerTest {
+public class PublicationTest extends BaseControllerTest {
 
-    private Pedigree controller;
+    private Publication controller;
 
     @Start
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(Pedigree.class.getResource("Pedigree.fxml"));
+        FXMLLoader loader = new FXMLLoader(Publication.class.getResource("Publication.fxml"));
         loader.setControllerFactory(CONTROLLER_FACTORY);
 
         Parent parent = loader.load();
@@ -41,11 +41,11 @@ public class PedigreeTest extends BaseControllerTest {
 
     @Test
     public void test(FxRobot robot) throws Exception {
-        ObservableFamilyStudy study = new ObservableFamilyStudy(TestData.V2.comprehensiveFamilyStudy());
+        ObservableFamilyStudy familyStudy = new ObservableFamilyStudy(TestData.V2.comprehensiveFamilyStudy());
 
-        Platform.runLater(() -> controller.setData(study.getPedigree()));
+        Platform.runLater(() -> controller.setData(familyStudy.getPublication()));
 
-        robot.sleep(30, TimeUnit.SECONDS);
+        robot.sleep(10, TimeUnit.SECONDS);
 
         System.err.println(controller.getData());
     }

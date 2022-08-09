@@ -6,7 +6,7 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMemberTitle?>
 
 <TitledPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMember"
+            fx:controller="org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMemberController"
             stylesheets="@pedigree-member.css"
             id="titled-pane-box" contentDisplay="GRAPHIC_ONLY" expanded="false">
     <graphic>

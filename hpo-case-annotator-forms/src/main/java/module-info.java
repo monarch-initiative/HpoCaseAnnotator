@@ -8,6 +8,8 @@ module org.monarchinitiative.hca.forms {
     requires javafx.fxml;
     requires org.controlsfx.controls;
 
+    requires spring.context;
+
     requires org.slf4j;
 
     exports org.monarchinitiative.hpo_case_annotator.forms;

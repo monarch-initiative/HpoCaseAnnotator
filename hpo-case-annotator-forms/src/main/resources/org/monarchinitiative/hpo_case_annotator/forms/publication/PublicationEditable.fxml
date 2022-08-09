@@ -4,6 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Separator?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication?>
 
 <fx:root xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
          type="javafx.scene.layout.VBox"
@@ -14,7 +15,7 @@
     </stylesheets>
     <VBox styleClass="summary-area">
         <children>
-            <fx:include fx:id="publication" source="Publication.fxml"/>
+            <Publication fx:id="publication"/>
         </children>
     </VBox>
     <Separator/>
