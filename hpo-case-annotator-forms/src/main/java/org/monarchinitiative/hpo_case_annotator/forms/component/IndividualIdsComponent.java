@@ -31,7 +31,7 @@ public class IndividualIdsComponent extends VBox {
     @FXML
     private TitledLabel proband;
     @FXML
-    private Label ageSummary;
+    private TitledLabel ageSummary;
     @FXML
     private TitledLabel vitalStatus;
     @FXML

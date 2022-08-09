@@ -2,11 +2,9 @@ package org.monarchinitiative.hpo_case_annotator.forms.nvo;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.Dialog;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseBindingObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.metadata.Metadata;
 import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree;
@@ -20,7 +18,9 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilySt
 public class FamilyStudyController extends BaseBindingObservableDataController<ObservableFamilyStudy> {
 
     @FXML
-    private VBox publicationBox;
+    private ScrollPane studyScrollPane;
+    @FXML
+    private Label publicationLabel;
     @FXML
     private Parent publication;
     @FXML
@@ -28,19 +28,19 @@ public class FamilyStudyController extends BaseBindingObservableDataController<O
     @FXML
     private Button editPublication;
     @FXML
-    private VBox pedigreeBox;
+    private Label pedigreeLabel;
     @FXML
     private Parent pedigree;
     @FXML
     private Pedigree pedigreeController;
     @FXML
-    private VBox variantsBox;
+    private Label variantsLabel;
     @FXML
     private Parent variantSummary;
     @FXML
     private VariantSummary variantSummaryController;
     @FXML
-    private VBox metadataBox;
+    private Label metadataLabel;
     @FXML
     private Metadata metadataSummary;
 
@@ -68,11 +68,12 @@ public class FamilyStudyController extends BaseBindingObservableDataController<O
 
     @FXML
     private void editPublicationAction(ActionEvent e) {
+        Dialog<Boolean> dialog = new Dialog<>();
+        dialog.setTitle("Edit publication data");
+        dialog.initOwner(studyScrollPane.getParent().getScene().getWindow());
+
         PublicationEditable component = new PublicationEditable();
         component.setInitialData(publicationController.getData());
-
-        Dialog<Boolean> dialog = new Dialog<>();
-        dialog.setHeaderText("Edit publication data:");
         dialog.getDialogPane().setContent(component);
         dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.UPDATE_CANCEL_BUTTONS);
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
@@ -95,25 +96,40 @@ public class FamilyStudyController extends BaseBindingObservableDataController<O
 
     @FXML
     private void publicationNavMouseClicked(ActionEvent e) {
-        publicationBox.requestFocus();
+//        ensureVisible(studyScrollPane, publicationLabel);
         e.consume();
     }
 
     @FXML
     private void pedigreeNavMouseClicked(ActionEvent e) {
-        pedigreeBox.requestFocus();
+//        ensureVisible(studyScrollPane, pedigreeLabel);
         e.consume();
     }
 
     @FXML
     private void variantsNavMouseClicked(ActionEvent e) {
-        variantsBox.requestFocus();
+//        ensureVisible(studyScrollPane, variantsLabel);
         e.consume();
     }
 
     @FXML
     private void metadataNavMouseClicked(ActionEvent e) {
-        metadataBox.requestFocus();
+//        ensureVisible(studyScrollPane, metadataLabel);
         e.consume();
+    }
+
+    private static void ensureVisible(ScrollPane pane, Node node) {
+        double width = pane.getContent().getBoundsInLocal().getWidth();
+        double height = pane.getContent().getBoundsInLocal().getHeight();
+
+        double x = node.getBoundsInParent().getMaxX();
+        double y = node.getBoundsInParent().getMaxY();
+
+        // scrolling values range from 0 to 1
+        pane.setVvalue(y/height);
+        pane.setHvalue(x/width);
+
+        // just for usability
+        node.requestFocus();
     }
 }

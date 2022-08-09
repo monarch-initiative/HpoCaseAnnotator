@@ -12,24 +12,12 @@
     <children>
         <VBox>
             <children>
-                <Label styleClass="h3" text="Phenotype feature"/>
+                <Label styleClass="h2" text="Phenotype feature"/>
                 <VBox id="phenotypic-feature-column" styleClass="column">
                     <children>
-                        <VBox>
-                            <children>
-                                <TitledLabel name="ID" id="term-id" fx:id="termId"/>
-                            </children>
-                        </VBox>
-                        <VBox>
-                            <children>
-                                <TitledLabel name="Label" id="term-name" fx:id="name"/>
-                            </children>
-                        </VBox>
-                        <VBox>
-                            <children>
-                                <TitledLabel name="Definition" id="term-definition" fx:id="definition"/>
-                            </children>
-                        </VBox>
+                        <TitledLabel fx:id="termId" name="ID" id="term-id" />
+                        <TitledLabel fx:id="name" name="Label" id="term-name" />
+                        <TitledLabel fx:id="definition" name="Definition" id="term-definition" />
                     </children>
                 </VBox>
             </children>
@@ -37,7 +25,7 @@
         <Separator/>
         <VBox>
             <children>
-                <Label styleClass="h3" text="Status"/>
+                <Label styleClass="h2" text="Status"/>
                 <RadioButton fx:id="presentRadioButton" mnemonicParsing="false" text="Present"/>
                 <RadioButton fx:id="absentRadioButton" mnemonicParsing="false" text="Excluded"/>
             </children>
@@ -45,20 +33,20 @@
         <Separator/>
         <VBox>
             <children>
-                <Label styleClass="h3" text="Temporal"/>
+                <Label styleClass="h2" text="Temporal"/>
                 <StackPane VBox.vgrow="ALWAYS">
                     <children>
                         <VBox>
                             <children>
-                                <VBox>
+                                <VBox styleClass="section">
                                     <children>
-                                        <Label styleClass="h4" text="Onset"/>
+                                        <Label styleClass="h3" text="Onset"/>
                                         <TimeElementComponent fx:id="onsetComponent"/>
                                     </children>
                                 </VBox>
-                                <VBox>
+                                <VBox styleClass="section">
                                     <children>
-                                        <Label styleClass="h4" text="Resolution"/>
+                                        <Label styleClass="h3" text="Resolution"/>
                                         <TimeElementComponent fx:id="resolutionComponent"/>
                                     </children>
                                 </VBox>
@@ -73,7 +61,7 @@
         <Separator/>
         <VBox>
             <children>
-                <Label styleClass="h3" text="Modifiers"/>
+                <Label styleClass="h2" text="Modifiers"/>
                 <Text text="Not yet implemented" style="-fx-fill: red"/>
             </children>
         </VBox>

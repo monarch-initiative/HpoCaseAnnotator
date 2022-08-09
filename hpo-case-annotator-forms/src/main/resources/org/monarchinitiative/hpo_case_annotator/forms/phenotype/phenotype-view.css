@@ -1,4 +1,9 @@
+#phenotype-feature-list {
+    -fx-pref-width: 900;
+}
+
 #phenotype-feature-pane {
-    -fx-pref-width: 250px;
-    -fx-max-width: 450px;
+    -fx-min-width: 250;
+    -fx-pref-width: 250;
+    -fx-max-width: 450;
 }

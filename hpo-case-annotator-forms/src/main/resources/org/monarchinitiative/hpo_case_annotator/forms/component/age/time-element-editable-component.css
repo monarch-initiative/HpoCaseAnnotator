@@ -3,5 +3,10 @@
 }
 
 ComboBox {
+    -fx-pref-width: 200;
     -fx-max-width: 200;
+}
+
+.ar-label {
+    -fx-pref-width: 60;
 }

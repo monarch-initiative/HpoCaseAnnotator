@@ -9,10 +9,10 @@
          stylesheets="@individual-ids-component.css"
          type="javafx.scene.layout.VBox" alignment="CENTER_LEFT" >
         <children>
-            <VBox>
-                <!-- Identifiers -->
+            <!-- Credentials -->
+            <VBox id="credential-row">
                 <children>
-                    <HBox alignment="CENTER_LEFT" styleClass="credential-row" VBox.vgrow="NEVER">
+                    <HBox>
                         <children>
                             <TitledLabel fx:id="individualId" name="ID" text="I:1" />
                             <TitledLabel fx:id="paternalId" name="Paternal ID" text="II:2" />
@@ -23,12 +23,12 @@
                     </HBox>
                 </children>
             </VBox>
-            <VBox>
-                <!-- Age -->
+            <!-- Age -->
+            <VBox id="age-row">
                 <children>
-                    <HBox alignment="CENTER_LEFT" styleClass="credential-row" VBox.vgrow="NEVER">
+                    <HBox>
                         <children>
-                            <Label fx:id="ageSummary"/>
+                            <TitledLabel fx:id="ageSummary" name="Age"/>
                             <TitledLabel fx:id="vitalStatus" name="Vital status" text="DECEASED"/>
                             <VBox>
                                 <children>

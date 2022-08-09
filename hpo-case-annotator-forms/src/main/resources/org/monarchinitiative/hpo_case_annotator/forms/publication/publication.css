@@ -1,24 +1,13 @@
-.journal {
+#title-label {
+    /* Publication title is slightly larger than the other texts. */
+    -fx-font-size: 1.1em;
+    -fx-font-weight: bold;
+}
+
+#journal-label {
     -fx-font-style: italic;
 }
 
-.content * {
-    -fx-padding: 0px 5px 0px 0px;
-}
-
-.details Label {
-    -fx-padding: 0px 5px 0px 0px;
-}
-
-.publication-editable-box {
-    -fx-pref-width: 800px;
-}
-
-.publication-editable-box .edit-area TextField {
-    -fx-padding: 10 0 10 0;
-    -fx-pref-height: 30px;
-}
-
-.publication-editable-box .summary-area {
-    -fx-padding: 10 0 10 0;
+#publication-bits * {
+    -fx-padding: 0 5 0 0;
 }

@@ -4,17 +4,19 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root id="title-box" stylesheets="@pedigree-member-title.css" type="javafx.scene.layout.HBox"
-         xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.HBox"
+         stylesheets="@pedigree-member-title.css"
+         id="title-box">
     <children>
         <ImageView fx:id="icon" fitHeight="20" preserveRatio="true">
             <image>
                 <Image url="@male-proband.png" />
             </image>
         </ImageView>
-        <Pane styleClass="spacer-pane"/>
+        <Pane styleClass="spacer"/>
         <Label id="probandIdLabel" fx:id="probandId" text="FAM:001" />
-        <Pane styleClass="spacer-pane"/>
+        <Pane styleClass="spacer"/>
         <Label id="summaryLabel" fx:id="summary" text="2 phenotype terms, 1 disease, 5 genotypes" />
     </children>
 </fx:root>

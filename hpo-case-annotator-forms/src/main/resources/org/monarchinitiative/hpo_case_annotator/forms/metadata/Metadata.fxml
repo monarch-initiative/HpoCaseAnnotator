@@ -8,23 +8,35 @@
          type="javafx.scene.layout.VBox"
          stylesheets="@metadata.css">
     <children>
-        <Label text="Free text description" />
-        <TextArea fx:id="freeTextArea" prefHeight="150.0" wrapText="true" />
-        <Label text="Created by" />
-        <EditHistory fx:id="createdBy" />
-        <Label text="Modified by" />
-        <TableView fx:id="editHistory" prefHeight="150.0">
-            <columns>
-                <TableColumn fx:id="curatorIdColumn" editable="false" text="Curator ID" />
-                <TableColumn fx:id="softwareVersionColumn" editable="false" text="Software version" />
-                <TableColumn fx:id="timestampColumn" editable="false" text="Timestamp" />
-            </columns>
-            <columnResizePolicy>
-                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-            </columnResizePolicy>
-            <placeholder>
-                <Label text="No edit history" />
-            </placeholder>
-        </TableView>
+        <VBox styleClass="subsection">
+            <children>
+                <Label styleClass="h2" text="Free text description" />
+                <TextArea fx:id="freeTextArea" prefHeight="150.0" wrapText="true" />
+            </children>
+        </VBox>
+        <VBox styleClass="subsection">
+            <children>
+                <Label styleClass="h2" text="Created by" />
+                <EditHistory fx:id="createdBy" />
+            </children>
+        </VBox>
+        <VBox styleClass="subsection">
+            <children>
+                <Label styleClass="h2" text="Modified by" />
+                <TableView fx:id="editHistory" prefHeight="150.0">
+                    <columns>
+                        <TableColumn fx:id="curatorIdColumn" editable="false" text="Curator ID" />
+                        <TableColumn fx:id="softwareVersionColumn" editable="false" text="Software version" />
+                        <TableColumn fx:id="timestampColumn" editable="false" text="Timestamp" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                    <placeholder>
+                        <Label text="No edit history" />
+                    </placeholder>
+                </TableView>
+            </children>
+        </VBox>
     </children>
 </fx:root>

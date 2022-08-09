@@ -20,9 +20,13 @@
                             <Image url="@pregnant.png" />
                         </ImageView>
                     </graphic>
+                    <tooltip>
+                        <Tooltip text="Gestational age"/>
+                    </tooltip>
                     <content>
-                        <VBox styleClass="entries">
+                        <VBox>
                             <children>
+                                <Label text="Gestational age" styleClass="h3"/>
                                 <HBox alignment="CENTER_LEFT">
                                     <children>
                                         <TitledTextField fx:id="gestationalWeeks" name="Weeks" promptText="e.g. 25" />
@@ -45,10 +49,13 @@
                             <Image url="@person.png" />
                         </ImageView>
                     </graphic>
+                    <tooltip>
+                        <Tooltip text="Age"/>
+                    </tooltip>
                     <content>
                         <VBox>
                             <children>
-                                <Label text="Age"/>
+                                <Label text="Age" styleClass="h3"/>
                                 <SimpleEditableAge fx:id="age"/>
                             </children>
                         </VBox>
@@ -60,12 +67,25 @@
                             <Image url="@person.png" />
                         </ImageView>
                     </graphic>
+                    <tooltip>
+                        <Tooltip text="Age range"/>
+                    </tooltip>
                     <content>
                         <VBox>
                             <children>
-                                <Label text="Age range"/>
-                                <SimpleEditableAge fx:id="ageRangeStart"/>
-                                <SimpleEditableAge fx:id="ageRangeEnd"/>
+                                <Label text="Age range" styleClass="h3"/>
+                                <HBox>
+                                    <children>
+                                        <Label styleClass="ar-label" text="Start"/>
+                                        <SimpleEditableAge fx:id="ageRangeStart"/>
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <Label styleClass="ar-label" text="End"/>
+                                        <SimpleEditableAge fx:id="ageRangeEnd"/>
+                                    </children>
+                                </HBox>
                             </children>
                         </VBox>
                     </content>
@@ -73,13 +93,16 @@
                 <Tab fx:id="ontologyClassTab" closable="false">
                     <graphic>
                         <ImageView fitHeight="25" preserveRatio="true">
-                            <Image url="@../../icons/hpo-logo-black.png" />
+                            <Image url="@hpo-logo-black.png" />
                         </ImageView>
                     </graphic>
+                    <tooltip>
+                        <Tooltip text="Age as ontology class"/>
+                    </tooltip>
                     <content>
                         <VBox>
                             <children>
-                                <Label text="Ontology class"/>
+                                <Label text="Ontology class" styleClass="h3"/>
                                 <HBox alignment="CENTER_LEFT">
                                     <children>
                                         <ComboBox fx:id="ontologyClassComboBox"/>

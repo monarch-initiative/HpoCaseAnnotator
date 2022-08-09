@@ -4,17 +4,6 @@ RadioButton {
     -fx-min-width: 80px;
 }
 
-SearchableComboBox {
-    -fx-min-height: 30px;
-    -fx-min-width: 80px;
-    -fx-max-width: 150px;
-}
-
-TextField {
-    -fx-min-height: 30px;
-    -fx-min-width: 80px;
-    -fx-max-width: 150px;
-}
 
 #term-id {
     -fx-font-size: 10pt;
@@ -30,4 +19,8 @@ TextField {
 #term-definition {
     -fx-font-size: 10pt;
     -fx-max-width: 300px;
+}
+
+TitledLabel {
+    -fx-padding: 10 0 0 0;
 }

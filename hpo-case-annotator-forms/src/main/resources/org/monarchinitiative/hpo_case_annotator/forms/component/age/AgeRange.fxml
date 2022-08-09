@@ -8,7 +8,8 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.age.SimpleAge?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.VBox">
+         type="javafx.scene.layout.VBox"
+         stylesheets="@age-range.css">
     <children>
         <Label text="Age range">
             <graphic>
@@ -17,17 +18,17 @@
                 </ImageView>
             </graphic>
         </Label>
-        <VBox styleClass="entries">
+        <VBox>
             <children>
-                <HBox alignment="CENTER_LEFT">
+                <HBox alignment="CENTER_LEFT" >
                     <children>
-                        <Label text="Start"/>
+                        <Label text="Start" styleClass="ar-label"/>
                         <SimpleAge fx:id="start"/>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER_LEFT">
                     <children>
-                        <Label text="End"/>
+                        <Label text="End" styleClass="ar-label"/>
                         <SimpleAge fx:id="end"/>
                     </children>
                 </HBox>

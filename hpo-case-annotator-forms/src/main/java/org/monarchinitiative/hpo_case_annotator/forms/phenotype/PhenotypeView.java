@@ -11,17 +11,14 @@ import org.monarchinitiative.hpo_case_annotator.forms.DataEditController;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
-import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.Objects;
-import java.util.function.Function;
 
+import static javafx.beans.binding.Bindings.select;
 import static javafx.beans.binding.Bindings.when;
 
 public class PhenotypeView implements DataEditController<ObservablePedigreeMember> {
-
-    private final Function<TermId, Term> termSource;
 
     private ObservablePedigreeMember item;
 
@@ -38,27 +35,14 @@ public class PhenotypeView implements DataEditController<ObservablePedigreeMembe
     @FXML
     private PhenotypicFeature phenotypicFeatureController;
 
-    /**
-     * @param termSource a function to get ahold of {@link TermId} details. The function returns {@code null}
-     *                   for unknown {@link TermId}s.
-     */
-    public PhenotypeView(Function<TermId, Term> termSource) {
-        this.termSource = Objects.requireNonNull(termSource);
-    }
-
     @FXML
     private void initialize() {
         termIdColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().id()));
-        termLabel.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(getTermLabel(cdf)));
+        termLabel.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLabel()));
 
         phenotypeTerms.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         phenotypicFeatureController.dataProperty().bind(phenotypeTerms.getSelectionModel().selectedItemProperty());
         phenotypicFeature.disableProperty().bind(phenotypeTerms.getSelectionModel().selectedItemProperty().isNull());
-    }
-
-    private String getTermLabel(TableColumn.CellDataFeatures<ObservablePhenotypicFeature, String> cdf) {
-        Term term = termSource.apply(cdf.getValue().id());
-        return term == null ? null : term.getName();
     }
 
     @Override
@@ -71,6 +55,8 @@ public class PhenotypeView implements DataEditController<ObservablePedigreeMembe
         individualIds.ageProperty().bind(item.ageProperty());
         individualIds.sexProperty().bind(item.sexProperty().asString());
         individualIds.probandProperty().bind(when(item.probandProperty()).then("Yes").otherwise("No"));
+        individualIds.vitalStatusProperty().bind(select(item.vitalStatusProperty(), "status").asString());
+        individualIds.timeOfDeathProperty().bind(select(item.vitalStatusProperty(), "timeOfDeath"));
 
         phenotypeTerms.getItems().addAll(item.getObservablePhenotypicFeatures());
     }

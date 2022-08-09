@@ -2,7 +2,6 @@ package org.monarchinitiative.hpo_case_annotator.forms.component;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.DataEditController;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementEditableComponent;
@@ -17,8 +16,6 @@ public class IndividualIdsEditableComponent extends VBox implements DataEditCont
 
     private ObservablePedigreeMember item;
 
-    @FXML
-    private Label idLabel;
     @FXML
     private TitledTextField individualId;
     @FXML
@@ -49,7 +46,6 @@ public class IndividualIdsEditableComponent extends VBox implements DataEditCont
 
     @FXML
     private void initialize() {
-        idLabel.textProperty().bind(individualId.textProperty());
         sex.getItems().addAll(Sex.values());
     }
 

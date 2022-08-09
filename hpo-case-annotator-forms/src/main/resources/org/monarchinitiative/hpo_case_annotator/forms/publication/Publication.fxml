@@ -4,28 +4,19 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      stylesheets="@publication.css"
-      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationController">
+      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationController"
+      stylesheets="@publication.css">
     <children>
-        <HBox styleClass="content">
+        <Label fx:id="title" styleClass="h2" text="Interpretable prioritization of splice variants in diagnostic next-generation sequencing" />
+        <Label fx:id="authors" text="Danis D, Jacobsen JOB, Carmody LC, Gargano MA, McMurry JA, Hegde A, Haendel MA, Valentini G, Smedley D, Robinson PN" />
+        <HBox id="publication-bits" alignment="CENTER_LEFT">
             <children>
-                <VBox>
-                    <children>
-                        <Label fx:id="title" styleClass="h3" text="Interpretable prioritization of splice variants in diagnostic next-generation sequencing" />
-                        <Label fx:id="authors" text="Danis D, Jacobsen JOB, Carmody LC, Gargano MA, McMurry JA, Hegde A, Haendel MA, Valentini G, Smedley D, Robinson PN" />
-                        <HBox alignment="CENTER_LEFT" styleClass="details">
-                            <children>
-                                <Label fx:id="journal" styleClass="journal" text="Am J Hum Genet" />
-                                <Label fx:id="year" text="2021" />
-                                <Label fx:id="volume" text="108(9)" />
-                                <Label fx:id="pages" text="1564-1577" />
-                                <Label fx:id="pmid" text="34289339" />
-                            </children>
-                        </HBox>
-                    </children>
-                </VBox>
+                <Label fx:id="journal" id="journal-label" text="Am J Hum Genet" />
+                <Label fx:id="year" text="2021" />
+                <Label fx:id="volume" text="108(9)" />
+                <Label fx:id="pages" text="1564-1577" />
+                <Label fx:id="pmid" text="34289339" />
             </children>
         </HBox>
-
     </children>
 </VBox>

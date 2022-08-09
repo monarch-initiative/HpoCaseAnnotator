@@ -1,0 +1,4 @@
+/* A column in VitalStatus. */
+#vs-col {
+ -fx-padding: 0 20 0 0;
+}

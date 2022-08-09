@@ -8,16 +8,16 @@
 <TitledPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMember"
             stylesheets="@pedigree-member.css"
-            id="titled-pane-box" contentDisplay="GRAPHIC_ONLY">
+            id="titled-pane-box" contentDisplay="GRAPHIC_ONLY" expanded="false">
     <graphic>
         <PedigreeMemberTitle fx:id="pedigreeMemberTitle"/>
     </graphic>
     <content>
         <VBox>
             <children>
-                <VBox>
+                <VBox styleClass="pm-section">
                     <children>
-                        <Label styleClass="h4" text="Credentials"/>
+                        <Label styleClass="h3" text="Credentials"/>
                         <StackPane onMouseEntered="#identifiersSectionMouseEntered"
                                    onMouseExited="#identifiersSectionMouseExited">
                             <children>
@@ -29,13 +29,14 @@
                         </StackPane>
                     </children>
                 </VBox>
-                <VBox>
+                <Separator/>
+                <VBox styleClass="pm-section">
                     <children>
-                        <Label styleClass="h4" text="Phenotype features"/>
+                        <Label styleClass="h3" text="Phenotype features"/>
                         <StackPane onMouseEntered="#phenotypesSectionMouseEntered"
                                    onMouseExited="#phenotypesSectionMouseExited">
                             <children>
-                                <TableView id="hpo-terms-table" fx:id="phenotypes">
+                                <TableView id="phenotype-features-table" fx:id="phenotypes">
                                     <columns>
                                         <TableColumn fx:id="idColumn" editable="false" prefWidth="120.0" text="ID"/>
                                         <TableColumn fx:id="labelColumn" editable="false" prefWidth="200.0" text="Label"/>
@@ -63,9 +64,10 @@
                         </StackPane>
                     </children>
                 </VBox>
-                <VBox>
+                <Separator/>
+                <VBox styleClass="pm-section">
                     <children>
-                        <Label styleClass="h4" text="Diseases"/>
+                        <Label styleClass="h3" text="Diseases"/>
                         <StackPane onMouseEntered="#diseasesSectionMouseEntered"
                                    onMouseExited="#diseasesSectionMouseExited">
                             <children>
@@ -89,12 +91,13 @@
                         </StackPane>
                     </children>
                 </VBox>
-                <VBox>
+                <Separator/>
+                <VBox styleClass="pm-section">
                     <children>
-                        <Label styleClass="h4" text="Variant genotypes"/>
-                        <TableView fx:id="genotypesTable" editable="true">
+                        <Label styleClass="h3" text="Variant genotypes"/>
+                        <TableView fx:id="genotypesTable" editable="true" id="variants-table">
                             <columns>
-                                <TableColumn fx:id="genotypeTableColumn" text="Genotype" minWidth="200.0"/>
+                                <TableColumn fx:id="genotypeTableColumn" text="Genotype" minWidth="55.0"/>
                                 <TableColumn fx:id="variantIdTableColumn" editable="false" maxWidth="-1.0" minWidth="120.0" text="Id"/>
                                 <TableColumn fx:id="genomicAssemblyTableColumn" editable="false" maxWidth="-1.0" minWidth="120.0" text="Assembly"/>
                                 <TableColumn fx:id="contigTableColumn" editable="false" maxWidth="-1.0" minWidth="100.0" text="Contig"/>
@@ -104,7 +107,7 @@
                                 <TableColumn fx:id="altTableColumn" editable="false" minWidth="120.0" text="Alt"/>
                             </columns>
                             <columnResizePolicy>
-                                <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                             </columnResizePolicy>
                             <placeholder>
                                 <Label text="No variants yet"/>

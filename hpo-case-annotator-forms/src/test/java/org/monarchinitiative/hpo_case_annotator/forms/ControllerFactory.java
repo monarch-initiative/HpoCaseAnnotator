@@ -111,7 +111,7 @@ public class ControllerFactory implements HCAControllerFactory {
         } else if (clz.equals(TimeElementComponent.class)) {
             return new TimeElementComponent();
         } else if (clz.equals(PhenotypeView.class)) {
-            return new PhenotypeView(termId -> hpo.getTermMap().get(termId));
+            return new PhenotypeView();
         } else if (clz.equals(PhenotypicFeature.class)) {
             return new PhenotypicFeature(termId -> hpo.getTermMap().get(termId));
         }

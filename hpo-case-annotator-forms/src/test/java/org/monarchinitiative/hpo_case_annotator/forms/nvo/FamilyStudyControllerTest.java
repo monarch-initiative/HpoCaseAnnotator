@@ -2,8 +2,8 @@ package org.monarchinitiative.hpo_case_annotator.forms.nvo;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.junit.jupiter.api.Disabled;
@@ -29,7 +29,7 @@ public class FamilyStudyControllerTest extends BaseControllerTest {
         FXMLLoader loader = new FXMLLoader(FamilyStudyController.class.getResource("FamilyStudy.fxml"));
         loader.setControllerFactory(CONTROLLER_FACTORY);
 
-        ScrollPane parent = loader.load();
+        Parent parent = loader.load();
         controller = loader.getController();
 
         Scene scene = new Scene(parent, 1200, 900);

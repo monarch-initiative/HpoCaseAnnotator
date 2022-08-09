@@ -7,9 +7,13 @@
 <?import javafx.scene.control.CheckBox?>
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="javafx.scene.layout.HBox"
-         alignment="CENTER_LEFT" stylesheets="@vital-status-editable-component.css">
+         stylesheets="@vital-status-editable-component.css">
     <children>
-        <TitledComboBox fx:id="vitalStatus" name="VitalStatus"/>
+        <VBox id="vs-col">
+            <children>
+                <TitledComboBox fx:id="vitalStatus" name="Status"/>
+            </children>
+        </VBox>
         <VBox>
             <children>
                 <CheckBox fx:id="timeOfDeathIsUnknown" selected="true" text="Time of death is unknown"/>

@@ -24,6 +24,17 @@ public enum Genotype {
         return name;
     }
 
+    public boolean isKnown() {
+        return switch (this) {
+            case UNSET, UNKNOWN -> false;
+            case HETEROZYGOUS, HOMOZYGOUS_ALTERNATE, HOMOZYGOUS_REFERENCE, HEMIZYGOUS -> true;
+        };
+    }
+
+    public boolean isUnknown() {
+        return !isKnown();
+    }
+
     public static Genotype parseCode(String value) {
         return switch (value) {
             case "Unset" -> UNSET;

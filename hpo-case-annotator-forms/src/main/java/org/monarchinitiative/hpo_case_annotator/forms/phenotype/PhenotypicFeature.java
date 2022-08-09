@@ -110,7 +110,7 @@ public class PhenotypicFeature extends BaseBindingObservableDataController<Obser
     private void editTemporalFieldsAction(ActionEvent e) {
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.setResizable(true);
-        dialog.setHeaderText("Edit phenotypic feature");
+        dialog.setTitle("Edit onset and resolution of %s".formatted(data.get().id().getValue()));
         EditTemporalFields etf = new EditTemporalFields();
         etf.setInitialData(data.get());
 

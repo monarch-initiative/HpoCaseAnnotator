@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class EditTemporalFields extends VBox implements DataEditController<ObservablePhenotypicFeature> {
 
-    private ObservablePhenotypicFeature data;
+    private ObservablePhenotypicFeature item;
     private ObservableTimeElement onset;
     private ObservableTimeElement resolution;
 
@@ -76,18 +76,18 @@ public class EditTemporalFields extends VBox implements DataEditController<Obser
 
     @Override
     public void setInitialData(ObservablePhenotypicFeature data) {
-        this.data = Objects.requireNonNull(data);
+        item = Objects.requireNonNull(data);
 
-        termId.setText(this.data.getTermId().getValue());
-        termLabel.setText("NOT RIGHT NOW");
+        termId.setText(item.getTermId().getValue());
+        termLabel.setText(item.getLabel());
         termDefinition.setText("NOT RIGHT NOW");
 
-        onset = this.data.getOnset();
+        onset = item.getOnset();
         onsetIsUnknown.setSelected(onset == null);
         if (onset != null)
             onsetComponent.setInitialData(onset);
 
-        resolution = this.data.getResolution();
+        resolution = item.getResolution();
         resolutionIsUnknown.setSelected(resolution == null);
         if (resolution != null)
             resolutionComponent.setInitialData(resolution);
@@ -96,17 +96,17 @@ public class EditTemporalFields extends VBox implements DataEditController<Obser
     @Override
     public void commit() {
         if (onsetIsUnknown.isSelected()) {
-            data.setOnset(null);
+            item.setOnset(null);
         } else {
             onsetComponent.commit();
-            data.setOnset(onset);
+            item.setOnset(onset);
         }
 
         if (resolutionIsUnknown.isSelected()) {
-            data.setResolution(null);
+            item.setResolution(null);
         } else {
             resolutionComponent.commit();
-            data.setResolution(resolution);
+            item.setResolution(resolution);
         }
     }
 }

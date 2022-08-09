@@ -3,15 +3,14 @@
 <?import java.net.URL?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Separator?>
-
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
-<fx:root xmlns="http://javafx.com/javafx"
-         xmlns:fx="http://javafx.com/fxml"
-         styleClass="publication-editable-box"
-         type="javafx.scene.layout.VBox">
+
+<fx:root xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+         type="javafx.scene.layout.VBox"
+         id="publication-editable-box">
     <stylesheets>
-        <URL value="@publication.css"/>
         <URL value="@../base.css"/>
+        <URL value="@publication-editable.css"/>
     </stylesheets>
     <VBox styleClass="summary-area">
         <children>
@@ -30,5 +29,4 @@
             <TitledTextField fx:id="pmid" name="PMID"/>
         </children>
     </VBox>
-
 </fx:root>

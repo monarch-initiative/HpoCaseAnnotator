@@ -7,7 +7,8 @@
       fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary"
       stylesheets="@variant-summary.css">
     <children>
-        <TableView fx:id="variantTable" onMouseClicked="#variantTableViewOnMouseClicked" VBox.vgrow="ALWAYS">
+        <TableView fx:id="variantTable" onMouseClicked="#variantTableViewOnMouseClicked"
+                   id="variant-table">
             <columns>
                 <TableColumn fx:id="idTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="ID" />
                 <TableColumn fx:id="genomicAssemblyTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Assembly" />

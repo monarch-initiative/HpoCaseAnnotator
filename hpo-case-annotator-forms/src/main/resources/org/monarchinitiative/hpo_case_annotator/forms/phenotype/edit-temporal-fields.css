@@ -1,7 +1,7 @@
-#onset-box {
-
+#box {
+    -fx-background-color: white;
 }
 
-#resolution-box {
-
+TitledLabel {
+    -fx-padding: 0 20 0 0;
 }

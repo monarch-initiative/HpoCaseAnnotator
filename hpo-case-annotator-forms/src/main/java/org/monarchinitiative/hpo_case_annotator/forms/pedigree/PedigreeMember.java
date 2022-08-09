@@ -1,6 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.forms.pedigree;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
@@ -25,7 +24,6 @@ import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.hpo_case_annotator.forms.util.GenotypeStringConverter;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
-import org.monarchinitiative.hpo_case_annotator.model.v2.VitalStatus;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.*;
@@ -259,7 +257,7 @@ public class PedigreeMember {
                 return new StringBuilder()
                         .append(member.getObservablePhenotypicFeatures().size()).append(" phenotype terms, ")
                         .append(member.getDiseaseStates().size()).append(" disease states, ")
-                        .append(member.getGenotypes().size()).append(" genotypes")
+                        .append(member.getGenotypes().stream().filter(ovg -> ovg.getGenotype().isKnown()).count()).append(" known genotypes")
                         .toString();
             }
         };
@@ -278,8 +276,8 @@ public class PedigreeMember {
     @FXML
     private void editIdentifiersAction(ActionEvent e) {
         Dialog<Boolean> dialog = new Dialog<>();
-        dialog.setHeaderText("Edit identifiers");
-        dialog.titleProperty().bind(concat("Individual ID: ", nullableStringProperty(item, "id")));
+        dialog.initOwner(pedigreeMemberTitle.getParent().getScene().getWindow());
+        dialog.titleProperty().bind(concat("Edit identifiers for ", nullableStringProperty(item, "id")));
         IndividualIdsEditableComponent component = new IndividualIdsEditableComponent();
         component.setInitialData(item.getValue());
 

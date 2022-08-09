@@ -5,23 +5,30 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.age.*?>
 
-<fx:root stylesheets="@edit-temporal-fields.css" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<?import java.net.URL?>
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.VBox" id="box">
+    <stylesheets>
+        <URL value="@../base.css"/>
+        <URL value="@edit-temporal-fields.css"/>
+    </stylesheets>
     <children>
-        <HBox>
+        <HBox styleClass="section">
             <children>
                 <TitledLabel fx:id="termId" name="ID" />
                 <TitledLabel fx:id="termLabel" name="Name" />
                 <TitledLabel fx:id="termDefinition" name="Definition" />
             </children>
         </HBox>
-        <HBox>
-            <VBox id="onset-box" HBox.hgrow="SOMETIMES">
+        <HBox styleClass="section">
+            <VBox HBox.hgrow="SOMETIMES">
                 <children>
                     <CheckBox fx:id="onsetIsUnknown" selected="true" text="Onset is unknown" />
                     <TimeElementEditableComponent fx:id="onsetComponent" disable="true" />
                 </children>
             </VBox>
-            <VBox id="resolution-box" HBox.hgrow="SOMETIMES">
+            <Separator orientation="VERTICAL"/>
+            <VBox HBox.hgrow="SOMETIMES">
                 <children>
                     <CheckBox fx:id="resolutionIsUnknown" selected="true" text="Resolution is unknown" />
                     <TimeElementEditableComponent fx:id="resolutionComponent" disable="true" />
