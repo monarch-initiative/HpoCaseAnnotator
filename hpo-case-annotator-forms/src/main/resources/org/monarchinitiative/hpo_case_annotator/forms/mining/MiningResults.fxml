@@ -4,38 +4,33 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<fx:root xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.VBox"
-         stylesheets="@mining-results.css"
-         styleClass="mining-results-box" >
-    <children>
-      <SplitPane dividerPositions="0.6" VBox.vgrow="ALWAYS">
-        <items>
-            <AnchorPane>
-                <children>
-                    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                        <children>
-                            <Label styleClass="tm-title" text="Text mining results" />
-                            <TextFlow fx:id="textFlow" VBox.vgrow="ALWAYS" />
-                        </children>
-                    </VBox>
-                </children>
-            </AnchorPane>
-            <AnchorPane>
-                <children>
-                    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                        <children>
-                            <Label styleClass="tm-title" text="Vetted phenotypic features" />
-                            <ListView fx:id="vettedPhenotypicFeatures" VBox.vgrow="ALWAYS" >
-                                <placeholder>
-                                    <Label text="No vetted features yet"/>
-                                </placeholder>
-                            </ListView>
-                        </children>
-                    </VBox>
-                </children>
-            </AnchorPane>
-        </items>
-      </SplitPane>
-    </children>
-</fx:root>
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.mining.MiningResultsVettingBox"
+      stylesheets="@mining-results.css" styleClass="mining-results-box">
+    <SplitPane dividerPositions="0.6" VBox.vgrow="ALWAYS">
+        <AnchorPane>
+            <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                  AnchorPane.topAnchor="0.0">
+                <Label styleClass="tm-title" text="Text mining results"/>
+                <TextFlow fx:id="textFlow" VBox.vgrow="ALWAYS"/>
+                <Label fx:id="statusLabel"/>
+            </VBox>
+        </AnchorPane>
+        <AnchorPane>
+            <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                  AnchorPane.topAnchor="0.0">
+                <Label styleClass="tm-title" text="Vetted phenotypic features"/>
+                <TableView fx:id="vettedPhenotypicFeatures">
+                    <columns>
+                        <TableColumn prefWidth="75.0" text="Id" fx:id="idColumn"/>
+                        <TableColumn prefWidth="75.0" text="Name" fx:id="nameColumn"/>
+                        <TableColumn prefWidth="75.0" text="Excluded" fx:id="excludedColumn"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="No vetted features yet"/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+        </AnchorPane>
+    </SplitPane>
+</VBox>

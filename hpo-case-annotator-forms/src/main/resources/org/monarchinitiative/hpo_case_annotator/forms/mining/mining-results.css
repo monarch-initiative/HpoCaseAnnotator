@@ -8,3 +8,22 @@
     -fx-pref-width: 600;
     -fx-pref-height: 400;
 }
+
+.accepted {
+    -fx-underline: true;
+    -fx-text-fill: red;
+}
+
+.mined {
+    -fx-text-fill: red;
+}
+
+.close-tooltip-button {
+    -fx-background-color: red;
+    -fx-font-size: 6;
+    -fx-text-fill: white
+}
+
+.tooltip {
+    -fx-font-size: 12;
+}

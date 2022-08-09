@@ -7,6 +7,7 @@ import javafx.stage.StageStyle;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
@@ -28,8 +29,13 @@ public class MiningResultsVettingBoxTest {
     private MiningResultsVettingBox results;
 
     @Start
-    public void start(Stage stage) {
-        results = new MiningResultsVettingBox();
+    public void start(Stage stage) throws Exception {
+        controller = new MiningResultsVettingBox(BaseControllerTest.HPO);
+
+        FXMLLoader loader = new FXMLLoader(MiningResultsVettingBox.class.getResource("MiningResults.fxml"));
+        loader.setControllerFactory(clz -> controller);
+
+        Parent parent = loader.load();
 
         Scene scene = new Scene(results);
         stage.setScene(scene);
