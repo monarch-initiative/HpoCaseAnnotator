@@ -21,6 +21,8 @@ module org.monarchinitiative.hca.forms {
     exports org.monarchinitiative.hpo_case_annotator.forms.pedigree;
     exports org.monarchinitiative.hpo_case_annotator.forms.phenotype;
     exports org.monarchinitiative.hpo_case_annotator.forms.publication;
+    exports org.monarchinitiative.hpo_case_annotator.forms.stepper;
+    exports org.monarchinitiative.hpo_case_annotator.forms.stepper.step;
     exports org.monarchinitiative.hpo_case_annotator.forms.variants;
 
     exports org.monarchinitiative.hpo_case_annotator.forms.v2;
@@ -41,6 +43,8 @@ module org.monarchinitiative.hca.forms {
     opens org.monarchinitiative.hpo_case_annotator.forms.pedigree to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.phenotype to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.publication to javafx.fxml, org.monarchinitiative.hca.app;
+    opens org.monarchinitiative.hpo_case_annotator.forms.stepper to javafx.fxml, org.monarchinitiative.hca.app;
+    opens org.monarchinitiative.hpo_case_annotator.forms.stepper.step to javafx.fxml, org.monarchinitiative.hca.app;
     opens org.monarchinitiative.hpo_case_annotator.forms.variants to javafx.fxml, org.monarchinitiative.hca.app;
 
     opens org.monarchinitiative.hpo_case_annotator.forms.v2 to javafx.fxml, org.monarchinitiative.hca.app;

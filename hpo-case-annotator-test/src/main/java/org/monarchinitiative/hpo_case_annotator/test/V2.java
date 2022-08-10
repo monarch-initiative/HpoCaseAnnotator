@@ -18,6 +18,11 @@ class V2 {
 
     private static final GenomicAssembly HG19 = GenomicAssemblies.GRCh37p13();
 
+    public static IndividualStudy comprehensiveIndividualStudy() {
+        DiseaseIdentifier diseaseIdentifier = cysticFibrosis();
+        return IndividualStudy.of("individualStudyTest", getPublication(), getVariants(), abcIndividual(diseaseIdentifier), getStudyMetadata());
+    }
+
     public static FamilyStudy comprehensiveFamilyStudy() {
         return FamilyStudy.of("familyStudyTest", getPublication(), getVariants(), getPedigree(), getStudyMetadata());
     }
@@ -157,7 +162,7 @@ class V2 {
     }
 
     private static Pedigree getPedigree() {
-        DiseaseIdentifier diseaseIdentifier = DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF");
+        DiseaseIdentifier diseaseIdentifier = cysticFibrosis();
         List<DiseaseStatus> diseases = List.of(DiseaseStatus.of(diseaseIdentifier, false));
 
         List<VariantGenotype> genotypes = List.of(
@@ -187,14 +192,22 @@ class V2 {
     }
 
     private static Collection<? extends Individual> getCohortMembers() {
-        DiseaseIdentifier diseaseIdentifier = DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF");
-        // abc
-        // The phenotypic features are nonsense, just for testing.
+        DiseaseIdentifier diseaseIdentifier = cysticFibrosis();
+        return List.of(abcIndividual(diseaseIdentifier), defIndividual(diseaseIdentifier));
+    }
+
+    private static DiseaseIdentifier cysticFibrosis() {
+        return DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF");
+    }
+
+    private static Individual abcIndividual(DiseaseIdentifier diseaseIdentifier) {
         TimeElement abcHypertensionOnset = TimeElement.of(TimeElement.TimeElementCase.GESTATIONAL_AGE, GestationalAge.of(38, 3), null, null, null);
         TimeElement abcBronchiectasisOnset = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(10, 0, 20), null, null);
+
         TimeElement abcAge = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(14, null, null), null, null);
         VitalStatus abcVitalStatus = VitalStatus.of(VitalStatus.Status.ALIVE, null);
-        Individual abc = Individual.of("abc",
+        return Individual.of("abc",
+                // The phenotypic features are nonsense, just for testing.
                 List.of(
                         PhenotypicFeature.of(TermId.of("HP:0000822"), "Hypertension", true, abcHypertensionOnset, null), // Hypertension
                         PhenotypicFeature.of(TermId.of("HP:0002110"), "Bronchiectasis", false, abcBronchiectasisOnset, null) // Bronchiectasis
@@ -209,17 +222,21 @@ class V2 {
                 abcAge,
                 abcVitalStatus,
                 Sex.MALE);
+    }
 
-        // def
+    private static Individual defIndividual(DiseaseIdentifier diseaseIdentifier) {
         // Onset somewhere in the 16th year of life.
         Age start = Age.of(15, null, null);
         Age end = Age.of(16, null, null);
         TimeElement defHypertensionOnset = TimeElement.of(TimeElement.TimeElementCase.AGE_RANGE, null, null, AgeRange.of(start, end), null);
+
         TermId adultOnset = TermId.of("HP:0003581");
         TimeElement defBronchiectasisOnset = TimeElement.of(TimeElement.TimeElementCase.ONTOLOGY_CLASS, null, null, null, adultOnset);
+
         TimeElement defAge = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(25, null, null), null, null);
         VitalStatus defVitalStatus = VitalStatus.of(VitalStatus.Status.DECEASED, TimeElement.age(Age.of(35, null, null)));
-        Individual def = Individual.of("def",
+        return Individual.of("def",
+                // The phenotypic features are nonsense, just for testing.
                 List.of(
                         PhenotypicFeature.of(TermId.of("HP:0000822"), "Hypertension", false, defHypertensionOnset, null), // Hypertension
                         PhenotypicFeature.of(TermId.of("HP:0002110"), "Bronchiectasis", true, defBronchiectasisOnset, null) // Bronchiectasis
@@ -234,8 +251,6 @@ class V2 {
                 defAge,
                 defVitalStatus,
                 Sex.FEMALE);
-
-        return List.of(abc, def);
     }
 
     private static StudyMetadata getStudyMetadata() {

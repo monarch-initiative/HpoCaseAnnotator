@@ -4,7 +4,10 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 
 import java.util.Collection;
 
-public interface CohortStudy extends Study {
+/**
+ * A study of two or more unrelated individuals.
+ */
+public interface CohortStudy extends GroupStudy<Individual> {
 
     static CohortStudy of(String id,
                           Publication publication,

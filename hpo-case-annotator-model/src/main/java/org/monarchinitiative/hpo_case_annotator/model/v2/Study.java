@@ -15,8 +15,6 @@ public interface Study {
 
     List<? extends CuratedVariant> getVariants();
 
-    List<? extends Individual> getMembers();
-
     StudyMetadata getStudyMetadata();
 
 }

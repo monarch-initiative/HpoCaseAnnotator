@@ -6,7 +6,7 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication?>
 
-<fx:root xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="javafx.scene.layout.VBox"
          id="publication-editable-box">
     <stylesheets>

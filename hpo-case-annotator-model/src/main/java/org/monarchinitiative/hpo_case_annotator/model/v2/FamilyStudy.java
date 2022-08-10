@@ -5,7 +5,10 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import java.util.Collection;
 import java.util.List;
 
-public interface FamilyStudy extends Study {
+/**
+ * A study of two or more individuals who are related.
+ */
+public interface FamilyStudy extends GroupStudy<PedigreeMember> {
 
     static FamilyStudy of(String id,
                           Publication publication,
