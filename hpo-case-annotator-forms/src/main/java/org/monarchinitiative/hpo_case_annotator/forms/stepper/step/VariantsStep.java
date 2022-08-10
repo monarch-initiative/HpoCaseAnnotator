@@ -1,13 +1,21 @@
 package org.monarchinitiative.hpo_case_annotator.forms.stepper.step;
 
+import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummaryController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudy;
 
 public class VariantsStep<T extends ObservableStudy> extends BaseStep<T> {
 
-    public VariantsStep() {
-        super(VariantsStep.class.getResource("VariantsStep.fxml"));
+    @FXML
+    private Parent variantSummary;
+    @FXML
+    private VariantSummaryController variantSummaryController;
+
+    public VariantsStep(HCAControllerFactory controllerFactory) {
+        super(VariantsStep.class.getResource("VariantsStep.fxml"), controllerFactory);
     }
 
     @Override
@@ -17,11 +25,12 @@ public class VariantsStep<T extends ObservableStudy> extends BaseStep<T> {
 
     @Override
     protected void bind(T data) {
-        // TODO - implement
+        variantSummaryController.variants().bindBidirectional(data.variants());
     }
 
     @Override
     protected void unbind(T data) {
-        // TODO - implement
+        variantSummaryController.variants().unbindBidirectional(data.variants());
     }
+
 }

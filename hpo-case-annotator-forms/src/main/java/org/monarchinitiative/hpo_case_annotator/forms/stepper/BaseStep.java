@@ -2,10 +2,13 @@ package org.monarchinitiative.hpo_case_annotator.forms.stepper;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,10 +17,18 @@ public abstract class BaseStep<T> extends VBox implements Step<T> {
 
     protected final ObjectProperty<T> data = new SimpleObjectProperty<>();
 
+    @FXML
+    private Label header;
+
     public BaseStep(URL location) {
+        this(location, null);
+    }
+
+    public BaseStep(URL location, HCAControllerFactory controllerFactory) {
         FXMLLoader loader = new FXMLLoader(location);
         loader.setRoot(this);
         loader.setController(this);
+        loader.setControllerFactory(controllerFactory);
         try {
             loader.load();
         } catch (IOException e) {
@@ -41,6 +52,18 @@ public abstract class BaseStep<T> extends VBox implements Step<T> {
     @Override
     public ObjectProperty<T> dataProperty() {
         return data;
+    }
+
+    public String getHeader() {
+        return header.textProperty().get();
+    }
+
+    public StringProperty headerProperty() {
+        return header.textProperty();
+    }
+
+    public void setHeader(String header) {
+        this.header.textProperty().set(header);
     }
 
     protected abstract void bind(T data);

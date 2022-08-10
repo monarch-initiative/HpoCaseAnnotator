@@ -7,5 +7,7 @@
          type="javafx.scene.layout.VBox">
     <children>
         <Label text="Variants"/>
+        <Label fx:id="header" text="Add genomic variants identified in the individual."/>
+        <fx:include fx:id="variantSummary" source="../../variants/VariantSummary.fxml"/>
     </children>
 </fx:root>

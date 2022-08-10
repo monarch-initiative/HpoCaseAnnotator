@@ -10,7 +10,8 @@
          stylesheets="@publication-step.css"
          id="publication-step-box">
     <children>
-        <Label text="Enter publication details"/>
+        <Label text="Publication"/>
+        <Label fx:id="header" text="Provide publication details for the individual."/>
         <Label text="Fetch from PubMed"/>
         <HBox>
             <children>

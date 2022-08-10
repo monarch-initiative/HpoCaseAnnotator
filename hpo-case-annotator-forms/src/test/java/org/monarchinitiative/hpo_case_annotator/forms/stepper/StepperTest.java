@@ -10,6 +10,7 @@ import javafx.stage.StageStyle;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividualStudy;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
@@ -22,7 +23,7 @@ import java.util.function.Consumer;
 
 @Disabled
 @ExtendWith(ApplicationExtension.class)
-public class StepperTest {
+public class StepperTest extends BaseControllerTest {
 
     private Stepper<ObservableIndividualStudy> controller;
 
@@ -34,7 +35,7 @@ public class StepperTest {
         Parent parent = loader.load();
         controller = loader.getController();
 
-        Scene scene = new Scene(parent, 400, 200);
+        Scene scene = new Scene(parent);
         stage.setScene(scene);
         stage.setTitle("Stepper test");
         stage.initStyle(StageStyle.DECORATED);
@@ -76,6 +77,6 @@ public class StepperTest {
     }
 
     private static IndividualStudySteps prepareIndividualStudySteps() {
-        return new IndividualStudySteps();
+        return new IndividualStudySteps(CONTROLLER_FACTORY);
     }
 }
