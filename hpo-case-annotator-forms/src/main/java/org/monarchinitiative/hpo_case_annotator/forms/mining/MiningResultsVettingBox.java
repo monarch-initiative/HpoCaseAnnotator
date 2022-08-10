@@ -24,6 +24,7 @@ public class MiningResultsVettingBox {
 
     @FXML
     private TextFlow textFlow;
+
     @FXML
     private TableView<ObservableMinedTerm> vettedPhenotypicFeatures;
     @FXML
@@ -116,7 +117,6 @@ public class MiningResultsVettingBox {
     }
 
     public static StringBinding makeSummaryBinding(ObservableList<ObservableMinedTerm> minedTerms) {
-        // TODO - check DoubleBinding for documentation on StringBinding
         return new StringBinding() {
             {
                 bind(minedTerms);
@@ -134,52 +134,12 @@ public class MiningResultsVettingBox {
                     } else if (!term.isExcludedProperty().get()) {
                         present++;
                     }
-                    if (term.isApprovedProperty().get()) {
+                    if (term.getReviewStatus().equals(ReviewStatus.APPROVED)) {
                         approved++;
                     }
                     total++;
                 }
                 return "%s total: %s approved, %s present, %s excluded".formatted(total, approved, present, excluded);
-            }
-
-        };
-    }
-
-    public static ListBinding<VettedPhenotypicFeature> makeListBinding(ObservableList<ObservableMinedTerm> minedTerms) {
-        return new ListBinding<>() {
-            {
-                bind(minedTerms);
-            }
-
-            @Override
-            public ObservableList<VettedPhenotypicFeature> computeValue() {
-                ObservableList<VettedPhenotypicFeature> vettedFeatures = FXCollections.observableArrayList();
-                for (ObservableMinedTerm term : minedTerms) {
-                    VettedPhenotypicFeature vettedFeature = new VettedPhenotypicFeature() {
-                        @Override
-                        public boolean isNegated() {
-                            return term.isExcludedProperty().get();
-                        }
-
-                        @Override
-                        public TermId id() {
-                            return term.getTermId();
-                        }
-                        @Override
-                        public String getLabel() {
-                            return term.getLabel();
-                        }
-                    };
-
-                    boolean approved = term.isApprovedProperty().get();
-                    boolean inList = vettedFeatures.contains(vettedFeature);
-                    if (approved && !inList) {
-                        vettedFeatures.add(vettedFeature);
-                    } else if (!approved && inList) {
-                        vettedFeatures.remove(vettedFeature);
-                    }
-                }
-                return vettedFeatures;
             }
 
         };

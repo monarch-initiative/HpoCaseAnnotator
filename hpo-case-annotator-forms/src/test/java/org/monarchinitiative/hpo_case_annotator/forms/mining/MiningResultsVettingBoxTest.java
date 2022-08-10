@@ -47,7 +47,7 @@ public class MiningResultsVettingBoxTest {
 
     @Test
     public void showTheWidget(FxRobot robot) {
-        robot.sleep(5, TimeUnit.SECONDS);
+        robot.sleep(1, TimeUnit.SECONDS);
         Platform.runLater(() -> controller.setResults(getExampleTestResults()));
 
         robot.sleep(60, TimeUnit.SECONDS);

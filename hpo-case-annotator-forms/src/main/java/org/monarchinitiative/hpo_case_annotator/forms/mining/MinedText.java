@@ -1,7 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.forms.mining;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.geometry.Point2D;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -19,15 +17,24 @@ public class MinedText extends Text {
         this.setText(text);
         this.setFill(Color.RED);
         this.setOnMouseClicked(e -> showHpoInfo());
+        this.minedTerm.reviewStatusProperty().addListener((obs, old, novel) -> {
+            switch (old) {
+                // Clean up
+                case APPROVED -> getStyleClass().remove("accepted");
+                case REJECTED -> getStyleClass().remove("rejected");
+                case UNREVIEWED -> {} // no-op
+            }
+            switch (novel) {
+                case APPROVED -> getStyleClass().add("accepted");
+                case REJECTED -> getStyleClass().add("rejected");
+                case UNREVIEWED -> {} // should not happen
+            }
+        });
     }
 
     private void showHpoInfo() {
-        MiningResultsTooltipInfo infoBox = new MiningResultsTooltipInfo(this);
+        MiningResultsTooltipInfo infoBox = new MiningResultsTooltipInfo(minedTerm);
         infoBox.setSpacing(10);
-        CheckBox excludedCheckBox = infoBox.getExcludedCheckBox();
-        BooleanProperty excludedProperty = minedTerm.isExcludedProperty();
-        excludedCheckBox.setSelected(excludedProperty.get());
-        excludedProperty.bind(excludedCheckBox.selectedProperty());
 
         tooltip.setGraphic(infoBox);
         tooltip.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);

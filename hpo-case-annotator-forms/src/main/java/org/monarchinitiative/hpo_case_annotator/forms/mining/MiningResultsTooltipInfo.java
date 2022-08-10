@@ -1,6 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.forms.mining;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -8,19 +7,20 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class MiningResultsTooltipInfo extends VBox {
 
-    private final MinedText minedText;
+    private final ObservableMinedTerm minedTerm;
 
     @FXML
-    private Label idLabel = new Label();
+    private Label idLabel;
 
     @FXML
-    private Label nameLabel = new Label();
+    private Label nameLabel;
 
     @FXML
-    private CheckBox excludedCheckBox = new CheckBox();
+    private CheckBox excludedCheckBox;
 
     @FXML
     private Button acceptTermButton;
@@ -31,13 +31,12 @@ public class MiningResultsTooltipInfo extends VBox {
     @FXML
     private HBox buttonBox;
 
-    public MiningResultsTooltipInfo(MinedText minedText) {
-        this.minedText = minedText;
+    public MiningResultsTooltipInfo(ObservableMinedTerm minedTerm) {
+        this.minedTerm = Objects.requireNonNull(minedTerm);
         FXMLLoader loader = new FXMLLoader(MiningResultsVettingBox.class.getResource("MiningResultsTooltipInfo.fxml"));
         loader.setRoot(this);
         loader.setController(this);
         try {
-            initialize();
             loader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -46,7 +45,6 @@ public class MiningResultsTooltipInfo extends VBox {
 
     @FXML
     private void initialize() {
-        ObservableMinedTerm minedTerm = minedText.getMinedTerm();
         String id = minedTerm.getTermId().toString();
         String name = minedTerm.getLabel();
         idLabel.setText(id);
