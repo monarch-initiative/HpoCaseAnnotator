@@ -74,13 +74,11 @@ public class Stepper<T> implements ObservableDataController<T> {
 
             // Set the current step
             ObservableList<? extends Step<T>> list = change.getList();
-            LOGGER.info("We have {} steps", list.size());
             currentStep.set(list.isEmpty() ? -1 : 0);
 
         });
 
         currentStep.addListener((obs, old, novel) -> {
-            LOGGER.info("Setting to step {}/{}", novel, steps.size());
             Step<T> step = novel.intValue() < 0
                     ? null
                     : steps.get(novel.intValue());
