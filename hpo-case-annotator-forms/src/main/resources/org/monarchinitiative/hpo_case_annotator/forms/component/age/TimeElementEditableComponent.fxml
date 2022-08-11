@@ -10,7 +10,7 @@
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="javafx.scene.layout.VBox"
-         stylesheets="@time-element-editable-component.css" >
+         stylesheets="@time-element-component.css" >
     <children>
         <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
             <tabs>
@@ -24,7 +24,7 @@
                         <Tooltip text="Gestational age"/>
                     </tooltip>
                     <content>
-                        <VBox>
+                        <VBox id="gestational-box">
                             <children>
                                 <Label text="Gestational age" styleClass="h3"/>
                                 <HBox alignment="CENTER_LEFT">
@@ -53,7 +53,7 @@
                         <Tooltip text="Age"/>
                     </tooltip>
                     <content>
-                        <VBox>
+                        <VBox id="age-box">
                             <children>
                                 <Label text="Age" styleClass="h3"/>
                                 <SimpleEditableAge fx:id="age"/>
@@ -71,7 +71,7 @@
                         <Tooltip text="Age range"/>
                     </tooltip>
                     <content>
-                        <VBox>
+                        <VBox id="age-range-box">
                             <children>
                                 <Label text="Age range" styleClass="h3"/>
                                 <HBox>

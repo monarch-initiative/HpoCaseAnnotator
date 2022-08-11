@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.VitalStatusBindingComponent?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementBindingComponent?>
-<?import javafx.scene.control.Separator?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.HBox"
-         stylesheets="@individual-ids-binding-component.css">
+         type="javafx.scene.layout.HBox">
+    <stylesheets>
+        <URL value="@../base.css"/>
+        <URL value="@individual-ids-component.css"/>
+    </stylesheets>
     <children>
         <VBox styleClass="section">
             <!-- Identifiers -->
@@ -33,7 +38,7 @@
                 </VBox>
             </children>
         </VBox>
-        <Separator/>
+        <Separator orientation="VERTICAL"/>
         <VBox styleClass="section">
             <!-- Age -->
             <children>
@@ -45,7 +50,7 @@
                 </HBox>
             </children>
         </VBox>
-        <Separator/>
+        <Separator orientation="VERTICAL"/>
         <VBox styleClass="section">
             <children>
                 <Label text="Vital status" styleClass="h1"/>

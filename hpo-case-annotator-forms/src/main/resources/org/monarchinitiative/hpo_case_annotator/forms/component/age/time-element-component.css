@@ -1,3 +1,24 @@
 TitledLabel {
     -fx-padding: 0 30 0 0;
 }
+
+ComboBox {
+    -fx-pref-width: 120;
+    -fx-max-width: 120;
+}
+
+.ar-label {
+    -fx-pref-width: 60;
+}
+
+#gestational-box TitledTextField {
+    -fx-max-width: 70;
+}
+
+#age-box TitledTextField {
+    -fx-max-width: 60;
+}
+
+#age-range-box TitledTextField {
+    -fx-max-width: 60;
+}

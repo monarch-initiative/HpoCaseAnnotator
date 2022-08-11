@@ -8,19 +8,19 @@
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="javafx.scene.layout.HBox">
     <children>
-        <HBox alignment="CENTER_LEFT">
+        <HBox>
             <children>
                 <TitledTextField fx:id="years" name="Years" />
                 <Button onAction="#clearYears" styleClass="clear-button" />
             </children>
         </HBox>
-        <HBox alignment="CENTER_LEFT">
+        <HBox>
             <children>
                 <TitledComboBox fx:id="months" name="Months" />
                 <Button onAction="#clearMonths" styleClass="clear-button" />
             </children>
         </HBox>
-        <HBox alignment="CENTER_LEFT">
+        <HBox>
             <children>
                 <TitledComboBox fx:id="days" name="Days" />
                 <Button onAction="#clearDays" styleClass="clear-button" />

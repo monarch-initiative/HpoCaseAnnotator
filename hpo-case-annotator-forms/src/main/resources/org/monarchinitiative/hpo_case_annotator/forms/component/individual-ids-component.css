@@ -9,3 +9,15 @@ TitledLabel {
 #age-row {
     -fx-padding: 15 0 0 0;
 }
+
+#top-level {
+    -fx-background-color: white;
+}
+
+.credential-col {
+    -fx-padding: 0 20 0 0;
+}
+
+TitledTextField TextField {
+    -fx-pref-width: 100;
+}

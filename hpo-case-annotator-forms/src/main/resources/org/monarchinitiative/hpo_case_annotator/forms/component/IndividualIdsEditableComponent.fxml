@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.URL?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementEditableComponent?>
 
-<?import javafx.scene.control.Separator?>
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="javafx.scene.layout.VBox"
          id="top-level">
     <stylesheets>
         <URL value="@../base.css"/>
-        <URL value="@individual-ids-editable-component.css"/>
+        <URL value="@individual-ids-component.css"/>
     </stylesheets>
     <children>
         <VBox styleClass="section">

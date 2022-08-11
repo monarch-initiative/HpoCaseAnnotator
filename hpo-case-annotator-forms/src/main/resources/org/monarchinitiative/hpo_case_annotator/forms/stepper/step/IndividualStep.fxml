@@ -10,5 +10,8 @@
         <Label text="Individual"/>
         <Label fx:id="header" text="Provide credentials of the individual under investigation."/>
         <IndividualIdsBindingComponent fx:id="individualIds" />
+
+        <!-- TODO - add phenotype -->
+
     </children>
 </fx:root>
