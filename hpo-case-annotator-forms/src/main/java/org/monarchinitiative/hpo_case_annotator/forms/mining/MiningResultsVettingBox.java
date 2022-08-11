@@ -1,11 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.forms.mining;
 
-import javafx.beans.binding.ListBinding;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,9 +9,11 @@ import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
-import org.monarchinitiative.phenol.ontology.data.TermId;
+import org.monarchinitiative.phenol.ontology.data.Term;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class MiningResultsVettingBox {
 
@@ -47,6 +45,7 @@ public class MiningResultsVettingBox {
         idColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getTermId().toString()));
         nameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getLabel()));
         excludedColumn.setCellValueFactory(cellData -> cellData.getValue().isExcludedProperty());
+        statusColumn.setCellFactory(c -> new ReviewStatusTableCell());
         statusColumn.setCellValueFactory(cellData -> cellData.getValue().reviewStatusProperty());
         results.addListener((obs, old, novel) -> {
             if (old != null) unbind(old);
@@ -56,37 +55,57 @@ public class MiningResultsVettingBox {
 
     private void bind(TextMiningResults results) {
         String sourceText = results.sourceText();
-        List<MinedTerm> sortedTerms = results.minedTerms().stream().sorted(Comparator.comparingInt(MinedTerm::start)).toList();
-        ObservableList<ObservableMinedTerm> minedTerms = FXCollections.observableArrayList(ObservableMinedTerm.EXTRACTOR);
-        sortedTerms.forEach(term -> minedTerms.add(new ObservableMinedTerm(term.id(), hpo.getTermMap().get(term.id()).getName(), term.isNegated())));
 
-        List<Text> textList = new ArrayList<>();
+        ObservableList<ObservableMinedTerm> sortedObservableTerms = results.minedTerms().stream()
+                .sorted(Comparator.comparingInt(MinedTerm::start).thenComparingInt(MinedTerm::end))
+                .map(toObservableMinedTerm())
+                .collect(Collectors.toCollection(() -> FXCollections.observableArrayList(ObservableMinedTerm.EXTRACTOR)));
+
+        ObservableList<Text> texts = prepareTexts(sourceText, sortedObservableTerms);
+
+        textFlow.getChildren().addAll(texts);
+        vettedPhenotypicFeatures.setItems(sortedObservableTerms);
+        statusLabel.textProperty().bind(makeSummaryBinding(sortedObservableTerms));
+    }
+
+    private Function<MinedTerm, ObservableMinedTerm> toObservableMinedTerm() {
+        return t -> {
+            Term term = hpo.getTermMap().get(t.id());
+            return new ObservableMinedTerm(t.id(), term == null ? "N/A" : term.getName(), t.start(), t.end(), t.isNegated());
+        };
+    }
+
+    private ObservableList<Text> prepareTexts(String sourceText, List<ObservableMinedTerm> sortedTerms) {
         int start = 0;
-        for (MinedTerm term : sortedTerms) {
-            int termStart = term.start();
-            int termEnd = term.end();
+
+        List<Text> texts = new ArrayList<>();
+        for (ObservableMinedTerm term : sortedTerms) {
+            int termStart = term.getStart();
+            int termEnd = term.getEnd();
             if (start < termStart) {
-                Text subText = new Text(sourceText.substring(start, termStart));
-                textList.add(subText);
+                Text plainText = new Text(sourceText.substring(start, termStart));
+                texts.add(plainText);
             }
-            String minedSubstring = sourceText.substring(termStart, termEnd);
-            ObservableMinedTerm observableMinedTerm = minedTerms.get(sortedTerms.indexOf(term));
-            MinedText minedText = new MinedText(observableMinedTerm, minedSubstring);
-            textList.add(minedText);
+
+            String concept = sourceText.substring(termStart, termEnd);
+            Text conceptText = prepareTextForConcept(concept, term);
+            texts.add(conceptText);
             if (termEnd <= sourceText.length()) {
                 start = termEnd;
             }
         }
+
         if (start < sourceText.length()) {
-            Text endText = new Text(sourceText.substring(start));
-            textList.add(endText);
+            Text remainder = new Text(sourceText.substring(start));
+            texts.add(remainder);
         }
-        textFlow.getChildren().addAll(textList);
 
-        vettedPhenotypicFeatures.setItems(minedTerms);
+        return FXCollections.observableList(texts);
+    }
 
-        StringBinding status = makeSummaryBinding(minedTerms);
-        statusLabel.textProperty().bind(status);
+    private Text prepareTextForConcept(String conceptSubstring, ObservableMinedTerm term) {
+        // Just one type of text for now
+        return new MinedText(conceptSubstring, term);
     }
 
 

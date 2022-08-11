@@ -14,14 +14,33 @@ class ObservableMinedTerm {
 
     private final TermId termId;
     private final String label;
+    private final int start;
+    private final int end;
     private final BooleanProperty isExcluded = new SimpleBooleanProperty(this, "isExcluded");
     private final ObjectProperty<ReviewStatus> reviewStatus = new SimpleObjectProperty<>(this, "reviewStatus");
 
-    public ObservableMinedTerm(TermId termId, String label, boolean isExcluded) {
+    public ObservableMinedTerm(TermId termId, String label, int start, int end, boolean isExcluded) {
         this.termId = termId;
         this.label = label;
+        this.start = start;
+        this.end = end;
         this.isExcluded.setValue(isExcluded);
         this.reviewStatus.set(ReviewStatus.UNREVIEWED);
+    }
+    TermId getTermId() {
+        return this.termId;
+    }
+
+    String getLabel() {
+        return this.label;
+    }
+
+    int getStart() {
+        return start;
+    }
+
+    int getEnd() {
+        return end;
     }
 
     BooleanProperty isExcludedProperty() {
@@ -39,21 +58,15 @@ class ObservableMinedTerm {
         reviewStatus.set(status);
     }
 
-    TermId getTermId() {
-        return this.termId;
-    }
-
-    String getLabel() {
-        return this.label;
-    }
-
-
+    @Override
     public String toString() {
-        return String.format("%s\t%s\t%s\t%s",
-                termId,
-                label,
-                isExcludedProperty().get(),
-                reviewStatusProperty().get()
-        );
+        return "ObservableMinedTerm{" +
+                "termId=" + termId +
+                ", label='" + label + '\'' +
+                ", start=" + start +
+                ", end=" + end +
+                ", isExcluded=" + isExcluded.get() +
+                ", reviewStatus=" + reviewStatus.get() +
+                '}';
     }
 }

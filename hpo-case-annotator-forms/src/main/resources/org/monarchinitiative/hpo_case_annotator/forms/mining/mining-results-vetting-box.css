@@ -1,0 +1,32 @@
+.tm-title {
+    -fx-font-size: 1.2em;
+    -fx-text-fill: navy;
+    -fx-effect: dropshadow(gaussian, #858585, 5, .5, 1, 1);
+}
+
+#text-flow {
+    -fx-pref-width: 500;
+}
+
+.hpo-term {
+    /* To add the "clickable" feeling. */
+    -fx-cursor: hand;
+}
+
+.unreviewed {
+    -fx-fill: dodgerblue;
+}
+
+.approved {
+    -fx-fill: seagreen;
+    -fx-underline: true;
+}
+
+.rejected {
+    -fx-fill: red;
+    -fx-strikethrough: true;
+}
+
+.tooltip {
+    -fx-font-size: 15;
+}

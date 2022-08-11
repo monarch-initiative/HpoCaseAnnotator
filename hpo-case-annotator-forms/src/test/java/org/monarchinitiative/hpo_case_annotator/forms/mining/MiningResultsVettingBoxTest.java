@@ -34,7 +34,7 @@ public class MiningResultsVettingBoxTest {
     public void start(Stage stage) throws Exception {
         controller = new MiningResultsVettingBox(BaseControllerTest.HPO);
 
-        FXMLLoader loader = new FXMLLoader(MiningResultsVettingBox.class.getResource("MiningResults.fxml"));
+        FXMLLoader loader = new FXMLLoader(MiningResultsVettingBox.class.getResource("MiningResultsVettingBox.fxml"));
         loader.setControllerFactory(clz -> controller);
 
         Parent parent = loader.load();

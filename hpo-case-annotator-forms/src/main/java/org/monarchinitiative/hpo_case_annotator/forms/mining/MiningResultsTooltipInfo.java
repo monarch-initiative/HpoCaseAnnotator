@@ -22,15 +22,6 @@ public class MiningResultsTooltipInfo extends VBox {
     @FXML
     private CheckBox excludedCheckBox;
 
-    @FXML
-    private Button acceptTermButton;
-
-    @FXML
-    private Button rejectTermButton;
-
-    @FXML
-    private HBox buttonBox;
-
     public MiningResultsTooltipInfo(ObservableMinedTerm minedTerm) {
         this.minedTerm = Objects.requireNonNull(minedTerm);
         FXMLLoader loader = new FXMLLoader(MiningResultsVettingBox.class.getResource("MiningResultsTooltipInfo.fxml"));
@@ -45,38 +36,18 @@ public class MiningResultsTooltipInfo extends VBox {
 
     @FXML
     private void initialize() {
-        String id = minedTerm.getTermId().toString();
-        String name = minedTerm.getLabel();
-        idLabel.setText(id);
-        nameLabel.setText(name);
+        idLabel.setText(minedTerm.getTermId().toString());
+        nameLabel.setText(minedTerm.getLabel());
         excludedCheckBox.selectedProperty().bindBidirectional(minedTerm.isExcludedProperty());
-//        acceptTermButton.setTooltip(new Tooltip("Accept Term"));
-//        rejectTermButton.setTooltip(new Tooltip("Reject Term"));
-    }
-
-    public CheckBox getExcludedCheckBox() {
-        return excludedCheckBox;
-    }
-
-    public HBox getButtonBox() {
-        return buttonBox;
-    }
-
-    public Label getIdLabel() {
-        return idLabel;
-    }
-
-    public Label getNameLabel() {
-        return nameLabel;
     }
 
     @FXML
-    void acceptTermButtonAction() {
+    private void approveTermButtonAction() {
         minedTerm.setReviewStatus(ReviewStatus.APPROVED);
     }
 
     @FXML
-    void rejectTermButtonAction() {
+    private void rejectTermButtonAction() {
         minedTerm.setReviewStatus(ReviewStatus.REJECTED);
     }
 

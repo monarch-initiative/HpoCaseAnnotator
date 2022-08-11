@@ -1,60 +1,45 @@
 package org.monarchinitiative.hpo_case_annotator.forms.mining;
 
+import javafx.geometry.Point2D;
 import javafx.scene.control.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 
-public class MinedText extends Text {
+class MinedText extends Text {
 
-    private final ObservableMinedTerm minedTerm;
-
-    private final Tooltip tooltip = new Tooltip();
-
-
-    public MinedText(ObservableMinedTerm minedTerm, String text) {
-        this.minedTerm = minedTerm;
+    MinedText(String text, ObservableMinedTerm minedTerm) {
+        getStyleClass().addAll("unreviewed", "hpo-term");
         this.setText(text);
-        this.setFill(Color.RED);
-        this.setOnMouseClicked(e -> showHpoInfo());
-        this.minedTerm.reviewStatusProperty().addListener((obs, old, novel) -> {
+        this.setOnMouseClicked(e -> showHpoInfo(minedTerm));
+        minedTerm.reviewStatusProperty().addListener((obs, old, novel) -> {
             switch (old) {
                 // Clean up
-                case APPROVED -> getStyleClass().remove("accepted");
+                case APPROVED -> getStyleClass().remove("approved");
                 case REJECTED -> getStyleClass().remove("rejected");
-                case UNREVIEWED -> {} // no-op
+                case UNREVIEWED -> getStyleClass().remove("unreviewed");
             }
             switch (novel) {
-                case APPROVED -> getStyleClass().add("accepted");
+                case APPROVED -> getStyleClass().add("approved");
                 case REJECTED -> getStyleClass().add("rejected");
                 case UNREVIEWED -> {} // should not happen
             }
         });
     }
 
-    private void showHpoInfo() {
+    private void showHpoInfo(ObservableMinedTerm minedTerm) {
+        Tooltip t = new Tooltip();
         MiningResultsTooltipInfo infoBox = new MiningResultsTooltipInfo(minedTerm);
-        infoBox.setSpacing(10);
 
-        tooltip.setGraphic(infoBox);
-        tooltip.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        tooltip.getStyleClass().add("tooltip");
-        infoBox.getStyleClass().add("tooltip-box");
-        infoBox.getIdLabel().getStyleClass().add("id-label");
-        infoBox.getNameLabel().getStyleClass().add("name-label");
-        infoBox.getButtonBox().getStyleClass().add("tooltip-box");
-        Tooltip.install(this, tooltip);
-        tooltip.show(getScene().getWindow());
+        t.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        t.setGraphic(infoBox);
 
-        minedTerm.reviewStatusProperty().addListener(obs -> tooltip.hide());
-    }
+        // The tooltip is hidden if the tooltip loses focus or if the user clicks on Approve/Reject button.
+        minedTerm.reviewStatusProperty().addListener(obs -> t.hide());
+        t.setAutoHide(true);
 
-    public ObservableMinedTerm getMinedTerm() {
-        return minedTerm;
-    }
-
-    public Tooltip getTooltip() {
-        return tooltip;
+        // Show the tooltip below the text (+20)
+        Point2D pointOnScreen = localToScreen(0, 0);
+        t.show(getScene().getWindow(), pointOnScreen.getX(), pointOnScreen.getY() + 20);
     }
 
 }

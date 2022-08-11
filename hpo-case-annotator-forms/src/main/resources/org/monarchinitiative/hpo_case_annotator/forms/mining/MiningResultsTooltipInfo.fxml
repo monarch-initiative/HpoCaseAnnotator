@@ -3,20 +3,29 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+<fx:root xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
          type="javafx.scene.layout.VBox"
-         stylesheets="@mining-results.css">
-    <HBox>
-        <Label text="ID:   "/>
-        <Label fx:id="idLabel"/>
-    </HBox>
-    <HBox>
-        <Label text="Name:   "/>
-        <Label fx:id="nameLabel"/>
-    </HBox>
-    <CheckBox fx:id="excludedCheckBox" text="Excluded"/>
-    <HBox fx:id="buttonBox">
-        <Button fx:id="acceptTermButton" onAction="#acceptTermButtonAction" text="Accept"/>
-        <Button fx:id="rejectTermButton" onAction="#rejectTermButtonAction" text="Reject"/>
+         stylesheets="@mining-results-tooltip-info.css">
+   <GridPane>
+     <columnConstraints>
+       <ColumnConstraints hgrow="SOMETIMES" minWidth="60.0" />
+       <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" />
+     </columnConstraints>
+     <rowConstraints>
+       <RowConstraints minHeight="30.0" />
+       <RowConstraints minHeight="30.0" />
+       <RowConstraints minHeight="40.0" />
+     </rowConstraints>
+      <children>
+           <Label text="ID:" />
+           <Label fx:id="idLabel" id="id-label" GridPane.columnIndex="1" />
+           <Label text="Name:" GridPane.rowIndex="1" />
+           <Label fx:id="nameLabel" id="name-label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+          <CheckBox fx:id="excludedCheckBox" text="Excluded" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+      </children>
+   </GridPane>
+    <HBox fx:id="buttonBox" id="tooltip-box">
+        <Button onAction="#approveTermButtonAction" text="Approve" />
+        <Button onAction="#rejectTermButtonAction" text="Reject" />
     </HBox>
 </fx:root>
