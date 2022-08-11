@@ -10,14 +10,14 @@
 <?import javafx.scene.control.Separator?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.VBox"
+         type="javafx.scene.layout.HBox"
          stylesheets="@individual-ids-binding-component.css">
     <children>
         <VBox styleClass="section">
             <!-- Identifiers -->
             <children>
                 <Label text="Credentials" styleClass="h1"/>
-                <HBox>
+                <VBox>
                     <children>
                         <VBox styleClass="credential-col">
                             <children>
@@ -30,7 +30,7 @@
                             </children>
                         </VBox>
                     </children>
-                </HBox>
+                </VBox>
             </children>
         </VBox>
         <Separator/>

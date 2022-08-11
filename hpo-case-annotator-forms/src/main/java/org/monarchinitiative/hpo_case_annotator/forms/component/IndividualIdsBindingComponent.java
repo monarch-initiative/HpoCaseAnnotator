@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementBindingComponent;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
@@ -13,7 +13,7 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividu
 
 import java.io.IOException;
 
-public class IndividualIdsBindingComponent extends VBox implements ObservableDataController<ObservableIndividual> {
+public class IndividualIdsBindingComponent extends HBox implements ObservableDataController<ObservableIndividual> {
 
     private final ObjectProperty<ObservableIndividual> data = new SimpleObjectProperty<>();
     @FXML
