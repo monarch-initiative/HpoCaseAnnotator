@@ -12,7 +12,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualVariantSummar
 import org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.*;
-import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummaryController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeBrowserController;
@@ -27,6 +27,9 @@ import org.springframework.context.annotation.Scope;
  * All beans of this configuration have <em>prototype</em> scope.
  */
 @Configuration
+//@ComponentScan(basePackages = {
+//        "org.monarchinitiative.hpo_case_annotator.forms",
+//})
 public class ControllerConfiguration {
 
     /* *****************************************     Study controllers     ***************************************** */
@@ -54,8 +57,8 @@ public class ControllerConfiguration {
 
     @Bean
     @Scope("prototype")
-    public VariantSummary variantSummaryController(HCAControllerFactory hcaControllerFactory) {
-        return new VariantSummary(hcaControllerFactory);
+    public VariantSummaryController variantSummaryController(HCAControllerFactory hcaControllerFactory) {
+        return new VariantSummaryController(hcaControllerFactory);
     }
 
     @Bean
