@@ -7,7 +7,7 @@
       fx:controller="org.monarchinitiative.hpo_case_annotator.forms.stepper.Stepper"
       stylesheets="@stepper.css">
     <children>
-        <StackPane fx:id="content" />
+        <StackPane fx:id="content" VBox.vgrow="ALWAYS"/>
         <Separator/>
         <ButtonBar>
             <buttons>

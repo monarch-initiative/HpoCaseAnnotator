@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.control.CheckBox?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementEditableComponent?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementBindingComponent?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.HBox"
-         stylesheets="@vital-status-editable-component.css">
+         type="javafx.scene.layout.VBox">
     <children>
         <VBox id="vs-col">
             <children>
@@ -17,7 +16,7 @@
         <VBox>
             <children>
                 <CheckBox fx:id="timeOfDeathIsUnknown" selected="true" text="Time of death is unknown"/>
-                <TimeElementEditableComponent fx:id="timeOfDeathComponent" disable="true"/>
+                <TimeElementBindingComponent fx:id="timeOfDeathComponent" />
             </children>
         </VBox>
     </children>

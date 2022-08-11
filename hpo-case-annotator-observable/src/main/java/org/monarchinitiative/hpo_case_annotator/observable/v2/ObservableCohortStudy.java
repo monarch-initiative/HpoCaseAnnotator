@@ -9,6 +9,13 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.Individual;
 
 public class ObservableCohortStudy extends ObservableStudy implements CohortStudy {
 
+    public static ObservableCohortStudy defaultInstance() {
+        ObservableCohortStudy instance = new ObservableCohortStudy();
+        instance.setPublication(ObservablePublication.defaultInstance());
+        instance.setStudyMetadata(ObservableStudyMetadata.defaultInstance());
+        return instance;
+    }
+
     private final ListProperty<ObservableIndividual> members = new SimpleListProperty<>(this, "members", FXCollections.observableArrayList());
 
     public ObservableCohortStudy() {

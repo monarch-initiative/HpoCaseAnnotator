@@ -9,6 +9,13 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 
 public class ObservablePhenotypicFeature implements PhenotypicFeature {
 
+    public static ObservablePhenotypicFeature defaultInstance() {
+        ObservablePhenotypicFeature instance = new ObservablePhenotypicFeature();
+        instance.setOnset(ObservableTimeElement.defaultInstance());
+        instance.setResolution(ObservableTimeElement.defaultInstance());
+        return instance;
+    }
+
     private TermId termId;
     private String label;
     private final BooleanProperty excluded = new SimpleBooleanProperty(this, "excluded");

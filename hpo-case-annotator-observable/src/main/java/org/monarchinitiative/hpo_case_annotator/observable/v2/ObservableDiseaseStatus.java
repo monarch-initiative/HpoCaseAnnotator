@@ -5,6 +5,10 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
 
 public class ObservableDiseaseStatus implements DiseaseStatus {
 
+    public static ObservableDiseaseStatus defaultInstance() {
+        return new ObservableDiseaseStatus();
+    }
+
     private DiseaseIdentifier diseaseId;
     private final BooleanProperty excluded = new SimpleBooleanProperty(this, "excluded");
 

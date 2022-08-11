@@ -12,7 +12,7 @@ public class ObservableVariantGenotype implements VariantGenotype, Observable {
 
     static final Callback<ObservableVariantGenotype, Observable[]> EXTRACTOR = ovg -> new Observable[]{ovg.genotype};
     private String md5Hex;
-    private final ObjectProperty<Genotype> genotype = new SimpleObjectProperty<>(this, "genotype");
+    private final ObjectProperty<Genotype> genotype = new SimpleObjectProperty<>(this, "genotype", Genotype.UNSET);
 
     public ObservableVariantGenotype() {
     }

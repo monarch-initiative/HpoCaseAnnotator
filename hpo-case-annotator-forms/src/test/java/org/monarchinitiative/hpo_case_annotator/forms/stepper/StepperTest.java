@@ -35,7 +35,7 @@ public class StepperTest extends BaseControllerTest {
         Parent parent = loader.load();
         controller = loader.getController();
 
-        Scene scene = new Scene(parent);
+        Scene scene = new Scene(parent, 800, 600);
         stage.setScene(scene);
         stage.setTitle("Stepper test");
         stage.initStyle(StageStyle.DECORATED);
@@ -50,12 +50,12 @@ public class StepperTest extends BaseControllerTest {
 
         Consumer<Boolean> closeHook = status -> System.err.printf("Should we commit? %s%n", status);
         Platform.runLater(() -> controller.setConclude(closeHook));
-        ObservableIndividualStudy study = new ObservableIndividualStudy();
+        ObservableIndividualStudy study = ObservableIndividualStudy.defaultInstance();
         study.setPublication(new ObservablePublication());
         Platform.runLater(() -> controller.setData(study));
         Platform.runLater(() -> controller.setSteps(FXCollections.observableList(steps.getSteps())));
 
-        robot.sleep(1, TimeUnit.MINUTES);
+        robot.sleep(20, TimeUnit.SECONDS);
 
         ObservableIndividualStudy data = controller.getData();
         System.err.println(data);
@@ -71,7 +71,7 @@ public class StepperTest extends BaseControllerTest {
         Platform.runLater(() -> controller.setData(new ObservableIndividualStudy(TestData.V2.comprehensiveIndividualStudy())));
         Platform.runLater(() -> controller.setSteps(FXCollections.observableList(steps.getSteps())));
 
-        robot.sleep(1, TimeUnit.MINUTES);
+        robot.sleep(20, TimeUnit.SECONDS);
 
         System.err.println(controller.getData());
     }

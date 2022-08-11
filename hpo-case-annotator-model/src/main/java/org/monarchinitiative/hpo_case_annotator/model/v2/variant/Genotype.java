@@ -2,7 +2,13 @@ package org.monarchinitiative.hpo_case_annotator.model.v2.variant;
 
 public enum Genotype {
 
+    /**
+     * Indicates that the user did not set genotype. It may be known but the information was not set into the data model.
+     */
     UNSET("Unset", "Unset"),
+    /**
+     * Incicates that the genotype has been set to unknown by the user.
+     */
     UNKNOWN("Unknown", "Unknown"),
     HETEROZYGOUS("0/1", "Heterozygous"),
     HOMOZYGOUS_ALTERNATE("1/1", "Homozygous alternative"),

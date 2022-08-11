@@ -7,6 +7,15 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 
 public class ObservableTimeElement implements TimeElement {
 
+    public static ObservableTimeElement defaultInstance() {
+        ObservableTimeElement instance = new ObservableTimeElement();
+        instance.setTimeElementCase(TimeElementCase.AGE);
+        instance.setGestationalAge(ObservableGestationalAge.defaultInstance());
+        instance.setAge(ObservableAge.defaultInstance());
+        instance.setAgeRange(ObservableAgeRange.defaultInstance());
+        return instance;
+    }
+
     private final ObjectProperty<TimeElement.TimeElementCase> timeElementCase = new SimpleObjectProperty<>(this, "timeElementCase");
     private final ObjectProperty<ObservableGestationalAge> gestationalAge = new SimpleObjectProperty<>(this, "gestationalAge");
     private final ObjectProperty<ObservableAge> age = new SimpleObjectProperty<>(this, "age");

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.Label?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.VitalStatusBindingComponent?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementBindingComponent?>
+<?import javafx.scene.control.Separator?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.VBox"
+         stylesheets="@individual-ids-binding-component.css">
+    <children>
+        <VBox styleClass="section">
+            <!-- Identifiers -->
+            <children>
+                <Label text="Credentials" styleClass="h1"/>
+                <HBox>
+                    <children>
+                        <VBox styleClass="credential-col">
+                            <children>
+                                <TitledTextField fx:id="individualId" name="ID" promptText="e.g. I:1"/>
+                            </children>
+                        </VBox>
+                        <VBox styleClass="credential-col">
+                            <children>
+                                <TitledComboBox fx:id="sex" name="Sex" value="MALE"/>
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+        <Separator/>
+        <VBox styleClass="section">
+            <!-- Age -->
+            <children>
+                <Label text="Age" styleClass="h1"/>
+                <HBox>
+                    <children>
+                        <TimeElementBindingComponent fx:id="ageComponent" HBox.hgrow="ALWAYS"/>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+        <Separator/>
+        <VBox styleClass="section">
+            <children>
+                <Label text="Vital status" styleClass="h1"/>
+                <VitalStatusBindingComponent fx:id="vitalStatusComponent"/>
+            </children>
+        </VBox>
+    </children>
+</fx:root>

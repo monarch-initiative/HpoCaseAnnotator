@@ -5,6 +5,10 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.Age;
 
 public class ObservableAge implements Age {
 
+    public static ObservableAge defaultInstance() {
+        return new ObservableAge();
+    }
+
     // Years, months, and days are nullabe, hence ObjectProperty.
     private final ObjectProperty<Integer> years = new SimpleObjectProperty<>(this, "years");
     private final ObjectProperty<Integer> months = new SimpleObjectProperty<>(this, "months");

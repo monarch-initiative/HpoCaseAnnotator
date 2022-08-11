@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.SimpleBindingAge?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.VBox">
+    <children>
+        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab fx:id="gestationalAgeTab" closable="false">
+                    <graphic>
+                        <ImageView fitHeight="25" preserveRatio="true">
+                            <Image url="@pregnant.png" />
+                        </ImageView>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="Gestational age"/>
+                    </tooltip>
+                    <content>
+                        <VBox>
+                            <children>
+                                <Label text="Gestational age" styleClass="h3"/>
+                                <HBox alignment="CENTER_LEFT">
+                                    <children>
+                                        <TitledTextField fx:id="gestationalWeeks" name="Weeks" promptText="e.g. 25" />
+                                        <Button onAction="#clearGestationalWeeks" styleClass="clear-button"/>
+                                    </children>
+                                </HBox>
+                                <HBox alignment="CENTER_LEFT">
+                                    <children>
+                                        <TitledComboBox fx:id="gestationalDays" name="Days" />
+                                        <Button onAction="#clearGestationalDays" styleClass="clear-button"/>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+                <Tab fx:id="ageTab" closable="false">
+                    <graphic>
+                        <ImageView fitHeight="25" preserveRatio="true">
+                            <Image url="@person.png" />
+                        </ImageView>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="Age"/>
+                    </tooltip>
+                    <content>
+                        <VBox>
+                            <children>
+                                <Label text="Age" styleClass="h3"/>
+                                <SimpleBindingAge fx:id="age"/>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+                <Tab fx:id="ageRangeTab" closable="false">
+                    <graphic>
+                        <ImageView fitHeight="25" preserveRatio="true">
+                            <Image url="@person.png" />
+                        </ImageView>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="Age range"/>
+                    </tooltip>
+                    <content>
+                        <VBox>
+                            <children>
+                                <Label text="Age range" styleClass="h3"/>
+                                <HBox>
+                                    <children>
+                                        <Label styleClass="ar-label" text="Start"/>
+                                        <SimpleBindingAge fx:id="ageRangeStart"/>
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <Label styleClass="ar-label" text="End"/>
+                                        <SimpleBindingAge fx:id="ageRangeEnd"/>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+                <Tab fx:id="ontologyClassTab" closable="false">
+                    <graphic>
+                        <ImageView fitHeight="25" preserveRatio="true">
+                            <Image url="@hpo-logo-black.png" />
+                        </ImageView>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="Age as ontology class"/>
+                    </tooltip>
+                    <content>
+                        <VBox>
+                            <children>
+                                <Label text="Ontology class" styleClass="h3"/>
+                                <HBox alignment="CENTER_LEFT">
+                                    <children>
+                                        <ComboBox fx:id="ontologyClassComboBox"/>
+                                        <Button onAction="#clearOntologyClass" styleClass="clear-button"/>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </children>
+</fx:root>

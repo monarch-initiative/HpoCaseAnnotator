@@ -6,6 +6,13 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.AgeRange;
 
 public class ObservableAgeRange implements AgeRange {
 
+    public static ObservableAgeRange defaultInstance() {
+        ObservableAgeRange instance = new ObservableAgeRange();
+        instance.setStart(ObservableAge.defaultInstance());
+        instance.setEnd(ObservableAge.defaultInstance());
+        return instance;
+    }
+
     private final ObjectProperty<ObservableAge> start = new SimpleObjectProperty<>(this, "start");
     private final ObjectProperty<ObservableAge> end = new SimpleObjectProperty<>(this, "end");
 

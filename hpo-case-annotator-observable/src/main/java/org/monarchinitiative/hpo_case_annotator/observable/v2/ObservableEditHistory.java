@@ -10,6 +10,10 @@ import java.time.Instant;
 
 public class ObservableEditHistory implements EditHistory {
 
+    public static ObservableEditHistory defaultInstance() {
+        return new ObservableEditHistory();
+    }
+
     private final StringProperty curatorId = new SimpleStringProperty(this, "curatorId");
     private final StringProperty softwareVersion = new SimpleStringProperty(this, "softwareVersion");
     private final ObjectProperty<Instant> timestamp = new SimpleObjectProperty<>(this, "timestamp");
