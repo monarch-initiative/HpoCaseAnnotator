@@ -1,17 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsBindingComponent?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.VBox">
+         type="javafx.scene.layout.VBox"
+         styleClass="step-box" >
+    <stylesheets>
+        <URL value="@step-base.css" />
+        <URL value="@individual-step.css" />
+    </stylesheets>
     <children>
-        <Label text="Individual"/>
-        <Label fx:id="header" text="Provide credentials of the individual under investigation."/>
+        <Label text="Individual" />
+        <Label fx:id="header" text="Provide credentials of the individual under investigation." />
         <IndividualIdsBindingComponent fx:id="individualIds" />
 
-        <!-- TODO - add phenotype -->
+        <GridPane id="phenotype-disease-genotype-grid">
+            <columnConstraints>
+                <ColumnConstraints minWidth="300.0" />
+                <ColumnConstraints minWidth="300.0" />
+                <ColumnConstraints minWidth="300.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+            <children>
+                <Label styleClass="h2" text="Phenotype features" />
+                <Label text="Phenotype feature summary" GridPane.rowIndex="1" />
+                <Button styleClass="add-edit-attribute-button" text="Add/Edit phenotype features" GridPane.rowIndex="2" />
 
+                <Label styleClass="h2" text="Disease" GridPane.columnIndex="1" />
+                <Label text="Disease summary" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Button styleClass="add-edit-attribute-button" text="Add/Edit diseases" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                <Label styleClass="h2" text="Variant genotypes" GridPane.columnIndex="2" />
+                <Label text="Variant genotype summary" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <Button styleClass="add-edit-attribute-button" text="Add/Edit variant genotypes" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            </children>
+        </GridPane>
     </children>
 </fx:root>

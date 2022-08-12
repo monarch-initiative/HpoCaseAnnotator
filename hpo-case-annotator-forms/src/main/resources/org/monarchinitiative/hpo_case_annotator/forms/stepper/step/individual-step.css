@@ -1,0 +1,11 @@
+#phenotype-disease-genotype-grid {
+    -fx-hgap: 5;
+    -fx-vgap: 5;
+}
+
+.add-edit-attribute-button {
+    -fx-min-width: 300;
+    -fx-max-width: 300;
+    -fx-min-height: 100;
+    -fx-wrap-text: true;
+}
