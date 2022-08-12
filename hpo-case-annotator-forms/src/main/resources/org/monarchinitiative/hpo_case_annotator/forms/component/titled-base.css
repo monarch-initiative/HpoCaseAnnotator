@@ -1,4 +1,6 @@
-.titled-base-name {
+.tl-name {
     -fx-font-size: .8em;
+    -fx-font-weight: bold;
     -fx-font-style: italic;
+    -fx-text-fill: #4b4b4b;
 }

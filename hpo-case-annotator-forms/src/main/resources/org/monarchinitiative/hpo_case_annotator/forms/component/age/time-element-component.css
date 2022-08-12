@@ -8,7 +8,9 @@ ComboBox {
 }
 
 .ar-label {
+    -fx-min-width: 60;
     -fx-pref-width: 60;
+    -fx-max-width: 60;
 }
 
 #gestational-box TitledTextField {

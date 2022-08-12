@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-
-<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.SimpleBindingAge?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.*?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="javafx.scene.layout.VBox"
@@ -18,7 +15,7 @@
                 <Tab fx:id="gestationalAgeTab" closable="false">
                     <graphic>
                         <ImageView fitHeight="25" preserveRatio="true">
-                            <Image url="@pregnant.png" />
+                            <Image url="@pregnant.png"/>
                         </ImageView>
                     </graphic>
                     <tooltip>
@@ -27,19 +24,27 @@
                     <content>
                         <VBox id="gestational-box">
                             <children>
-                                <Label text="Gestational age" styleClass="h3"/>
-                                <HBox alignment="CENTER_LEFT">
+                                <GridPane>
+                                    <columnConstraints>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints/>
+                                        <RowConstraints valignment="BOTTOM"/>
+                                        <RowConstraints valignment="BOTTOM"/>
+                                    </rowConstraints>
                                     <children>
-                                        <TitledTextField fx:id="gestationalWeeks" name="Weeks" promptText="e.g. 25" />
-                                        <Button onAction="#clearGestationalWeeks" styleClass="clear-button"/>
+                                        <Label styleClass="h3" text="Gestational age" GridPane.columnSpan="2147483647"/>
+                                        <TitledTextField fx:id="gestationalWeeks" name="Weeks" promptText="e.g. 25"
+                                                         GridPane.rowIndex="1"/>
+                                        <Button onAction="#clearGestationalWeeks" styleClass="clear-button"
+                                                GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                        <TitledComboBox fx:id="gestationalDays" name="Days" GridPane.rowIndex="2"/>
+                                        <Button onAction="#clearGestationalDays" styleClass="clear-button"
+                                                GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                                     </children>
-                                </HBox>
-                                <HBox alignment="CENTER_LEFT">
-                                    <children>
-                                        <TitledComboBox fx:id="gestationalDays" name="Days" />
-                                        <Button onAction="#clearGestationalDays" styleClass="clear-button"/>
-                                    </children>
-                                </HBox>
+                                </GridPane>
                             </children>
                         </VBox>
                     </content>
@@ -47,7 +52,7 @@
                 <Tab fx:id="ageTab" closable="false">
                     <graphic>
                         <ImageView fitHeight="25" preserveRatio="true">
-                            <Image url="@person.png" />
+                            <Image url="@person.png"/>
                         </ImageView>
                     </graphic>
                     <tooltip>
@@ -56,8 +61,8 @@
                     <content>
                         <VBox id="age-box">
                             <children>
-                                <Label text="Age" styleClass="h3"/>
-                                <SimpleBindingAge fx:id="age" id="age-form"/>
+                                <Label styleClass="h3" text="Age"/>
+                                <SimpleBindingAge id="age-form" fx:id="age"/>
                             </children>
                         </VBox>
                     </content>
@@ -65,7 +70,7 @@
                 <Tab fx:id="ageRangeTab" closable="false">
                     <graphic>
                         <ImageView fitHeight="25" preserveRatio="true">
-                            <Image url="@person.png" />
+                            <Image url="@person.png"/>
                         </ImageView>
                     </graphic>
                     <tooltip>
@@ -74,7 +79,7 @@
                     <content>
                         <VBox id="age-range-box">
                             <children>
-                                <Label text="Age range" styleClass="h3"/>
+                                <Label styleClass="h3" text="Age range"/>
                                 <HBox>
                                     <children>
                                         <Label styleClass="ar-label" text="Start"/>
@@ -94,7 +99,7 @@
                 <Tab fx:id="ontologyClassTab" closable="false">
                     <graphic>
                         <ImageView fitHeight="25" preserveRatio="true">
-                            <Image url="@hpo-logo-black.png" />
+                            <Image url="@hpo-logo-black.png"/>
                         </ImageView>
                     </graphic>
                     <tooltip>
@@ -103,7 +108,7 @@
                     <content>
                         <VBox>
                             <children>
-                                <Label text="Ontology class" styleClass="h3"/>
+                                <Label styleClass="h3" text="Ontology class"/>
                                 <HBox alignment="CENTER_LEFT">
                                     <children>
                                         <ComboBox fx:id="ontologyClassComboBox"/>

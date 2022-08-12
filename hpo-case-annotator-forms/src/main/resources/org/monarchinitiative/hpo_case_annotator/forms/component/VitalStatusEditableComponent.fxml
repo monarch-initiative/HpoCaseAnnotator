@@ -7,7 +7,7 @@
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="javafx.scene.layout.HBox"
-         stylesheets="@vital-status-editable-component.css">
+         stylesheets="@vital-status-component.css">
     <children>
         <VBox id="vs-col">
             <children>

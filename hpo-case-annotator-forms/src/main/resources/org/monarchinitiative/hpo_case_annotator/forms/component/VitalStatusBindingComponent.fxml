@@ -6,18 +6,12 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementBindingComponent?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.VBox">
+         type="javafx.scene.layout.VBox"
+         stylesheets="@vital-status-component.css">
     <children>
-        <VBox id="vs-col">
-            <children>
-                <TitledComboBox fx:id="vitalStatus" name="Status"/>
-            </children>
-        </VBox>
-        <VBox>
-            <children>
-                <CheckBox fx:id="timeOfDeathIsUnknown" selected="true" text="Time of death is unknown"/>
-                <TimeElementBindingComponent fx:id="timeOfDeathComponent" />
-            </children>
-        </VBox>
+        <TitledComboBox fx:id="vitalStatus" name="Status"/>
+        <Separator/>
+        <CheckBox fx:id="timeOfDeathIsUnknown" selected="true" text="Time of death is unknown"/>
+        <TimeElementBindingComponent fx:id="timeOfDeathComponent" />
     </children>
 </fx:root>

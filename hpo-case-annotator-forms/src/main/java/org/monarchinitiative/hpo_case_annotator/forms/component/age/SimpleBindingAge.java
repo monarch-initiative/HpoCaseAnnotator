@@ -6,7 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
 import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
@@ -16,7 +16,7 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
 
 import java.io.IOException;
 
-public class SimpleBindingAge extends HBox implements ObservableDataController<ObservableAge> {
+public class SimpleBindingAge extends GridPane implements ObservableDataController<ObservableAge> {
 
     private final ObjectProperty<ObservableAge> data = new SimpleObjectProperty<>();
 

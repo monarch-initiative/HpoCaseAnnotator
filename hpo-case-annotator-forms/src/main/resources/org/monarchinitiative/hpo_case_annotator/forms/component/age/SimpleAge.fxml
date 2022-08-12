@@ -4,7 +4,8 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.HBox">
+         type="javafx.scene.layout.HBox"
+         stylesheets="@simple-age.css" id="age-box">
     <children>
         <TitledLabel fx:id="years" name="Years" text="5" />
         <TitledLabel fx:id="months" name="Months" text="2" />

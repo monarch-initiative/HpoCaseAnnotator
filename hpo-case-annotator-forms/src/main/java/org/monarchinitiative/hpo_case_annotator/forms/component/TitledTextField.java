@@ -5,11 +5,20 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 
+import java.util.List;
+
 public class TitledTextField extends TitledBase<TextField> {
+
+    private static final List<String> STYLECLASSES = List.of("tl-text-field");
 
     @Override
     protected TextField getItem() {
         return new TextField();
+    }
+
+    @Override
+    protected List<String> itemStyleClasses() {
+        return STYLECLASSES;
     }
 
     public void setText(String value) {

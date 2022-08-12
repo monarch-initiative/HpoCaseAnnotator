@@ -4,11 +4,20 @@ import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 
+import java.util.List;
+
 public class TitledComboBox<T> extends TitledBase<ComboBox<T>> {
+
+    private static final List<String> STYLECLASSES = List.of("tl-combo-box");
 
     @Override
     protected ComboBox<T> getItem() {
         return new ComboBox<>();
+    }
+
+    @Override
+    protected List<String> itemStyleClasses() {
+        return STYLECLASSES;
     }
 
     public void setValue(T value) {
