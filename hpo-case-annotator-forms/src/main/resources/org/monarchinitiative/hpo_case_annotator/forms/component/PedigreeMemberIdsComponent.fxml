@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="javafx.scene.layout.VBox"
-         stylesheets="@individual-ids-component.css">
+         stylesheets="@pedigree-member-ids-component.css">
     <children>
         <!-- Credentials -->
         <VBox id="credential-row">
@@ -15,7 +15,10 @@
                 <HBox>
                     <children>
                         <TitledLabel fx:id="individualId" name="ID" text="I:1" />
+                        <TitledLabel fx:id="paternalId" name="Paternal ID" text="II:2" />
+                        <TitledLabel fx:id="maternalId" name="Maternal ID" text="II:3" />
                         <TitledLabel fx:id="sex" name="Sex" text="MALE" />
+                        <TitledLabel fx:id="proband" name="Proband?" text="Yes" />
                     </children>
                 </HBox>
             </children>

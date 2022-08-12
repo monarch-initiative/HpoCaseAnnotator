@@ -18,10 +18,6 @@
     -fx-padding: 0 0 20 0;
 }
 
-#phenotype-features-table {
-    -fx-pref-height: 200;
-}
-
 /* Diseases table */
 #diseases-table {
     -fx-pref-height: 100;

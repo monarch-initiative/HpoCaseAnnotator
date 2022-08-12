@@ -5,7 +5,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementC
 import org.monarchinitiative.hpo_case_annotator.forms.nvo.FamilyStudyController;
 import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMemberController;
-import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeView;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeatureController;
 import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
@@ -13,7 +13,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualCo
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualVariantSummaryController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.SelectableOntologyTreeController;
-import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.cache.HgvsVariantController;
@@ -105,12 +105,12 @@ public class ControllerFactory implements HCAControllerFactory {
             return new PedigreeController(this);
         } else if (clz.equals(PedigreeMemberController.class)) {
             return new PedigreeMemberController(this);
-        } else if (clz.equals(IndividualIdsComponent.class)) {
-            return new IndividualIdsComponent();
+        } else if (clz.equals(PedigreeMemberIdsComponent.class)) {
+            return new PedigreeMemberIdsComponent();
         } else if (clz.equals(TimeElementComponent.class)) {
             return new TimeElementComponent();
-        } else if (clz.equals(PhenotypeView.class)) {
-            return new PhenotypeView(this);
+        } else if (clz.equals(PhenotypeDataEdit.class)) {
+            return new PhenotypeDataEdit(this);
         } else if (clz.equals(PhenotypicFeatureController.class)) {
             return new PhenotypicFeatureController(termId -> hpo.getTermMap().get(termId));
         }

@@ -2,8 +2,9 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsComponent?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMemberTitle?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable?>
 
 <TitledPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMemberController"
@@ -21,7 +22,7 @@
                         <StackPane onMouseEntered="#identifiersSectionMouseEntered"
                                    onMouseExited="#identifiersSectionMouseExited">
                             <children>
-                                <IndividualIdsComponent fx:id="individualIdentifiers" StackPane.alignment="CENTER"/>
+                                <PedigreeMemberIdsComponent fx:id="pedigreeMemberIdentifiers" StackPane.alignment="CENTER"/>
                                 <Button fx:id="editIdentifiersButton" visible="false" contentDisplay="GRAPHIC_ONLY"
                                         StackPane.alignment="TOP_RIGHT" styleClass="edit-button"
                                         onAction="#editIdentifiersAction"/>
@@ -36,27 +37,7 @@
                         <StackPane onMouseEntered="#phenotypesSectionMouseEntered"
                                    onMouseExited="#phenotypesSectionMouseExited">
                             <children>
-                                <TableView id="phenotype-features-table" fx:id="phenotypes">
-                                    <columns>
-                                        <TableColumn fx:id="idColumn" editable="false" prefWidth="120.0" text="ID"/>
-                                        <TableColumn fx:id="labelColumn" editable="false" prefWidth="200.0" text="Label"/>
-                                        <TableColumn fx:id="statusColumn" editable="false" prefWidth="75.0" text="Status"/>
-                                        <TableColumn editable="false" prefWidth="75.0" text="Temporal">
-                                            <columns>
-                                                <TableColumn fx:id="onsetColumn" editable="false" prefWidth="75.0" text="Onset"/>
-                                                <TableColumn fx:id="resolutionColumn" editable="false" prefWidth="100.0" text="Resolution"/>
-                                            </columns>
-                                        </TableColumn>
-                                        <!-- TODO - add when we have modifiers in the model -->
-                                        <!-- <TableColumn fx:id="modifiersColumn" editable="false" prefWidth="75.0" text="Modifiers" />-->
-                                    </columns>
-                                    <columnResizePolicy>
-                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                                    </columnResizePolicy>
-                                    <placeholder>
-                                        <Label text="No phenotype features yet"/>
-                                    </placeholder>
-                                </TableView>
+                                <PhenotypeTable fx:id="phenotypeTable"/>
                                 <Button fx:id="editPhenotypeButton" visible="false" contentDisplay="GRAPHIC_ONLY"
                                         StackPane.alignment="TOP_RIGHT" styleClass="edit-button"
                                         onAction="#editPhenotypeAction" />

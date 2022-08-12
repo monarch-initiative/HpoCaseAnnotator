@@ -4,12 +4,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      type="javafx.scene.layout.VBox">
+         type="javafx.scene.layout.VBox">
     <stylesheets>
         <URL value="@../base.css" />
-        <URL value="@phenotype-view.css" />
+        <URL value="@phenotype.css" />
     </stylesheets>
    <children>
       <SplitPane VBox.vgrow="ALWAYS">
@@ -24,19 +25,19 @@
                     </VBox>
                     <VBox styleClass="section">
                         <children>
+                            <Label text="Add phenotype features" styleClass="h2"/>
+                            <HBox>
+                                <children>
+                                    <Button text="Browse HPO hierarchy"/>
+                                    <Button text="Add clinical encounter"/>
+                                </children>
+                            </HBox>
+                        </children>
+                    </VBox>
+                    <VBox styleClass="section">
+                        <children>
                             <Label text="Phenotype features" styleClass="h2"/>
-                            <TableView fx:id="phenotypeTerms">
-                                <columns>
-                                    <TableColumn fx:id="termIdColumn" text="ID" minWidth="120" prefWidth="120"/>
-                                    <TableColumn fx:id="termLabel" text="Label" minWidth="300" prefWidth="500"/>
-                                </columns>
-                                <columnResizePolicy>
-                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                                </columnResizePolicy>
-                                <placeholder>
-                                    <Label text="No phenotype features yet" />
-                                </placeholder>
-                            </TableView>
+                            <PhenotypeTable fx:id="phenotypeTable"/>
                         </children>
                     </VBox>
                 </children>

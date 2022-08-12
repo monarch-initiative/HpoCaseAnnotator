@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 
+// TODO - move to util
 public class ObservableTimeElementTableCell<T> extends TableCell<T, ObservableTimeElement> {
 
     private static final Map<TimeElement.TimeElementCase, Image> ICONS = loadIcons();

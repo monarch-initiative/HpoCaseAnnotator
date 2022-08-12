@@ -14,13 +14,14 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.image.Image;
 import javafx.stage.StageStyle;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
-import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsEditableComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.component.age.ObservableTimeElementTableCell;
-import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeView;
+import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsEditableComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.hpo_case_annotator.forms.util.GenotypeStringConverter;
+import org.monarchinitiative.hpo_case_annotator.forms.util.TermIdTableCell;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
@@ -50,28 +51,18 @@ public class PedigreeMemberController {
     private final HCAControllerFactory controllerFactory;
     private final ListProperty<CuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ObjectProperty<ObservablePedigreeMember> item = new SimpleObjectProperty<>();
+
     @FXML
     private PedigreeMemberTitle pedigreeMemberTitle;
     @FXML
     private Button editIdentifiersButton;
     @FXML
-    private IndividualIdsComponent individualIdentifiers;
+    private PedigreeMemberIdsComponent pedigreeMemberIdentifiers;
     @FXML
     private Button editPhenotypeButton;
+
     @FXML
-    private TableView<ObservablePhenotypicFeature> phenotypes;
-    @FXML
-    private TableColumn<ObservablePhenotypicFeature, TermId> idColumn;
-    @FXML
-    private TableColumn<ObservablePhenotypicFeature, String> labelColumn;
-    @FXML
-    private TableColumn<ObservablePhenotypicFeature, String> statusColumn;
-    @FXML
-    private TableColumn<ObservablePhenotypicFeature, ObservableTimeElement> onsetColumn;
-    @FXML
-    private TableColumn<ObservablePhenotypicFeature, ObservableTimeElement> resolutionColumn;
-//    @FXML
-//    private TableColumn<ObservablePhenotypicFeature, String> modifiersColumn;
+    private PhenotypeTable phenotypeTable;
     @FXML
     private Button editDiseasesButton;
     @FXML
@@ -115,33 +106,20 @@ public class PedigreeMemberController {
         pedigreeMemberTitle.probandId.textProperty().bind(individualId);
         pedigreeMemberTitle.icon.imageProperty().bind(createIndividualImageBinding());
         pedigreeMemberTitle.summary.textProperty().bind(individualSummary(item));
-        individualIdentifiers.individualIdProperty()
-                .bind(individualId);
-        individualIdentifiers.paternalIdProperty()
-                .bind(nullableStringProperty(item, "paternalId"));
-        individualIdentifiers.maternalIdProperty()
-                .bind(nullableStringProperty(item, "maternalId"));
-        individualIdentifiers.sexProperty()
-                .bind(select(item, "sex").asString());
-        individualIdentifiers.ageProperty()
-                .bind(select(item, "age"));
-        individualIdentifiers.probandProperty()
-                .bind(when(selectBoolean(item, "proband"))
+        pedigreeMemberIdentifiers.individualIdProperty().bind(individualId);
+        pedigreeMemberIdentifiers.paternalIdProperty().bind(nullableStringProperty(item, "paternalId"));
+        pedigreeMemberIdentifiers.maternalIdProperty().bind(nullableStringProperty(item, "maternalId"));
+        pedigreeMemberIdentifiers.sexProperty().bind(select(item, "sex").asString());
+        pedigreeMemberIdentifiers.ageProperty().bind(select(item, "age"));
+        pedigreeMemberIdentifiers.probandProperty().bind(
+                when(selectBoolean(item, "proband"))
                         .then("Yes")
                         .otherwise("No"));
-        individualIdentifiers.vitalStatusProperty().bind(select(item, "vitalStatus", "status").asString());
-        individualIdentifiers.timeOfDeathProperty().bind(select(item, "vitalStatus", "timeOfDeath"));
+        pedigreeMemberIdentifiers.vitalStatusProperty().bind(select(item, "vitalStatus", "status").asString());
+        pedigreeMemberIdentifiers.timeOfDeathProperty().bind(select(item, "vitalStatus", "timeOfDeath"));
 
         // Phenotypes table view
-        phenotypes.itemsProperty().bind(select(item, "phenotypicFeatures"));
-        idColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().id()));
-        idColumn.setCellFactory(column -> new TermIdTableCell<>());
-        labelColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLabel()));
-        statusColumn.setCellValueFactory(cdf -> when(cdf.getValue().excludedProperty()).then("Excluded").otherwise("Present"));
-        onsetColumn.setCellFactory(tc -> new ObservableTimeElementTableCell<>());
-        onsetColumn.setCellValueFactory(cdf -> cdf.getValue().onsetProperty());
-        resolutionColumn.setCellFactory(tc -> new ObservableTimeElementTableCell<>());
-        resolutionColumn.setCellValueFactory(cdf -> cdf.getValue().resolutionProperty());
+        phenotypeTable.itemsProperty().bind(select(item, "phenotypicFeatures"));
 
         // Diseases table view
         diseaseTable.itemsProperty().bind(select(item, "diseaseStates"));
@@ -280,7 +258,7 @@ public class PedigreeMemberController {
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.initOwner(pedigreeMemberTitle.getParent().getScene().getWindow());
         dialog.titleProperty().bind(concat("Edit identifiers for ", nullableStringProperty(item, "id")));
-        IndividualIdsEditableComponent component = new IndividualIdsEditableComponent();
+        PedigreeMemberIdsEditableComponent component = new PedigreeMemberIdsEditableComponent();
         component.setInitialData(item.getValue());
 
         dialog.getDialogPane().setContent(component);
@@ -313,14 +291,14 @@ public class PedigreeMemberController {
         dialog.titleProperty().bind(concat("Edit phenotype features for ", nullableStringProperty(item, "id")));
         dialog.setResizable(true);
 
-        PhenotypeView phenotypeView = new PhenotypeView(controllerFactory);
-        phenotypeView.setInitialData(item.get()); // TODO - check non null?
-        dialog.getDialogPane().setContent(phenotypeView);
+        PhenotypeDataEdit phenotypeDataEdit = new PhenotypeDataEdit(controllerFactory);
+        phenotypeDataEdit.setInitialData(item.get()); // TODO - check non null?
+        dialog.getDialogPane().setContent(phenotypeDataEdit);
         dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_CANCEL_BUTTONS);
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
         dialog.showAndWait()
                 .ifPresent(shouldCommit -> {
-                    if (shouldCommit) phenotypeView.commit();
+                    if (shouldCommit) phenotypeDataEdit.commit();
                 });
         e.consume();
     }

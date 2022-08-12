@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.phenotype.BrowseHpoController"
+      stylesheets="@browse-hpo.css">
+    <children>
+        <GridPane alignment="TOP_CENTER">
+            <children>
+                <TitledTextField fx:id="searchField" name="Search for HPO term" promptText="e.g. Arachnodactyly" GridPane.columnSpan="2147483647" />
+                <!-- TODO - move from v2 to a more appropriate location-->
+                <fx:include fx:id="ontologyTreeBrowser" source="../v2/ontotree/OntologyTreeBrowser.fxml" GridPane.rowIndex="1" />
+                <fx:include fx:id="phenotypicFeature" source="PhenotypicFeature.fxml" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            </children>
+        </GridPane>
+    </children>
+</VBox>

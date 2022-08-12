@@ -11,8 +11,7 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigree
 import java.io.IOException;
 import java.util.Objects;
 
-public class IndividualIdsEditableComponent extends VBox implements DataEditController<ObservablePedigreeMember> {
-    private static final String DEFAULT_STYLECLASS = "individual-ids-component";
+public class PedigreeMemberIdsEditableComponent extends VBox implements DataEditController<ObservablePedigreeMember> {
 
     private ObservablePedigreeMember item;
 
@@ -31,9 +30,8 @@ public class IndividualIdsEditableComponent extends VBox implements DataEditCont
     @FXML
     private VitalStatusEditableComponent vitalStatusComponent;
 
-    public IndividualIdsEditableComponent() {
-        getStyleClass().add(DEFAULT_STYLECLASS);
-        FXMLLoader loader = new FXMLLoader(IndividualIdsEditableComponent.class.getResource("IndividualIdsEditableComponent.fxml"));
+    public PedigreeMemberIdsEditableComponent() {
+        FXMLLoader loader = new FXMLLoader(PedigreeMemberIdsEditableComponent.class.getResource("PedigreeMemberIdsEditableComponent.fxml"));
         loader.setRoot(this);
         loader.setController(this);
 

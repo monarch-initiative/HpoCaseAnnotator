@@ -1,9 +1,9 @@
-package org.monarchinitiative.hpo_case_annotator.forms.pedigree;
+package org.monarchinitiative.hpo_case_annotator.forms.util;
 
 import javafx.scene.control.TableCell;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
-class TermIdTableCell<T> extends TableCell<T, TermId> {
+public class TermIdTableCell<T> extends TableCell<T, TermId> {
 
     @Override
     protected void updateItem(TermId item, boolean empty) {

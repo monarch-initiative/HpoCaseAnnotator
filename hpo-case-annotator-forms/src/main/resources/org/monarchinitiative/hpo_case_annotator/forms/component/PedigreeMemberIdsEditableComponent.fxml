@@ -12,7 +12,7 @@
          id="top-level">
     <stylesheets>
         <URL value="@../base.css"/>
-        <URL value="@individual-ids-component.css"/>
+        <URL value="@pedigree-member-ids-component.css"/>
     </stylesheets>
     <children>
         <VBox styleClass="section">

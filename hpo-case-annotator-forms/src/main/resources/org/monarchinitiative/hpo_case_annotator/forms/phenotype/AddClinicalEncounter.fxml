@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.*?>
+
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.phenotype.AddClinicalEncounterController"
+      stylesheets="@add-clinical-encounter.css">
+    <children>
+        <GridPane>
+            <children>
+                <!-- Row 1 -->
+                <Label text="Individual" />
+                <IndividualIdsComponent fx:id="individualIds" GridPane.rowIndex="1" />
+
+                <Label text="Encounter time" GridPane.columnIndex="1" />
+                <TimeElementEditableComponent fx:id="encounterTime" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <!-- Row 2 -->
+                <VBox GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
+                    <children>
+                        <Label text="Add terms" />
+                        <TabPane id="add-terms-tab-pane" tabClosingPolicy="UNAVAILABLE">
+                            <tabs>
+                                <Tab text="Browse HPO hierarchy">
+                                    <content>
+                                        <fx:include fx:id="browseHpo" source="BrowseHpo.fxml" />
+                                    </content>
+                                </Tab>
+                                <Tab text="Text mining">
+                                    <content>
+                                        <fx:include fx:id="textMining" source="TextMining.fxml" />
+                                    </content>
+                                </Tab>
+                            </tabs>
+                        </TabPane>
+                    </children>
+                </VBox>
+
+                <!-- Row 3 -->
+                <VBox GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+                    <children>
+                        <Label text="Added phenotype features" />
+                        <PhenotypeTable fx:id="phenotypeTable" />
+                    </children>
+                </VBox>
+            </children>
+        </GridPane>
+
+    </children>
+</VBox>
