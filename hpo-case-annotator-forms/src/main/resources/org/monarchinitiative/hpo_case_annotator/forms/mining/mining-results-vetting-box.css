@@ -14,17 +14,20 @@
 }
 
 .unreviewed {
-    -fx-fill: dodgerblue;
+    -fx-fill: orange;
+    -fx-font-weight: bold;
 }
 
 .approved {
     -fx-fill: seagreen;
     -fx-underline: true;
+    -fx-font-weight: bold;
 }
 
 .rejected {
     -fx-fill: red;
     -fx-strikethrough: true;
+    -fx-font-weight: bold;
 }
 
 .tooltip {
