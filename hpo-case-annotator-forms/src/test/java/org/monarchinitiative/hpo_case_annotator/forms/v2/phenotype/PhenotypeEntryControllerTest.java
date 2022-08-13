@@ -38,7 +38,7 @@ public class PhenotypeEntryControllerTest extends BaseControllerTest {
 
     @Test
     public void showIt(FxRobot robot) {
-        Platform.runLater(() -> controller.setOntology(ONTOLOGY));
+        Platform.runLater(() -> controller.setOntology(HPO));
         Platform.runLater(() -> controller.onsetAge().set(new ObservableAge(5, 2, 1)));
         Platform.runLater(() -> controller.resolutionAge().set(new ObservableAge(10, 8, 31)));
 

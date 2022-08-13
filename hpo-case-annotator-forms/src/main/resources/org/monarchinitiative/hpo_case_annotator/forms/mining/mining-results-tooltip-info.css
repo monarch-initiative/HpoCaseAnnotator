@@ -1,0 +1,12 @@
+#tooltip-box {
+    -fx-padding: 5;
+    -fx-spacing: 15;
+}
+
+#id-label {
+    -fx-text-fill: orange;
+}
+
+#name-label {
+    -fx-text-fill: deepskyblue;
+}

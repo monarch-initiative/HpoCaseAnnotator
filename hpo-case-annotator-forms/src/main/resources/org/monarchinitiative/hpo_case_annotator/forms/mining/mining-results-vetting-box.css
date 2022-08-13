@@ -1,0 +1,35 @@
+.tm-title {
+    -fx-font-size: 1.2em;
+    -fx-text-fill: navy;
+    -fx-effect: dropshadow(gaussian, #858585, 5, .5, 1, 1);
+}
+
+#text-flow {
+    -fx-pref-width: 500;
+}
+
+.hpo-term {
+    /* To add the "clickable" feeling. */
+    -fx-cursor: hand;
+}
+
+.unreviewed {
+    -fx-fill: orange;
+    -fx-font-weight: bold;
+}
+
+.approved {
+    -fx-fill: seagreen;
+    -fx-underline: true;
+    -fx-font-weight: bold;
+}
+
+.rejected {
+    -fx-fill: red;
+    -fx-strikethrough: true;
+    -fx-font-weight: bold;
+}
+
+.tooltip {
+    -fx-font-size: 15;
+}
