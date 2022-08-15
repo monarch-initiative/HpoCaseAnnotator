@@ -15,7 +15,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.disease.DiseaseStatusController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
+import org.monarchinitiative.hpo_case_annotator.forms.tree.SimpleOntologyClassTreeView;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeEntryController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypicFeatureController;
@@ -101,7 +101,6 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
         bind(PedigreeMemberController.class);
         bind(DiseaseStatusController.class);
         bind(PhenotypeEntryController.class);
-        bind(OntologyTreeBrowserController.class);
         bind(PhenotypicFeatureController.class);
         bind(PhenotypicFeaturesTableController.class);
 

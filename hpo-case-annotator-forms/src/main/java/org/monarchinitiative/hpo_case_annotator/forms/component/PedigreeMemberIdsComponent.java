@@ -1,12 +1,15 @@
 package org.monarchinitiative.hpo_case_annotator.forms.component;
 
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 
 import java.io.IOException;
 
-public class PedigreeMemberIdsComponent extends BaseIndividualIdsComponent {
+import static javafx.beans.binding.Bindings.selectBoolean;
+import static javafx.beans.binding.Bindings.when;
+
+public class PedigreeMemberIdsComponent extends BaseIndividualIdsComponent<ObservablePedigreeMember> {
 
     @FXML
     private TitledLabel paternalId;
@@ -32,16 +35,23 @@ public class PedigreeMemberIdsComponent extends BaseIndividualIdsComponent {
         super.initialize();
     }
 
-    public StringProperty paternalIdProperty() {
-        return paternalId.textProperty();
+    @Override
+    protected void bind(ObservablePedigreeMember data) {
+        super.bind(data);
+        paternalId.textProperty().bind(data.paternalIdProperty());
+        maternalId.textProperty().bind(data.maternalIdProperty());
+        proband.textProperty().bind(
+                when(selectBoolean(data, "proband"))
+                        .then("Yes")
+                        .otherwise("No"));
     }
 
-    public StringProperty maternalIdProperty() {
-        return maternalId.textProperty();
-    }
-
-    public StringProperty probandProperty() {
-        return proband.textProperty();
+    @Override
+    protected void unbind(ObservablePedigreeMember data) {
+        super.unbind(data);
+        paternalId.textProperty().unbind();
+        maternalId.textProperty().unbind();
+        proband.textProperty().unbind();
     }
 
 }

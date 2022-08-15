@@ -2,6 +2,8 @@ package org.monarchinitiative.hpo_case_annotator.forms.component;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 
@@ -12,7 +14,7 @@ public class TitledTextField extends TitledBase<TextField> {
     private static final List<String> STYLECLASSES = List.of("tl-text-field");
 
     @Override
-    protected TextField getItem() {
+    public TextField getItem() {
         return new TextField();
     }
 
@@ -55,5 +57,9 @@ public class TitledTextField extends TitledBase<TextField> {
 
     public ObjectProperty<TextFormatter<?>> textFormatterProperty() {
         return item.textFormatterProperty();
+    }
+
+    public void setOnAction(EventHandler<ActionEvent> handler) {
+        item.setOnAction(handler);
     }
 }

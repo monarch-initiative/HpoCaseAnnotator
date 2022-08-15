@@ -4,17 +4,17 @@ import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.layout.VBox;
+import org.monarchinitiative.hpo_case_annotator.forms.VBoxObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
 
 import static javafx.beans.binding.Bindings.select;
 
-abstract class BaseIndividualIdsComponent extends VBox {
+public abstract class BaseIndividualIdsComponent<T extends BaseObservableIndividual> extends VBoxObservableDataController<T> {
 
     private final ObjectProperty<ObservableTimeElement> age = new SimpleObjectProperty<>();
 
@@ -95,32 +95,21 @@ abstract class BaseIndividualIdsComponent extends VBox {
         };
     }
 
-    public StringProperty individualIdProperty() {
-        return individualId.textProperty();
+    @Override
+    protected void bind(T data) {
+        individualId.textProperty().bind(data.idProperty());
+        sex.textProperty().bind(data.sexProperty().asString());
+        age.bind(data.ageProperty());
+        vitalStatus.textProperty().bind(select(data, "vitalStatus", "status").asString());
+        timeOfDeath.dataProperty().bind(select(data, "vitalStatus", "timeOfDeath"));
     }
 
-    public String getSex() {
-        return sex.getText();
+    @Override
+    protected void unbind(T data) {
+        individualId.textProperty().unbind();
+        sex.textProperty().unbind();
+        age.unbind();
+        vitalStatus.textProperty().unbind();
+        timeOfDeath.dataProperty().unbind();
     }
-
-    public void setSex(String sex) {
-        this.sex.setText(sex);
-    }
-
-    public StringProperty sexProperty() {
-        return sex.textProperty();
-    }
-
-    public ObjectProperty<ObservableTimeElement> ageProperty() {
-        return age;
-    }
-
-    public StringProperty vitalStatusProperty() {
-        return vitalStatus.textProperty();
-    }
-
-    public ObjectProperty<ObservableTimeElement> timeOfDeathProperty() {
-        return timeOfDeath.dataProperty();
-    }
-
 }

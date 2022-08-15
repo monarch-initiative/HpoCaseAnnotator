@@ -18,7 +18,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.BindingObservableDataContr
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Utils;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualDetailController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
+import org.monarchinitiative.hpo_case_annotator.forms.tree.SimpleOntologyClassTreeView;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
@@ -39,7 +39,7 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual> exte
     @FXML
     private VBox ontologyTreeBrowser;
     @FXML
-    private OntologyTreeBrowserController ontologyTreeBrowserController;
+    private SimpleOntologyClassTreeView ontologyTreeView;
 
     @FXML
     private HBox individualDetail;
@@ -71,8 +71,9 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual> exte
     protected void initialize() {
         super.initialize();
 
-        ontologyTreeBrowserController.ontologyProperty().bind(ontology);
-        phenotypicFeaturesTableController.selectedPhenotypeDescription().addListener(ontologyTreeBrowserController.phenotypeDescriptionChangeListener());
+        ontologyTreeView.ontologyProperty().bind(ontology);
+        // TODO - fix if necessary
+//        phenotypicFeaturesTableController.selectedPhenotypeDescription().addListener(phenotypicFeatureTreeView.phenotypeDescriptionChangeListener());
 
         phenotypicFeatureController.ontologyProperty().bind(ontology);
         // phenotypic feature is disabled when no phenotypic feature is selected

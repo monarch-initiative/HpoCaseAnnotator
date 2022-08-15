@@ -1,5 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.forms.component.age;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
@@ -7,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.GridPane;
+import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
@@ -16,8 +19,13 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
 
 import java.io.IOException;
 
-public class SimpleBindingAge extends GridPane implements ObservableDataController<ObservableAge> {
+public class SimpleBindingAge extends GridPane implements ObservableDataController<ObservableAge>, Observable {
 
+    static final Callback<SimpleBindingAge, Observable[]> EXTRACTOR = sba -> new Observable[]{
+            sba.yearsFormatter.valueProperty(),
+            sba.months.valueProperty(),
+            sba.days.valueProperty()
+    };
     private final ObjectProperty<ObservableAge> data = new SimpleObjectProperty<>();
 
     @FXML
@@ -98,5 +106,17 @@ public class SimpleBindingAge extends GridPane implements ObservableDataControll
     private void clearDays(ActionEvent e) {
         days.setValue(null);
         e.consume();
+    }
+
+    @Override
+    public void addListener(InvalidationListener listener) {
+        for (Observable observable : EXTRACTOR.call(this))
+            observable.addListener(listener);
+    }
+
+    @Override
+    public void removeListener(InvalidationListener listener) {
+        for (Observable observable : EXTRACTOR.call(this))
+            observable.removeListener(listener);
     }
 }

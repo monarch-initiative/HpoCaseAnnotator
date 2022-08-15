@@ -14,7 +14,6 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemb
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.*;
 import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummaryController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeEntryController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypicFeatureController;
@@ -159,12 +158,6 @@ public class ControllerConfiguration {
     @Scope("prototype")
     public PhenotypicFeaturesTableController phenotypicFeaturesTableController() {
         return new PhenotypicFeaturesTableController();
-    }
-
-    @Bean
-    @Scope("prototype")
-    public OntologyTreeBrowserController ontologyTreeBrowserController() {
-        return new OntologyTreeBrowserController();
     }
 
     /* *****************************************         Disease           ****************************************** */

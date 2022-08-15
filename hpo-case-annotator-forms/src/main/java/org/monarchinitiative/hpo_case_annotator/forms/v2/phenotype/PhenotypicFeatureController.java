@@ -10,7 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.BindingObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.AgeController;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAgeRange;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
@@ -63,6 +62,7 @@ public class PhenotypicFeatureController extends BindingObservableDataController
     }
 
     private BooleanBinding preparePhenotypicFeatureIsExcludedBinding() {
+        // TODO - this class should be removed in future, hence the duplicate is no issue.
         return Bindings.createBooleanBinding(() -> {
             RadioButton selected = (RadioButton) presenceStatusToggleGroup.getSelectedToggle();
             if (selected.equals(presentRadioButton)) {

@@ -6,9 +6,10 @@
 <?import javafx.scene.layout.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.metadata.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree?>
 
-<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.nvo.FamilyStudyController"
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      type="javafx.scene.layout.VBox"
       id="outer-box">
     <stylesheets>
         <URL value="@../base.css"/>
@@ -59,7 +60,7 @@
                                 <VBox styleClass="section">
                                     <children>
                                         <Label fx:id="pedigreeLabel" text="Pedigree" styleClass="h1"/>
-                                        <fx:include fx:id="pedigree" source="../pedigree/Pedigree.fxml" VBox.vgrow="ALWAYS"/>
+                                        <Pedigree fx:id="pedigree" VBox.vgrow="ALWAYS"/>
                                     </children>
                                 </VBox>
                                 <Separator/>
@@ -83,5 +84,5 @@
             </children>
         </VBox>
     </children>
-</VBox>
+</fx:root>
 

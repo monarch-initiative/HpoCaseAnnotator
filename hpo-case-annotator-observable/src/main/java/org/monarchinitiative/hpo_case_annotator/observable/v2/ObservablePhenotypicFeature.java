@@ -57,6 +57,10 @@ public class ObservablePhenotypicFeature implements PhenotypicFeature {
         return label;
     }
 
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
     @Override
     public boolean isExcluded() {
         return excluded.get();

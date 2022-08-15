@@ -17,36 +17,27 @@
         <Label fx:id="header" text="Provide credentials of the individual under investigation." />
         <IndividualIdsBindingComponent fx:id="individualIds" />
 
-        <GridPane id="phenotype-disease-genotype-grid">
-            <columnConstraints>
-                <ColumnConstraints minWidth="300.0" />
-                <ColumnConstraints minWidth="300.0" />
-                <ColumnConstraints minWidth="300.0" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-            </rowConstraints>
-            <children>
-                <Label styleClass="h2" text="Phenotype features" />
-                <Label text="Phenotype feature summary" GridPane.rowIndex="1" />
-                <Button text="Add/Edit phenotype features"
-                        styleClass="add-edit-attribute-button" GridPane.rowIndex="2"
-                        onAction="#addEditPhenotypesAction" />
+        <ToolBar>
+            <items>
+                <Button onAction="#addEditPhenotypesAction" text="Add/Edit phenotype features" />
+                <Button onAction="#addEditDiseasesAction" text="Add/Edit diseases" />
+                <Button onAction="#addEditGenotypesAction" text="Add/Edit variant genotypes" />
+            </items>
+        </ToolBar>
+        <!-- TODO finalize or delete. -->
+<!--        <VBox>-->
+<!--            <children>-->
+<!--                <Label styleClass="h2" text="Phenotype features" />-->
+<!--                <Label text="Phenotype feature summary" GridPane.rowIndex="1" />-->
 
-                <Label styleClass="h2" text="Disease" GridPane.columnIndex="1" />
-                <Label text="Disease summary" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <Button text="Add/Edit diseases"
-                        styleClass="add-edit-attribute-button" GridPane.columnIndex="1" GridPane.rowIndex="2"
-                        onAction="#addEditDiseasesAction" />
 
-                <Label styleClass="h2" text="Variant genotypes" GridPane.columnIndex="2" />
-                <Label text="Variant genotype summary" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                <Button text="Add/Edit variant genotypes"
-                        styleClass="add-edit-attribute-button" GridPane.columnIndex="2" GridPane.rowIndex="2"
-                        onAction="#addEditGenotypesAction" />
-            </children>
-        </GridPane>
+<!--                <Label styleClass="h2" text="Disease" GridPane.columnIndex="1" />-->
+<!--                <Label text="Disease summary" GridPane.columnIndex="1" GridPane.rowIndex="1" />-->
+
+
+<!--                <Label styleClass="h2" text="Variant genotypes" GridPane.columnIndex="2" />-->
+<!--                <Label text="Variant genotype summary" GridPane.columnIndex="2" GridPane.rowIndex="1" />-->
+<!--            </children>-->
+<!--        </VBox>-->
     </children>
 </fx:root>

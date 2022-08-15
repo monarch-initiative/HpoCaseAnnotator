@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.forms.stepper;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,6 +15,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividualStudy;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
@@ -77,6 +79,7 @@ public class StepperTest extends BaseControllerTest {
     }
 
     private static IndividualStudySteps prepareIndividualStudySteps() {
-        return new IndividualStudySteps(CONTROLLER_FACTORY);
+        SimpleObjectProperty<Ontology> ontology = new SimpleObjectProperty<>(HPO);
+        return new IndividualStudySteps(CONTROLLER_FACTORY, ontology);
     }
 }

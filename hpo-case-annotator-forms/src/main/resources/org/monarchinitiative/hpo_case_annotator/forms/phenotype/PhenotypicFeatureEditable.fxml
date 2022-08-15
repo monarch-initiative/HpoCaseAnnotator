@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementBindingComponent?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.VBox">
+    <children>
+        <VBox>
+            <children>
+                <Label styleClass="h2" text="Phenotype feature"/>
+                <VBox id="phenotypic-feature-column" styleClass="column">
+                    <children>
+                        <TitledLabel fx:id="termId" name="ID" id="term-id" />
+                        <TitledLabel fx:id="name" name="Label" id="term-name" />
+                        <TitledLabel fx:id="definition" name="Definition" id="term-definition" />
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+        <Separator/>
+        <VBox>
+            <children>
+                <Label styleClass="h2" text="Status"/>
+                <RadioButton fx:id="presentRadioButton" mnemonicParsing="false" text="Present"/>
+                <RadioButton fx:id="absentRadioButton" mnemonicParsing="false" text="Excluded"/>
+            </children>
+        </VBox>
+        <Separator/>
+        <VBox>
+            <children>
+                <Label styleClass="h2" text="Temporal"/>
+                <VBox styleClass="section">
+                    <children>
+                        <Label styleClass="h3" text="Onset"/>
+                        <CheckBox fx:id="onsetIsUnknown" text="Onset is unknown"/>
+                        <TimeElementBindingComponent fx:id="onsetComponent"/>
+                    </children>
+                </VBox>
+                <VBox styleClass="section">
+                    <children>
+                        <Label styleClass="h3" text="Resolution"/>
+                        <CheckBox fx:id="resolutionIsUnknown" text="Resolution is unknown"/>
+                        <TimeElementBindingComponent fx:id="resolutionComponent"/>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+        <Separator/>
+        <VBox>
+            <children>
+                <Label styleClass="h2" text="Modifiers"/>
+                <Text text="Not yet implemented" style="-fx-fill: red"/>
+            </children>
+        </VBox>
+    </children>
+</fx:root>

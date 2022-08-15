@@ -6,10 +6,10 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMemberTitle?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable?>
 
-<TitledPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMemberController"
-            stylesheets="@pedigree-member.css"
-            id="titled-pane-box" contentDisplay="GRAPHIC_ONLY" expanded="false">
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.control.TitledPane"
+         stylesheets="@pedigree-member.css"
+         id="titled-pane-box" contentDisplay="GRAPHIC_ONLY" expanded="false">
     <graphic>
         <PedigreeMemberTitle fx:id="pedigreeMemberTitle"/>
     </graphic>
@@ -99,4 +99,4 @@
             </children>
         </VBox>
     </content>
-</TitledPane>
+</fx:root>

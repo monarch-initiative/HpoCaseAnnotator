@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.tree.SimpleOntologyClassTreeView?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeatureBinding?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.phenotype.BrowseHpoController"
-      stylesheets="@browse-hpo.css">
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.VBox"
+         stylesheets="@browse-hpo.css">
     <children>
-        <GridPane alignment="TOP_CENTER">
-            <children>
-                <TitledTextField fx:id="searchField" name="Search for HPO term" promptText="e.g. Arachnodactyly" GridPane.columnSpan="2147483647" />
-                <!-- TODO - move from v2 to a more appropriate location-->
-                <fx:include fx:id="ontologyTreeBrowser" source="../v2/ontotree/OntologyTreeBrowser.fxml" GridPane.rowIndex="1" />
-                <fx:include fx:id="phenotypicFeature" source="PhenotypicFeature.fxml" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            </children>
-        </GridPane>
+        <TitledTextField fx:id="searchField" name="Search for HPO term" promptText="e.g. Arachnodactyly" />
+        <SplitPane>
+            <items>
+                <SimpleOntologyClassTreeView fx:id="ontologyTreeView" />
+                <PhenotypicFeatureBinding fx:id="phenotypicFeature"/>
+            </items>
+        </SplitPane>
+
+        <ButtonBar >
+            <buttons>
+                <Button fx:id="okButton" onAction="#okButtonAction" ButtonBar.buttonData="OK_DONE" text="Add HPO term">
+                    <tooltip>
+                        <Tooltip text="Add the HPO term to patient's terms."/>
+                    </tooltip>
+                </Button>
+            </buttons>
+        </ButtonBar>
     </children>
-</VBox>
+</fx:root>

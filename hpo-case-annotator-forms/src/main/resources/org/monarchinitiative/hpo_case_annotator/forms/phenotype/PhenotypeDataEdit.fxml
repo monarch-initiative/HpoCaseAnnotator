@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeature?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="javafx.scene.layout.VBox">
@@ -26,12 +27,24 @@
                     <VBox styleClass="section">
                         <children>
                             <Label text="Add phenotype features" styleClass="h2"/>
-                            <HBox>
-                                <children>
-                                    <Button text="Browse HPO hierarchy"/>
-                                    <Button text="Add clinical encounter"/>
-                                </children>
-                            </HBox>
+                            <ButtonBar>
+                                <buttons>
+                                    <Button fx:id="browseHpo" onAction="#browseHpoAction"
+                                            text="Browse HPO hierarchy">
+                                        <tooltip>
+                                            <Tooltip text="Add a single phenotype term by browsing HPO hierarchy"
+                                                     wrapText="true"/>
+                                        </tooltip>
+                                    </Button>
+                                    <Button fx:id="addClinicalEncounter" onAction="#addClinicalEncounterAction"
+                                            text="Add clinical encounter">
+                                        <tooltip>
+                                            <Tooltip text="Add one or more phenotype terms for a clinical encounter"
+                                                     wrapText="true"/>
+                                        </tooltip>
+                                    </Button>
+                                </buttons>
+                            </ButtonBar>
                         </children>
                     </VBox>
                     <VBox styleClass="section">
@@ -44,7 +57,7 @@
             </VBox>
             <VBox id="phenotype-feature-pane" styleClass="section">
                 <children>
-                    <fx:include fx:id="phenotypicFeature" source="PhenotypicFeature.fxml"/>
+                    <PhenotypicFeature fx:id="phenotypicFeature"/>
                 </children>
             </VBox>
         </items>

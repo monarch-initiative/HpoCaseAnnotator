@@ -85,7 +85,17 @@ Separator {
 
 .add-button, .remove-button, .edit-button {
     -fx-content-display: graphic-only;
-    -fx-background-radius: 30px;
+    -fx-max-width: 20;
+    -fx-max-height: 20;
+    -fx-background-radius: 10px;
+}
+
+.remove-button-tiny {
+    -fx-content-display: graphic-only;
+    -fx-graphic: url("icons/remove-button-tiny.png");
+    -fx-max-width: 20;
+    -fx-max-height: 20;
+    -fx-background-radius: 10px;
 }
 
 .clear-button {

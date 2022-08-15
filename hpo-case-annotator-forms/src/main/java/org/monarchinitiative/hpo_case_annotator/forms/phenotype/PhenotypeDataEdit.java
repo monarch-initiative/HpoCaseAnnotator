@@ -1,36 +1,41 @@
 package org.monarchinitiative.hpo_case_annotator.forms.phenotype;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.DataEditController;
-import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
-import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 import java.io.IOException;
 import java.util.Objects;
 
-import static javafx.beans.binding.Bindings.select;
-
 public class PhenotypeDataEdit extends VBox implements DataEditController<BaseObservableIndividual> {
 
+    private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
     private BaseObservableIndividual item;
-
     @FXML
-    private IndividualIdsComponent individualIds;
+    private BaseIndividualIdsComponent<BaseObservableIndividual> individualIds;
+    @FXML
+    private Button browseHpo;
+    @FXML
+    private Button addClinicalEncounter;
     @FXML
     private PhenotypeTable phenotypeTable;
     @FXML
-    private Parent phenotypicFeature;
-    @FXML
-    private PhenotypicFeatureController phenotypicFeatureController;
-
-    public PhenotypeDataEdit(HCAControllerFactory controllerFactory) {
+    private PhenotypicFeature phenotypicFeature;
+    public PhenotypeDataEdit() {
         FXMLLoader loader = new FXMLLoader(PhenotypeDataEdit.class.getResource("PhenotypeDataEdit.fxml"));
         loader.setRoot(this);
-        loader.setControllerFactory(controllerFactory);
         loader.setController(this);
 
         try {
@@ -42,7 +47,8 @@ public class PhenotypeDataEdit extends VBox implements DataEditController<BaseOb
 
     @FXML
     private void initialize() {
-        phenotypicFeatureController.dataProperty().bind(phenotypeTable.getSelectionModel().selectedItemProperty());
+        phenotypicFeature.hpoProperty().bind(hpo);
+        phenotypicFeature.dataProperty().bind(phenotypeTable.getSelectionModel().selectedItemProperty());
         phenotypicFeature.disableProperty().bind(phenotypeTable.getSelectionModel().selectedItemProperty().isNull());
     }
 
@@ -50,13 +56,52 @@ public class PhenotypeDataEdit extends VBox implements DataEditController<BaseOb
     public void setInitialData(BaseObservableIndividual data) {
         item = Objects.requireNonNull(data);
 
-        individualIds.individualIdProperty().bind(item.idProperty());
-        individualIds.ageProperty().bind(item.ageProperty());
-        individualIds.sexProperty().bind(item.sexProperty().asString());
-        individualIds.vitalStatusProperty().bind(select(item.vitalStatusProperty(), "status").asString());
-        individualIds.timeOfDeathProperty().bind(select(item.vitalStatusProperty(), "timeOfDeath"));
+        individualIds.setData(data);
 
         phenotypeTable.getItems().addAll(item.getObservablePhenotypicFeatures());
+    }
+
+    @FXML
+    private void browseHpoAction(ActionEvent e) {
+        BrowseHpo component = new BrowseHpo();
+        component.hpoProperty().bind(hpo);
+        component.setPhenotypicFeatureConsumer(phenotypeTable.getItems()::add);
+
+        showComponentNodeDialog(component);
+
+        e.consume();
+    }
+
+    @FXML
+    private void addClinicalEncounterAction(ActionEvent e) {
+        AddClinicalEncounter component = new AddClinicalEncounter();
+        component.hpoProperty().bind(hpo);
+        component.setData(item);
+
+        showComponentNodeDialog(component);
+        phenotypeTable.getItems().addAll(component.itemsProperty().get());
+
+        e.consume();
+    }
+
+    private static void showComponentNodeDialog(Node component) {
+        Dialog<Boolean> dialog = new Dialog<>();
+        dialog.setResizable(true);
+        dialog.getDialogPane().setContent(component);
+        dialog.getDialogPane().getButtonTypes().add(new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE));
+        dialog.showAndWait();
+    }
+
+    public Ontology getHpo() {
+        return hpo.get();
+    }
+
+    public ObjectProperty<Ontology> hpoProperty() {
+        return hpo;
+    }
+
+    public void setHpo(Ontology hpo) {
+        this.hpo.set(hpo);
     }
 
     @Override

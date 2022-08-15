@@ -1,10 +1,9 @@
 package org.monarchinitiative.hpo_case_annotator.model.v2;
 
-import org.monarchinitiative.phenol.ontology.data.Identified;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 // Roughly corresponds to PhenotypicFeature of Phenopackets v2
-public interface PhenotypicFeature extends Identified {
+public interface PhenotypicFeature extends OntologyClass {
 
     static PhenotypicFeature of(TermId termId, String label, boolean isExcluded, TimeElement onset, TimeElement resolution) {
         return new PhenotypicFeatureDefault(termId, label, isExcluded, onset, resolution);
@@ -14,8 +13,6 @@ public interface PhenotypicFeature extends Identified {
     default TermId termId() {
         return id();
     }
-
-    String getLabel();
 
     boolean isExcluded();
 

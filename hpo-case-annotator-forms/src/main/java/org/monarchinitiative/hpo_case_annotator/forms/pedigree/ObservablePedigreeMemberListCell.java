@@ -1,34 +1,24 @@
 package org.monarchinitiative.hpo_case_annotator.forms.pedigree;
 
 import javafx.beans.property.ListProperty;
-import javafx.fxml.FXMLLoader;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListCell;
-import javafx.scene.layout.Region;
-import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
-
-import java.io.IOException;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 class ObservablePedigreeMemberListCell extends ListCell<ObservablePedigreeMember> {
 
-    private final Region graphic;
+    private final PedigreeMember pedigreeMember;
 
-    ObservablePedigreeMemberListCell(HCAControllerFactory controllerFactory, ListProperty<CuratedVariant> variants) {
+    ObservablePedigreeMemberListCell(ListProperty<CuratedVariant> variants, ObjectProperty<Ontology> hpo) {
         setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        FXMLLoader loader = new FXMLLoader(PedigreeMemberController.class.getResource("PedigreeMember.fxml"));
-        loader.setControllerFactory(controllerFactory);
-        PedigreeMemberController controller;
-        try {
-            graphic = loader.load();
-            controller = loader.getController();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        graphic.prefWidthProperty().bind(maxWidthProperty());
-        controller.itemProperty().bind(itemProperty());
-        controller.variantsProperty().bind(variants);
+        pedigreeMember = new PedigreeMember();
+        pedigreeMember.prefWidthProperty().bind(maxWidthProperty());
+        pedigreeMember.itemProperty().bind(itemProperty());
+        pedigreeMember.variantsProperty().bind(variants);
+        pedigreeMember.hpoProperty().bind(hpo);
     }
 
     @Override
@@ -37,7 +27,7 @@ class ObservablePedigreeMemberListCell extends ListCell<ObservablePedigreeMember
         if (empty || item == null) {
             setGraphic(null);
         } else {
-            setGraphic(graphic);
+            setGraphic(pedigreeMember);
         }
     }
 }

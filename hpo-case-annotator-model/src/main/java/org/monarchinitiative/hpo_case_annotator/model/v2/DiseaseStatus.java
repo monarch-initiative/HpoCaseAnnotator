@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.model.v2;
 
+// TODO - use OntologyClass instead of DiseaseIdentifier
 public interface DiseaseStatus {
 
     static DiseaseStatus of(DiseaseIdentifier diseaseId, boolean isExcluded) {

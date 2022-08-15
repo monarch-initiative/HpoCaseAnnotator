@@ -4,9 +4,9 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeController"
-      stylesheets="@pedigree.css">
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.VBox"
+         stylesheets="@pedigree.css">
     <children>
         <VBox styleClass="subsection">
             <children>
@@ -25,4 +25,4 @@
             </children>
         </VBox>
     </children>
-</VBox>
+</fx:root>

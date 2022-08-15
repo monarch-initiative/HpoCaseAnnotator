@@ -1,5 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.forms.component.age;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
@@ -13,6 +15,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
@@ -27,7 +30,19 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.IOException;
 
-public class TimeElementBindingComponent extends VBox implements ObservableDataController<ObservableTimeElement> {
+public class TimeElementBindingComponent extends VBox implements ObservableDataController<ObservableTimeElement>, Observable {
+
+    static final Callback<TimeElementBindingComponent, Observable[]> EXTRACTOR = tbc -> new Observable[]{
+            tbc.tabPane.getSelectionModel().selectedItemProperty(),
+
+            tbc.gestationalWeeks.textProperty(),
+            tbc.gestationalDays.valueProperty(),
+
+            tbc.age,
+            tbc.ageRangeStart,
+            tbc.ageRangeEnd,
+            tbc.ontologyClassComboBox.valueProperty()
+    };
 
     private final ObjectProperty<ObservableTimeElement> data = new SimpleObjectProperty<>();
 
@@ -190,5 +205,17 @@ public class TimeElementBindingComponent extends VBox implements ObservableDataC
     private void clearOntologyClass(ActionEvent e) {
         ontologyClassComboBox.setValue(null);
         e.consume();
+    }
+
+    @Override
+    public void addListener(InvalidationListener listener) {
+        for (Observable observable : EXTRACTOR.call(this))
+            observable.addListener(listener);
+    }
+
+    @Override
+    public void removeListener(InvalidationListener listener) {
+        for (Observable observable : EXTRACTOR.call(this))
+            observable.removeListener(listener);
     }
 }

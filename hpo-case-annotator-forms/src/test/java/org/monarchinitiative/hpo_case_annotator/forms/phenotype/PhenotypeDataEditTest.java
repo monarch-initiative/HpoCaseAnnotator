@@ -23,17 +23,14 @@ import java.util.concurrent.TimeUnit;
 @ExtendWith(ApplicationExtension.class)
 public class PhenotypeDataEditTest extends BaseControllerTest {
 
-    private PhenotypeDataEdit controller;
+    private PhenotypeDataEdit phenotypeDataEdit;
 
     @Start
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(PhenotypeDataEdit.class.getResource("PhenotypeDataEdit.fxml"));
+        phenotypeDataEdit = new PhenotypeDataEdit();
+        phenotypeDataEdit.setHpo(HPO);
 
-        loader.setControllerFactory(CONTROLLER_FACTORY);
-        Parent parent = loader.load();
-        controller = loader.getController();
-
-        Scene scene = new Scene(parent);
+        Scene scene = new Scene(phenotypeDataEdit);
         stage.setScene(scene);
         stage.setTitle("Phenotype view test");
         stage.initStyle(StageStyle.DECORATED);
@@ -45,12 +42,12 @@ public class PhenotypeDataEditTest extends BaseControllerTest {
         ObservableFamilyStudy familyStudy = new ObservableFamilyStudy(TestData.V2.comprehensiveFamilyStudy());
 
         ObservablePedigreeMember member = familyStudy.getPedigree().membersProperty().get(0);
-        Platform.runLater(() -> controller.setInitialData(member));
+        Platform.runLater(() -> phenotypeDataEdit.setInitialData(member));
 
-        robot.sleep(60, TimeUnit.SECONDS);
+        robot.sleep(5, TimeUnit.MINUTES);
 
         System.err.println(member);
-        Platform.runLater(() -> controller.commit());
+        Platform.runLater(() -> phenotypeDataEdit.commit());
         robot.sleep(1, TimeUnit.SECONDS);
         System.err.println(member);
     }
