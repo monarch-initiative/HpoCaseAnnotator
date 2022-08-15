@@ -13,19 +13,15 @@ import java.util.Map;
 
 public class BaseControllerTest {
 
-    public static final Path TEST_BASE_PATH = Path.of("src/test/resources/org/monarchinitiative/hpo_case_annotator/forms");
-    /**
-     * HPO module containing all ancestors of `HP:0001166` Arachnodactyly and complete sub-hierarchies
-     * except from `HP:0000118` Phenotypic abnormality.
-     */
-    public static final Path HPO_MODULE_PATH = TEST_BASE_PATH.resolve("hp.module.json");
+    private static final Path TEST_BASE_DIR = Path.of("src/test/resources/org/monarchinitiative/hpo_case_annotator/forms");
+    private static final Path HPO_MODULE_PATH = TEST_BASE_DIR.resolve("hp.module.json");
 
     public static final Ontology HPO = OntologyLoader.loadOntology(HPO_MODULE_PATH.toFile());
 
     public static final GenomicAssemblyRegistry GENOMIC_ASSEMBLY_REGISTRY = createGenomicAssemblyRegistry();
     public static final FunctionalAnnotationRegistry FUNCTIONAL_ANNOTATION_REGISTRY = new FunctionalAnnotationRegistry();
     public static final GeneIdentifierService GENE_IDENTIFIER_SERVICE = makeGeneIdService();
-    public static final ControllerFactory CONTROLLER_FACTORY = new ControllerFactory(GENOMIC_ASSEMBLY_REGISTRY, FUNCTIONAL_ANNOTATION_REGISTRY, GENE_IDENTIFIER_SERVICE, HPO);
+    public static final ControllerFactory CONTROLLER_FACTORY = new ControllerFactory(GENOMIC_ASSEMBLY_REGISTRY, FUNCTIONAL_ANNOTATION_REGISTRY, GENE_IDENTIFIER_SERVICE);
 
     private static GenomicAssemblyRegistry createGenomicAssemblyRegistry() {
         GenomicAssemblyRegistry genomicAssemblyRegistry = new GenomicAssemblyRegistry();

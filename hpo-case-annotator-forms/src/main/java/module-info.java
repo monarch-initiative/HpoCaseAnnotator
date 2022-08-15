@@ -28,7 +28,6 @@ module org.monarchinitiative.hca.forms {
     exports org.monarchinitiative.hpo_case_annotator.forms.v2.disease;
     exports org.monarchinitiative.hpo_case_annotator.forms.v2.individual;
     exports org.monarchinitiative.hpo_case_annotator.forms.v2.model;
-    exports org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree;
     exports org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype;
     exports org.monarchinitiative.hpo_case_annotator.forms.v2.variant;
 
@@ -37,6 +36,7 @@ module org.monarchinitiative.hca.forms {
     opens org.monarchinitiative.hpo_case_annotator.forms.component to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.component.age to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.liftover to javafx.fxml, org.monarchinitiative.hca.app;
+    opens org.monarchinitiative.hpo_case_annotator.forms.mining to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.metadata to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.nvo to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.pedigree to javafx.fxml;
@@ -50,7 +50,6 @@ module org.monarchinitiative.hca.forms {
     opens org.monarchinitiative.hpo_case_annotator.forms.v2.disease to javafx.fxml, org.monarchinitiative.hca.app;
     opens org.monarchinitiative.hpo_case_annotator.forms.v2.individual to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.v2.model to javafx.fxml;
-    opens org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype to javafx.fxml, org.monarchinitiative.hca.app;
     opens org.monarchinitiative.hpo_case_annotator.forms.v2.variant to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.util to javafx.fxml;
