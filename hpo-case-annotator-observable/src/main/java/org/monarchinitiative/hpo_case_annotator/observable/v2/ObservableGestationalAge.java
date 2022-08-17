@@ -1,11 +1,16 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
+import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.GestationalAge;
 
-public class ObservableGestationalAge implements GestationalAge {
+import java.util.stream.Stream;
 
+public class ObservableGestationalAge implements GestationalAge, ObservableItem {
+
+    static final Callback<ObservableGestationalAge, Stream<Observable>> EXTRACTOR = tbc -> Stream.of(tbc.weeks, tbc.days);
     public static ObservableGestationalAge defaultInstance() {
         return new ObservableGestationalAge();
     }
@@ -46,6 +51,11 @@ public class ObservableGestationalAge implements GestationalAge {
 
     public void setDays(Integer days) {
         this.days.set(days);
+    }
+
+    @Override
+    public Stream<Observable> dependencies() {
+        return EXTRACTOR.call(this);
     }
 
     @Override

@@ -8,9 +8,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
-import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.VBoxObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
@@ -18,14 +17,15 @@ import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
 
 import java.io.IOException;
+import java.util.stream.Stream;
 
-public class SimpleBindingAge extends GridPane implements ObservableDataController<ObservableAge>, Observable {
+public class SimpleBindingAge extends VBoxObservableDataController<ObservableAge> implements Observable {
 
-    static final Callback<SimpleBindingAge, Observable[]> EXTRACTOR = sba -> new Observable[]{
+    static final Callback<SimpleBindingAge, Stream<Observable>> EXTRACTOR = sba -> Stream.of(
             sba.yearsFormatter.valueProperty(),
             sba.months.valueProperty(),
-            sba.days.valueProperty()
-    };
+            sba.days.valueProperty());
+
     private final ObjectProperty<ObservableAge> data = new SimpleObjectProperty<>();
 
     @FXML
@@ -49,7 +49,8 @@ public class SimpleBindingAge extends GridPane implements ObservableDataControll
     }
 
     @FXML
-    private void initialize() {
+    protected void initialize() {
+        super.initialize();
         years.setTextFormatter(yearsFormatter);
         months.getItems().addAll(FormUtils.getIntegers(11));
         days.getItems().addAll(FormUtils.getIntegers(30));
@@ -59,7 +60,8 @@ public class SimpleBindingAge extends GridPane implements ObservableDataControll
         });
     }
 
-    private void unbind(ObservableAge data) {
+    @Override
+    protected void unbind(ObservableAge data) {
         if (data == null) {
             clear();
         } else {
@@ -69,7 +71,8 @@ public class SimpleBindingAge extends GridPane implements ObservableDataControll
         }
     }
 
-    private void bind(ObservableAge data) {
+    @Override
+    protected void bind(ObservableAge data) {
         if (data == null) {
             clear();
         } else {
@@ -88,6 +91,30 @@ public class SimpleBindingAge extends GridPane implements ObservableDataControll
     @Override
     public ObjectProperty<ObservableAge> dataProperty() {
         return data;
+    }
+
+    void setYears(Integer value) {
+        yearsFormatter.setValue(value);
+    }
+
+    Integer getYears() {
+        return yearsFormatter.getValue();
+    }
+
+    void setMonths(Integer value) {
+        months.setValue(value);
+    }
+
+    Integer getMonths() {
+        return months.getValue();
+    }
+
+    void setDays(Integer value) {
+        days.setValue(value);
+    }
+
+    Integer getDays() {
+        return days.getValue();
     }
 
     @FXML
@@ -110,13 +137,11 @@ public class SimpleBindingAge extends GridPane implements ObservableDataControll
 
     @Override
     public void addListener(InvalidationListener listener) {
-        for (Observable observable : EXTRACTOR.call(this))
-            observable.addListener(listener);
+        EXTRACTOR.call(this).forEach(obs -> obs.addListener(listener));
     }
 
     @Override
     public void removeListener(InvalidationListener listener) {
-        for (Observable observable : EXTRACTOR.call(this))
-            observable.removeListener(listener);
+        EXTRACTOR.call(this).forEach(obs -> obs.removeListener(listener));
     }
 }

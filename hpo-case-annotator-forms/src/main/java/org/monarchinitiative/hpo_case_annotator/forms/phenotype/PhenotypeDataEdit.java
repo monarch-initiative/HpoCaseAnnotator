@@ -4,7 +4,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -16,10 +15,9 @@ import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualId
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 
-import java.io.IOException;
 import java.util.Objects;
 
-public class PhenotypeDataEdit extends VBox implements DataEditController<BaseObservableIndividual> {
+public abstract class PhenotypeDataEdit<T extends BaseObservableIndividual> extends VBox implements DataEditController<T> {
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
     private BaseObservableIndividual item;
@@ -33,17 +31,6 @@ public class PhenotypeDataEdit extends VBox implements DataEditController<BaseOb
     private PhenotypeTable phenotypeTable;
     @FXML
     private PhenotypicFeature phenotypicFeature;
-    public PhenotypeDataEdit() {
-        FXMLLoader loader = new FXMLLoader(PhenotypeDataEdit.class.getResource("PhenotypeDataEdit.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-
-        try {
-            loader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @FXML
     private void initialize() {

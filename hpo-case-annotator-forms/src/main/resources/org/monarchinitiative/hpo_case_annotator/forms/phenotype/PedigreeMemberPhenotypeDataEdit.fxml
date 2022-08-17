@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsComponent?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeature?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox">
+    <stylesheets>
+        <URL value="@../base.css" />
+        <URL value="@phenotype.css" />
+    </stylesheets>
+   <children>
+      <SplitPane VBox.vgrow="ALWAYS">
+        <items>
+            <VBox id="phenotype-feature-list">
+                <children>
+                    <VBox styleClass="section">
+                        <children>
+                            <Label text="Credentials" styleClass="h2"/>
+                            <PedigreeMemberIdsComponent fx:id="individualIds"/>
+                        </children>
+                    </VBox>
+                    <VBox styleClass="section">
+                        <children>
+                            <Label text="Add phenotype features" styleClass="h2"/>
+                            <ButtonBar>
+                                <buttons>
+                                    <Button fx:id="browseHpo" onAction="#browseHpoAction"
+                                            text="Browse HPO hierarchy">
+                                        <tooltip>
+                                            <Tooltip text="Add a single phenotype term by browsing HPO hierarchy"
+                                                     wrapText="true"/>
+                                        </tooltip>
+                                    </Button>
+                                    <Button fx:id="addClinicalEncounter" onAction="#addClinicalEncounterAction"
+                                            text="Add clinical encounter">
+                                        <tooltip>
+                                            <Tooltip text="Add one or more phenotype terms for a clinical encounter"
+                                                     wrapText="true"/>
+                                        </tooltip>
+                                    </Button>
+                                </buttons>
+                            </ButtonBar>
+                        </children>
+                    </VBox>
+                    <VBox styleClass="section">
+                        <children>
+                            <Label text="Phenotype features" styleClass="h2"/>
+                            <PhenotypeTable fx:id="phenotypeTable"/>
+                        </children>
+                    </VBox>
+                </children>
+            </VBox>
+            <VBox id="phenotype-feature-pane" styleClass="section">
+                <children>
+                    <PhenotypicFeature fx:id="phenotypicFeature"/>
+                </children>
+            </VBox>
+        </items>
+      </SplitPane>
+   </children>
+</fx:root>

@@ -5,34 +5,38 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="GridPane"
+         type="VBox"
          stylesheets="@simple-age.css" id="age-grid" >
-    <columnConstraints>
-        <ColumnConstraints />
-        <ColumnConstraints />
-        <ColumnConstraints />
-    </columnConstraints>
     <children>
-        <HBox styleClass="age-datum">
+        <GridPane id="age-grid">
+            <columnConstraints>
+                <ColumnConstraints />
+                <ColumnConstraints />
+                <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints />
+            </rowConstraints>
             <children>
-                <TitledTextField fx:id="years" name="Years" />
-                <Button onAction="#clearYears" styleClass="clear-button" />
+                <HBox styleClass="age-datum">
+                    <children>
+                        <TitledTextField fx:id="years" name="Years" />
+                        <Button onAction="#clearYears" styleClass="clear-button" />
+                    </children>
+                </HBox>
+                <HBox styleClass="age-datum" GridPane.columnIndex="1">
+                    <children>
+                        <TitledComboBox fx:id="months" name="Months" />
+                        <Button onAction="#clearMonths" styleClass="clear-button" />
+                    </children>
+                </HBox>
+                <HBox styleClass="age-datum" GridPane.columnIndex="2">
+                    <children>
+                        <TitledComboBox fx:id="days" name="Days" />
+                        <Button onAction="#clearDays" styleClass="clear-button" />
+                    </children>
+                </HBox>
             </children>
-        </HBox>
-        <HBox styleClass="age-datum" GridPane.columnIndex="1">
-            <children>
-                <TitledComboBox fx:id="months" name="Months" />
-                <Button onAction="#clearMonths" styleClass="clear-button" />
-            </children>
-        </HBox>
-        <HBox styleClass="age-datum" GridPane.columnIndex="2">
-            <children>
-                <TitledComboBox fx:id="days" name="Days" />
-                <Button onAction="#clearDays" styleClass="clear-button" />
-            </children>
-        </HBox>
+        </GridPane>
     </children>
-    <rowConstraints>
-        <RowConstraints />
-    </rowConstraints>
 </fx:root>

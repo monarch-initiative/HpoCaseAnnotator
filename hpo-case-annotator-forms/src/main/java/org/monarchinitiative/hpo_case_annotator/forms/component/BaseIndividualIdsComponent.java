@@ -14,7 +14,7 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElem
 
 import static javafx.beans.binding.Bindings.select;
 
-public abstract class BaseIndividualIdsComponent<T extends BaseObservableIndividual> extends VBoxObservableDataController<T> {
+public class BaseIndividualIdsComponent<T extends BaseObservableIndividual> extends VBoxObservableDataController<T> {
 
     private final ObjectProperty<ObservableTimeElement> age = new SimpleObjectProperty<>();
 
@@ -31,6 +31,7 @@ public abstract class BaseIndividualIdsComponent<T extends BaseObservableIndivid
 
     @FXML
     protected void initialize() {
+        super.initialize();
         ageSummary.textProperty().bind(ageSummaryBinding());
     }
 

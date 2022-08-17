@@ -73,7 +73,7 @@ public class StepperTest extends BaseControllerTest {
         Platform.runLater(() -> controller.setData(new ObservableIndividualStudy(TestData.V2.comprehensiveIndividualStudy())));
         Platform.runLater(() -> controller.setSteps(FXCollections.observableList(steps.getSteps())));
 
-        robot.sleep(20, TimeUnit.SECONDS);
+        robot.sleep(5, TimeUnit.MINUTES);
 
         System.err.println(controller.getData());
     }

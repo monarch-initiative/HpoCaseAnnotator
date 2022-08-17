@@ -16,7 +16,7 @@ import javafx.scene.image.Image;
 import javafx.stage.StageStyle;
 import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsEditableComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PedigreeMemberPhenotypeDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
@@ -283,7 +283,7 @@ public class PedigreeMember extends TitledPane {
         dialog.titleProperty().bind(concat("Edit phenotype features for ", nullableStringProperty(item, "id")));
         dialog.setResizable(true);
 
-        PhenotypeDataEdit phenotypeDataEdit = new PhenotypeDataEdit();
+        PedigreeMemberPhenotypeDataEdit phenotypeDataEdit = new PedigreeMemberPhenotypeDataEdit();
         phenotypeDataEdit.setInitialData(item.get()); // TODO - check non null?
         dialog.getDialogPane().setContent(phenotypeDataEdit);
         dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_CANCEL_BUTTONS);

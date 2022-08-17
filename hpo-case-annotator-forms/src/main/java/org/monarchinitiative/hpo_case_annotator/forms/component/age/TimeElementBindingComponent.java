@@ -2,11 +2,6 @@ package org.monarchinitiative.hpo_case_annotator.forms.component.age;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,9 +9,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.layout.VBox;
 import javafx.util.Callback;
-import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.VBoxObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
@@ -29,10 +23,11 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElem
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.IOException;
+import java.util.stream.Stream;
 
-public class TimeElementBindingComponent extends VBox implements ObservableDataController<ObservableTimeElement>, Observable {
+public class TimeElementBindingComponent extends VBoxObservableDataController<ObservableTimeElement> implements Observable {
 
-    static final Callback<TimeElementBindingComponent, Observable[]> EXTRACTOR = tbc -> new Observable[]{
+    static final Callback<TimeElementBindingComponent, Stream<Observable>> EXTRACTOR = tbc -> Stream.of(
             tbc.tabPane.getSelectionModel().selectedItemProperty(),
 
             tbc.gestationalWeeks.textProperty(),
@@ -41,10 +36,7 @@ public class TimeElementBindingComponent extends VBox implements ObservableDataC
             tbc.age,
             tbc.ageRangeStart,
             tbc.ageRangeEnd,
-            tbc.ontologyClassComboBox.valueProperty()
-    };
-
-    private final ObjectProperty<ObservableTimeElement> data = new SimpleObjectProperty<>();
+            tbc.ontologyClassComboBox.valueProperty());
 
     @FXML
     private TabPane tabPane;
@@ -73,7 +65,8 @@ public class TimeElementBindingComponent extends VBox implements ObservableDataC
     private Tab ontologyClassTab;
     @FXML
     private ComboBox<TermId> ontologyClassComboBox;
-    private ObjectBinding<TimeElement.TimeElementCase> tecBinding;
+
+    private boolean valueIsBeingSetProgramatically;
 
     public TimeElementBindingComponent() {
         FXMLLoader loader = new FXMLLoader(TimeElementBindingComponent.class.getResource("TimeElementBindingComponent.fxml"));
@@ -87,62 +80,59 @@ public class TimeElementBindingComponent extends VBox implements ObservableDataC
         }
     }
 
-    @Override
-    public ObjectProperty<ObservableTimeElement> dataProperty() {
-        return data;
-    }
-
     @FXML
-    private void initialize() {
+    protected void initialize() {
+        super.initialize();
         gestationalDays.getItems().addAll(FormUtils.getIntegers(6));
         gestationalWeeks.setTextFormatter(gestationalWeeksFormatter);
-        dataProperty().addListener((obs, old, novel) -> {
-            unbind(old);
-            bind(novel);
-        });
-        tabPane.getSelectionModel().selectedItemProperty().addListener(setupTimeElementCaseTabListener());
-        tecBinding = Bindings.createObjectBinding(
-                () -> mapToTimeElementCase(tabPane.getSelectionModel().getSelectedItem()),
-                tabPane.getSelectionModel().selectedItemProperty());
-    }
-
-    private ChangeListener<Tab> setupTimeElementCaseTabListener() {
-        return (obs, old, novel) -> {
-            ObservableTimeElement ote = data.get();
-            if (ote == null)
+        InvalidationListener listener = obs -> {
+            if (valueIsBeingSetProgramatically)
                 return;
-
-            // bind novel
-            TimeElement.TimeElementCase novelTec = mapToTimeElementCase(novel);
-            switch (novelTec) {
+            ObservableTimeElement te = data.get();
+            if (te == null)
+                return;
+            TimeElement.TimeElementCase tec = mapToTimeElementCase(tabPane.getSelectionModel().getSelectedItem());
+            te.setTimeElementCase(tec);
+            switch (tec) {
                 case GESTATIONAL_AGE -> {
-                    if (ote.getGestationalAge() == null)
-                        ote.setGestationalAge(ObservableGestationalAge.defaultInstance());
-                    gestationalWeeksFormatter.valueProperty().bindBidirectional(ote.getGestationalAge().weeksProperty());
-                    gestationalDays.valueProperty().bindBidirectional(ote.getGestationalAge().daysProperty());
+                    if (te.getGestationalAge() == null)
+                        te.setGestationalAge(ObservableGestationalAge.defaultInstance());
+                    ObservableGestationalAge ga = te.getGestationalAge();
+                    ga.setWeeks(gestationalWeeksFormatter.getValue());
+                    ga.setDays(gestationalDays.getValue());
                 }
                 case AGE -> {
-                    if (ote.getAge() == null)
-                        ote.setAge(ObservableAge.defaultInstance());
-                    age.dataProperty().bindBidirectional(ote.ageProperty());
+                    if (te.getAge() == null)
+                        te.setAge(ObservableAge.defaultInstance());
+                    copyAge(age, te.getAge());
                 }
                 case AGE_RANGE -> {
-                    if (ote.getAgeRange() == null)
-                        ote.setAgeRange(ObservableAgeRange.defaultInstance());
-                    ObservableAgeRange ar = ote.getAgeRange();
+                    if (te.getAgeRange() == null)
+                        te.setAgeRange(ObservableAgeRange.defaultInstance());
+                    ObservableAgeRange ar = te.getAgeRange();
                     if (ar.getStart() == null)
                         ar.setStart(ObservableAge.defaultInstance());
+                    copyAge(ageRangeStart, ar.getStart());
+
                     if (ar.getEnd() == null)
                         ar.setEnd(ObservableAge.defaultInstance());
-                    ageRangeStart.dataProperty().bindBidirectional(ar.startProperty());
-                    ageRangeEnd.dataProperty().bindBidirectional(ar.endProperty());
+                    copyAge(ageRangeEnd, ar.getEnd());
                 }
-                case ONTOLOGY_CLASS -> ontologyClassComboBox.valueProperty().bindBidirectional(ote.ontologyClassProperty());
+                case ONTOLOGY_CLASS ->
+                        ontologyClassComboBox.valueProperty().bindBidirectional(te.ontologyClassProperty());
             }
         };
+        addListener(listener);
     }
 
-    private void bind(ObservableTimeElement data) {
+    private static void copyAge(SimpleBindingAge source, ObservableAge target) {
+        target.setYears(source.getYears());
+        target.setMonths(source.getMonths());
+        target.setDays(source.getDays());
+    }
+
+    @Override
+    protected void bind(ObservableTimeElement data) {
         if (data == null) { // clear
             gestationalWeeksFormatter.setValue(null);
             gestationalDays.setValue(null);
@@ -151,12 +141,29 @@ public class TimeElementBindingComponent extends VBox implements ObservableDataC
             ageRangeEnd.setData(null);
             ontologyClassComboBox.setValue(null);
         } else {
-            TimeElement.TimeElementCase timeElementCase = data.getTimeElementCase();
-            if (timeElementCase == null)
+            TimeElement.TimeElementCase tec = data.getTimeElementCase();
+            if (tec == null)
                 throw new RuntimeException("Time element case must not be null");
 
-            tabPane.getSelectionModel().select(mapToTimeTab(timeElementCase));
-            data.timeElementCaseProperty().bind(tecBinding);
+            valueIsBeingSetProgramatically = true;
+            tabPane.getSelectionModel().select(mapToTimeTab(tec));
+
+            ObservableGestationalAge ga = data.getGestationalAge();
+            if (ga != null) {
+                gestationalWeeksFormatter.setValue(ga.getWeeks());
+                gestationalDays.setValue(ga.getDays());
+            }
+
+            ObservableAge a = data.getAge();
+            if (a != null) {
+                age.setYears(a.getYears());
+                age.setMonths(a.getMonths());
+                age.setDays(a.getDays());
+            }
+
+            ontologyClassComboBox.setValue(data.getOntologyClass());
+
+            valueIsBeingSetProgramatically = false;
         }
     }
 
@@ -183,10 +190,9 @@ public class TimeElementBindingComponent extends VBox implements ObservableDataC
         };
     }
 
-    private void unbind(ObservableTimeElement data) {
-        if (data != null) {
-            data.timeElementCaseProperty().unbind();
-        }
+    @Override
+    protected void unbind(ObservableTimeElement data) {
+        // Not required, no binding is created in the `bind` method
     }
 
     @FXML
@@ -209,13 +215,11 @@ public class TimeElementBindingComponent extends VBox implements ObservableDataC
 
     @Override
     public void addListener(InvalidationListener listener) {
-        for (Observable observable : EXTRACTOR.call(this))
-            observable.addListener(listener);
+        EXTRACTOR.call(this).forEach(obs -> obs.addListener(listener));
     }
 
     @Override
     public void removeListener(InvalidationListener listener) {
-        for (Observable observable : EXTRACTOR.call(this))
-            observable.removeListener(listener);
+        EXTRACTOR.call(this).forEach(obs -> obs.removeListener(listener));
     }
 }

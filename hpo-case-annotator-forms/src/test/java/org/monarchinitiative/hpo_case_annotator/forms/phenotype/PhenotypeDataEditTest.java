@@ -23,11 +23,11 @@ import java.util.concurrent.TimeUnit;
 @ExtendWith(ApplicationExtension.class)
 public class PhenotypeDataEditTest extends BaseControllerTest {
 
-    private PhenotypeDataEdit phenotypeDataEdit;
+    private PedigreeMemberPhenotypeDataEdit phenotypeDataEdit;
 
     @Start
     public void start(Stage stage) throws Exception {
-        phenotypeDataEdit = new PhenotypeDataEdit();
+        phenotypeDataEdit = new PedigreeMemberPhenotypeDataEdit();
         phenotypeDataEdit.setHpo(HPO);
 
         Scene scene = new Scene(phenotypeDataEdit);

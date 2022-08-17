@@ -1,10 +1,16 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
+import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.AgeRange;
 
-public class ObservableAgeRange implements AgeRange {
+import java.util.stream.Stream;
+
+public class ObservableAgeRange implements AgeRange, ObservableItem {
+
+    static final Callback<ObservableAgeRange, Stream<Observable>> EXTRACTOR = or -> Stream.of(or.start, or.end);
 
     public static ObservableAgeRange defaultInstance() {
         ObservableAgeRange instance = new ObservableAgeRange();
@@ -53,6 +59,11 @@ public class ObservableAgeRange implements AgeRange {
 
     public ObjectProperty<ObservableAge> endProperty() {
         return end;
+    }
+
+    @Override
+    public Stream<Observable> dependencies() {
+        return EXTRACTOR.call(this);
     }
 
     @Override

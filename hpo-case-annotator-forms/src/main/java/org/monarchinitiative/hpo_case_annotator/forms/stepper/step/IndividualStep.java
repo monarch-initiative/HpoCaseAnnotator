@@ -9,7 +9,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Dialog;
 import javafx.stage.StageStyle;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsBindingComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.IndividualPhenotypeDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividualStudy;
@@ -66,7 +66,7 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
         // TODO - setup title
         dialog.setResizable(true);
 
-        PhenotypeDataEdit phenotypeDataEdit = new PhenotypeDataEdit();
+        IndividualPhenotypeDataEdit phenotypeDataEdit = new IndividualPhenotypeDataEdit();
         phenotypeDataEdit.hpoProperty().bind(hpo);
         phenotypeDataEdit.setInitialData(data.get().getIndividual()); // TODO - check non null?
         dialog.getDialogPane().setContent(phenotypeDataEdit);

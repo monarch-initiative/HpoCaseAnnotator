@@ -1,11 +1,17 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
+import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
-public class ObservableTimeElement implements TimeElement {
+import java.util.stream.Stream;
+
+public class ObservableTimeElement implements TimeElement, ObservableItem {
+
+    static final Callback<ObservableTimeElement, Stream<Observable>> EXTRACTOR = ote -> Stream.of(ote.timeElementCase, ote.gestationalAge, ote.age, ote.ageRange, ote.ontologyClass);
 
     public static ObservableTimeElement defaultInstance() {
         ObservableTimeElement instance = new ObservableTimeElement();
@@ -101,6 +107,11 @@ public class ObservableTimeElement implements TimeElement {
 
     public ObjectProperty<TermId> ontologyClassProperty() {
         return ontologyClass;
+    }
+
+    @Override
+    public Stream<Observable> dependencies() {
+        return EXTRACTOR.call(this);
     }
 
     @Override

@@ -1,15 +1,21 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
+import javafx.beans.Observable;
 import javafx.beans.property.*;
+import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Age;
 
-public class ObservableAge implements Age {
+import java.util.stream.Stream;
+
+public class ObservableAge implements Age, ObservableItem {
+
+    static final Callback<ObservableAge, Stream<Observable>> EXTRACTOR = oa -> Stream.of(oa.years, oa.months, oa.days);
 
     public static ObservableAge defaultInstance() {
         return new ObservableAge();
     }
 
-    // Years, months, and days are nullabe, hence ObjectProperty.
+    // Years, months, and days are nullable, hence ObjectProperty.
     private final ObjectProperty<Integer> years = new SimpleObjectProperty<>(this, "years");
     private final ObjectProperty<Integer> months = new SimpleObjectProperty<>(this, "months");
     private final ObjectProperty<Integer> days = new SimpleObjectProperty<>(this, "days");
@@ -62,6 +68,11 @@ public class ObservableAge implements Age {
 
     public ObjectProperty<Integer> daysProperty() {
         return days;
+    }
+
+    @Override
+    public Stream<Observable> dependencies() {
+        return EXTRACTOR.call(this);
     }
 
     @Override
