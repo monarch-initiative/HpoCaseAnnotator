@@ -30,7 +30,7 @@ public abstract class PhenotypeDataEdit<T extends BaseObservableIndividual> exte
     @FXML
     private PhenotypeTable phenotypeTable;
     @FXML
-    private PhenotypicFeature phenotypicFeature;
+    private PhenotypicFeatureBinding phenotypicFeature;
 
     @FXML
     private void initialize() {
@@ -66,6 +66,7 @@ public abstract class PhenotypeDataEdit<T extends BaseObservableIndividual> exte
         component.setData(item);
 
         showComponentNodeDialog(component);
+        // TODO - allow cancelling the dialog, resulting in not adding the terms.
         phenotypeTable.getItems().addAll(component.itemsProperty().get());
 
         e.consume();

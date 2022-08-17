@@ -7,6 +7,7 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeature?>
 
+<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeatureBinding?>
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="javafx.scene.layout.VBox">
     <stylesheets>
@@ -57,7 +58,7 @@
             </VBox>
             <VBox id="phenotype-feature-pane" styleClass="section">
                 <children>
-                    <PhenotypicFeature fx:id="phenotypicFeature"/>
+                    <PhenotypicFeatureBinding fx:id="phenotypicFeature"/>
                 </children>
             </VBox>
         </items>
