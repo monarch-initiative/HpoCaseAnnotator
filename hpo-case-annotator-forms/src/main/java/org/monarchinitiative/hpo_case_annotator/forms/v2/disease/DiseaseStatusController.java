@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.BindingObservableDataController;
@@ -71,8 +72,8 @@ public class DiseaseStatusController<T extends BaseObservableIndividual> extends
     }
 
     private void initializeAutocompletion() {
-        TextFields.bindAutoCompletion(diseaseIdTextField, diseaseIdentifierService.diseaseIds())
-                .setVisibleRowCount(10);
+        AutoCompletionBinding<String> abc = TextFields.bindAutoCompletion(diseaseIdTextField, diseaseIdentifierService.diseaseIds());
+        abc.setVisibleRowCount(10);
         TextFields.bindAutoCompletion(diseaseNameTextField, diseaseIdentifierService.diseaseNames())
                 .setVisibleRowCount(10);
     }

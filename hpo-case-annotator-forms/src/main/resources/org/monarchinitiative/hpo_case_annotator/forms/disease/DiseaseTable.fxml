@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@disease-table.css">
+    <children>
+        <StackPane fx:id="contentPane" onMouseEntered="#diseaseTableMouseEntered" onMouseExited="#diseaseTableMouseExited">
+            <children>
+                <TableView fx:id="diseases" editable="true">
+                    <columns>
+                        <TableColumn fx:id="isPresentColumn" minWidth="70.0" maxWidth="70.0" text="Present"/>
+                        <TableColumn fx:id="idColumn" editable="false" prefWidth="100.0" text="ID"/>
+                        <TableColumn fx:id="labelColumn" editable="false" prefWidth="200.0" text="Label"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                    <placeholder>
+                        <Label text="No diseases yet"/>
+                    </placeholder>
+                </TableView>
+                <Button fx:id="removeDiseaseStatus" onAction="#removeDiseaseAction" text="Remove"
+                        StackPane.alignment="TOP_RIGHT" visible="false" styleClass="remove-item-tiny"/>
+            </children>
+        </StackPane>
+    </children>
+</fx:root>

@@ -1,7 +1,9 @@
 package org.monarchinitiative.hpo_case_annotator.forms;
 
+import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifier;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierService;
+import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseIdentifier;
 import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -17,11 +19,23 @@ public class BaseControllerTest {
     private static final Path HPO_MODULE_PATH = TEST_BASE_DIR.resolve("hp.module.json");
 
     public static final Ontology HPO = OntologyLoader.loadOntology(HPO_MODULE_PATH.toFile());
+    public static final DiseaseIdentifierService DISEASES = createDiseaseIdentifierService();
 
     public static final GenomicAssemblyRegistry GENOMIC_ASSEMBLY_REGISTRY = createGenomicAssemblyRegistry();
+
     public static final FunctionalAnnotationRegistry FUNCTIONAL_ANNOTATION_REGISTRY = new FunctionalAnnotationRegistry();
     public static final GeneIdentifierService GENE_IDENTIFIER_SERVICE = makeGeneIdService();
     public static final ControllerFactory CONTROLLER_FACTORY = new ControllerFactory(GENOMIC_ASSEMBLY_REGISTRY, FUNCTIONAL_ANNOTATION_REGISTRY, GENE_IDENTIFIER_SERVICE);
+
+    private static DiseaseIdentifierService createDiseaseIdentifierService() {
+        List<DiseaseIdentifier> diseases = List.of(
+                DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF"),
+                DiseaseIdentifier.of(TermId.of("OMIM:256000"), "LEIGH SYNDROME; LS"),
+                DiseaseIdentifier.of(TermId.of("OMIM:154700"), "MARFAN SYNDROME; MFS"),
+                DiseaseIdentifier.of(TermId.of("OMIM:301500"), "FABRY DISEASE")
+        );
+        return new TestDiseaseIdentifierService(diseases);
+    }
 
     private static GenomicAssemblyRegistry createGenomicAssemblyRegistry() {
         GenomicAssemblyRegistry genomicAssemblyRegistry = new GenomicAssemblyRegistry();

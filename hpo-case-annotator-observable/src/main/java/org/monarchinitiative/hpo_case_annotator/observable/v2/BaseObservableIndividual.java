@@ -54,7 +54,7 @@ public abstract class BaseObservableIndividual implements Individual {
     }
 
     @Override
-    public List<? extends PhenotypicFeature> getPhenotypicFeatures() {
+    public List<ObservablePhenotypicFeature> getPhenotypicFeatures() {
         return phenotypicFeatures;
     }
 
@@ -64,7 +64,7 @@ public abstract class BaseObservableIndividual implements Individual {
 
 
     @Override
-    public ObservableList<? extends DiseaseStatus> getDiseaseStates() {
+    public ObservableList<ObservableDiseaseStatus> getDiseaseStates() {
         return diseaseStates;
     }
 

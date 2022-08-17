@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseTable?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@disease-data-edit.css">
+    <children>
+        <SplitPane>
+            <items>
+                <VBox>
+                    <children>
+                        <GridPane>
+                            <children>
+                                <Label text="Search for diseases" styleClass="h2" />
+                                <Label text="Disease ID" GridPane.rowIndex="1"/>
+                                <TextField fx:id="diseaseIdTextField" promptText="E.g. OMIM:256000" onAction="#addDisease"
+                                           GridPane.rowIndex="2"/>
+                                <Label text="Disease name" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                <TextField fx:id="diseaseNameTextField" promptText="LEIGH SYNDROME; LS " onAction="#addDisease"
+                                                 GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                                <Button fx:id="addDiseaseButton" onAction="#addDisease" text="Add disease"
+                                        GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+                            </children>
+                        </GridPane>
+                    </children>
+                </VBox>
+                <VBox>
+                    <children>
+                        <Label text="Credentials" styleClass="h2" />
+                        <IndividualIdsComponent fx:id="individualIds"/>
+                        <Label text="Diseases" styleClass="h2" />
+                        <DiseaseTable fx:id="diseaseTable"/>
+                    </children>
+                </VBox>
+            </items>
+        </SplitPane>
+    </children>
+</fx:root>

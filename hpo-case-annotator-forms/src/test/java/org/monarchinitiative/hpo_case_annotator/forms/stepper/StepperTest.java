@@ -11,6 +11,7 @@ import javafx.stage.StageStyle;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividualStudy;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
@@ -80,6 +81,7 @@ public class StepperTest extends BaseControllerTest {
 
     private static IndividualStudySteps prepareIndividualStudySteps() {
         SimpleObjectProperty<Ontology> ontology = new SimpleObjectProperty<>(HPO);
-        return new IndividualStudySteps(CONTROLLER_FACTORY, ontology);
+        SimpleObjectProperty<DiseaseIdentifierService> diseases = new SimpleObjectProperty<>(DISEASES);
+        return new IndividualStudySteps(CONTROLLER_FACTORY, ontology, diseases);
     }
 }

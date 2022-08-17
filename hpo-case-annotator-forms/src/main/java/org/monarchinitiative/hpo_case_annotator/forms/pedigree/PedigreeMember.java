@@ -16,18 +16,19 @@ import javafx.scene.image.Image;
 import javafx.stage.StageStyle;
 import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsEditableComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseTable;
+import org.monarchinitiative.hpo_case_annotator.forms.disease.IndividualDiseaseDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.disease.PedigreeMemberDiseaseDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PedigreeMemberPhenotypeDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.hpo_case_annotator.forms.util.GenotypeStringConverter;
-import org.monarchinitiative.hpo_case_annotator.forms.util.TermIdTableCell;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.*;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.monarchinitiative.svart.CoordinateSystem;
 import org.monarchinitiative.svart.Strand;
 import org.slf4j.Logger;
@@ -63,13 +64,7 @@ public class PedigreeMember extends TitledPane {
     @FXML
     private Button editDiseasesButton;
     @FXML
-    private TableView<ObservableDiseaseStatus> diseaseTable;
-    @FXML
-    private TableColumn<ObservableDiseaseStatus, String> diseaseStatusColumn;
-    @FXML
-    private TableColumn<ObservableDiseaseStatus, TermId> diseaseIdColumn;
-    @FXML
-    private TableColumn<ObservableDiseaseStatus, String> diseaseNameColumn;
+    private DiseaseTable diseaseTable;
     @FXML
     private TableView<CuratedVariant> genotypesTable;
     @FXML
@@ -115,10 +110,6 @@ public class PedigreeMember extends TitledPane {
 
         // Diseases table view
         diseaseTable.itemsProperty().bind(select(item, "diseaseStates"));
-        diseaseStatusColumn.setCellValueFactory(cdf -> when(cdf.getValue().excludedProperty()).then("Excluded").otherwise("Present"));
-        diseaseIdColumn.setCellValueFactory(cdf -> select(cdf.getValue(), "diseaseId", "diseaseId")); // Yeah, twice.
-        diseaseIdColumn.setCellFactory(column -> new TermIdTableCell<>());
-        diseaseNameColumn.setCellValueFactory(cdf -> select(cdf.getValue(), "diseaseId", "diseaseName"));
 
         // Genotypes table view
         genotypeTableColumn.setCellValueFactory(cdf -> extractGenotype(cdf.getValue().md5Hex(), item));
@@ -284,6 +275,8 @@ public class PedigreeMember extends TitledPane {
         dialog.setResizable(true);
 
         PedigreeMemberPhenotypeDataEdit phenotypeDataEdit = new PedigreeMemberPhenotypeDataEdit();
+        // TODO - bind HPO
+//        phenotypeDataEdit.hpoProperty().bind();
         phenotypeDataEdit.setInitialData(item.get()); // TODO - check non null?
         dialog.getDialogPane().setContent(phenotypeDataEdit);
         dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_CANCEL_BUTTONS);
@@ -307,10 +300,23 @@ public class PedigreeMember extends TitledPane {
 
     @FXML
     private void editDiseasesAction(ActionEvent e) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Not yet implemented", ButtonType.OK);
-        alert.setTitle("Edit diseases");
-        alert.setHeaderText("Sorry");
-        alert.showAndWait();
+        Dialog<Boolean> dialog = new Dialog<>();
+        dialog.initOwner(pedigreeMemberTitle.getParent().getScene().getWindow());
+        dialog.initStyle(StageStyle.DECORATED);
+        // TODO - setup title
+        dialog.setResizable(true);
+
+        PedigreeMemberDiseaseDataEdit diseaseDataEdit = new PedigreeMemberDiseaseDataEdit();
+        // TODO - bind diseaseIdentifiers service
+//        diseaseDataEdit.diseaseIdentifierServiceProperty().bind(diseaseIdentifierService);
+        diseaseDataEdit.setInitialData(item.get()); // TODO - check non null?
+        dialog.getDialogPane().setContent(diseaseDataEdit);
+        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_CANCEL_BUTTONS);
+        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
+        dialog.showAndWait()
+                .ifPresent(shouldCommit -> {
+                    if (shouldCommit) diseaseDataEdit.commit();
+                });
         e.consume();
     }
 

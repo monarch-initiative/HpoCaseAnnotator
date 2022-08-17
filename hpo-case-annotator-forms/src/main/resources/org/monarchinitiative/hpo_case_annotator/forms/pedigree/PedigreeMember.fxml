@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsComponent?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseTable?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMemberTitle?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable?>
 
@@ -52,19 +53,7 @@
                         <StackPane onMouseEntered="#diseasesSectionMouseEntered"
                                    onMouseExited="#diseasesSectionMouseExited">
                             <children>
-                                <TableView id="diseases-table" fx:id="diseaseTable">
-                                    <columns>
-                                        <TableColumn id="disease-status" fx:id="diseaseStatusColumn" editable="false" text="Status"/>
-                                        <TableColumn id="disease-id" fx:id="diseaseIdColumn" editable="false" text="ID"/>
-                                        <TableColumn id="disease-name" fx:id="diseaseNameColumn" editable="false" text="Name"/>
-                                    </columns>
-                                    <columnResizePolicy>
-                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                                    </columnResizePolicy>
-                                    <placeholder>
-                                        <Label text="No diseases yet"/>
-                                    </placeholder>
-                                </TableView>
+                                <DiseaseTable fx:id="diseaseTable"/>
                                 <Button fx:id="editDiseasesButton" visible="false" contentDisplay="GRAPHIC_ONLY"
                                         StackPane.alignment="TOP_RIGHT" styleClass="edit-button"
                                         onAction="#editDiseasesAction" />

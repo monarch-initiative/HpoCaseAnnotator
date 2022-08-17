@@ -13,7 +13,7 @@ public interface DiseaseIdentifierService {
 
     default List<String> diseaseIds() {
         return diseaseIdentifiers()
-                .map(DiseaseIdentifier::getDiseaseId)
+                .map(DiseaseIdentifier::id)
                 .map(TermId::getValue)
                 .distinct()
                 .toList();
@@ -28,7 +28,7 @@ public interface DiseaseIdentifierService {
 
     default Optional<DiseaseIdentifier> diseaseIdentifierForDiseaseId(TermId diseaseId) {
         return diseaseIdentifiers()
-                .filter(di -> di.getDiseaseId().equals(diseaseId))
+                .filter(di -> di.id().equals(diseaseId))
                 .findAny();
     }
 

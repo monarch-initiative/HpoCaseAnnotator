@@ -8,7 +8,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Dialog;
 import javafx.stage.StageStyle;
+import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsBindingComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.disease.IndividualDiseaseDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.IndividualPhenotypeDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
@@ -18,6 +20,7 @@ import org.monarchinitiative.phenol.ontology.data.Ontology;
 public class IndividualStep<T extends ObservableIndividualStudy> extends BaseStep<T> {
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
+    private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();
 
     @FXML
     private IndividualIdsBindingComponent individualIds;
@@ -58,6 +61,18 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
         this.hpo.set(hpo);
     }
 
+    public DiseaseIdentifierService getDiseaseIdentifierService() {
+        return diseaseIdentifierService.get();
+    }
+
+    public ObjectProperty<DiseaseIdentifierService> diseaseIdentifierServiceProperty() {
+        return diseaseIdentifierService;
+    }
+
+    public void setDiseaseIdentifierService(DiseaseIdentifierService diseaseIdentifierService) {
+        this.diseaseIdentifierService.set(diseaseIdentifierService);
+    }
+
     @FXML
     private void addEditPhenotypesAction(ActionEvent e) {
         Dialog<Boolean> dialog = new Dialog<>();
@@ -81,7 +96,22 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
 
     @FXML
     private void addEditDiseasesAction(ActionEvent e) {
-        // TODO - implement
+        Dialog<Boolean> dialog = new Dialog<>();
+        dialog.initOwner(individualIds.getParent().getScene().getWindow());
+        dialog.initStyle(StageStyle.DECORATED);
+        // TODO - setup title
+        dialog.setResizable(true);
+
+        IndividualDiseaseDataEdit diseaseDataEdit = new IndividualDiseaseDataEdit();
+        diseaseDataEdit.diseaseIdentifierServiceProperty().bind(diseaseIdentifierService);
+        diseaseDataEdit.setInitialData(data.get().getIndividual()); // TODO - check non null?
+        dialog.getDialogPane().setContent(diseaseDataEdit);
+        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_CANCEL_BUTTONS);
+        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
+        dialog.showAndWait()
+                .ifPresent(shouldCommit -> {
+                    if (shouldCommit) diseaseDataEdit.commit();
+                });
         e.consume();
     }
 
