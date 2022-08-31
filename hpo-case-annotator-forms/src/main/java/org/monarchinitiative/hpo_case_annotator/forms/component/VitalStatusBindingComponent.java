@@ -40,7 +40,8 @@ public class VitalStatusBindingComponent extends VBox implements ObservableDataC
 
     @FXML
     private void initialize() {
-        timeOfDeathComponent.disableProperty().bind(timeOfDeathIsUnknown.selectedProperty());
+        timeOfDeathComponent.disableProperty().bind(timeOfDeathIsUnknown.selectedProperty()
+                .or(vitalStatus.valueProperty().isNotEqualTo(VitalStatus.Status.DECEASED)));
         vitalStatus.getItems().addAll(VitalStatus.Status.values());
         dataProperty().addListener(onDataChange());
 

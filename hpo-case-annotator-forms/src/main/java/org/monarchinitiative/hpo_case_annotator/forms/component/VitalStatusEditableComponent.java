@@ -40,7 +40,8 @@ public class VitalStatusEditableComponent extends HBox implements DataEditContro
     @FXML
     private void initialize() {
         vitalStatus.getItems().addAll(VitalStatus.Status.values());
-        timeOfDeathComponent.disableProperty().bind(timeOfDeathIsUnknown.selectedProperty());
+        timeOfDeathComponent.disableProperty().bind(timeOfDeathIsUnknown.selectedProperty()
+                .or(vitalStatus.valueProperty().isNotEqualTo(VitalStatus.Status.DECEASED)));
     }
 
     @Override

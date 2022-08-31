@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Dialog;
 import javafx.stage.StageStyle;
@@ -118,6 +119,11 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
     @FXML
     private void addEditGenotypesAction(ActionEvent e) {
         // TODO - implement
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Sorry");
+        alert.setHeaderText("Sorry");
+        alert.setContentText("Reeeeeaaaally sorry");
+        alert.showAndWait();
         e.consume();
     }
 }

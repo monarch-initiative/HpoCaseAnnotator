@@ -118,7 +118,7 @@ public abstract class DiseaseDataEdit<T extends BaseObservableIndividual> extend
                 .map(DiseaseIdentifier::new);
     }
 
-    private Consumer< DiseaseIdentifier> addDiseaseIdentifier() {
+    private Consumer<DiseaseIdentifier> addDiseaseIdentifier() {
         return di -> {
             ObservableDiseaseStatus ods = new ObservableDiseaseStatus();
             ods.setDiseaseId(di);

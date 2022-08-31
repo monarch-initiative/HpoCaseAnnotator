@@ -9,10 +9,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.util.CheckBoxTableCell;
 import org.monarchinitiative.hpo_case_annotator.forms.util.TermIdTableCell;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableDiseaseStatus;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -28,7 +28,7 @@ public class DiseaseTable extends VBox {
     @FXML
     private TableView<ObservableDiseaseStatus> diseases;
     @FXML
-    private TableColumn<ObservableDiseaseStatus, Boolean> isPresentColumn;
+    private TableColumn<ObservableDiseaseStatus, Boolean> isExcludedColumn;
     @FXML
     private TableColumn<ObservableDiseaseStatus, TermId> idColumn;
     @FXML
@@ -52,9 +52,8 @@ public class DiseaseTable extends VBox {
     private void initialize() {
         diseases.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-        // TODO - checkbox state is not working
-        isPresentColumn.setCellValueFactory(cdf -> cdf.getValue().excludedProperty());
-        isPresentColumn.setCellFactory(col -> new CheckBoxTableCell<>());
+        isExcludedColumn.setCellValueFactory(cdf -> cdf.getValue().excludedProperty());
+        isExcludedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(isExcludedColumn));
         idColumn.setCellValueFactory(cdf -> select(cdf.getValue(), "diseaseId", "id"));
         idColumn.setCellFactory(column -> new TermIdTableCell<>());
         labelColumn.setCellValueFactory(cdf -> select(cdf.getValue(), "diseaseId", "diseaseName"));

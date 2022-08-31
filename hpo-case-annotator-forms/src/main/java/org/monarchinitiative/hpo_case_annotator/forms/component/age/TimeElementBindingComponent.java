@@ -85,6 +85,8 @@ public class TimeElementBindingComponent extends VBoxObservableDataController<Ob
         super.initialize();
         gestationalDays.getItems().addAll(FormUtils.getIntegers(6));
         gestationalWeeks.setTextFormatter(gestationalWeeksFormatter);
+
+        // Update the data model upon change of each UI component
         InvalidationListener listener = obs -> {
             if (valueIsBeingSetProgramatically)
                 return;

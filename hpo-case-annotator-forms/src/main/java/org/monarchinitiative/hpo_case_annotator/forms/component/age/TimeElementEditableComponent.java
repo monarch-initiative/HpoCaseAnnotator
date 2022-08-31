@@ -1,6 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.forms.component.age;
 
-import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
