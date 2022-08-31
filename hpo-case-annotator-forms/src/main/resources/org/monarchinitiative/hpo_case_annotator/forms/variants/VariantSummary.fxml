@@ -3,25 +3,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantTable?>
+
 <VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummaryController"
       stylesheets="@variant-summary.css">
     <children>
-        <TableView fx:id="variantTable" onMouseClicked="#variantTableViewOnMouseClicked"
-                   id="variant-table">
-            <columns>
-                <TableColumn fx:id="idTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="ID" />
-                <TableColumn fx:id="genomicAssemblyTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Assembly" />
-                <TableColumn fx:id="contigTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Contig" />
-                <TableColumn fx:id="startTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Start" />
-                <TableColumn fx:id="endTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="End" />
-                <TableColumn fx:id="refTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="REF" />
-                <TableColumn fx:id="altTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="ALT" />
-            </columns>
-            <placeholder>
-                <Label>No variants to display.</Label>
-            </placeholder>
-        </TableView>
+        <VariantTable fx:id="variantTable"/>
         <HBox alignment="BOTTOM_LEFT" styleClass="edit-row">
             <children>
                 <Button fx:id="addVariantButton" mnemonicParsing="false" onAction="#addVariantButtonAction" styleClass="add-item" text="+" />

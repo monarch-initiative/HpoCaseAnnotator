@@ -1,10 +1,13 @@
 package org.monarchinitiative.hpo_case_annotator.forms.stepper.step;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummaryController;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudy;
 
 public class VariantsStep<T extends ObservableStudy> extends BaseStep<T> {
@@ -31,6 +34,10 @@ public class VariantsStep<T extends ObservableStudy> extends BaseStep<T> {
     @Override
     protected void unbind(T data) {
         variantSummaryController.variants().unbindBidirectional(data.variants());
+    }
+
+    public ObjectProperty<ObservableList<CuratedVariant>> variantsProperty() {
+        return variantSummaryController.variants();
     }
 
 }

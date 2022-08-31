@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsComponent?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@variant-data-edit.css">
+    <children>
+        <PedigreeMemberIdsComponent fx:id="individualIds"/>
+
+        <TableView fx:id="genotypesTable" editable="true" id="variants-table">
+            <columns>
+                <TableColumn fx:id="genotypeTableColumn" text="Genotype" minWidth="55.0"/>
+                <TableColumn fx:id="variantIdTableColumn" editable="false" maxWidth="-1.0" minWidth="120.0" text="Id"/>
+                <TableColumn fx:id="genomicAssemblyTableColumn" editable="false" maxWidth="-1.0" minWidth="120.0" text="Assembly"/>
+                <TableColumn fx:id="contigTableColumn" editable="false" maxWidth="-1.0" minWidth="100.0" text="Contig"/>
+                <TableColumn fx:id="startTableColumn" editable="false" maxWidth="-1.0" minWidth="100.0" text="Start"/>
+                <TableColumn fx:id="endTableColumn" editable="false" maxWidth="-1.0" minWidth="100.0" text="End"/>
+                <TableColumn fx:id="refTableColumn" editable="false" minWidth="120.0" text="Ref"/>
+                <TableColumn fx:id="altTableColumn" editable="false" minWidth="120.0" text="Alt"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+            <placeholder>
+                <Label text="No variants yet"/>
+            </placeholder>
+        </TableView>
+    </children>
+</fx:root>

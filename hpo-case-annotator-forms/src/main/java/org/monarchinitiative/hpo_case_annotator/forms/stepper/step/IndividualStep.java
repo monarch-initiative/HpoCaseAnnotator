@@ -1,11 +1,13 @@
 package org.monarchinitiative.hpo_case_annotator.forms.stepper.step;
 
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Dialog;
 import javafx.stage.StageStyle;
@@ -15,12 +17,15 @@ import org.monarchinitiative.hpo_case_annotator.forms.disease.IndividualDiseaseD
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.IndividualPhenotypeDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.IndividualVariantDataEdit;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividualStudy;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 public class IndividualStep<T extends ObservableIndividualStudy> extends BaseStep<T> {
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
+    private final ListProperty<CuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();
 
     @FXML
@@ -60,6 +65,10 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
 
     public void setHpo(Ontology hpo) {
         this.hpo.set(hpo);
+    }
+
+    public ListProperty<CuratedVariant> variantsProperty() {
+        return variants;
     }
 
     public DiseaseIdentifierService getDiseaseIdentifierService() {
@@ -118,12 +127,22 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
 
     @FXML
     private void addEditGenotypesAction(ActionEvent e) {
-        // TODO - implement
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Sorry");
-        alert.setHeaderText("Sorry");
-        alert.setContentText("Reeeeeaaaally sorry");
-        alert.showAndWait();
+        Dialog<Boolean> dialog = new Dialog<>();
+        dialog.initOwner(individualIds.getParent().getScene().getWindow());
+        dialog.initStyle(StageStyle.DECORATED);
+        // TODO - setup title
+        dialog.setResizable(true);
+
+        IndividualVariantDataEdit variantDataEdit = new IndividualVariantDataEdit();
+        variantDataEdit.setInitialData(data.get().getIndividual()); // TODO - check non null?
+        variantDataEdit.variantsProperty().bind(variants);
+        dialog.getDialogPane().setContent(variantDataEdit);
+        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_BUTTONS);
+        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
+        dialog.showAndWait()
+                .ifPresent(shouldCommit -> {
+                    if (shouldCommit) variantDataEdit.commit();
+                });
         e.consume();
     }
 }

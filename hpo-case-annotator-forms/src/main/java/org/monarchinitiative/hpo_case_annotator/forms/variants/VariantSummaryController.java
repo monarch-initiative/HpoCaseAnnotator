@@ -49,21 +49,7 @@ public class VariantSummaryController {
     private final HCAControllerFactory controllerFactory;
 
     @FXML
-    private TableView<CuratedVariant> variantTable;
-    @FXML
-    private TableColumn<CuratedVariant, String> idTableColumn;
-    @FXML
-    private TableColumn<CuratedVariant, String> genomicAssemblyTableColumn;
-    @FXML
-    private TableColumn<CuratedVariant, String> contigTableColumn;
-    @FXML
-    private TableColumn<CuratedVariant, String> startTableColumn;
-    @FXML
-    private TableColumn<CuratedVariant, String> endTableColumn;
-    @FXML
-    private TableColumn<CuratedVariant, String> refTableColumn;
-    @FXML
-    private TableColumn<CuratedVariant, String> altTableColumn;
+    private VariantTable variantTable;
     @FXML
     private Button addVariantButton;
     @FXML
@@ -78,14 +64,6 @@ public class VariantSummaryController {
     @FXML
     private void initialize() {
         variantTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-
-        idTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().id()));
-        genomicAssemblyTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getGenomicAssembly()));
-        contigTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getVariant().contigName()));
-        startTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getVariant().startOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
-        endTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getVariant().endOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
-        refTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getVariant().ref()));
-        altTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getVariant().alt()));
 
         // remove button is disabled when there are no variants in the table
         removeVariantButton.disableProperty().bind(variantTable.getSelectionModel().selectedItemProperty().isNull());

@@ -28,16 +28,25 @@ public class IndividualStudySteps {
     }
 
     public List<Step<ObservableIndividualStudy>> getSteps() {
+        PublicationStep<ObservableIndividualStudy> publication = new PublicationStep<>();
+        publication.setHeader("Set publication data");
+
         VariantsStep<ObservableIndividualStudy> variants = new VariantsStep<>(controllerFactory);
-        variants.setHeader("Add genomic variants identified in the individual.");
+        variants.setHeader("Add genomic variants identified in the investigated individual.");
+
         IndividualStep<ObservableIndividualStudy> individual = new IndividualStep<>();
+        individual.setHeader("Add data regarding the investigated individual.");
         individual.hpoProperty().bind(hpo);
         individual.diseaseIdentifierServiceProperty().bind(diseaseIdentifierService);
+        individual.variantsProperty().bind(variants.variantsProperty());
+
+        IdStep<ObservableIndividualStudy> identifiers = new IdStep<>();
+
         return List.of(
-                new PublicationStep<>(),
+                publication,
                 variants,
                 individual,
-                new IdStep<>()
+                identifiers
         );
     }
 
