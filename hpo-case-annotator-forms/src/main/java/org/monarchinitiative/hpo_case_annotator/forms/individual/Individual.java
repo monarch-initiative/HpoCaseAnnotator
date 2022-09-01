@@ -6,8 +6,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.StackPane;
-import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsBindingComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsEditableComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.disease.IndividualDiseaseDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.IndividualPhenotypeDataEdit;
@@ -45,18 +45,17 @@ public class Individual extends BaseIndividual<ObservableIndividual> {
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.initOwner(getParent().getScene().getWindow());
         dialog.titleProperty().bind(concat("Edit identifiers for ", Utils.nullableStringProperty(data, "id")));
-        IndividualIdsBindingComponent component = new IndividualIdsBindingComponent();
-        component.setData(data.getValue());
+        IndividualIdsEditableComponent component = new IndividualIdsEditableComponent();
+        component.setInitialData(data.getValue());
 
         dialog.getDialogPane().setContent(component);
         dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.UPDATE_CANCEL_BUTTONS);
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
 
         dialog.showAndWait()
-//                .ifPresent(shouldUpdate -> {
-//                    if (shouldUpdate) component.commit();
-//                })
-        ;
+                .ifPresent(shouldUpdate -> {
+                    if (shouldUpdate) component.commit();
+                });
 
         e.consume();
     }

@@ -1,74 +1,38 @@
 package org.monarchinitiative.hpo_case_annotator.forms.component;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.DataEditController;
-import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementEditableComponent;
-import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 
-import java.io.IOException;
-import java.util.Objects;
+public class PedigreeMemberIdsEditableComponent extends BaseIndividualIdsEditableComponent<ObservablePedigreeMember> {
 
-public class PedigreeMemberIdsEditableComponent extends VBox implements DataEditController<ObservablePedigreeMember> {
-
-    private ObservablePedigreeMember item;
-
-    @FXML
-    private TitledTextField individualId;
     @FXML
     private TitledTextField paternalId;
     @FXML
     private TitledTextField maternalId;
     @FXML
-    private TitledComboBox<Sex> sex;
-    @FXML
     private TitledCheckBox proband;
-    @FXML
-    private TimeElementEditableComponent ageComponent;
-    @FXML
-    private VitalStatusEditableComponent vitalStatusComponent;
 
     public PedigreeMemberIdsEditableComponent() {
-        FXMLLoader loader = new FXMLLoader(PedigreeMemberIdsEditableComponent.class.getResource("PedigreeMemberIdsEditableComponent.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-
-        try {
-            loader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        super(PedigreeMemberIdsEditableComponent.class.getResource("PedigreeMemberIdsEditableComponent.fxml"));
     }
 
-    @FXML
-    private void initialize() {
-        sex.getItems().addAll(Sex.values());
-    }
 
     @Override
     public void setInitialData(ObservablePedigreeMember data) {
-        item = Objects.requireNonNull(data);
+        super.setInitialData(data);
 
-        individualId.setText(data.getId());
         paternalId.setText(data.getPaternalId().orElse(null));
         maternalId.setText(data.getMaternalId().orElse(null));
-        sex.setValue(data.getSex());
         proband.setSelected(data.isProband());
-        ageComponent.setInitialData(data.getAge());
-        vitalStatusComponent.setInitialData(data.getVitalStatus());
     }
 
     @Override
     public void commit() {
-        item.setId(individualId.getText());
+        super.commit();
+
         item.setPaternalId(paternalId.getText());
         item.setMaternalId(maternalId.getText());
-        item.setSex(sex.getValue());
         item.setProband(proband.isSelected());
-        ageComponent.commit();
-        vitalStatusComponent.commit();
     }
 
 }

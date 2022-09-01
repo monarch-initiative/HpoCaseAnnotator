@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.VBoxBindingObservableDataController;
 
@@ -28,6 +29,8 @@ public abstract class BaseStudy<T extends ObservableStudy> extends VBoxBindingOb
     @FXML
     private ScrollPane studyScrollPane;
     // ------------------------------------ PUBLICATION SECTION ----------------------------------------------------- //
+    @FXML
+    private StackPane publicationPane;
     @FXML
     private Publication publication;
     @FXML
@@ -55,7 +58,7 @@ public abstract class BaseStudy<T extends ObservableStudy> extends VBoxBindingOb
     @Override
     protected void initialize() {
         super.initialize();
-        editPublication.visibleProperty().bind(studyScrollPane.hoverProperty());
+        editPublication.visibleProperty().bind(publicationPane.hoverProperty());
     }
 
     @Override

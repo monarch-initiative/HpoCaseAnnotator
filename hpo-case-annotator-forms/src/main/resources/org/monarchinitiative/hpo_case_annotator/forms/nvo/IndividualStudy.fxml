@@ -48,7 +48,7 @@
                         <VBox  VBox.vgrow="NEVER" styleClass="section">
                             <children>
                                 <Label text="Publication" styleClass="h1" />
-                                <StackPane>
+                                <StackPane fx:id="publicationPane">
                                     <children>
                                         <Publication fx:id="publication" StackPane.alignment="CENTER"/>
                                         <Button fx:id="editPublication" contentDisplay="GRAPHIC_ONLY"
