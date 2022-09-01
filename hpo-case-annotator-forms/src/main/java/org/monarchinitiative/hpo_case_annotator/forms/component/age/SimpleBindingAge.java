@@ -9,7 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextFormatter;
 import javafx.util.Callback;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.VBoxBindingObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
@@ -19,7 +19,7 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
 import java.io.IOException;
 import java.util.stream.Stream;
 
-public class SimpleBindingAge extends VBoxObservableDataController<ObservableAge> implements Observable {
+public class SimpleBindingAge extends VBoxBindingObservableDataController<ObservableAge> implements Observable {
 
     static final Callback<SimpleBindingAge, Stream<Observable>> EXTRACTOR = sba -> Stream.of(
             sba.yearsFormatter.valueProperty(),

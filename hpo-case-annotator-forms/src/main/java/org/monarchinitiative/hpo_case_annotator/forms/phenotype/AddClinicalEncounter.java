@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.VBoxBindingObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementEditableComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
@@ -16,7 +16,7 @@ import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 import java.io.IOException;
 
-public class AddClinicalEncounter extends VBoxObservableDataController<BaseObservableIndividual> {
+public class AddClinicalEncounter extends VBoxBindingObservableDataController<BaseObservableIndividual> {
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
 

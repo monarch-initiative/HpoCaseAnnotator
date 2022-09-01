@@ -10,7 +10,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextFormatter;
 import javafx.util.Callback;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.VBoxBindingObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
@@ -25,7 +25,7 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 import java.io.IOException;
 import java.util.stream.Stream;
 
-public class TimeElementBindingComponent extends VBoxObservableDataController<ObservableTimeElement> implements Observable {
+public class TimeElementBindingComponent extends VBoxBindingObservableDataController<ObservableTimeElement> implements Observable {
 
     static final Callback<TimeElementBindingComponent, Stream<Observable>> EXTRACTOR = tbc -> Stream.of(
             tbc.tabPane.getSelectionModel().selectedItemProperty(),

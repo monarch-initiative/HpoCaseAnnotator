@@ -11,7 +11,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
+import org.monarchinitiative.hpo_case_annotator.forms.VBoxBindingObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigree;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
@@ -19,9 +20,10 @@ import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 import java.io.IOException;
 
-public class Pedigree extends VBoxObservableDataController<ObservablePedigree> {
+public class Pedigree extends VBoxBindingObservableDataController<ObservablePedigree> {
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
+    private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();
     private final ListProperty<CuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     @FXML
@@ -43,7 +45,7 @@ public class Pedigree extends VBoxObservableDataController<ObservablePedigree> {
     @Override
     protected void initialize() {
         super.initialize();
-        members.setCellFactory(lv -> new ObservablePedigreeMemberListCell(variants, hpo));
+        members.setCellFactory(lv -> new ObservablePedigreeMemberListCell(variants, hpo, diseaseIdentifierService));
     }
 
     @Override
@@ -65,6 +67,10 @@ public class Pedigree extends VBoxObservableDataController<ObservablePedigree> {
 
     public ObjectProperty<Ontology> hpoProperty() {
         return hpo;
+    }
+
+    public ObjectProperty<DiseaseIdentifierService> diseaseIdentifierServiceProperty() {
+        return diseaseIdentifierService;
     }
 
     private static String pedigreeSummary(ObservablePedigree pedigree) {

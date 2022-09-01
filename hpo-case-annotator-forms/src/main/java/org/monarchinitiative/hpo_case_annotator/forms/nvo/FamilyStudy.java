@@ -1,137 +1,48 @@
 package org.monarchinitiative.hpo_case_annotator.forms.nvo;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxObservableDataController;
-import org.monarchinitiative.hpo_case_annotator.forms.metadata.Metadata;
 import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree;
-import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication;
-import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationEditable;
-import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
-import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilyStudy;
-import org.monarchinitiative.phenol.ontology.data.Ontology;
 
-import java.io.IOException;
+public class FamilyStudy extends BaseStudy<ObservableFamilyStudy> {
 
-public class FamilyStudy extends VBoxObservableDataController<ObservableFamilyStudy> {
-
-    private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
-
-    @FXML
-    private ScrollPane studyScrollPane;
-    @FXML
-    private Label publicationLabel;
-    @FXML
-    private Publication publication;
-    @FXML
-    private Button editPublication;
     @FXML
     private Label pedigreeLabel;
     @FXML
     private Pedigree pedigree;
-    @FXML
-    private Label variantsLabel;
-    @FXML
-    private VariantSummary variantSummary;
-    @FXML
-    private Label metadataLabel;
-    @FXML
-    private Metadata metadataSummary;
 
     public FamilyStudy() {
-        FXMLLoader loader = new FXMLLoader(FamilyStudy.class.getResource("FamilyStudy.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-        try {
-            loader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        super(FamilyStudy.class.getResource("FamilyStudy.fxml"));
     }
 
     @FXML
     @Override
     protected void initialize() {
         super.initialize();
-        pedigree.variantsProperty().bind(variantSummary.variants());
         pedigree.hpoProperty().bind(hpo);
-    }
-
-    public ObjectProperty<Ontology> hpoProperty() {
-        return hpo;
+        pedigree.diseaseIdentifierServiceProperty().bind(diseaseIdentifierService);
+        pedigree.variantsProperty().bind(variantSummary.variants());
     }
 
     @Override
     protected void bind(ObservableFamilyStudy data) {
-        publication.dataProperty().bindBidirectional(data.publicationProperty());
+        super.bind(data);
         pedigree.dataProperty().bindBidirectional(data.pedigreeProperty());
-        variantSummary.variants().bindBidirectional(data.variants());
-        metadataSummary.dataProperty().bind(data.studyMetadataProperty());
     }
 
     @Override
     protected void unbind(ObservableFamilyStudy data) {
-        publication.dataProperty().unbindBidirectional(data.publicationProperty());
+        super.unbind(data);
         pedigree.dataProperty().unbindBidirectional(data.pedigreeProperty());
-        variantSummary.variants().unbindBidirectional(data.variants());
-        metadataSummary.dataProperty().unbind();
-    }
-
-    @FXML
-    private void editPublicationAction(ActionEvent e) {
-        Dialog<Boolean> dialog = new Dialog<>();
-        dialog.setTitle("Edit publication data");
-        dialog.initOwner(studyScrollPane.getParent().getScene().getWindow());
-
-        PublicationEditable component = new PublicationEditable();
-        component.setInitialData(publication.getData());
-        dialog.getDialogPane().setContent(component);
-        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.UPDATE_CANCEL_BUTTONS);
-        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
-
-        dialog.showAndWait()
-                .ifPresent(shouldUpdate -> {if (shouldUpdate) component.commit();});
-
-        e.consume();
-    }
-
-    @FXML
-    private void publicationSectionMouseEntered() {
-        editPublication.setVisible(true);
-    }
-
-    @FXML
-    private void publicationSectionMouseExited() {
-        editPublication.setVisible(false);
-    }
-
-    @FXML
-    private void publicationNavMouseClicked(ActionEvent e) {
-//        ensureVisible(studyScrollPane, publicationLabel);
-        e.consume();
     }
 
     @FXML
     private void pedigreeNavMouseClicked(ActionEvent e) {
 //        ensureVisible(studyScrollPane, pedigreeLabel);
-        e.consume();
-    }
-
-    @FXML
-    private void variantsNavMouseClicked(ActionEvent e) {
-//        ensureVisible(studyScrollPane, variantsLabel);
-        e.consume();
-    }
-
-    @FXML
-    private void metadataNavMouseClicked(ActionEvent e) {
-//        ensureVisible(studyScrollPane, metadataLabel);
+        System.err.println("Pedigree NAV item was clicked on");
         e.consume();
     }
 

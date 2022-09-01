@@ -26,6 +26,7 @@ public class FamilyStudyTest extends BaseControllerTest {
     public void start(Stage stage) throws Exception {
         component = new FamilyStudy();
         component.hpoProperty().set(HPO);
+        component.diseaseIdentifierServiceProperty().set(DISEASES);
 
         Scene scene = new Scene(component, 1200, 900);
         stage.initStyle(StageStyle.DECORATED);

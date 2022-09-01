@@ -5,8 +5,8 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
+<?import org.monarchinitiative.hpo_case_annotator.forms.individual.Individual?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.metadata.Metadata?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary?>
 
@@ -15,28 +15,28 @@
          id="outer-box">
     <stylesheets>
         <URL value="@../base.css"/>
-        <URL value="@family-study.css"/>
+        <URL value="@individual-study.css"/>
     </stylesheets>
     <children>
-        <VBox id="content-box">
+        <HBox id="study-headline">
             <children>
-                <HBox id="study-headline">
+                <Label styleClass="scene-title" text="Family study">
+                    <graphic>
+                        <ImageView preserveRatio="true">
+                            <Image url="@../icons/individual.png"/>
+                        </ImageView>
+                    </graphic>
+                </Label>
+                <HBox id="nav-row" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="scene-title" text="Family study">
-                            <graphic>
-                                <ImageView preserveRatio="true">
-                                    <Image url="@../icons/pedigree.png"/>
-                                </ImageView>
-                            </graphic>
-                        </Label>
-                        <HBox id="nav-row" HBox.hgrow="ALWAYS">
-                            <children>
-                                <Button text="Publication" onAction="#publicationNavMouseClicked" disable="true"/>
-                                <Button text="Pedigree" onAction="#pedigreeNavMouseClicked" disable="true"/>
-                                <Button text="Variants" onAction="#variantsNavMouseClicked" disable="true"/>
-                                <Button text="Metadata" onAction="#metadataNavMouseClicked" disable="true"/>
-                            </children>
-                        </HBox>
+                        <!-- BASE STUDY -->
+                        <Button text="Publication" onAction="#publicationNavMouseClicked" disable="true"/>
+                        <!-- INDIVIDUAL STUDY -->
+                        <Button text="Individual" onAction="#individualNavMouseClicked" disable="true"/>
+                        <!-- BASE STUDY -->
+                        <Button text="Variants" onAction="#variantsNavMouseClicked" disable="true"/>
+                        <!-- BASE STUDY -->
+                        <Button text="Metadata" onAction="#metadataNavMouseClicked" disable="true"/>
                     </children>
                 </HBox>
                 <ScrollPane fx:id="studyScrollPane" id="study-scroll-pane">
@@ -60,8 +60,8 @@
                                 <Separator/>
                                 <VBox styleClass="section">
                                     <children>
-                                        <Label text="Pedigree" styleClass="h1"/>
-                                        <Pedigree fx:id="pedigree" VBox.vgrow="ALWAYS"/>
+                                        <Label text="Individual" styleClass="h1"/>
+                                        <Individual fx:id="individual" VBox.vgrow="ALWAYS"/>
                                     </children>
                                 </VBox>
                                 <Separator/>
@@ -83,7 +83,6 @@
                     </content>
                 </ScrollPane>
             </children>
-        </VBox>
+        </HBox>
     </children>
 </fx:root>
-

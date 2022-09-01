@@ -7,7 +7,7 @@
 <?import javafx.scene.image.Image?>
 <ScrollPane stylesheets="@../base.css" xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.monarchinitiative.hpo_case_annotator.forms.nvo.CohortStudyController">
+            fx:controller="org.monarchinitiative.hpo_case_annotator.forms.nvo.CohortStudy">
     <content>
         <VBox>
             <children>

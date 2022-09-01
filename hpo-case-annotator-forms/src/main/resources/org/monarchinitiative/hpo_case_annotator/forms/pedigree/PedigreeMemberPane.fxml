@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.individual.PedigreeMember?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMemberTitle?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.control.TitledPane"
+         stylesheets="@pedigree-member-pane.css"
+         id="titled-pane-box" contentDisplay="GRAPHIC_ONLY" expanded="false">
+    <graphic>
+        <PedigreeMemberTitle fx:id="pedigreeMemberTitle"/>
+    </graphic>
+    <content>
+        <PedigreeMember fx:id="pedigreeMember"/>
+    </content>
+</fx:root>

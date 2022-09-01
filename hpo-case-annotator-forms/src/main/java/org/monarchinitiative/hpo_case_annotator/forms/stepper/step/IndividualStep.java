@@ -134,15 +134,16 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
         dialog.setResizable(true);
 
         IndividualVariantDataEdit variantDataEdit = new IndividualVariantDataEdit();
-        variantDataEdit.setInitialData(data.get().getIndividual()); // TODO - check non null?
+        variantDataEdit.setData(data.get().getIndividual()); // TODO - check non null?
         variantDataEdit.variantsProperty().bind(variants);
         dialog.getDialogPane().setContent(variantDataEdit);
         dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_BUTTONS);
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
         dialog.showAndWait()
-                .ifPresent(shouldCommit -> {
-                    if (shouldCommit) variantDataEdit.commit();
-                });
+//                .ifPresent(shouldCommit -> {
+//                    if (shouldCommit) variantDataEdit.commit();
+//                });
+        ;
         e.consume();
     }
 }

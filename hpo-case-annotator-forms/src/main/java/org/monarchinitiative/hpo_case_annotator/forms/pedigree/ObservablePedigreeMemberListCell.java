@@ -4,21 +4,25 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListCell;
+import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 class ObservablePedigreeMemberListCell extends ListCell<ObservablePedigreeMember> {
 
-    private final PedigreeMember pedigreeMember;
+    private final PedigreeMemberPane pedigreeMemberPane;
 
-    ObservablePedigreeMemberListCell(ListProperty<CuratedVariant> variants, ObjectProperty<Ontology> hpo) {
+    ObservablePedigreeMemberListCell(ListProperty<CuratedVariant> variants,
+                                     ObjectProperty<Ontology> hpo,
+                                     ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService) {
         setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        pedigreeMember = new PedigreeMember();
-        pedigreeMember.prefWidthProperty().bind(maxWidthProperty());
-        pedigreeMember.itemProperty().bind(itemProperty());
-        pedigreeMember.variantsProperty().bind(variants);
-        pedigreeMember.hpoProperty().bind(hpo);
+        pedigreeMemberPane = new PedigreeMemberPane();
+        pedigreeMemberPane.prefWidthProperty().bind(maxWidthProperty());
+        pedigreeMemberPane.itemProperty().bind(itemProperty()); // TODO - evaluate if this is good/necessary
+        pedigreeMemberPane.variantsProperty().bind(variants);
+        pedigreeMemberPane.hpoProperty().bind(hpo);
+        pedigreeMemberPane.diseaseIdentifierServiceProperty().bind(diseaseIdentifierService);
     }
 
     @Override
@@ -27,7 +31,7 @@ class ObservablePedigreeMemberListCell extends ListCell<ObservablePedigreeMember
         if (empty || item == null) {
             setGraphic(null);
         } else {
-            setGraphic(pedigreeMember);
+            setGraphic(pedigreeMemberPane);
         }
     }
 }

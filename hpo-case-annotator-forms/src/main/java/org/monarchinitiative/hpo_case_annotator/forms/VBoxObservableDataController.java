@@ -2,13 +2,12 @@ package org.monarchinitiative.hpo_case_annotator.forms;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 
 /**
- * Very frequently we need an {@link ObservableDataController} that is also a {@link VBox}. This base class handles
- * setting listeners to the {@link #dataProperty()}.
+ * This base class is an {@link ObservableDataController} and also a {@link VBox}. The base class manages an
+ * {@link ObjectProperty} with {@link T} that represents model object managed by the instance.
  *
  * @param <T> type of observable data.
  */
@@ -22,18 +21,6 @@ public abstract class VBoxObservableDataController<T> extends VBox implements Ob
     }
 
     @FXML
-    protected void initialize() {
-        dataProperty().addListener(onDataChange());
-    }
+    protected abstract void initialize();
 
-    private ChangeListener<T> onDataChange() {
-        return (obs, old, novel) -> {
-            if (old != null) unbind(old);
-            if (novel != null) bind(novel);
-        };
-    }
-
-    protected abstract void bind(T data);
-
-    protected abstract void unbind(T data);
 }
