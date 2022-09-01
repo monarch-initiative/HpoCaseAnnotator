@@ -21,14 +21,9 @@ public abstract class BaseStep<T> extends VBox implements Step<T> {
     private Label header;
 
     public BaseStep(URL location) {
-        this(location, null);
-    }
-
-    public BaseStep(URL location, HCAControllerFactory controllerFactory) {
         FXMLLoader loader = new FXMLLoader(location);
         loader.setRoot(this);
         loader.setController(this);
-        loader.setControllerFactory(controllerFactory);
         try {
             loader.load();
         } catch (IOException e) {

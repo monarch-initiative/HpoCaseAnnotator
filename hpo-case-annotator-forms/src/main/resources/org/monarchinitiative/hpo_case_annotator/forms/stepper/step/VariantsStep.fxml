@@ -3,11 +3,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary?>
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.VBox">
+         type="VBox">
     <children>
         <Label text="Variants"/>
         <Label fx:id="header" text="Add genomic variants identified in the individual."/>
-        <fx:include fx:id="variantSummary" source="../../variants/VariantSummary.fxml"/>
+        <VariantSummary fx:id="variantSummary"/>
     </children>
 </fx:root>

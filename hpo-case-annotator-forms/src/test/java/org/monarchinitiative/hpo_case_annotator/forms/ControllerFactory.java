@@ -1,21 +1,14 @@
 package org.monarchinitiative.hpo_case_annotator.forms;
 
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.nvo.FamilyStudy;
-import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree;
-import org.monarchinitiative.hpo_case_annotator.forms.pedigree.PedigreeMember;
-import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualVariantSummaryController;
 import org.monarchinitiative.hpo_case_annotator.forms.tree.SimpleOntologyClassTreeView;
-import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.cache.HgvsVariantController;
-import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummaryController;
 
 public class ControllerFactory implements HCAControllerFactory {
 
@@ -48,8 +41,6 @@ public class ControllerFactory implements HCAControllerFactory {
             return new BreakendController();
         } else if (clz.equals(HgvsVariantController.class)) {
             return new HgvsVariantController(geneIdentifierService);
-        } else if (clz.equals(VariantSummaryController.class)) {
-            return new VariantSummaryController(this);
         }
 
         // various

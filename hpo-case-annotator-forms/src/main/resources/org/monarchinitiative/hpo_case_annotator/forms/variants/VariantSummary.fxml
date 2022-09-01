@@ -5,9 +5,8 @@
 
 <?import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantTable?>
 
-<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummaryController"
-      stylesheets="@variant-summary.css">
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox" stylesheets="@variant-summary.css">
     <children>
         <VariantTable fx:id="variantTable"/>
         <HBox alignment="BOTTOM_LEFT" styleClass="edit-row">
@@ -18,4 +17,4 @@
             </children>
         </HBox>
     </children>
-</VBox>
+</fx:root>

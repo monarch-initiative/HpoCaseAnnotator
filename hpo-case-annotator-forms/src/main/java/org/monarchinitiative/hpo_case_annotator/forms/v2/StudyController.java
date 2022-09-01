@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.BindingObservableDataController;
-import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummaryController;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudy;
 
 public abstract class StudyController<T extends ObservableStudy> extends BindingObservableDataController<T> {
@@ -20,9 +20,7 @@ public abstract class StudyController<T extends ObservableStudy> extends Binding
     private PublicationController publicationController;
 
     @FXML
-    private VBox variantSummary;
-    @FXML
-    protected VariantSummaryController variantSummaryController;
+    protected VariantSummary variantSummary;
 
     @FXML
     private VBox studyMetadata;
@@ -41,7 +39,7 @@ public abstract class StudyController<T extends ObservableStudy> extends Binding
 
         publicationController.dataProperty().bindBidirectional(study.publicationProperty());
 
-        Bindings.bindContentBidirectional(variantSummaryController.curatedVariants(), study.variants());
+        Bindings.bindContentBidirectional(variantSummary.curatedVariants(), study.variants());
 
         studyMetadataController.dataProperty().bindBidirectional(study.studyMetadataProperty());
     }
@@ -52,7 +50,7 @@ public abstract class StudyController<T extends ObservableStudy> extends Binding
 
         publicationController.dataProperty().unbindBidirectional(study.publicationProperty());
 
-        Bindings.unbindContentBidirectional(variantSummaryController.curatedVariants(), study.variants());
+        Bindings.unbindContentBidirectional(variantSummary.curatedVariants(), study.variants());
 
         studyMetadataController.dataProperty().unbindBidirectional(study.studyMetadataProperty());
     }

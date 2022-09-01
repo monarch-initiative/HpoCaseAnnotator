@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import org.monarchinitiative.hpo_case_annotator.forms.VBoxObservableDataController;
@@ -16,14 +17,28 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigree
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 
+import java.io.IOException;
+
 public class Pedigree extends VBoxObservableDataController<ObservablePedigree> {
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
     private final ListProperty<CuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
+
     @FXML
     private Label summary;
     @FXML
     private ListView<ObservablePedigreeMember> members;
+
+    public Pedigree() {
+        FXMLLoader loader = new FXMLLoader(Pedigree.class.getResource("Pedigree.fxml"));
+        loader.setRoot(this);
+        loader.setController(this);
+        try {
+            loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     protected void initialize() {

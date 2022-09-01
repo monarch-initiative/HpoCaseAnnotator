@@ -7,10 +7,11 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.metadata.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      type="javafx.scene.layout.VBox"
-      id="outer-box">
+         type="VBox"
+         id="outer-box">
     <stylesheets>
         <URL value="@../base.css"/>
         <URL value="@family-study.css"/>
@@ -67,7 +68,7 @@
                                 <VBox styleClass="section">
                                     <children>
                                         <Label fx:id="variantsLabel" text="Variants" styleClass="h1"/>
-                                        <fx:include fx:id="variantSummary" source="../variants/VariantSummary.fxml"/>
+                                        <VariantSummary fx:id="variantSummary" />
                                     </children>
                                 </VBox>
                                 <Separator/>

@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms.variants;
 
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -17,19 +17,15 @@ import org.controlsfx.dialog.CommandLinksDialog;
 import org.monarchinitiative.hpo_case_annotator.forms.ComponentController;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataException;
-import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VariantNotation;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfBreakendVariantController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSequenceVariantController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSymbolicVariantController;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.svart.CoordinateSystem;
-import org.monarchinitiative.svart.Strand;
 import org.monarchinitiative.svart.GenomicVariant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 import java.net.URL;
@@ -40,13 +36,11 @@ import java.util.Optional;
  * {@link org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy} or for
  * {@link org.monarchinitiative.hpo_case_annotator.model.v2.CohortStudy}.
  */
-@Scope("prototype")
-@Controller("nvoVariantSummary") // TODO - rename
-public class VariantSummaryController {
+public class VariantSummary extends VBox {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(VariantSummaryController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VariantSummary.class);
 
-    private final HCAControllerFactory controllerFactory;
+    private HCAControllerFactory controllerFactory;
 
     @FXML
     private VariantTable variantTable;
@@ -57,7 +51,23 @@ public class VariantSummaryController {
     @FXML
     private Button editButton;
 
-    public VariantSummaryController(HCAControllerFactory controllerFactory) {
+    public VariantSummary() {
+        FXMLLoader loader = new FXMLLoader(VariantSummary.class.getResource("VariantSummary.fxml"));
+        loader.setRoot(this);
+        loader.setController(this);
+
+        try {
+            loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public HCAControllerFactory getControllerFactory() {
+        return controllerFactory;
+    }
+
+    public void setControllerFactory(HCAControllerFactory controllerFactory) {
         this.controllerFactory = controllerFactory;
     }
 

@@ -12,7 +12,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualVariantSummar
 import org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.*;
-import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummaryController;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeEntryController;
@@ -56,8 +56,10 @@ public class ControllerConfiguration {
 
     @Bean
     @Scope("prototype")
-    public VariantSummaryController variantSummaryController(HCAControllerFactory hcaControllerFactory) {
-        return new VariantSummaryController(hcaControllerFactory);
+    public VariantSummary variantSummaryController(HCAControllerFactory hcaControllerFactory) {
+        VariantSummary variantSummary = new VariantSummary();
+        variantSummary.setControllerFactory(hcaControllerFactory);
+        return variantSummary;
     }
 
     @Bean

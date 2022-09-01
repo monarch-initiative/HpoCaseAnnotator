@@ -4,8 +4,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import org.monarchinitiative.hpo_case_annotator.forms.VBoxObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.metadata.Metadata;
@@ -13,9 +13,11 @@ import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree;
 import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication;
 import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationEditable;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
-import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummaryController;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilyStudy;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
+
+import java.io.IOException;
 
 public class FamilyStudy extends VBoxObservableDataController<ObservableFamilyStudy> {
 
@@ -36,18 +38,28 @@ public class FamilyStudy extends VBoxObservableDataController<ObservableFamilySt
     @FXML
     private Label variantsLabel;
     @FXML
-    private Parent variantSummary;
-    @FXML
-    private VariantSummaryController variantSummaryController;
+    private VariantSummary variantSummary;
     @FXML
     private Label metadataLabel;
     @FXML
     private Metadata metadataSummary;
 
+    public FamilyStudy() {
+        FXMLLoader loader = new FXMLLoader(FamilyStudy.class.getResource("FamilyStudy.fxml"));
+        loader.setRoot(this);
+        loader.setController(this);
+        try {
+            loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
     @Override
     protected void initialize() {
         super.initialize();
-        pedigree.variantsProperty().bind(variantSummaryController.variants());
+        pedigree.variantsProperty().bind(variantSummary.variants());
         pedigree.hpoProperty().bind(hpo);
     }
 
@@ -59,7 +71,7 @@ public class FamilyStudy extends VBoxObservableDataController<ObservableFamilySt
     protected void bind(ObservableFamilyStudy data) {
         publication.dataProperty().bindBidirectional(data.publicationProperty());
         pedigree.dataProperty().bindBidirectional(data.pedigreeProperty());
-        variantSummaryController.variants().bindBidirectional(data.variants());
+        variantSummary.variants().bindBidirectional(data.variants());
         metadataSummary.dataProperty().bind(data.studyMetadataProperty());
     }
 
@@ -67,7 +79,7 @@ public class FamilyStudy extends VBoxObservableDataController<ObservableFamilySt
     protected void unbind(ObservableFamilyStudy data) {
         publication.dataProperty().unbindBidirectional(data.publicationProperty());
         pedigree.dataProperty().unbindBidirectional(data.pedigreeProperty());
-        variantSummaryController.variants().unbindBidirectional(data.variants());
+        variantSummary.variants().unbindBidirectional(data.variants());
         metadataSummary.dataProperty().unbind();
     }
 

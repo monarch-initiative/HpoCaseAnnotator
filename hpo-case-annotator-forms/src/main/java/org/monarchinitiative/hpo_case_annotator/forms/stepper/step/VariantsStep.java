@@ -6,19 +6,18 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
-import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummaryController;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudy;
 
 public class VariantsStep<T extends ObservableStudy> extends BaseStep<T> {
 
     @FXML
-    private Parent variantSummary;
-    @FXML
-    private VariantSummaryController variantSummaryController;
+    private VariantSummary variantSummary;
 
     public VariantsStep(HCAControllerFactory controllerFactory) {
-        super(VariantsStep.class.getResource("VariantsStep.fxml"), controllerFactory);
+        super(VariantsStep.class.getResource("VariantsStep.fxml"));
+//        variantSummary.setControllerFactory(controllerFactory);
     }
 
     @Override
@@ -28,16 +27,16 @@ public class VariantsStep<T extends ObservableStudy> extends BaseStep<T> {
 
     @Override
     protected void bind(T data) {
-        variantSummaryController.variants().bindBidirectional(data.variants());
+        variantSummary.variants().bindBidirectional(data.variants());
     }
 
     @Override
     protected void unbind(T data) {
-        variantSummaryController.variants().unbindBidirectional(data.variants());
+        variantSummary.variants().unbindBidirectional(data.variants());
     }
 
     public ObjectProperty<ObservableList<CuratedVariant>> variantsProperty() {
-        return variantSummaryController.variants();
+        return variantSummary.variants();
     }
 
 }

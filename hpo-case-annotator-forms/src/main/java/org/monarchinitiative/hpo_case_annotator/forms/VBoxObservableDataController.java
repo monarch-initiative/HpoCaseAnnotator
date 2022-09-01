@@ -16,10 +16,6 @@ public abstract class VBoxObservableDataController<T> extends VBox implements Ob
 
     protected final ObjectProperty<T> data = new SimpleObjectProperty<>();
 
-    public VBoxObservableDataController() {
-
-    }
-
     @Override
     public ObjectProperty<T> dataProperty() {
         return data;

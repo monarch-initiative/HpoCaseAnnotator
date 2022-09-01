@@ -15,7 +15,6 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.disease.DiseaseStatusController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
-import org.monarchinitiative.hpo_case_annotator.forms.tree.SimpleOntologyClassTreeView;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeEntryController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypicFeatureController;
@@ -24,7 +23,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.BreakendControl
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfBreakendVariantController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSequenceVariantController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSymbolicVariantController;
-import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummaryController;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.*;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.*;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
@@ -124,8 +123,10 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
     }
 
     @Provides
-    public VariantSummaryController variantSummary(HCAControllerFactory hcaControllerFactory) {
-        return new VariantSummaryController(hcaControllerFactory);
+    public VariantSummary variantSummary(HCAControllerFactory hcaControllerFactory) {
+        VariantSummary variantSummary = new VariantSummary();
+        variantSummary.setControllerFactory(hcaControllerFactory);
+        return variantSummary;
     }
 
     @Provides
