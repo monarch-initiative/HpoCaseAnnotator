@@ -32,6 +32,10 @@ public abstract class PhenotypeDataEdit<T extends BaseObservableIndividual> exte
     @FXML
     private PhenotypicFeatureBinding phenotypicFeature;
 
+    public ObjectProperty<Ontology> hpoProperty() {
+        return hpo;
+    }
+
     @FXML
     private void initialize() {
         phenotypicFeature.hpoProperty().bind(hpo);
@@ -45,7 +49,7 @@ public abstract class PhenotypeDataEdit<T extends BaseObservableIndividual> exte
 
         individualIds.setData(data);
 
-        phenotypeTable.getItems().addAll(item.getObservablePhenotypicFeatures());
+        phenotypeTable.getItems().addAll(item.getPhenotypicFeatures());
     }
 
     @FXML
@@ -80,20 +84,8 @@ public abstract class PhenotypeDataEdit<T extends BaseObservableIndividual> exte
         dialog.showAndWait();
     }
 
-    public Ontology getHpo() {
-        return hpo.get();
-    }
-
-    public ObjectProperty<Ontology> hpoProperty() {
-        return hpo;
-    }
-
-    public void setHpo(Ontology hpo) {
-        this.hpo.set(hpo);
-    }
-
     @Override
     public void commit() {
-        // TODO - implement
+        item.setPhenotypicFeatures(phenotypeTable.getItems());
     }
 }

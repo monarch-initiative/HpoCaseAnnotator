@@ -27,7 +27,6 @@ public abstract class DiseaseDataEdit<T extends BaseObservableIndividual> extend
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseDataEdit.class);
 
-
     private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();
 
     private BaseObservableIndividual item;
@@ -45,6 +44,10 @@ public abstract class DiseaseDataEdit<T extends BaseObservableIndividual> extend
 
     private AutoCompletionBinding<String> diseaseIdCompletion;
     private AutoCompletionBinding<String> diseaseNameCompletion;
+
+    public ObjectProperty<DiseaseIdentifierService> diseaseIdentifierServiceProperty() {
+        return diseaseIdentifierService;
+    }
 
     @FXML
     protected void initialize() {
@@ -137,18 +140,7 @@ public abstract class DiseaseDataEdit<T extends BaseObservableIndividual> extend
 
     @Override
     public void commit() {
-        item.getDiseaseStates().setAll(diseaseTable.getItems());
+        item.setDiseaseStates(diseaseTable.getItems());
     }
 
-    public DiseaseIdentifierService getDiseaseIdentifierService() {
-        return diseaseIdentifierService.get();
-    }
-
-    public ObjectProperty<DiseaseIdentifierService> diseaseIdentifierServiceProperty() {
-        return diseaseIdentifierService;
-    }
-
-    public void setDiseaseIdentifierService(DiseaseIdentifierService diseaseIdentifierService) {
-        this.diseaseIdentifierService.set(diseaseIdentifierService);
-    }
 }

@@ -91,7 +91,7 @@ public class PedigreeMemberPane extends TitledPane {
                     return "";
 
                 return new StringBuilder()
-                        .append(member.getObservablePhenotypicFeatures().size()).append(" phenotype terms, ")
+                        .append(member.getPhenotypicFeatures().size()).append(" phenotype terms, ")
                         .append(member.getDiseaseStates().size()).append(" disease states, ")
                         .append(member.getGenotypes().stream().filter(ovg -> ovg.getGenotype().isKnown()).count()).append(" known genotypes")
                         .toString();

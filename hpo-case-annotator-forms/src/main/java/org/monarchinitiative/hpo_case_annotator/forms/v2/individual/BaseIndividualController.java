@@ -132,8 +132,8 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual> exte
         individual.sexProperty().bind(sexBinding);
 
         // phenotype
-        summarizePhenotypeCount(individual.getObservablePhenotypicFeatures());
-        individual.getObservablePhenotypicFeatures().addListener(summarizePhenotypeCount);
+        summarizePhenotypeCount(individual.phenotypicFeaturesProperty());
+        individual.phenotypicFeaturesProperty().addListener(summarizePhenotypeCount);
 
         // diseases
         Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatesProperty());
@@ -154,7 +154,7 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual> exte
         individual.sexProperty().unbind();
 
         // phenotype
-        individual.getObservablePhenotypicFeatures().removeListener(summarizePhenotypeCount);
+        individual.phenotypicFeaturesProperty().removeListener(summarizePhenotypeCount);
 
         // diseases
         Bindings.unbindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatesProperty());

@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
-abstract class BaseIndividualIdsEditableComponent<T extends BaseObservableIndividual> extends VBox implements DataEditController<T> {
+public abstract class BaseIndividualIdsEditableComponent<T extends BaseObservableIndividual> extends VBox implements DataEditController<T> {
 
     protected T item;
 

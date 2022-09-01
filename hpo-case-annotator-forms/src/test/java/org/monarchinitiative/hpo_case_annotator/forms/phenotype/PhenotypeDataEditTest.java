@@ -28,7 +28,7 @@ public class PhenotypeDataEditTest extends BaseControllerTest {
     @Start
     public void start(Stage stage) throws Exception {
         phenotypeDataEdit = new PedigreeMemberPhenotypeDataEdit();
-        phenotypeDataEdit.setHpo(HPO);
+        phenotypeDataEdit.hpoProperty().set(HPO);
 
         Scene scene = new Scene(phenotypeDataEdit);
         stage.setScene(scene);

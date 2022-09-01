@@ -45,7 +45,7 @@ public class TimeElementBindingComponentTest {
 
         ObservableFamilyStudy familyStudy = new ObservableFamilyStudy(TestData.V2.comprehensiveFamilyStudy());
         ObservablePedigreeMember member = familyStudy.getPedigree().membersProperty().get(0);
-        ObservablePhenotypicFeature pf = member.getObservablePhenotypicFeatures().get(0);
+        ObservablePhenotypicFeature pf = member.getPhenotypicFeatures().get(0);
         ObservableTimeElement onset = pf.getOnset();
         onset.addListener(obs -> System.err.println("NOVEL ONSET: " + onset));
 

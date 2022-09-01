@@ -6,8 +6,6 @@ import javafx.collections.ObservableList;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 
-import java.util.*;
-
 public abstract class BaseObservableIndividual implements Individual {
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
@@ -54,26 +52,29 @@ public abstract class BaseObservableIndividual implements Individual {
     }
 
     @Override
-    public List<ObservablePhenotypicFeature> getPhenotypicFeatures() {
+    public ObservableList<ObservablePhenotypicFeature> getPhenotypicFeatures() {
         return phenotypicFeatures;
     }
 
-    public ListProperty<ObservablePhenotypicFeature> getObservablePhenotypicFeatures() {
-        return phenotypicFeatures;
+    public void setPhenotypicFeatures(ObservableList<ObservablePhenotypicFeature> phenotypicFeatures) {
+        this.phenotypicFeatures.set(phenotypicFeatures);
     }
 
+    public ListProperty<ObservablePhenotypicFeature> phenotypicFeaturesProperty() {
+        return phenotypicFeatures;
+    }
 
     @Override
     public ObservableList<ObservableDiseaseStatus> getDiseaseStates() {
         return diseaseStates;
     }
 
-    public ListProperty<ObservableDiseaseStatus> diseaseStatesProperty() {
-        return diseaseStates;
-    }
-
     public void setDiseaseStates(ObservableList<ObservableDiseaseStatus> diseaseStates) {
         this.diseaseStates.set(diseaseStates);
+    }
+
+    public ListProperty<ObservableDiseaseStatus> diseaseStatesProperty() {
+        return diseaseStates;
     }
 
     @Override

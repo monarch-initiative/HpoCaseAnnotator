@@ -91,7 +91,7 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual> exte
         individualDetailController.sexProperty().bind(individual.sexProperty().asString());
         // TODO - fix or discard
 //        individualDetailController.ageLabel().bind(individual.getObservableAge().period().asString());
-        Bindings.bindContentBidirectional(phenotypicFeaturesTableController.observablePhenotypeDescriptions(), individual.getObservablePhenotypicFeatures());
+        Bindings.bindContentBidirectional(phenotypicFeaturesTableController.observablePhenotypeDescriptions(), individual.phenotypicFeaturesProperty());
     }
 
     @Override
@@ -99,7 +99,7 @@ public class PhenotypeBrowserController<T extends BaseObservableIndividual> exte
         individualDetailController.idProperty().unbind();
         individualDetailController.sexProperty().unbind();
         individualDetailController.ageLabel().unbind();
-        Bindings.unbindContentBidirectional(phenotypicFeaturesTableController.observablePhenotypeDescriptions(), individual.getObservablePhenotypicFeatures());
+        Bindings.unbindContentBidirectional(phenotypicFeaturesTableController.observablePhenotypeDescriptions(), individual.phenotypicFeaturesProperty());
     }
 
     @FXML

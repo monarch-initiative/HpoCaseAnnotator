@@ -11,6 +11,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.StageStyle;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.VBoxObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsEditableComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseTable;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeDataEdit;
@@ -93,7 +94,26 @@ public abstract class BaseIndividual<T extends BaseObservableIndividual> extends
     }
 
     @FXML
-    protected abstract void editIdentifiersAction(ActionEvent e);
+    private void editIdentifiersAction(ActionEvent e) {
+        Dialog<Boolean> dialog = new Dialog<>();
+        dialog.initOwner(getParent().getScene().getWindow());
+        dialog.titleProperty().bind(concat("Edit identifiers for ", Utils.nullableStringProperty(data, "id")));
+        BaseIndividualIdsEditableComponent<T> component = getIdsEditableComponent();
+        component.setInitialData(data.getValue());
+
+        dialog.getDialogPane().setContent(component);
+        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.UPDATE_CANCEL_BUTTONS);
+        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
+
+        dialog.showAndWait()
+                .ifPresent(shouldUpdate -> {
+                    if (shouldUpdate) component.commit();
+                });
+
+        e.consume();
+    }
+
+    protected abstract BaseIndividualIdsEditableComponent<T> getIdsEditableComponent();
 
     @FXML
     private void editPhenotypeAction(ActionEvent e) {
@@ -123,7 +143,7 @@ public abstract class BaseIndividual<T extends BaseObservableIndividual> extends
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.initOwner(getParent().getScene().getWindow());
         dialog.initStyle(StageStyle.DECORATED);
-        // TODO - setup title
+        dialog.titleProperty().bind(concat("Edit diseases for ", Utils.nullableStringProperty(data, "id")));
         dialog.setResizable(true);
 
         DiseaseDataEdit<T> diseaseDataEdit = getDiseaseDataEdit();
