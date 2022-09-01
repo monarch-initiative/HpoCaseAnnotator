@@ -19,6 +19,10 @@ public class IndividualStudy extends BaseStudy<ObservableIndividualStudy> {
     @Override
     protected void initialize() {
         super.initialize();
+
+        individual.hpoProperty().bind(hpo);
+        individual.diseaseIdentifierServiceProperty().bind(diseaseIdentifierService);
+        individual.variantsProperty().bind(variantSummary.variants());
     }
 
     @Override

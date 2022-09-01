@@ -36,10 +36,11 @@ public class Individual extends BaseIndividual<ObservableIndividual> {
     protected void initialize() {
         super.initialize();
         individualIds.dataProperty().bind(data);
-        editIdentifiersButton.visibleProperty().bind(individualIds.hoverProperty());
+        editIdentifiersButton.visibleProperty().bind(credentialPane.hoverProperty());
     }
 
     @FXML
+    @Override
     protected void editIdentifiersAction(ActionEvent e) {
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.initOwner(getParent().getScene().getWindow());

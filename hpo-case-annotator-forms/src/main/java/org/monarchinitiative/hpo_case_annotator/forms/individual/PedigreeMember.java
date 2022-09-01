@@ -39,6 +39,7 @@ public class PedigreeMember extends BaseIndividual<ObservablePedigreeMember> {
     }
 
     @FXML
+    @Override
     protected void editIdentifiersAction(ActionEvent e) {
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.initOwner(getParent().getScene().getWindow());

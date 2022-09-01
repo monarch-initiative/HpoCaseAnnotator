@@ -20,7 +20,7 @@
     <children>
         <HBox id="study-headline">
             <children>
-                <Label styleClass="scene-title" text="Family study">
+                <Label styleClass="scene-title" text="Individual study">
                     <graphic>
                         <ImageView preserveRatio="true">
                             <Image url="@../icons/individual.png"/>
@@ -39,50 +39,50 @@
                         <Button text="Metadata" onAction="#metadataNavMouseClicked" disable="true"/>
                     </children>
                 </HBox>
-                <ScrollPane fx:id="studyScrollPane" id="study-scroll-pane">
-                    <content>
-                        <VBox id="study-document">
-                            <children>
-                                <VBox  VBox.vgrow="NEVER" styleClass="section">
-                                    <children>
-                                        <Label text="Publication" styleClass="h1" />
-                                        <StackPane>
-                                            <children>
-                                                <Publication fx:id="publication" StackPane.alignment="CENTER"/>
-                                                <Button fx:id="editPublication" contentDisplay="GRAPHIC_ONLY"
-                                                        mnemonicParsing="false" onAction="#editPublicationAction"
-                                                        styleClass="edit-button" visible="false"
-                                                        StackPane.alignment="TOP_RIGHT"/>
-                                            </children>
-                                        </StackPane>
-                                    </children>
-                                </VBox>
-                                <Separator/>
-                                <VBox styleClass="section">
-                                    <children>
-                                        <Label text="Individual" styleClass="h1"/>
-                                        <Individual fx:id="individual" VBox.vgrow="ALWAYS"/>
-                                    </children>
-                                </VBox>
-                                <Separator/>
-                                <VBox styleClass="section">
-                                    <children>
-                                        <Label text="Variants" styleClass="h1"/>
-                                        <VariantSummary fx:id="variantSummary" />
-                                    </children>
-                                </VBox>
-                                <Separator/>
-                                <VBox  styleClass="section">
-                                    <children>
-                                        <Label text="Metadata" styleClass="h1"/>
-                                        <Metadata fx:id="metadataSummary"/>
-                                    </children>
-                                </VBox>
-                            </children>
-                        </VBox>
-                    </content>
-                </ScrollPane>
             </children>
         </HBox>
+        <ScrollPane fx:id="studyScrollPane" id="study-scroll-pane">
+            <content>
+                <VBox id="study-document">
+                    <children>
+                        <VBox  VBox.vgrow="NEVER" styleClass="section">
+                            <children>
+                                <Label text="Publication" styleClass="h1" />
+                                <StackPane>
+                                    <children>
+                                        <Publication fx:id="publication" StackPane.alignment="CENTER"/>
+                                        <Button fx:id="editPublication" contentDisplay="GRAPHIC_ONLY"
+                                                mnemonicParsing="false" onAction="#editPublicationAction"
+                                                styleClass="edit-button" visible="false"
+                                                StackPane.alignment="TOP_RIGHT"/>
+                                    </children>
+                                </StackPane>
+                            </children>
+                        </VBox>
+                        <Separator/>
+                        <VBox styleClass="section">
+                            <children>
+                                <Label text="Individual" styleClass="h1"/>
+                                <Individual fx:id="individual" VBox.vgrow="ALWAYS"/>
+                            </children>
+                        </VBox>
+                        <Separator/>
+                        <VBox styleClass="section">
+                            <children>
+                                <Label text="Variants" styleClass="h1"/>
+                                <VariantSummary fx:id="variantSummary" />
+                            </children>
+                        </VBox>
+                        <Separator/>
+                        <VBox  styleClass="section">
+                            <children>
+                                <Label text="Metadata" styleClass="h1"/>
+                                <Metadata fx:id="metadataSummary"/>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
     </children>
 </fx:root>

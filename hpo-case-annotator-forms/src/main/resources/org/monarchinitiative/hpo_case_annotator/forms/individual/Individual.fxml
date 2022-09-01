@@ -7,6 +7,7 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseTable?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantGenotypeTable?>
+
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="VBox"
          stylesheets="@individual.css">
@@ -29,7 +30,8 @@
                     </children>
                 </StackPane>
             </children>
-        </VBox><Separator/>
+        </VBox>
+        <Separator/>
         <VBox styleClass="pm-section">
             <children>
                 <Label styleClass="h3" text="Phenotype features"/>
