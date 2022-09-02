@@ -36,11 +36,6 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
     }
 
     @Override
-    protected void initialize() {
-        super.initialize();
-    }
-
-    @Override
     public Parent getContent() {
         return this;
     }

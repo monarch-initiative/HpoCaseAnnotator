@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox">
+    <stylesheets>
+        <URL value="@step-base.css"/>
+        <URL value="@id-step.css"/>
+    </stylesheets>
+    <children>
+        <Label text="Case report ID"/>
+        <Label fx:id="header" text="Set case report ID."/>
+        <TitledTextField fx:id="studyId" name="Case report ID"/>
+    </children>
+</fx:root>

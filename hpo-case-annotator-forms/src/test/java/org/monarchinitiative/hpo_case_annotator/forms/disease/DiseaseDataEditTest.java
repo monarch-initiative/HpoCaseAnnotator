@@ -27,7 +27,7 @@ public class DiseaseDataEditTest extends BaseControllerTest {
     @Start
     public void start(Stage stage) throws Exception {
         diseaseDataEdit = new PedigreeMemberDiseaseDataEdit();
-        diseaseDataEdit.setDiseaseIdentifierService(DISEASES);
+        diseaseDataEdit.diseaseIdentifierServiceProperty().set(DISEASES);
 
         Scene scene = new Scene(diseaseDataEdit);
         stage.setScene(scene);

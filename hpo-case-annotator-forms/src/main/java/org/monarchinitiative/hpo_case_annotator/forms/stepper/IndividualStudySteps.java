@@ -4,10 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.IdStep;
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.IndividualStep;
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.PublicationStep;
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.VariantsStep;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.*;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividualStudy;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 
@@ -40,7 +37,7 @@ public class IndividualStudySteps {
         individual.diseaseIdentifierServiceProperty().bind(diseaseIdentifierService);
         individual.variantsProperty().bind(variants.variantsProperty());
 
-        IdStep<ObservableIndividualStudy> identifiers = new IdStep<>();
+        IndividualStudyIdStep identifiers = new IndividualStudyIdStep();
 
         return List.of(
                 publication,

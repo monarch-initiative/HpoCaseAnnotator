@@ -27,11 +27,6 @@ public class PublicationStep<T extends ObservableStudy> extends BaseStep<T> {
         super(PublicationStep.class.getResource("PublicationStep.fxml"));
     }
 
-    @FXML
-    protected void initialize() {
-        super.initialize();
-    }
-
     @Override
     protected void bind(T data) {
         publicationBinding.dataProperty().bindBidirectional(data.publicationProperty());
