@@ -21,7 +21,7 @@ import org.monarchinitiative.phenol.ontology.data.Ontology;
 import java.io.IOException;
 import java.net.URL;
 
-public abstract class BaseStudy<T extends ObservableStudy> extends VBoxBindingObservableDataComponent<T> {
+public abstract class BaseStudyComponent<T extends ObservableStudy> extends VBoxBindingObservableDataComponent<T> {
 
     protected final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
     protected final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();
@@ -44,7 +44,7 @@ public abstract class BaseStudy<T extends ObservableStudy> extends VBoxBindingOb
     @FXML
     private Metadata metadataSummary;
 
-    protected BaseStudy(URL location) {
+    protected BaseStudyComponent(URL location) {
         FXMLLoader loader = new FXMLLoader(location);
         loader.setRoot(this);
         loader.setController(this);

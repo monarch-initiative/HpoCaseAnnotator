@@ -15,7 +15,6 @@ import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalRes
 import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverAdapter;
 import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverService;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
-import org.monarchinitiative.hpo_case_annotator.model.proto.Gene;
 import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseIdentifier;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.slf4j.Logger;
@@ -52,7 +51,7 @@ public class OptionalResources {
     // default value does not harm here
     private final StringProperty biocuratorId = new SimpleStringProperty(this, "biocuratorId", "");
 
-    private final ObjectProperty<Ontology> ontology = new SimpleObjectProperty<>(this, "ontology");
+    private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>(this, "hpo");
 
     private final ObservableList<DiseaseIdentifier> diseaseIdentifiers = FXCollections.observableList(new LinkedList<>());
 
@@ -88,7 +87,7 @@ public class OptionalResources {
                     LOGGER.warn("Path to HPO does not point to a file: `{}`", novel.getAbsolutePath());
                     return;
                 }
-                setOntology(Loaders.loadOntology(novel.toPath()));
+                setHpo(Loaders.loadOntology(novel.toPath()));
             }
         };
     }
@@ -220,18 +219,18 @@ public class OptionalResources {
     }
 
 
-    public Ontology getOntology() {
-        return ontology.get();
+    public Ontology getHpo() {
+        return hpo.get();
     }
 
 
-    public void setOntology(Ontology ontology) {
-        this.ontology.set(ontology);
+    public void setHpo(Ontology hpo) {
+        this.hpo.set(hpo);
     }
 
 
-    public ObjectProperty<Ontology> ontologyProperty() {
-        return ontology;
+    public ObjectProperty<Ontology> hpoProperty() {
+        return hpo;
     }
 
     public ObservableList<File> liftoverChainFiles() {

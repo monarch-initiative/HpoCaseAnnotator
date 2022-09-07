@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.convert;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.monarchinitiative.hpo_case_annotator.model.convert.ModelTransformationException;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
@@ -10,24 +11,45 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.MendelianVariantMetadata;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.StructuralVariantMetadata;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
+import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.monarchinitiative.svart.*;
 import org.monarchinitiative.svart.assembly.GenomicAssemblies;
 import org.monarchinitiative.svart.assembly.GenomicAssembly;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
 
 public class V1toV2CodecTest {
 
     private static final GenomicAssembly GRCH37 = GenomicAssemblies.GRCh37p13();
 
+    private static final TermId A = TermId.of("HP:1234567");
+    private static final TermId B = TermId.of("HP:9876543");
+    private static final Map<TermId, Term> TERM_MAP = Map.of(
+            A, Term.of(A, "Term A"),
+            B, Term.of(B, "Term B")
+    );
+
+    private Ontology hpo;
+
+    @BeforeEach
+    public void setUp() {
+        hpo = mock(Ontology.class);
+        when(hpo.getTermMap()).thenReturn(TERM_MAP);
+        when(hpo.getPrimaryTermId(A)).thenReturn(A);
+        when(hpo.getPrimaryTermId(B)).thenReturn(B);
+    }
+
     @Test
     public void encodeDiseaseCase() throws ModelTransformationException {
         DiseaseCase comprehensiveCase = TestData.V1.comprehensiveCase();
-        V1toV2Codec instance = V1toV2Codec.getInstance();
+        V1toV2Codec instance = V1toV2Codec.of(hpo);
 
         Study study = instance.encode(comprehensiveCase);
 
@@ -116,17 +138,14 @@ public class V1toV2CodecTest {
                 StructuralVariantMetadata.of("", "structural", "", false, false))));
 
         // Test members
-        assertThat(study, instanceOf(FamilyStudy.class));
-        FamilyStudy familyStudy = (FamilyStudy) study;
-        List<? extends PedigreeMember> members = familyStudy.getMembers();
-        assertThat(members, hasSize(1));
+        assertThat(study, instanceOf(IndividualStudy.class));
+        IndividualStudy individualStudy = (IndividualStudy) study;
+        Individual individual = individualStudy.getIndividual();
         TimeElement age = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.ofYearsMonthsDays(10, 5, 4), null, null);
-        assertThat(members.get(0), equalTo(PedigreeMember.of("FAM:001", "", "",
-                true,
-                List.of(
+        assertThat(individual, equalTo(Individual.of("FAM:001", List.of(
                         // TODO - consider removing MISSING values
-                        PhenotypicFeature.of(TermId.of("HP:1234567"), "MISSING", false, null, null),
-                        PhenotypicFeature.of(TermId.of("HP:9876543"), "MISSING", true, null, null)
+                        PhenotypicFeature.of(TermId.of("HP:1234567"), "Term A", false, null, null),
+                        PhenotypicFeature.of(TermId.of("HP:9876543"), "Term B", true, null, null)
                 ),
                 List.of(DiseaseStatus.of(DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF"), false)),
                 List.of(

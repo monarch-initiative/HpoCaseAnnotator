@@ -12,7 +12,6 @@ import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataComponent;
  *
  * @param <T> type of observable data.
  */
-// TODO - remove Controller from the name
 public abstract class VBoxObservableDataComponent<T> extends VBox implements ObservableDataComponent<T> {
 
     protected final ObjectProperty<T> data = new SimpleObjectProperty<>();

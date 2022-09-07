@@ -98,19 +98,6 @@
                 <MenuItem fx:id="showCuratedVariantsMenuItem" mnemonicParsing="false"
                           onAction="#showCuratedVariantsMenuItemAction" text="Show curated variants"/>
             </Menu>
-            <Menu fx:id="genotypeMenu" disable="true" mnemonicParsing="false" text="Genotype"/>
-            <Menu fx:id="phenotypeMenu" disable="true" mnemonicParsing="false" text="Phenotype">
-                <items>
-                    <MenuItem fx:id="editPhenotypeFeaturesMenuItem" mnemonicParsing="false"
-                              onAction="#editPhenotypicFeaturesMenuItemAction" text="Edit phenotypic features"/>
-                </items>
-            </Menu>
-            <Menu fx:id="diseaseMenu" disable="true" mnemonicParsing="false" text="Disease">
-                <items>
-                    <MenuItem fx:id="editDiseaseMenuItem" mnemonicParsing="false" onAction="#editDiseaseMenuItemAction"
-                              text="Edit disease data"/>
-                </items>
-            </Menu>
             <Menu text="Validate">
                 <MenuItem fx:id="validateCurrentEntryMenuItem" disable="true" mnemonicParsing="false"
                           onAction="#validateCurrentEntryMenuItemAction" text="Validate current case">

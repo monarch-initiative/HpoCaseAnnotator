@@ -16,19 +16,15 @@ import org.testfx.framework.junit5.Start;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
-
 @Disabled
 @ExtendWith(ApplicationExtension.class)
 public class IndividualStudyTest extends BaseControllerTest {
 
-    private IndividualStudy component;
+    private IndividualStudyComponent component;
 
     @Start
     public void start(Stage stage) throws Exception {
-        component = new IndividualStudy();
+        component = new IndividualStudyComponent();
         component.hpoProperty().set(HPO);
         component.diseaseIdentifierServiceProperty().set(DISEASES);
 

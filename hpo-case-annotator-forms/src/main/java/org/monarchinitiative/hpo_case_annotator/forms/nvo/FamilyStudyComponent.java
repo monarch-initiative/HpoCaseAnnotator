@@ -7,15 +7,15 @@ import javafx.scene.control.*;
 import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilyStudy;
 
-public class FamilyStudy extends BaseStudy<ObservableFamilyStudy> {
+public class FamilyStudyComponent extends BaseStudyComponent<ObservableFamilyStudy> {
 
     @FXML
     private Label pedigreeLabel;
     @FXML
     private Pedigree pedigree;
 
-    public FamilyStudy() {
-        super(FamilyStudy.class.getResource("FamilyStudy.fxml"));
+    public FamilyStudyComponent() {
+        super(FamilyStudyComponent.class.getResource("FamilyStudy.fxml"));
     }
 
     @Override

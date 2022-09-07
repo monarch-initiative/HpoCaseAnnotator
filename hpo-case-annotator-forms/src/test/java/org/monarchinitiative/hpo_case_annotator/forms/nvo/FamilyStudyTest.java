@@ -20,11 +20,11 @@ import java.util.concurrent.TimeUnit;
 @ExtendWith(ApplicationExtension.class)
 public class FamilyStudyTest extends BaseControllerTest {
 
-    private FamilyStudy component;
+    private FamilyStudyComponent component;
 
     @Start
     public void start(Stage stage) throws Exception {
-        component = new FamilyStudy();
+        component = new FamilyStudyComponent();
         component.hpoProperty().set(HPO);
         component.diseaseIdentifierServiceProperty().set(DISEASES);
 

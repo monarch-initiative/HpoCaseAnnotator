@@ -21,7 +21,7 @@ import org.monarchinitiative.hpo_case_annotator.app.util.GenomicLocalResourceVal
 import org.monarchinitiative.hpo_case_annotator.app.util.FileListCell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -41,7 +41,7 @@ import java.util.function.Function;
  * <p>
  * Created by Daniel Danis on 7/16/17.
  */
-@Component
+@Controller
 public class SetResourcesController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SetResourcesController.class);
@@ -330,7 +330,7 @@ public class SetResourcesController {
         });
         task.setOnFailed(event -> {
             optionalResources.setOntologyPath(null);
-            optionalResources.setOntology(null);
+            optionalResources.setHpo(null);
         });
         executorService.submit(task);
     }

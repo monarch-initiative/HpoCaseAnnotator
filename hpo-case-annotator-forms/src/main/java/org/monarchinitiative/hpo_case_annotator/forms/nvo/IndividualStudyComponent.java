@@ -6,13 +6,13 @@ import javafx.fxml.FXML;
 import org.monarchinitiative.hpo_case_annotator.forms.individual.Individual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividualStudy;
 
-public class IndividualStudy extends BaseStudy<ObservableIndividualStudy> {
+public class IndividualStudyComponent extends BaseStudyComponent<ObservableIndividualStudy> {
 
     @FXML
     private Individual individual;
 
-    public IndividualStudy() {
-        super(IndividualStudy.class.getResource("IndividualStudy.fxml"));
+    public IndividualStudyComponent() {
+        super(IndividualStudyComponent.class.getResource("IndividualStudy.fxml"));
     }
 
     @FXML
