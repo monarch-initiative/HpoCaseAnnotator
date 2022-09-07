@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.nvo;
+package org.monarchinitiative.hpo_case_annotator.forms.study;
 
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCohortStudy;
 

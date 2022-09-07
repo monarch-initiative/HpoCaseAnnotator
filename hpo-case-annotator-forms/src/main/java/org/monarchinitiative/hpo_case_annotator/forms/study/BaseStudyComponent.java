@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.nvo;
+package org.monarchinitiative.hpo_case_annotator.forms.study;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

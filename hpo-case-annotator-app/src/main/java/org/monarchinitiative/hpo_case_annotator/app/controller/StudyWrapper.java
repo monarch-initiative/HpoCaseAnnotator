@@ -1,7 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.app.controller;
 
 
-import org.monarchinitiative.hpo_case_annotator.forms.nvo.BaseStudyComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.study.BaseStudyComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudy;
 
 import java.nio.file.Path;

@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.nvo;
+package org.monarchinitiative.hpo_case_annotator.forms.study;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

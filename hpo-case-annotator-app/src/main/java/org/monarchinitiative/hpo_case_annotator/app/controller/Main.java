@@ -22,10 +22,10 @@ import org.monarchinitiative.hpo_case_annotator.app.StudyType;
 import org.monarchinitiative.hpo_case_annotator.app.publication.PublicationBrowser;
 import org.monarchinitiative.hpo_case_annotator.convert.ConversionCodecs;
 import org.monarchinitiative.hpo_case_annotator.forms.liftover.LiftoverController;
-import org.monarchinitiative.hpo_case_annotator.forms.nvo.BaseStudyComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.nvo.CohortStudyComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.nvo.FamilyStudyComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.nvo.IndividualStudyComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.study.BaseStudyComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.study.CohortStudyComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.study.FamilyStudyComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.study.IndividualStudyComponent;
 import org.monarchinitiative.hpo_case_annotator.model.convert.ModelTransformationException;
 import org.monarchinitiative.hpo_case_annotator.app.io.PubmedIO;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
@@ -45,7 +45,6 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
 
-import static javafx.beans.binding.Bindings.select;
 import static javafx.beans.binding.Bindings.selectString;
 
 @Controller
@@ -428,8 +427,6 @@ public class Main {
 
     private <T extends ObservableStudy> void addStudy(StudyWrapper<T> wrapper) {
         BaseStudyComponent<T> component = wrapper.component();
-        // TODO - bind functional properties to the component.
-        component.hpoProperty().bind(optionalResources.hpoProperty());
 
         Tab tab = new Tab();
         tab.setContent(component);
@@ -493,22 +490,30 @@ public class Main {
         return Optional.ofNullable(study);
     }
 
-    private static Optional<StudyWrapper<? extends ObservableStudy>> wrapStudy(Study study, Path path) {
+    private Optional<StudyWrapper<? extends ObservableStudy>> wrapStudy(Study study, Path path) {
         if (study instanceof IndividualStudy is) {
             IndividualStudyComponent component = new IndividualStudyComponent();
             component.setData(new ObservableIndividualStudy(is));
+            wireFunctionalPropertiesToObservableStudy(component);
             return Optional.of(StudyWrapper.of(component, path));
         } else if (study instanceof CohortStudy cs) {
             CohortStudyComponent component = new CohortStudyComponent();
             component.setData(new ObservableCohortStudy(cs));
+            wireFunctionalPropertiesToObservableStudy(component);
             return Optional.of(StudyWrapper.of(component, path));
         } else if (study instanceof FamilyStudy fs) {
             FamilyStudyComponent component = new FamilyStudyComponent();
             component.setData(new ObservableFamilyStudy(fs));
+            wireFunctionalPropertiesToObservableStudy(component);
             return Optional.of(StudyWrapper.of(component, path));
         } else {
             return Optional.empty();
         }
+    }
+
+    private void wireFunctionalPropertiesToObservableStudy(BaseStudyComponent<? extends ObservableStudy> component) {
+        // TODO - bind functional properties to the component.
+        component.hpoProperty().bind(optionalResources.hpoProperty());
     }
 
     private Window getOwnerWindow() {
@@ -574,32 +579,22 @@ public class Main {
                 : which.toPath();
     }
 
-    private static Function<StudyWrapper<? extends ObservableStudy>, Optional<StudyWrapper<? extends ObservableStudy>>> cloneStudyWrapper() {
-        return wrapper -> {
-            BaseStudyComponent<? extends ObservableStudy> component = wrapper.component();
-            if (component == null) {
-                return Optional.empty();
-            }
-
-            ObservableStudy source = component.getData();
-            if (source == null) {
-                return Optional.empty();
-            }
-
-            Study cloned = null;
-            if (source instanceof ObservableIndividualStudy is) {
-                cloned = new ObservableIndividualStudy(is);
-            } else if (source instanceof ObservableFamilyStudy fs) {
-                cloned = new ObservableFamilyStudy(fs);
-            } else if (source instanceof ObservableCohortStudy cs) {
-                cloned = new ObservableCohortStudy(cs);
-            }
-            if (cloned == null)
-                return Optional.empty();
-
-            // Path must be null to not overwrite the original file
-            return wrapStudy(cloned, null);
-        };
+    private Function<StudyWrapper<? extends ObservableStudy>, Optional<StudyWrapper<? extends ObservableStudy>>> cloneStudyWrapper() {
+        return wrapper -> Optional.ofNullable(wrapper.component())
+                .flatMap(component -> Optional.ofNullable(component.getData()))
+                .flatMap(source -> {
+                    // Clone source study
+                    Study cloned = null;
+                    if (source instanceof ObservableIndividualStudy is)
+                        cloned = new ObservableIndividualStudy(is);
+                    else if (source instanceof ObservableFamilyStudy fs)
+                        cloned = new ObservableFamilyStudy(fs);
+                    else if (source instanceof ObservableCohortStudy cs)
+                        cloned = new ObservableCohortStudy(cs);
+                    return Optional.ofNullable(cloned);
+                })
+                // Path must be null to not overwrite the original file
+                .flatMap(cloned -> wrapStudy(cloned, null));
     }
 
     private Optional<BaseStudyComponent<?>> getCurrentStudyComponent() {
