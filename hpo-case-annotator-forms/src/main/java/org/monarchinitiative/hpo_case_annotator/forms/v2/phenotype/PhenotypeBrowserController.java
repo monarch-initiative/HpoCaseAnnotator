@@ -14,7 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.monarchinitiative.hpo_case_annotator.forms.BindingObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.base.BindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Utils;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualDetailController;
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class PhenotypeBrowserController<T extends BaseObservableIndividual> extends BindingObservableDataController<T> {
+public class PhenotypeBrowserController<T extends BaseObservableIndividual> extends BindingObservableDataComponent<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PhenotypeBrowserController.class);
     private final HCAControllerFactory controllerFactory;

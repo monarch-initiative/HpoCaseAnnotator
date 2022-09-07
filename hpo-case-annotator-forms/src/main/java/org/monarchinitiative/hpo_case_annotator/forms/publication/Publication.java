@@ -6,14 +6,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
 
 import java.io.IOException;
 
 import static javafx.beans.binding.Bindings.*;
 
-public class Publication extends VBox implements ObservableDataController<ObservablePublication> {
+public class Publication extends VBox implements ObservableDataComponent<ObservablePublication> {
 
     private final ObjectProperty<ObservablePublication> item = new SimpleObjectProperty<>();
 

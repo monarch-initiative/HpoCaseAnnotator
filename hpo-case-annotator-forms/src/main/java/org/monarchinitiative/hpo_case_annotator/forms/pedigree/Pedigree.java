@@ -12,7 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxBindingObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigree;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
@@ -33,7 +33,7 @@ import java.io.IOException;
  * Furthermore, the {@link Pedigree} tracks {@link #variantsProperty()} to keep variant genotype tables of the managed
  * {@link org.monarchinitiative.hpo_case_annotator.model.v2.PedigreeMember}s.
  */
-public class Pedigree extends VBoxBindingObservableDataController<ObservablePedigree> {
+public class Pedigree extends VBoxBindingObservableDataComponent<ObservablePedigree> {
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
     private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();

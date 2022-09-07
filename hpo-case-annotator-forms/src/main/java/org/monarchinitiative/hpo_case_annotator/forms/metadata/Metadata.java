@@ -9,7 +9,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableEditHistory;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudyMetadata;
 
@@ -17,7 +17,7 @@ import java.io.IOException;
 
 import static javafx.beans.binding.Bindings.select;
 
-public class Metadata extends VBox implements ObservableDataController<ObservableStudyMetadata> {
+public class Metadata extends VBox implements ObservableDataComponent<ObservableStudyMetadata> {
 
     private final ObjectProperty<ObservableStudyMetadata> item = new SimpleObjectProperty<>();
 

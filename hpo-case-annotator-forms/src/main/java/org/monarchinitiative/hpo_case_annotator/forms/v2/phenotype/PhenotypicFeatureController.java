@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.BindingObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.base.BindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.AgeController;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
-public class PhenotypicFeatureController extends BindingObservableDataController<ObservablePhenotypicFeature> {
+public class PhenotypicFeatureController extends BindingObservableDataComponent<ObservablePhenotypicFeature> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PhenotypicFeatureController.class);
 

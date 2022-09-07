@@ -9,7 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.stage.StageStyle;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.disease.BaseDiseaseDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseTable;
@@ -38,7 +38,7 @@ import static javafx.beans.binding.Bindings.*;
  * Furthermore, the component tracks {@link #variantsProperty()} to keep variant genotype table in sync with variants
  * in the study.
  */
-public abstract class BaseIndividual<T extends BaseObservableIndividual> extends VBoxObservableDataController<T> {
+public abstract class BaseIndividual<T extends BaseObservableIndividual> extends VBoxObservableDataComponent<T> {
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
     private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();

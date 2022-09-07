@@ -1,7 +1,8 @@
-package org.monarchinitiative.hpo_case_annotator.forms;
+package org.monarchinitiative.hpo_case_annotator.forms.base;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
+import org.monarchinitiative.hpo_case_annotator.forms.DataEdit;
 
 /**
  * A {@link DataEdit} implementation that also happens to be a {@link VBox}.

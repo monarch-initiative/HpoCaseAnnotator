@@ -2,7 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.variants.detail;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
 
@@ -16,7 +16,7 @@ import static javafx.beans.binding.Bindings.*;
  * <p>
  * The class manages genomic assembly for all variant notations.
  */
-abstract class BaseVariantDetail extends VBoxObservableDataController<ObservableCuratedVariant> {
+abstract class BaseVariantDetail extends VBoxObservableDataComponent<ObservableCuratedVariant> {
 
     @FXML
     private TitledLabel assembly;

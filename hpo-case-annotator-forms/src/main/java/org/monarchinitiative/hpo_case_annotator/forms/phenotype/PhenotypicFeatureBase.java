@@ -8,7 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxBindingObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
@@ -26,7 +26,7 @@ import java.net.URL;
  *     <li>{@link #hpoProperty()} ()} for showing HPO term definitions</li>
  * </ul>
  */
-public abstract class PhenotypicFeatureBase extends VBoxBindingObservableDataController<ObservablePhenotypicFeature> {
+public abstract class PhenotypicFeatureBase extends VBoxBindingObservableDataComponent<ObservablePhenotypicFeature> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PhenotypicFeatureBase.class);
 

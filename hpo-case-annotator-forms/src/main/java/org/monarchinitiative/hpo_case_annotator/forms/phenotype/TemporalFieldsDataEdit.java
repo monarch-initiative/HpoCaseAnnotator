@@ -3,7 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.phenotype;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementDataEdit;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;

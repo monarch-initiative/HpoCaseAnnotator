@@ -8,7 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxBindingObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 
 import org.monarchinitiative.hpo_case_annotator.forms.metadata.Metadata;
 import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication;
@@ -21,7 +21,7 @@ import org.monarchinitiative.phenol.ontology.data.Ontology;
 import java.io.IOException;
 import java.net.URL;
 
-public abstract class BaseStudy<T extends ObservableStudy> extends VBoxBindingObservableDataController<T> {
+public abstract class BaseStudy<T extends ObservableStudy> extends VBoxBindingObservableDataComponent<T> {
 
     protected final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
     protected final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();

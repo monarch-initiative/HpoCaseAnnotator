@@ -3,7 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.component;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxBindingObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementBindingComponent;
 import org.monarchinitiative.hpo_case_annotator.model.v2.VitalStatus;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
@@ -11,7 +11,7 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableVitalSta
 
 import java.io.IOException;
 
-public class VitalStatusBindingComponent extends VBoxBindingObservableDataController<ObservableVitalStatus> {
+public class VitalStatusBindingComponent extends VBoxBindingObservableDataComponent<ObservableVitalStatus> {
 
     @FXML
     private TitledComboBox<VitalStatus.Status> vitalStatus;

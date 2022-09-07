@@ -8,14 +8,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
 
 import java.io.IOException;
 
 import static javafx.beans.binding.Bindings.*;
 
-public class TimeElementComponent extends VBox implements ObservableDataController<ObservableTimeElement> {
+public class TimeElementComponent extends VBox implements ObservableDataComponent<ObservableTimeElement> {
 
     private static Label NO_AGE_PLACEHOLDER;
     private final ObjectProperty<ObservableTimeElement> data = new SimpleObjectProperty<>();

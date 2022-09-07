@@ -8,7 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
-import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  *
  * @param <T> type of the data under construction
  */
-public class Stepper<T> implements ObservableDataController<T> {
+public class Stepper<T> implements ObservableDataComponent<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Stepper.class);
 

@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;

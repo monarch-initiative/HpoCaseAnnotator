@@ -3,7 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.publication;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextFormatter;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;

@@ -3,7 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.variants;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.variants.detail.BreakendVariantDetail;
 import org.monarchinitiative.hpo_case_annotator.forms.variants.detail.SequenceVariantDetail;
 import org.monarchinitiative.hpo_case_annotator.forms.variants.detail.SymbolicVariantDetail;
@@ -30,7 +30,7 @@ class ObservableCuratedVariantListCell extends ListCell<ObservableCuratedVariant
                 return;
             }
 
-            VBoxObservableDataController<ObservableCuratedVariant> detail = switch (notation) {
+            VBoxObservableDataComponent<ObservableCuratedVariant> detail = switch (notation) {
                 case SEQUENCE -> new SequenceVariantDetail();
                 case SYMBOLIC -> new SymbolicVariantDetail();
                 case BREAKEND -> new BreakendVariantDetail();

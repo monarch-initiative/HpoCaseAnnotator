@@ -4,10 +4,10 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
-import org.monarchinitiative.hpo_case_annotator.forms.BindingObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.base.BindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudyMetadata;
 
-public class StudyMetadataController extends BindingObservableDataController<ObservableStudyMetadata> {
+public class StudyMetadataController extends BindingObservableDataComponent<ObservableStudyMetadata> {
 
     private final ObjectProperty<ObservableStudyMetadata> studyMetadata = new SimpleObjectProperty<>(this, "studyMetadata", new ObservableStudyMetadata());
 

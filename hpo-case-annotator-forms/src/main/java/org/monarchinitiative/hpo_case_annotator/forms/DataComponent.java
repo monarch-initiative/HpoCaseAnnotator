@@ -1,6 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms;
 
-public interface DataController<T> {
+public interface DataComponent<T> {
 
     /**
      * @return {@link T} representing the actual state of the controller, possibly {@code null} value.

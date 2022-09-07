@@ -9,7 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.hpo_case_annotator.forms.util.GenotypeStringConverter;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Optional;
 
-public class VariantGenotypeTable extends VBoxObservableDataController<BaseObservableIndividual> {
+public class VariantGenotypeTable extends VBoxObservableDataComponent<BaseObservableIndividual> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VariantGenotypeTable.class);
 

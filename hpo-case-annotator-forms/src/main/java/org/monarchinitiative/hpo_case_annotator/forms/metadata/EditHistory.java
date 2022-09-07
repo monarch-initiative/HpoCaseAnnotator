@@ -5,13 +5,13 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.HBox;
-import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableEditHistory;
 
 import java.io.IOException;
 
-public class EditHistory extends HBox implements ObservableDataController<ObservableEditHistory> {
+public class EditHistory extends HBox implements ObservableDataComponent<ObservableEditHistory> {
 
     private final ObjectProperty<ObservableEditHistory> data = new SimpleObjectProperty<>();
 

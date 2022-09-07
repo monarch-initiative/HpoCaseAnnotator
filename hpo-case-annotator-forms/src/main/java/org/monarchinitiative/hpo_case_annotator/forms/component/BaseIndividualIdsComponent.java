@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxBindingObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
@@ -18,7 +18,7 @@ import java.net.URL;
 
 import static javafx.beans.binding.Bindings.select;
 
-public class BaseIndividualIdsComponent<T extends BaseObservableIndividual> extends VBoxBindingObservableDataController<T> {
+public class BaseIndividualIdsComponent<T extends BaseObservableIndividual> extends VBoxBindingObservableDataComponent<T> {
 
     private final ObjectProperty<ObservableTimeElement> age = new SimpleObjectProperty<>();
 

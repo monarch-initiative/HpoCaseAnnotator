@@ -4,11 +4,11 @@ package org.monarchinitiative.hpo_case_annotator.forms.v2;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.BindingObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.base.BindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudy;
 
-public abstract class StudyController<T extends ObservableStudy> extends BindingObservableDataController<T> {
+public abstract class StudyController<T extends ObservableStudy> extends BindingObservableDataComponent<T> {
 
     @FXML
     private TextField studyIdTextField;

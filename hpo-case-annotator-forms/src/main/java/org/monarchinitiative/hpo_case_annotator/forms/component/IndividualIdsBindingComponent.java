@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
-import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementBindingComponent;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividual;
@@ -15,7 +15,7 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElem
 
 import java.io.IOException;
 
-public class IndividualIdsBindingComponent extends HBox implements ObservableDataController<ObservableIndividual> {
+public class IndividualIdsBindingComponent extends HBox implements ObservableDataComponent<ObservableIndividual> {
 
     private final ObjectProperty<ObservableIndividual> data = new SimpleObjectProperty<>();
     @FXML

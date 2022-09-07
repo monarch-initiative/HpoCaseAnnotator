@@ -19,6 +19,7 @@ import org.monarchinitiative.hpo_case_annotator.core.reference.functional.Functi
 import org.monarchinitiative.hpo_case_annotator.forms.*;
 import org.monarchinitiative.hpo_case_annotator.core.reference.genome.GenomicAssemblyService;
 import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataException;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxDataEdit;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.StructuralVariantMetadata;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadata;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;

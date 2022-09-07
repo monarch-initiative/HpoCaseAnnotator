@@ -1,9 +1,9 @@
-package org.monarchinitiative.hpo_case_annotator.forms;
+package org.monarchinitiative.hpo_case_annotator.forms.base;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-public abstract class BaseBindingObservableDataController<T> extends BindingObservableDataController<T> {
+public abstract class BaseBindingObservableDataComponent<T> extends BindingObservableDataComponent<T> {
 
     protected final ObjectProperty<T> data = new SimpleObjectProperty<>();
 

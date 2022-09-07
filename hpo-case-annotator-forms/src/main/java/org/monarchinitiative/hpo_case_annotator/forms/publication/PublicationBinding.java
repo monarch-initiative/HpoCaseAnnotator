@@ -6,14 +6,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
 
 import java.io.IOException;
 
-public class PublicationBinding extends VBox implements ObservableDataController<ObservablePublication> {
+public class PublicationBinding extends VBox implements ObservableDataComponent<ObservablePublication> {
 
     private final ObjectProperty<ObservablePublication> data = new SimpleObjectProperty<>();
 

@@ -6,7 +6,7 @@ import javafx.beans.property.ObjectProperty;
  * represents a case, either V1 or V2, or an observable component of the case.
  * @param <T>
  */
-public interface ObservableDataController<T> extends DataController<T> {
+public interface ObservableDataComponent<T> extends DataComponent<T> {
 
     ObjectProperty<T> dataProperty();
 

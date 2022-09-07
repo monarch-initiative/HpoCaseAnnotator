@@ -13,7 +13,7 @@ import javafx.scene.control.TextField;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.DiseaseIdentifier;

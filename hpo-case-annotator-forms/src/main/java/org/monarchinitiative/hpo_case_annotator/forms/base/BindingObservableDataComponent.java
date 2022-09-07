@@ -1,9 +1,10 @@
-package org.monarchinitiative.hpo_case_annotator.forms;
+package org.monarchinitiative.hpo_case_annotator.forms.base;
 
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataComponent;
 
-public abstract class BindingObservableDataController<T> implements ObservableDataController<T> {
+public abstract class BindingObservableDataComponent<T> implements ObservableDataComponent<T> {
 
     @FXML
     protected void initialize() {

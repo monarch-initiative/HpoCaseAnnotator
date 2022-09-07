@@ -13,7 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;

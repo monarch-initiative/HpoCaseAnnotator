@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import org.monarchinitiative.hpo_case_annotator.forms.VBoxObservableDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
@@ -13,7 +13,7 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedV
 import java.io.IOException;
 import java.net.URL;
 
-abstract class VariantGenotypesObservableData<T extends BaseObservableIndividual> extends VBoxObservableDataController<T> {
+abstract class VariantGenotypesObservableData<T extends BaseObservableIndividual> extends VBoxObservableDataComponent<T> {
 
     private final ListProperty<ObservableCuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
 
