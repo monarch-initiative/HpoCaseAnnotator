@@ -11,10 +11,6 @@ public class ObservableAge implements Age, ObservableItem {
 
     static final Callback<ObservableAge, Stream<Observable>> EXTRACTOR = oa -> Stream.of(oa.years, oa.months, oa.days);
 
-    public static ObservableAge defaultInstance() {
-        return new ObservableAge();
-    }
-
     // Years, months, and days are nullable, hence ObjectProperty.
     private final ObjectProperty<Integer> years = new SimpleObjectProperty<>(this, "years");
     private final ObjectProperty<Integer> months = new SimpleObjectProperty<>(this, "months");

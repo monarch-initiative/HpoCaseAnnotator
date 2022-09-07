@@ -11,18 +11,15 @@ import java.util.stream.Stream;
 
 public class ObservableTimeElement implements TimeElement, ObservableItem {
 
-    static final Callback<ObservableTimeElement, Stream<Observable>> EXTRACTOR = ote -> Stream.of(ote.timeElementCase, ote.gestationalAge, ote.age, ote.ageRange, ote.ontologyClass);
+    static final Callback<ObservableTimeElement, Stream<Observable>> EXTRACTOR = ote -> Stream.of(
+            ote.timeElementCase,
+            ote.gestationalAge,
+            ote.age,
+            ote.ageRange,
+            ote.ontologyClass);
 
-    public static ObservableTimeElement defaultInstance() {
-        ObservableTimeElement instance = new ObservableTimeElement();
-        instance.setTimeElementCase(TimeElementCase.AGE);
-        instance.setGestationalAge(ObservableGestationalAge.defaultInstance());
-        instance.setAge(ObservableAge.defaultInstance());
-        instance.setAgeRange(ObservableAgeRange.defaultInstance());
-        return instance;
-    }
-
-    private final ObjectProperty<TimeElement.TimeElementCase> timeElementCase = new SimpleObjectProperty<>(this, "timeElementCase");
+    // Time element case must not be null when starting.
+    private final ObjectProperty<TimeElement.TimeElementCase> timeElementCase = new SimpleObjectProperty<>(this, "timeElementCase", TimeElementCase.AGE);
     private final ObjectProperty<ObservableGestationalAge> gestationalAge = new SimpleObjectProperty<>(this, "gestationalAge");
     private final ObjectProperty<ObservableAge> age = new SimpleObjectProperty<>(this, "age");
     private final ObjectProperty<ObservableAgeRange> ageRange = new SimpleObjectProperty<>(this, "ageRange");

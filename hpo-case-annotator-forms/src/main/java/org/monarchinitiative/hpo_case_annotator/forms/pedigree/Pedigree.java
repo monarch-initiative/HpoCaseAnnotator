@@ -13,18 +13,31 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.VBoxBindingObservableDataController;
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigree;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 import java.io.IOException;
 
+/**
+ * {@link Pedigree} manages a list of {@link org.monarchinitiative.hpo_case_annotator.model.v2.PedigreeMember}s.
+ *
+ * <h2>Properties</h2>
+ * {@link Pedigree} needs the following properties to be set in order to work.
+ * <ul>
+ *     <li>{@link #diseaseIdentifierServiceProperty()}</li>
+ *     <li>{@link #hpoProperty()}</li>
+ * </ul>
+ * <p>
+ * Furthermore, the {@link Pedigree} tracks {@link #variantsProperty()} to keep variant genotype tables of the managed
+ * {@link org.monarchinitiative.hpo_case_annotator.model.v2.PedigreeMember}s.
+ */
 public class Pedigree extends VBoxBindingObservableDataController<ObservablePedigree> {
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
     private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();
-    private final ListProperty<CuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<ObservableCuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     @FXML
     private Label summary;
@@ -42,26 +55,7 @@ public class Pedigree extends VBoxBindingObservableDataController<ObservablePedi
         }
     }
 
-    @Override
-    protected void initialize() {
-        super.initialize();
-        members.setCellFactory(lv -> new ObservablePedigreeMemberListCell(variants, hpo, diseaseIdentifierService));
-    }
-
-    @Override
-    protected void bind(ObservablePedigree data) {
-        members.itemsProperty().bindBidirectional(data.membersProperty());
-        StringBinding summaryBinding = Bindings.createStringBinding(() -> pedigreeSummary(data), data.membersProperty());
-        summary.textProperty().bind(summaryBinding);
-    }
-
-    @Override
-    protected void unbind(ObservablePedigree data) {
-        members.itemsProperty().unbindBidirectional(data.membersProperty());
-        summary.textProperty().unbind();
-    }
-
-    public ListProperty<CuratedVariant> variantsProperty() {
+    public ListProperty<ObservableCuratedVariant> variantsProperty() {
         return variants;
     }
 
@@ -71,6 +65,29 @@ public class Pedigree extends VBoxBindingObservableDataController<ObservablePedi
 
     public ObjectProperty<DiseaseIdentifierService> diseaseIdentifierServiceProperty() {
         return diseaseIdentifierService;
+    }
+
+    @Override
+    protected void initialize() {
+        super.initialize();
+        members.setCellFactory(lv -> new ObservablePedigreeMemberListCell(variants, hpo, diseaseIdentifierService));
+    }
+
+    @Override
+    protected void bind(ObservablePedigree data) {
+        if (data != null) {
+            members.itemsProperty().bindBidirectional(data.membersProperty());
+            StringBinding summaryBinding = Bindings.createStringBinding(() -> pedigreeSummary(data), data.membersProperty());
+            summary.textProperty().bind(summaryBinding);
+        }
+    }
+
+    @Override
+    protected void unbind(ObservablePedigree data) {
+        if (data != null) {
+            members.itemsProperty().unbindBidirectional(data.membersProperty());
+            summary.textProperty().unbind();
+        }
     }
 
     private static String pedigreeSummary(ObservablePedigree pedigree) {

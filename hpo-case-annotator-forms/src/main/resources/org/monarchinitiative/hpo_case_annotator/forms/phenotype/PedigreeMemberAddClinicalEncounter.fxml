@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.*?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.VBox"
+         stylesheets="@add-clinical-encounter.css">
+    <children>
+        <SplitPane dividerPositions="0.3">
+            <items>
+                <VBox>
+                    <children>
+                        <Label text="Individual"/>
+                        <PedigreeMemberIdsComponent fx:id="individualIds"/>
+
+                        <Label text="Encounter time"/>
+                        <TimeElementDataEdit fx:id="encounterTime"/>
+                    </children>
+                </VBox>
+                <VBox>
+                    <children>
+                        <Label text="Add terms"/>
+                        <TabPane id="add-terms-tab-pane" tabClosingPolicy="UNAVAILABLE">
+                            <tabs>
+                                <Tab text="Browse HPO hierarchy">
+                                    <content>
+                                        <BrowseHpo fx:id="browseHpo"/>
+                                    </content>
+                                </Tab>
+                                <Tab text="Text mining">
+                                    <content>
+                                        <fx:include fx:id="textMining" source="TextMining.fxml"/>
+                                    </content>
+                                </Tab>
+                            </tabs>
+                        </TabPane>
+                    </children>
+                </VBox>
+            </items>
+        </SplitPane>
+        <VBox>
+            <children>
+                <Label text="Added phenotype features"/>
+                <PhenotypeTable fx:id="phenotypeTable"/>
+            </children>
+        </VBox>
+    </children>
+</fx:root>

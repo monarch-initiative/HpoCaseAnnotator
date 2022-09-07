@@ -18,7 +18,6 @@ public class FamilyStudy extends BaseStudy<ObservableFamilyStudy> {
         super(FamilyStudy.class.getResource("FamilyStudy.fxml"));
     }
 
-    @FXML
     @Override
     protected void initialize() {
         super.initialize();
@@ -30,13 +29,15 @@ public class FamilyStudy extends BaseStudy<ObservableFamilyStudy> {
     @Override
     protected void bind(ObservableFamilyStudy data) {
         super.bind(data);
-        pedigree.dataProperty().bindBidirectional(data.pedigreeProperty());
+        if (data != null)
+            pedigree.dataProperty().bindBidirectional(data.pedigreeProperty());
     }
 
     @Override
     protected void unbind(ObservableFamilyStudy data) {
         super.unbind(data);
-        pedigree.dataProperty().unbindBidirectional(data.pedigreeProperty());
+        if (data != null)
+            pedigree.dataProperty().unbindBidirectional(data.pedigreeProperty());
     }
 
     @FXML

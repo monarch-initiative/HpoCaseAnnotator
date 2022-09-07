@@ -13,7 +13,6 @@ import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierServi
 import org.monarchinitiative.hpo_case_annotator.forms.individual.PedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Utils;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.*;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 
@@ -24,6 +23,19 @@ import java.util.Map;
 
 import static javafx.beans.binding.Bindings.*;
 
+/**
+ * {@link PedigreeMemberPane} presents a single {@link org.monarchinitiative.hpo_case_annotator.model.v2.PedigreeMember}.
+ *
+ * <h2>Properties</h2>
+ * {@link PedigreeMemberPane} needs the following properties to be set in order to work.
+ * <ul>
+ *     <li>{@link #diseaseIdentifierServiceProperty()}</li>
+ *     <li>{@link #hpoProperty()}</li>
+ * </ul>
+ * <p>
+ * Furthermore, the {@link PedigreeMemberPane} tracks {@link #variantsProperty()} to keep track of genotypes
+ * of the managed {@link org.monarchinitiative.hpo_case_annotator.model.v2.PedigreeMember}.
+ */
 public class PedigreeMemberPane extends TitledPane {
 
     private static final Map<Sex, Map<Boolean, Image>> SEX_AFFECTED_ICONS = loadSexAffectedIconsMap();
@@ -43,6 +55,22 @@ public class PedigreeMemberPane extends TitledPane {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public ObjectProperty<ObservablePedigreeMember> itemProperty() {
+        return item;
+    }
+
+    public ListProperty<ObservableCuratedVariant> variantsProperty() {
+        return pedigreeMember.variantsProperty();
+    }
+
+    public ObjectProperty<Ontology> hpoProperty() {
+        return pedigreeMember.hpoProperty();
+    }
+
+    public ObjectProperty<DiseaseIdentifierService> diseaseIdentifierServiceProperty() {
+        return pedigreeMember.diseaseIdentifierServiceProperty();
     }
 
     @FXML
@@ -97,22 +125,6 @@ public class PedigreeMemberPane extends TitledPane {
                         .toString();
             }
         };
-    }
-
-    public ObjectProperty<ObservablePedigreeMember> itemProperty() {
-        return item;
-    }
-
-    public ListProperty<CuratedVariant> variantsProperty() {
-        return pedigreeMember.variantsProperty();
-    }
-
-    public ObjectProperty<Ontology> hpoProperty() {
-        return pedigreeMember.hpoProperty();
-    }
-
-    public ObjectProperty<DiseaseIdentifierService> diseaseIdentifierServiceProperty() {
-        return pedigreeMember.diseaseIdentifierServiceProperty();
     }
 
     // TODO - move to an Util class with lazy loading.

@@ -17,15 +17,25 @@ import org.monarchinitiative.hpo_case_annotator.forms.disease.IndividualDiseaseD
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.IndividualPhenotypeDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
-import org.monarchinitiative.hpo_case_annotator.forms.variants.IndividualVariantDataEdit;
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.IndividualVariantGenotypesObservableData;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividualStudy;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 
+/**
+ * <h2>Properties</h2>
+ * {@link IndividualStep} needs the following properties to be set in order to work.
+ * <ul>
+ *     <li>{@link #diseaseIdentifierServiceProperty()}</li>
+ *     <li>{@link #hpoProperty()}</li>
+ * </ul>
+ * <p>
+ * Furthermore, {@link IndividualStep} keeps track of variants of the study via {@link #variantsProperty()}.
+ */
 public class IndividualStep<T extends ObservableIndividualStudy> extends BaseStep<T> {
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
-    private final ListProperty<CuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<ObservableCuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();
 
     @FXML
@@ -33,6 +43,24 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
 
     public IndividualStep() {
         super(IndividualStep.class.getResource("IndividualStep.fxml"));
+    }
+
+    public ObjectProperty<Ontology> hpoProperty() {
+        return hpo;
+    }
+
+    public ListProperty<ObservableCuratedVariant> variantsProperty() {
+        return variants;
+    }
+
+    public ObjectProperty<DiseaseIdentifierService> diseaseIdentifierServiceProperty() {
+        return diseaseIdentifierService;
+    }
+
+    @Override
+    protected void initialize() {
+        super.initialize();
+
     }
 
     @Override
@@ -48,34 +76,6 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
     @Override
     protected void unbind(T data) {
         individualIds.dataProperty().unbindBidirectional(data.individualProperty());
-    }
-
-    public Ontology getHpo() {
-        return hpo.get();
-    }
-
-    public ObjectProperty<Ontology> hpoProperty() {
-        return hpo;
-    }
-
-    public void setHpo(Ontology hpo) {
-        this.hpo.set(hpo);
-    }
-
-    public ListProperty<CuratedVariant> variantsProperty() {
-        return variants;
-    }
-
-    public DiseaseIdentifierService getDiseaseIdentifierService() {
-        return diseaseIdentifierService.get();
-    }
-
-    public ObjectProperty<DiseaseIdentifierService> diseaseIdentifierServiceProperty() {
-        return diseaseIdentifierService;
-    }
-
-    public void setDiseaseIdentifierService(DiseaseIdentifierService diseaseIdentifierService) {
-        this.diseaseIdentifierService.set(diseaseIdentifierService);
     }
 
     @FXML
@@ -128,10 +128,10 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
         // TODO - setup title
         dialog.setResizable(true);
 
-        IndividualVariantDataEdit variantDataEdit = new IndividualVariantDataEdit();
-        variantDataEdit.setData(data.get().getIndividual()); // TODO - check non null?
-        variantDataEdit.variantsProperty().bind(variants);
-        dialog.getDialogPane().setContent(variantDataEdit);
+        IndividualVariantGenotypesObservableData content = new IndividualVariantGenotypesObservableData();
+        content.setData(data.get().getIndividual()); // TODO - check non null?
+        content.variantsProperty().bind(variants);
+        dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_BUTTONS);
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
         dialog.showAndWait()

@@ -16,8 +16,6 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.GenotypedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableVariantGenotype;
-import org.monarchinitiative.svart.CoordinateSystem;
-import org.monarchinitiative.svart.Strand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,13 +58,13 @@ public class IndividualVariantSummaryController {
         genotypeTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(Genotype.values()));
         genotypeTableColumn.setOnEditCommit(commitGenotypeChange());
 
-        variantIdTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().id()));
+        variantIdTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getId()));
         genomicAssemblyTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getGenomicAssembly()));
-        contigTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getVariant().contigName()));
-        startTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getCuratedVariant().getVariant().startOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
-        endTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getCuratedVariant().getVariant().endOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
-        refTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getVariant().ref()));
-        altTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getVariant().alt()));
+        contigTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getContig().name()));
+        startTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getCuratedVariant().getStart())));
+        endTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getCuratedVariant().getEnd())));
+        refTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getRef()));
+        altTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getAlt()));
 
         variants.addListener(createCuratedVariantChangeListener());
     }

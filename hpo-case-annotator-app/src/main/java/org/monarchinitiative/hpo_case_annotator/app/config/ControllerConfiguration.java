@@ -11,8 +11,8 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualCo
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualVariantSummaryController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.*;
 import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.input.*;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeEntryController;
@@ -57,9 +57,7 @@ public class ControllerConfiguration {
     @Bean
     @Scope("prototype")
     public VariantSummary variantSummaryController(HCAControllerFactory hcaControllerFactory) {
-        VariantSummary variantSummary = new VariantSummary();
-        variantSummary.setControllerFactory(hcaControllerFactory);
-        return variantSummary;
+        return new VariantSummary();
     }
 
     @Bean
@@ -85,35 +83,44 @@ public class ControllerConfiguration {
 
     @Bean
     @Scope("prototype")
-    public VcfSequenceVariantController vcfSequenceVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry,
-                                                                     FunctionalAnnotationRegistry functionalAnnotationRegistry) {
-        return new VcfSequenceVariantController(genomicAssemblyRegistry, functionalAnnotationRegistry);
+    public VcfSequenceVariantDataEdit vcfSequenceVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry,
+                                                                   FunctionalAnnotationRegistry functionalAnnotationRegistry) {
+        VcfSequenceVariantDataEdit controller = new VcfSequenceVariantDataEdit();
+        controller.genomicAssemblyRegistryProperty().set(genomicAssemblyRegistry);
+        controller.functionalAnnotationRegistryProperty().set(functionalAnnotationRegistry);
+        return controller;
     }
 
     @Bean
     @Scope("prototype")
-    public VcfSymbolicVariantController vcfSymbolicVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry,
-                                                                     FunctionalAnnotationRegistry functionalAnnotationRegistry) {
-        return new VcfSymbolicVariantController(genomicAssemblyRegistry, functionalAnnotationRegistry);
+    public VcfSymbolicVariantDataEdit vcfSymbolicVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry,
+                                                                   FunctionalAnnotationRegistry functionalAnnotationRegistry) {
+        VcfSymbolicVariantDataEdit controller = new VcfSymbolicVariantDataEdit();
+        controller.genomicAssemblyRegistryProperty().set(genomicAssemblyRegistry);
+        controller.functionalAnnotationRegistryProperty().set(functionalAnnotationRegistry);
+        return controller;
     }
 
     @Bean
     @Scope("prototype")
-    public VcfBreakendVariantController vcfBreakendVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry,
-                                                                     FunctionalAnnotationRegistry functionalAnnotationRegistry) {
-        return new VcfBreakendVariantController(genomicAssemblyRegistry, functionalAnnotationRegistry);
+    public VcfBreakendVariantDataEdit vcfBreakendVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry,
+                                                                   FunctionalAnnotationRegistry functionalAnnotationRegistry) {
+        VcfBreakendVariantDataEdit controller = new VcfBreakendVariantDataEdit();
+        controller.genomicAssemblyRegistryProperty().set(genomicAssemblyRegistry);
+        controller.functionalAnnotationRegistryProperty().set(functionalAnnotationRegistry);
+        return controller;
     }
 
     @Bean
     @Scope("prototype")
-    public BreakendController breakendController() {
-        return new BreakendController();
+    public GenomicBreakendDataEdit breakendController() {
+        return new GenomicBreakendDataEdit();
     }
 
     @Bean
     @Scope("prototype")
-    public FunctionalAnnotationController functionalAnnotationController() {
-        return new FunctionalAnnotationController();
+    public FunctionalAnnotationTable functionalAnnotationController() {
+        return new FunctionalAnnotationTable();
     }
 
     /* *****************************************  Individual controllers   ***************************************** */

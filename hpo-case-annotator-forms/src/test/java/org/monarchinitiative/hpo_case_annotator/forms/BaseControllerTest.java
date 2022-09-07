@@ -3,6 +3,8 @@ package org.monarchinitiative.hpo_case_annotator.forms;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifier;
 import org.monarchinitiative.hpo_case_annotator.core.reference.GeneIdentifierService;
+import org.monarchinitiative.hpo_case_annotator.core.reference.functional.JannovarFunctionalAnnotationService;
+import org.monarchinitiative.hpo_case_annotator.model.HpoCaseAnnotatorException;
 import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseIdentifier;
 import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
@@ -23,7 +25,19 @@ public class BaseControllerTest {
 
     public static final GenomicAssemblyRegistry GENOMIC_ASSEMBLY_REGISTRY = createGenomicAssemblyRegistry();
 
-    public static final FunctionalAnnotationRegistry FUNCTIONAL_ANNOTATION_REGISTRY = new FunctionalAnnotationRegistry();
+    public static final FunctionalAnnotationRegistry FUNCTIONAL_ANNOTATION_REGISTRY = createFunctionalAnnotationRegistry();
+
+    private static FunctionalAnnotationRegistry createFunctionalAnnotationRegistry() {
+        try {
+            FunctionalAnnotationRegistry registry = new FunctionalAnnotationRegistry();
+            registry.setHg19Service(JannovarFunctionalAnnotationService.of(TEST_BASE_DIR.resolve("hg19").resolve("hg19_refseq.small.ser")));
+            registry.setHg38Service(JannovarFunctionalAnnotationService.of(TEST_BASE_DIR.resolve("hg38").resolve("hg38_refseq.small.ser")));
+            return registry;
+        } catch (HpoCaseAnnotatorException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static final GeneIdentifierService GENE_IDENTIFIER_SERVICE = makeGeneIdService();
     public static final ControllerFactory CONTROLLER_FACTORY = new ControllerFactory(GENOMIC_ASSEMBLY_REGISTRY, FUNCTIONAL_ANNOTATION_REGISTRY, GENE_IDENTIFIER_SERVICE);
 

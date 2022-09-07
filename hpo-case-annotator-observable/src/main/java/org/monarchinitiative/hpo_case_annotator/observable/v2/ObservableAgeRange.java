@@ -12,13 +12,6 @@ public class ObservableAgeRange implements AgeRange, ObservableItem {
 
     static final Callback<ObservableAgeRange, Stream<Observable>> EXTRACTOR = or -> Stream.of(or.start, or.end);
 
-    public static ObservableAgeRange defaultInstance() {
-        ObservableAgeRange instance = new ObservableAgeRange();
-        instance.setStart(ObservableAge.defaultInstance());
-        instance.setEnd(ObservableAge.defaultInstance());
-        return instance;
-    }
-
     private final ObjectProperty<ObservableAge> start = new SimpleObjectProperty<>(this, "start");
     private final ObjectProperty<ObservableAge> end = new SimpleObjectProperty<>(this, "end");
 

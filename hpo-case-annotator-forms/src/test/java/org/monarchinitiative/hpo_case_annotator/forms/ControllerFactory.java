@@ -7,8 +7,11 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.IndividualCo
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualVariantSummaryController;
 import org.monarchinitiative.hpo_case_annotator.forms.tree.SimpleOntologyClassTreeView;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.*;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.*;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.cache.HgvsVariantController;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.input.GenomicBreakendDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.input.VcfBreakendVariantDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.input.VcfSequenceVariantDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.input.VcfSymbolicVariantDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.input.cache.HgvsVariantController;
 
 public class ControllerFactory implements HCAControllerFactory {
 
@@ -31,14 +34,23 @@ public class ControllerFactory implements HCAControllerFactory {
     @Override
     public Object call(Class<?> clz) {
         // variant
-        if (clz.equals(VcfSequenceVariantController.class)) {
-            return new VcfSequenceVariantController(genomicAssemblyRegistry, functionalAnnotationRegistry);
-        } else if (clz.equals(VcfSymbolicVariantController.class)) {
-            return new VcfSymbolicVariantController(genomicAssemblyRegistry, functionalAnnotationRegistry);
-        } else if (clz.equals(VcfBreakendVariantController.class)) {
-            return new VcfBreakendVariantController(genomicAssemblyRegistry, functionalAnnotationRegistry);
-        } else if (clz.equals(BreakendController.class)) {
-            return new BreakendController();
+        if (clz.equals(VcfSequenceVariantDataEdit.class)) {
+            VcfSequenceVariantDataEdit controller = new VcfSequenceVariantDataEdit();
+            controller.genomicAssemblyRegistryProperty().set(genomicAssemblyRegistry);
+            controller.functionalAnnotationRegistryProperty().set(functionalAnnotationRegistry);
+            return controller;
+        } else if (clz.equals(VcfSymbolicVariantDataEdit.class)) {
+            VcfSymbolicVariantDataEdit controller = new VcfSymbolicVariantDataEdit();
+            controller.genomicAssemblyRegistryProperty().set(genomicAssemblyRegistry);
+            controller.functionalAnnotationRegistryProperty().set(functionalAnnotationRegistry);
+            return controller;
+        } else if (clz.equals(VcfBreakendVariantDataEdit.class)) {
+            VcfBreakendVariantDataEdit controller = new VcfBreakendVariantDataEdit();
+            controller.genomicAssemblyRegistryProperty().set(genomicAssemblyRegistry);
+            controller.functionalAnnotationRegistryProperty().set(functionalAnnotationRegistry);
+            return controller;
+        } else if (clz.equals(GenomicBreakendDataEdit.class)) {
+            return new GenomicBreakendDataEdit();
         } else if (clz.equals(HgvsVariantController.class)) {
             return new HgvsVariantController(geneIdentifierService);
         }

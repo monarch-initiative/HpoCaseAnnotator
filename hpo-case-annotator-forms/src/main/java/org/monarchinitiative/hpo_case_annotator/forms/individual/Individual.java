@@ -3,13 +3,13 @@ package org.monarchinitiative.hpo_case_annotator.forms.individual;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
-import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsEditableComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsEditableComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.disease.BaseDiseaseDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.disease.IndividualDiseaseDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.IndividualPhenotypeDataEdit;
-import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.BasePhenotypeDataEdit;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividual;
 
 public class Individual extends BaseIndividual<ObservableIndividual> {
@@ -34,17 +34,17 @@ public class Individual extends BaseIndividual<ObservableIndividual> {
     }
 
     @Override
-    protected BaseIndividualIdsEditableComponent<ObservableIndividual> getIdsEditableComponent() {
-        return new IndividualIdsEditableComponent();
+    protected BaseIndividualIdsDataEdit<ObservableIndividual> getIdsDataEdit() {
+        return new IndividualIdsDataEdit();
     }
 
     @Override
-    protected PhenotypeDataEdit<ObservableIndividual> getPhenotypeDataEdit() {
+    protected BasePhenotypeDataEdit<ObservableIndividual> getPhenotypeDataEdit() {
         return new IndividualPhenotypeDataEdit();
     }
 
     @Override
-    protected DiseaseDataEdit<ObservableIndividual> getDiseaseDataEdit() {
+    protected BaseDiseaseDataEdit<ObservableIndividual> getDiseaseDataEdit() {
         return new IndividualDiseaseDataEdit();
     }
 }

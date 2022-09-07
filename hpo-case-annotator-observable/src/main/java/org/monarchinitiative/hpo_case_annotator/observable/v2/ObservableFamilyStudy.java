@@ -7,14 +7,6 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 
 public class ObservableFamilyStudy extends ObservableStudy implements FamilyStudy {
 
-    public static ObservableFamilyStudy defaultInstance() {
-        ObservableFamilyStudy instance = new ObservableFamilyStudy();
-        instance.setPublication(ObservablePublication.defaultInstance());
-        instance.setPedigree(ObservablePedigree.defaultInstance());
-        instance.setStudyMetadata(ObservableStudyMetadata.defaultInstance());
-        return instance;
-    }
-
     private final ObjectProperty<ObservablePedigree> pedigree = new SimpleObjectProperty<>(this, "pedigree");
 
     public ObservableFamilyStudy() {

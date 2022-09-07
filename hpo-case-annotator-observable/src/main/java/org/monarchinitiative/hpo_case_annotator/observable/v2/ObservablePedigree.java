@@ -9,9 +9,6 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.PedigreeMember;
 
 public class ObservablePedigree implements Pedigree {
 
-    public static ObservablePedigree defaultInstance() {
-        return new ObservablePedigree();
-    }
     private final ListProperty<ObservablePedigreeMember> members = new SimpleListProperty<>(this, "members", FXCollections.observableArrayList());
 
     public ObservablePedigree() {

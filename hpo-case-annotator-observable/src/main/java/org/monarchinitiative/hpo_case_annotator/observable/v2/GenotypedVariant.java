@@ -5,11 +5,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 
-import java.util.Objects;
-
 public class GenotypedVariant {
 
-    private final CuratedVariant curatedVariant;
+    private final ObservableCuratedVariant curatedVariant;
 
     private final ObjectProperty<Genotype> genotype = new SimpleObjectProperty<>(this, "genotype");
 
@@ -18,7 +16,7 @@ public class GenotypedVariant {
     }
 
     public GenotypedVariant(CuratedVariant curatedVariant, Genotype genotype) {
-        this.curatedVariant = Objects.requireNonNull(curatedVariant, "Curated variant must not be null");
+        this.curatedVariant = new ObservableCuratedVariant(curatedVariant);
         this.genotype.set(genotype);
     }
 
@@ -34,7 +32,7 @@ public class GenotypedVariant {
         this.genotype.set(genotype);
     }
 
-    public CuratedVariant getCuratedVariant() {
+    public ObservableCuratedVariant getCuratedVariant() {
         return curatedVariant;
     }
 

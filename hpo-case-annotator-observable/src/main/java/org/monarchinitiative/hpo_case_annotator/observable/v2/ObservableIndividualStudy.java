@@ -7,14 +7,6 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 
 public class ObservableIndividualStudy extends ObservableStudy implements IndividualStudy {
 
-    public static ObservableIndividualStudy defaultInstance() {
-        ObservableIndividualStudy instance = new ObservableIndividualStudy();
-        instance.setPublication(ObservablePublication.defaultInstance());
-        instance.setIndividual(ObservableIndividual.defaultInstance());
-        instance.setStudyMetadata(ObservableStudyMetadata.defaultInstance());
-        return instance;
-    }
-
     private final ObjectProperty<ObservableIndividual> individual = new SimpleObjectProperty<>(this, "individual");
 
     public ObservableIndividualStudy() {

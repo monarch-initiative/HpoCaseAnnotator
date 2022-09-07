@@ -2,6 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 
@@ -11,7 +12,7 @@ public abstract class ObservableStudy implements Study {
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
     private final ObjectProperty<ObservablePublication> publication = new SimpleObjectProperty<>(this, "publication");
-    private final ListProperty<CuratedVariant> variants = new SimpleListProperty<>(this, "variants", FXCollections.observableArrayList());
+    private final ListProperty<ObservableCuratedVariant> variants = new SimpleListProperty<>(this, "variants", FXCollections.observableArrayList());
     private final ObjectProperty<ObservableStudyMetadata> studyMetadata = new SimpleObjectProperty<>(this, "studyMetadata");
 
     public ObservableStudy() {
@@ -24,7 +25,10 @@ public abstract class ObservableStudy implements Study {
             if (study.getPublication() != null)
                 publication.set(new ObservablePublication(study.getPublication()));
 
-            variants.addAll(study.getVariants()); // TODO - implement observable variant
+            for (CuratedVariant variant : study.getVariants()) {
+                if (variant != null)
+                    variants.add(new ObservableCuratedVariant(variant));
+            }
 
             if (study.getStudyMetadata() != null)
                 studyMetadata.set(new ObservableStudyMetadata(study.getStudyMetadata()));
@@ -57,12 +61,16 @@ public abstract class ObservableStudy implements Study {
         return publication;
     }
 
-    public ListProperty<CuratedVariant> variants() {
+    @Override
+    public List<? extends ObservableCuratedVariant> getVariants() {
         return variants;
     }
 
-    @Override
-    public List<? extends CuratedVariant> getVariants() {
+    public void setVariants(ObservableList<ObservableCuratedVariant> variants) {
+        this.variants.set(variants);
+    }
+
+    public ListProperty<ObservableCuratedVariant> variantsProperty() {
         return variants;
     }
 

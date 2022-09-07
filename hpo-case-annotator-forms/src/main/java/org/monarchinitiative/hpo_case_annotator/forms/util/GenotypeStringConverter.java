@@ -16,7 +16,9 @@ public class GenotypeStringConverter extends StringConverter<Genotype> {
 
     @Override
     public String toString(Genotype object) {
-        return object.getCode();
+        return (object == null)
+                ? Genotype.UNSET.getCode()
+                : object.getCode();
     }
 
     @Override

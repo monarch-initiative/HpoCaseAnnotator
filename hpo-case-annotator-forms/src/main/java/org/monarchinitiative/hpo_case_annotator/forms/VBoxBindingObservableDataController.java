@@ -20,8 +20,11 @@ public abstract class VBoxBindingObservableDataController<T> extends VBoxObserva
 
     private ChangeListener<T> onDataChange() {
         return (obs, old, novel) -> {
-            if (old != null) unbind(old);
-            if (novel != null) bind(novel);
+            // TODO - this may cause issues downstream
+//            if (old != null)
+                unbind(old);
+//            if (novel != null)
+                bind(novel);
         };
     }
 

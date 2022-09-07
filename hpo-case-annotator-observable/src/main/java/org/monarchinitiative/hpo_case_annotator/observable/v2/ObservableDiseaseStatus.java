@@ -11,10 +11,6 @@ public class ObservableDiseaseStatus implements DiseaseStatus, ObservableItem {
 
     static final Callback<ObservableDiseaseStatus, Stream<Observable>> EXTRACTOR = oa -> Stream.of(oa.excluded);
 
-    public static ObservableDiseaseStatus defaultInstance() {
-        return new ObservableDiseaseStatus();
-    }
-
     private DiseaseIdentifier diseaseId;
     private final BooleanProperty excluded = new SimpleBooleanProperty(this, "excluded");
 

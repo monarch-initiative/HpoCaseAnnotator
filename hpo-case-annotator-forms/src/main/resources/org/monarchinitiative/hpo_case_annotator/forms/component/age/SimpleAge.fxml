@@ -7,8 +7,8 @@
          type="javafx.scene.layout.HBox"
          stylesheets="@simple-age.css" id="age-box">
     <children>
-        <TitledLabel fx:id="years" name="Years" text="5" />
-        <TitledLabel fx:id="months" name="Months" text="2" />
-        <TitledLabel fx:id="days" name="Days" text="1" />
+        <TitledLabel fx:id="years" name="Years"/>
+        <TitledLabel fx:id="months" name="Months"/>
+        <TitledLabel fx:id="days" name="Days"/>
     </children>
 </fx:root>

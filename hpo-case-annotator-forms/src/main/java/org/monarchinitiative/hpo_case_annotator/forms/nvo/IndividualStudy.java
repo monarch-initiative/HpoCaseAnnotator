@@ -28,13 +28,15 @@ public class IndividualStudy extends BaseStudy<ObservableIndividualStudy> {
     @Override
     protected void bind(ObservableIndividualStudy data) {
         super.bind(data);
-        individual.dataProperty().bindBidirectional(data.individualProperty());
+        if (data != null)
+            individual.dataProperty().bindBidirectional(data.individualProperty());
     }
 
     @Override
     protected void unbind(ObservableIndividualStudy data) {
         super.unbind(data);
-        individual.dataProperty().unbindBidirectional(data.individualProperty());
+        if (data != null)
+            individual.dataProperty().unbindBidirectional(data.individualProperty());
     }
 
     @FXML

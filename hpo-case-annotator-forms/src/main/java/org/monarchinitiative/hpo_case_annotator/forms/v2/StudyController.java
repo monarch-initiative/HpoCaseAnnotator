@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms.v2;
 
 
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -39,7 +38,7 @@ public abstract class StudyController<T extends ObservableStudy> extends Binding
 
         publicationController.dataProperty().bindBidirectional(study.publicationProperty());
 
-        Bindings.bindContentBidirectional(variantSummary.curatedVariants(), study.variants());
+        variantSummary.variants().bindBidirectional(study.variantsProperty());
 
         studyMetadataController.dataProperty().bindBidirectional(study.studyMetadataProperty());
     }
@@ -50,7 +49,7 @@ public abstract class StudyController<T extends ObservableStudy> extends Binding
 
         publicationController.dataProperty().unbindBidirectional(study.publicationProperty());
 
-        Bindings.unbindContentBidirectional(variantSummary.curatedVariants(), study.variants());
+        variantSummary.variants().unbindBidirectional(study.variantsProperty());
 
         studyMetadataController.dataProperty().unbindBidirectional(study.studyMetadataProperty());
     }

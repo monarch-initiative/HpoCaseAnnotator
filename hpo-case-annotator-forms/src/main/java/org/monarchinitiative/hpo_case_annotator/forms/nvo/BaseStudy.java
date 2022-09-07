@@ -44,8 +44,8 @@ public abstract class BaseStudy<T extends ObservableStudy> extends VBoxBindingOb
     @FXML
     private Metadata metadataSummary;
 
-    protected BaseStudy(URL url) {
-        FXMLLoader loader = new FXMLLoader(url);
+    protected BaseStudy(URL location) {
+        FXMLLoader loader = new FXMLLoader(location);
         loader.setRoot(this);
         loader.setController(this);
         try {
@@ -53,28 +53,6 @@ public abstract class BaseStudy<T extends ObservableStudy> extends VBoxBindingOb
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    protected void initialize() {
-        super.initialize();
-        editPublication.visibleProperty().bind(publicationPane.hoverProperty());
-    }
-
-    @Override
-    protected void bind(T data) {
-        publication.dataProperty().bindBidirectional(data.publicationProperty());
-
-        variantSummary.variants().bindBidirectional(data.variants());
-        metadataSummary.dataProperty().bind(data.studyMetadataProperty());
-    }
-
-    @Override
-    protected void unbind(T data) {
-        publication.dataProperty().unbindBidirectional(data.publicationProperty());
-
-        variantSummary.variants().unbindBidirectional(data.variants());
-        metadataSummary.dataProperty().unbind();
     }
 
     public ObjectProperty<Ontology> hpoProperty() {
@@ -85,6 +63,31 @@ public abstract class BaseStudy<T extends ObservableStudy> extends VBoxBindingOb
         return diseaseIdentifierService;
     }
 
+    @Override
+    protected void initialize() {
+        super.initialize();
+        editPublication.visibleProperty().bind(publicationPane.hoverProperty());
+    }
+
+    @Override
+    protected void bind(T data) {
+        if (data != null) {
+            publication.dataProperty().bindBidirectional(data.publicationProperty());
+
+            variantSummary.variants().bindBidirectional(data.variantsProperty());
+            metadataSummary.dataProperty().bind(data.studyMetadataProperty());
+        }
+    }
+
+    @Override
+    protected void unbind(T data) {
+        if (data != null) {
+            publication.dataProperty().unbindBidirectional(data.publicationProperty());
+
+            variantSummary.variants().unbindBidirectional(data.variantsProperty());
+            metadataSummary.dataProperty().unbind();
+        }
+    }
     @FXML
     private void editPublicationAction(ActionEvent e) {
         Dialog<Boolean> dialog = new Dialog<>();

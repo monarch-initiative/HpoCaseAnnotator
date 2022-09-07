@@ -5,10 +5,6 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.Publication;
 
 public class ObservablePublication implements Publication {
 
-    public static ObservablePublication defaultInstance() {
-        return new ObservablePublication();
-    }
-
     private final StringProperty authors = new SimpleStringProperty(this, "authors");
     private final StringProperty title = new SimpleStringProperty(this, "title");
     private final StringProperty journal = new SimpleStringProperty(this, "journal");

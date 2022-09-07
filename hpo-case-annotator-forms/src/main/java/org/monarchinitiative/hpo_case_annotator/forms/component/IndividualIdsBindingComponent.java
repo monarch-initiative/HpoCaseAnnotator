@@ -59,7 +59,7 @@ public class IndividualIdsBindingComponent extends HBox implements ObservableDat
             if (ageIsUnknown)
                 data.get().setAge(null);
             else
-                data.get().setAge(ObservableTimeElement.defaultInstance());
+                data.get().setAge(new ObservableTimeElement());
         });
     }
 

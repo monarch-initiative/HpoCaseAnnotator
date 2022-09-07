@@ -13,13 +13,6 @@ import java.util.Optional;
 
 public class ObservablePedigreeMember extends BaseObservableIndividual implements PedigreeMember {
 
-    public static ObservablePedigreeMember defaultInstance() {
-        ObservablePedigreeMember instance = new ObservablePedigreeMember();
-        instance.setAge(ObservableTimeElement.defaultInstance());
-        instance.setVitalStatus(ObservableVitalStatus.defaultInstance());
-        return instance;
-    }
-
     private final StringProperty paternalId = new SimpleStringProperty(this, "paternalId");
     private final StringProperty maternalId = new SimpleStringProperty(this, "maternalId");
     private final BooleanProperty proband = new SimpleBooleanProperty(this, "proband");

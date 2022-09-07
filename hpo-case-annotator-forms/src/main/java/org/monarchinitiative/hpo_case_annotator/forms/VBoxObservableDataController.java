@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
  *
  * @param <T> type of observable data.
  */
+// TODO - remove Controller from the name
 public abstract class VBoxObservableDataController<T> extends VBox implements ObservableDataController<T> {
 
     protected final ObjectProperty<T> data = new SimpleObjectProperty<>();

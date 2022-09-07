@@ -1,9 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms.variants;
 
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -18,9 +15,8 @@ import org.monarchinitiative.hpo_case_annotator.forms.util.GenotypeStringConvert
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableVariantGenotype;
-import org.monarchinitiative.svart.CoordinateSystem;
-import org.monarchinitiative.svart.Strand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,32 +27,31 @@ public class VariantGenotypeTable extends VBoxObservableDataController<BaseObser
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VariantGenotypeTable.class);
 
-    private final ListProperty<CuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<ObservableCuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     @FXML
-    private TableView<CuratedVariant> genotypesTable;
+    private TableView<ObservableCuratedVariant> genotypesTable;
     @FXML
-    private TableColumn<CuratedVariant, Genotype> genotypeTableColumn;
+    private TableColumn<ObservableCuratedVariant, Genotype> genotypeTableColumn;
     @FXML
-    private TableColumn<CuratedVariant, String> variantIdTableColumn;
+    private TableColumn<ObservableCuratedVariant, String> variantIdTableColumn;
     @FXML
-    private TableColumn<CuratedVariant, String> genomicAssemblyTableColumn;
+    private TableColumn<ObservableCuratedVariant, String> genomicAssemblyTableColumn;
     @FXML
-    private TableColumn<CuratedVariant, String> contigTableColumn;
+    private TableColumn<ObservableCuratedVariant, String> contigTableColumn;
     @FXML
-    private TableColumn<CuratedVariant, String> startTableColumn;
+    private TableColumn<ObservableCuratedVariant, String> startTableColumn;
     @FXML
-    private TableColumn<CuratedVariant, String> endTableColumn;
+    private TableColumn<ObservableCuratedVariant, String> endTableColumn;
     @FXML
-    private TableColumn<CuratedVariant, String> refTableColumn;
+    private TableColumn<ObservableCuratedVariant, String> refTableColumn;
     @FXML
-    private TableColumn<CuratedVariant, String> altTableColumn;
+    private TableColumn<ObservableCuratedVariant, String> altTableColumn;
 
     public VariantGenotypeTable() {
         FXMLLoader loader = new FXMLLoader(VariantGenotypeTable.class.getResource("VariantGenotypeTable.fxml"));
         loader.setRoot(this);
         loader.setController(this);
-
         try {
             loader.load();
         } catch (IOException e) {
@@ -70,13 +65,13 @@ public class VariantGenotypeTable extends VBoxObservableDataController<BaseObser
         genotypeTableColumn.setCellValueFactory(cdf -> extractGenotype(cdf.getValue().md5Hex(), data));
         genotypeTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(GenotypeStringConverter.getInstance(), Genotype.values()));
 
-        variantIdTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().id()));
-        genomicAssemblyTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getGenomicAssembly()));
-        contigTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getVariant().contigName()));
-        startTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getVariant().startOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
-        endTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getVariant().endOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
-        refTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getVariant().ref()));
-        altTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getVariant().alt()));
+        variantIdTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getId()));
+        genomicAssemblyTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getGenomicAssembly()));
+        contigTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(Utils.getContigNameOrEmptyString(cdf.getValue().getContig())));
+        startTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(Formats.NUMBER_FORMAT.format(cdf.getValue().getStart())));
+        endTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(Formats.NUMBER_FORMAT.format(cdf.getValue().getEnd())));
+        refTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getRef()));
+        altTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getAlt()));
 
         variants.addListener(handleAddingAndRemovingVariant(data));
         genotypesTable.itemsProperty().bind(variants);
@@ -129,7 +124,7 @@ public class VariantGenotypeTable extends VBoxObservableDataController<BaseObser
         };
     }
 
-    public ListProperty<CuratedVariant> variantsProperty() {
+    public ListProperty<ObservableCuratedVariant> variantsProperty() {
         return variants;
     }
 

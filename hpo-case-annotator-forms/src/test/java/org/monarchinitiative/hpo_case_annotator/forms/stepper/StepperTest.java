@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms.stepper;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,12 +10,10 @@ import javafx.stage.StageStyle;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividualStudy;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
-import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
@@ -53,7 +50,7 @@ public class StepperTest extends BaseControllerTest {
 
         Consumer<Boolean> closeHook = status -> System.err.printf("Should we commit? %s%n", status);
         Platform.runLater(() -> controller.setConclude(closeHook));
-        ObservableIndividualStudy study = ObservableIndividualStudy.defaultInstance();
+        ObservableIndividualStudy study = new ObservableIndividualStudy();
         study.setPublication(new ObservablePublication());
         Platform.runLater(() -> controller.setData(study));
         Platform.runLater(() -> controller.setSteps(FXCollections.observableList(steps.getSteps())));
@@ -80,8 +77,13 @@ public class StepperTest extends BaseControllerTest {
     }
 
     private static IndividualStudySteps prepareIndividualStudySteps() {
-        SimpleObjectProperty<Ontology> ontology = new SimpleObjectProperty<>(HPO);
-        SimpleObjectProperty<DiseaseIdentifierService> diseases = new SimpleObjectProperty<>(DISEASES);
-        return new IndividualStudySteps(CONTROLLER_FACTORY, ontology, diseases);
+        IndividualStudySteps steps = new IndividualStudySteps();
+
+        steps.hpoProperty().set(HPO);
+        steps.diseaseIdentifierServiceProperty().set(DISEASES);
+        steps.genomicAssemblyRegistryProperty().set(GENOMIC_ASSEMBLY_REGISTRY);
+        steps.functionalAnnotationRegistryProperty().set(FUNCTIONAL_ANNOTATION_REGISTRY);
+
+        return steps;
     }
 }

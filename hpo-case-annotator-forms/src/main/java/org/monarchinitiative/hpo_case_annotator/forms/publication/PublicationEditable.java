@@ -2,10 +2,8 @@ package org.monarchinitiative.hpo_case_annotator.forms.publication;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.DataEditController;
+import org.monarchinitiative.hpo_case_annotator.forms.VBoxDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
@@ -13,7 +11,7 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublicat
 import java.io.IOException;
 import java.util.Objects;
 
-public class PublicationEditable extends VBox implements DataEditController<ObservablePublication> {
+public class PublicationEditable extends VBoxDataEdit<ObservablePublication> {
 
     private static final String DEFAULT_STYLECLASS = "publication-editable";
 
@@ -38,7 +36,6 @@ public class PublicationEditable extends VBox implements DataEditController<Obse
     private TitledTextField pmid;
 
     public PublicationEditable() {
-        getStyleClass().add(DEFAULT_STYLECLASS);
         FXMLLoader loader = new FXMLLoader(PublicationEditable.class.getResource("PublicationEditable.fxml"));
         loader.setRoot(this);
         loader.setController(this);
@@ -48,10 +45,11 @@ public class PublicationEditable extends VBox implements DataEditController<Obse
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        getStyleClass().add(DEFAULT_STYLECLASS);
     }
 
     @FXML
-    private void initialize() {
+    protected void initialize() {
         year.setTextFormatter(yearTextFormatter);
     }
 

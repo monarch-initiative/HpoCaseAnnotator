@@ -39,7 +39,7 @@ public class SimpleEditableAge extends HBox {
     private void initialize() {
         years.setTextFormatter(yearsFormatter);
         months.getItems().addAll(FormUtils.getIntegers(11));
-        days.getItems().addAll(FormUtils.getIntegers(30));
+        days.getItems().addAll(FormUtils.getIntegers(31));
     }
 
     @FXML

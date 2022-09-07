@@ -11,9 +11,6 @@ import java.util.stream.Stream;
 public class ObservableGestationalAge implements GestationalAge, ObservableItem {
 
     static final Callback<ObservableGestationalAge, Stream<Observable>> EXTRACTOR = tbc -> Stream.of(tbc.weeks, tbc.days);
-    public static ObservableGestationalAge defaultInstance() {
-        return new ObservableGestationalAge();
-    }
 
     // Weeks and days are nullabe, hence ObjectProperty.
     private final ObjectProperty<Integer> weeks = new SimpleObjectProperty<>(this, "weeks");

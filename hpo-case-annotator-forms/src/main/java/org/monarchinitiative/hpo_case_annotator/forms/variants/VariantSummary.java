@@ -1,46 +1,50 @@
 package org.monarchinitiative.hpo_case_annotator.forms.variants;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.controlsfx.dialog.CommandLinksDialog;
-import org.monarchinitiative.hpo_case_annotator.forms.ComponentController;
-import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
-import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataException;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VariantNotation;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfBreakendVariantController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSequenceVariantController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSymbolicVariantController;
+import org.monarchinitiative.hpo_case_annotator.forms.FunctionalAnnotationRegistry;
+import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
+import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.input.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
-import org.monarchinitiative.svart.CoordinateSystem;
-import org.monarchinitiative.svart.GenomicVariant;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.VariantNotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Optional;
 
 /**
- * This controller is the single source of truth regarding {@link CuratedVariant}s for
+ * This controller is the single source of truth regarding {@link ObservableCuratedVariant}s for
  * {@link org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy} or for
  * {@link org.monarchinitiative.hpo_case_annotator.model.v2.CohortStudy}.
+ *
+ * <h2>Properties</h2>
+ * {@link VariantSummary} needs the following properties to be set in order to work:
+ * <ul>
+ *     <li>{@link #genomicAssemblyRegistryProperty()}</li>
+ *     <li>{@link #functionalAnnotationRegistryProperty()}</li>
+ * </ul>
+ * <p>
+ * {@link VariantSummary} exposes the following properties:
+ * <ul>
+ *     <li>{@link #variants()}</li>
+ * </ul>
  */
 public class VariantSummary extends VBox {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VariantSummary.class);
 
-    private HCAControllerFactory controllerFactory;
+    private final ObjectProperty<GenomicAssemblyRegistry> genomicAssemblyRegistry = new SimpleObjectProperty<>();
+    private final ObjectProperty<FunctionalAnnotationRegistry> functionalAnnotationRegistry = new SimpleObjectProperty<>();
 
     @FXML
     private VariantTable variantTable;
@@ -63,12 +67,8 @@ public class VariantSummary extends VBox {
         }
     }
 
-    public HCAControllerFactory getControllerFactory() {
-        return controllerFactory;
-    }
-
-    public void setControllerFactory(HCAControllerFactory controllerFactory) {
-        this.controllerFactory = controllerFactory;
+    public ObjectProperty<ObservableList<ObservableCuratedVariant>> variants() {
+        return variantTable.itemsProperty();
     }
 
     @FXML
@@ -78,11 +78,41 @@ public class VariantSummary extends VBox {
         // remove button is disabled when there are no variants in the table
         removeVariantButton.disableProperty().bind(variantTable.getSelectionModel().selectedItemProperty().isNull());
         editButton.disableProperty().bind(variantTable.getSelectionModel().selectedItemProperty().isNull());
+    }
 
+    public ObjectProperty<GenomicAssemblyRegistry> genomicAssemblyRegistryProperty() {
+        return genomicAssemblyRegistry;
+    }
+
+    public ObjectProperty<FunctionalAnnotationRegistry> functionalAnnotationRegistryProperty() {
+        return functionalAnnotationRegistry;
     }
 
     @FXML
     private void addVariantButtonAction() {
+        askForVariantNotation()
+                .flatMap(notation -> addEditVariant(notation, new ObservableCuratedVariant()))
+                .ifPresent(newVariant -> variantTable.getItems().add(newVariant));
+    }
+
+    @FXML
+    private void removeVariantButtonAction() {
+        int selectedIndex = variantTable.getSelectionModel().getSelectedIndex();
+        CuratedVariant v = variantTable.getItems().remove(selectedIndex);
+//        LOGGER.info("Removed variant {}:{}:{}{}>{}", v.id(), v.getVariant().contigName(), v.getVariant().startWithCoordinateSystem(CoordinateSystem.oneBased()), v.getVariant().ref(), v.getVariant().alt());
+    }
+
+    @FXML
+    private void editButtonAction() {
+        int index = variantTable.getSelectionModel().getSelectedIndex();
+        ObservableCuratedVariant variant = variantTable.getItems().get(index);
+
+        Optional.ofNullable(variant.getVariantNotation())
+                .or(this::askForVariantNotation) // The notation is missing from some reason
+                .flatMap(notation -> addEditVariant(notation, variant));
+    }
+
+    private Optional<VariantNotation> askForVariantNotation() {
         var sequenceVariant = new CommandLinksDialog.CommandLinksButtonType("Sequence variant", "Both REF and ALT alleles are known.", true);
         var symbolicVariant = new CommandLinksDialog.CommandLinksButtonType("Symbolic variant", "The ALT allele is symbolic (E.g. \"<DEL>\").", false);
         var breakendVariant = new CommandLinksDialog.CommandLinksButtonType("Breakend variant", "A rearrangement involving two chromosomes.", false);
@@ -91,7 +121,8 @@ public class VariantSummary extends VBox {
         dialog.setHeaderText("Select variant notation");
         dialog.setContentText("The following variant notations are supported:");
 
-        dialog.showAndWait().flatMap(bt -> {
+        return dialog.showAndWait()
+                .flatMap(bt -> {
                     if (bt.equals(sequenceVariant.getButtonType())) {
                         return Optional.of(VariantNotation.SEQUENCE);
                     } else if (bt.equals(symbolicVariant.getButtonType())) {
@@ -101,96 +132,65 @@ public class VariantSummary extends VBox {
                     } else {
                         return Optional.empty();
                     }
-                }).flatMap(notation -> addEditVariant(notation, null))
-                .ifPresent(variantTable.getItems()::add);
+                });
     }
 
-    private Optional<CuratedVariant> addEditVariant(VariantNotation notation, CuratedVariant variant) {
-        URL controllerFxmlUrl = switch (notation) {
-            case SEQUENCE -> VcfSequenceVariantController.class.getResource("VcfSequenceVariant.fxml");
-            case SYMBOLIC -> VcfSymbolicVariantController.class.getResource("VcfSymbolicVariant.fxml");
-            case BREAKEND -> VcfBreakendVariantController.class.getResource("VcfBreakendVariant.fxml");
+    /**
+     * Presents a {@link org.monarchinitiative.hpo_case_annotator.forms.DataEdit} for given {@code variant} and
+     * {@code notation}. If the user chooses to commit the changes, the updated variant is returned inside
+     * the {@link Optional}. If the user chooses to cancel without committing, the {@link Optional#empty()} is returned.
+     */
+    private Optional<ObservableCuratedVariant> addEditVariant(VariantNotation notation,
+                                                              ObservableCuratedVariant variant) {
+        // (*) Setup content
+        BaseVariantDataEdit content = switch (notation) {
+            case SEQUENCE -> new VcfSequenceVariantDataEdit();
+            case SYMBOLIC -> new VcfSymbolicVariantDataEdit();
+            case BREAKEND -> new VcfBreakendVariantDataEdit();
         };
 
-        try {
-            // setup controller
-            FXMLLoader loader = new FXMLLoader(controllerFxmlUrl);
-            loader.setControllerFactory(controllerFactory);
-            Parent parent = loader.load();
-            ComponentController<CuratedVariant> controller = loader.getController();
-            if (variant != null)
-                controller.presentComponent(variant);
+        // bind properties
+        content.genomicAssemblyRegistryProperty().bind(genomicAssemblyRegistry);
+        content.functionalAnnotationRegistryProperty().bind(functionalAnnotationRegistry);
+        content.setInitialData(variant); // TODO - check non null?
 
-            // setup stage
-            Stage stage = new Stage();
-            stage.setTitle(notation.label());
-            stage.initOwner(variantTable.getScene().getWindow());
-            stage.initModality(Modality.NONE);
-            stage.initStyle(StageStyle.DECORATED);
-            stage.setScene(new Scene(parent));
-            stage.showAndWait();
+        // (*) Setup dialog
+        Dialog<Boolean> dialog = new Dialog<>();
+        dialog.initOwner(variantTable.getParent().getScene().getWindow());
+        dialog.initStyle(StageStyle.DECORATED);
+        dialog.setTitle("Edit variant"); // TODO - set proper title
+        dialog.setResizable(true);
 
-            return Optional.ofNullable(controller.getComponent());
-        } catch (IOException | InvalidComponentDataException e) {
-            LOGGER.warn("Unable to add variant: {}", e.getMessage());
-            LOGGER.debug("Unable to add variant: {}", e.getMessage(), e);
-            return Optional.empty();
-        }
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_CANCEL_BUTTONS);
+        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
+
+        return dialog.showAndWait()
+                .flatMap(shouldCommit -> {
+                    if (shouldCommit) {
+                        content.commit();
+                        return Optional.of(variant);
+                    } else
+                        return Optional.empty();
+                });
     }
 
-    @FXML
-    private void removeVariantButtonAction() {
-        int selectedIndex = variantTable.getSelectionModel().getSelectedIndex();
-        CuratedVariant v = variantTable.getItems().remove(selectedIndex);
-        LOGGER.info("Removed variant {}:{}:{}{}>{}", v.id(), v.getVariant().contigName(), v.getVariant().startWithCoordinateSystem(CoordinateSystem.oneBased()), v.getVariant().ref(), v.getVariant().alt());
-    }
-
-    @FXML
-    private void editButtonAction() {
-        int index = variantTable.getSelectionModel().getSelectedIndex();
-        CuratedVariant variant = variantTable.getItems().get(index);
-        VariantNotation notation = resolveVariantNotation(variant.getVariant());
-        addEditVariant(notation, variant)
-                .ifPresent(edited -> variantTable.getItems().set(index, edited));
-    }
-
-    private static VariantNotation resolveVariantNotation(GenomicVariant variant) {
-        if (variant.isBreakend()) {
-            return VariantNotation.BREAKEND;
-        } else if (variant.isSymbolic()) {
-            return VariantNotation.SYMBOLIC;
-        } else {
-            return VariantNotation.SEQUENCE;
-        }
-    }
-
-    /**
-     * @deprecated use {@link #variants()} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public ObservableList<CuratedVariant> curatedVariants() {
-        return variantTable.getItems();
-    }
-
-    public ObjectProperty<ObservableList<CuratedVariant>> variants() {
-        return variantTable.itemsProperty();
-    }
-
-    /**
-     * Open edit dialog after double-clicking on a variant.
-     *
-     * @param e mouse event
-     */
-    @FXML
-    private void variantTableViewOnMouseClicked(MouseEvent e) {
-        if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
-            int index = variantTable.getSelectionModel().getSelectedIndex();
-            CuratedVariant selectedItem = variantTable.getItems().get(index);
-            addEditVariant(resolveVariantNotation(selectedItem.getVariant()), selectedItem)
-                    .ifPresent(edited -> variantTable.getItems().set(index, edited));
-
-            e.consume();
-        }
-    }
+//    /**
+//     * Open edit dialog after double-clicking on a variant.
+//     *
+//     * @param e mouse event
+//     */
+//    @FXML
+//    private void variantTableViewOnMouseClicked(MouseEvent e) {
+//        if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
+//            int index = variantTable.getSelectionModel().getSelectedIndex();
+//            ObservableCuratedVariant selectedItem = variantTable.getItems().get(index);
+//            Optional.ofNullable(selectedItem.getVariantNotation())
+//                    .flatMap(notation -> addEditVariant(notation, selectedItem))
+//                    .ifPresent(edited -> variantTable.getItems().set(index, edited));
+//
+//            e.consume();
+//        }
+//    }
 
 }

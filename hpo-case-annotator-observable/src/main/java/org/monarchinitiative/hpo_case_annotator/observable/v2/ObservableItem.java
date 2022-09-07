@@ -5,6 +5,9 @@ import javafx.beans.Observable;
 
 import java.util.stream.Stream;
 
+/**
+ * An interface to help implement {@link Observable}.
+ */
 interface ObservableItem extends Observable {
 
     Stream<Observable> dependencies();

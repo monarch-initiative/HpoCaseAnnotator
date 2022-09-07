@@ -6,12 +6,6 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.VitalStatus;
 
 public class ObservableVitalStatus implements VitalStatus {
 
-    public static ObservableVitalStatus defaultInstance() {
-        ObservableVitalStatus instance = new ObservableVitalStatus();
-        instance.setTimeOfDeath(ObservableTimeElement.defaultInstance());
-        return instance;
-    }
-
     private final ObjectProperty<Status> status = new SimpleObjectProperty<>(this, "status");
     private final ObjectProperty<ObservableTimeElement> timeOfDeath = new SimpleObjectProperty<>(this, "timeOfDeath");
 

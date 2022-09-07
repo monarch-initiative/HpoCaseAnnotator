@@ -8,11 +8,6 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.StudyMetadata;
 
 public class ObservableStudyMetadata implements StudyMetadata {
 
-    public static ObservableStudyMetadata defaultInstance() {
-        ObservableStudyMetadata instance = new ObservableStudyMetadata();
-        instance.setCreatedBy(ObservableEditHistory.defaultInstance());
-        return instance;
-    }
     private final StringProperty freeText = new SimpleStringProperty(this, "freeText");
     private final ObjectProperty<ObservableEditHistory> createdBy = new SimpleObjectProperty<>(this, "createdBy");
     private final ListProperty<ObservableEditHistory> modifiedBy = new SimpleListProperty<>(this, "modifiedBy", FXCollections.observableArrayList());

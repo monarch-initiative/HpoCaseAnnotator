@@ -7,19 +7,6 @@
          type="VBox"
          stylesheets="@variant-table.css">
     <children>
-        <TableView fx:id="variantTable" id="variant-table">
-            <columns>
-                <TableColumn fx:id="idTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="ID" />
-                <TableColumn fx:id="genomicAssemblyTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Assembly" />
-                <TableColumn fx:id="contigTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Contig" />
-                <TableColumn fx:id="startTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Start" />
-                <TableColumn fx:id="endTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="End" />
-                <TableColumn fx:id="refTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="REF" />
-                <TableColumn fx:id="altTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="ALT" />
-            </columns>
-            <placeholder>
-                <Label>No variants to display.</Label>
-            </placeholder>
-        </TableView>
+        <ListView fx:id="variantList"/>
     </children>
 </fx:root>

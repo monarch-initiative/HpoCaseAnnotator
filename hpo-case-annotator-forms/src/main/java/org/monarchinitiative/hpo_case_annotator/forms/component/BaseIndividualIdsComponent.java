@@ -6,11 +6,15 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import org.monarchinitiative.hpo_case_annotator.forms.VBoxBindingObservableDataController;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
+
+import java.io.IOException;
+import java.net.URL;
 
 import static javafx.beans.binding.Bindings.select;
 
@@ -28,6 +32,17 @@ public class BaseIndividualIdsComponent<T extends BaseObservableIndividual> exte
     private TitledLabel vitalStatus;
     @FXML
     private TimeElementComponent timeOfDeath;
+
+    protected BaseIndividualIdsComponent(URL location) {
+        FXMLLoader loader = new FXMLLoader(location);
+        loader.setRoot(this);
+        loader.setController(this);
+        try {
+            loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @FXML
     protected void initialize() {
@@ -98,19 +113,23 @@ public class BaseIndividualIdsComponent<T extends BaseObservableIndividual> exte
 
     @Override
     protected void bind(T data) {
-        individualId.textProperty().bind(data.idProperty());
-        sex.textProperty().bind(data.sexProperty().asString());
-        age.bind(data.ageProperty());
-        vitalStatus.textProperty().bind(select(data, "vitalStatus", "status").asString());
-        timeOfDeath.dataProperty().bind(select(data, "vitalStatus", "timeOfDeath"));
+        if (data != null) {
+            individualId.textProperty().bind(data.idProperty());
+            sex.textProperty().bind(data.sexProperty().asString());
+            age.bind(data.ageProperty());
+            vitalStatus.textProperty().bind(select(data, "vitalStatus", "status").asString());
+            timeOfDeath.dataProperty().bind(select(data, "vitalStatus", "timeOfDeath"));
+        }
     }
 
     @Override
     protected void unbind(T data) {
-        individualId.textProperty().unbind();
-        sex.textProperty().unbind();
-        age.unbind();
-        vitalStatus.textProperty().unbind();
-        timeOfDeath.dataProperty().unbind();
+        if (data != null) {
+            individualId.textProperty().unbind();
+            sex.textProperty().unbind();
+            age.unbind();
+            vitalStatus.textProperty().unbind();
+            timeOfDeath.dataProperty().unbind();
+        }
     }
 }

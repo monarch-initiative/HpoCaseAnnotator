@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms;
 
+@Deprecated
 public interface ComponentController<T> {
 
     /**

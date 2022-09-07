@@ -3,13 +3,13 @@ package org.monarchinitiative.hpo_case_annotator.forms.individual;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
-import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsEditableComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsEditableComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.disease.BaseDiseaseDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.disease.PedigreeMemberDiseaseDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PedigreeMemberPhenotypeDataEdit;
-import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.BasePhenotypeDataEdit;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 
 public class PedigreeMember extends BaseIndividual<ObservablePedigreeMember> {
@@ -33,17 +33,17 @@ public class PedigreeMember extends BaseIndividual<ObservablePedigreeMember> {
     }
 
     @Override
-    protected BaseIndividualIdsEditableComponent<ObservablePedigreeMember> getIdsEditableComponent() {
-        return new PedigreeMemberIdsEditableComponent();
+    protected BaseIndividualIdsDataEdit<ObservablePedigreeMember> getIdsDataEdit() {
+        return new PedigreeMemberIdsDataEdit();
     }
 
     @Override
-    protected PhenotypeDataEdit<ObservablePedigreeMember> getPhenotypeDataEdit() {
+    protected BasePhenotypeDataEdit<ObservablePedigreeMember> getPhenotypeDataEdit() {
         return new PedigreeMemberPhenotypeDataEdit();
     }
 
     @Override
-    protected DiseaseDataEdit<ObservablePedigreeMember> getDiseaseDataEdit() {
+    protected BaseDiseaseDataEdit<ObservablePedigreeMember> getDiseaseDataEdit() {
         return new PedigreeMemberDiseaseDataEdit();
     }
 }

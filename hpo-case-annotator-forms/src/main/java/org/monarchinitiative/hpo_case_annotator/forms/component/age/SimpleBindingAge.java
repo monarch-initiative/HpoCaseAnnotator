@@ -2,8 +2,6 @@ package org.monarchinitiative.hpo_case_annotator.forms.component.age;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,8 +23,6 @@ public class SimpleBindingAge extends VBoxBindingObservableDataController<Observ
             sba.yearsFormatter.valueProperty(),
             sba.months.valueProperty(),
             sba.days.valueProperty());
-
-    private final ObjectProperty<ObservableAge> data = new SimpleObjectProperty<>();
 
     @FXML
     private TitledTextField years;
@@ -53,18 +49,12 @@ public class SimpleBindingAge extends VBoxBindingObservableDataController<Observ
         super.initialize();
         years.setTextFormatter(yearsFormatter);
         months.getItems().addAll(FormUtils.getIntegers(11));
-        days.getItems().addAll(FormUtils.getIntegers(30));
-        data.addListener((obs, old, novel) -> {
-            unbind(old);
-            bind(novel);
-        });
+        days.getItems().addAll(FormUtils.getIntegers(31));
     }
 
     @Override
     protected void unbind(ObservableAge data) {
-        if (data == null) {
-            clear();
-        } else {
+        if (data != null) {
             yearsFormatter.valueProperty().unbindBidirectional(data.yearsProperty());
             months.valueProperty().unbindBidirectional(data.monthsProperty());
             days.valueProperty().unbindBidirectional(data.daysProperty());
@@ -86,11 +76,6 @@ public class SimpleBindingAge extends VBoxBindingObservableDataController<Observ
         yearsFormatter.setValue(null);
         months.setValue(null);
         days.setValue(null);
-    }
-
-    @Override
-    public ObjectProperty<ObservableAge> dataProperty() {
-        return data;
     }
 
     void setYears(Integer value) {

@@ -18,8 +18,8 @@
         </Label>
         <HBox>
             <children>
-                <TitledLabel fx:id="gestationalWeeks" name="Weeks" text="4" />
-                <TitledLabel fx:id="gestationalDays" name="Days" text="3" />
+                <TitledLabel fx:id="gestationalWeeks" name="Weeks"/>
+                <TitledLabel fx:id="gestationalDays" name="Days" />
             </children>
         </HBox>
     </children>
