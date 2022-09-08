@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableGenomicBreakend;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.VariantNotation;
 import org.monarchinitiative.svart.GenomicVariant;
 
 import java.util.Optional;
@@ -60,7 +61,8 @@ public class VcfBreakendVariantDataEdit extends BaseVariantDataEdit {
     public void commit() {
         super.commit();
 
-        // TODO - commit
+        item.setVariantNotation(VariantNotation.BREAKEND);
+        // TODO - implement commit
     }
 
     @Override

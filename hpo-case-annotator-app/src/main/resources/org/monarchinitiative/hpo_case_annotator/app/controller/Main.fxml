@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.app.controller.StatusBar?>
 
 <BorderPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.monarchinitiative.hpo_case_annotator.app.controller.Main">
@@ -44,28 +45,7 @@
                     </accelerator>
                 </MenuItem>
                 <SeparatorMenuItem mnemonicParsing="false"/>
-                <Menu mnemonicParsing="false" text="Settings">
-                    <MenuItem mnemonicParsing="false" onAction="#setResourcesMenuItemAction"
-                              text="Initialize resources"/>
-                </Menu>
-                <SeparatorMenuItem mnemonicParsing="false"/>
-                <Menu text="Export">
-                    <MenuItem mnemonicParsing="false" onAction="#exportToCSVMenuItemAction"
-                              text="Export all mutation data to CSV file"/>
-                    <MenuItem disable="true" mnemonicParsing="false" onAction="#exportToSummaryFileMenuItemAction"
-                              text="Export all mutation data to summary file"/>
-                    <SeparatorMenuItem mnemonicParsing="false"/>
-                    <Menu mnemonicParsing="false" text="Export phenopacket(s)">
-                        <items>
-                            <MenuItem id="phenopacketMenuItem" fx:id="exportPhenopacketMenuItem" disable="true"
-                                      mnemonicParsing="false" onAction="#exportPhenopacketCurrentCaseMenuItemAction"
-                                      text="Current case"/>
-                            <MenuItem mnemonicParsing="false" onAction="#exportPhenopacketAllCasesMenuItemAction"
-                                      text="All cases"/>
-                        </items>
-                    </Menu>
-                    <SeparatorMenuItem mnemonicParsing="false"/>
-                </Menu>
+                <MenuItem mnemonicParsing="false" onAction="#setResourcesMenuItemAction" text="Initialize resources"/>
                 <SeparatorMenuItem mnemonicParsing="false"/>
                 <MenuItem mnemonicParsing="false" onAction="#exitMenuItemAction" text="Exit">
                     <accelerator>
@@ -81,8 +61,6 @@
                 <items>
                     <Menu mnemonicParsing="false" text="Publication">
                         <items>
-                            <MenuItem fx:id="fetchFromPubmedMenuItem" mnemonicParsing="false"
-                                      onAction="#fetchFromPubmedMenuItemAction" text="Fetch from Pubmed"/>
                             <MenuItem fx:id="viewOnPubmedMenuItem" disable="true" mnemonicParsing="false"
                                       onAction="#viewOnPubmedMenuItemAction" text="View on Pubmed"/>
                         </items>
@@ -105,12 +83,29 @@
                         <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="DOWN" shortcut="UP"/>
                     </accelerator>
                 </MenuItem>
-                <MenuItem mnemonicParsing="false" onAction="#validateAllModelsMenuItemAction"
+                <MenuItem mnemonicParsing="false" disable="true" onAction="#validateAllModelsMenuItemAction"
                           text="Validate all cases"/>
+            </Menu>
+            <Menu text="Export">
+                <MenuItem disable="true" mnemonicParsing="false" onAction="#exportToCSVMenuItemAction"
+                          text="Export all mutation data to CSV file"/>
+                <MenuItem disable="true" mnemonicParsing="false" onAction="#exportToSummaryFileMenuItemAction"
+                          text="Export all mutation data to summary file"/>
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <Menu mnemonicParsing="false" text="Export phenopacket(s)">
+                    <items>
+                        <MenuItem id="phenopacketMenuItem" fx:id="exportPhenopacketMenuItem" disable="true"
+                                  mnemonicParsing="false" onAction="#exportPhenopacketCurrentCaseMenuItemAction"
+                                  text="Current case"/>
+                        <MenuItem disable="true" mnemonicParsing="false" onAction="#exportPhenopacketAllCasesMenuItemAction"
+                                  text="All cases"/>
+                    </items>
+                </Menu>
+                <SeparatorMenuItem mnemonicParsing="false"/>
             </Menu>
             <Menu text="Help">
                 <MenuItem id="helpMenuItem" mnemonicParsing="false" onAction="#helpMenuItemAction" text="Help"/>
-                <MenuItem mnemonicParsing="false" onAction="#liftoverAction" text="Liftover"/>
+                <MenuItem fx:id="liftoverMenuItem" disable="true" mnemonicParsing="false" onAction="#liftoverAction" text="Liftover"/>
             </Menu>
         </MenuBar>
     </top>
@@ -124,7 +119,7 @@
     <bottom>
         <VBox alignment="CENTER_LEFT">
             <children>
-                <fx:include fx:id="statusBar" source="StatusBar.fxml"/>
+                <StatusBar fx:id="statusBar"/>
             </children>
         </VBox>
     </bottom>

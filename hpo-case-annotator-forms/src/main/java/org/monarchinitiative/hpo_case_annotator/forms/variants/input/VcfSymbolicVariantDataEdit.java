@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataException;
 import org.monarchinitiative.hpo_case_annotator.forms.util.VariantTypeStringConverter;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.VariantNotation;
 import org.monarchinitiative.svart.GenomicVariant;
 import org.monarchinitiative.svart.VariantType;
 
@@ -53,6 +54,8 @@ public class VcfSymbolicVariantDataEdit extends VcfSequenceOrSymbolicVariantData
     @Override
     public void commit() {
         super.commit();
+
+        item.setVariantNotation(VariantNotation.SYMBOLIC);
         // TODO - check this is OK
         item.setStart(Integer.parseInt(startTextField.getText()));
         item.setEnd(Integer.parseInt(endTextField.getText()));

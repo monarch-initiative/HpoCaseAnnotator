@@ -6,11 +6,15 @@ import javafx.beans.binding.StringBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 
-public class StatusBarController {
+import java.io.IOException;
+
+public class StatusBar extends HBox {
 
     private final ObservableList<String> messages = FXCollections.observableArrayList();
 
@@ -20,6 +24,18 @@ public class StatusBarController {
     private Label messageLabel;
     @FXML
     private Button clearButton;
+
+    public StatusBar() {
+        FXMLLoader loader = new FXMLLoader(StatusBar.class.getResource("StatusBar.fxml"));
+        loader.setRoot(this);
+        loader.setController(this);
+
+        try {
+            loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @FXML
     private void initialize() {

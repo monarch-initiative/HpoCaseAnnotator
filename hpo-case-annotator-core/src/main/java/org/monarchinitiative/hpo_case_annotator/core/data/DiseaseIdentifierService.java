@@ -9,6 +9,10 @@ import java.util.stream.Stream;
 
 public interface DiseaseIdentifierService {
 
+    static DiseaseIdentifierService of(List<DiseaseIdentifier> diseaseIdentifiers) {
+        return new DiseaseIdentifierServiceDefault(diseaseIdentifiers);
+    }
+
     Stream<DiseaseIdentifier> diseaseIdentifiers();
 
     default List<String> diseaseIds() {

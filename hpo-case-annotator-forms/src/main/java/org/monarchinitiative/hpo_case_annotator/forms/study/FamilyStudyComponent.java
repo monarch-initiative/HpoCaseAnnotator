@@ -21,8 +21,8 @@ public class FamilyStudyComponent extends BaseStudyComponent<ObservableFamilyStu
     @Override
     protected void initialize() {
         super.initialize();
-        pedigree.hpoProperty().bind(hpo);
-        pedigree.diseaseIdentifierServiceProperty().bind(diseaseIdentifierService);
+        pedigree.hpoProperty().bind(hpoProperty());
+        pedigree.diseaseIdentifierServiceProperty().bind(diseaseIdentifierServiceProperty());
         pedigree.variantsProperty().bind(variantSummary.variants());
     }
 

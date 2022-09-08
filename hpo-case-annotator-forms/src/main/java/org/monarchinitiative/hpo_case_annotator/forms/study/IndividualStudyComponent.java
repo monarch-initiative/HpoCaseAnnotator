@@ -20,8 +20,8 @@ public class IndividualStudyComponent extends BaseStudyComponent<ObservableIndiv
     protected void initialize() {
         super.initialize();
 
-        individual.hpoProperty().bind(hpo);
-        individual.diseaseIdentifierServiceProperty().bind(diseaseIdentifierService);
+        individual.hpoProperty().bind(hpoProperty());
+        individual.diseaseIdentifierServiceProperty().bind(diseaseIdentifierServiceProperty());
         individual.variantsProperty().bind(variantSummary.variants());
     }
 

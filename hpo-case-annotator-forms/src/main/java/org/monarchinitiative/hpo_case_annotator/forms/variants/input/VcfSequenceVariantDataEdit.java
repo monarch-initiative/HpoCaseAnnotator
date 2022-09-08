@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.VariantNotation;
 import org.monarchinitiative.svart.GenomicVariant;
 
 import java.util.Optional;
@@ -47,6 +48,7 @@ public class VcfSequenceVariantDataEdit extends VcfSequenceOrSymbolicVariantData
     public void commit() {
         super.commit();
 
+        item.setVariantNotation(VariantNotation.SEQUENCE);
         // TODO - check this is OK
         int value = Integer.parseInt(positionTextField.getText());
         item.setStart(value);
@@ -80,7 +82,6 @@ public class VcfSequenceVariantDataEdit extends VcfSequenceOrSymbolicVariantData
             return Optional.of(gv);
         } catch (Exception e) {
             // TODO - handle properly
-            System.err.println(e);
             return Optional.empty();
         }
     }

@@ -8,6 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
+import org.monarchinitiative.hpo_case_annotator.forms.FunctionalAnnotationRegistry;
+import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 
 import org.monarchinitiative.hpo_case_annotator.forms.metadata.Metadata;
@@ -21,10 +23,27 @@ import org.monarchinitiative.phenol.ontology.data.Ontology;
 import java.io.IOException;
 import java.net.URL;
 
+import static javafx.beans.binding.Bindings.select;
+
+/**
+ * This controller is the base for all {@link org.monarchinitiative.hpo_case_annotator.model.v2.Study} types.
+ *
+ * <h2>Properties</h2>
+ * {@link BaseStudyComponent} needs the following properties to be set in order to work:
+ * <ul>
+ *     <li>{@link #hpoProperty()}</li>
+ *     <li>{@link #diseaseIdentifierServiceProperty()}</li>
+ *     <li>{@link #genomicAssemblyRegistryProperty()}</li>
+ *     <li>{@link #functionalAnnotationRegistryProperty()}</li>
+ * </ul>
+ * <p>
+ */
 public abstract class BaseStudyComponent<T extends ObservableStudy> extends VBoxBindingObservableDataComponent<T> {
 
-    protected final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
-    protected final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();
+    private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
+    private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();
+    private final ObjectProperty<GenomicAssemblyRegistry> genomicAssemblyRegistry = new SimpleObjectProperty<>();
+    private final ObjectProperty<FunctionalAnnotationRegistry> functionalAnnotationRegistry = new SimpleObjectProperty<>();
 
     @FXML
     private ScrollPane studyScrollPane;
@@ -63,10 +82,21 @@ public abstract class BaseStudyComponent<T extends ObservableStudy> extends VBox
         return diseaseIdentifierService;
     }
 
+    public ObjectProperty<GenomicAssemblyRegistry> genomicAssemblyRegistryProperty() {
+        return genomicAssemblyRegistry;
+    }
+
+    public ObjectProperty<FunctionalAnnotationRegistry> functionalAnnotationRegistryProperty() {
+        return functionalAnnotationRegistry;
+    }
+
     @Override
     protected void initialize() {
         super.initialize();
-        editPublication.visibleProperty().bind(publicationPane.hoverProperty());
+        editPublication.visibleProperty().bind(publicationPane.hoverProperty().and(select(data, "publication").isNotNull()));
+
+        variantSummary.functionalAnnotationRegistryProperty().bind(functionalAnnotationRegistry);
+        variantSummary.genomicAssemblyRegistryProperty().bind(genomicAssemblyRegistry);
     }
 
     @Override

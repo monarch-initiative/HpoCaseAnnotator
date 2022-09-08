@@ -5,29 +5,26 @@ import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.stage.*;
-import javafx.util.converter.IntegerStringConverter;
 import org.controlsfx.dialog.CommandLinksDialog;
 import org.monarchinitiative.hpo_case_annotator.app.dialogs.Dialogs;
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.StudyType;
+import org.monarchinitiative.hpo_case_annotator.app.model.OptionalServices;
 import org.monarchinitiative.hpo_case_annotator.app.publication.PublicationBrowser;
 import org.monarchinitiative.hpo_case_annotator.convert.ConversionCodecs;
-import org.monarchinitiative.hpo_case_annotator.forms.liftover.LiftoverController;
+import org.monarchinitiative.hpo_case_annotator.forms.liftover.Liftover;
 import org.monarchinitiative.hpo_case_annotator.forms.study.BaseStudyComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.study.CohortStudyComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.study.FamilyStudyComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.study.IndividualStudyComponent;
 import org.monarchinitiative.hpo_case_annotator.model.convert.ModelTransformationException;
-import org.monarchinitiative.hpo_case_annotator.app.io.PubmedIO;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.*;
 import org.monarchinitiative.hpo_case_annotator.io.ModelParsers;
@@ -42,7 +39,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
 
 import static javafx.beans.binding.Bindings.selectString;
@@ -53,8 +49,9 @@ public class Main {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
     private static final String SEE_LOG_FOR_MORE_DETAILS = "See log for more details.";
 
+    private final ControllerFactory controllerFactory;
     private final OptionalResources optionalResources;
-    private final ExecutorService executorService;
+    private final OptionalServices optionalServices;
     private final PublicationBrowser publicationBrowser;
 
     /**
@@ -83,8 +80,6 @@ public class Main {
     @FXML
     private Menu studyMenu;
     @FXML
-    private MenuItem fetchFromPubmedMenuItem;
-    @FXML
     private MenuItem viewOnPubmedMenuItem;
 
     /* *************************************************   PROJECT    *********************************************** */
@@ -101,7 +96,8 @@ public class Main {
     private MenuItem exportPhenopacketMenuItem;
 
     /* ************************************************     HELP    ************************************************* */
-
+    @FXML
+    private MenuItem liftoverMenuItem;
 
     /* ************************************************   THE REST   ************************************************* */
 
@@ -110,22 +106,23 @@ public class Main {
     private TabPane studiesTabPane;
 
     @FXML
-    private HBox statusBar;
+    private StatusBar statusBar;
 
-    @FXML
-    private StatusBarController statusBarController;
-
-    public Main(OptionalResources optionalResources,
-                ExecutorService executorService,
+    public Main(ControllerFactory controllerFactory,
+                OptionalResources optionalResources,
+                OptionalServices optionalServices,
                 PublicationBrowser publicationBrowser) {
+        this.controllerFactory = controllerFactory;
         this.optionalResources = optionalResources;
-        this.executorService = executorService;
+        this.optionalServices = optionalServices;
         this.publicationBrowser = publicationBrowser;
     }
 
     @FXML
     private void initialize() {
         disableMenuEntriesDependentOnADataModel();
+
+        liftoverMenuItem.disableProperty().bind(optionalServices.liftoverServiceProperty().isNull());
     }
 
     private void disableMenuEntriesDependentOnADataModel() {
@@ -137,7 +134,6 @@ public class Main {
 
         cloneCaseMenuItem.disableProperty().bind(noTabIsPresent);
         studyMenu.disableProperty().bind(noTabIsPresent);
-        fetchFromPubmedMenuItem.disableProperty().bind(noTabIsPresent);
         viewOnPubmedMenuItem.disableProperty().bind(noTabIsPresent);
 
         validateCurrentEntryMenuItem.disableProperty().bind(noTabIsPresent);
@@ -157,6 +153,8 @@ public class Main {
         dialog.setHeaderText("Select study type");
         dialog.setContentText("HCA supports the following study types:");
         Optional<ButtonType> buttonType = dialog.showAndWait();
+
+        // TODO - use stepper
 
         buttonType.flatMap(bt -> {
             if (bt.equals(individualStudy.getButtonType())) {
@@ -265,8 +263,7 @@ public class Main {
     private void setResourcesMenuItemAction(ActionEvent e) {
         try {
             FXMLLoader loader = new FXMLLoader(SetResourcesController.class.getResource("SetResources.fxml"));
-            // TODO - implement
-//            loader.setControllerFactory(controllerFactory);
+            loader.setControllerFactory(controllerFactory);
 
             Parent parent = loader.load();
             Stage stage = new Stage();
@@ -299,43 +296,6 @@ public class Main {
     }
 
     /*                                                 VIEW                                                           */
-    @FXML
-    private void fetchFromPubmedMenuItemAction(ActionEvent e) {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Fetch publication from PubMed");
-        dialog.setHeaderText("Enter PMID number");
-        dialog.setContentText("E.g. 18023225");
-        dialog.initOwner(getOwnerWindow());
-        TextFormatter<Integer> formatter = new TextFormatter<>(new IntegerStringConverter());
-        dialog.getEditor().setTextFormatter(formatter);
-
-        dialog.showAndWait().ifPresent(pmid -> {
-            Task<Publication> task = PubmedIO.v2publication(pmid);
-
-            // trip to PubMed was successful
-            task.setOnSucceeded(we -> Platform.runLater(() -> {
-                Publication publication = task.getValue();
-
-                getCurrentStudyComponent()
-                        .ifPresent(study -> {
-                            ObservableStudy data = study.getData();
-                            if (data != null)
-                                data.setPublication(new ObservablePublication(publication));
-                });
-            }));
-
-            // No avail
-            task.setOnFailed(we -> {
-                Throwable throwable = we.getSource().getException();
-                Dialogs.showWarningDialog("Error", "Error fetching PubMed data for " + pmid, SEE_LOG_FOR_MORE_DETAILS);
-                LOGGER.warn("Error fetching PubMed data for " + pmid, throwable);
-            });
-            executorService.submit(task);
-        });
-
-        e.consume();
-    }
-
     @FXML
     private void viewOnPubmedMenuItemAction(ActionEvent e) {
         e.consume();
@@ -397,26 +357,15 @@ public class Main {
 
     @FXML
     private void liftoverAction(ActionEvent e) {
-        try {
-            FXMLLoader loader = new FXMLLoader(LiftoverController.class.getResource("Liftover.fxml"));
-            // TODO - implement
-//            loader.setControllerFactory(controllerFactory);
+        Liftover liftover = new Liftover();
+        liftover.liftoverServiceProperty().bind(optionalServices.liftoverServiceProperty());
 
-            Parent parent = loader.load();
-            LiftoverController controller = loader.getController();
-            controller.liftoverServiceProperty().bind(optionalResources.liftoverServiceProperty());
-
-            Stage stage = new Stage();
-            stage.initOwner(getOwnerWindow());
-            stage.initModality(Modality.NONE);
-            stage.setTitle("Liftover contig position");
-            stage.setScene(new Scene(parent));
-            stage.show();
-            controller.liftoverServiceProperty().unbind();
-        } catch (IOException ex) {
-            Dialogs.showErrorDialog("Error", "Error occurred while opening the LiftOver window.", SEE_LOG_FOR_MORE_DETAILS);
-            LOGGER.warn("Unable to display liftover dialog: {}", ex.getCause().getMessage());
-        }
+        Stage stage = new Stage();
+        stage.initOwner(getOwnerWindow());
+        stage.initModality(Modality.NONE);
+        stage.setTitle("Liftover a contig position");
+        stage.setScene(new Scene(liftover));
+        stage.show();
 
         e.consume();
     }
@@ -450,7 +399,7 @@ public class Main {
         // try v1 first
         try {
             DiseaseCase dc = ModelParsers.V1.jsonParser().read(studyFile);
-            Ontology hpo = optionalResources.getHpo();
+            Ontology hpo = optionalServices.getHpo();
             if (hpo == null) {
                 boolean shouldProceed = Dialogs.getBooleanFromUser("Info",
                                 "HPO has not been set or loaded",
@@ -512,8 +461,10 @@ public class Main {
     }
 
     private void wireFunctionalPropertiesToObservableStudy(BaseStudyComponent<? extends ObservableStudy> component) {
-        // TODO - bind functional properties to the component.
-        component.hpoProperty().bind(optionalResources.hpoProperty());
+        component.hpoProperty().bind(optionalServices.hpoProperty());
+        component.diseaseIdentifierServiceProperty().bind(optionalServices.diseaseIdentifierServiceProperty());
+        component.genomicAssemblyRegistryProperty().set(optionalServices.getGenomicAssemblyRegistry());
+        component.functionalAnnotationRegistryProperty().set(optionalServices.getFunctionalAnnotationRegistry());
     }
 
     private Window getOwnerWindow() {

@@ -16,8 +16,6 @@ import org.monarchinitiative.hpo_case_annotator.forms.variants.input.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.VariantNotation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -40,8 +38,6 @@ import java.util.Optional;
  * </ul>
  */
 public class VariantSummary extends VBox {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(VariantSummary.class);
 
     private final ObjectProperty<GenomicAssemblyRegistry> genomicAssemblyRegistry = new SimpleObjectProperty<>();
     private final ObjectProperty<FunctionalAnnotationRegistry> functionalAnnotationRegistry = new SimpleObjectProperty<>();

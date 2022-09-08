@@ -7,21 +7,23 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverService;
 import org.monarchinitiative.hpo_case_annotator.forms.util.ContigNameStringConverter;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.svart.Contig;
 
+import java.io.IOException;
 
-public class LiftoverController {
+public class Liftover extends VBox {
 
     private final ObjectProperty<LiftOverService> liftoverService = new SimpleObjectProperty<>(this, "liftoverService");
     private final ObjectProperty<LiftOverService.ContigPosition> lifted = new SimpleObjectProperty<>(this, "lifted");
-    private final TextFormatter<Number> sourceTextFormatter = Formats.numberFormatter();
 
     @FXML
     private ComboBox<String> sourceAssembly;
@@ -29,6 +31,7 @@ public class LiftoverController {
     private ComboBox<Contig> sourceContig;
     @FXML
     private TextField sourcePosition;
+    private final TextFormatter<Number> sourceTextFormatter = Formats.numberFormatter();
     @FXML
     private ComboBox<String> targetAssembly;
     @FXML
@@ -38,9 +41,26 @@ public class LiftoverController {
     @FXML
     private Label messageLabel;
 
+    public Liftover() {
+        FXMLLoader loader = new FXMLLoader(Liftover.class.getResource("Liftover.fxml"));
+        loader.setRoot(this);
+        loader.setController(this);
+
+        try {
+            loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ObjectProperty<LiftOverService> liftoverServiceProperty() {
+        return liftoverService;
+    }
 
     @FXML
     private void initialize() {
+        disableProperty().bind(liftoverService.isNull());
+
         liftoverService.addListener(liftOverServiceListener());
         sourceAssembly.valueProperty().addListener(sourceGenomicAssemblyListener());
         sourcePosition.setTextFormatter(sourceTextFormatter);
@@ -119,7 +139,7 @@ public class LiftoverController {
             if (novel == null) {
                 resultContigLabel.setText(null);
                 resultPosition.clear();
-                messageLabel.setText(String.format("Unable to convert %s:%d", sourceContig.getValue().ucscName(), sourceTextFormatter.getValue()));
+                messageLabel.setText(String.format("Unable to convert %s:%s", sourceContig.getValue().ucscName(), sourceTextFormatter.getValue()));
             } else {
                 resultContigLabel.setText(novel.contig());
                 resultPosition.setText(String.valueOf(novel.position()));
@@ -128,7 +148,4 @@ public class LiftoverController {
         };
     }
 
-    public ObjectProperty<LiftOverService> liftoverServiceProperty() {
-        return liftoverService;
-    }
 }
