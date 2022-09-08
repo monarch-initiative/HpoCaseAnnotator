@@ -200,7 +200,7 @@ public class Main {
     private void saveMenuItemAction(ActionEvent e) {
         int tabIdx = studiesTabPane.getSelectionModel().getSelectedIndex();
         StudyWrapper<?> wrapper = wrappers.get(tabIdx);
-        saveStudy(wrapper.component(), wrapper.studyPath());
+        saveAsV2Study(wrapper.component().getData(), wrapper.studyPath());
         e.consume();
     }
 
@@ -208,14 +208,15 @@ public class Main {
     private void saveAsMenuItemAction(ActionEvent e) {
         int tabIdx = studiesTabPane.getSelectionModel().getSelectedIndex();
         StudyWrapper<?> wrapper = wrappers.get(tabIdx);
-        saveStudy(wrapper.component(), null);
+        ObservableStudy study = wrapper.component().getData();
+        saveAsV2Study(study, null);
         e.consume();
     }
 
     @FXML
     private void saveAllMenuItemAction(ActionEvent e) {
         for (StudyWrapper<?> wrapper : wrappers) {
-            if (!saveStudy(wrapper.component(), wrapper.studyPath())) {
+            if (!saveAsV2Study(wrapper.component().getData(), wrapper.studyPath())) {
                 // The user cancelled.
                 break;
             }
@@ -471,36 +472,14 @@ public class Main {
         return studiesTabPane.getScene().getWindow();
     }
 
-    private boolean saveStudy(Object data, Path path) {
-        return convertToStudy(data)
-                .map(study -> saveV2Study(study, path))
-                .orElse(false);
-    }
-
-    private static Optional<Study> convertToStudy(Object data) {
-//        if (data instanceof DiseaseCase dc) {
-//            try {
-//                return Optional.of(ConversionCodecs.v1ToV2().encode(dc));
-//            } catch (ModelTransformationException e) {
-//                LOGGER.warn("Error serializing study: {}", e.getMessage(), e);
-//                return Optional.empty();
-//            }
-//        } else
-        if (data instanceof ObservableStudy study) {
-            return Optional.of(study);
-        } else {
-            LOGGER.warn("Unknown study class: `{}`", data.getClass());
-            return Optional.empty();
-        }
-    }
-
-    private boolean saveV2Study(Study study, Path path) {
+    private boolean saveAsV2Study(Study study, Path path) {
         if (path == null) {
             path = askForPath(study.getId());
         }
 
         if (path == null) // the user canceled
             return false;
+
         try {
             ModelParsers.V2.jsonParser().write(study, path);
             return true;

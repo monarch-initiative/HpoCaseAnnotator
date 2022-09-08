@@ -3,10 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.io.v2.json.serialize;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import org.monarchinitiative.hpo_case_annotator.model.v2.CohortStudy;
-import org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy;
-import org.monarchinitiative.hpo_case_annotator.model.v2.Individual;
-import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
+import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 
 import java.io.IOException;
@@ -41,6 +38,10 @@ public class StudySerializer extends StdSerializer<Study> {
             for (Individual individual : cohortStudy.getMembers())
                 gen.writeObject(individual);
             gen.writeEndArray();
+        } else if (study instanceof IndividualStudy individualStudy) {
+            gen.writeObjectField("individual", individualStudy.getIndividual());
+        } else {
+            throw new IOException("Invalid study `%s`".formatted(study.getClass().getCanonicalName()));
         }
 
         gen.writeEndObject();
