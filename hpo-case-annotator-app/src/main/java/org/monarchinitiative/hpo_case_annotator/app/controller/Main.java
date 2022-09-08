@@ -19,7 +19,10 @@ import org.monarchinitiative.hpo_case_annotator.app.StudyType;
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalServices;
 import org.monarchinitiative.hpo_case_annotator.app.publication.PublicationBrowser;
 import org.monarchinitiative.hpo_case_annotator.convert.ConversionCodecs;
+import org.monarchinitiative.hpo_case_annotator.forms.StudyResources;
+import org.monarchinitiative.hpo_case_annotator.forms.StudyResourcesAware;
 import org.monarchinitiative.hpo_case_annotator.forms.liftover.Liftover;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.*;
 import org.monarchinitiative.hpo_case_annotator.forms.study.BaseStudyComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.study.CohortStudyComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.study.FamilyStudyComponent;
@@ -39,6 +42,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
 import static javafx.beans.binding.Bindings.selectString;
@@ -154,8 +158,6 @@ public class Main {
         dialog.setContentText("HCA supports the following study types:");
         Optional<ButtonType> buttonType = dialog.showAndWait();
 
-        // TODO - use stepper
-
         buttonType.flatMap(bt -> {
             if (bt.equals(individualStudy.getButtonType())) {
                 return Optional.of(new ObservableIndividualStudy());
@@ -166,7 +168,7 @@ public class Main {
             } else {
                 return Optional.empty();
             }
-        })
+        }).flatMap(displayStepper())
                 .flatMap(st -> wrapStudy(st, null))
                 .ifPresent(this::addStudy);
         e.consume();
@@ -444,28 +446,29 @@ public class Main {
         if (study instanceof IndividualStudy is) {
             IndividualStudyComponent component = new IndividualStudyComponent();
             component.setData(new ObservableIndividualStudy(is));
-            wireFunctionalPropertiesToObservableStudy(component);
+            wireFunctionalPropertiesToStudyResourcesAware(component);
             return Optional.of(StudyWrapper.of(component, path));
         } else if (study instanceof CohortStudy cs) {
             CohortStudyComponent component = new CohortStudyComponent();
             component.setData(new ObservableCohortStudy(cs));
-            wireFunctionalPropertiesToObservableStudy(component);
+            wireFunctionalPropertiesToStudyResourcesAware(component);
             return Optional.of(StudyWrapper.of(component, path));
         } else if (study instanceof FamilyStudy fs) {
             FamilyStudyComponent component = new FamilyStudyComponent();
             component.setData(new ObservableFamilyStudy(fs));
-            wireFunctionalPropertiesToObservableStudy(component);
+            wireFunctionalPropertiesToStudyResourcesAware(component);
             return Optional.of(StudyWrapper.of(component, path));
         } else {
             return Optional.empty();
         }
     }
 
-    private void wireFunctionalPropertiesToObservableStudy(BaseStudyComponent<? extends ObservableStudy> component) {
-        component.hpoProperty().bind(optionalServices.hpoProperty());
-        component.diseaseIdentifierServiceProperty().bind(optionalServices.diseaseIdentifierServiceProperty());
-        component.genomicAssemblyRegistryProperty().set(optionalServices.getGenomicAssemblyRegistry());
-        component.functionalAnnotationRegistryProperty().set(optionalServices.getFunctionalAnnotationRegistry());
+    private void wireFunctionalPropertiesToStudyResourcesAware(StudyResourcesAware resourcesAware) {
+        StudyResources resources = resourcesAware.getStudyResources();
+        resources.hpoProperty().bind(optionalServices.hpoProperty());
+        resources.diseaseIdentifierServiceProperty().bind(optionalServices.diseaseIdentifierServiceProperty());
+        resources.genomicAssemblyRegistryProperty().set(optionalServices.getGenomicAssemblyRegistry());
+        resources.functionalAnnotationRegistryProperty().set(optionalServices.getFunctionalAnnotationRegistry());
     }
 
     private Window getOwnerWindow() {
@@ -540,95 +543,58 @@ public class Main {
         return Optional.empty();
     }
 
-//    private <T extends BaseObservableIndividual> void editDisease(ObjectBinding<T> individual) {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(DiseaseStatusController.class.getResource("DiseaseStatus.fxml"));
-//            loader.setControllerFactory(controllerFactory);
-//            Parent parent = loader.load();
-//
-//            // setup & bind controller
-//            DiseaseStatusController<T> controller = loader.getController();
-//            controller.dataProperty().bind(individual);
-//
-//            // show the phenotype stage
-//            Stage stage = new Stage();
-//            stage.initStyle(StageStyle.DECORATED);
-//            stage.initOwner(getOwnerWindow());
-//            stage.setTitle(String.format("Disease data of %s", individual.get().getId()));
-//            stage.setScene(new Scene(parent));
-//            stage.showAndWait();
-//
-//            // unbind
-//            controller.dataProperty().unbind();
-//        } catch (IOException e) {
-//            Dialogs.showErrorDialog("Error", "Error occurred while adding phenotype features", SEE_LOG_FOR_MORE_DETAILS);
-//            LOGGER.warn("Error adding phenotype features: {}", e.getMessage(), e);
-//        }
-//    }
-//
-//    private Function<Object, Optional<? extends ObjectBinding<? extends BaseObservableIndividual>>> getBaseObservableIndividualBinding() {
-//        return data -> {
-//            Tab selectedStudyTab = studiesTabPane.getSelectionModel().getSelectedItem();
-//            if (data instanceof ObservableFamilyStudy || data instanceof ObservableCohortStudy) {
-//                TabPane membersTabPane = (TabPane) selectedStudyTab.getContent().getParent().lookup("#members-tab-pane");
-//                Integer tabIdx = membersTabPane.getSelectionModel().selectedIndexProperty().getValue();
-//
-//                if (tabIdx == null || tabIdx == 0) {
-//                    // No tab is open, or summary tab is open.
-//                    Dialogs.showWarningDialog("Sorry", "Unable to open the dialog when no individual tab is open", "Open a tab in the pedigree/cohort");
-//                    return Optional.empty();
-//                }
-//
-//
-//                if (data instanceof ObservableFamilyStudy study) {
-//                    return Optional.of(Bindings.valueAt(study.getPedigree().membersProperty(), tabIdx - 1));
-//                } else {
-//                    return Optional.of(Bindings.valueAt(((ObservableCohortStudy) data).membersProperty(), tabIdx - 1));
-//                }
-//            } else {
-//                Dialogs.showInfoDialog("Sorry", String.format("Working with '%s' is not yet implemented", data.getClass().getName()), null);
-//                return Optional.empty();
-//            }
-//        };
-//    }
-//
-//    private <T extends BaseObservableIndividual> void editPhenotypeFeatures(ObjectBinding<T> individual) {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(PhenotypeBrowserController.class.getResource("PhenotypeBrowser.fxml"));
-//            loader.setControllerFactory(controllerFactory);
-//            Parent parent = loader.load();
-//
-//            // setup & bind controller
-//            PhenotypeBrowserController<T> controller = loader.getController();
-//            controller.ontologyProperty().bind(optionalResources.ontologyProperty());
-//            controller.dataProperty().bind(individual);
-//
-//            // show the phenotype stage
-//            Stage stage = new Stage();
-//            stage.initStyle(StageStyle.DECORATED);
-//            stage.initOwner(getOwnerWindow());
-//            stage.setTitle(String.format("Phenotype features of %s", individual.get().getId()));
-//            stage.setScene(new Scene(parent));
-//            stage.showAndWait();
-//
-//            // unbind
-//            controller.ontologyProperty().unbind();
-//            controller.dataProperty().unbind();
-//        } catch (IOException e) {
-//            Dialogs.showErrorDialog("Error", "Error occurred while adding phenotype features", SEE_LOG_FOR_MORE_DETAILS);
-//            LOGGER.warn("Error adding phenotype features: {}", e.getMessage(), e);
-//        }
-//    }
-//
-//    private static Optional<StudyType> studyTypeForData(Object data) {
-//        if (data instanceof FamilyStudy) {
-//            return Optional.of(StudyType.FAMILY);
-//        } else if (data instanceof CohortStudy) {
-//            return Optional.of(StudyType.COHORT);
-//        } else {
-//            LOGGER.warn("Unknown study data class: {}", data.getClass());
-//            return Optional.empty();
-//        }
-//    }
+    private <T extends ObservableStudy> Function<T, Optional<? extends T>> displayStepper() {
+        return study -> {
+            Optional<? extends BaseStudySteps<T>> optionalSteps = prepareSteps(study);
+            if (optionalSteps.isEmpty())
+                return Optional.empty();
+
+            BaseStudySteps<T> steps = optionalSteps.get();
+            Stepper<T> stepper = new Stepper<>();
+            wireFunctionalPropertiesToStudyResourcesAware(steps);
+            stepper.stepsProperty().bind(steps.stepsProperty());
+            stepper.setData(study);
+
+            Stage stage = new Stage();
+            AtomicBoolean accept = new AtomicBoolean();
+            stepper.statusProperty().addListener((obs, old, novel) -> {
+                switch (novel) {
+                    case IN_PROGRESS -> {
+                        return; // Do not close the stage
+                    }
+                    case FINISH -> accept.set(true);
+                    case CANCEL -> accept.set(false);
+                }
+                stage.close();
+            });
+
+            stage.initOwner(getOwnerWindow());
+            stage.initStyle(StageStyle.UTILITY);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Enter study details");
+            stage.setResizable(true);
+            stage.setScene(new Scene(stepper));
+
+            stage.showAndWait();
+
+            return accept.get()
+                    ? Optional.of(stepper.getData())
+                    : Optional.empty();
+        };
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends ObservableStudy> Optional<? extends BaseStudySteps<T>> prepareSteps(T study) {
+        if (study instanceof ObservableIndividualStudy) {
+            return Optional.of((BaseStudySteps<T>) new IndividualStudySteps());
+        } else if (study instanceof ObservableFamilyStudy) {
+            return Optional.of((BaseStudySteps<T>) new FamilyStudySteps());
+        } else if (study instanceof ObservableCohortStudy) {
+            return Optional.of((BaseStudySteps<T>) new CohortStudySteps());
+        } else {
+            LOGGER.warn("Unable to create steps for {}", study.getClass().getSimpleName());
+            return Optional.empty();
+        }
+    }
 
 }

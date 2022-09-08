@@ -4,8 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.stepper.Stepper">
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox">
     <stylesheets>
         <URL value="@../base.css"/>
         <URL value="@stepper.css"/>
@@ -22,4 +22,4 @@
             </buttons>
         </ButtonBar>
     </children>
-</VBox>
+</fx:root>

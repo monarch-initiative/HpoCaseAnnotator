@@ -1,15 +1,12 @@
 package org.monarchinitiative.hpo_case_annotator.forms.study;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
-import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.forms.FunctionalAnnotationRegistry;
-import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
+import org.monarchinitiative.hpo_case_annotator.forms.StudyResources;
+import org.monarchinitiative.hpo_case_annotator.forms.StudyResourcesAware;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 
 import org.monarchinitiative.hpo_case_annotator.forms.metadata.Metadata;
@@ -18,7 +15,6 @@ import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationEdi
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudy;
-import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,23 +23,14 @@ import static javafx.beans.binding.Bindings.select;
 
 /**
  * This controller is the base for all {@link org.monarchinitiative.hpo_case_annotator.model.v2.Study} types.
- *
- * <h2>Properties</h2>
- * {@link BaseStudyComponent} needs the following properties to be set in order to work:
- * <ul>
- *     <li>{@link #hpoProperty()}</li>
- *     <li>{@link #diseaseIdentifierServiceProperty()}</li>
- *     <li>{@link #genomicAssemblyRegistryProperty()}</li>
- *     <li>{@link #functionalAnnotationRegistryProperty()}</li>
- * </ul>
+ * {@link BaseStudyComponent} needs the properties specified by {@link StudyResources} to work.
  * <p>
  */
-public abstract class BaseStudyComponent<T extends ObservableStudy> extends VBoxBindingObservableDataComponent<T> {
+public abstract class BaseStudyComponent<T extends ObservableStudy>
+        extends VBoxBindingObservableDataComponent<T>
+        implements StudyResourcesAware {
 
-    private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
-    private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();
-    private final ObjectProperty<GenomicAssemblyRegistry> genomicAssemblyRegistry = new SimpleObjectProperty<>();
-    private final ObjectProperty<FunctionalAnnotationRegistry> functionalAnnotationRegistry = new SimpleObjectProperty<>();
+    protected final StudyResources studyResources = new StudyResources();
 
     @FXML
     private ScrollPane studyScrollPane;
@@ -74,20 +61,9 @@ public abstract class BaseStudyComponent<T extends ObservableStudy> extends VBox
         }
     }
 
-    public ObjectProperty<Ontology> hpoProperty() {
-        return hpo;
-    }
-
-    public ObjectProperty<DiseaseIdentifierService> diseaseIdentifierServiceProperty() {
-        return diseaseIdentifierService;
-    }
-
-    public ObjectProperty<GenomicAssemblyRegistry> genomicAssemblyRegistryProperty() {
-        return genomicAssemblyRegistry;
-    }
-
-    public ObjectProperty<FunctionalAnnotationRegistry> functionalAnnotationRegistryProperty() {
-        return functionalAnnotationRegistry;
+    @Override
+    public StudyResources getStudyResources() {
+        return studyResources;
     }
 
     @Override
@@ -95,8 +71,8 @@ public abstract class BaseStudyComponent<T extends ObservableStudy> extends VBox
         super.initialize();
         editPublication.visibleProperty().bind(publicationPane.hoverProperty().and(select(data, "publication").isNotNull()));
 
-        variantSummary.functionalAnnotationRegistryProperty().bind(functionalAnnotationRegistry);
-        variantSummary.genomicAssemblyRegistryProperty().bind(genomicAssemblyRegistry);
+        variantSummary.functionalAnnotationRegistryProperty().bind(studyResources.functionalAnnotationRegistryProperty());
+        variantSummary.genomicAssemblyRegistryProperty().bind(studyResources.genomicAssemblyRegistryProperty());
     }
 
     @Override

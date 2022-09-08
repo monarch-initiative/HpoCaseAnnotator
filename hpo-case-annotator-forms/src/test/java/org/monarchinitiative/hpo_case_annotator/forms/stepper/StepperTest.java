@@ -1,9 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms.stepper;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -11,6 +8,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
+import org.monarchinitiative.hpo_case_annotator.forms.StudyResources;
+import org.monarchinitiative.hpo_case_annotator.forms.StudyResourcesAware;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividualStudy;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
@@ -19,23 +18,19 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 @Disabled
 @ExtendWith(ApplicationExtension.class)
 public class StepperTest extends BaseControllerTest {
 
-    private Stepper<ObservableIndividualStudy> controller;
+    private Stepper<ObservableIndividualStudy> stepper;
 
     @Start
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(Stepper.class.getResource("Stepper.fxml"));
+        stepper = new Stepper<>();
+        stepper.statusProperty().addListener((obs, old, novel) -> System.err.println(novel));
 
-        loader.setControllerFactory(clz -> new Stepper<>());
-        Parent parent = loader.load();
-        controller = loader.getController();
-
-        Scene scene = new Scene(parent, 800, 600);
+        Scene scene = new Scene(stepper, 800, 600);
         stage.setScene(scene);
         stage.setTitle("Stepper test");
         stage.initStyle(StageStyle.DECORATED);
@@ -46,44 +41,40 @@ public class StepperTest extends BaseControllerTest {
     public void testEmpty(FxRobot robot) {
         robot.sleep(1, TimeUnit.SECONDS);
 
-        IndividualStudySteps steps = prepareIndividualStudySteps();
+        IndividualStudySteps steps = new IndividualStudySteps();
+        wireFunctionalPropertiesToStudyResourcesAware(steps);
 
-        Consumer<Boolean> closeHook = status -> System.err.printf("Should we commit? %s%n", status);
-        Platform.runLater(() -> controller.setConclude(closeHook));
         ObservableIndividualStudy study = new ObservableIndividualStudy();
         study.setPublication(new ObservablePublication());
-        Platform.runLater(() -> controller.setData(study));
-        Platform.runLater(() -> controller.setSteps(FXCollections.observableList(steps.getSteps())));
+        Platform.runLater(() -> stepper.setData(study));
+        Platform.runLater(() -> stepper.stepsProperty().bind(steps.stepsProperty()));
 
         robot.sleep(20, TimeUnit.MINUTES);
 
-        ObservableIndividualStudy data = controller.getData();
+        ObservableIndividualStudy data = stepper.getData();
         System.err.println(data);
     }
 
     @Test
     public void testIndividualSteps(FxRobot robot) {
         robot.sleep(1, TimeUnit.SECONDS);
-        IndividualStudySteps steps = prepareIndividualStudySteps();
+        IndividualStudySteps steps = new IndividualStudySteps();
+        wireFunctionalPropertiesToStudyResourcesAware(steps);
 
-        Consumer<Boolean> closeHook = status -> System.err.printf("Should we commit? %s%n", status);
-        Platform.runLater(() -> controller.setConclude(closeHook));
-        Platform.runLater(() -> controller.setData(new ObservableIndividualStudy(TestData.V2.comprehensiveIndividualStudy())));
-        Platform.runLater(() -> controller.setSteps(FXCollections.observableList(steps.getSteps())));
+        Platform.runLater(() -> stepper.setData(new ObservableIndividualStudy(TestData.V2.comprehensiveIndividualStudy())));
+        Platform.runLater(() -> stepper.stepsProperty().bind(steps.stepsProperty()));
 
         robot.sleep(5, TimeUnit.MINUTES);
 
-        System.err.println(controller.getData());
+        System.err.println(stepper.getData());
     }
 
-    private static IndividualStudySteps prepareIndividualStudySteps() {
-        IndividualStudySteps steps = new IndividualStudySteps();
-
-        steps.hpoProperty().set(HPO);
-        steps.diseaseIdentifierServiceProperty().set(DISEASES);
-        steps.genomicAssemblyRegistryProperty().set(GENOMIC_ASSEMBLY_REGISTRY);
-        steps.functionalAnnotationRegistryProperty().set(FUNCTIONAL_ANNOTATION_REGISTRY);
-
-        return steps;
+    private void wireFunctionalPropertiesToStudyResourcesAware(StudyResourcesAware resourcesAware) {
+        StudyResources resources = resourcesAware.getStudyResources();
+        resources.setHpo(HPO);
+        resources.setDiseaseIdentifierService(DISEASES);
+        resources.setGenomicAssemblyRegistry(GENOMIC_ASSEMBLY_REGISTRY);
+        resources.setFunctionalAnnotationRegistry(FUNCTIONAL_ANNOTATION_REGISTRY);
     }
+
 }
