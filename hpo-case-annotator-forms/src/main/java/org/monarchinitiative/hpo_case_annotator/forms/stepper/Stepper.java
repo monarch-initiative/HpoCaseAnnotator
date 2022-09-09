@@ -7,7 +7,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxObservableDataComponent;
 import org.slf4j.Logger;
@@ -73,7 +72,6 @@ public class Stepper<T> extends VBoxObservableDataComponent<T> {
 
     @FXML
     protected void initialize() {
-        content.getChildren().add(new Label("No steps to display")); // always at the bottom of the stack.
         previous.disableProperty().bind(currentStep.lessThan(0)
                 .or(currentStep.isEqualTo(0)));
         next.disableProperty().bind(currentStep.lessThan(0)
@@ -111,8 +109,8 @@ public class Stepper<T> extends VBoxObservableDataComponent<T> {
 
     private void loadStep(Step<T> step) {
         int currentContentSize = content.getChildren().size();
-        if (currentContentSize > 1)
-            // Remove the previous step, if any. There is always the placeholder at the bottom.
+        if (currentContentSize > 0)
+            // Remove the previous step, if any.
             content.getChildren().remove(currentContentSize - 1);
 
         if (step != null)
