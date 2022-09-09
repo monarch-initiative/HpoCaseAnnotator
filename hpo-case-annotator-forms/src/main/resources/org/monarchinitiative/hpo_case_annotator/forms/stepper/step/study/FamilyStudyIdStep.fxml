@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextArea?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="VBox">
@@ -16,5 +17,8 @@
         <Label text="Family study ID"/>
         <Label fx:id="header" text="Set family study ID."/>
         <TitledTextField fx:id="studyId" name="Family study ID"/>
+        <Separator/>
+        <Label text="Add description that do not fit into the study fields."/>
+        <TitledTextArea fx:id="freeTextMetadata" name="Free text description"/>
     </children>
 </fx:root>
