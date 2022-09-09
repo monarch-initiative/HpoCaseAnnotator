@@ -16,21 +16,27 @@
     <children>
         <Label text="Publication"/>
         <Label fx:id="header" text="Provide publication details for the individual."/>
-        <Label text="Fetch from PubMed"/>
-        <HBox>
+        <CheckBox fx:id="publicationIsUnknown" text="Publication is unknown" selected="true"/>
+        <VBox fx:id="publicationDataBox">
             <children>
-                <TitledTextField fx:id="pmidTextField" name="PMID"/>
-                <Button fx:id="fetchFromPubmed" onAction="#fetchFromPubmedAction" text="Fetch"/>
-            </children>
-        </HBox>
+                <Label text="Fetch from PubMed"/>
+                <HBox>
+                    <children>
+                        <TitledTextField fx:id="pmidTextField" name="PMID"/>
+                        <Button fx:id="fetchFromPubmed" onAction="#fetchFromPubmedAction" text="Fetch"/>
+                    </children>
+                </HBox>
 
-        <HBox>
-            <children>
-                <Label text="or"/>
-                <Separator/>
+                <HBox>
+                    <children>
+                        <Label text="or"/>
+                        <Separator/>
+                    </children>
+                </HBox>
+
+                <Label text="Enter manually"/>
+                <PublicationBinding fx:id="publicationBinding"/>
             </children>
-        </HBox>
-        <Label text="Enter manually"/>
-        <PublicationBinding fx:id="publicationBinding"/>
+        </VBox>
     </children>
 </fx:root>

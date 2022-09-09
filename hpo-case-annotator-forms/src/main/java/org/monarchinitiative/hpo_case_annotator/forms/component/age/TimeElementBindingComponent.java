@@ -25,7 +25,8 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 import java.io.IOException;
 import java.util.stream.Stream;
 
-public class TimeElementBindingComponent extends VBoxBindingObservableDataComponent<ObservableTimeElement> implements Observable {
+public class TimeElementBindingComponent extends VBoxBindingObservableDataComponent<ObservableTimeElement>
+        implements Observable, InvalidationListener {
 
     static final Callback<TimeElementBindingComponent, Stream<Observable>> EXTRACTOR = tbc -> Stream.of(
             tbc.tabPane.getSelectionModel().selectedItemProperty(),
@@ -89,44 +90,47 @@ public class TimeElementBindingComponent extends VBoxBindingObservableDataCompon
         gestationalWeeks.setTextFormatter(gestationalWeeksFormatter);
 
         // Update the data model upon change of each UI component
-        addListener(obs -> {
-            if (valueIsNotBeingSetByUserInteraction)
-                return;
-            ObservableTimeElement te = data.get();
-            if (te == null)
-                return;
+        addListener(this::invalidated);
+    }
 
-            TimeElement.TimeElementCase tec = mapToTimeElementCase(tabPane.getSelectionModel().getSelectedItem());
-            te.setTimeElementCase(tec);
-            switch (tec) {
-                case GESTATIONAL_AGE -> {
-                    if (te.getGestationalAge() == null)
-                        te.setGestationalAge(new ObservableGestationalAge());
-                    ObservableGestationalAge ga = te.getGestationalAge();
-                    ga.setWeeks(gestationalWeeksFormatter.getValue());
-                    ga.setDays(gestationalDays.getValue());
-                }
-                case AGE -> {
-                    if (te.getAge() == null)
-                        te.setAge(new ObservableAge());
-                    copyAge(age, te.getAge());
-                }
-                case AGE_RANGE -> {
-                    if (te.getAgeRange() == null)
-                        te.setAgeRange(new ObservableAgeRange());
+    @Override
+    public void invalidated(Observable obs) {
+        if (valueIsNotBeingSetByUserInteraction)
+            return;
+        ObservableTimeElement te = data.get();
+        if (te == null)
+            return;
 
-                    ObservableAgeRange targetAgeRange = te.getAgeRange();
-                    if (targetAgeRange.getStart() == null)
-                        targetAgeRange.setStart(new ObservableAge());
-                    copyAge(ageRangeStart, targetAgeRange.getStart());
-
-                    if (targetAgeRange.getEnd() == null)
-                        targetAgeRange.setEnd(new ObservableAge());
-                    copyAge(ageRangeEnd, targetAgeRange.getEnd());
-                }
-                case ONTOLOGY_CLASS -> te.setOntologyClass(ontologyClassComboBox.getValue());
+        TimeElement.TimeElementCase tec = mapToTimeElementCase(tabPane.getSelectionModel().getSelectedItem());
+        te.setTimeElementCase(tec);
+        switch (tec) {
+            case GESTATIONAL_AGE -> {
+                if (te.getGestationalAge() == null)
+                    te.setGestationalAge(new ObservableGestationalAge());
+                ObservableGestationalAge ga = te.getGestationalAge();
+                ga.setWeeks(gestationalWeeksFormatter.getValue());
+                ga.setDays(gestationalDays.getValue());
             }
-        });
+            case AGE -> {
+                if (te.getAge() == null)
+                    te.setAge(new ObservableAge());
+                copyAge(age, te.getAge());
+            }
+            case AGE_RANGE -> {
+                if (te.getAgeRange() == null)
+                    te.setAgeRange(new ObservableAgeRange());
+
+                ObservableAgeRange targetAgeRange = te.getAgeRange();
+                if (targetAgeRange.getStart() == null)
+                    targetAgeRange.setStart(new ObservableAge());
+                copyAge(ageRangeStart, targetAgeRange.getStart());
+
+                if (targetAgeRange.getEnd() == null)
+                    targetAgeRange.setEnd(new ObservableAge());
+                copyAge(ageRangeEnd, targetAgeRange.getEnd());
+            }
+            case ONTOLOGY_CLASS -> te.setOntologyClass(ontologyClassComboBox.getValue());
+        }
     }
 
     private static void copyAge(SimpleBindingAge source, ObservableAge target) {

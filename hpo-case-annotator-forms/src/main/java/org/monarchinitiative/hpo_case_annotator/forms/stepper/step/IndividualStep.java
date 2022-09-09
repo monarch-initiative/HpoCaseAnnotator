@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms.stepper.step;
 
+import javafx.beans.Observable;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -21,6 +22,8 @@ import org.monarchinitiative.hpo_case_annotator.forms.variants.IndividualVariant
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividualStudy;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
+
+import java.util.stream.Stream;
 
 /**
  * <h2>Properties</h2>
@@ -64,18 +67,33 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
     }
 
     @Override
+    protected Stream<Observable> dependencies() {
+        // TODO - implement
+        return Stream.of();
+    }
+
+    @Override
+    public void invalidated(Observable obs) {
+        // TODO - implement
+    }
+
+    @Override
     public Parent getContent() {
         return this;
     }
 
     @Override
     protected void bind(T data) {
-        individualIds.dataProperty().bindBidirectional(data.individualProperty());
+        if (data != null)
+            individualIds.dataProperty().bindBidirectional(data.individualProperty());
+        else
+            individualIds.setData(null);
     }
 
     @Override
     protected void unbind(T data) {
-        individualIds.dataProperty().unbindBidirectional(data.individualProperty());
+        if (data != null)
+            individualIds.dataProperty().unbindBidirectional(data.individualProperty());
     }
 
     @FXML

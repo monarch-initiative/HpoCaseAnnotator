@@ -14,6 +14,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication;
 import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationEditable;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudy;
 
 import java.io.IOException;
@@ -69,7 +70,8 @@ public abstract class BaseStudyComponent<T extends ObservableStudy>
     @Override
     protected void initialize() {
         super.initialize();
-        editPublication.visibleProperty().bind(publicationPane.hoverProperty().and(select(data, "publication").isNotNull()));
+        editPublication.visibleProperty().bind(publicationPane.hoverProperty());
+        publication.disableProperty().bind(select(data, "publication").isNotNull());
 
         variantSummary.functionalAnnotationRegistryProperty().bind(studyResources.functionalAnnotationRegistryProperty());
         variantSummary.genomicAssemblyRegistryProperty().bind(studyResources.genomicAssemblyRegistryProperty());
@@ -101,13 +103,22 @@ public abstract class BaseStudyComponent<T extends ObservableStudy>
         dialog.initOwner(studyScrollPane.getParent().getScene().getWindow());
 
         PublicationEditable component = new PublicationEditable();
-        component.setInitialData(publication.getData());
+        ObservablePublication pub = publication.getData() == null
+                ? new ObservablePublication()
+                : publication.getData();
+        component.setInitialData(pub);
         dialog.getDialogPane().setContent(component);
         dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.UPDATE_CANCEL_BUTTONS);
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
 
         dialog.showAndWait()
-                .ifPresent(shouldUpdate -> {if (shouldUpdate) component.commit();});
+                .ifPresent(shouldUpdate -> {
+                    if (shouldUpdate) {
+                        component.commit();
+                        if (publication.getData() == null)
+                            publication.setData(pub);
+                    }
+                });
 
         e.consume();
     }

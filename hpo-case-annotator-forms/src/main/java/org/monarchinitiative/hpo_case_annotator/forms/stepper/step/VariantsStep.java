@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms.stepper.step;
 
+import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -11,6 +12,8 @@ import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudy;
+
+import java.util.stream.Stream;
 
 /**
  * <h2>Properties</h2>
@@ -30,6 +33,12 @@ public class VariantsStep<T extends ObservableStudy> extends BaseStep<T> {
 
     public VariantsStep() {
         super(VariantsStep.class.getResource("VariantsStep.fxml"));
+
+        // This indeed is an unusual place for setting up bindings.
+        // However, note that we cannot use `initialize` method.
+        // The fields of this class are `null` when `initialize` is called in the super constructor.
+        variantSummary.genomicAssemblyRegistryProperty().bind(genomicAssemblyRegistry);
+        variantSummary.functionalAnnotationRegistryProperty().bind(functionalAnnotationRegistry);
     }
 
     public ObjectProperty<ObservableList<ObservableCuratedVariant>> variantsProperty() {
@@ -50,21 +59,32 @@ public class VariantsStep<T extends ObservableStudy> extends BaseStep<T> {
     }
 
     @Override
+    protected Stream<Observable> dependencies() {
+        // TODO - implement
+        return Stream.of();
+    }
+
+    @Override
+    public void invalidated(Observable obs) {
+        // TODO - implement
+    }
+
+    @Override
     public Parent getContent() {
         return this;
     }
 
     @Override
     protected void bind(T data) {
-        variantSummary.variants().bindBidirectional(data.variantsProperty());
-        variantSummary.genomicAssemblyRegistryProperty().bind(genomicAssemblyRegistry);
-        variantSummary.functionalAnnotationRegistryProperty().bind(functionalAnnotationRegistry);
+        if (data != null)
+            variantSummary.variants().bindBidirectional(data.variantsProperty());
+        else
+            variantSummary.variants().get().clear();
     }
 
     @Override
     protected void unbind(T data) {
-        variantSummary.variants().unbindBidirectional(data.variantsProperty());
-        variantSummary.genomicAssemblyRegistryProperty().unbind();
-        variantSummary.functionalAnnotationRegistryProperty().unbind();
+        if (data != null)
+            variantSummary.variants().unbindBidirectional(data.variantsProperty());
     }
 }

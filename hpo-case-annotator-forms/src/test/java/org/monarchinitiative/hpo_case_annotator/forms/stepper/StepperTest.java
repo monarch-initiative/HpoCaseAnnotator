@@ -28,7 +28,10 @@ public class StepperTest extends BaseControllerTest {
     @Start
     public void start(Stage stage) throws Exception {
         stepper = new Stepper<>();
-        stepper.statusProperty().addListener((obs, old, novel) -> System.err.println(novel));
+        stepper.statusProperty().addListener((obs, old, novel) -> {
+            stage.close();
+            System.err.println(stepper.getData());
+        });
 
         Scene scene = new Scene(stepper, 800, 600);
         stage.setScene(scene);
@@ -39,25 +42,21 @@ public class StepperTest extends BaseControllerTest {
 
     @Test
     public void testEmpty(FxRobot robot) {
-        robot.sleep(1, TimeUnit.SECONDS);
+        robot.sleep(300, TimeUnit.MILLISECONDS);
 
         IndividualStudySteps steps = new IndividualStudySteps();
         wireFunctionalPropertiesToStudyResourcesAware(steps);
 
         ObservableIndividualStudy study = new ObservableIndividualStudy();
-        study.setPublication(new ObservablePublication());
         Platform.runLater(() -> stepper.setData(study));
         Platform.runLater(() -> stepper.stepsProperty().bind(steps.stepsProperty()));
 
-        robot.sleep(20, TimeUnit.MINUTES);
-
-        ObservableIndividualStudy data = stepper.getData();
-        System.err.println(data);
+        robot.sleep(5, TimeUnit.MINUTES);
     }
 
     @Test
     public void testIndividualSteps(FxRobot robot) {
-        robot.sleep(1, TimeUnit.SECONDS);
+        robot.sleep(300, TimeUnit.MILLISECONDS);
         IndividualStudySteps steps = new IndividualStudySteps();
         wireFunctionalPropertiesToStudyResourcesAware(steps);
 
@@ -65,8 +64,6 @@ public class StepperTest extends BaseControllerTest {
         Platform.runLater(() -> stepper.stepsProperty().bind(steps.stepsProperty()));
 
         robot.sleep(5, TimeUnit.MINUTES);
-
-        System.err.println(stepper.getData());
     }
 
     private void wireFunctionalPropertiesToStudyResourcesAware(StudyResourcesAware resourcesAware) {

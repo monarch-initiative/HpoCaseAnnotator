@@ -1,24 +1,24 @@
 package org.monarchinitiative.hpo_case_annotator.forms.stepper;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.HCAControllerFactory;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.stream.Stream;
 
-public abstract class BaseStep<T> extends VBox implements Step<T> {
-
-    protected final ObjectProperty<T> data = new SimpleObjectProperty<>();
+public abstract class BaseStep<T> extends VBoxBindingObservableDataComponent<T> implements Step<T> , Observable, InvalidationListener {
 
     @FXML
     private Label header;
+
+    // Indicate that the value is being changed via `dataProperty` and not by the user using the UI components.
+    protected boolean valueIsNotBeingSetByUserInteraction;
 
     public BaseStep(URL location) {
         FXMLLoader loader = new FXMLLoader(location);
@@ -32,21 +32,10 @@ public abstract class BaseStep<T> extends VBox implements Step<T> {
     }
 
     @FXML
-    protected void initialize() {
-        data.addListener(onDataChange());
-    }
-
-
-    private ChangeListener<T> onDataChange() {
-        return (obs, old, novel) -> {
-            if (old != null) unbind(old);
-            if (novel != null) bind(novel);
-        };
-    }
-
     @Override
-    public ObjectProperty<T> dataProperty() {
-        return data;
+    protected void initialize() {
+        super.initialize();
+        addListener(this::invalidated);
     }
 
     public String getHeader() {
@@ -61,8 +50,15 @@ public abstract class BaseStep<T> extends VBox implements Step<T> {
         this.header.textProperty().set(header);
     }
 
-    protected abstract void bind(T data);
+    protected abstract Stream<Observable> dependencies();
 
-    protected abstract void unbind(T data);
+    @Override
+    public void addListener(InvalidationListener listener) {
+        dependencies().forEach(obs -> obs.addListener(listener));
+    }
 
+    @Override
+    public void removeListener(InvalidationListener listener) {
+        dependencies().forEach(obs -> obs.removeListener(listener));
+    }
 }
