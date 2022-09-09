@@ -1,8 +1,10 @@
 package org.monarchinitiative.hpo_case_annotator.forms.component;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
+import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementBindingComponent;
 import org.monarchinitiative.hpo_case_annotator.model.v2.VitalStatus;
@@ -15,6 +17,8 @@ public class VitalStatusBindingComponent extends VBoxBindingObservableDataCompon
 
     @FXML
     private TitledComboBox<VitalStatus.Status> vitalStatus;
+    @FXML
+    private VBox deathBox;
     @FXML
     private CheckBox timeOfDeathIsUnknown;
     @FXML
@@ -35,10 +39,11 @@ public class VitalStatusBindingComponent extends VBoxBindingObservableDataCompon
     @FXML
     protected void initialize() {
         super.initialize();
-        timeOfDeathComponent.disableProperty().bind(timeOfDeathIsUnknown.selectedProperty()
-                .or(vitalStatus.valueProperty().isNotEqualTo(VitalStatus.Status.DECEASED)));
         vitalStatus.getItems().addAll(VitalStatus.Status.values());
+        BooleanBinding isNotDeceased = vitalStatus.valueProperty().isNotEqualTo(VitalStatus.Status.DECEASED);
         vitalStatus.setValue(VitalStatus.Status.UNKNOWN);
+        deathBox.disableProperty().bind(isNotDeceased);
+        timeOfDeathComponent.disableProperty().bind(timeOfDeathIsUnknown.selectedProperty());
 
         timeOfDeathIsUnknown.selectedProperty().addListener((obs, old, isUnknown) -> {
             if (isUnknown) {
@@ -51,17 +56,21 @@ public class VitalStatusBindingComponent extends VBoxBindingObservableDataCompon
 
     @Override
     protected void unbind(ObservableVitalStatus data) {
-        vitalStatus.valueProperty().unbindBidirectional(data.statusProperty());
-        timeOfDeathComponent.dataProperty().unbindBidirectional(data.timeOfDeathProperty());
-        clear();
+        if (data != null) {
+            vitalStatus.valueProperty().unbindBidirectional(data.statusProperty());
+            timeOfDeathComponent.dataProperty().unbindBidirectional(data.timeOfDeathProperty());
+        }
     }
 
     @Override
     protected void bind(ObservableVitalStatus data) {
-        vitalStatus.valueProperty().bindBidirectional(data.statusProperty());
+        if (data != null) {
+            vitalStatus.valueProperty().bindBidirectional(data.statusProperty());
 
-        timeOfDeathIsUnknown.setSelected(data.getTimeOfDeath() == null);
-        timeOfDeathComponent.dataProperty().bindBidirectional(data.timeOfDeathProperty());
+            timeOfDeathIsUnknown.setSelected(data.getTimeOfDeath() == null);
+            timeOfDeathComponent.dataProperty().bindBidirectional(data.timeOfDeathProperty());
+        } else
+            clear();
     }
 
     private void clear() {

@@ -29,7 +29,7 @@
                         <TitledLabel fx:id="vitalStatus" name="Vital status" text="DECEASED"/>
                         <VBox>
                             <children>
-                                <Label text="Time of death"/>
+                                <Label text="Age of death"/>
                                 <TimeElementComponent fx:id="timeOfDeath"/>
                             </children>
                         </VBox>

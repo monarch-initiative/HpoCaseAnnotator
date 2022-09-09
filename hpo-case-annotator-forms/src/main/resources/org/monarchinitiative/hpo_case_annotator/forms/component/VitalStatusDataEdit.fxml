@@ -6,7 +6,7 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementDataEdit?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.HBox"
+         type="HBox"
          stylesheets="@vital-status-component.css">
     <children>
         <VBox id="vs-col">
@@ -14,9 +14,9 @@
                 <TitledComboBox fx:id="vitalStatus" name="Status"/>
             </children>
         </VBox>
-        <VBox>
+        <VBox fx:id="deathBox">
             <children>
-                <CheckBox fx:id="timeOfDeathIsUnknown" selected="true" text="Time of death is unknown"/>
+                <CheckBox fx:id="timeOfDeathIsUnknown" selected="true" text="Age of death is unknown"/>
                 <TimeElementDataEdit fx:id="timeOfDeathComponent" disable="true"/>
             </children>
         </VBox>

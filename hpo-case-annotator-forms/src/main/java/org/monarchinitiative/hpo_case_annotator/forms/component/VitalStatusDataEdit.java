@@ -1,9 +1,11 @@
 package org.monarchinitiative.hpo_case_annotator.forms.component;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.DataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementDataEdit;
 import org.monarchinitiative.hpo_case_annotator.model.v2.VitalStatus;
@@ -20,6 +22,8 @@ public class VitalStatusDataEdit extends HBox implements DataEdit<ObservableVita
     private ObservableTimeElement timeOfDeath;
     @FXML
     private TitledComboBox<VitalStatus.Status> vitalStatus;
+    @FXML
+    private VBox deathBox;
     @FXML
     private CheckBox timeOfDeathIsUnknown;
     @FXML
@@ -40,8 +44,10 @@ public class VitalStatusDataEdit extends HBox implements DataEdit<ObservableVita
     @FXML
     private void initialize() {
         vitalStatus.getItems().addAll(VitalStatus.Status.values());
-        timeOfDeathComponent.disableProperty().bind(timeOfDeathIsUnknown.selectedProperty()
-                .or(vitalStatus.valueProperty().isNotEqualTo(VitalStatus.Status.DECEASED)));
+        BooleanBinding isNotDeceased = vitalStatus.valueProperty().isNotEqualTo(VitalStatus.Status.DECEASED);
+        vitalStatus.setValue(VitalStatus.Status.UNKNOWN); // default
+        deathBox.disableProperty().bind(isNotDeceased);
+        timeOfDeathComponent.disableProperty().bind(timeOfDeathIsUnknown.selectedProperty());
     }
 
     @Override
@@ -50,7 +56,9 @@ public class VitalStatusDataEdit extends HBox implements DataEdit<ObservableVita
 
         vitalStatus.setValue(item.getStatus() == null ? VitalStatus.Status.UNKNOWN : item.getStatus());
 
-        boolean timeOfDeathIsUnknownRightNow = item.getTimeOfDeath() == null;
+        boolean timeOfDeathIsUnknownRightNow = item.getStatus() == null
+                || !item.getStatus().equals(VitalStatus.Status.DECEASED)
+                || item.getTimeOfDeath() == null;
         timeOfDeathIsUnknown.setSelected(timeOfDeathIsUnknownRightNow);
         timeOfDeath = timeOfDeathIsUnknownRightNow
                 ? new ObservableTimeElement()
@@ -61,8 +69,9 @@ public class VitalStatusDataEdit extends HBox implements DataEdit<ObservableVita
 
     @Override
     public void commit() {
-        item.setStatus(vitalStatus.getValue());
-        if (timeOfDeathIsUnknown.isSelected()) {
+        VitalStatus.Status status = vitalStatus.getValue();
+        item.setStatus(status);
+        if (status.equals(VitalStatus.Status.UNKNOWN) || timeOfDeathIsUnknown.isSelected()) {
             item.setTimeOfDeath(null);
         } else {
             timeOfDeathComponent.commit();
