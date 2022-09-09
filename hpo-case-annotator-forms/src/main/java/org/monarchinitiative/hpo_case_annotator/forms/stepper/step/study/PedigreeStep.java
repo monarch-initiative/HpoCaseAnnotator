@@ -99,7 +99,7 @@ public class PedigreeStep<T extends ObservableFamilyStudy> extends BaseStep<T> i
 
     @FXML
     private void addButtonAction(ActionEvent e) {
-        askForCredentials()
+        addPedigreeMember()
                 .ifPresent(pedigree.getMembers()::add);
         e.consume();
     }
@@ -114,14 +114,16 @@ public class PedigreeStep<T extends ObservableFamilyStudy> extends BaseStep<T> i
         e.consume();
     }
 
-    private Optional<ObservablePedigreeMember> askForCredentials() {
+    private Optional<ObservablePedigreeMember> addPedigreeMember() {
+        ObservablePedigreeMember member = new ObservablePedigreeMember();
+        Stepper<ObservablePedigreeMember> stepper = new Stepper<>();
+        stepper.setData(member);
+
         PedigreeMemberSteps steps = new PedigreeMemberSteps().configureSteps();
         steps.bindStudyResources(this);
-
-        Stepper<ObservablePedigreeMember> stepper = new Stepper<>();
         stepper.stepsProperty().bind(steps.stepsProperty());
-        ObservablePedigreeMember member = new ObservablePedigreeMember();
-        stepper.setData(member);
+        steps.variantsProperty().bind(variants);
+
 
         Stage stage = new Stage();
         AtomicBoolean accept = new AtomicBoolean();
@@ -155,33 +157,4 @@ public class PedigreeStep<T extends ObservableFamilyStudy> extends BaseStep<T> i
         return studyResources;
     }
 
-
-    private static void wireFunctionalPropertiesToStudyResourcesAware(StudyResources source, StudyResources target) {
-        target.hpoProperty().bind(source.hpoProperty());
-        target.diseaseIdentifierServiceProperty().bind(source.diseaseIdentifierServiceProperty());
-        target.genomicAssemblyRegistryProperty().bind(source.genomicAssemblyRegistryProperty());
-        target.functionalAnnotationRegistryProperty().bind(source.functionalAnnotationRegistryProperty());
-    }
-
-    // Dialog<Boolean> dialog = new Dialog<>();
-    //        dialog.initOwner(getParent().getScene().getWindow());
-    //        dialog.setTitle("Add pedigree member");
-    //        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.UPDATE_CANCEL_BUTTONS);
-    //        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
-    //
-    //        PedigreeMemberIdsDataEdit content = new PedigreeMemberIdsDataEdit();
-    //        ObservablePedigreeMember member = new ObservablePedigreeMember();
-    //        member.setAge(new ObservableTimeElement());
-    //        member.setVitalStatus(new ObservableVitalStatus());
-    //        content.setInitialData(member);
-    //        dialog.getDialogPane().setContent(content);
-    //
-    //        return dialog.showAndWait()
-    //                .flatMap(shouldUpdate -> {
-    //                    if (shouldUpdate) {
-    //                        content.commit();
-    //                        return Optional.of(member);
-    //                    }
-    //                    return Optional.empty();
-    //                });
 }

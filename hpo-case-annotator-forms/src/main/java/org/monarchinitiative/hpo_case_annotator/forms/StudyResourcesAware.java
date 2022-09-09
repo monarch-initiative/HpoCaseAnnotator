@@ -12,11 +12,9 @@ public interface StudyResourcesAware {
     }
 
     private static void bind(StudyResourcesAware source, StudyResourcesAware target) {
-        StudyResources s = source.getStudyResources();
-        StudyResources t = target.getStudyResources();
-        t.hpoProperty().bind(s.hpoProperty());
-        t.diseaseIdentifierServiceProperty().bind(s.diseaseIdentifierServiceProperty());
-        t.functionalAnnotationRegistryProperty().bind(s.functionalAnnotationRegistryProperty());
-        t.genomicAssemblyRegistryProperty().bind(s.genomicAssemblyRegistryProperty());
+        source.getStudyResources().hpoProperty().bind(target.getStudyResources().hpoProperty());
+        source.getStudyResources().diseaseIdentifierServiceProperty().bind(target.getStudyResources().diseaseIdentifierServiceProperty());
+        source.getStudyResources().functionalAnnotationRegistryProperty().bind(target.getStudyResources().functionalAnnotationRegistryProperty());
+        source.getStudyResources().genomicAssemblyRegistryProperty().bind(target.getStudyResources().genomicAssemblyRegistryProperty());
     }
 }

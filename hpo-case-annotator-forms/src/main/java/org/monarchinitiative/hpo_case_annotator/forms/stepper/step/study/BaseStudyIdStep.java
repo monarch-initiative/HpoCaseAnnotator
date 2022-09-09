@@ -36,7 +36,7 @@ public abstract class BaseStudyIdStep<T extends ObservableStudy> extends BaseSte
             valueIsBeingSetProgrammatically = true;
 
             if (data != null)
-                studyId.textProperty().bind(data.idProperty());
+                studyId.textProperty().bindBidirectional(data.idProperty());
             else
                 studyId.setText(null);
         } finally {
@@ -47,6 +47,6 @@ public abstract class BaseStudyIdStep<T extends ObservableStudy> extends BaseSte
     @Override
     protected void unbind(T data) {
         if (data != null)
-            studyId.textProperty().unbind();
+            studyId.textProperty().unbindBidirectional(data.idProperty());
     }
 }

@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.ResourceAwareStudySteps;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.individual.disease.DiseaseStep;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.individual.genotype.VariantGenotypeStep;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.individual.id.BaseIndividuaIdStep;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.individual.phenotype.BasePhenotypeStep;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
@@ -30,8 +31,11 @@ abstract class BaseIndividualSteps<T extends BaseObservableIndividual> extends R
         disease.setHeader("Add diseases");
         steps.add(disease);
 
-        // TODO - implement
-        // - Genotypes
+        VariantGenotypeStep<T> genotypes = new VariantGenotypeStep<>();
+        genotypes.variantsProperty().bind(variants);
+        genotypes.setHeader("Set variant genotypes");
+        steps.add(genotypes);
+
         return this;
     }
 

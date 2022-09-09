@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms.variants;
 
 import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -23,6 +22,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * Note: {@link #dataProperty()} must be set/non-null prior to setting {@link #variantsProperty()}.
+ */
 public class VariantGenotypeTable extends VBoxObservableDataComponent<BaseObservableIndividual> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VariantGenotypeTable.class);
@@ -77,12 +79,15 @@ public class VariantGenotypeTable extends VBoxObservableDataComponent<BaseObserv
         genotypesTable.itemsProperty().bind(variants);
     }
 
-    private static <T extends BaseObservableIndividual> ObservableValue<Genotype> extractGenotype(String variantMd5Hex, ObjectProperty<T> member) {
-        T m = member.get();
-        if (m == null)
+    /**
+     * Find {@link Genotype} property for given {@code variantMd5Hex} variant ID.
+     */
+    private static <T extends BaseObservableIndividual> ObjectProperty<Genotype> extractGenotype(String variantMd5Hex, ObjectProperty<T> memberProperty) {
+        T member = memberProperty.get();
+        if (member == null)
             return null;
 
-        return m.getGenotypes().stream()
+        return member.getGenotypes().stream()
                 .filter(g -> g.getMd5Hex().equals(variantMd5Hex))
                 .findFirst()
                 .map(ObservableVariantGenotype::genotypeProperty)

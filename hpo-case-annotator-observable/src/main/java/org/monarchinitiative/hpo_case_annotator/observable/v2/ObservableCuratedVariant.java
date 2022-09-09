@@ -336,6 +336,24 @@ public class ObservableCuratedVariant implements CuratedVariant, ObservableItem 
         return EXTRACTOR.call(this);
     }
 
-
-
+    @Override
+    public String toString() {
+        return "ObservableCuratedVariant{" +
+                "variantNotation=" + variantNotation.get() +
+                ", genomicAssembly=" + genomicAssembly.get() +
+                ", contig=" + contig.get() +
+                ", start=" + start.get() +
+                ", startCi=" + startCi.get() +
+                ", end=" + end.get() +
+                ", endCi=" + endCi.get() +
+                ", id=" + id.get() +
+                ", ref=" + ref.get() +
+                ", alt=" + alt.get() +
+                ", variantType=" + variantType.get() +
+                ", changeLength=" + changeLength.get() +
+                ", left=" + left.get() +
+                ", right=" + right.get() +
+                ", variantMetadata=" + variantMetadata.get() +
+                '}';
+    }
 }
