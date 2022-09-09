@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutorService;
 
 @Component
 public class OptionalServices {
+    // TODO - consider implementing StudyResources or StudyResourcesAware
 
     private final ObjectProperty<ExecutorService> executorService = new SimpleObjectProperty<>(this, "executorService");
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>(this, "hpo");

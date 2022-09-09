@@ -95,7 +95,7 @@ public abstract class BaseDiseaseDataEdit<T extends BaseObservableIndividual> ex
         diseaseNameTextField.disableProperty().bind(diseaseIdentifierService.isNull());
         addDiseaseButton.disableProperty().bind(diseaseIdentifierService.isNull());
 
-        diseaseTable.itemsProperty().bind(diseaseStates);
+        diseaseTable.diseaseStatesProperty().bind(diseaseStates);
 
         diseaseIdentifierService.addListener((obs, old, novel) -> {
             if (novel == null) {
@@ -167,7 +167,7 @@ public abstract class BaseDiseaseDataEdit<T extends BaseObservableIndividual> ex
         return di -> {
             ObservableDiseaseStatus ods = new ObservableDiseaseStatus();
             ods.setDiseaseId(di);
-            diseaseTable.getItems().add(ods);
+            diseaseTable.getDiseaseStates().add(ods);
         };
     }
 }

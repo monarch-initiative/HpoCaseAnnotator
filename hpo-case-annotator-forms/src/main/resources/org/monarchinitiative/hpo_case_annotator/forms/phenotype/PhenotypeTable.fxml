@@ -7,7 +7,7 @@
          type="javafx.scene.layout.VBox"
          stylesheets="@phenotype-table.css">
     <children>
-        <StackPane fx:id="contentPane" onMouseEntered="#phenotypeTableMouseEntered" onMouseExited="#phenotypeTableMouseExited">
+        <StackPane fx:id="contentPane">
             <children>
                 <TableView fx:id="phenotypes">
                     <columns>

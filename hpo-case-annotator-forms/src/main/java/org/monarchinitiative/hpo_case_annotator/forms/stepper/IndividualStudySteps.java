@@ -1,12 +1,16 @@
 package org.monarchinitiative.hpo_case_annotator.forms.stepper;
 
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.*;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.individual.IndividualStep;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.study.BaseStudyIdStep;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.study.IndividualStudyIdStep;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.study.PublicationStep;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.study.VariantsStep;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividualStudy;
 
 public class IndividualStudySteps extends BaseStudySteps<ObservableIndividualStudy> {
 
     @Override
-    protected void configureSteps() {
+    public IndividualStudySteps configureSteps() {
         PublicationStep<ObservableIndividualStudy> publication = new PublicationStep<>();
         publication.setHeader("Set publication data");
         steps.add(publication);
@@ -26,6 +30,8 @@ public class IndividualStudySteps extends BaseStudySteps<ObservableIndividualStu
 
         BaseStudyIdStep<ObservableIndividualStudy> identifiers = new IndividualStudyIdStep();
         steps.add(identifiers);
+
+        return this;
     }
 
 }

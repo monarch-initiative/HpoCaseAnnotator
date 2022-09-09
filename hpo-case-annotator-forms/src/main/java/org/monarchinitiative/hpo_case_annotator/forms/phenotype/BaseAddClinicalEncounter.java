@@ -50,7 +50,7 @@ public class BaseAddClinicalEncounter<T extends BaseObservableIndividual> extend
     }
 
     public ObjectProperty<ObservableList<ObservablePhenotypicFeature>> itemsProperty() {
-        return phenotypeTable.itemsProperty();
+        return phenotypeTable.phenotypicFeaturesProperty();
     }
 
     @FXML
@@ -58,7 +58,7 @@ public class BaseAddClinicalEncounter<T extends BaseObservableIndividual> extend
         super.initialize();
 
         // Browse HPO tab
-        browseHpo.setPhenotypicFeatureConsumer(phenotypeTable.getItems()::add);
+        browseHpo.setPhenotypicFeatureConsumer(phenotypeTable.getPhenotypicFeatures()::add);
         browseHpo.hpoProperty().bind(hpo);
         ObservableTimeElement ote = new ObservableTimeElement();
         encounterTime.setInitialData(ote);

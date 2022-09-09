@@ -11,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.ObservableTimeElementTableCell;
@@ -40,6 +39,7 @@ public class PhenotypeTable extends VBox {
     private TableColumn<ObservablePhenotypicFeature, ObservableTimeElement> onsetColumn;
     @FXML
     private TableColumn<ObservablePhenotypicFeature, ObservableTimeElement> resolutionColumn;
+    // TODO - consider removing
     @FXML
     private Button removePhenotypicFeature;
 //    @FXML
@@ -71,19 +71,8 @@ public class PhenotypeTable extends VBox {
         resolutionColumn.setCellFactory(tc -> new ObservableTimeElementTableCell<>());
         resolutionColumn.setCellValueFactory(cdf -> cdf.getValue().resolutionProperty());
 
+        removePhenotypicFeature.visibleProperty().bind(contentPane.hoverProperty());
         removePhenotypicFeature.disableProperty().bind(phenotypes.getSelectionModel().selectedItemProperty().isNull());
-    }
-
-    @FXML
-    private void phenotypeTableMouseEntered(MouseEvent e) {
-        removePhenotypicFeature.setVisible(true);
-        e.consume();
-    }
-
-    @FXML
-    private void phenotypeTableMouseExited(MouseEvent e) {
-        removePhenotypicFeature.setVisible(false);
-        e.consume();
     }
 
     @FXML
@@ -93,11 +82,11 @@ public class PhenotypeTable extends VBox {
         e.consume();
     }
 
-    public ObservableList<ObservablePhenotypicFeature> getItems() {
+    public ObservableList<ObservablePhenotypicFeature> getPhenotypicFeatures() {
         return phenotypes.getItems();
     }
 
-    public ObjectProperty<ObservableList<ObservablePhenotypicFeature>> itemsProperty() {
+    public ObjectProperty<ObservableList<ObservablePhenotypicFeature>> phenotypicFeaturesProperty() {
         return phenotypes.itemsProperty();
     }
 

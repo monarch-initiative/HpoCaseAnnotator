@@ -82,7 +82,7 @@ public abstract class BaseStudyComponent<T extends ObservableStudy>
         if (data != null) {
             publication.dataProperty().bindBidirectional(data.publicationProperty());
 
-            variantSummary.variants().bindBidirectional(data.variantsProperty());
+            variantSummary.variantsProperty().bindBidirectional(data.variantsProperty());
             metadataSummary.dataProperty().bind(data.studyMetadataProperty());
         }
     }
@@ -92,7 +92,7 @@ public abstract class BaseStudyComponent<T extends ObservableStudy>
         if (data != null) {
             publication.dataProperty().unbindBidirectional(data.publicationProperty());
 
-            variantSummary.variants().unbindBidirectional(data.variantsProperty());
+            variantSummary.variantsProperty().unbindBidirectional(data.variantsProperty());
             metadataSummary.dataProperty().unbind();
         }
     }

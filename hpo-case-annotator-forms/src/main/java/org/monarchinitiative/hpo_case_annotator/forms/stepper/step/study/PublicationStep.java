@@ -1,11 +1,10 @@
-package org.monarchinitiative.hpo_case_annotator.forms.stepper.step;
+package org.monarchinitiative.hpo_case_annotator.forms.stepper.step.study;
 
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.VBox;
@@ -39,6 +38,7 @@ public class PublicationStep<T extends ObservableStudy> extends BaseStep<T> {
     @Override
     protected void initialize() {
         super.initialize();
+        disableProperty().bind(data.isNull());
         publicationDataBox.disableProperty().bind(publicationIsUnknown.selectedProperty());
     }
 
@@ -49,13 +49,10 @@ public class PublicationStep<T extends ObservableStudy> extends BaseStep<T> {
 
     @Override
     public void invalidated(Observable obs) {
-        // check flag
-        if (valueIsNotBeingSetByUserInteraction)
+        if (valueIsBeingSetProgrammatically || data.get() == null)
             return;
 
         T data = this.data.get();
-        if (data == null)
-            return;
 
         if (obs.equals(publicationIsUnknown.selectedProperty())) {
             if (publicationIsUnknown.isSelected())
@@ -71,21 +68,24 @@ public class PublicationStep<T extends ObservableStudy> extends BaseStep<T> {
 
     @Override
     protected void bind(T data) {
-        if (data != null) {
-            try {
-                valueIsNotBeingSetByUserInteraction = true;
-                publicationIsUnknown.setSelected(data.getPublication() == null);
+        try {
+            valueIsBeingSetProgrammatically = true;
+
+            publicationIsUnknown.setSelected(data == null || data.getPublication() == null);
+            if (data != null) {
                 publicationBinding.dataProperty().bind(data.publicationProperty());
-            } finally {
-                valueIsNotBeingSetByUserInteraction = false;
+            } else {
+                publicationBinding.setData(null);
             }
+        } finally {
+            valueIsBeingSetProgrammatically = false;
         }
     }
 
     @Override
     protected void unbind(T data) {
         if (data != null)
-            publicationBinding.dataProperty().unbindBidirectional(data.publicationProperty());
+            publicationBinding.dataProperty().unbind();
     }
 
     @FXML
@@ -97,19 +97,14 @@ public class PublicationStep<T extends ObservableStudy> extends BaseStep<T> {
 
         // trip to PubMed was successful
         task.setOnSucceeded(we -> Platform.runLater(() -> {
-            // 18023225
-            Publication publication = task.getValue();
-            publicationBinding.setData(new ObservablePublication(publication));
+            // Result of `data.get()` must be non-null because the entire UI is enabled only iff `data.get() != null`.
+            data.get().setPublication(new ObservablePublication(task.getValue()));
+            pmidTextField.setText(null);
         }));
 
         task.run();
 
         e.consume();
-    }
-
-    @Override
-    public Parent getContent() {
-        return this;
     }
 
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseTable?>
+
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         type="VBox">
+    <children>
+        <Label fx:id="header"/>
+        <SplitPane>
+            <items>
+                <VBox>
+                    <children>
+                        <GridPane>
+                            <children>
+                                <Label text="Search for diseases" styleClass="h2" />
+                                <Label text="Disease ID" GridPane.rowIndex="1"/>
+                                <TextField fx:id="diseaseIdTextField" promptText="E.g. OMIM:256000" onAction="#addDisease"
+                                           GridPane.rowIndex="2"/>
+                                <Label text="Disease name" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                <TextField fx:id="diseaseNameTextField" promptText="LEIGH SYNDROME; LS " onAction="#addDisease"
+                                           GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                                <Button fx:id="addDiseaseButton" onAction="#addDisease" text="Add disease"
+                                        GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+                            </children>
+                        </GridPane>
+                    </children>
+                </VBox>
+                <VBox>
+                    <children>
+                        <Label text="Diseases" styleClass="h2" />
+                        <DiseaseTable fx:id="diseaseTable"/>
+                    </children>
+                </VBox>
+            </items>
+        </SplitPane>
+    </children>
+</fx:root>

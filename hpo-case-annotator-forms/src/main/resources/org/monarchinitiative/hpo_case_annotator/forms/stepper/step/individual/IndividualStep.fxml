@@ -9,7 +9,7 @@
          type="javafx.scene.layout.VBox"
          styleClass="step-box" >
     <stylesheets>
-        <URL value="@step-base.css" />
+        <URL value="@../step-base.css" />
         <URL value="@individual-step.css" />
     </stylesheets>
     <children>

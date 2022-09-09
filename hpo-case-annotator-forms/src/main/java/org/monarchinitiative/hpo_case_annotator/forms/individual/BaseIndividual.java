@@ -85,11 +85,11 @@ public abstract class BaseIndividual<T extends BaseObservableIndividual> extends
     @Override
     protected void initialize() {
         // Phenotypes table view
-        phenotypeTable.itemsProperty().bind(select(data, "phenotypicFeatures"));
+        phenotypeTable.phenotypicFeaturesProperty().bind(select(data, "phenotypicFeatures"));
         editPhenotypeButton.visibleProperty().bind(phenotypePane.hoverProperty().and(data.isNotNull()));
 
         // Diseases table view
-        diseaseTable.itemsProperty().bind(select(data, "diseaseStates"));
+        diseaseTable.diseaseStatesProperty().bind(select(data, "diseaseStates"));
         editDiseasesButton.visibleProperty().bind(diseasePane.hoverProperty().and(data.isNotNull()));
 
         // Genotypes table view

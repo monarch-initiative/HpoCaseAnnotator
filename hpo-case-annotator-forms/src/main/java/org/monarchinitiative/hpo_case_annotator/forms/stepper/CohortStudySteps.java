@@ -1,12 +1,12 @@
 package org.monarchinitiative.hpo_case_annotator.forms.stepper;
 
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.*;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.study.*;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCohortStudy;
 
 public class CohortStudySteps extends BaseStudySteps<ObservableCohortStudy> {
 
     @Override
-    protected void configureSteps() {
+    public CohortStudySteps configureSteps() {
         PublicationStep<ObservableCohortStudy> publication = new PublicationStep<>();
         publication.setHeader("Set publication data");
         steps.add(publication);
@@ -26,6 +26,8 @@ public class CohortStudySteps extends BaseStudySteps<ObservableCohortStudy> {
 
         BaseStudyIdStep<ObservableCohortStudy> identifiers = new CohortStudyIdStep();
         steps.add(identifiers);
+
+        return this;
     }
 
 }

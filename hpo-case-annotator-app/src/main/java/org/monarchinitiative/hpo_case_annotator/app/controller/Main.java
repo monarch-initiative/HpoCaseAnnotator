@@ -586,11 +586,11 @@ public class Main {
     @SuppressWarnings("unchecked")
     private static <T extends ObservableStudy> Optional<? extends BaseStudySteps<T>> prepareSteps(T study) {
         if (study instanceof ObservableIndividualStudy) {
-            return Optional.of((BaseStudySteps<T>) new IndividualStudySteps());
+            return Optional.of((BaseStudySteps<T>) new IndividualStudySteps().configureSteps());
         } else if (study instanceof ObservableFamilyStudy) {
-            return Optional.of((BaseStudySteps<T>) new FamilyStudySteps());
+            return Optional.of((BaseStudySteps<T>) new FamilyStudySteps().configureSteps());
         } else if (study instanceof ObservableCohortStudy) {
-            return Optional.of((BaseStudySteps<T>) new CohortStudySteps());
+            return Optional.of((BaseStudySteps<T>) new CohortStudySteps().configureSteps());
         } else {
             LOGGER.warn("Unable to create steps for {}", study.getClass().getSimpleName());
             return Optional.empty();

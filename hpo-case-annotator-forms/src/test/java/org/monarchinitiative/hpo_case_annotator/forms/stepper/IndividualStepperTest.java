@@ -11,7 +11,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
 import org.monarchinitiative.hpo_case_annotator.forms.StudyResources;
 import org.monarchinitiative.hpo_case_annotator.forms.StudyResourcesAware;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividualStudy;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudy;
 import org.monarchinitiative.hpo_case_annotator.test.TestData;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 @Disabled
 @ExtendWith(ApplicationExtension.class)
-public class StepperTest extends BaseControllerTest {
+public class IndividualStepperTest extends BaseControllerTest {
 
     private Stepper<ObservableIndividualStudy> stepper;
 
@@ -44,7 +44,7 @@ public class StepperTest extends BaseControllerTest {
     public void testEmpty(FxRobot robot) {
         robot.sleep(300, TimeUnit.MILLISECONDS);
 
-        IndividualStudySteps steps = new IndividualStudySteps();
+        IndividualStudySteps steps = new IndividualStudySteps().configureSteps();
         wireFunctionalPropertiesToStudyResourcesAware(steps);
 
         ObservableIndividualStudy study = new ObservableIndividualStudy();
@@ -57,7 +57,7 @@ public class StepperTest extends BaseControllerTest {
     @Test
     public void testIndividualSteps(FxRobot robot) {
         robot.sleep(300, TimeUnit.MILLISECONDS);
-        IndividualStudySteps steps = new IndividualStudySteps();
+        IndividualStudySteps steps = new IndividualStudySteps().configureSteps();
         wireFunctionalPropertiesToStudyResourcesAware(steps);
 
         Platform.runLater(() -> stepper.setData(new ObservableIndividualStudy(TestData.V2.comprehensiveIndividualStudy())));

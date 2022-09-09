@@ -79,11 +79,11 @@ public class DiseaseTable extends VBox {
         e.consume();
     }
 
-    public ObservableList<ObservableDiseaseStatus> getItems() {
+    public ObservableList<ObservableDiseaseStatus> getDiseaseStates() {
         return diseases.getItems();
     }
 
-    public ObjectProperty<ObservableList<ObservableDiseaseStatus>> itemsProperty() {
+    public ObjectProperty<ObservableList<ObservableDiseaseStatus>> diseaseStatesProperty() {
         return diseases.itemsProperty();
     }
 

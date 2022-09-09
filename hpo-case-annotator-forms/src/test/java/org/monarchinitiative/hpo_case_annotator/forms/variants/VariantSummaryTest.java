@@ -15,10 +15,6 @@ import org.testfx.framework.junit5.Start;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
-
 @Disabled
 @ExtendWith(ApplicationExtension.class)
 public class VariantSummaryTest extends BaseControllerTest {
@@ -44,11 +40,11 @@ public class VariantSummaryTest extends BaseControllerTest {
 
 
         robot.sleep(300, TimeUnit.MILLISECONDS);
-        variantSummary.variants().bindBidirectional(familyStudy.variantsProperty());
+        variantSummary.variantsProperty().bindBidirectional(familyStudy.variantsProperty());
 
         robot.sleep(5, TimeUnit.MINUTES);
 
-        variantSummary.variants().get()
+        variantSummary.variantsProperty().get()
                 .forEach(System.err::println);
         System.err.println("--------------------------------------------------------------------------------");
         familyStudy.getVariants()

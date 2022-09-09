@@ -5,6 +5,7 @@ import javafx.beans.Observable;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 
@@ -18,9 +19,9 @@ public abstract class BaseStep<T> extends VBoxBindingObservableDataComponent<T> 
     private Label header;
 
     // Indicate that the value is being changed via `dataProperty` and not by the user using the UI components.
-    protected boolean valueIsNotBeingSetByUserInteraction;
+    protected boolean valueIsBeingSetProgrammatically;
 
-    public BaseStep(URL location) {
+    protected BaseStep(URL location) {
         FXMLLoader loader = new FXMLLoader(location);
         loader.setRoot(this);
         loader.setController(this);
@@ -35,7 +36,7 @@ public abstract class BaseStep<T> extends VBoxBindingObservableDataComponent<T> 
     @Override
     protected void initialize() {
         super.initialize();
-        addListener(this::invalidated);
+        addListener(this);
     }
 
     public String getHeader() {
@@ -48,6 +49,11 @@ public abstract class BaseStep<T> extends VBoxBindingObservableDataComponent<T> 
 
     public void setHeader(String header) {
         this.header.textProperty().set(header);
+    }
+
+    @Override
+    public Parent getContent() {
+        return this;
     }
 
     protected abstract Stream<Observable> dependencies();

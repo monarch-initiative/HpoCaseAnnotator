@@ -1,11 +1,10 @@
-package org.monarchinitiative.hpo_case_annotator.forms.stepper.step;
+package org.monarchinitiative.hpo_case_annotator.forms.stepper.step.study;
 
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import org.monarchinitiative.hpo_case_annotator.forms.FunctionalAnnotationRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
@@ -42,7 +41,7 @@ public class VariantsStep<T extends ObservableStudy> extends BaseStep<T> {
     }
 
     public ObjectProperty<ObservableList<ObservableCuratedVariant>> variantsProperty() {
-        return variantSummary.variants();
+        return variantSummary.variantsProperty();
     }
 
     public ObjectProperty<GenomicAssemblyRegistry> genomicAssemblyRegistryProperty() {
@@ -70,21 +69,16 @@ public class VariantsStep<T extends ObservableStudy> extends BaseStep<T> {
     }
 
     @Override
-    public Parent getContent() {
-        return this;
-    }
-
-    @Override
     protected void bind(T data) {
         if (data != null)
-            variantSummary.variants().bindBidirectional(data.variantsProperty());
+            variantSummary.variantsProperty().bindBidirectional(data.variantsProperty());
         else
-            variantSummary.variants().get().clear();
+            variantSummary.getVariants().clear();
     }
 
     @Override
     protected void unbind(T data) {
         if (data != null)
-            variantSummary.variants().unbindBidirectional(data.variantsProperty());
+            variantSummary.variantsProperty().unbindBidirectional(data.variantsProperty());
     }
 }

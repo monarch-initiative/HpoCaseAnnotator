@@ -1,12 +1,24 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
+import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 
-public abstract class BaseObservableIndividual implements Individual {
+public abstract class BaseObservableIndividual implements Observable, Individual {
+
+    static final Callback<BaseObservableIndividual, Observable[]> EXTRACTOR = item -> new Observable[]{
+            item.id,
+            item.age,
+            item.vitalStatus,
+            item.sex,
+            item.phenotypicFeatures,
+            item.diseaseStates,
+            item.genotypes
+    };
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
     private final ObjectProperty<ObservableTimeElement> age = new SimpleObjectProperty<>(this, "age");

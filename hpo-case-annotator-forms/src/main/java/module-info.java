@@ -41,6 +41,12 @@ module org.monarchinitiative.hca.forms {
     opens org.monarchinitiative.hpo_case_annotator.forms.publication to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.stepper to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.stepper.step to javafx.fxml;
+    opens org.monarchinitiative.hpo_case_annotator.forms.stepper.step.individual to javafx.fxml;
+    opens org.monarchinitiative.hpo_case_annotator.forms.stepper.step.individual.disease to javafx.fxml;
+    opens org.monarchinitiative.hpo_case_annotator.forms.stepper.step.individual.genotype to javafx.fxml;
+    opens org.monarchinitiative.hpo_case_annotator.forms.stepper.step.individual.id to javafx.fxml;
+    opens org.monarchinitiative.hpo_case_annotator.forms.stepper.step.individual.phenotype to javafx.fxml;
+    opens org.monarchinitiative.hpo_case_annotator.forms.stepper.step.study to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.tree to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.variants to javafx.fxml;
     opens org.monarchinitiative.hpo_case_annotator.forms.variants.detail to javafx.fxml;

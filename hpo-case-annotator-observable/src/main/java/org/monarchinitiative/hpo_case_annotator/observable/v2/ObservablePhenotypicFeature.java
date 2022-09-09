@@ -1,13 +1,23 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
+import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.PhenotypicFeature;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
-public class ObservablePhenotypicFeature implements PhenotypicFeature {
+import java.util.stream.Stream;
+
+public class ObservablePhenotypicFeature implements PhenotypicFeature, ObservableItem {
+
+    static final Callback<ObservablePhenotypicFeature, Stream<Observable>> EXTRACTOR = ote -> Stream.of(
+            ote.excluded,
+            ote.onset,
+            ote.resolution
+    );
 
     private TermId termId;
     private String label;
@@ -91,6 +101,11 @@ public class ObservablePhenotypicFeature implements PhenotypicFeature {
 
     public ObjectProperty<ObservableTimeElement> resolutionProperty() {
         return resolution;
+    }
+
+    @Override
+    public Stream<Observable> dependencies() {
+        return EXTRACTOR.call(this);
     }
 
     @Override

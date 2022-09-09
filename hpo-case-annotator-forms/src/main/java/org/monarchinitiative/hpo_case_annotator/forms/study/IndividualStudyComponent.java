@@ -22,7 +22,7 @@ public class IndividualStudyComponent extends BaseStudyComponent<ObservableIndiv
 
         individual.hpoProperty().bind(studyResources.hpoProperty());
         individual.diseaseIdentifierServiceProperty().bind(studyResources.diseaseIdentifierServiceProperty());
-        individual.variantsProperty().bind(variantSummary.variants());
+        individual.variantsProperty().bind(variantSummary.variantsProperty());
     }
 
     @Override

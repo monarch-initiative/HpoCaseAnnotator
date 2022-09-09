@@ -67,7 +67,7 @@ public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> 
         phenotypicFeature.hpoProperty().bind(hpo);
         phenotypicFeature.dataProperty().bind(phenotypeTable.getSelectionModel().selectedItemProperty());
         phenotypicFeature.disableProperty().bind(phenotypeTable.getSelectionModel().selectedItemProperty().isNull());
-        phenotypeTable.itemsProperty().bind(phenotypicFeatures);
+        phenotypeTable.phenotypicFeaturesProperty().bind(phenotypicFeatures);
     }
 
     @Override
@@ -89,7 +89,7 @@ public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> 
     private void browseHpoAction(ActionEvent e) {
         BrowseHpo component = new BrowseHpo();
         component.hpoProperty().bind(hpo);
-        component.setPhenotypicFeatureConsumer(phenotypeTable.getItems()::add);
+        component.setPhenotypicFeatureConsumer(phenotypeTable.getPhenotypicFeatures()::add);
 
         showComponentNodeDialog(component);
 
@@ -103,7 +103,7 @@ public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> 
         component.setData(item);
 
         showComponentNodeDialog(component);
-        phenotypeTable.getItems().addAll(component.itemsProperty().get());
+        phenotypeTable.getPhenotypicFeatures().addAll(component.itemsProperty().get());
 
         e.consume();
     }

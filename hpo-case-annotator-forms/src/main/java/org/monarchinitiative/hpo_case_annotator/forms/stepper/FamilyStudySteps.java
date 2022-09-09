@@ -1,14 +1,12 @@
 package org.monarchinitiative.hpo_case_annotator.forms.stepper;
 
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.FamilyStudyIdStep;
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.PublicationStep;
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.VariantsStep;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.study.*;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableFamilyStudy;
 
 public class FamilyStudySteps extends BaseStudySteps<ObservableFamilyStudy> {
 
     @Override
-    protected void configureSteps() {
+    public FamilyStudySteps configureSteps() {
         PublicationStep<ObservableFamilyStudy> publication = new PublicationStep<>();
         publication.setHeader("Set publication data");
         steps.add(publication);
@@ -19,15 +17,16 @@ public class FamilyStudySteps extends BaseStudySteps<ObservableFamilyStudy> {
         variants.functionalAnnotationRegistryProperty().bind(studyResources.functionalAnnotationRegistryProperty());
         steps.add(variants);
 
-        // TODO - implement adding family members members
-//        IndividualStep<ObservableIndividualStudy> individual = new IndividualStep<>();
-//        individual.setHeader("Add data regarding the investigated individual.");
-//        individual.hpoProperty().bind(hpo);
-//        individual.diseaseIdentifierServiceProperty().bind(diseaseIdentifierService);
-//        individual.variantsProperty().bind(variants.variantsProperty());
+        PedigreeStep<ObservableFamilyStudy> pedigree = new PedigreeStep<>();
+        pedigree.setHeader("Add data regarding the investigated family members.");
+        pedigree.bindStudyResources(this);
+        pedigree.variantsProperty().bind(variants.variantsProperty());
+        steps.add(pedigree);
 
         FamilyStudyIdStep identifiers = new FamilyStudyIdStep();
         steps.add(identifiers);
+
+        return this;
     }
 
 }

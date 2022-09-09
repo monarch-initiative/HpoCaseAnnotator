@@ -34,7 +34,7 @@ import java.util.Optional;
  * <p>
  * {@link VariantSummary} exposes the following properties:
  * <ul>
- *     <li>{@link #variants()}</li>
+ *     <li>{@link #variantsProperty()}</li>
  * </ul>
  */
 public class VariantSummary extends VBox {
@@ -63,8 +63,12 @@ public class VariantSummary extends VBox {
         }
     }
 
-    public ObjectProperty<ObservableList<ObservableCuratedVariant>> variants() {
+    public ObjectProperty<ObservableList<ObservableCuratedVariant>> variantsProperty() {
         return variantTable.itemsProperty();
+    }
+
+    public ObservableList<ObservableCuratedVariant> getVariants() {
+        return variantTable.getItems();
     }
 
     @FXML

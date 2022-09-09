@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.stepper.step;
+package org.monarchinitiative.hpo_case_annotator.forms.stepper.step.individual;
 
 import javafx.beans.Observable;
 import javafx.beans.property.ListProperty;
@@ -8,7 +8,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Dialog;
 import javafx.stage.StageStyle;
@@ -63,7 +62,6 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
     @Override
     protected void initialize() {
         super.initialize();
-
     }
 
     @Override
@@ -78,16 +76,17 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
     }
 
     @Override
-    public Parent getContent() {
-        return this;
-    }
-
-    @Override
     protected void bind(T data) {
-        if (data != null)
-            individualIds.dataProperty().bindBidirectional(data.individualProperty());
-        else
-            individualIds.setData(null);
+        // set flag
+        try {
+            valueIsBeingSetProgrammatically = true;
+            if (data != null)
+                individualIds.dataProperty().bindBidirectional(data.individualProperty());
+            else
+                individualIds.setData(null);
+        } finally {
+            valueIsBeingSetProgrammatically = false;
+        }
     }
 
     @Override
@@ -101,7 +100,7 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.initOwner(individualIds.getParent().getScene().getWindow());
         dialog.initStyle(StageStyle.DECORATED);
-        // TODO - setup title
+        dialog.setTitle("Add phenotype features"); // TODO - nicer title
         dialog.setResizable(true);
 
         IndividualPhenotypeDataEdit phenotypeDataEdit = new IndividualPhenotypeDataEdit();
@@ -122,7 +121,7 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.initOwner(individualIds.getParent().getScene().getWindow());
         dialog.initStyle(StageStyle.DECORATED);
-        // TODO - setup title
+        dialog.setTitle("Add diseases"); // TODO - nicer title
         dialog.setResizable(true);
 
         IndividualDiseaseDataEdit diseaseDataEdit = new IndividualDiseaseDataEdit();
@@ -143,7 +142,7 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.initOwner(individualIds.getParent().getScene().getWindow());
         dialog.initStyle(StageStyle.DECORATED);
-        // TODO - setup title
+        dialog.setTitle("Add genotypes"); // TODO - nicer title
         dialog.setResizable(true);
 
         IndividualVariantGenotypesObservableData content = new IndividualVariantGenotypesObservableData();

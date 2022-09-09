@@ -9,12 +9,12 @@
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="VBox">
     <stylesheets>
-        <URL value="@step-base.css"/>
+        <URL value="@../step-base.css"/>
         <URL value="@id-step.css"/>
     </stylesheets>
     <children>
-        <Label text="Family study ID"/>
-        <Label fx:id="header" text="Set family study ID."/>
-        <TitledTextField fx:id="studyId" name="Family study ID"/>
+        <Label text="Case report ID"/>
+        <Label fx:id="header" text="Set case report ID."/>
+        <TitledTextField fx:id="studyId" name="Case report ID"/>
     </children>
 </fx:root>

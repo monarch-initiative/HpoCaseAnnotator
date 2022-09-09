@@ -7,10 +7,12 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MultipleSelectionModel;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
@@ -65,6 +67,18 @@ public class Pedigree extends VBoxBindingObservableDataComponent<ObservablePedig
 
     public ObjectProperty<DiseaseIdentifierService> diseaseIdentifierServiceProperty() {
         return diseaseIdentifierService;
+    }
+
+    public MultipleSelectionModel<ObservablePedigreeMember> getSelectionModel() {
+        return members.getSelectionModel();
+    }
+
+    public ObservableList<ObservablePedigreeMember> getMembers() {
+        return members.getItems();
+    }
+
+    public ObjectProperty<ObservableList<ObservablePedigreeMember>> membersProperty() {
+        return members.itemsProperty();
     }
 
     @Override

@@ -38,7 +38,7 @@ public abstract class StudyController<T extends ObservableStudy> extends Binding
 
         publicationController.dataProperty().bindBidirectional(study.publicationProperty());
 
-        variantSummary.variants().bindBidirectional(study.variantsProperty());
+        variantSummary.variantsProperty().bindBidirectional(study.variantsProperty());
 
         studyMetadataController.dataProperty().bindBidirectional(study.studyMetadataProperty());
     }
@@ -49,7 +49,7 @@ public abstract class StudyController<T extends ObservableStudy> extends Binding
 
         publicationController.dataProperty().unbindBidirectional(study.publicationProperty());
 
-        variantSummary.variants().unbindBidirectional(study.variantsProperty());
+        variantSummary.variantsProperty().unbindBidirectional(study.variantsProperty());
 
         studyMetadataController.dataProperty().unbindBidirectional(study.studyMetadataProperty());
     }

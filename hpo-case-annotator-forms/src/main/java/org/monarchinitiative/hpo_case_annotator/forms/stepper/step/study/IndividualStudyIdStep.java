@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.stepper.step;
+package org.monarchinitiative.hpo_case_annotator.forms.stepper.step.study;
 
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividualStudy;
 
