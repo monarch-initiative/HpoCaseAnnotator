@@ -21,8 +21,8 @@ public abstract class VBoxBindingObservableDataComponent<T> extends VBoxObservab
 
     private ChangeListener<T> onDataChange() {
         return (obs, old, novel) -> {
-                unbind(old);
-                bind(novel);
+            unbind(old);
+            bind(novel);
         };
     }
 

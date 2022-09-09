@@ -29,13 +29,13 @@
                                 <VBox styleClass="credential-col">
                                     <children>
                                         <TitledTextField fx:id="individualId" name="ID" promptText="e.g. I:1"/>
-                                        <TitledTextField fx:id="paternalId" name="Paternal ID" text="II:2" />
-                                        <TitledTextField fx:id="maternalId" name="Maternal ID" text="II:3" />
+                                        <TitledTextField fx:id="paternalId" name="Paternal ID" promptText="II:2" />
+                                        <TitledTextField fx:id="maternalId" name="Maternal ID" promptText="II:3" />
                                     </children>
                                 </VBox>
                                 <VBox styleClass="credential-col">
                                     <children>
-                                        <TitledComboBox fx:id="sex" name="Sex" value="MALE"/>
+                                        <TitledComboBox fx:id="sex" name="Sex"/>
                                         <TitledCheckBox fx:id="proband" name="Proband?" />
                                     </children>
                                 </VBox>

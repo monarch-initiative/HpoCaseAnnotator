@@ -38,6 +38,7 @@ public class VitalStatusBindingComponent extends VBoxBindingObservableDataCompon
         timeOfDeathComponent.disableProperty().bind(timeOfDeathIsUnknown.selectedProperty()
                 .or(vitalStatus.valueProperty().isNotEqualTo(VitalStatus.Status.DECEASED)));
         vitalStatus.getItems().addAll(VitalStatus.Status.values());
+        vitalStatus.setValue(VitalStatus.Status.UNKNOWN);
 
         timeOfDeathIsUnknown.selectedProperty().addListener((obs, old, isUnknown) -> {
             if (isUnknown) {

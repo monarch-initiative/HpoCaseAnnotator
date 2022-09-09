@@ -161,9 +161,9 @@ public class Main {
         buttonType.flatMap(bt -> {
             if (bt.equals(individualStudy.getButtonType())) {
                 return Optional.of(new ObservableIndividualStudy());
-            } else if (bt.equals(cohortStudy.getButtonType())) {
-                return Optional.of(new ObservableFamilyStudy());
             } else if (bt.equals(familyStudy.getButtonType())) {
+                return Optional.of(new ObservableFamilyStudy());
+            } else if (bt.equals(cohortStudy.getButtonType())) {
                 return Optional.of(new ObservableCohortStudy());
             } else {
                 return Optional.empty();
@@ -583,18 +583,21 @@ public class Main {
         };
     }
 
-    @SuppressWarnings("unchecked")
     private static <T extends ObservableStudy> Optional<? extends BaseStudySteps<T>> prepareSteps(T study) {
+        Object steps;
         if (study instanceof ObservableIndividualStudy) {
-            return Optional.of((BaseStudySteps<T>) new IndividualStudySteps().configureSteps());
+            steps = new IndividualStudySteps().configureSteps();
         } else if (study instanceof ObservableFamilyStudy) {
-            return Optional.of((BaseStudySteps<T>) new FamilyStudySteps().configureSteps());
+            steps = new FamilyStudySteps().configureSteps();
         } else if (study instanceof ObservableCohortStudy) {
-            return Optional.of((BaseStudySteps<T>) new CohortStudySteps().configureSteps());
+            steps = new CohortStudySteps().configureSteps();
         } else {
             LOGGER.warn("Unable to create steps for {}", study.getClass().getSimpleName());
             return Optional.empty();
         }
+
+        //noinspection unchecked
+        return Optional.of((BaseStudySteps<T>) steps);
     }
 
 }

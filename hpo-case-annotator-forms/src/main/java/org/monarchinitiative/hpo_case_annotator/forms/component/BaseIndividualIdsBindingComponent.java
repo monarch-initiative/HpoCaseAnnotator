@@ -44,6 +44,7 @@ public abstract class BaseIndividualIdsBindingComponent<T extends BaseObservable
     protected void initialize() {
         super.initialize();
         sex.getItems().addAll(Sex.values());
+        sex.setValue(Sex.UNKNOWN);
         ageComponent.disableProperty().bind(ageIsUnknown.selectedProperty());
         ageIsUnknown.selectedProperty().addListener((obs, old, ageIsUnknown) -> {
             if (valueIsBeingSetProgrammatically)
@@ -63,6 +64,8 @@ public abstract class BaseIndividualIdsBindingComponent<T extends BaseObservable
             ageIsUnknown.setSelected(data.getAge() == null);
             ageComponent.dataProperty().bindBidirectional(data.ageProperty());
             vitalStatusComponent.dataProperty().bindBidirectional(data.vitalStatusProperty());
+        } else {
+            clear();
         }
     }
 
@@ -74,5 +77,13 @@ public abstract class BaseIndividualIdsBindingComponent<T extends BaseObservable
             ageComponent.dataProperty().unbindBidirectional(data.ageProperty());
             vitalStatusComponent.dataProperty().unbindBidirectional(data.vitalStatusProperty());
         }
+    }
+
+    private void clear() {
+        individualId.setText(null);
+        sex.setValue(Sex.UNKNOWN);
+        ageIsUnknown.setSelected(false);
+        ageComponent.setData(null);
+        vitalStatusComponent.setData(null);
     }
 }
