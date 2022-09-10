@@ -4,7 +4,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
-<?import org.monarchinitiative.hpo_case_annotator.app.controller.StatusBar?>
 
 <BorderPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.monarchinitiative.hpo_case_annotator.app.controller.Main">
@@ -116,11 +115,4 @@
             </children>
         </VBox>
     </center>
-    <bottom>
-        <VBox alignment="CENTER_LEFT">
-            <children>
-                <StatusBar fx:id="statusBar"/>
-            </children>
-        </VBox>
-    </bottom>
 </BorderPane>

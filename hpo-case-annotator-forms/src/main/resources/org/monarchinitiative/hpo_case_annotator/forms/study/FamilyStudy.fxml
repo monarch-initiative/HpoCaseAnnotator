@@ -12,15 +12,16 @@
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="VBox"
-         id="outer-box">
+         styleClass="outer-box">
     <stylesheets>
         <URL value="@../base.css"/>
+        <URL value="@study.css"/>
         <URL value="@family-study.css"/>
     </stylesheets>
     <children>
-        <VBox id="content-box">
+        <VBox styleClass="content-box">
             <children>
-                <HBox id="study-headline">
+                <HBox styleClass="study-headline">
                     <children>
                         <Label styleClass="scene-title" text="Family study">
                             <graphic>
@@ -29,23 +30,25 @@
                                 </ImageView>
                             </graphic>
                         </Label>
-                        <HBox id="nav-row" HBox.hgrow="ALWAYS">
+                        <HBox styleClass="nav-row">
                             <children>
-                                <Button text="Publication" onAction="#publicationNavMouseClicked" disable="true"/>
-                                <Button text="Pedigree" onAction="#pedigreeNavMouseClicked" disable="true"/>
-                                <Button text="Variants" onAction="#variantsNavMouseClicked" disable="true"/>
-                                <Button text="Metadata" onAction="#metadataNavMouseClicked" disable="true"/>
+                                <Button text="Publication" onAction="#publicationNavMouseClicked" />
+                                <Button text="Pedigree" onAction="#pedigreeNavMouseClicked" />
+                                <Button text="Variants" onAction="#variantsNavMouseClicked" />
+                                <Button text="Metadata" onAction="#metadataNavMouseClicked" />
                             </children>
                         </HBox>
                     </children>
                 </HBox>
                 <ScrollPane fx:id="studyScrollPane" id="study-scroll-pane">
                     <content>
-                        <VBox id="study-document">
+                        <VBox styleClass="study-body">
                             <children>
-                                <VBox  VBox.vgrow="NEVER" styleClass="section">
+                                <HBox styleClass="study-section">
                                     <children>
-                                        <Label text="Publication" styleClass="h1" />
+                                        <VBox styleClass="study-section-title">
+                                            <Label text="Publication" styleClass="h1" />
+                                        </VBox>
                                         <StackPane fx:id="publicationPane">
                                             <children>
                                                 <Publication fx:id="publication" StackPane.alignment="CENTER"/>
@@ -56,28 +59,34 @@
                                             </children>
                                         </StackPane>
                                     </children>
-                                </VBox>
-                                <Separator/>
-                                <VBox styleClass="section">
+                                </HBox>
+                                <Pane styleClass="study-section-spacer"/>
+                                <HBox styleClass="study-section">
                                     <children>
-                                        <Label text="Pedigree" styleClass="h1"/>
+                                        <VBox styleClass="study-section-title">
+                                            <Label text="Pedigree" styleClass="h1"/>
+                                        </VBox>
                                         <Pedigree fx:id="pedigree" VBox.vgrow="ALWAYS"/>
                                     </children>
-                                </VBox>
-                                <Separator/>
-                                <VBox styleClass="section">
+                                </HBox>
+                                <Pane styleClass="study-section-spacer"/>
+                                <HBox styleClass="study-section">
                                     <children>
-                                        <Label text="Variants" styleClass="h1"/>
+                                        <VBox styleClass="study-section-title">
+                                            <Label text="Variants" styleClass="h1"/>
+                                        </VBox>
                                         <VariantSummary fx:id="variantSummary" />
                                     </children>
-                                </VBox>
-                                <Separator/>
-                                <VBox  styleClass="section">
+                                </HBox>
+                                <Pane styleClass="study-section-spacer"/>
+                                <HBox styleClass="study-section">
                                     <children>
-                                        <Label text="Metadata" styleClass="h1"/>
+                                        <VBox styleClass="study-section-title">
+                                            <Label text="Metadata" styleClass="h1"/>
+                                        </VBox>
                                         <Metadata fx:id="metadataSummary"/>
                                     </children>
-                                </VBox>
+                                </HBox>
                             </children>
                         </VBox>
                     </content>

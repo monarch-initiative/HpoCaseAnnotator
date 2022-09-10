@@ -1,45 +1,4 @@
-#outer-box {
-    /* The VBox that contains the entire FamilyStudy. */
-    -fx-alignment: top-center;
-    -fx-background-color:
-            linear-gradient(#2368d7, #003688),
-            radial-gradient(center 50% 50%, radius 90%, #FFFFFF33, #00000033);
-}
-
-#content-box {
-    -fx-max-width: 1000;
-    -fx-border-color: transparent grey transparent grey;
-    -fx-border-width: 1;
-    -fx-effect: dropshadow(gaussian, grey, 10, .2, 2, 2);
-}
-
-#study-scroll-pane {
-    -fx-fit-to-width: true;
-}
-
-
-#study-document {
-    -fx-background-color: white;
-}
-
-#study-headline {
-    -fx-border-color: transparent transparent #003688 transparent;
-    -fx-border-width: 3;
-    -fx-background-color: white;
-}
-
-#nav-row {
-    -fx-fill-width: true;
-    -fx-alignment: center;
-}
-
-#nav-row Button {
-    -fx-background-color: transparent;
-    -fx-pref-height: 45;
-    -fx-pref-width: 170;
-    -fx-border-insets: 0 20 0 0;
-}
-
-#nav-row Button:hover {
-    -fx-background-color: #e1e1e1;
+/* The box that contains the entire Study. */
+.outer-box {
+    -fx-background-image: url(family-background.png);
 }

@@ -1,3 +1,13 @@
+.root {
+    -fx-pref-width: 1600;
+    -fx-pref-height: 800;
+
+
+    -fx-font-size: 11pt;
+    -fx-font-family: "ui-sans-serif";
+    -fx-background-color: transparent;
+}
+
 .title {
     -fx-font-size: 22pt;
     -fx-font-weight: bold;

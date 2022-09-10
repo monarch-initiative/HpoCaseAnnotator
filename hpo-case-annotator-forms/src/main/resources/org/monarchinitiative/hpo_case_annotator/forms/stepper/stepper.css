@@ -1,0 +1,17 @@
+#stepper-box {
+    -fx-pref-width: 900;
+    -fx-background-color: #ffefef;
+    -fx-alignment: top-center;
+}
+
+#stepper-content {
+    -fx-pref-width: 800;
+    -fx-max-width: 800;
+    -fx-border-color: transparent black transparent black;
+    -fx-effect: dropshadow(gaussian, #5e5e5e, 5, .25, 1, 1);
+}
+
+#button-bar {
+    -fx-background-color: white;
+    -fx-padding: 5;
+}

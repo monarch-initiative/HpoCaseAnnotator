@@ -14,28 +14,38 @@
         <URL value="@publication-step.css"/>
     </stylesheets>
     <children>
-        <Label text="Publication"/>
-        <Label fx:id="header" text="Provide publication details for the individual."/>
-        <CheckBox fx:id="publicationIsUnknown" text="Publication is unknown" selected="true"/>
+        <Label styleClass="stepper-title" text="Publication"/>
+        <Label styleClass="stepper-instruction"
+               text="Enter publication that describes the study or leave unset to set up later."/>
+        <CheckBox fx:id="publicationIsUnknown" text="Leave unset" selected="true"/>
         <VBox fx:id="publicationDataBox">
             <children>
-                <Label text="Fetch from PubMed"/>
-                <HBox>
+                <VBox styleClass="spacing-box">
                     <children>
-                        <TitledTextField fx:id="pmidTextField" name="PMID"/>
-                        <Button fx:id="fetchFromPubmed" onAction="#fetchFromPubmedAction" text="Fetch"/>
+                        <Label styleClass="stepper-subtitle" text="Fetch from PubMed"/>
+                        <HBox>
+                            <children>
+                                <TitledTextField fx:id="pmidTextField" name="PMID"/>
+                                <Button fx:id="fetchFromPubmed" onAction="#fetchFromPubmedAction" text="Fetch"/>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <HBox id="separator">
+                    <children>
+                        <Separator HBox.hgrow="ALWAYS"/>
+                        <Label styleClass="stepper-instruction" text="or"/>
+                        <Separator HBox.hgrow="ALWAYS"/>
                     </children>
                 </HBox>
 
-                <HBox>
+                <VBox styleClass="spacing-box">
                     <children>
-                        <Label text="or"/>
-                        <Separator/>
+                        <Label styleClass="stepper-subtitle" text="Enter manually"/>
+                        <PublicationBinding fx:id="publicationBinding"/>
                     </children>
-                </HBox>
-
-                <Label text="Enter manually"/>
-                <PublicationBinding fx:id="publicationBinding"/>
+                </VBox>
             </children>
         </VBox>
     </children>

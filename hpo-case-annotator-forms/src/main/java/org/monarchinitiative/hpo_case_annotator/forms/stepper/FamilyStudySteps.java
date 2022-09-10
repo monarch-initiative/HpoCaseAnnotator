@@ -8,7 +8,6 @@ public class FamilyStudySteps extends BaseStudySteps<ObservableFamilyStudy> {
     @Override
     public FamilyStudySteps configureSteps() {
         PublicationStep<ObservableFamilyStudy> publication = new PublicationStep<>();
-        publication.setHeader("Set publication data");
         steps.add(publication);
 
         VariantsStep<ObservableFamilyStudy> variants = new VariantsStep<>();

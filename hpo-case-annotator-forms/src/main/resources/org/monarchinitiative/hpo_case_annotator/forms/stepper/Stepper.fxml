@@ -5,15 +5,16 @@
 <?import javafx.scene.layout.*?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="VBox">
+         type="VBox"
+         id="stepper-box">
     <stylesheets>
         <URL value="@../base.css"/>
         <URL value="@stepper.css"/>
     </stylesheets>
     <children>
-        <StackPane fx:id="content" VBox.vgrow="ALWAYS"/>
-        <Separator/>
-        <ButtonBar>
+        <StackPane id="stepper-content" fx:id="content" VBox.vgrow="ALWAYS"/>
+<!--        <Separator/>-->
+        <ButtonBar id="button-bar">
             <buttons>
                 <Button onAction="#cancelAction" ButtonBar.buttonData="CANCEL_CLOSE" text="Cancel"/>
                 <Button fx:id="previous" onAction="#previousStep" ButtonBar.buttonData="BACK_PREVIOUS" text="Previous"/>

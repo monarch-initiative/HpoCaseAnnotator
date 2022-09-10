@@ -2,11 +2,11 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.*?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.VBox"
+         type="VBox"
          stylesheets="@individual-ids-component.css">
     <children>
         <!-- Credentials -->

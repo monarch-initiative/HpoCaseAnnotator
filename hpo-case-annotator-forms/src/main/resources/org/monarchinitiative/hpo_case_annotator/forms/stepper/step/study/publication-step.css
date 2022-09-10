@@ -1,0 +1,22 @@
+#separator {
+    -fx-alignment: center;
+    -fx-max-width: 400;
+}
+
+.tl-text-field {
+    -fx-min-height: 30;
+    -fx-min-width: 250;
+    -fx-max-width: 250;
+}
+
+#separator Label {
+    -fx-padding: 0 5 0 5;
+}
+
+#separator Separator {
+    -fx-fill-width: true;
+}
+
+HBox {
+    -fx-alignment: bottom-left;
+}

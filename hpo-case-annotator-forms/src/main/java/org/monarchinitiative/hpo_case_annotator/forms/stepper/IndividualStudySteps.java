@@ -12,7 +12,6 @@ public class IndividualStudySteps extends BaseStudySteps<ObservableIndividualStu
     @Override
     public IndividualStudySteps configureSteps() {
         PublicationStep<ObservableIndividualStudy> publication = new PublicationStep<>();
-        publication.setHeader("Set publication data");
         steps.add(publication);
 
         VariantsStep<ObservableIndividualStudy> variants = new VariantsStep<>();

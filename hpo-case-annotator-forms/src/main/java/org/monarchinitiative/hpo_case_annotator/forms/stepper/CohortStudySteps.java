@@ -8,7 +8,6 @@ public class CohortStudySteps extends BaseStudySteps<ObservableCohortStudy> {
     @Override
     public CohortStudySteps configureSteps() {
         PublicationStep<ObservableCohortStudy> publication = new PublicationStep<>();
-        publication.setHeader("Set publication data");
         steps.add(publication);
 
         VariantsStep<ObservableCohortStudy> variants = new VariantsStep<>();

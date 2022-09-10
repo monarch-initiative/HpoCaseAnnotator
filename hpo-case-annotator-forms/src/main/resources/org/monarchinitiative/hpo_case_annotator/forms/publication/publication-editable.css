@@ -3,9 +3,14 @@
     -fx-background-color: white;
 }
 
-#publication-editable-box .edit-area TextField {
+.edit-area TextField {
     -fx-padding: 10 0 10 0;
-    -fx-pref-height: 30px;
+
+}
+
+.tl-text-field {
+    -fx-pref-height: 25;
+    -fx-max-width: 250;
 }
 
 #publication-editable-box .summary-area {

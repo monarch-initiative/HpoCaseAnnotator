@@ -1,4 +1,4 @@
 /* The box that contains the entire Study. */
 .outer-box {
-    -fx-background-image: url(individual-background.png);
+    -fx-background-image: url(cohort-background.png);
 }
