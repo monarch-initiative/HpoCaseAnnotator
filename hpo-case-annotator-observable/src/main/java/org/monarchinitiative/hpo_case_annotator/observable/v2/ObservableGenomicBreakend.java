@@ -11,11 +11,9 @@ import org.monarchinitiative.svart.Strand;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class ObservableGenomicBreakend implements ObservableItem {
+public class ObservableGenomicBreakend extends ObservableItem {
 
-
-    static final Callback<ObservableGenomicBreakend, Stream<Observable>> EXTRACTOR = ogb ->
-            Stream.of(ogb.id, ogb.contig, ogb.pos, ogb.strand);
+    public static final Callback<ObservableGenomicBreakend, Observable[]> EXTRACTOR = obs -> new Observable[]{obs.id, obs.contig, obs.pos, obs.strand};
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
     private final ObjectProperty<Contig> contig = new SimpleObjectProperty<>(this, "contig");
@@ -102,8 +100,8 @@ public class ObservableGenomicBreakend implements ObservableItem {
     }
 
     @Override
-    public Stream<Observable> dependencies() {
-        return EXTRACTOR.call(this);
+    public Stream<Observable> observables() {
+        return Stream.of(EXTRACTOR.call(this));
     }
 
     @Override

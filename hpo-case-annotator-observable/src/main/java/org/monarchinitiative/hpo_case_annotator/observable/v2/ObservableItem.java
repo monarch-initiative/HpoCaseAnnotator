@@ -6,19 +6,19 @@ import javafx.beans.Observable;
 import java.util.stream.Stream;
 
 /**
- * An interface to help implement {@link Observable}.
+ * A little convenience class for implementing {@link Observable} based on {@link #observables()}.
  */
-interface ObservableItem extends Observable {
+abstract class ObservableItem implements Observable {
 
-    Stream<Observable> dependencies();
+    protected abstract Stream<Observable> observables();
 
     @Override
-    default void addListener(InvalidationListener listener) {
-        dependencies().forEach(obs -> obs.addListener(listener));
+    public void addListener(InvalidationListener listener) {
+        observables().forEach(obs -> obs.addListener(listener));
     }
 
     @Override
-    default void removeListener(InvalidationListener listener) {
-        dependencies().forEach(obs -> obs.removeListener(listener));
+    public void removeListener(InvalidationListener listener) {
+        observables().forEach(obs -> obs.removeListener(listener));
     }
 }

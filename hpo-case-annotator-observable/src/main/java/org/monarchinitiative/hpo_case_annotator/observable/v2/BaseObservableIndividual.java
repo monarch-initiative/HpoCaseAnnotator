@@ -8,24 +8,26 @@ import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 
-public abstract class BaseObservableIndividual implements Observable, Individual {
+import java.util.stream.Stream;
 
-    static final Callback<BaseObservableIndividual, Observable[]> EXTRACTOR = item -> new Observable[]{
-            item.id,
-            item.age,
-            item.vitalStatus,
-            item.sex,
-            item.phenotypicFeatures,
-            item.diseaseStates,
-            item.genotypes
+public abstract class BaseObservableIndividual extends DeepObservable implements Individual {
+
+    public static final Callback<BaseObservableIndividual, Observable[]> EXTRACTOR = obs -> new Observable[]{
+            obs.id,
+            obs.age,
+            obs.vitalStatus,
+            obs.sex,
+            obs.phenotypicFeatures,
+            obs.diseaseStates,
+            obs.genotypes
     };
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
     private final ObjectProperty<ObservableTimeElement> age = new SimpleObjectProperty<>(this, "age");
     private final ObjectProperty<ObservableVitalStatus> vitalStatus = new SimpleObjectProperty<>(this, "vitalStatus");
     private final ObjectProperty<Sex> sex = new SimpleObjectProperty<>(this, "sex");
-    private final ListProperty<ObservablePhenotypicFeature> phenotypicFeatures = new SimpleListProperty<>(this, "phenotypicFeatures", FXCollections.observableArrayList());
-    private final ListProperty<ObservableDiseaseStatus> diseaseStates = new SimpleListProperty<>(this, "diseaseStates", FXCollections.observableArrayList());
+    private final ListProperty<ObservablePhenotypicFeature> phenotypicFeatures = new SimpleListProperty<>(this, "phenotypicFeatures", FXCollections.observableArrayList(ObservablePhenotypicFeature.EXTRACTOR));
+    private final ListProperty<ObservableDiseaseStatus> diseaseStates = new SimpleListProperty<>(this, "diseaseStates", FXCollections.observableArrayList(ObservableDiseaseStatus.EXTRACTOR));
     private final ListProperty<ObservableVariantGenotype> genotypes = new SimpleListProperty<>(this, "genotypes", FXCollections.observableArrayList(ObservableVariantGenotype.EXTRACTOR));
 
     protected BaseObservableIndividual() {
@@ -139,6 +141,11 @@ public abstract class BaseObservableIndividual implements Observable, Individual
 
     public ObjectProperty<Sex> sexProperty() {
         return sex;
+    }
+
+    @Override
+    protected Stream<Property<? extends Observable>> objectProperties() {
+        return Stream.of(age, vitalStatus, phenotypicFeatures, diseaseStates, genotypes);
     }
 
     @Override

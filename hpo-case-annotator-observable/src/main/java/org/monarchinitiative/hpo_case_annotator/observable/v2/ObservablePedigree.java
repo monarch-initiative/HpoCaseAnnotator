@@ -1,16 +1,20 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
-import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Pedigree;
 import org.monarchinitiative.hpo_case_annotator.model.v2.PedigreeMember;
 
-public class ObservablePedigree implements Observable, Pedigree {
+import java.util.stream.Stream;
 
+public class ObservablePedigree extends DeepObservable implements Pedigree {
+
+    public static final Callback<ObservablePedigree, Observable[]> EXTRACTOR = obs -> new Observable[]{obs.members};
     private final ListProperty<ObservablePedigreeMember> members = new SimpleListProperty<>(this, "members", FXCollections.observableArrayList(ObservablePedigreeMember.EXTRACTOR));
 
     public ObservablePedigree() {
@@ -39,13 +43,13 @@ public class ObservablePedigree implements Observable, Pedigree {
     }
 
     @Override
-    public void addListener(InvalidationListener listener) {
-        members.addListener(listener);
+    protected Stream<Property<? extends Observable>> objectProperties() {
+        return Stream.of(members);
     }
 
     @Override
-    public void removeListener(InvalidationListener listener) {
-        members.removeListener(listener);
+    public Stream<Observable> observables() {
+        return Stream.of(EXTRACTOR.call(this));
     }
 
     @Override

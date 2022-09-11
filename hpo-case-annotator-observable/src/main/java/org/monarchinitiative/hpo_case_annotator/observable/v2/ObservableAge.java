@@ -7,9 +7,9 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.Age;
 
 import java.util.stream.Stream;
 
-public class ObservableAge implements Age, ObservableItem {
+public class ObservableAge extends ObservableItem implements Age {
 
-    static final Callback<ObservableAge, Stream<Observable>> EXTRACTOR = oa -> Stream.of(oa.years, oa.months, oa.days);
+    public static final Callback<ObservableAge, Observable[]> EXTRACTOR = obs -> new Observable[]{obs.years, obs.months, obs.days};
 
     // Years, months, and days are nullable, hence ObjectProperty.
     private final ObjectProperty<Integer> years = new SimpleObjectProperty<>(this, "years");
@@ -67,8 +67,8 @@ public class ObservableAge implements Age, ObservableItem {
     }
 
     @Override
-    public Stream<Observable> dependencies() {
-        return EXTRACTOR.call(this);
+    public Stream<Observable> observables() {
+        return Stream.of(EXTRACTOR.call(this));
     }
 
     @Override

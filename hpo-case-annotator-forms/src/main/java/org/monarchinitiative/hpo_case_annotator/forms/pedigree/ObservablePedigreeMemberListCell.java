@@ -20,7 +20,7 @@ class ObservablePedigreeMemberListCell extends ListCell<ObservablePedigreeMember
         pedigreeMemberPane = new PedigreeMemberPane();
 
         pedigreeMemberPane.prefWidthProperty().bind(maxWidthProperty());
-        pedigreeMemberPane.itemProperty().bind(itemProperty()); // TODO - evaluate if this is good/necessary
+        pedigreeMemberPane.dataProperty().bind(itemProperty()); // TODO - evaluate if this is good/necessary
         pedigreeMemberPane.variantsProperty().bind(variants);
         pedigreeMemberPane.hpoProperty().bind(hpo);
         pedigreeMemberPane.diseaseIdentifierServiceProperty().bind(diseaseIdentifierService);

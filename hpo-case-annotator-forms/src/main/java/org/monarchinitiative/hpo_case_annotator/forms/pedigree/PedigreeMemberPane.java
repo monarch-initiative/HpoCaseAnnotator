@@ -39,7 +39,7 @@ import static javafx.beans.binding.Bindings.*;
 public class PedigreeMemberPane extends TitledPane {
 
     private static final Map<Sex, Map<Boolean, Image>> SEX_AFFECTED_ICONS = loadSexAffectedIconsMap();
-    private final ObjectProperty<ObservablePedigreeMember> item = new SimpleObjectProperty<>();
+    private final ObjectProperty<ObservablePedigreeMember> data = new SimpleObjectProperty<>();
 
     @FXML
     private PedigreeMemberTitle pedigreeMemberTitle;
@@ -57,8 +57,8 @@ public class PedigreeMemberPane extends TitledPane {
         }
     }
 
-    public ObjectProperty<ObservablePedigreeMember> itemProperty() {
-        return item;
+    public ObjectProperty<ObservablePedigreeMember> dataProperty() {
+        return data;
     }
 
     public ListProperty<ObservableCuratedVariant> variantsProperty() {
@@ -76,16 +76,16 @@ public class PedigreeMemberPane extends TitledPane {
     @FXML
     private void initialize() {
         // Individual credentials
-        pedigreeMemberTitle.probandId.textProperty().bind(Utils.nullableStringProperty(item, "id"));
+        pedigreeMemberTitle.probandId.textProperty().bind(Utils.nullableStringProperty(data, "id"));
         pedigreeMemberTitle.icon.imageProperty().bind(createIndividualImageBinding());
-        pedigreeMemberTitle.summary.textProperty().bind(individualSummary(item));
+        pedigreeMemberTitle.summary.textProperty().bind(individualSummary(data));
 
-        pedigreeMember.dataProperty().bind(item);
+        pedigreeMember.dataProperty().bind(data);
     }
 
     private ObservableValue<? extends Image> createIndividualImageBinding() {
-        ObjectBinding<Sex> sex = select(item, "sex");
-        BooleanBinding isProband = selectBoolean(item, "proband");
+        ObjectBinding<Sex> sex = select(data, "sex");
+        BooleanBinding isProband = selectBoolean(data, "proband");
         return new ObjectBinding<>() {
             {
                 bind(sex, isProband);

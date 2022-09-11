@@ -1,11 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
-import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
 import org.monarchinitiative.hpo_case_annotator.model.v2.PedigreeMember;
@@ -13,12 +9,13 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.PhenotypicFeature;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class ObservablePedigreeMember extends BaseObservableIndividual implements PedigreeMember {
 
-    static final Callback<ObservablePedigreeMember, Observable[]> EXTRACTOR = opm -> {
-        Observable[] parent = BaseObservableIndividual.EXTRACTOR.call(opm);
-        Observable[] current = new Observable[]{opm.paternalId, opm.maternalId, opm.proband};
+    public static final Callback<ObservablePedigreeMember, Observable[]> EXTRACTOR = obs -> {
+        Observable[] parent = BaseObservableIndividual.EXTRACTOR.call(obs);
+        Observable[] current = new Observable[]{obs.paternalId, obs.maternalId, obs.proband};
 
         // Concatenate parent and current
         Observable[] total = new Observable[current.length + parent.length];
@@ -83,17 +80,13 @@ public class ObservablePedigreeMember extends BaseObservableIndividual implement
     }
 
     @Override
-    public void addListener(InvalidationListener listener) {
-        for (Observable observable : EXTRACTOR.call(this)) {
-            observable.addListener(listener);
-        }
+    protected Stream<Property<? extends Observable>> objectProperties() {
+        return super.objectProperties(); // Nothing on top of the parent
     }
 
     @Override
-    public void removeListener(InvalidationListener listener) {
-        for (Observable observable : EXTRACTOR.call(this)) {
-            observable.removeListener(listener);
-        }
+    public Stream<Observable> observables() {
+        return Stream.of(EXTRACTOR.call(this));
     }
 
     @Override

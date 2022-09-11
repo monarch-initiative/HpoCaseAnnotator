@@ -7,9 +7,9 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
 
 import java.util.stream.Stream;
 
-public class ObservableDiseaseStatus implements DiseaseStatus, ObservableItem {
+public class ObservableDiseaseStatus extends ObservableItem implements DiseaseStatus {
 
-    static final Callback<ObservableDiseaseStatus, Stream<Observable>> EXTRACTOR = oa -> Stream.of(oa.excluded);
+    public static final Callback<ObservableDiseaseStatus, Observable[]> EXTRACTOR = obs -> new Observable[]{obs.excluded};
 
     private DiseaseIdentifier diseaseId;
     private final BooleanProperty excluded = new SimpleBooleanProperty(this, "excluded");
@@ -49,8 +49,8 @@ public class ObservableDiseaseStatus implements DiseaseStatus, ObservableItem {
     }
 
     @Override
-    public Stream<Observable> dependencies() {
-        return EXTRACTOR.call(this);
+    public Stream<Observable> observables() {
+        return Stream.of(EXTRACTOR.call(this));
     }
 
     @Override

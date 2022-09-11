@@ -1,14 +1,19 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
+import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.EditHistory;
 
 import java.time.Instant;
+import java.util.stream.Stream;
 
-public class ObservableEditHistory implements EditHistory {
+public class ObservableEditHistory extends ObservableItem implements EditHistory {
+
+    public static final Callback<ObservableEditHistory, Observable[]> EXTRACTOR = obs -> new Observable[]{obs.curatorId, obs.softwareVersion, obs.timestamp};
 
     private final StringProperty curatorId = new SimpleStringProperty(this, "curatorId");
     private final StringProperty softwareVersion = new SimpleStringProperty(this, "softwareVersion");
@@ -64,6 +69,11 @@ public class ObservableEditHistory implements EditHistory {
 
     public ObjectProperty<Instant> timestampProperty() {
         return timestamp;
+    }
+
+    @Override
+    public Stream<Observable> observables() {
+        return Stream.of(EXTRACTOR.call(this));
     }
 
     @Override

@@ -1,12 +1,10 @@
 package org.monarchinitiative.hpo_case_annotator.forms.component.age;
 
-import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import org.monarchinitiative.hpo_case_annotator.model.v2.GestationalAge;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAgeRange;
@@ -17,8 +15,6 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-
-import static javafx.beans.binding.Bindings.select;
 
 
 // TODO - move to util
@@ -67,34 +63,15 @@ public class ObservableTimeElementTableCell<T> extends TableCell<T, ObservableTi
             setText(null);
         } else {
             item.timeElementCaseProperty().addListener((obs, old, novel) -> imageView.setImage(ICONS.get(novel)));
-            // TODO - from some reason the summary is only updated after toggling the tabs.
             textProperty().bind(summarizeTimeElement(item));
         }
     }
 
     private static StringBinding summarizeTimeElement(ObservableTimeElement item) {
-        ObjectBinding<TimeElement.TimeElementCase> timeElementCase = select(item, "timeElementCase");
-
-        ObjectBinding<GestationalAge> gestatioanlAge = select(item, "gestationalAge");
-        ObjectBinding<Integer> gestationalWeeks = select(item, "gestationalAge", "weeks");
-        ObjectBinding<Integer> gestationalDays = select(item, "gestationalAge", "days");
-
-        ObjectBinding<ObservableAge> age = select(item, "age");
-        ObjectBinding<ObservableAge> ageYears = select(item, "age", "years");
-        ObjectBinding<ObservableAge> ageMonths = select(item, "age", "months");
-        ObjectBinding<ObservableAge> ageDays = select(item, "age", "days");
-        ObjectBinding<ObservableAge> start = select(item, "ageRange", "start");
-        ObjectBinding<ObservableAge> end = select(item, "ageRange", "end");
-        ObjectBinding<TermId> ontologyClass = select(item, "ontologyClass");
 
         return new StringBinding() {
             {
-                // TODO - check if this is working or not. Maybe we don't need to listen to all of this.
-                bind(item, timeElementCase,
-                        gestatioanlAge, gestationalWeeks, gestationalDays,
-                        age, ageYears, ageMonths, ageDays,
-                        start, end,
-                        ontologyClass);
+                bind(item);
             }
 
             @Override

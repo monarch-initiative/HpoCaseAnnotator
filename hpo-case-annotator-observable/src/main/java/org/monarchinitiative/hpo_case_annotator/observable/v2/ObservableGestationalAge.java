@@ -8,9 +8,9 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.GestationalAge;
 
 import java.util.stream.Stream;
 
-public class ObservableGestationalAge implements GestationalAge, ObservableItem {
+public class ObservableGestationalAge extends ObservableItem implements GestationalAge {
 
-    static final Callback<ObservableGestationalAge, Stream<Observable>> EXTRACTOR = tbc -> Stream.of(tbc.weeks, tbc.days);
+    public static final Callback<ObservableGestationalAge, Observable[]> EXTRACTOR = obs -> new Observable[]{obs.weeks, obs.days};
 
     // Weeks and days are nullabe, hence ObjectProperty.
     private final ObjectProperty<Integer> weeks = new SimpleObjectProperty<>(this, "weeks");
@@ -51,8 +51,8 @@ public class ObservableGestationalAge implements GestationalAge, ObservableItem 
     }
 
     @Override
-    public Stream<Observable> dependencies() {
-        return EXTRACTOR.call(this);
+    public Stream<Observable> observables() {
+        return Stream.of(EXTRACTOR.call(this));
     }
 
     @Override

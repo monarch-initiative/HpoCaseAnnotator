@@ -1,14 +1,19 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
+import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 
 import java.util.List;
+import java.util.stream.Stream;
 
-public abstract class ObservableStudy implements Study {
+public abstract class ObservableStudy extends DeepObservable implements Study {
+
+    public static final Callback<ObservableStudy, Observable[]> EXTRACTOR = obs -> new Observable[]{obs.id, obs.publication, obs.variants, obs.studyMetadata};
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
     private final ObjectProperty<ObservablePublication> publication = new SimpleObjectProperty<>(this, "publication");
@@ -85,6 +90,11 @@ public abstract class ObservableStudy implements Study {
 
     public ObjectProperty<ObservableStudyMetadata> studyMetadataProperty() {
         return studyMetadata;
+    }
+
+    @Override
+    protected Stream<Property<? extends Observable>> objectProperties() {
+        return Stream.of(publication, variants, studyMetadata);
     }
 
     @Override

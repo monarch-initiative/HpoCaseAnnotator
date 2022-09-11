@@ -10,25 +10,25 @@ import org.monarchinitiative.svart.*;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class ObservableCuratedVariant implements CuratedVariant, ObservableItem {
+public class ObservableCuratedVariant extends ObservableItem implements CuratedVariant {
 
     public static final Strand VCF_SEQUENCE_SYMBOLIC_VARIANT_STRAND = Strand.POSITIVE;
-    static final Callback<ObservableCuratedVariant, Stream<Observable>> EXTRACTOR = ocv -> Stream.of(
-            ocv.variantNotation,
-            ocv.genomicAssembly,
-            ocv.contig,
-            ocv.start,
-            ocv.startCi,
-            ocv.end,
-            ocv.endCi,
-            ocv.id,
-            ocv.ref,
-            ocv.alt,
-            ocv.variantType,
-            ocv.changeLength,
-            ocv.left,
-            ocv.right,
-            ocv.variantMetadata);
+    public static final Callback<ObservableCuratedVariant, Observable[]> EXTRACTOR = obs -> new Observable[]{
+            obs.variantNotation,
+            obs.genomicAssembly,
+            obs.contig,
+            obs.start,
+            obs.startCi,
+            obs.end,
+            obs.endCi,
+            obs.id,
+            obs.ref,
+            obs.alt,
+            obs.variantType,
+            obs.changeLength,
+            obs.left,
+            obs.right,
+            obs.variantMetadata};
 
     private final ObjectProperty<VariantNotation> variantNotation = new SimpleObjectProperty<>(this, "variantNotation");
     private final StringProperty genomicAssembly = new SimpleStringProperty(this, "genomicAssembly");
@@ -332,8 +332,8 @@ public class ObservableCuratedVariant implements CuratedVariant, ObservableItem 
     }
 
     @Override
-    public Stream<Observable> dependencies() {
-        return EXTRACTOR.call(this);
+    public Stream<Observable> observables() {
+        return Stream.of(EXTRACTOR.call(this));
     }
 
     @Override

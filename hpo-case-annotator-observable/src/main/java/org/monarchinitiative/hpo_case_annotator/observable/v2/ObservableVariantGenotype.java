@@ -1,6 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
-import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -8,9 +7,11 @@ import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 
-public class ObservableVariantGenotype implements VariantGenotype, Observable {
+import java.util.stream.Stream;
 
-    static final Callback<ObservableVariantGenotype, Observable[]> EXTRACTOR = ovg -> new Observable[]{ovg.genotype};
+public class ObservableVariantGenotype extends ObservableItem implements VariantGenotype {
+
+    public static final Callback<ObservableVariantGenotype, Observable[]> EXTRACTOR = obs -> new Observable[]{obs.genotype};
     private String md5Hex;
     private final ObjectProperty<Genotype> genotype = new SimpleObjectProperty<>(this, "genotype", Genotype.UNSET);
 
@@ -47,17 +48,8 @@ public class ObservableVariantGenotype implements VariantGenotype, Observable {
     }
 
     @Override
-    public void addListener(InvalidationListener listener) {
-        for (Observable observable : EXTRACTOR.call(this)) {
-            observable.addListener(listener);
-        }
-    }
-
-    @Override
-    public void removeListener(InvalidationListener listener) {
-        for (Observable observable : EXTRACTOR.call(this)) {
-            observable.addListener(listener);
-        }
+    public Stream<Observable> observables() {
+        return Stream.of(genotype);
     }
 
     @Override

@@ -1,9 +1,15 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
+import javafx.beans.Observable;
 import javafx.beans.property.*;
+import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Publication;
 
-public class ObservablePublication implements Publication {
+import java.util.stream.Stream;
+
+public class ObservablePublication extends ObservableItem implements Publication {
+
+    public static final Callback<ObservablePublication, Observable[]> EXTRACTOR = obs -> new Observable[]{obs.authors, obs.title, obs.journal, obs.year, obs.volume, obs.pages, obs.pmid};
 
     private final StringProperty authors = new SimpleStringProperty(this, "authors");
     private final StringProperty title = new SimpleStringProperty(this, "title");
@@ -117,6 +123,11 @@ public class ObservablePublication implements Publication {
 
     public StringProperty pmidProperty() {
         return pmid;
+    }
+
+    @Override
+    public Stream<Observable> observables() {
+        return Stream.of(EXTRACTOR.call(this));
     }
 
     @Override

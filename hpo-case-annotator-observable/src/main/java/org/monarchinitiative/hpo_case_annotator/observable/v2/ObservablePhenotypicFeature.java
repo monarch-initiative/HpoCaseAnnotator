@@ -1,23 +1,20 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
 import javafx.beans.Observable;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.PhenotypicFeature;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.stream.Stream;
 
-public class ObservablePhenotypicFeature implements PhenotypicFeature, ObservableItem {
+public class ObservablePhenotypicFeature extends DeepObservable implements PhenotypicFeature {
 
-    static final Callback<ObservablePhenotypicFeature, Stream<Observable>> EXTRACTOR = ote -> Stream.of(
-            ote.excluded,
-            ote.onset,
-            ote.resolution
-    );
+    public static final Callback<ObservablePhenotypicFeature, Observable[]> EXTRACTOR = obs -> new Observable[]{
+            obs.excluded,
+            obs.onset,
+            obs.resolution
+    };
 
     private TermId termId;
     private String label;
@@ -104,8 +101,13 @@ public class ObservablePhenotypicFeature implements PhenotypicFeature, Observabl
     }
 
     @Override
-    public Stream<Observable> dependencies() {
-        return EXTRACTOR.call(this);
+    protected Stream<Property<? extends Observable>> objectProperties() {
+        return Stream.of(onset, resolution);
+    }
+
+    @Override
+    public Stream<Observable> observables() {
+        return Stream.of(EXTRACTOR.call(this));
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
@@ -9,14 +10,10 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.stream.Stream;
 
-public class ObservableTimeElement implements TimeElement, ObservableItem {
+public class ObservableTimeElement extends DeepObservable implements TimeElement {
 
-    static final Callback<ObservableTimeElement, Stream<Observable>> EXTRACTOR = ote -> Stream.of(
-            ote.timeElementCase,
-            ote.gestationalAge,
-            ote.age,
-            ote.ageRange,
-            ote.ontologyClass);
+    // TODO - simplify API, hide TimeElementCase setter
+    public static final Callback<ObservableTimeElement, Observable[]> EXTRACTOR = obs -> new Observable[]{obs.timeElementCase, obs.gestationalAge, obs.age, obs.ageRange, obs.ontologyClass};
 
     // Time element case must not be null when starting.
     private final ObjectProperty<TimeElement.TimeElementCase> timeElementCase = new SimpleObjectProperty<>(this, "timeElementCase", TimeElementCase.AGE);
@@ -26,9 +23,11 @@ public class ObservableTimeElement implements TimeElement, ObservableItem {
     private final ObjectProperty<TermId> ontologyClass = new SimpleObjectProperty<>(this, "ontologyClass");
 
     public ObservableTimeElement() {
+        super();
     }
 
     public ObservableTimeElement(TimeElement timeElement) {
+        super();
         if (timeElement != null) {
             TimeElementCase tec = timeElement.getTimeElementCase();
             timeElementCase.set(tec);
@@ -107,8 +106,13 @@ public class ObservableTimeElement implements TimeElement, ObservableItem {
     }
 
     @Override
-    public Stream<Observable> dependencies() {
-        return EXTRACTOR.call(this);
+    protected Stream<Property<? extends Observable>> objectProperties() {
+        return Stream.of(gestationalAge, age, ageRange);
+    }
+
+    @Override
+    public Stream<Observable> observables() {
+        return Stream.of(EXTRACTOR.call(this));
     }
 
     @Override

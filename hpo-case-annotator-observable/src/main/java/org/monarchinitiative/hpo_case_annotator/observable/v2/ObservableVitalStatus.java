@@ -1,10 +1,17 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
+import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.VitalStatus;
 
-public class ObservableVitalStatus implements VitalStatus {
+import java.util.stream.Stream;
+
+public class ObservableVitalStatus extends DeepObservable implements VitalStatus {
+
+    public static final Callback<ObservableVitalStatus, Observable[]> EXTRACTOR = obs -> new Observable[]{obs.status, obs.timeOfDeath};
 
     private final ObjectProperty<Status> status = new SimpleObjectProperty<>(this, "status");
     private final ObjectProperty<ObservableTimeElement> timeOfDeath = new SimpleObjectProperty<>(this, "timeOfDeath");
@@ -45,6 +52,16 @@ public class ObservableVitalStatus implements VitalStatus {
 
     public ObjectProperty<ObservableTimeElement> timeOfDeathProperty() {
         return timeOfDeath;
+    }
+
+    @Override
+    protected Stream<Property<? extends Observable>> objectProperties() {
+        return Stream.of(timeOfDeath);
+    }
+
+    @Override
+    public Stream<Observable> observables() {
+        return Stream.of(EXTRACTOR.call(this));
     }
 
     @Override

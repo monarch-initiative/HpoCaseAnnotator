@@ -1,16 +1,22 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
+import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.EditHistory;
 import org.monarchinitiative.hpo_case_annotator.model.v2.StudyMetadata;
 
-public class ObservableStudyMetadata implements StudyMetadata {
+import java.util.stream.Stream;
+
+public class ObservableStudyMetadata extends DeepObservable implements StudyMetadata {
+
+    public static final Callback<ObservableStudyMetadata, Observable[]> EXTRACTOR = obs -> new Observable[]{obs.freeText, obs.createdBy, obs.modifiedBy};
 
     private final StringProperty freeText = new SimpleStringProperty(this, "freeText");
     private final ObjectProperty<ObservableEditHistory> createdBy = new SimpleObjectProperty<>(this, "createdBy");
-    private final ListProperty<ObservableEditHistory> modifiedBy = new SimpleListProperty<>(this, "modifiedBy", FXCollections.observableArrayList());
+    private final ListProperty<ObservableEditHistory> modifiedBy = new SimpleListProperty<>(this, "modifiedBy", FXCollections.observableArrayList(ObservableEditHistory.EXTRACTOR));
 
     public ObservableStudyMetadata() {
     }
@@ -65,6 +71,16 @@ public class ObservableStudyMetadata implements StudyMetadata {
 
     public ListProperty<ObservableEditHistory> modifiedByProperty() {
         return modifiedBy;
+    }
+
+    @Override
+    protected Stream<Property<? extends Observable>> objectProperties() {
+        return Stream.of(createdBy, modifiedBy);
+    }
+
+    @Override
+    public Stream<Observable> observables() {
+        return Stream.of(EXTRACTOR.call(this));
     }
 
     @Override
