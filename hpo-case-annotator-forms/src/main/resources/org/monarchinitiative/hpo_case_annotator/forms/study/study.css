@@ -1,3 +1,5 @@
+@import "../base.css";
+
 /* The box that contains the entire Study. */
 .outer-box {
     -fx-alignment: top-center;
@@ -27,7 +29,7 @@
 }
 
 .nav-row Button:hover {
-    -fx-effect: dropshadow(gaussian, rgba(0, 11, 136, 0.5), 5, .0, 0, 0);
+    -fx-effect: dropshadow(gaussian, iceberg, 5, .0, 0, 0);
 }
 
 #study-scroll-pane {
@@ -35,17 +37,18 @@
 }
 
 .study-body {
-    -fx-background-color: transparent;
+    -fx-background-color: derive(silver-chalice, 80%);
     -fx-padding: 10; /* Should be the same as .study-section-spacer */
     -fx-border-width: 0 1 0 1;
 }
 
 .study-section {
     -fx-padding: 10 0 10 10;
-    -fx-border-color: white;
     -fx-border-radius: 20;
     -fx-background-radius: 20;
     -fx-background-color: white;
+    -fx-border-color: derive(silver-chalice, -30%);
+    -fx-effect: dropshadow(gaussian, derive(silver-chalice, -20%), 7, .4, 0, 0);
 }
 
 .study-section-spacer {

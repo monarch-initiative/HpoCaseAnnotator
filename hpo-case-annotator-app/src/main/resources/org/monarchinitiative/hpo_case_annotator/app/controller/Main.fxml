@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.monarchinitiative.hpo_case_annotator.app.controller.Main">
-    <stylesheets>
-        <URL value="@base.css"/>
-        <URL value="@main.css"/>
-    </stylesheets>
+            fx:controller="org.monarchinitiative.hpo_case_annotator.app.controller.Main"
+            stylesheets="@main.css">
     <top>
         <MenuBar BorderPane.alignment="TOP_CENTER">
             <Menu mnemonicParsing="false" text="File">

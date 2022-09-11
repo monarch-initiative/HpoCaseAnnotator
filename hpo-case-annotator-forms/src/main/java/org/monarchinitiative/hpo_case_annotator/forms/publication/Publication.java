@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
 
 import java.io.IOException;
@@ -22,15 +23,15 @@ public class Publication extends VBox implements ObservableDataComponent<Observa
     @FXML
     private Label authors;
     @FXML
-    private Label journal;
+    private TitledLabel journal;
     @FXML
-    private Label year;
+    private TitledLabel year;
     @FXML
-    private Label volume;
+    private TitledLabel volume;
     @FXML
-    private Label pages;
+    private TitledLabel pages;
     @FXML
-    private Label pmid;
+    private TitledLabel pmid;
 
     public Publication() {
         FXMLLoader loader = new FXMLLoader(Publication.class.getResource("Publication.fxml"));

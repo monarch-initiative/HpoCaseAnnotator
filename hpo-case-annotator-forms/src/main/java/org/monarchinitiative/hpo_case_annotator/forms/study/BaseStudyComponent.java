@@ -71,7 +71,7 @@ public abstract class BaseStudyComponent<T extends ObservableStudy>
     protected void initialize() {
         super.initialize();
         editPublication.visibleProperty().bind(publicationPane.hoverProperty());
-        publication.disableProperty().bind(select(data, "publication").isNotNull());
+        publication.disableProperty().bind(select(data, "publication").isNull());
 
         variantSummary.functionalAnnotationRegistryProperty().bind(studyResources.functionalAnnotationRegistryProperty());
         variantSummary.genomicAssemblyRegistryProperty().bind(studyResources.genomicAssemblyRegistryProperty());
