@@ -37,18 +37,18 @@
 }
 
 .study-body {
-    -fx-background-color: derive(silver-chalice, 80%);
+    -fx-background-color: derive(silverchalice, 80%);
     -fx-padding: 10; /* Should be the same as .study-section-spacer */
     -fx-border-width: 0 1 0 1;
 }
 
 .study-section {
     -fx-padding: 10 0 10 10;
-    -fx-border-radius: 20;
-    -fx-background-radius: 20;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
     -fx-background-color: white;
-    -fx-border-color: derive(silver-chalice, -30%);
-    -fx-effect: dropshadow(gaussian, derive(silver-chalice, -20%), 7, .4, 0, 0);
+    -fx-border-color: derive(silverchalice, -30%);
+    -fx-effect: dropshadow(gaussian, derive(silverchalice, -20%), 7, .4, 0, 0);
 }
 
 .study-section-spacer {

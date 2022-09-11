@@ -1,0 +1,24 @@
+@import "../base.css";
+
+#ids-box {
+    -fx-pref-width: 400;
+}
+
+#id-flow-pane {
+    -fx-vgap: 5;
+    -fx-hgap: 5;
+}
+
+.flow-box {
+    -fx-min-width: 195;
+}
+
+/* Separate flow box title from the content. */
+.flow-box .h3 {
+    -fx-padding: 0 0 5 0;
+}
+
+/* Ensure the titled elements are not too close to each other */
+.tl-box {
+    -fx-padding: 0 10 5 0;
+}

@@ -12,27 +12,16 @@
          type="VBox"
          stylesheets="@individual.css">
     <children>
-<!--        <VBox styleClass="subsection">-->
-<!--            <children>-->
-<!--                <Label styleClass="h2" text="Summary"/>-->
-<!--                <Label fx:id="summary"/>-->
-<!--            </children>-->
-<!--        </VBox>-->
-        <VBox styleClass="subsection">
+        <StackPane fx:id="credentialPane">
             <children>
-                <Label styleClass="h2" text="Credentials"/>
-                <StackPane fx:id="credentialPane">
-                    <children>
-                        <IndividualIdsComponent fx:id="individualIds" StackPane.alignment="CENTER"/>
-                        <Button fx:id="editIdentifiersButton" visible="false" contentDisplay="GRAPHIC_ONLY"
-                                StackPane.alignment="TOP_RIGHT" styleClass="edit-button"
-                                onAction="#editIdentifiersAction"/>
-                    </children>
-                </StackPane>
+                <IndividualIdsComponent fx:id="individualIds" StackPane.alignment="CENTER"/>
+                <Button fx:id="editIdentifiersButton" visible="false" contentDisplay="GRAPHIC_ONLY"
+                        StackPane.alignment="TOP_RIGHT" styleClass="edit-button"
+                        onAction="#editIdentifiersAction"/>
             </children>
-        </VBox>
+        </StackPane>
         <Separator/>
-        <VBox styleClass="pm-section">
+        <VBox>
             <children>
                 <Label styleClass="h3" text="Phenotype features"/>
                 <StackPane fx:id="phenotypePane">
@@ -46,7 +35,7 @@
             </children>
         </VBox>
         <Separator/>
-        <VBox styleClass="pm-section">
+        <VBox>
             <children>
                 <Label styleClass="h3" text="Diseases"/>
                 <StackPane fx:id="diseasePane">
@@ -60,7 +49,7 @@
             </children>
         </VBox>
         <Separator/>
-        <VBox styleClass="pm-section">
+        <VBox>
             <children>
                 <Label styleClass="h3" text="Variant genotypes"/>
                 <VariantGenotypeTable fx:id="variantGenotypeTable"/>

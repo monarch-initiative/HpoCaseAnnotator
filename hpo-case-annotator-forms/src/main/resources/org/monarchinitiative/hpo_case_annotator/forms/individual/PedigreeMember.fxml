@@ -10,17 +10,10 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantGenotypeTable?>
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="VBox"
-         stylesheets="@pedigree-member.css">
+         stylesheets="@individual-pedigree-member.css">
     <children>
-<!--        <VBox styleClass="subsection">-->
-<!--            <children>-->
-<!--                <Label styleClass="h2" text="Summary"/>-->
-<!--                <Label fx:id="summary"/>-->
-<!--            </children>-->
-<!--        </VBox>-->
         <VBox styleClass="pm-section">
             <children>
-                <Label styleClass="h3" text="Credentials"/>
                 <StackPane fx:id="credentialPane">
                     <children>
                         <PedigreeMemberIdsComponent fx:id="pedigreeMemberIdentifiers" StackPane.alignment="CENTER"/>

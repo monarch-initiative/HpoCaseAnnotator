@@ -20,6 +20,8 @@
 
 .h3 {
     -fx-font-size: 1.2em;
+    -fx-text-fill: derive(silverchalice, -50%);
+    -fx-effect: dropshadow(gaussian, #dadada, 2, .5, 1, 1);
 }
 
 .h4 {
@@ -34,8 +36,9 @@
     -fx-padding: 10 0 0 5;
 }
 
-.spacer {
-    -fx-pref-width: 15px;
+.spacer10px {
+    -fx-pref-width: 10px;
+    -fx-pref-height: 10px;
 }
 
 Separator {

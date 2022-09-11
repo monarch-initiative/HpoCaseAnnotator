@@ -3,42 +3,48 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Label?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTimeElementComponent?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="javafx.scene.layout.VBox"
-         stylesheets="@pedigree-member-ids-component.css">
+         stylesheets="@individual-pedigree-member-ids-component.css"
+         id="ids-box">
     <children>
-        <!-- Credentials -->
-        <VBox id="credential-row">
+        <FlowPane id="id-flow-pane">
             <children>
-                <HBox>
+                <!-- Credentials -->
+                <VBox styleClass="flow-box">
                     <children>
+                        <Label styleClass="h3" text="IDs"/>
                         <TitledLabel fx:id="individualId" name="ID" text="I:1" />
                         <TitledLabel fx:id="paternalId" name="Paternal ID" text="II:2" />
                         <TitledLabel fx:id="maternalId" name="Maternal ID" text="II:3" />
                         <TitledLabel fx:id="sex" name="Sex" text="MALE" />
                         <TitledLabel fx:id="proband" name="Proband?" text="Yes" />
                     </children>
-                </HBox>
-            </children>
-        </VBox>
-        <!-- Age -->
-        <VBox id="age-row">
-            <children>
-                <HBox>
+                </VBox>
+
+                <Pane styleClass="spacer10px"/>
+
+                <!-- Age -->
+                <VBox styleClass="flow-box">
                     <children>
-                        <TitledLabel fx:id="ageSummary" name="Age"/>
-                        <TitledLabel fx:id="vitalStatus" name="Vital status" text="DECEASED"/>
-                        <VBox>
-                            <children>
-                                <Label text="Time of death"/>
-                                <TimeElementComponent fx:id="timeOfDeath"/>
-                            </children>
-                        </VBox>
+                        <Label styleClass="h3" text="Age"/>
+                        <Label fx:id="ageSummary"/>
                     </children>
-                </HBox>
+                </VBox>
+
+                <Pane styleClass="spacer10px"/>
+
+                <!-- Vital status -->
+                <VBox styleClass="flow-box">
+                    <children>
+                        <Label styleClass="h3" text="Vital status"/>
+                        <Label fx:id="vitalStatus" text="DECEASED"/>
+                        <TitledTimeElementComponent fx:id="timeOfDeath" name="Age of death"/>
+                    </children>
+                </VBox>
             </children>
-        </VBox>
+        </FlowPane>
     </children>
 </fx:root>

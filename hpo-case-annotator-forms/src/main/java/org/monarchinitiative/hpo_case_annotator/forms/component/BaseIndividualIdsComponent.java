@@ -7,8 +7,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
@@ -27,11 +27,11 @@ public class BaseIndividualIdsComponent<T extends BaseObservableIndividual> exte
     @FXML
     private TitledLabel sex;
     @FXML
-    private TitledLabel ageSummary;
+    private Label ageSummary;
     @FXML
-    private TitledLabel vitalStatus;
+    private Label vitalStatus;
     @FXML
-    private TimeElementComponent timeOfDeath;
+    private TitledTimeElementComponent timeOfDeath;
 
     protected BaseIndividualIdsComponent(URL location) {
         FXMLLoader loader = new FXMLLoader(location);
@@ -76,12 +76,12 @@ public class BaseIndividualIdsComponent<T extends BaseObservableIndividual> exte
                         if (gw != null)
                             builder.append(": ")
                                     .append(gw)
-                                    .append(" weeks");
+                                    .append(" w");
                         Integer gd = gestationalDays.getValue();
                         if (gd != null)
-                            builder.append(", ")
+                            builder.append(" ")
                                     .append(gd)
-                                    .append(" days");
+                                    .append(" d");
                     }
                     case AGE -> {
                         builder.append("Age");
@@ -89,17 +89,17 @@ public class BaseIndividualIdsComponent<T extends BaseObservableIndividual> exte
                         if (ay != null)
                             builder.append(": ")
                                     .append(ay)
-                                    .append(" years");
+                                    .append("y");
                         Integer am = ageMonths.getValue();
                         if (am != null)
-                            builder.append(", ")
+                            builder.append(" ")
                                     .append(am)
-                                    .append(" months");
+                                    .append("m");
                         Integer ad = ageDays.getValue();
                         if (ad != null)
-                            builder.append(", ")
+                            builder.append(" ")
                                     .append(ad)
-                                    .append(" days");
+                                    .append("d");
                     }
                     case AGE_RANGE -> builder.append("Using age range to represent individual's age is not supported.");
                     case ONTOLOGY_CLASS ->
@@ -118,7 +118,7 @@ public class BaseIndividualIdsComponent<T extends BaseObservableIndividual> exte
             sex.textProperty().bind(data.sexProperty().asString());
             age.bind(data.ageProperty());
             vitalStatus.textProperty().bind(select(data, "vitalStatus", "status").asString());
-            timeOfDeath.dataProperty().bind(select(data, "vitalStatus", "timeOfDeath"));
+            timeOfDeath.item.dataProperty().bind(select(data, "vitalStatus", "timeOfDeath"));
         }
     }
 
@@ -129,7 +129,7 @@ public class BaseIndividualIdsComponent<T extends BaseObservableIndividual> exte
             sex.textProperty().unbind();
             age.unbind();
             vitalStatus.textProperty().unbind();
-            timeOfDeath.dataProperty().unbind();
+            timeOfDeath.item.dataProperty().unbind();
         }
     }
 }
