@@ -55,31 +55,31 @@
                                         </StackPane>
                                     </children>
                                 </HBox>
-                                <Pane styleClass="study-section-spacer"/>
+                                <Pane styleClass="spacer10px"/>
                                 <HBox styleClass="study-section">
                                     <children>
                                         <VBox styleClass="study-section-title">
                                             <Label text="Individual" styleClass="h1"/>
                                         </VBox>
-                                        <Individual fx:id="individual" VBox.vgrow="ALWAYS"/>
+                                        <Individual fx:id="individual" HBox.hgrow="ALWAYS"/>
                                     </children>
                                 </HBox>
-                                <Pane styleClass="study-section-spacer"/>
+                                <Pane styleClass="spacer10px"/>
                                 <HBox styleClass="study-section">
                                     <children>
                                         <VBox styleClass="study-section-title">
                                             <Label text="Variants" styleClass="h1"/>
                                         </VBox>
-                                        <VariantSummary fx:id="variantSummary" />
+                                        <VariantSummary fx:id="variantSummary" HBox.hgrow="ALWAYS"/>
                                     </children>
                                 </HBox>
-                                <Pane styleClass="study-section-spacer"/>
+                                <Pane styleClass="spacer10px"/>
                                 <HBox styleClass="study-section">
                                     <children>
                                         <VBox styleClass="study-section-title">
                                             <Label text="Metadata" styleClass="h1"/>
                                         </VBox>
-                                        <Metadata fx:id="metadataSummary"/>
+                                        <Metadata fx:id="metadataSummary" HBox.hgrow="ALWAYS"/>
                                     </children>
                                 </HBox>
                             </children>

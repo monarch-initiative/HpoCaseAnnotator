@@ -10,7 +10,7 @@
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="VBox"
-         stylesheets="@individual.css">
+         stylesheets="@individual-pedigree-member.css">
     <children>
         <StackPane fx:id="credentialPane">
             <children>

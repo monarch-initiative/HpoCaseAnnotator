@@ -55,7 +55,7 @@
                                         </StackPane>
                                     </children>
                                 </HBox>
-                                <Pane styleClass="study-section-spacer"/>
+                                <Pane styleClass="spacer10px"/>
                                 <HBox styleClass="study-section">
                                     <children>
                                         <VBox styleClass="study-section-title">
@@ -64,7 +64,7 @@
                                         <Pedigree fx:id="pedigree" VBox.vgrow="ALWAYS"/>
                                     </children>
                                 </HBox>
-                                <Pane styleClass="study-section-spacer"/>
+                                <Pane styleClass="spacer10px"/>
                                 <HBox styleClass="study-section">
                                     <children>
                                         <VBox styleClass="study-section-title">
@@ -73,7 +73,7 @@
                                         <VariantSummary fx:id="variantSummary" />
                                     </children>
                                 </HBox>
-                                <Pane styleClass="study-section-spacer"/>
+                                <Pane styleClass="spacer10px"/>
                                 <HBox styleClass="study-section">
                                     <children>
                                         <VBox styleClass="study-section-title">

@@ -7,29 +7,15 @@
     -fx-font-family: "ui-sans-serif";
     -fx-background-color: transparent;
 
-    iceberg: #6da3d6;
-    silverchalice: #b3b3b3;
-    bisque: #f1d6b8;
+    colprimary: #4087c9;
+    colmedium: #b3b3b3;
+    colsecondary: #e8d49d;
+
+    /*
+    Other secondary colors:
+    - #ba3b46e5
+    - #524948f2
+    - #26a671
+    - #344055
+     */
 }
-
-/* TODO - remove */
-/*.title {*/
-/*    -fx-font-size: 22pt;*/
-/*    -fx-font-weight: bold;*/
-/*    -fx-padding: 15px 5px 5px 5px;*/
-/*}*/
-
-/*.section {*/
-/*    -fx-border-color: rgba(128, 128, 128, 0.5);*/
-/*    -fx-border-style: dotted;*/
-/*    -fx-border-width: 1px;*/
-/*    -fx-padding: 15px 0px 0px 15px;*/
-/*}*/
-
-/*.row {*/
-/*    -fx-padding: 10px 0px 5px 0px;*/
-/*}*/
-
-/*.column {*/
-/*    -fx-padding: 0px 10px 0px 0px;*/
-/*}*/
