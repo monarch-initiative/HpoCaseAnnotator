@@ -83,7 +83,9 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         Contig contig = parseContig(variantPosition.getGenomeAssembly(), variantPosition.getContig());
 
         ConfidenceInterval startCi = ConfidenceInterval.of(variantPosition.getCiBeginOne(), variantPosition.getCiBeginTwo());
-        Coordinates coordinates = Coordinates.of(CoordinateSystem.oneBased(), variantPosition.getPos(), startCi, variantPosition.getPos(), startCi);
+        int start = variantPosition.getPos();
+        int end = variantPosition.getPos() + variantPosition.getRefAllele().length() -1;
+        Coordinates coordinates = Coordinates.of(CoordinateSystem.oneBased(), start, startCi, end, startCi);
 
 
         // The assembly will not be null, as it is null-checked in `parseContig` method above
@@ -308,7 +310,8 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
             Age a = Age.ofYearsMonthsDays(period.getYears(), period.getMonths(), period.getDays());
             age = TimeElement.age(a);
         } catch (DateTimeParseException e) {
-            throw new ModelTransformationException(e);
+            LOGGER.warn("Error parsing {}: {}", familyInfo.getAge(), e.getMessage(), e);
+            age = null;
         }
 
         List<VariantGenotype> genotypes = new ArrayList<>(variants.size());
