@@ -21,6 +21,7 @@
         <appender-ref ref="FILE"/>
     </logger>
     <logger name="org.monarchinitiative.phenol" level="INFO"/>
+    <logger name="de.charite.compbio.jannovar" level="WARN"/>
     <logger name="org.springframework.boot" level="WARN"/>
     <root level="info">
         <appender-ref ref="STDOUT" />

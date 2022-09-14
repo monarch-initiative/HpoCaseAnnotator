@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Separator?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.VBox"
+         id="publication-editable-box">
+    <stylesheets>
+        <URL value="@../base.css"/>
+        <URL value="@publication-editable.css"/>
+    </stylesheets>
+    <VBox styleClass="summary-area">
+        <children>
+            <Publication fx:id="publication"/>
+        </children>
+    </VBox>
+    <Separator/>
+    <VBox styleClass="edit-area">
+        <children>
+            <TitledTextField fx:id="title" name="Title"/>
+            <TitledTextField fx:id="authors" name="Authors"/>
+            <TitledTextField fx:id="journal" name="Journal"/>
+            <TitledTextField fx:id="year" name="Year"/>
+            <TitledTextField fx:id="volume" name="Volume"/>
+            <TitledTextField fx:id="pages" name="Pages"/>
+            <TitledTextField fx:id="pmid" name="PMID"/>
+        </children>
+    </VBox>
+</fx:root>

@@ -1,0 +1,17 @@
+#phenotypic-feature-column .tl-label {
+    -fx-max-width: 250;
+    -fx-wrap-text: true;
+}
+
+#phenotypic-feature-column TitledLabel {
+    -fx-padding: 5 0 0 0;
+}
+
+RadioButton {
+    -fx-min-height: 30px;
+    -fx-min-width: 80px;
+}
+
+.temporal-box {
+    -fx-min-height: 300;
+}

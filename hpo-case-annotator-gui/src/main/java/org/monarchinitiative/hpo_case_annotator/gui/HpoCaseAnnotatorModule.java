@@ -15,15 +15,15 @@ import org.monarchinitiative.hpo_case_annotator.forms.v2.*;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.disease.DiseaseStatusController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.PedigreeController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.individual.PedigreeMemberController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeBrowserController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypeEntryController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypicFeatureController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype.PhenotypicFeaturesTableController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.BreakendController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfBreakendVariantController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSequenceVariantController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.variant.VcfSymbolicVariantController;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.input.GenomicBreakendDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.input.VcfBreakendVariantDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.input.VcfSequenceVariantDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.input.VcfSymbolicVariantDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.*;
 import org.monarchinitiative.hpo_case_annotator.gui.controllers.variant.*;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
@@ -94,13 +94,12 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
         bind(PublicationController.class);
 
         // variant
-        bind(BreakendController.class);
+        bind(GenomicBreakendDataEdit.class);
 
         // individual
         bind(PedigreeMemberController.class);
         bind(DiseaseStatusController.class);
         bind(PhenotypeEntryController.class);
-        bind(OntologyTreeBrowserController.class);
         bind(PhenotypicFeatureController.class);
         bind(PhenotypicFeaturesTableController.class);
 
@@ -109,23 +108,23 @@ public class HpoCaseAnnotatorModule extends AbstractModule {
     }
 
     @Provides
-    public VcfBreakendVariantController vcfBreakendVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
-        return new VcfBreakendVariantController(genomicAssemblyRegistry, null);
+    public VcfBreakendVariantDataEdit vcfBreakendVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
+        return new VcfBreakendVariantDataEdit();
     }
 
     @Provides
-    public VcfSymbolicVariantController vcfSymbolicVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
-        return new VcfSymbolicVariantController(genomicAssemblyRegistry, null);
+    public VcfSymbolicVariantDataEdit vcfSymbolicVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
+        return new VcfSymbolicVariantDataEdit();
     }
 
     @Provides
-    public VcfSequenceVariantController vcfSequenceVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
-        return new VcfSequenceVariantController(genomicAssemblyRegistry, null);
+    public VcfSequenceVariantDataEdit vcfSequenceVariantController(GenomicAssemblyRegistry genomicAssemblyRegistry) {
+        return new VcfSequenceVariantDataEdit();
     }
 
     @Provides
-    public VariantSummaryController variantSummaryController(HCAControllerFactory hcaControllerFactory) {
-        return new VariantSummaryController(hcaControllerFactory);
+    public VariantSummary variantSummary(HCAControllerFactory hcaControllerFactory) {
+        return new VariantSummary();
     }
 
     @Provides

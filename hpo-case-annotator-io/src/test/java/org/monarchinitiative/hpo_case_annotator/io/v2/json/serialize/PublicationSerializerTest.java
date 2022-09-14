@@ -33,7 +33,7 @@ public class PublicationSerializerTest {
     public void serialize() throws Exception {
         String authors = "Ben Mahmoud A, Siala O, Mansour RB, Driss F, Baklouti-Gargouri S, Mkaouar-Rebai E, Belguith N, Fakhfakh F";
         Publication publication = Publication.of(
-                Arrays.stream(authors.split(",")).map(String::trim).toList(),
+                authors,
                 "First functional analysis of a novel splicing mutation in the B3GALTL gene by an ex vivo approach in Tunisian patients with typical Peters plus syndrome",
                 "Gene",
                 2021,
@@ -45,7 +45,7 @@ public class PublicationSerializerTest {
 
         assertThat(encoded, equalTo("""
                 {
-                  "authors" : [ "Ben Mahmoud A", "Siala O", "Mansour RB", "Driss F", "Baklouti-Gargouri S", "Mkaouar-Rebai E", "Belguith N", "Fakhfakh F" ],
+                  "authors" : "Ben Mahmoud A, Siala O, Mansour RB, Driss F, Baklouti-Gargouri S, Mkaouar-Rebai E, Belguith N, Fakhfakh F",
                   "title" : "First functional analysis of a novel splicing mutation in the B3GALTL gene by an ex vivo approach in Tunisian patients with typical Peters plus syndrome",
                   "journal" : "Gene",
                   "year" : 2021,

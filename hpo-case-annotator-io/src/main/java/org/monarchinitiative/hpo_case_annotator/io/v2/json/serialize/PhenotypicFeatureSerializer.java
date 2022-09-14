@@ -21,9 +21,12 @@ public class PhenotypicFeatureSerializer extends StdSerializer<PhenotypicFeature
     public void serialize(PhenotypicFeature value, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
 
-        gen.writeStringField("termId", value.termId().getValue());
+        gen.writeStringField("termId", value.id().getValue());
+        gen.writeStringField("label", value.getLabel());
         gen.writeBooleanField("isExcluded", value.isExcluded());
-        gen.writeObjectField("observationAge", value.observationAge());
+
+        gen.writeObjectField("onset", value.getOnset());
+        gen.writeObjectField("resolution", value.getResolution());
 
         gen.writeEndObject();
     }

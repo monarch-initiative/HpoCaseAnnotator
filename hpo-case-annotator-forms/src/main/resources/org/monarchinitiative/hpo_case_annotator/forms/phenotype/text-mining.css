@@ -1,0 +1,4 @@
+#text-mining-tab-pane {
+    -fx-tab-min-width: 100;
+    -fx-tab-min-height: 30;
+}

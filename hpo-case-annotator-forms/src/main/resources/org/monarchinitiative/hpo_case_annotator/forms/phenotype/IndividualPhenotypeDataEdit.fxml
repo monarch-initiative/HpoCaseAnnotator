@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.*?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@phenotype.css">
+    <children>
+        <IndividualIdsComponent fx:id="individualIds"/>
+
+        <Label styleClass="h2" text="Add phenotype features"/>
+        <HBox>
+            <children>
+                <Button fx:id="browseHpo" onAction="#browseHpoAction"
+                        text="Browse HPO hierarchy">
+                    <tooltip>
+                        <Tooltip text="Add a single phenotype term by browsing HPO hierarchy" wrapText="true"/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="addClinicalEncounter" onAction="#addClinicalEncounterAction"
+                        text="Add clinical encounter">
+                    <tooltip>
+                        <Tooltip text="Add one or more phenotype terms for a clinical encounter" wrapText="true"/>
+                    </tooltip>
+                </Button>
+            </children>
+        </HBox>
+
+        <Separator/>
+
+        <SplitPane>
+            <items>
+                <VBox>
+                    <children>
+                        <Label styleClass="h2" text="Phenotype features"/>
+                        <PhenotypeTable fx:id="phenotypeTable"/>
+                    </children>
+                </VBox>
+                <VBox id="phenotype-feature">
+                    <children>
+                        <Label styleClass="h2" text="Phenotype feature"/>
+                        <PhenotypicFeatureBinding fx:id="phenotypicFeature"/>
+                    </children>
+                </VBox>
+            </items>
+        </SplitPane>
+    </children>
+</fx:root>

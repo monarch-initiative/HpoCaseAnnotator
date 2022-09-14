@@ -1,0 +1,19 @@
+/* This is a FlowPane */
+#age-box {
+    -fx-hgap: 5;
+    -fx-vgap: 5;
+}
+
+#age-box TitledLabel {
+    -fx-pref-width: 80;
+}
+
+.age-datum {
+    -fx-alignment: bottom-left;
+    -fx-pref-width: 150;
+}
+
+ComboBox {
+    -fx-pref-width: 120;
+    -fx-max-width: 120;
+}

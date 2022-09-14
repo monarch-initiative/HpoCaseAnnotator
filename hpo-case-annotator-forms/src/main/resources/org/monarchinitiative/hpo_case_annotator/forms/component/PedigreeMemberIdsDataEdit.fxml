@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementDataEdit?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         id="ids-box">
+    <stylesheets>
+        <URL value="@../base.css"/>
+        <URL value="@individual-pedigree-member-ids-component.css"/>
+    </stylesheets>
+    <children>
+        <FlowPane id="id-flow-pane">
+            <children>
+                <VBox styleClass="flow-box">
+                    <!-- Identifiers -->
+                    <children>
+                        <Label text="Credentials" styleClass="h3"/>
+                        <TitledTextField fx:id="individualId" name="ID" promptText="e.g. I:1"/>
+                        <TitledTextField fx:id="paternalId" name="Paternal ID" promptText="e.g. II:1"/>
+                        <TitledTextField fx:id="maternalId" name="Maternal ID" promptText="e.g. II:2"/>
+                        <TitledComboBox fx:id="sex" name="Sex"/>
+                        <TitledCheckBox fx:id="proband" name="Proband?"/>
+                    </children>
+                </VBox>
+
+                <!-- Age -->
+                <VBox styleClass="flow-box">
+                    <children>
+                        <Label text="Age" styleClass="h3"/>
+                        <TimeElementDataEdit fx:id="ageComponent"/>
+                    </children>
+                </VBox>
+
+                <!-- Vital status -->
+                <VBox styleClass="flow-box">
+                    <children>
+                        <Label text="Vital status" styleClass="h3"/>
+                        <VitalStatusDataEdit fx:id="vitalStatusComponent"/>
+                    </children>
+                </VBox>
+            </children>
+        </FlowPane>
+    </children>
+</fx:root>

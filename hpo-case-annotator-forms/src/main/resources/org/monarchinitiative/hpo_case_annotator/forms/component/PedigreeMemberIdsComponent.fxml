@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTimeElementComponent?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.VBox"
+         stylesheets="@individual-pedigree-member-ids-component.css"
+         id="ids-box">
+    <children>
+        <FlowPane id="id-flow-pane">
+            <children>
+                <!-- Credentials -->
+                <VBox styleClass="flow-box">
+                    <children>
+                        <Label styleClass="h3" text="IDs"/>
+                        <TitledLabel fx:id="individualId" name="ID" text="I:1" />
+                        <TitledLabel fx:id="paternalId" name="Paternal ID" text="II:2" />
+                        <TitledLabel fx:id="maternalId" name="Maternal ID" text="II:3" />
+                        <TitledLabel fx:id="sex" name="Sex" text="MALE" />
+                        <TitledLabel fx:id="proband" name="Proband?" text="Yes" />
+                    </children>
+                </VBox>
+
+                <Pane styleClass="spacer10px"/>
+
+                <!-- Age -->
+                <VBox styleClass="flow-box">
+                    <children>
+                        <Label styleClass="h3" text="Age"/>
+                        <Label fx:id="ageSummary"/>
+                    </children>
+                </VBox>
+
+                <Pane styleClass="spacer10px"/>
+
+                <!-- Vital status -->
+                <VBox styleClass="flow-box">
+                    <children>
+                        <Label styleClass="h3" text="Vital status"/>
+                        <Label fx:id="vitalStatus" text="DECEASED"/>
+                        <TitledTimeElementComponent fx:id="timeOfDeath" name="Age of death"/>
+                    </children>
+                </VBox>
+            </children>
+        </FlowPane>
+    </children>
+</fx:root>

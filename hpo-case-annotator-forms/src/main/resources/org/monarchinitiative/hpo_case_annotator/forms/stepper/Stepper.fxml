@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@stepper.css"
+         id="stepper-box">
+    <children>
+        <StackPane id="stepper-content" fx:id="content" VBox.vgrow="ALWAYS"/>
+
+        <ButtonBar id="button-bar">
+            <buttons>
+                <Button onAction="#cancelAction" ButtonBar.buttonData="CANCEL_CLOSE" text="Cancel"/>
+                <Button fx:id="previous" onAction="#previousStep" ButtonBar.buttonData="BACK_PREVIOUS" text="Previous"/>
+                <Button fx:id="next" onAction="#nextStep" ButtonBar.buttonData="NEXT_FORWARD" text="Next"/>
+                <Button onAction="#finishAction" ButtonBar.buttonData="OK_DONE" text="Finish"/>
+            </buttons>
+        </ButtonBar>
+    </children>
+</fx:root>

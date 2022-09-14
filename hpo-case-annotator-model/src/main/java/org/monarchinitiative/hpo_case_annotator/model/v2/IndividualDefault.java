@@ -1,25 +1,25 @@
 package org.monarchinitiative.hpo_case_annotator.model.v2;
 
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 
-import java.time.Period;
 import java.util.*;
-import java.util.stream.Stream;
 
 class IndividualDefault implements Individual {
 
     private final String id;
-    private final Set<PhenotypicFeature> phenotypicFeatures;
+    private final List<PhenotypicFeature> phenotypicFeatures;
     private final List<DiseaseStatus> diseases;
-    private final Map<String, Genotype> genotypes;
-    private final Period age;
+    private final List<VariantGenotype> genotypes;
+    private final TimeElement age;
+    private final VitalStatus vitalStatus;
     private final Sex sex;
 
     protected IndividualDefault(String id,
-                                Set<PhenotypicFeature> phenotypicFeatures,
+                                List<PhenotypicFeature> phenotypicFeatures,
                                 List<DiseaseStatus> diseases,
-                                Map<String, Genotype> genotypes,
-                                Period age,
+                                List<VariantGenotype> genotypes,
+                                TimeElement age,
+                                VitalStatus vitalStatus,
                                 Sex sex) {
         // assume that null checks has been made
         this.id = id;
@@ -27,52 +27,60 @@ class IndividualDefault implements Individual {
         this.diseases = diseases;
         this.genotypes = genotypes;
         this.age = age;
+        this.vitalStatus = vitalStatus;
         this.sex = sex;
     }
 
     static IndividualDefault of(String id,
-                                Collection<PhenotypicFeature> phenotypicFeatures,
+                                List<PhenotypicFeature> phenotypicFeatures,
                                 List<DiseaseStatus> diseases,
-                                Map<String, Genotype> genotypes,
-                                Period age,
+                                List<VariantGenotype> genotypes,
+                                TimeElement age,
+                                VitalStatus vitalStatus,
                                 Sex sex) {
         return new IndividualDefault(
                 Objects.requireNonNull(id, "Individual ID must not be null"),
-                Set.copyOf(Objects.requireNonNull(phenotypicFeatures, "Phenotypes must not be null")),
+                Objects.requireNonNull(phenotypicFeatures, "Phenotypes must not be null"),
                 Objects.requireNonNull(diseases, "Diseases must not be null"),
                 Objects.requireNonNull(genotypes, "Genotypes must not be null"),
                 age,
+                vitalStatus,
                 Objects.requireNonNull(sex, "Sex must not be null")
         );
     }
 
     @Override
-    public String id() {
+    public String getId() {
         return id;
     }
 
     @Override
-    public Optional<Period> age() {
-        return Optional.ofNullable(age);
+    public TimeElement getAge() {
+        return age;
     }
 
     @Override
-    public Stream<PhenotypicFeature> phenotypicFeatures() {
-        return phenotypicFeatures.stream();
+    public VitalStatus getVitalStatus() {
+        return vitalStatus;
     }
 
     @Override
-    public List<DiseaseStatus> diseases() {
+    public List<? extends PhenotypicFeature> getPhenotypicFeatures() {
+        return phenotypicFeatures;
+    }
+
+    @Override
+    public List<? extends DiseaseStatus> getDiseaseStates() {
         return diseases;
     }
 
     @Override
-    public Map<String, Genotype> genotypes() {
+    public List<VariantGenotype> getGenotypes() {
         return genotypes;
     }
 
     @Override
-    public Sex sex() {
+    public Sex getSex() {
         return sex;
     }
 
@@ -81,12 +89,12 @@ class IndividualDefault implements Individual {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IndividualDefault that = (IndividualDefault) o;
-        return Objects.equals(id, that.id) && Objects.equals(phenotypicFeatures, that.phenotypicFeatures) && Objects.equals(diseases, that.diseases) && Objects.equals(genotypes, that.genotypes) && Objects.equals(age, that.age) && sex == that.sex;
+        return Objects.equals(id, that.id) && Objects.equals(phenotypicFeatures, that.phenotypicFeatures) && Objects.equals(diseases, that.diseases) && Objects.equals(genotypes, that.genotypes) && Objects.equals(age, that.age)  && Objects.equals(vitalStatus, that.vitalStatus) && sex == that.sex;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, phenotypicFeatures, diseases, genotypes, age, sex);
+        return Objects.hash(id, phenotypicFeatures, diseases, genotypes, age, vitalStatus, sex);
     }
 
     @Override
@@ -97,6 +105,7 @@ class IndividualDefault implements Individual {
                 ", diseases=" + diseases +
                 ", genotypes=" + genotypes +
                 ", age=" + age +
+                ", vitalStatus=" + vitalStatus +
                 ", sex=" + sex +
                 '}';
     }

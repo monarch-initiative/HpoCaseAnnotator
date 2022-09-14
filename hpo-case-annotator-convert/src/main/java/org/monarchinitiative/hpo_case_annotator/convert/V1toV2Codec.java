@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.convert;
 import org.monarchinitiative.hpo_case_annotator.model.Hg18GenomicAssembly;
 import org.monarchinitiative.hpo_case_annotator.model.convert.Codec;
 import org.monarchinitiative.hpo_case_annotator.model.convert.ModelTransformationException;
+import org.monarchinitiative.hpo_case_annotator.model.proto.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.model.proto.Variant;
 import org.monarchinitiative.hpo_case_annotator.model.proto.*;
 import org.monarchinitiative.hpo_case_annotator.model.ModelUtils;
@@ -11,11 +12,16 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.*;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
+import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.monarchinitiative.svart.*;
 import org.monarchinitiative.svart.assembly.GenomicAssemblies;
 import org.monarchinitiative.svart.assembly.GenomicAssembly;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.NumberFormat;
 import java.time.Instant;
@@ -25,27 +31,31 @@ import java.util.*;
 
 class V1toV2Codec implements Codec<DiseaseCase, Study> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(V1toV2Codec.class);
+
     private static final NumberFormat NF = NumberFormat.getNumberInstance(Locale.US);
-    private static final String DEFAULT_PARENTAL_ID = "";
-    private static final V1toV2Codec INSTANCE = new V1toV2Codec();
+    private static final VitalStatus DEFAULT_VITAL_STATUS = VitalStatus.of(VitalStatus.Status.UNKNOWN, null);
     private static final Map<GenomeAssembly, GenomicAssembly> ASSEMBLIES = Map.of(
             GenomeAssembly.NCBI_36, Hg18GenomicAssembly.hg18GenomicAssembly(),
             GenomeAssembly.GRCH_37, GenomicAssemblies.GRCh37p13(),
             GenomeAssembly.GRCH_38, GenomicAssemblies.GRCh38p13()
     );
+    /**
+     * In case the current HPO does not contain the requested term.
+     */
+    private static final String MISSING = "MISSING";
 
-    private V1toV2Codec() {
+    private final Ontology hpo;
+
+    private V1toV2Codec(Ontology hpo) {
+        this.hpo = hpo;
     }
 
-    static V1toV2Codec getInstance() {
-        return INSTANCE;
+    static V1toV2Codec of(Ontology hpo) {
+        return new V1toV2Codec(hpo);
     }
 
     private static Publication transformPublication(org.monarchinitiative.hpo_case_annotator.model.proto.Publication publication) throws ModelTransformationException {
-        List<String> authors = Arrays.stream(publication.getAuthorList().split(","))
-                .map(String::trim)
-                .toList();
-
         int year;
         try {
             year = Integer.parseInt(publication.getYear());
@@ -53,7 +63,7 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
             throw new ModelTransformationException("Invalid publication year: " + publication.getYear());
         }
 
-        return Publication.of(authors, publication.getTitle(), publication.getJournal(), year, publication.getVolume(), publication.getPages(), publication.getPmid());
+        return Publication.of(publication.getAuthorList(), publication.getTitle(), publication.getJournal(), year, publication.getVolume(), publication.getPages(), publication.getPmid());
     }
 
     private static StudyMetadata transformMetadata(String metadata, Biocurator biocurator, String softwareVersion) {
@@ -73,7 +83,9 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         Contig contig = parseContig(variantPosition.getGenomeAssembly(), variantPosition.getContig());
 
         ConfidenceInterval startCi = ConfidenceInterval.of(variantPosition.getCiBeginOne(), variantPosition.getCiBeginTwo());
-        Coordinates coordinates = Coordinates.of(CoordinateSystem.oneBased(), variantPosition.getPos(), startCi, variantPosition.getPos(), startCi);
+        int start = variantPosition.getPos();
+        int end = variantPosition.getPos() + variantPosition.getRefAllele().length() -1;
+        Coordinates coordinates = Coordinates.of(CoordinateSystem.oneBased(), start, startCi, end, startCi);
 
 
         // The assembly will not be null, as it is null-checked in `parseContig` method above
@@ -286,37 +298,40 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         return variants;
     }
 
-    private static Pedigree transformPedigree(FamilyInfo familyInfo,
-                                              org.monarchinitiative.hpo_case_annotator.model.proto.Disease disease,
-                                              List<OntologyClass> phenotypes,
-                                              List<Variant> variants,
-                                              List<CuratedVariant> curatedVariants) throws ModelTransformationException {
-        // we only have a single person in the v1 cases
-        Period age;
+    private Individual transformIndividual(FamilyInfo familyInfo,
+                                           Disease disease,
+                                           List<OntologyClass> phenotypes,
+                                           List<Variant> variants,
+                                           List<CuratedVariant> curatedVariants) throws ModelTransformationException {
+        // We have at most single person in the v1 cases.
+        TimeElement age;
         try {
-            age = Period.parse(familyInfo.getAge());
+            Period period = Period.parse(familyInfo.getAge()).normalized();
+            Age a = Age.ofYearsMonthsDays(period.getYears(), period.getMonths(), period.getDays());
+            age = TimeElement.age(a);
         } catch (DateTimeParseException e) {
-            throw new ModelTransformationException(e);
+            LOGGER.warn("Error parsing {}: {}", familyInfo.getAge(), e.getMessage(), e);
+            age = null;
         }
 
-        Map<String, Genotype> genotypes = new HashMap<>(variants.size());
+        List<VariantGenotype> genotypes = new ArrayList<>(variants.size());
         for (int i = 0; i < variants.size(); i++) {
             String hex = curatedVariants.get(i).md5Hex();
             Genotype genotype = transformGenotype(variants.get(i).getGenotype());
-            genotypes.put(hex, genotype);
+            genotypes.add(VariantGenotype.of(hex, genotype));
         }
 
         // here we only can assume that the proband had all the features since birth
-        List<PhenotypicFeature> observations = transformPhenotypes(age, phenotypes);
+        List<PhenotypicFeature> observations = transformPhenotypes(phenotypes);
 
-        PedigreeMember member = PedigreeMember.of(familyInfo.getFamilyOrProbandId(),
-                DEFAULT_PARENTAL_ID,
-                DEFAULT_PARENTAL_ID,
-                true, observations, List.of(transformDisease(disease)), genotypes, age,
+        return Individual.of(familyInfo.getFamilyOrProbandId(),
+                observations,
+                List.of(transformDisease(disease)),
+                genotypes,
+                age,
+                DEFAULT_VITAL_STATUS,
                 // by definition as we only store probands in v1 model
                 transformSex(familyInfo.getSex()));
-
-        return Pedigree.of(List.of(member));
     }
 
     private static Genotype transformGenotype(org.monarchinitiative.hpo_case_annotator.model.proto.Genotype genotype) {
@@ -330,12 +345,47 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         };
     }
 
-    private static List<PhenotypicFeature> transformPhenotypes(Period age, List<OntologyClass> phenotypeList) {
+    private List<PhenotypicFeature> transformPhenotypes(List<OntologyClass> phenotypeList) {
         List<PhenotypicFeature> phenotypes = new ArrayList<>(phenotypeList.size());
+
         for (OntologyClass phenotype : phenotypeList) {
-            phenotypes.add(PhenotypicFeature.of(TermId.of(phenotype.getId()), phenotype.getNotObserved(), AgeRange.sinceBirthUntilAge(age)));
+            Optional<Term> primaryTerm = getPrimaryTerm(phenotype.getId());
+            TermId id = primaryTerm.map(Term::id)
+                    .orElseGet(() -> TermId.of(phenotype.getId())); // Keep the original `TermId`.
+            String label = primaryTerm.map(Term::getName)
+                    .orElse(MISSING);
+
+            // We do not have onset, and we certainly do not have the resolution.
+            PhenotypicFeature feature = PhenotypicFeature.of(id, label, phenotype.getNotObserved(), null, null);
+            phenotypes.add(feature);
         }
+
         return phenotypes;
+    }
+
+    private Optional<Term> getPrimaryTerm(String id) {
+        if (hpo == null)
+            // no conversion without HPO
+            return Optional.empty();
+
+        TermId termId;
+        try {
+            termId = TermId.of(id);
+        } catch (RuntimeException e) {
+            LOGGER.warn("Invalid term ID `{}`", id);
+            return Optional.empty();
+        }
+
+        Term term = hpo.getTermMap().get(termId);
+        if (term == null)
+            return Optional.empty();
+        else if (term.isObsolete()) {
+            TermId primaryTermId = hpo.getPrimaryTermId(term.id());
+            LOGGER.debug("Replacing obsoleted term {} with {}", term.id().getValue(), primaryTermId.getValue());
+            term = hpo.getTermMap().get(primaryTermId);
+        }
+
+        return Optional.ofNullable(term);
     }
 
     private static Sex transformSex(org.monarchinitiative.hpo_case_annotator.model.proto.Sex sex) throws ModelTransformationException {
@@ -360,10 +410,10 @@ class V1toV2Codec implements Codec<DiseaseCase, Study> {
         String id = ModelUtils.getFileNameFor(diseaseCase);
         Publication publication = transformPublication(diseaseCase.getPublication());
         List<CuratedVariant> variants = transformVariants(diseaseCase.getVariantList());
-        Pedigree pedigree = transformPedigree(diseaseCase.getFamilyInfo(), diseaseCase.getDisease(), diseaseCase.getPhenotypeList(), diseaseCase.getVariantList(), variants);
+        Individual individual = transformIndividual(diseaseCase.getFamilyInfo(), diseaseCase.getDisease(), diseaseCase.getPhenotypeList(), diseaseCase.getVariantList(), variants);
         StudyMetadata metadata = transformMetadata(diseaseCase.getMetadata(), diseaseCase.getBiocurator(), diseaseCase.getSoftwareVersion());
 
-        return FamilyStudy.of(id, publication, variants, pedigree, metadata);
+        return IndividualStudy.of(id, publication, variants, individual, metadata);
     }
 
 }

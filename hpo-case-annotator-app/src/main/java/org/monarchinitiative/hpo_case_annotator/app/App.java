@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -50,6 +51,7 @@ import java.util.stream.Collectors;
 public class App extends Application {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
+    public static final String BASE_CSS = Objects.requireNonNull(App.class.getResource("base.css")).toExternalForm();
 
     private ConfigurableApplicationContext context;
 
@@ -72,6 +74,7 @@ public class App extends Application {
 
         Parent parent = loader.load();
         Scene scene = new Scene(parent, 1000, 800);
+        scene.getStylesheets().add(BASE_CSS);
         stage.setTitle(properties.name() + ' ' + properties.version());
         stage.getIcons().add(new Image(App.class.getResourceAsStream("/img/donald-duck.png")));
         stage.setScene(scene);
@@ -112,14 +115,14 @@ public class App extends Application {
                 resourceProperties.setProperty(ResourcePaths.HG38_JANNOVAR_CACHE_PATH, hg38JannovarPath.toAbsolutePath().toString());
         }
 
-        if (optionalResources.getOntologyPath() != null) {
-            resourceProperties.setProperty(ResourcePaths.ONTOLOGY_PATH_PROPERTY, optionalResources.getOntologyPath().getAbsolutePath());
+        if (optionalResources.getHpoPath() != null) {
+            resourceProperties.setProperty(ResourcePaths.ONTOLOGY_PATH_PROPERTY, optionalResources.getHpoPath().getAbsolutePath());
         }
         if (optionalResources.getDiseaseCaseDir() != null) {
             resourceProperties.setProperty(ResourcePaths.DISEASE_CASE_DIR_PROPERTY, optionalResources.getDiseaseCaseDir().getAbsolutePath());
         }
 
-        String liftoverChains = optionalResources.liftoverChainFiles().stream()
+        String liftoverChains = optionalResources.liftoverChainFilesProperty().stream()
                 .map(File::getAbsolutePath)
                 .collect(Collectors.joining(ResourcePaths.LIFTOVER_CHAIN_PATH_SEPARATOR));
         if (!liftoverChains.isBlank())

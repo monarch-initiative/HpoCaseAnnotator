@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.CheckBox?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementDataEdit?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="HBox"
+         stylesheets="@vital-status-component.css">
+    <children>
+        <VBox id="vs-col">
+            <children>
+                <TitledComboBox fx:id="vitalStatus" name="Status"/>
+            </children>
+        </VBox>
+        <VBox fx:id="deathBox">
+            <children>
+                <CheckBox fx:id="timeOfDeathIsUnknown" selected="true" text="Age of death is unknown"/>
+                <TimeElementDataEdit fx:id="timeOfDeathComponent" disable="true"/>
+            </children>
+        </VBox>
+    </children>
+</fx:root>

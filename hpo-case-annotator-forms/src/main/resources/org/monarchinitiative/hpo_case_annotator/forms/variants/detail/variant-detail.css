@@ -1,0 +1,14 @@
+TitledLabel {
+    -fx-min-width: 120;
+}
+
+/* Pos field is present in sequence variant display and should take the same amount of space as start and end
+in symbolic variant display, hence 240. */
+#pos-field {
+    -fx-min-width: 240;
+}
+
+/* Genomic assembly label is a bit longer, so we need an extra width. */
+#assembly-field {
+    -fx-min-width: 130;
+}

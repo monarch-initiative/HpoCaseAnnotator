@@ -1,0 +1,3 @@
+#pheno-disease-geno-tabpane .tab-header-background {
+    -fx-background-color: derive(-col-primary, 80%);
+}

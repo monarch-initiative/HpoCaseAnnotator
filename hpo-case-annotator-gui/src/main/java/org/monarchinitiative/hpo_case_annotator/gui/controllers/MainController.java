@@ -24,7 +24,6 @@ import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationResult
 import org.monarchinitiative.hpo_case_annotator.core.validation.ValidationRunner;
 import org.monarchinitiative.hpo_case_annotator.export.ExportCodecs;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.FamilyStudyController;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.Convert;
 import org.monarchinitiative.hpo_case_annotator.gui.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.gui.util.HostServicesWrapper;
 import org.monarchinitiative.hpo_case_annotator.gui.util.PopUps;
@@ -377,7 +376,7 @@ public final class MainController {
             // user might have selected to save the model elsewhere, here we reflect the update
             dcdc.setCurrentModelPath(actualPath);
         } else if (controller instanceof FamilyStudyController fsc) {
-            Study study = Convert.toFamilyStudy(fsc.getData());
+            Study study = fsc.getData();
             LOGGER.info("Saving V2 study");
             // TODO - implement
         }

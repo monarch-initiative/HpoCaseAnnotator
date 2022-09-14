@@ -10,9 +10,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.textfield.TextFields;
+import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeSuggestionProvider;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Utils;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.AgeController;
-import org.monarchinitiative.hpo_case_annotator.forms.v2.ontotree.OntologyTreeBrowserController;
+import org.monarchinitiative.hpo_case_annotator.forms.tree.SimpleOntologyClassTreeView;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
@@ -32,7 +33,7 @@ public class PhenotypeEntryController {
     @FXML
     private VBox ontologyTreeBrowser;
     @FXML
-    private OntologyTreeBrowserController ontologyTreeBrowserController;
+    private SimpleOntologyClassTreeView ontologyTreeView;
     @FXML
     private Button addButton;
     @FXML
@@ -57,11 +58,12 @@ public class PhenotypeEntryController {
     @FXML
     private void initialize() {
         suggestionProvider.ontologyProperty().bind(ontology);
-        ontologyTreeBrowserController.ontologyProperty().bind(ontology);
+        ontologyTreeView.ontologyProperty().bind(ontology);
         ontologyTreeBox.disableProperty().bind(ontology.isNull());
 
         phenotypicFeatureController.dataProperty().bind(phenotypicFeaturesTableController.selectedPhenotypeDescription());
-        phenotypicFeaturesTableController.selectedPhenotypeDescription().addListener(ontologyTreeBrowserController.phenotypeDescriptionChangeListener());
+        // TODO - Fix if necessary
+//        phenotypicFeaturesTableController.selectedPhenotypeDescription().addListener(ontologyTreeBrowserController.phenotypeDescriptionChangeListener());
         phenotypicFeatureController.ontologyProperty().bind(ontology);
 
         TextFields.bindAutoCompletion(searchTextField, suggestionProvider);
@@ -76,9 +78,10 @@ public class PhenotypeEntryController {
             return;
 
         ObservablePhenotypicFeature feature = new ObservablePhenotypicFeature();
-        feature.setTermId(ontologyTreeBrowserController.getSelectedTermId());
-        copyObservableAge(onsetAgeController.getData(), feature.getObservationAge().getOnset());
-        copyObservableAge(resolutionAgeController.getData(), feature.getObservationAge().getResolution());
+        feature.setTermId(ontologyTreeView.selectedItemProperty().get().getValue().getId());
+        // TODO - implement or delete the entire class.
+//        copyObservableAge(onsetAgeController.getData(), feature.getObservationAge().getOnset());
+//        copyObservableAge(resolutionAgeController.getData(), feature.getObservationAge().getResolution());
         phenotypicFeaturesTableController.observablePhenotypeDescriptions()
                 .add(feature);
     }
@@ -99,8 +102,8 @@ public class PhenotypeEntryController {
     private void searchTextFieldAction() {
         String text = searchTextField.getText();
         LOGGER.debug("Searching for `{}`", text);
-        suggestionProvider.termIdForName(text)
-                .ifPresent(termId -> ontologyTreeBrowserController.navigateToTermId(termId));
+        suggestionProvider.ontologyClassForLabel(text)
+                .ifPresent(oc -> ontologyTreeView.scrollTo(oc));
     }
 
     @FXML

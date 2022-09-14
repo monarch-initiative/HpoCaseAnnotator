@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.metadata.*?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@metadata.css">
+    <children>
+        <GridPane hgap="10.0">
+            <children>
+                <VBox>
+                    <children>
+                        <Label styleClass="h3" text="Free text description" />
+                        <TextArea id="meta-text" fx:id="freeTextArea" wrapText="true" VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
+
+                <VBox GridPane.columnIndex="1">
+                    <children>
+                        <Label styleClass="h3" text="Created by" />
+                        <EditHistory fx:id="createdBy"/>
+                        <Separator />
+                        <Label styleClass="h3" text="Modified by" />
+                        <TableView fx:id="editHistory" id="modified-by">
+                            <columns>
+                                <TableColumn fx:id="curatorIdColumn" editable="false" text="Curator ID" prefWidth="150"/>
+                                <TableColumn fx:id="softwareVersionColumn" editable="false" text="Software version" prefWidth="300"/>
+                                <TableColumn fx:id="timestampColumn" editable="false" text="Timestamp" prefWidth="300"/>
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                            <placeholder>
+                                <Label text="No edit history" />
+                            </placeholder>
+                        </TableView>
+                    </children>
+                </VBox>
+            </children>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints hgrow="ALWAYS"/>
+         </columnConstraints>
+        </GridPane>
+    </children>
+</fx:root>

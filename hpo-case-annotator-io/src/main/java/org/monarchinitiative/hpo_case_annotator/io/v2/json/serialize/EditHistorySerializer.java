@@ -20,9 +20,9 @@ public class EditHistorySerializer extends StdSerializer<EditHistory> {
     @Override
     public void serialize(EditHistory editHistory, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
-        gen.writeStringField("curatorId", editHistory.curatorId());
-        gen.writeStringField("softwareVersion", editHistory.softwareVersion());
-        gen.writeStringField("timestamp", editHistory.timestamp().toString());
+        gen.writeStringField("curatorId", editHistory.getCuratorId());
+        gen.writeStringField("softwareVersion", editHistory.getSoftwareVersion());
+        gen.writeStringField("timestamp", editHistory.getTimestamp().toString());
         gen.writeEndObject();
     }
 }

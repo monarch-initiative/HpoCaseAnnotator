@@ -1,0 +1,45 @@
+.root {
+    -fx-pref-width: 1600;
+    -fx-pref-height: 800;
+
+
+    -fx-font-size: 11pt;
+    -fx-font-family: "ui-sans-serif";
+    -fx-background-color: transparent;
+
+    -col-primary: #4087c9;
+    -col-medium: #b3b3b3;
+    -col-secondary: #e8d49d;
+
+    /*
+    Other secondary colors:
+    - #ba3b46e5
+    - #524948f2
+    - #26a671
+    - #344055
+     */
+}
+
+
+.h1 {
+    -fx-font-size: 1.3em;
+    -fx-font-weight: bold;
+    -fx-text-fill: -col-primary;
+    -fx-padding: 10 0 3 0;
+}
+
+.h2 {
+    -fx-font-size: 1.2em;
+    -fx-font-style: italic;
+    -fx-text-fill: derive(-col-primary, -30%);
+}
+
+.h3 {
+    -fx-font-size: 1.2em;
+    -fx-text-fill: derive(-col-medium, -50%);
+    -fx-effect: dropshadow(gaussian, #dadada, 2, .5, 1, 1);
+}
+
+.h4 {
+
+}

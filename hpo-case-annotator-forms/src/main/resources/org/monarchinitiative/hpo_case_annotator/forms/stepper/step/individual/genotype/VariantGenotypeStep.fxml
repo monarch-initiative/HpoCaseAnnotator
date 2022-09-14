@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantGenotypeTable?>
+
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         type="VBox">
+    <children>
+        <Label styleClass="stepper-instruction" text="Add variant genotypes observed in the individual"/>
+        <VariantGenotypeTable fx:id="genotypeTable"/>
+    </children>
+</fx:root>

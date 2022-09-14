@@ -1,0 +1,42 @@
+#titled-pane-box {
+    -fx-animated: false;
+    -fx-max-width: 950;
+}
+
+#titled-pane-box .title {
+    /* The pedigree member summary with id, number of phenotype terms, disease states, and known genotypes. */
+    -fx-alignment: top-center;
+}
+
+#titled-pane-box .content {
+    -fx-alignment: bottom-right;
+    -fx-padding: 0;
+}
+
+/* A data section, e.g. credentials, phenotype features, diseases... */
+.pm-section {
+    -fx-padding: 0 0 20 0;
+}
+
+/* Diseases table */
+#diseases-table {
+    -fx-pref-height: 100;
+}
+
+#disease-status {
+    -fx-pref-width: 85;
+}
+
+#disease-id {
+    -fx-pref-width: 130;
+}
+
+#disease-name {
+    -fx-pref-width: 200;
+    -fx-max-width: 300;
+}
+
+/*  Variants table */
+#variants-table {
+    -fx-pref-height: 220;
+}

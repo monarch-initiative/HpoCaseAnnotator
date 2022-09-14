@@ -4,9 +4,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox styleClass="section" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.app.controller.SetResourcesController">
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.monarchinitiative.hpo_case_annotator.app.controller.SetResourcesController"
+      styleClass="section">
     <stylesheets>
-        <URL value="@base.css" />
+        <URL value="@../base.css" />
         <URL value="@set-resources.css" />
     </stylesheets>
     <children>

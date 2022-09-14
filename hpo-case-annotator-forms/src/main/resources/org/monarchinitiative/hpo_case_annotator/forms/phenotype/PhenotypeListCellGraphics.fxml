@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTimeElementSummary?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="FlowPane"
+         stylesheets="@phenotype-list-cell-graphics.css"
+         id="phenotype-list-cell-graphics-box">
+    <children>
+        <TitledLabel fx:id="term" id="term"/>
+        <TitledLabel fx:id="status" name="Status"/>
+        <TitledTimeElementSummary fx:id="onset" name="Onset"/>
+        <TitledTimeElementSummary fx:id="resolution" name="Resolution"/>
+    </children>
+</fx:root>

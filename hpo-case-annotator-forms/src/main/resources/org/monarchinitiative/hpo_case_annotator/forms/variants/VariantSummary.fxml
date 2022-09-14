@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantTable?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@variant-summary.css">
+    <children>
+        <VariantTable fx:id="variantTable"/>
+        <HBox alignment="BOTTOM_LEFT" styleClass="edit-row">
+            <children>
+                <Button fx:id="addVariantButton" mnemonicParsing="false" onAction="#addVariantButtonAction" styleClass="add-item" text="+" />
+                <Button fx:id="removeVariantButton" disable="true" mnemonicParsing="false" onAction="#removeVariantButtonAction" styleClass="remove-item" text="-" />
+                <Button fx:id="editButton" disable="true" mnemonicParsing="false" onAction="#editButtonAction" styleClass="edit-item" text="Edit" />
+            </children>
+        </HBox>
+    </children>
+</fx:root>

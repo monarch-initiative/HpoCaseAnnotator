@@ -46,7 +46,7 @@ public abstract class BaseIndividualCollectionController<INDIVIDUAL extends Base
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseIndividualCollectionController.class);
 
     // This list is not supposed to be modified directly. The elements are added/removed in VariantSummaryController
-    private final ObservableList<CuratedVariant> curatedVariants = FXCollections.observableList(new LinkedList<>());
+    private final ObservableList<CuratedVariant> curatedVariants = FXCollections.observableArrayList();
 
     private final HCAControllerFactory controllerFactory;
 
@@ -72,7 +72,8 @@ public abstract class BaseIndividualCollectionController<INDIVIDUAL extends Base
     @FXML
     protected void initialize() {
         idTableColumn.setCellValueFactory(cdf -> cdf.getValue().idProperty());
-        ageTableColumn.setCellValueFactory(cdf -> cdf.getValue().getAge().period());
+        // TODO - fix or discard
+//        ageTableColumn.setCellValueFactory(cdf -> cdf.getValue().getObservableAge().period());
         ageTableColumn.setCellFactory(PeriodTableCell.of());
         sexTableColumn.setCellValueFactory(cdf -> cdf.getValue().sexProperty());
         sexTableColumn.setCellFactory(SexTableCell.of());

@@ -26,20 +26,20 @@ public class FamilyStudyController extends StudyController<ObservableFamilyStudy
     protected void bind(ObservableFamilyStudy study) {
         super.bind(study);
 
-        Bindings.bindContent(pedigreeController.curatedVariants(), variantSummaryController.curatedVariants());
+//        Bindings.bindContent(pedigreeController.curatedVariants(), variantSummary.curatedVariants());
         ObservablePedigree pedigree = study.getPedigree();
         if (pedigree != null)
-            Bindings.bindContentBidirectional(pedigreeController.members(), pedigree.members());
+            Bindings.bindContentBidirectional(pedigreeController.members(), pedigree.membersProperty());
     }
 
     @Override
     protected void unbind(ObservableFamilyStudy study) {
         super.unbind(study);
 
-        Bindings.unbindContent(pedigreeController.curatedVariants(), variantSummaryController.curatedVariants());
+//        Bindings.unbindContent(pedigreeController.curatedVariants(), variantSummary.curatedVariants());
         ObservablePedigree pedigree = study.getPedigree();
         if (pedigree != null)
-            Bindings.unbindContentBidirectional(pedigreeController.members(), pedigree.members());
+            Bindings.unbindContentBidirectional(pedigreeController.members(), pedigree.membersProperty());
     }
 
     @Override

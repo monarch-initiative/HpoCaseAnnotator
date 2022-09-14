@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.VBox"
+         stylesheets="@pedigree.css">
+    <children>
+        <VBox styleClass="subsection">
+            <children>
+                <Label styleClass="h2" text="Summary"/>
+                <Label fx:id="summary"/>
+            </children>
+        </VBox>
+        <VBox styleClass="subsection">
+            <children>
+                <Label styleClass="h2" text="Members"/>
+                <ListView fx:id="members" id="pedigree-members">
+                    <placeholder>
+                        <Label text="No pedigree members"/>
+                    </placeholder>
+                </ListView>
+            </children>
+        </VBox>
+    </children>
+</fx:root>

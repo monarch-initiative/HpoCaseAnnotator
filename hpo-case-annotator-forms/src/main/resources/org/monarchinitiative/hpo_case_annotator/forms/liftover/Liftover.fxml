@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox styleClass="column" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo_case_annotator.forms.liftover.LiftoverController">
-    <stylesheets>
-        <URL value="@../base.css" />
-        <URL value="@liftover.css" />
-    </stylesheets>
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      type="VBox"
+      stylesheets="@liftover.css">
     <children>
       <HBox>
          <children>
@@ -64,4 +61,4 @@
       <Separator prefWidth="200.0" />
       <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" />
     </children>
-</VBox>
+</fx:root>

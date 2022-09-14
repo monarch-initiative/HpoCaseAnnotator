@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.*?>
+
+<fx:root id="phenotypic-feature-box" stylesheets="@phenotypic-feature.css" type="VBox" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <VBox>
+            <children>
+                <VBox id="phenotypic-feature-column" VBox.vgrow="SOMETIMES">
+                    <children>
+                        <TitledLabel id="term-name" fx:id="name" VBox.vgrow="SOMETIMES" />
+                        <TitledLabel id="term-definition" fx:id="definition" name="Definition" VBox.vgrow="SOMETIMES" />
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+        <Separator />
+        <VBox>
+            <children>
+                <Label styleClass="h2" text="Status" />
+                <RadioButton fx:id="presentRadioButton" mnemonicParsing="false" selected="true" text="Present" />
+                <RadioButton fx:id="absentRadioButton" mnemonicParsing="false" text="Excluded" />
+            </children>
+        </VBox>
+        <Separator />
+        <VBox>
+            <children>
+                <Label styleClass="h2" text="Temporal" />
+                <VBox styleClass="temporal-box">
+                    <children>
+                        <Label styleClass="h3" text="Onset" />
+                        <CheckBox fx:id="onsetIsUnknown" selected="true" text="Onset is unknown" />
+                        <TimeElementBindingComponent fx:id="onsetComponent" visible="false" />
+                    </children>
+                </VBox>
+                <VBox styleClass="temporal-box">
+                    <children>
+                        <Label styleClass="h3" text="Resolution" />
+                        <CheckBox fx:id="resolutionIsUnknown" selected="true" text="Resolution is unknown" />
+                        <TimeElementBindingComponent fx:id="resolutionComponent" visible="false" />
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+        <Separator />
+        <VBox>
+            <children>
+                <Label styleClass="h2" text="Modifiers" />
+                <Text style="-fx-fill: grey" text="Not yet implemented" />
+            </children>
+        </VBox>
+    </children>
+</fx:root>

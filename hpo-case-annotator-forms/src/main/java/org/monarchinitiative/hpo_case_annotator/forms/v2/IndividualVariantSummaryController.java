@@ -14,8 +14,8 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
-import org.monarchinitiative.svart.CoordinateSystem;
-import org.monarchinitiative.svart.Strand;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.GenotypedVariant;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableVariantGenotype;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,13 +58,13 @@ public class IndividualVariantSummaryController {
         genotypeTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(Genotype.values()));
         genotypeTableColumn.setOnEditCommit(commitGenotypeChange());
 
-        variantIdTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().curatedVariant().id()));
-        genomicAssemblyTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().curatedVariant().genomicAssembly()));
-        contigTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().curatedVariant().contig().name()));
-        startTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().curatedVariant().startOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
-        endTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().curatedVariant().endOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))));
-        refTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().curatedVariant().ref()));
-        altTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().curatedVariant().alt()));
+        variantIdTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getId()));
+        genomicAssemblyTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getGenomicAssembly()));
+        contigTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getContig().name()));
+        startTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getCuratedVariant().getStart())));
+        endTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getCuratedVariant().getEnd())));
+        refTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getRef()));
+        altTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getAlt()));
 
         variants.addListener(createCuratedVariantChangeListener());
     }
@@ -73,7 +73,7 @@ public class IndividualVariantSummaryController {
         return e -> {
             GenotypedVariant variant = e.getRowValue();
             variant.setGenotype(e.getNewValue());
-            genotypes.put(variant.curatedVariant().md5Hex(), e.getNewValue());
+            genotypes.put(variant.getCuratedVariant().md5Hex(), e.getNewValue());
         };
     }
 
@@ -83,7 +83,7 @@ public class IndividualVariantSummaryController {
                 if (c.wasAdded()) {
                     for (CuratedVariant addedVariant : c.getAddedSubList()) {
                         Genotype genotype = genotypes.getOrDefault(addedVariant.md5Hex(), Genotype.UNKNOWN);
-                        variantTableView.getItems().add(GenotypedVariant.of(addedVariant, genotype));
+                        variantTableView.getItems().add(new GenotypedVariant(addedVariant, genotype));
                     }
                 } else if (c.wasRemoved()) {
                     List<Integer> indices = new ArrayList<>(2);
@@ -91,7 +91,7 @@ public class IndividualVariantSummaryController {
                         // find indices of the variantToRemove
                         int idx = 0;
                         for (GenotypedVariant gv : variantTableView.getItems()) {
-                            if (gv.curatedVariant().md5Hex().equals(variantToRemove.md5Hex()))
+                            if (gv.getCuratedVariant().md5Hex().equals(variantToRemove.md5Hex()))
                                 indices.add(idx);
                             idx++;
                         }
@@ -118,6 +118,11 @@ public class IndividualVariantSummaryController {
 
     public ObservableMap<String, Genotype> genotypes() {
         return genotypes;
+    }
+
+    public ObservableList<ObservableVariantGenotype> genotypesList() {
+        // TODO - implement or discard
+        return FXCollections.observableArrayList();
     }
 
     public ObservableList<CuratedVariant> variants() {

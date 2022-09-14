@@ -51,7 +51,7 @@ public class IndividualVariantSummaryControllerTest extends BaseControllerTest {
         Bindings.bindContentBidirectional(controller.genotypes(), genotypes);
 
 
-        List<CuratedVariant> testVariants = TestData.V2.comprehensiveFamilyStudy().variants();
+        List<? extends CuratedVariant> testVariants = TestData.V2.comprehensiveFamilyStudy().getVariants();
         variants.addAll(testVariants);
         for (CuratedVariant tv : testVariants) {
             genotypes.put(tv.md5Hex(), Genotype.UNKNOWN);

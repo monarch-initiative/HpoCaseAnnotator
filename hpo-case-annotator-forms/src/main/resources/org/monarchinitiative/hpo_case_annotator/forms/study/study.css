@@ -1,0 +1,56 @@
+/* The box that contains the entire Study. */
+.outer-box {
+    -fx-alignment: top-center;
+}
+
+.content-box {
+    -fx-max-width: 1600;
+}
+
+/* Nav bar, Icon, "Individual/Family/Cohort" */
+.study-headline {
+    -fx-padding: 10 0 10 0;
+    -fx-background-radius: 20 20 0 0;
+    -fx-background-color: rgba(255, 255, 255, 0.80);
+}
+
+.nav-row {
+    -fx-fill-width: true;
+    -fx-alignment: center;
+}
+
+.nav-row Button {
+    -fx-background-color: transparent;
+    -fx-pref-height: 45;
+    -fx-pref-width: 170;
+    -fx-border-insets: 0 20 0 0;
+}
+
+.nav-row Button:hover {
+    -fx-effect: dropshadow(gaussian, -col-primary, 5, .0, 0, 0);
+}
+
+#study-scroll-pane {
+    -fx-fit-to-width: true;
+}
+
+.study-body {
+    -fx-background-color: derive(-col-medium, 80%);
+    -fx-padding: 10; /* Should be the same as .spacer10px */
+    -fx-border-width: 0 1 0 1;
+}
+
+.study-section {
+    -fx-padding: 10 0 10 10;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-background-color: white;
+    -fx-border-color: derive(-col-medium, -30%);
+    -fx-effect: dropshadow(gaussian, derive(-col-medium, -20%), 7, .4, 0, 0);
+}
+
+.study-section-title {
+    -fx-alignment: top-left;
+    -fx-min-width: 150;
+    -fx-pref-width: 150;
+}

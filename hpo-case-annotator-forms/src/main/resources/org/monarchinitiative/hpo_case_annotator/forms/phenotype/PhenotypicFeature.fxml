@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.*?>
+
+<fx:root id="phenotypic-feature-box" stylesheets="@phenotypic-feature.css" type="VBox" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <VBox>
+            <children>
+                <Label styleClass="h2" text="Phenotype feature" />
+                <VBox id="phenotypic-feature-column" VBox.vgrow="SOMETIMES">
+                    <children>
+                        <TitledLabel id="term-name" fx:id="name" name="Label" VBox.vgrow="SOMETIMES" />
+                        <TitledLabel id="term-definition" fx:id="definition" name="Definition" VBox.vgrow="SOMETIMES" />
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+        <Separator />
+        <VBox>
+            <children>
+                <Label styleClass="h2" text="Status" />
+                <RadioButton fx:id="presentRadioButton" mnemonicParsing="false" selected="true" text="Present" />
+                <RadioButton fx:id="absentRadioButton" mnemonicParsing="false" text="Excluded" />
+            </children>
+        </VBox>
+        <Separator />
+        <VBox>
+            <children>
+                <Label styleClass="h2" text="Temporal" />
+                <StackPane>
+                    <children>
+                        <VBox>
+                            <children>
+                                <VBox styleClass="temporal-box">
+                                    <children>
+                                        <Label styleClass="h3" text="Onset" />
+                                        <TimeElementComponent fx:id="onsetComponent" />
+                                    </children>
+                                </VBox>
+                                <VBox styleClass="temporal-box">
+                                    <children>
+                                        <Label styleClass="h3" text="Resolution" />
+                                        <TimeElementComponent fx:id="resolutionComponent" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                        <Button fx:id="editTemporalFields" onAction="#editTemporalFieldsAction" styleClass="edit-button" StackPane.alignment="TOP_RIGHT" />
+                    </children>
+                </StackPane>
+            </children>
+        </VBox>
+        <Separator />
+        <VBox>
+            <children>
+                <Label styleClass="h2" text="Modifiers" />
+                <Text style="-fx-fill: grey" text="Not yet implemented" />
+            </children>
+        </VBox>
+    </children>
+</fx:root>

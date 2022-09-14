@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<fx:root xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+         type="VBox"
+         styleClass="outer-box">
+    <stylesheets>
+        <URL value="@../base.css"/>
+        <URL value="@cohort-study.css"/>
+    </stylesheets>
+    <children>
+        <VBox styleClass="content-box">
+            <children>
+                <HBox styleClass="study-headline">
+                    <children>
+                        <Label styleClass="scene-title" text="Cohort study">
+                            <graphic>
+                                <ImageView preserveRatio="true">
+                                    <Image url="@../icons/cohort.png"/>
+                                </ImageView>
+                            </graphic>
+                        </Label>
+                        <HBox styleClass="nav-row">
+                            <children>
+                                <Button text="Publication" onAction="#publicationNavMouseClicked" disable="true"/>
+                                <Button text="Cohort members" onAction="#pedigreeNavMouseClicked" disable="true"/>
+                                <Button text="Variants" onAction="#variantsNavMouseClicked" disable="true"/>
+                                <Button text="Metadata" onAction="#metadataNavMouseClicked" disable="true"/>
+                            </children>
+                        </HBox>
+                    </children>
+                </HBox>
+                <ScrollPane fx:id="studyScrollPane" id="study-scroll-pane">
+                    <content>
+                        <VBox styleClass="study-body">
+                            <children>
+                                <VBox  VBox.vgrow="NEVER" styleClass="section">
+                                    <children>
+                                        <Label styleClass="h2" text="Publication" />
+                                        <fx:include fx:id="publication" source="../publication/Publication.fxml" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
+    </children>
+</fx:root>

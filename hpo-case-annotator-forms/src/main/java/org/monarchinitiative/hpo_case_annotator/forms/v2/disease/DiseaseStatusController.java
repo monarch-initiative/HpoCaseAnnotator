@@ -10,15 +10,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.base.BindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Utils;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.DiseaseTableController;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.IndividualDetailController;
 import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseIdentifier;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.Convert;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableDiseaseStatus;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 
-public class DiseaseStatusController<T extends BaseObservableIndividual> extends BindingDataController<T> {
+public class DiseaseStatusController<T extends BaseObservableIndividual> extends BindingObservableDataComponent<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiseaseStatusController.class);
     private final ObjectProperty<T> individual = new SimpleObjectProperty<>(this, "individual");
@@ -72,8 +72,8 @@ public class DiseaseStatusController<T extends BaseObservableIndividual> extends
     }
 
     private void initializeAutocompletion() {
-        TextFields.bindAutoCompletion(diseaseIdTextField, diseaseIdentifierService.diseaseIds())
-                .setVisibleRowCount(10);
+        AutoCompletionBinding<String> abc = TextFields.bindAutoCompletion(diseaseIdTextField, diseaseIdentifierService.diseaseIds());
+        abc.setVisibleRowCount(10);
         TextFields.bindAutoCompletion(diseaseNameTextField, diseaseIdentifierService.diseaseNames())
                 .setVisibleRowCount(10);
     }
@@ -82,8 +82,9 @@ public class DiseaseStatusController<T extends BaseObservableIndividual> extends
     protected void bind(T individual) {
         individualDetailController.idProperty().bind(individual.idProperty());
         individualDetailController.sexProperty().bind(individual.sexProperty().asString());
-        individualDetailController.ageLabel().bind(individual.getAge().period().asString());
-        Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatuses());
+        // TODO - fix or discard
+//        individualDetailController.ageLabel().bind(individual.getObservableAge().period().asString());
+        Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatesProperty());
     }
 
     @Override
@@ -91,7 +92,7 @@ public class DiseaseStatusController<T extends BaseObservableIndividual> extends
         individualDetailController.idProperty().unbind();
         individualDetailController.sexProperty().unbind();
         individualDetailController.ageLabel().unbind();
-        Bindings.unbindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatuses());
+        Bindings.unbindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatesProperty());
     }
 
     @FXML
@@ -135,7 +136,7 @@ public class DiseaseStatusController<T extends BaseObservableIndividual> extends
     private Consumer<DiseaseIdentifier> addDiseaseIdentifier() {
         return di -> {
             ObservableDiseaseStatus ods = new ObservableDiseaseStatus();
-            Convert.toObservableDiseaseIdentifier(di, ods.getDiseaseIdentifier());
+            ods.setDiseaseId(new org.monarchinitiative.hpo_case_annotator.observable.v2.DiseaseIdentifier(di));
             diseaseTableController.diseaseStatuses().add(ods);
         };
     }

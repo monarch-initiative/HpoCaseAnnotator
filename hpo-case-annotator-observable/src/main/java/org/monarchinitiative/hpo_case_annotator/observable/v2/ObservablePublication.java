@@ -1,19 +1,40 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.Observable;
+import javafx.beans.property.*;
+import javafx.util.Callback;
+import org.monarchinitiative.hpo_case_annotator.model.v2.Publication;
 
-public class ObservablePublication {
+import java.util.stream.Stream;
+
+public class ObservablePublication extends ObservableItem implements Publication {
+
+    public static final Callback<ObservablePublication, Observable[]> EXTRACTOR = obs -> new Observable[]{obs.authors, obs.title, obs.journal, obs.year, obs.volume, obs.pages, obs.pmid};
+
     private final StringProperty authors = new SimpleStringProperty(this, "authors");
     private final StringProperty title = new SimpleStringProperty(this, "title");
     private final StringProperty journal = new SimpleStringProperty(this, "journal");
-    private final IntegerProperty year = new SimpleIntegerProperty(this, "year");
+    private final ObjectProperty<Integer> year = new SimpleObjectProperty<>(this, "year");
     private final StringProperty volume = new SimpleStringProperty(this, "volume");
     private final StringProperty pages = new SimpleStringProperty(this, "pages");
     private final StringProperty pmid = new SimpleStringProperty(this, "pmid");
 
+    public ObservablePublication() {
+    }
+
+    public ObservablePublication(Publication publication) {
+        if (publication != null) {
+            authors.set(publication.getAuthors());
+            title.set(publication.getTitle());
+            journal.set(publication.getJournal());
+            year.set(publication.getYear());
+            volume.set(publication.getVolume());
+            pages.set(publication.getPages());
+            pmid.set(publication.getPmid());
+        }
+    }
+
+    @Override
     public String getAuthors() {
         return authors.get();
     }
@@ -26,6 +47,7 @@ public class ObservablePublication {
         return authors;
     }
 
+    @Override
     public String getTitle() {
         return title.get();
     }
@@ -38,6 +60,7 @@ public class ObservablePublication {
         return title;
     }
 
+    @Override
     public String getJournal() {
         return journal.get();
     }
@@ -50,7 +73,8 @@ public class ObservablePublication {
         return journal;
     }
 
-    public int getYear() {
+    @Override
+    public Integer getYear() {
         return year.get();
     }
 
@@ -58,10 +82,11 @@ public class ObservablePublication {
         this.year.set(year);
     }
 
-    public IntegerProperty yearProperty() {
+    public ObjectProperty<Integer> yearProperty() {
         return year;
     }
 
+    @Override
     public String getVolume() {
         return volume.get();
     }
@@ -74,6 +99,7 @@ public class ObservablePublication {
         return volume;
     }
 
+    @Override
     public String getPages() {
         return pages.get();
     }
@@ -86,6 +112,7 @@ public class ObservablePublication {
         return pages;
     }
 
+    @Override
     public String getPmid() {
         return pmid.get();
     }
@@ -96,5 +123,23 @@ public class ObservablePublication {
 
     public StringProperty pmidProperty() {
         return pmid;
+    }
+
+    @Override
+    public Stream<Observable> observables() {
+        return Stream.of(EXTRACTOR.call(this));
+    }
+
+    @Override
+    public String toString() {
+        return "ObservablePublication{" +
+                "authors=" + authors.get() +
+                ", title=" + title.get() +
+                ", journal=" + journal.get() +
+                ", year=" + year.get() +
+                ", volume=" + volume.get() +
+                ", pages=" + pages.get() +
+                ", pmid=" + pmid.get() +
+                '}';
     }
 }

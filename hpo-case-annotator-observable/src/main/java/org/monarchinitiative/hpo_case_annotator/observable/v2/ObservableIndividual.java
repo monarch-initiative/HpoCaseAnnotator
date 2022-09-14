@@ -1,31 +1,31 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
-public class ObservableIndividual extends BaseObservableIndividual {
+import javafx.beans.Observable;
+import javafx.beans.property.Property;
+import javafx.util.Callback;
+import org.monarchinitiative.hpo_case_annotator.model.v2.Individual;
 
+import java.util.stream.Stream;
+
+public class ObservableIndividual extends BaseObservableIndividual implements Individual {
+
+    public static final Callback<ObservableIndividual, Observable[]> EXTRACTOR = BaseObservableIndividual.EXTRACTOR::call;
 
     public ObservableIndividual() {
     }
 
-    public ObservableIndividual(Builder builder) {
-        super(builder);
+    public ObservableIndividual(Individual individual) {
+        super(individual);
     }
 
-    public static Builder builder() {
-        return new Builder();
+    @Override
+    protected Stream<Property<? extends Observable>> objectProperties() {
+        return super.objectProperties(); // Nothing on top of the parent
     }
 
-    public static class Builder extends BaseObservableIndividual.Builder<Builder> {
-
-        @Override
-        protected Builder self() {
-            return this;
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public ObservableIndividual build() {
-            return new ObservableIndividual(self());
-        }
+    @Override
+    public Stream<Observable> observables() {
+        return Stream.of(EXTRACTOR.call(this)); // Nothing on top of the parent
     }
 
 }

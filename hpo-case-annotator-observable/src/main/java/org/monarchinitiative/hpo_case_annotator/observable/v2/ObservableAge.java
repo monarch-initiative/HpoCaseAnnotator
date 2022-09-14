@@ -1,79 +1,74 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.Observable;
+import javafx.beans.property.*;
+import javafx.util.Callback;
+import org.monarchinitiative.hpo_case_annotator.model.v2.Age;
 
-import java.time.Period;
+import java.util.stream.Stream;
 
-public class ObservableAge {
+public class ObservableAge extends ObservableItem implements Age {
 
-    private final ObjectProperty<Integer> years = new SimpleObjectProperty<>(this, "years", null);
-    private final ObjectProperty<Integer> months = new SimpleObjectProperty<>(this, "months", 0);
-    private final ObjectProperty<Integer> days = new SimpleObjectProperty<>(this, "days", 0);
-    private final ObjectBinding<Period> period = createPeriodBinding();
+    public static final Callback<ObservableAge, Observable[]> EXTRACTOR = obs -> new Observable[]{obs.years, obs.months, obs.days};
+
+    // Years, months, and days are nullable, hence ObjectProperty.
+    private final ObjectProperty<Integer> years = new SimpleObjectProperty<>(this, "years");
+    private final ObjectProperty<Integer> months = new SimpleObjectProperty<>(this, "months");
+    private final ObjectProperty<Integer> days = new SimpleObjectProperty<>(this, "days");
 
     public ObservableAge() {
     }
 
-    public ObservableAge(int years, int months, int days) {
-        this.years.set(years);
-        this.months.set(months);
-        this.days.set(days);
+    public ObservableAge(Age age) {
+        if (age != null) {
+            years.set(age.getYears());
+            months.set(age.getMonths());
+            days.set(age.getDays());
+        }
     }
 
-    private ObjectBinding<Period> createPeriodBinding() {
-        return Bindings.createObjectBinding(() -> {
-            Integer y = years.get();
-            Integer m = months.get();
-            Integer d = days.get();
-            if (y == null || m == null || d == null) {
-                return null;
-            } else {
-                return Period.of(y, m, d);
-            }
-        }, years, months, days);
-    }
-
+    @Override
     public Integer getYears() {
         return years.get();
     }
 
     public void setYears(Integer years) {
-        this.years.set(years);
+        this.years.setValue(years);
     }
 
     public ObjectProperty<Integer> yearsProperty() {
         return years;
     }
 
+    @Override
     public Integer getMonths() {
         return months.get();
     }
 
     public void setMonths(Integer months) {
-        this.months.set(months);
+        this.months.setValue(months);
     }
 
     public ObjectProperty<Integer> monthsProperty() {
         return months;
     }
 
+    @Override
     public Integer getDays() {
         return days.get();
     }
 
     public void setDays(Integer days) {
-        this.days.set(days);
+        this.days.setValue(days);
     }
 
     public ObjectProperty<Integer> daysProperty() {
         return days;
     }
 
-    public ObjectBinding<Period> period() {
-        return period;
+    @Override
+    public Stream<Observable> observables() {
+        return Stream.of(EXTRACTOR.call(this));
     }
 
     @Override

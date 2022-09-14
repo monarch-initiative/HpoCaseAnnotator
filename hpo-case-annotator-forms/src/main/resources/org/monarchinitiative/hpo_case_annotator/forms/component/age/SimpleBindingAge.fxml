@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+
+<!-- the same as SimpleEditableAge -->
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="FlowPane"
+         stylesheets="@age.css"
+         id="age-box">
+    <children>
+        <HBox styleClass="age-datum">
+            <children>
+                <TitledTextField fx:id="years" name="Years" />
+                <Button onAction="#clearYears" styleClass="clear-button" />
+            </children>
+        </HBox>
+        <HBox styleClass="age-datum">
+            <children>
+                <TitledComboBox fx:id="months" name="Months" />
+                <Button onAction="#clearMonths" styleClass="clear-button" />
+            </children>
+        </HBox>
+        <HBox styleClass="age-datum">
+            <children>
+                <TitledComboBox fx:id="days" name="Days" />
+                <Button onAction="#clearDays" styleClass="clear-button" />
+            </children>
+        </HBox>
+    </children>
+</fx:root>

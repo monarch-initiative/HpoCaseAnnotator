@@ -28,7 +28,7 @@
                   </Tab>
                   <Tab closable="false" text="Variants">
                      <content>
-                        <fx:include fx:id="variantSummary" source="VariantSummary.fxml" />
+                        <fx:include fx:id="variantSummary" source="../variants/VariantSummary.fxml" />
                      </content>
                   </Tab>
                   <Tab closable="false" text="Pedigree">

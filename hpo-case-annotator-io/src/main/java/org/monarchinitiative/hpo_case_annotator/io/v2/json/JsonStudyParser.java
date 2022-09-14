@@ -44,10 +44,12 @@ public class JsonStudyParser implements ModelParser<Study> {
         for (JsonSerializer<?> serializer : serializers())
             module.addSerializer(serializer);
 
+        module.addDeserializer(Age.class, new AgeDeserializer());
         module.addDeserializer(AgeRange.class, new AgeRangeDeserializer());
         module.addDeserializer(DiseaseIdentifier.class, new DiseaseIdentifierDeserializer());
         module.addDeserializer(DiseaseStatus.class, new DiseaseStatusDeserializer());
         module.addDeserializer(EditHistory.class, new EditHistoryDeserializer());
+        module.addDeserializer(GestationalAge.class, new GestationalAgeDeserializer());
         module.addDeserializer(Individual.class, new IndividualDeserializer());
         module.addDeserializer(PhenotypicFeature.class, new PhenotypicFeatureDeserializer());
         module.addDeserializer(PhenotypicObservation.class, new PhenotypicObservationDeserializer());
@@ -56,6 +58,8 @@ public class JsonStudyParser implements ModelParser<Study> {
         module.addDeserializer(Publication.class, new PublicationDeserializer());
         module.addDeserializer(Study.class, new StudyDeserializer());
         module.addDeserializer(StudyMetadata.class, new StudyMetadataDeserializer());
+        module.addDeserializer(TimeElement.class, new TimeElementDeserializer());
+        module.addDeserializer(VitalStatus.class, new VitalStatusDeserializer());
 
         module.addDeserializer(CuratedVariant.class, new CuratedVariantDeserializer(assemblies));
         module.addDeserializer(ConfidenceInterval.class, new ConfidenceIntervalDeserializer());
@@ -78,12 +82,14 @@ public class JsonStudyParser implements ModelParser<Study> {
 
     private static List<JsonSerializer<?>> serializers() {
         return List.of(
+                new AgeSerializer(),
                 new AgeRangeSerializer(),
                 new ConfidenceIntervalSerializer(),
                 new CuratedVariantSerializer(),
                 new DiseaseIdentifierSerializer(),
                 new DiseaseStatusSerializer(),
                 new EditHistorySerializer(),
+                new GestationalAgeSerializer(),
                 new IndividualSerializer(),
                 new PedigreeMemberSerializer(),
                 new PedigreeSerializer(),
@@ -91,7 +97,9 @@ public class JsonStudyParser implements ModelParser<Study> {
                 new PhenotypicObservationSerializer(),
                 new PublicationSerializer(),
                 new StudyMetadataSerializer(),
-                new StudySerializer());
+                new StudySerializer(),
+                new TimeElementSerializer(),
+                new VitalStatusSerializer());
     }
 
     @Override

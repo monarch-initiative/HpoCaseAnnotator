@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary?>
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         styleClass="step-box">
+    <stylesheets>
+        <URL value="@../step-base.css"/>
+        <URL value="@variants-step.css"/>
+    </stylesheets>
+    <children>
+        <Label text="Variants" styleClass="h1"/>
+        <Label text="Add genomic variants identified in the individual." styleClass="stepper-instruction"/>
+        <VariantSummary fx:id="variantSummary"/>
+    </children>
+</fx:root>

@@ -11,17 +11,17 @@ public interface StudyMetadata {
     /**
      * @return String with free text written down by the curator.
      */
-    String freeText();
+    String getFreeText();
 
     /**
      * @return timestamp, software version, and curator id of the first author of the study.
      */
-    EditHistory createdBy();
+    EditHistory getCreatedBy();
 
     /**
      * @return track record with timestamp, software version, and curator id of the successive edits of the study.
      */
-    List<EditHistory> modifiedBy();
+    List<? extends EditHistory> getModifiedBy();
 
     int hashCode();
 

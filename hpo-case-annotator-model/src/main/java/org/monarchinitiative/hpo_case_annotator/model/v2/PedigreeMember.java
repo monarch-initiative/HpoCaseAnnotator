@@ -1,11 +1,9 @@
 package org.monarchinitiative.hpo_case_annotator.model.v2;
 
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 
-import java.time.Period;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public interface PedigreeMember extends Individual {
@@ -14,10 +12,11 @@ public interface PedigreeMember extends Individual {
                              String paternalId,
                              String maternalId,
                              boolean isProband,
-                             Collection<PhenotypicFeature> phenotypicFeatures,
-                             List<DiseaseStatus> diseases,
-                             Map<String, Genotype> genotypes,
-                             Period age,
+                             Collection<? extends PhenotypicFeature> phenotypicFeatures,
+                             List<? extends DiseaseStatus> diseases,
+                             List<? extends VariantGenotype> genotypes,
+                             TimeElement age,
+                             VitalStatus vitalStatus,
                              Sex sex) {
         return PedigreeMemberDefault.of(id,
                 paternalId,
@@ -27,12 +26,13 @@ public interface PedigreeMember extends Individual {
                 diseases,
                 genotypes,
                 age,
+                vitalStatus,
                 sex);
     }
 
-    Optional<String> paternalId();
+    Optional<String> getPaternalId();
 
-    Optional<String> maternalId();
+    Optional<String> getMaternalId();
 
     boolean isProband();
 

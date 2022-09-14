@@ -1,0 +1,4 @@
+#add-terms-tab-pane {
+    -fx-tab-min-width: 150;
+    -fx-tab-min-height: 30;
+}

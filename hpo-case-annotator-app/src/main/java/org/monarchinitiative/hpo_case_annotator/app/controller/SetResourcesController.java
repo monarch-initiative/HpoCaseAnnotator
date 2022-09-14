@@ -21,7 +21,7 @@ import org.monarchinitiative.hpo_case_annotator.app.util.GenomicLocalResourceVal
 import org.monarchinitiative.hpo_case_annotator.app.util.FileListCell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -41,7 +41,7 @@ import java.util.function.Function;
  * <p>
  * Created by Daniel Danis on 7/16/17.
  */
-@Component
+@Controller
 public class SetResourcesController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SetResourcesController.class);
@@ -146,14 +146,14 @@ public class SetResourcesController {
         hg38JannovarLabel.textProperty().bind(optionalResources.getFunctionalAnnotationResources().hg38JannovarPathProperty().asString());
 
         // HPO
-        hpOboLabel.textProperty().bind(optionalResources.ontologyPathProperty().asString());
+        hpOboLabel.textProperty().bind(optionalResources.hpoPathProperty().asString());
 
         // Curated files folder
         curatedFilesDirLabel.textProperty().bind(optionalResources.diseaseCaseDirProperty().asString());
 
         // Liftover chains
         liftoverChainPathsListView.setCellFactory(FileListCell.of());
-        Bindings.bindContent(liftoverChainPathsListView.getItems(), optionalResources.liftoverChainFiles());
+        liftoverChainPathsListView.itemsProperty().bind(optionalResources.liftoverChainFilesProperty());
 
         // Biocurator
         biocuratorIDTextField.textProperty().bindBidirectional(optionalResources.biocuratorIdProperty());
@@ -299,11 +299,7 @@ public class SetResourcesController {
                     .map(bt -> bt.equals(ButtonType.OK))
                     .orElse(false);
             if (!overwrite) {
-                try {
-                    optionalResources.setOntologyPath(target);
-                } catch (RuntimeException ex) {
-                    LOGGER.warn("Error during opening the ontology file '{}'", target, ex);
-                }
+                optionalResources.setHpoPath(target);
                 return;
             }
         }
@@ -320,18 +316,8 @@ public class SetResourcesController {
 
         hpoProgressIndicator.progressProperty().unbind();
         hpoProgressIndicator.progressProperty().bind(task.progressProperty());
-        task.setOnSucceeded(event -> {
-            try {
-                optionalResources.setOntologyPath(target);
-            } catch (RuntimeException ex) {
-                LOGGER.warn("Error occured during opening the ontology file '{}'", target, ex);
-            }
-
-        });
-        task.setOnFailed(event -> {
-            optionalResources.setOntologyPath(null);
-            optionalResources.setOntology(null);
-        });
+        task.setOnSucceeded(event -> optionalResources.setHpoPath(target));
+        task.setOnFailed(event -> optionalResources.setHpoPath(null));
         executorService.submit(task);
     }
 
@@ -354,12 +340,8 @@ public class SetResourcesController {
             Path target = liftoverFolder.resolve(file);
 
             Task<Void> task = new Downloader(url, target.toFile());
-            task.setOnSucceeded(we -> optionalResources.liftoverChainFiles().add(target.toFile()));
+            task.setOnSucceeded(we -> optionalResources.liftoverChainFilesProperty().add(target.toFile()));
             executorService.submit(task);
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ignored) {
-            }
         }
     }
 

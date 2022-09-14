@@ -1,0 +1,12 @@
+.ar-label {
+    -fx-min-width: 60;
+    -fx-max-width: 60;
+}
+
+#gestational-box TitledTextField {
+    -fx-max-width: 70;
+}
+
+.age-col {
+    -fx-pref-width: 150;
+}

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.monarchinitiative.hpo_case_annotator.forms.individual.Individual?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.metadata.Metadata?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         styleClass="outer-box">
+    <stylesheets>
+        <URL value="@../base.css"/>
+        <URL value="@individual-study.css"/>
+    </stylesheets>
+    <children>
+        <VBox styleClass="content-box">
+            <children>
+                <HBox styleClass="study-headline">
+                    <children>
+                        <Label styleClass="scene-title" text="Individual study">
+                            <graphic>
+                                <ImageView preserveRatio="true">
+                                    <Image url="@../icons/individual.png"/>
+                                </ImageView>
+                            </graphic>
+                        </Label>
+                        <HBox styleClass="nav-row">
+                            <children>
+                                <Button text="Publication" onAction="#publicationNavMouseClicked" />
+                                <Button text="Individual" onAction="#individualNavMouseClicked" />
+                                <Button text="Variants" onAction="#variantsNavMouseClicked" />
+                                <Button text="Metadata" onAction="#metadataNavMouseClicked" />
+                            </children>
+                        </HBox>
+                    </children>
+                </HBox>
+                <ScrollPane fx:id="studyScrollPane" id="study-scroll-pane">
+                    <content>
+                        <VBox styleClass="study-body">
+                            <children>
+                                <HBox styleClass="study-section">
+                                    <children>
+                                        <VBox styleClass="study-section-title">
+                                            <Label text="Publication" styleClass="h1" />
+                                        </VBox>
+                                        <StackPane fx:id="publicationPane">
+                                            <children>
+                                                <Publication fx:id="publication" StackPane.alignment="CENTER"/>
+                                                <Button fx:id="editPublication" contentDisplay="GRAPHIC_ONLY"
+                                                        mnemonicParsing="false" onAction="#editPublicationAction"
+                                                        styleClass="edit-button" visible="false"
+                                                        StackPane.alignment="TOP_RIGHT"/>
+                                            </children>
+                                        </StackPane>
+                                    </children>
+                                </HBox>
+                                <Pane styleClass="spacer10px"/>
+                                <HBox styleClass="study-section">
+                                    <children>
+                                        <VBox styleClass="study-section-title">
+                                            <Label text="Individual" styleClass="h1"/>
+                                        </VBox>
+                                        <Individual fx:id="individual" HBox.hgrow="ALWAYS"/>
+                                    </children>
+                                </HBox>
+                                <Pane styleClass="spacer10px"/>
+                                <HBox styleClass="study-section">
+                                    <children>
+                                        <VBox styleClass="study-section-title">
+                                            <Label text="Variants" styleClass="h1"/>
+                                        </VBox>
+                                        <VariantSummary fx:id="variantSummary" HBox.hgrow="ALWAYS"/>
+                                    </children>
+                                </HBox>
+                                <Pane styleClass="spacer10px"/>
+                                <HBox styleClass="study-section">
+                                    <children>
+                                        <VBox styleClass="study-section-title">
+                                            <Label text="Metadata" styleClass="h1"/>
+                                        </VBox>
+                                        <Metadata fx:id="metadataSummary" HBox.hgrow="ALWAYS"/>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
+    </children>
+</fx:root>

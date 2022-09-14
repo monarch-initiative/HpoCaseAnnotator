@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseTable?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantGenotypeTable?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox">
+    <stylesheets>
+        <URL value="@../base.css"/>
+        <URL value="@individual-pedigree-member.css"/>
+    </stylesheets>
+    <children>
+        <StackPane fx:id="credentialPane">
+            <children>
+                <IndividualIdsComponent fx:id="individualIds" StackPane.alignment="CENTER"/>
+                <Button fx:id="editIdentifiersButton" visible="false" contentDisplay="GRAPHIC_ONLY"
+                        StackPane.alignment="TOP_RIGHT" styleClass="edit-button"
+                        onAction="#editIdentifiersAction"/>
+            </children>
+        </StackPane>
+        <Separator/>
+        <TabPane id="pheno-disease-geno-tabpane" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab text="Phenotypic features">
+                    <graphic>
+                        <ImageView fitHeight="25" preserveRatio="true">
+                            <Image url="@../icons/hpo-logo-black.png"/>
+                        </ImageView>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="Phenotype features of the individual"/>
+                    </tooltip>
+                    <content>
+                        <VBox>
+                            <children>
+<!--                                <Label styleClass="h3" text="Phenotype features"/>-->
+                                <StackPane fx:id="phenotypePane">
+                                    <children>
+                                        <PhenotypeTable fx:id="phenotypeTable"/>
+                                        <Button fx:id="editPhenotypeButton" visible="false" contentDisplay="GRAPHIC_ONLY"
+                                                StackPane.alignment="TOP_RIGHT" styleClass="edit-button"
+                                                onAction="#editPhenotypeAction" />
+                                    </children>
+                                </StackPane>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+
+                <Tab text="Diseases">
+                    <!-- TODO - add icon -->
+<!--                    <graphic>-->
+<!--                        <ImageView fitHeight="25" preserveRatio="true">-->
+<!--                            <Image url="@../icons/hpo-logo-black.png"/>-->
+<!--                        </ImageView>-->
+<!--                    </graphic>-->
+                    <tooltip>
+                        <Tooltip text="Diseases diagnosed in the individual"/>
+                    </tooltip>
+                    <content>
+                        <VBox>
+                            <children>
+<!--                                <Label styleClass="h3" text="Diseases"/>-->
+                                <StackPane fx:id="diseasePane">
+                                    <children>
+                                        <DiseaseTable fx:id="diseaseTable"/>
+                                        <Button fx:id="editDiseasesButton" visible="false" contentDisplay="GRAPHIC_ONLY"
+                                                StackPane.alignment="TOP_RIGHT" styleClass="edit-button"
+                                                onAction="#editDiseasesAction" />
+                                    </children>
+                                </StackPane>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+
+                <Tab text="Genotypes">
+<!--                     // TODO - add DNA-like icon -->
+<!--                    <graphic>-->
+<!--                        <ImageView fitHeight="25" preserveRatio="true">-->
+<!--                            <Image url="@../icons/hpo-logo-black.png"/>-->
+<!--                        </ImageView>-->
+<!--                    </graphic>-->
+                    <tooltip>
+                        <Tooltip text="Variant genotypes"/>
+                    </tooltip>
+                    <content>
+                        <VBox >
+                            <children>
+                                <VariantGenotypeTable fx:id="variantGenotypeTable"/>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </children>
+</fx:root>
