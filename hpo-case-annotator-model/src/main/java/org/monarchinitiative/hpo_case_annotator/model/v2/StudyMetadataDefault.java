@@ -15,7 +15,7 @@ record StudyMetadataDefault(String freeText, EditHistory createdBy,
     }
 
     @Override
-    public List<? extends EditHistory> getModifiedBy() {
+    public List<EditHistory> getModifiedBy() {
         return modifiedBy;
     }
 }

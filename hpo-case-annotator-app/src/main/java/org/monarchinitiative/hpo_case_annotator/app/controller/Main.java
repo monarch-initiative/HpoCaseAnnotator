@@ -42,6 +42,7 @@ import org.springframework.stereotype.Controller;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -480,13 +481,15 @@ public class Main {
         return studiesTabPane.getParent().getScene().getWindow();
     }
 
-    private boolean saveAsV2Study(Study study, Path path) {
+    private boolean saveAsV2Study(ObservableStudy study, Path path) {
         if (path == null) {
             path = askForPath(study.getId());
         }
 
         if (path == null) // the user canceled
             return false;
+
+        study.getStudyMetadata().getModifiedBy().add(prepareEditHistoryEntry());
 
         try {
             ModelParsers.V2.jsonParser().write(study, path);
@@ -515,6 +518,14 @@ public class Main {
         return (which == null)
                 ? null
                 : which.toPath();
+    }
+
+    private ObservableEditHistory prepareEditHistoryEntry() {
+        ObservableEditHistory entry = new ObservableEditHistory();
+        entry.setCuratorId(optionalResources.getBiocuratorId());
+        entry.setSoftwareVersion(optionalResources.getSoftwareVersion());
+        entry.setTimestamp(Instant.now());
+        return entry;
     }
 
     private Function<StudyWrapper<? extends ObservableStudy>, Optional<StudyWrapper<? extends ObservableStudy>>> cloneStudyWrapper() {

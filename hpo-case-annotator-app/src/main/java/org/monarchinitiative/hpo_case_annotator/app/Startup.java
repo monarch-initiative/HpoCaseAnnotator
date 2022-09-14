@@ -4,6 +4,7 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.Task;
+import org.monarchinitiative.hpo_case_annotator.app.config.HcaProperties;
 import org.monarchinitiative.hpo_case_annotator.app.model.FunctionalAnnotationResources;
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalServices;
@@ -65,17 +66,20 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
     private final GenomicRemoteResources genomicRemoteResources;
 
     private final Properties resourceProperties;
+    private final HcaProperties hcaProperties;
 
     public Startup(ExecutorService executorService,
                    OptionalResources optionalResources,
                    OptionalServices optionalServices,
                    GenomicRemoteResources genomicRemoteResources,
-                   Properties resourceProperties) {
+                   Properties resourceProperties,
+                   HcaProperties hcaProperties) {
         this.executorService = executorService;
         this.optionalResources = optionalResources;
         this.optionalServices = optionalServices;
         this.genomicRemoteResources = genomicRemoteResources;
         this.resourceProperties = resourceProperties;
+        this.hcaProperties = hcaProperties;
     }
 
     /**
@@ -97,6 +101,7 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
 
         LOGGER.debug("Setting resource locations");
         optionalResources.setBiocuratorId(resourceProperties.getProperty(ResourcePaths.BIOCURATOR_ID_PROPERTY, null));
+        optionalResources.setSoftwareVersion(hcaProperties.version());
 
         setGenomicAssemblyResourceLocations();
         setFunctionalAnnotationResourceLocations();

@@ -21,6 +21,7 @@ public class OptionalResources {
     private final FunctionalAnnotationResources functionalAnnotationResources = new FunctionalAnnotationResources();
     private final ListProperty<File> liftoverChainFiles = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final StringProperty biocuratorId = new SimpleStringProperty(this, "biocuratorId");
+    private final StringProperty softwareVersion = new SimpleStringProperty(this, "softwareVersion");
 
     public GenomicLocalResources getGenomicLocalResources() {
         return genomicLocalResources;
@@ -70,4 +71,15 @@ public class OptionalResources {
         return liftoverChainFiles;
     }
 
+    public String getSoftwareVersion() {
+        return softwareVersion.get();
+    }
+
+    public StringProperty softwareVersionProperty() {
+        return softwareVersion;
+    }
+
+    public void setSoftwareVersion(String softwareVersion) {
+        this.softwareVersion.set(softwareVersion);
+    }
 }

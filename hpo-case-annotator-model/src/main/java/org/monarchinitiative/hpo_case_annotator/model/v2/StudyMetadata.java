@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface StudyMetadata {
 
-    static StudyMetadata of(String freeText, EditHistory createdBy, List<? extends EditHistory> modifiedBy) {
+    static StudyMetadata of(String freeText, EditHistory createdBy, List<EditHistory> modifiedBy) {
         return new StudyMetadataDefault(freeText, createdBy, List.copyOf(modifiedBy));
     }
 
