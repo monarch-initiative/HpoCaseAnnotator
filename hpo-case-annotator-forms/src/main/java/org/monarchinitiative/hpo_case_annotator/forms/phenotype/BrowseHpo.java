@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 
 public class BrowseHpo extends VBox {
 
-    private static final int AUTOCOMPLETION_ROW_COUNT = 10;
+    private static final int AUTOCOMPLETION_ROW_COUNT = 14;
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
     // This is an optional property, and does not need to be set everywhere BrowseHpo is used
     private final ObjectProperty<Supplier<ObservableTimeElement>> encounterTime = new SimpleObjectProperty<>();
@@ -39,7 +39,7 @@ public class BrowseHpo extends VBox {
     @FXML
     private PhenotypicFeatureBinding phenotypicFeature;
     @FXML
-    private Button okButton;
+    private Button addHpo;
 
     public BrowseHpo() {
         FXMLLoader loader = new FXMLLoader(BrowseHpo.class.getResource("BrowseHpo.fxml"));
@@ -60,7 +60,7 @@ public class BrowseHpo extends VBox {
         suggestionProvider.ontologyProperty().bind(hpo);
 
         AutoCompletionBinding<String> binding = TextFields.bindAutoCompletion(searchField.getItem(), suggestionProvider);
-        binding.minWidthProperty().bind(searchField.minWidthProperty());
+        binding.minWidthProperty().bind(searchField.widthProperty());
         binding.setVisibleRowCount(AUTOCOMPLETION_ROW_COUNT);
         binding.setHideOnEscape(true);
 
@@ -96,14 +96,24 @@ public class BrowseHpo extends VBox {
         phenotypicFeature.hpoProperty().bind(hpo);
 
         // Set up the OK button
-        okButton.disableProperty().bind(phenotypicFeatureConsumer.isNull());
+        addHpo.disableProperty().bind(phenotypicFeatureConsumer.isNull());
     }
 
     @FXML
-    private void okButtonAction(ActionEvent e) {
-        // OK button is disabled when phenotypicFeatureConsumer is null, hence this is NPE safe.
-        phenotypicFeatureConsumer.get()
-                .accept(phenotypicFeature.getData());
+    private void addHpoTermAction(ActionEvent e) {
+        // The button is disabled when phenotypicFeatureConsumer is null, hence this is NPE safe.
+        ObservablePhenotypicFeature data = phenotypicFeature.getData();
+        if (data != null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Add HPO term");
+            alert.setHeaderText("%s added".formatted(data.getLabel()));
+            alert.showAndWait();
+
+            phenotypicFeatureConsumer.get()
+                    .accept(data);
+            searchField.getItem().clear();
+        }
+
         e.consume();
     }
 

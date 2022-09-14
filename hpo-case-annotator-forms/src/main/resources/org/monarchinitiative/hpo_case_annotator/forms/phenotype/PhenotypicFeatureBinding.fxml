@@ -34,14 +34,14 @@
                     <children>
                         <Label styleClass="h3" text="Onset" />
                         <CheckBox fx:id="onsetIsUnknown" selected="true" text="Onset is unknown" />
-                        <TimeElementBindingComponent fx:id="onsetComponent" disable="true" />
+                        <TimeElementBindingComponent fx:id="onsetComponent" visible="false" />
                     </children>
                 </VBox>
                 <VBox styleClass="temporal-box">
                     <children>
                         <Label styleClass="h3" text="Resolution" />
                         <CheckBox fx:id="resolutionIsUnknown" selected="true" text="Resolution is unknown" />
-                        <TimeElementBindingComponent fx:id="resolutionComponent" disable="true" />
+                        <TimeElementBindingComponent fx:id="resolutionComponent" visible="false" />
                     </children>
                 </VBox>
             </children>

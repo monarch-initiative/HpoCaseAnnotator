@@ -1,8 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms.component;
 
 import javafx.beans.property.StringProperty;
-import javafx.scene.Node;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -17,7 +15,7 @@ abstract class TitledBase<T extends Region> extends VBox {
     private static final String NAME_STYLE_CLASS = "tl-name";
 
     private final Label name = new Label();
-    protected final T item = getItem();
+    protected final T item = createItem();
 
     TitledBase() {
         getStylesheets().add(STYLESHEET_LOCATION);
@@ -31,7 +29,7 @@ abstract class TitledBase<T extends Region> extends VBox {
         item.minWidthProperty().bind(name.widthProperty());
     }
 
-    protected abstract T getItem();
+    protected abstract T createItem();
 
     protected abstract List<String> itemStyleClasses();
 
@@ -47,4 +45,7 @@ abstract class TitledBase<T extends Region> extends VBox {
         return name.textProperty();
     }
 
+    public T getItem() {
+        return item;
+    }
 }

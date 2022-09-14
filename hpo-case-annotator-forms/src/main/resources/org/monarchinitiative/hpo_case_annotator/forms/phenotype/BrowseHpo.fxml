@@ -20,7 +20,7 @@
 
         <ButtonBar >
             <buttons>
-                <Button fx:id="okButton" onAction="#okButtonAction" ButtonBar.buttonData="OK_DONE" text="Add HPO term">
+                <Button fx:id="addHpo" onAction="#addHpoTermAction" ButtonBar.buttonData="OK_DONE" text="Add HPO term">
                     <tooltip>
                         <Tooltip text="Add the HPO term to patient's terms."/>
                     </tooltip>

@@ -10,7 +10,7 @@ public class TitledLabel extends TitledBase<Label> {
     private static final List<String> STYLECLASSES = List.of("tl-label");
 
     @Override
-    protected Label getItem() {
+    protected Label createItem() {
         return new Label();
     }
 

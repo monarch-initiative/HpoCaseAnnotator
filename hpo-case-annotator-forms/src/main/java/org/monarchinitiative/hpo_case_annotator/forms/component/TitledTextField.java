@@ -14,7 +14,7 @@ public class TitledTextField extends TitledBase<TextField> {
     private static final List<String> STYLECLASSES = List.of("tl-text-field");
 
     @Override
-    public TextField getItem() {
+    protected TextField createItem() {
         return new TextField();
     }
 

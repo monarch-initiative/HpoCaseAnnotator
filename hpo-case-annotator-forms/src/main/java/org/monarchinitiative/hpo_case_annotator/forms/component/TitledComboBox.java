@@ -11,7 +11,7 @@ public class TitledComboBox<T> extends TitledBase<ComboBox<T>> {
     private static final List<String> STYLECLASSES = List.of("tl-combo-box");
 
     @Override
-    protected ComboBox<T> getItem() {
+    protected ComboBox<T> createItem() {
         return new ComboBox<>();
     }
 

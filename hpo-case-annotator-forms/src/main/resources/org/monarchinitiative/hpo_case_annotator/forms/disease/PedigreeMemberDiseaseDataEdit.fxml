@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsComponent?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseTable?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
@@ -14,18 +15,14 @@
         <GridPane hgap="5" vgap="5">
             <children>
                 <Label styleClass="h2" text="Search for diseases" />
-                <Label text="Disease ID"
-                       GridPane.rowIndex="1" />
-                <TextField fx:id="diseaseIdTextField" onAction="#addDisease" promptText="E.g. OMIM:256000"
-                           GridPane.rowIndex="2" />
+                <TitledTextField fx:id="diseaseIdTextField" onAction="#addDisease" name="Disease ID" promptText="E.g. OMIM:256000"
+                                 GridPane.rowIndex="1" />
 
-                <Label text="Disease name"
-                       GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <TextField fx:id="diseaseNameTextField" onAction="#addDisease" promptText="LEIGH SYNDROME; LS "
-                           GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TitledTextField fx:id="diseaseNameTextField" onAction="#addDisease" name="Disease name" promptText="LEIGH SYNDROME; LS "
+                                 GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                <Button fx:id="addDiseaseButton" onAction="#addDisease" text="Add disease"
-                        GridPane.columnIndex="2" GridPane.rowSpan="3" GridPane.valignment="BOTTOM" />
+                <Button fx:id="addDiseaseButton" onAction="#addDisease" text="Add"
+                        GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
             </children>
         </GridPane>
 

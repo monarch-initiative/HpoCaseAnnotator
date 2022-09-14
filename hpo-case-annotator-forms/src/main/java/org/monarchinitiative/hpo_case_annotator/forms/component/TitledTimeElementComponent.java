@@ -9,7 +9,7 @@ public class TitledTimeElementComponent extends TitledBase<TimeElementComponent>
     private static final List<String> STYLECLASSES = List.of("tl-time-element-component");
 
     @Override
-    protected TimeElementComponent getItem() {
+    protected TimeElementComponent createItem() {
         return new TimeElementComponent();
     }
 

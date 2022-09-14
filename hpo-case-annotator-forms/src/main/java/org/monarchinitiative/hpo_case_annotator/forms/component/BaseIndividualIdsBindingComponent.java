@@ -84,8 +84,6 @@ public abstract class BaseIndividualIdsBindingComponent<T extends BaseObservable
                 item.setAge(null);
             else
                 item.setAge(new ObservableTimeElement());
-        } else {
-            LOGGER.warn("Other observable changed");
         }
     }
 

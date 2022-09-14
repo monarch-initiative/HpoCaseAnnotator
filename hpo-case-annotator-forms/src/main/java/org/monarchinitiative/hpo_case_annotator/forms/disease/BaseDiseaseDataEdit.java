@@ -9,12 +9,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.DiseaseIdentifier;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableDiseaseStatus;
@@ -45,9 +45,9 @@ public abstract class BaseDiseaseDataEdit<T extends BaseObservableIndividual> ex
     private BaseObservableIndividual item;
 
     @FXML
-    private TextField diseaseIdTextField;
+    private TitledTextField diseaseIdTextField;
     @FXML
-    private TextField diseaseNameTextField;
+    private TitledTextField diseaseNameTextField;
     @FXML
     private Button addDiseaseButton;
     @FXML
@@ -102,12 +102,12 @@ public abstract class BaseDiseaseDataEdit<T extends BaseObservableIndividual> ex
                 diseaseIdCompletion = null;
                 diseaseNameCompletion = null;
             } else {
-                diseaseIdCompletion = TextFields.bindAutoCompletion(diseaseIdTextField, novel.diseaseIds());
+                diseaseIdCompletion = TextFields.bindAutoCompletion(diseaseIdTextField.getItem(), novel.diseaseIds());
                 diseaseIdCompletion.setHideOnEscape(true);
                 diseaseIdCompletion.setVisibleRowCount(10);
                 diseaseIdCompletion.minWidthProperty().bind(diseaseIdTextField.widthProperty());
 
-                diseaseNameCompletion = TextFields.bindAutoCompletion(diseaseNameTextField, novel.diseaseNames());
+                diseaseNameCompletion = TextFields.bindAutoCompletion(diseaseNameTextField.getItem(), novel.diseaseNames());
                 diseaseNameCompletion.setHideOnEscape(true);
                 diseaseNameCompletion.setVisibleRowCount(10);
                 diseaseNameCompletion.minWidthProperty().bind(diseaseNameTextField.widthProperty());
@@ -132,8 +132,8 @@ public abstract class BaseDiseaseDataEdit<T extends BaseObservableIndividual> ex
             return;
         }
 
-        diseaseIdTextField.clear();
-        diseaseNameTextField.clear();
+        diseaseIdTextField.getItem().clear();
+        diseaseNameTextField.getItem().clear();
         e.consume();
     }
 

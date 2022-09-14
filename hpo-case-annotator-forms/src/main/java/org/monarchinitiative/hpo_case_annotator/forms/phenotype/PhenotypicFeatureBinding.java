@@ -43,8 +43,8 @@ public class PhenotypicFeatureBinding extends PhenotypicFeatureBase implements O
     protected void initialize() {
         super.initialize();
 
-        onsetComponent.disableProperty().bind(onsetIsUnknown.selectedProperty());
-        resolutionComponent.disableProperty().bind(resolutionIsUnknown.selectedProperty());
+        onsetComponent.visibleProperty().bind(onsetIsUnknown.selectedProperty().not());
+        resolutionComponent.visibleProperty().bind(resolutionIsUnknown.selectedProperty().not());
 
         addListener(obs -> {
             if (valueIsNotBeingSetByUserInteraction)

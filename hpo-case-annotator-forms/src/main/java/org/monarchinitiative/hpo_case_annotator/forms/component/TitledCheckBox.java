@@ -10,7 +10,7 @@ public class TitledCheckBox extends TitledBase<CheckBox> {
     private static final List<String> STYLECLASSES = List.of("tl-check-box");
 
     @Override
-    protected CheckBox getItem() {
+    protected CheckBox createItem() {
         return new CheckBox();
     }
 

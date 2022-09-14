@@ -9,7 +9,7 @@ public class TitledTextArea extends TitledBase<TextArea> {
 
     private static final List<String> STYLECLASSES = List.of("tl-text-area");
     @Override
-    protected TextArea getItem() {
+    protected TextArea createItem() {
         return new TextArea();
     }
 

@@ -33,7 +33,7 @@ public class PhenotypeSuggestionProvider implements Callback<AutoCompletionBindi
     @Override
     public Collection<String> call(AutoCompletionBinding.ISuggestionRequest request) {
         return labelToId.keySet().stream()
-                .filter(termLabel -> termLabel.contains(request.getUserText()))
+                .filter(termLabel -> termLabel.toLowerCase().contains(request.getUserText().toLowerCase()))
                 .toList();
     }
 
