@@ -133,9 +133,11 @@ public class Main {
 
     private void disableMenuEntriesDependentOnADataModel() {
         BooleanBinding noTabIsPresent = studiesTabPane.getSelectionModel().selectedItemProperty().isNull();
-        saveMenuItem.disableProperty().bind(noTabIsPresent);
-        saveAsMenuItem.disableProperty().bind(noTabIsPresent);
-        saveAllMenuItem.disableProperty().bind(noTabIsPresent);
+        BooleanBinding biocuratorIsNullOrEmpty = optionalResources.biocuratorIdProperty().isNull().or(optionalResources.biocuratorIdProperty().isEmpty());
+        BooleanBinding savingIsDisabled = noTabIsPresent.or(biocuratorIsNullOrEmpty);
+        saveMenuItem.disableProperty().bind(savingIsDisabled);
+        saveAsMenuItem.disableProperty().bind(savingIsDisabled);
+        saveAllMenuItem.disableProperty().bind(savingIsDisabled);
         closeMenuItem.disableProperty().bind(noTabIsPresent);
 
         cloneCaseMenuItem.disableProperty().bind(noTabIsPresent);
