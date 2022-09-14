@@ -4,23 +4,25 @@
 <?import javafx.scene.layout.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.metadata.*?>
 
-<fx:root stylesheets="@metadata.css" type="VBox" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@metadata.css">
     <children>
         <GridPane hgap="10.0">
             <children>
                 <VBox>
                     <children>
-                        <Label styleClass="h2" text="Free text description" />
+                        <Label styleClass="h3" text="Free text description" />
                         <TextArea id="meta-text" fx:id="freeTextArea" wrapText="true" VBox.vgrow="ALWAYS" />
                     </children>
                 </VBox>
 
                 <VBox GridPane.columnIndex="1">
                     <children>
-                        <Label styleClass="h2" text="Created by" />
+                        <Label styleClass="h3" text="Created by" />
                         <EditHistory fx:id="createdBy"/>
                         <Separator />
-                        <Label styleClass="h2" text="Modified by" />
+                        <Label styleClass="h3" text="Modified by" />
                         <TableView fx:id="editHistory" id="modified-by">
                             <columns>
                                 <TableColumn fx:id="curatorIdColumn" editable="false" text="Curator ID" prefWidth="150"/>

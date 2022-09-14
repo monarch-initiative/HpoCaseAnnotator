@@ -110,11 +110,12 @@ public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> 
 
     protected abstract BaseAddClinicalEncounter<T> clinicalEncounterComponent();
 
-    private static void showComponentNodeDialog(Node component) {
+    private void showComponentNodeDialog(Node component) {
         Dialog<Boolean> dialog = new Dialog<>();
+        dialog.initOwner(phenotypeTable.getParent().getScene().getWindow());
         dialog.setResizable(true);
-        dialog.getDialogPane().setContent(component);
         dialog.getDialogPane().getButtonTypes().add(new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE));
+        dialog.getDialogPane().setContent(component);
         dialog.showAndWait();
     }
 }

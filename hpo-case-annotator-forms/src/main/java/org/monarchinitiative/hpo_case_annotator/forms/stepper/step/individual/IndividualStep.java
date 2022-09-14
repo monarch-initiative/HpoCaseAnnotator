@@ -19,6 +19,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.forms.variants.IndividualVariantGenotypesObservableData;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividualStudy;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 
@@ -66,8 +67,7 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
 
     @Override
     protected Stream<Observable> dependencies() {
-        // TODO - implement
-        return Stream.of();
+        return Stream.of(individualIds);
     }
 
     @Override
@@ -80,9 +80,14 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
         // set flag
         try {
             valueIsBeingSetProgrammatically = true;
-            if (data != null)
+            if (data != null) {
+
+                if (data.getIndividual() == null)
+                    // No point doing this without having a value to bind to.
+                    data.setIndividual(new ObservableIndividual());
+
                 individualIds.dataProperty().bindBidirectional(data.individualProperty());
-            else
+            } else
                 individualIds.setData(null);
         } finally {
             valueIsBeingSetProgrammatically = false;
@@ -100,7 +105,7 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.initOwner(individualIds.getParent().getScene().getWindow());
         dialog.initStyle(StageStyle.DECORATED);
-        dialog.setTitle("Add phenotype features"); // TODO - nicer title
+        dialog.setTitle("Add phenotypic features");
         dialog.setResizable(true);
 
         IndividualPhenotypeDataEdit phenotypeDataEdit = new IndividualPhenotypeDataEdit();
@@ -121,12 +126,12 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.initOwner(individualIds.getParent().getScene().getWindow());
         dialog.initStyle(StageStyle.DECORATED);
-        dialog.setTitle("Add diseases"); // TODO - nicer title
+        dialog.setTitle("Set diseases"); // TODO - nicer title
         dialog.setResizable(true);
 
         IndividualDiseaseDataEdit diseaseDataEdit = new IndividualDiseaseDataEdit();
         diseaseDataEdit.diseaseIdentifierServiceProperty().bind(diseaseIdentifierService);
-        diseaseDataEdit.setInitialData(data.get().getIndividual()); // TODO - check non null?
+        diseaseDataEdit.setInitialData(data.get().getIndividual());
         dialog.getDialogPane().setContent(diseaseDataEdit);
         dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_CANCEL_BUTTONS);
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
@@ -142,7 +147,7 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.initOwner(individualIds.getParent().getScene().getWindow());
         dialog.initStyle(StageStyle.DECORATED);
-        dialog.setTitle("Add genotypes"); // TODO - nicer title
+        dialog.setTitle("Set variant genotypes");
         dialog.setResizable(true);
 
         IndividualVariantGenotypesObservableData content = new IndividualVariantGenotypesObservableData();
@@ -151,11 +156,7 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
         dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_BUTTONS);
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
-        dialog.showAndWait()
-//                .ifPresent(shouldCommit -> {
-//                    if (shouldCommit) variantDataEdit.commit();
-//                });
-        ;
+        dialog.showAndWait();
         e.consume();
     }
 }

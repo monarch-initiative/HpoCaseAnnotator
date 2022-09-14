@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.app.controller;
 import com.google.protobuf.InvalidProtocolBufferException;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.StringBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.*;
 import org.controlsfx.dialog.CommandLinksDialog;
+import org.monarchinitiative.hpo_case_annotator.app.App;
 import org.monarchinitiative.hpo_case_annotator.app.dialogs.Dialogs;
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.StudyType;
@@ -45,7 +47,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
-import static javafx.beans.binding.Bindings.selectString;
+import static javafx.beans.binding.Bindings.*;
 
 @Controller
 public class Main {
@@ -382,7 +384,8 @@ public class Main {
 
         Tab tab = new Tab();
         tab.setContent(component);
-        tab.textProperty().bind(selectString(component.dataProperty(), "id"));
+        StringBinding idBinding = selectString(component.dataProperty(), "id");
+        tab.textProperty().bind(when(idBinding.isNotNull()).then(idBinding).otherwise("N/A"));
 
         tab.setOnCloseRequest(e -> removeStudy(studiesTabPane.getTabs().indexOf(tab)));
 
@@ -472,7 +475,7 @@ public class Main {
     }
 
     private Window getOwnerWindow() {
-        return studiesTabPane.getScene().getWindow();
+        return studiesTabPane.getParent().getScene().getWindow();
     }
 
     private boolean saveAsV2Study(Study study, Path path) {
@@ -573,7 +576,9 @@ public class Main {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Enter study details");
             stage.setResizable(true);
-            stage.setScene(new Scene(stepper));
+            Scene scene = new Scene(stepper);
+            scene.getStylesheets().add(App.BASE_CSS);
+            stage.setScene(scene);
 
             stage.showAndWait();
 

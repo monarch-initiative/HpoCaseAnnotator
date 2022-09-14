@@ -6,38 +6,24 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.VBox"
-         styleClass="step-box" >
+         type="VBox"
+         styleClass="step-box">
     <stylesheets>
         <URL value="@../step-base.css" />
         <URL value="@individual-step.css" />
     </stylesheets>
     <children>
-        <Label text="Individual" />
-        <Label fx:id="header" text="Provide credentials of the individual under investigation." />
+        <Label text="Individual" styleClass="h1"/>
+        <Label text="Provide credentials of the individual under investigation." styleClass="stepper-instruction"/>
+
         <IndividualIdsBindingComponent fx:id="individualIds" />
 
-        <ToolBar>
-            <items>
+        <GridPane hgap="5">
+            <children>
                 <Button onAction="#addEditPhenotypesAction" text="Add/Edit phenotype features" />
-                <Button onAction="#addEditDiseasesAction" text="Add/Edit diseases" />
-                <Button onAction="#addEditGenotypesAction" text="Add/Edit variant genotypes" />
-            </items>
-        </ToolBar>
-        <!-- TODO finalize or delete. -->
-<!--        <VBox>-->
-<!--            <children>-->
-<!--                <Label styleClass="h2" text="Phenotype features" />-->
-<!--                <Label text="Phenotype feature summary" GridPane.rowIndex="1" />-->
-
-
-<!--                <Label styleClass="h2" text="Disease" GridPane.columnIndex="1" />-->
-<!--                <Label text="Disease summary" GridPane.columnIndex="1" GridPane.rowIndex="1" />-->
-
-
-<!--                <Label styleClass="h2" text="Variant genotypes" GridPane.columnIndex="2" />-->
-<!--                <Label text="Variant genotype summary" GridPane.columnIndex="2" GridPane.rowIndex="1" />-->
-<!--            </children>-->
-<!--        </VBox>-->
+                <Button onAction="#addEditDiseasesAction" text="Add/Edit diseases" GridPane.columnIndex="1"/>
+                <Button onAction="#addEditGenotypesAction" text="Add/Edit variant genotypes" GridPane.columnIndex="2"/>
+            </children>
+        </GridPane>
     </children>
 </fx:root>

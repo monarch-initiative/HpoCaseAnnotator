@@ -1,10 +1,13 @@
 package org.monarchinitiative.hpo_case_annotator.forms.component;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementBindingComponent;
 import org.monarchinitiative.hpo_case_annotator.model.v2.VitalStatus;
@@ -12,8 +15,16 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElem
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableVitalStatus;
 
 import java.io.IOException;
+import java.util.stream.Stream;
 
-public class VitalStatusBindingComponent extends VBoxBindingObservableDataComponent<ObservableVitalStatus> {
+public class VitalStatusBindingComponent extends VBoxBindingObservableDataComponent<ObservableVitalStatus>
+        implements Observable {
+
+    static final Callback<VitalStatusBindingComponent, Stream<Observable>> EXTRACTOR = item -> Stream.of(
+            item.vitalStatus.valueProperty(),
+
+            item.timeOfDeathIsUnknown.selectedProperty(),
+            item.timeOfDeathComponent);
 
     @FXML
     private TitledComboBox<VitalStatus.Status> vitalStatus;
@@ -79,4 +90,13 @@ public class VitalStatusBindingComponent extends VBoxBindingObservableDataCompon
         timeOfDeathComponent.setData(null);
     }
 
+    @Override
+    public void addListener(InvalidationListener listener) {
+        EXTRACTOR.call(this).forEach(obs -> obs.addListener(listener));
+    }
+
+    @Override
+    public void removeListener(InvalidationListener listener) {
+        EXTRACTOR.call(this).forEach(obs -> obs.removeListener(listener));
+    }
 }

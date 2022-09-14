@@ -11,13 +11,11 @@ public class FamilyStudySteps extends BaseStudySteps<ObservableFamilyStudy> {
         steps.add(publication);
 
         VariantsStep<ObservableFamilyStudy> variants = new VariantsStep<>();
-        variants.setHeader("Add genomic variants identified in the investigated individual.");
         variants.genomicAssemblyRegistryProperty().bind(studyResources.genomicAssemblyRegistryProperty());
         variants.functionalAnnotationRegistryProperty().bind(studyResources.functionalAnnotationRegistryProperty());
         steps.add(variants);
 
         PedigreeStep<ObservableFamilyStudy> pedigree = new PedigreeStep<>();
-        pedigree.setHeader("Add data regarding the investigated family members.");
         pedigree.bindStudyResources(this);
         pedigree.variantsProperty().bind(variants.variantsProperty());
         steps.add(pedigree);

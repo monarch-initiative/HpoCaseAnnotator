@@ -2,67 +2,63 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementComponent?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
+<?import javafx.scene.text.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.*?>
 
-<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="VBox"
-         stylesheets="@phenotypic-feature.css"
-         id="phenotypic-feature-box">
+<fx:root id="phenotypic-feature-box" stylesheets="@phenotypic-feature.css" type="VBox" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <VBox>
             <children>
-                <Label styleClass="h2" text="Phenotype feature"/>
-                <VBox id="phenotypic-feature-column">
+                <Label styleClass="h2" text="Phenotype feature" />
+                <VBox id="phenotypic-feature-column" VBox.vgrow="SOMETIMES">
                     <children>
-                        <TitledLabel fx:id="name" name="Label" id="term-name" />
-                        <TitledLabel fx:id="definition" name="Definition" id="term-definition" />
+                        <TitledLabel id="term-name" fx:id="name" name="Label" VBox.vgrow="SOMETIMES" />
+                        <TitledLabel id="term-definition" fx:id="definition" name="Definition" VBox.vgrow="SOMETIMES" />
                     </children>
                 </VBox>
             </children>
         </VBox>
-        <Separator/>
+        <Separator />
         <VBox>
             <children>
-                <Label styleClass="h2" text="Status"/>
-                <RadioButton fx:id="presentRadioButton" mnemonicParsing="false" text="Present" selected="true"/>
-                <RadioButton fx:id="absentRadioButton" mnemonicParsing="false" text="Excluded"/>
+                <Label styleClass="h2" text="Status" />
+                <RadioButton fx:id="presentRadioButton" mnemonicParsing="false" selected="true" text="Present" />
+                <RadioButton fx:id="absentRadioButton" mnemonicParsing="false" text="Excluded" />
             </children>
         </VBox>
-        <Separator/>
+        <Separator />
         <VBox>
             <children>
-                <Label styleClass="h2" text="Temporal"/>
+                <Label styleClass="h2" text="Temporal" />
                 <StackPane>
                     <children>
                         <VBox>
                             <children>
-                                <VBox>
+                                <VBox styleClass="temporal-box">
                                     <children>
-                                        <Label styleClass="h3" text="Onset"/>
-                                        <TimeElementComponent fx:id="onsetComponent"/>
+                                        <Label styleClass="h3" text="Onset" />
+                                        <TimeElementComponent fx:id="onsetComponent" />
                                     </children>
                                 </VBox>
-                                <VBox>
+                                <VBox styleClass="temporal-box">
                                     <children>
-                                        <Label styleClass="h3" text="Resolution"/>
-                                        <TimeElementComponent fx:id="resolutionComponent"/>
+                                        <Label styleClass="h3" text="Resolution" />
+                                        <TimeElementComponent fx:id="resolutionComponent" />
                                     </children>
                                 </VBox>
                             </children>
                         </VBox>
-                        <Button fx:id="editTemporalFields" onAction="#editTemporalFieldsAction"
-                                styleClass="edit-button" StackPane.alignment="TOP_RIGHT"/>
+                        <Button fx:id="editTemporalFields" onAction="#editTemporalFieldsAction" styleClass="edit-button" StackPane.alignment="TOP_RIGHT" />
                     </children>
                 </StackPane>
             </children>
         </VBox>
-        <Separator/>
+        <Separator />
         <VBox>
             <children>
-                <Label styleClass="h2" text="Modifiers"/>
-                <Text text="Not yet implemented" style="-fx-fill: grey"/>
+                <Label styleClass="h2" text="Modifiers" />
+                <Text style="-fx-fill: grey" text="Not yet implemented" />
             </children>
         </VBox>
     </children>

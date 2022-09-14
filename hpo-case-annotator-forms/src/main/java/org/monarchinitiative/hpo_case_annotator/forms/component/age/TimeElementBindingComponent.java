@@ -90,7 +90,7 @@ public class TimeElementBindingComponent extends VBoxBindingObservableDataCompon
         gestationalWeeks.setTextFormatter(gestationalWeeksFormatter);
 
         // Update the data model upon change of each UI component
-        addListener(this::invalidated);
+        addListener(this);
     }
 
     @Override

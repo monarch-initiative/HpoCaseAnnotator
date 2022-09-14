@@ -8,7 +8,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.disease.BaseDiseaseDataEdit;
@@ -159,8 +158,6 @@ public abstract class BaseIndividual<T extends BaseObservableIndividual> extends
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.initOwner(phenotypePane.getParent().getScene().getWindow());
         dialog.setResizable(true);
-        dialog.getDialogPane().getStylesheets().add(ObservableDataComponent.class.getResource("base.css").toExternalForm());
-        dialog.getDialogPane().setPrefWidth(1000);
         dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.UPDATE_CANCEL_BUTTONS);
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
         return dialog;

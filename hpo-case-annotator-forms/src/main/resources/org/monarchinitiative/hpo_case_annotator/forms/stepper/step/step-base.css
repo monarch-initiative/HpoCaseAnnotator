@@ -1,30 +1,15 @@
 .step-box {
     -fx-background-color: white;
+    -fx-padding: 0 10 0 10;
 }
 
 .spacing-box {
     -fx-padding: 15 0 0 0;
 }
 
-.stepper-title {
-    -fx-font-size: 1.3em;
-    -fx-font-weight: bold;
-    -fx-text-fill: #000b88;
-    -fx-effect: dropshadow(gaussian, #b2b2b2, 1, .25, 1, 1);
-}
-
-
-.stepper-subtitle {
-    -fx-font-size: 1em;
-    -fx-font-weight: bold;
-    -fx-font-style: italic;
-    -fx-text-fill: #000b88;
-    -fx-effect: dropshadow(gaussian, #b2b2b2, 1, .25, 1, 1);
-}
-
 .stepper-instruction {
     -fx-font-style: italic;
     -fx-font-size: 0.9em;
-    -fx-text-fill: #414141;
+    -fx-text-fill: derive(-col-medium, -50%);
     -fx-padding: 5 0 10 10;
 }

@@ -14,7 +14,7 @@
     </stylesheets>
     <children>
         <Label text="Pedigree"/>
-        <Label fx:id="header" text="Provide publication details for the individual."/>
+        <Label text="Add data regarding the investigated family members."/>
         <Pedigree fx:id="pedigree"/>
         <HBox alignment="BOTTOM_LEFT" styleClass="edit-row">
             <children>

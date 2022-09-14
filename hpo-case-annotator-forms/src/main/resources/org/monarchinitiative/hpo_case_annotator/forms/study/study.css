@@ -27,7 +27,7 @@
 }
 
 .nav-row Button:hover {
-    -fx-effect: dropshadow(gaussian, colprimary, 5, .0, 0, 0);
+    -fx-effect: dropshadow(gaussian, -col-primary, 5, .0, 0, 0);
 }
 
 #study-scroll-pane {
@@ -35,7 +35,7 @@
 }
 
 .study-body {
-    -fx-background-color: derive(colmedium, 80%);
+    -fx-background-color: derive(-col-medium, 80%);
     -fx-padding: 10; /* Should be the same as .spacer10px */
     -fx-border-width: 0 1 0 1;
 }
@@ -45,8 +45,8 @@
     -fx-border-radius: 10;
     -fx-background-radius: 10;
     -fx-background-color: white;
-    -fx-border-color: derive(colmedium, -30%);
-    -fx-effect: dropshadow(gaussian, derive(colmedium, -20%), 7, .4, 0, 0);
+    -fx-border-color: derive(-col-medium, -30%);
+    -fx-effect: dropshadow(gaussian, derive(-col-medium, -20%), 7, .4, 0, 0);
 }
 
 .study-section-title {

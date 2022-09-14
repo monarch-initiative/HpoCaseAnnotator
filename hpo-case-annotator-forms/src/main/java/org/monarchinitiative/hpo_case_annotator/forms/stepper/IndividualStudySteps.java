@@ -15,13 +15,11 @@ public class IndividualStudySteps extends BaseStudySteps<ObservableIndividualStu
         steps.add(publication);
 
         VariantsStep<ObservableIndividualStudy> variants = new VariantsStep<>();
-        variants.setHeader("Add genomic variants identified in the investigated individual.");
         variants.genomicAssemblyRegistryProperty().bind(studyResources.genomicAssemblyRegistryProperty());
         variants.functionalAnnotationRegistryProperty().bind(studyResources.functionalAnnotationRegistryProperty());
         steps.add(variants);
 
         IndividualStep<ObservableIndividualStudy> individual = new IndividualStep<>();
-        individual.setHeader("Add data regarding the investigated individual.");
         individual.hpoProperty().bind(studyResources.hpoProperty());
         individual.diseaseIdentifierServiceProperty().bind(studyResources.diseaseIdentifierServiceProperty());
         individual.variantsProperty().bind(variants.variantsProperty());

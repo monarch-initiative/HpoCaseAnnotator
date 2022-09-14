@@ -14,7 +14,7 @@
         <URL value="@publication-step.css"/>
     </stylesheets>
     <children>
-        <Label styleClass="stepper-title" text="Publication"/>
+        <Label styleClass="h1" text="Publication"/>
         <Label styleClass="stepper-instruction"
                text="Enter publication that describes the study or leave unset to set up later."/>
         <CheckBox fx:id="publicationIsUnknown" text="Leave unset" selected="true"/>
@@ -22,7 +22,7 @@
             <children>
                 <VBox styleClass="spacing-box">
                     <children>
-                        <Label styleClass="stepper-subtitle" text="Fetch from PubMed"/>
+                        <Label styleClass="h2" text="Fetch from PubMed"/>
                         <HBox>
                             <children>
                                 <TitledTextField fx:id="pmidTextField" name="PMID"/>
@@ -42,7 +42,7 @@
 
                 <VBox styleClass="spacing-box">
                     <children>
-                        <Label styleClass="stepper-subtitle" text="Enter manually"/>
+                        <Label styleClass="h2" text="Enter manually"/>
                         <PublicationBinding fx:id="publicationBinding"/>
                     </children>
                 </VBox>

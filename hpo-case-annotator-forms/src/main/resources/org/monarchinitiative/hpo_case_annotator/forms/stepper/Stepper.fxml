@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="VBox"
+         stylesheets="@stepper.css"
          id="stepper-box">
-    <stylesheets>
-        <URL value="@../base.css"/>
-        <URL value="@stepper.css"/>
-    </stylesheets>
     <children>
         <StackPane id="stepper-content" fx:id="content" VBox.vgrow="ALWAYS"/>
-<!--        <Separator/>-->
+
         <ButtonBar id="button-bar">
             <buttons>
                 <Button onAction="#cancelAction" ButtonBar.buttonData="CANCEL_CLOSE" text="Cancel"/>

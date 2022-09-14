@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.forms.stepper.step.study;
 
 import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -143,7 +144,10 @@ public class PedigreeStep<T extends ObservableFamilyStudy> extends BaseStep<T> i
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Add pedigree member");
         stage.setResizable(true);
-        stage.setScene(new Scene(stepper));
+        Scene scene = new Scene(stepper);
+        // Bind "this" to "that", not "that" to "this"!
+        Bindings.bindContent(scene.getStylesheets(), getScene().getStylesheets());
+        stage.setScene(scene);
 
         stage.showAndWait();
 

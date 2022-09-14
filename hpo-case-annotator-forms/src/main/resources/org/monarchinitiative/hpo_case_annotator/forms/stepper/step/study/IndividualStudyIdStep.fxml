@@ -8,17 +8,18 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextArea?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="VBox">
+         type="VBox"
+         styleClass="step-box">
     <stylesheets>
         <URL value="@../step-base.css"/>
         <URL value="@id-step.css"/>
     </stylesheets>
     <children>
-        <Label text="Case report ID"/>
-        <Label fx:id="header" text="Set case report ID."/>
-        <TitledTextField fx:id="studyId" name="Case report ID"/>
-        <Separator/>
-        <Label text="Add description that do not fit into the study fields."/>
-        <TitledTextArea fx:id="freeTextMetadata" name="Free text description"/>
+        <Label styleClass="h1" text="Case report ID"/>
+        <Label styleClass="stepper-instruction" text="Set case report ID."/>
+        <TitledTextField fx:id="studyId" name="Case report ID" id="study-id"/>
+        <Pane styleClass="spacer10px"/>
+        <Label styleClass="stepper-instruction" text="Add description that do not fit into the study fields."/>
+        <TitledTextArea fx:id="freeTextMetadata" name="Free text description" promptText="Enter free text description"/>
     </children>
 </fx:root>

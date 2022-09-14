@@ -18,22 +18,18 @@ abstract class BaseIndividualSteps<T extends BaseObservableIndividual> extends R
     @Override
     public BaseIndividualSteps<T> configureSteps() {
         BaseIndividuaIdStep<T> credentials = getIdStep();
-        credentials.setHeader("Enter credentials");
         steps.add(credentials);
 
         BasePhenotypeStep<T> phenotype = getPhenotypeStep();
         phenotype.hpoProperty().bind(studyResources.hpoProperty());
-        phenotype.setHeader("Add phenotypic features");
         steps.add(phenotype);
 
         DiseaseStep<T> disease = new DiseaseStep<>();
         disease.diseaseIdentifierServiceProperty().bind(studyResources.diseaseIdentifierServiceProperty());
-        disease.setHeader("Add diseases");
         steps.add(disease);
 
         VariantGenotypeStep<T> genotypes = new VariantGenotypeStep<>();
         genotypes.variantsProperty().bind(variants);
-        genotypes.setHeader("Set variant genotypes");
         steps.add(genotypes);
 
         return this;

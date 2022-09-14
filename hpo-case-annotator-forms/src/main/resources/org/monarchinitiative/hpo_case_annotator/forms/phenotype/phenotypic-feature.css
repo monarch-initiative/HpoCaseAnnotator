@@ -1,4 +1,5 @@
 #phenotypic-feature-column .tl-label {
+    -fx-max-width: 250;
     -fx-wrap-text: true;
 }
 
@@ -9,4 +10,8 @@
 RadioButton {
     -fx-min-height: 30px;
     -fx-min-width: 80px;
+}
+
+.temporal-box {
+    -fx-min-height: 300;
 }

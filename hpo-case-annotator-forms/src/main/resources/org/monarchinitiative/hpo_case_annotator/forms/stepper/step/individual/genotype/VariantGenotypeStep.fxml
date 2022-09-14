@@ -8,7 +8,7 @@
          xmlns:fx="http://javafx.com/fxml"
          type="VBox">
     <children>
-        <Label fx:id="header"/>
+        <Label styleClass="stepper-instruction" text="Add variant genotypes observed in the individual"/>
         <VariantGenotypeTable fx:id="genotypeTable"/>
     </children>
 </fx:root>

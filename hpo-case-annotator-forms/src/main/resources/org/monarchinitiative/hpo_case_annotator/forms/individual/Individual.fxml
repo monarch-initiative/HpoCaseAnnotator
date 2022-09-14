@@ -94,7 +94,6 @@
                     <content>
                         <VBox >
                             <children>
-                                <Label styleClass="h3" text="Variant genotypes"/>
                                 <VariantGenotypeTable fx:id="variantGenotypeTable"/>
                             </children>
                         </VBox>

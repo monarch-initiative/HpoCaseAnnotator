@@ -1,18 +1,35 @@
 package org.monarchinitiative.hpo_case_annotator.forms.component;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
-import org.monarchinitiative.hpo_case_annotator.forms.base.HBoxBindingObservableDataComponent;
+import javafx.util.Callback;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementBindingComponent;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.stream.Stream;
 
-public abstract class BaseIndividualIdsBindingComponent<T extends BaseObservableIndividual> extends HBoxBindingObservableDataComponent<T> {
+public abstract class BaseIndividualIdsBindingComponent<T extends BaseObservableIndividual> extends VBoxBindingObservableDataComponent<T>
+        implements Observable, InvalidationListener {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseIndividualIdsBindingComponent.class);
+
+    static final  Callback<BaseIndividualIdsBindingComponent<?>, Stream<Observable>> EXTRACTOR = item -> Stream.of(
+            item.individualId.textProperty(),
+            item.sex.valueProperty(),
+            item.ageIsUnknown.selectedProperty(),
+            item.ageComponent,
+            item.vitalStatusComponent
+    );
 
     @FXML
     private TitledTextField individualId;
@@ -26,7 +43,7 @@ public abstract class BaseIndividualIdsBindingComponent<T extends BaseObservable
     @FXML
     private VitalStatusBindingComponent vitalStatusComponent;
 
-    protected boolean valueIsBeingSetProgrammatically;
+    protected boolean valueIsNotBeingSetByUserInteraction;
 
     protected BaseIndividualIdsBindingComponent(URL location) {
         FXMLLoader loader = new FXMLLoader(location);
@@ -46,14 +63,30 @@ public abstract class BaseIndividualIdsBindingComponent<T extends BaseObservable
         sex.getItems().addAll(Sex.values());
         sex.setValue(Sex.UNKNOWN);
         ageComponent.disableProperty().bind(ageIsUnknown.selectedProperty());
-        ageIsUnknown.selectedProperty().addListener((obs, old, ageIsUnknown) -> {
-            if (valueIsBeingSetProgrammatically)
-                return;
-            if (ageIsUnknown)
-                data.get().setAge(null);
+
+        addListener(this);
+    }
+
+    @Override
+    public void invalidated(Observable obs) {
+        if (valueIsNotBeingSetByUserInteraction)
+            return;
+        T item = data.get();
+        if (item == null)
+            return;
+
+        if (obs.equals(individualId.textProperty())) {
+            item.setId(individualId.getText());
+        } else if (obs.equals(sex.valueProperty())) {
+            item.setSex(sex.getValue());
+        } else if (obs.equals(ageIsUnknown.selectedProperty())) {
+            if (ageIsUnknown.isSelected())
+                item.setAge(null);
             else
-                data.get().setAge(new ObservableTimeElement());
-        });
+                item.setAge(new ObservableTimeElement());
+        } else {
+            LOGGER.warn("Other observable changed");
+        }
     }
 
     @Override
@@ -85,5 +118,17 @@ public abstract class BaseIndividualIdsBindingComponent<T extends BaseObservable
         ageIsUnknown.setSelected(false);
         ageComponent.setData(null);
         vitalStatusComponent.setData(null);
+    }
+
+    protected abstract Stream<Observable> dependencies();
+
+    @Override
+    public void addListener(InvalidationListener listener) {
+        dependencies().forEach(obs -> obs.addListener(listener));
+    }
+
+    @Override
+    public void removeListener(InvalidationListener listener) {
+        dependencies().forEach(obs -> obs.removeListener(listener));
     }
 }

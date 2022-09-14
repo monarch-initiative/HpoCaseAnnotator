@@ -6,15 +6,15 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.VBox"
+         type="VBox"
          styleClass="step-box" >
     <stylesheets>
         <URL value="@../../step-base.css" />
         <URL value="@../individual-step.css" />
     </stylesheets>
     <children>
-        <Label text="Individual" />
-        <Label fx:id="header" text="Provide credentials of the individual under investigation." />
+        <Label styleClass="h2" text="Individual" />
+        <Label styleClass="stepper-instruction" text="Provide credentials of the individual under investigation." />
         <IndividualIdsBindingComponent fx:id="individualIds" />
     </children>
 </fx:root>

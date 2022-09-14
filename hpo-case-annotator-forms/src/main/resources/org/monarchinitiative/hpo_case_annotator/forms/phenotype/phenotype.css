@@ -1,8 +1,5 @@
-#phenotype-feature-list {
-    -fx-pref-width: 900;
-}
 
 #phenotype-feature {
-    -fx-pref-width: 250;
-    -fx-max-width: 250;
+    -fx-pref-width: 300;
+    -fx-max-width: 300;
 }

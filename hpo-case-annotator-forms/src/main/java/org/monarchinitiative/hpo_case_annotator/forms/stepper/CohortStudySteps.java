@@ -11,7 +11,6 @@ public class CohortStudySteps extends BaseStudySteps<ObservableCohortStudy> {
         steps.add(publication);
 
         VariantsStep<ObservableCohortStudy> variants = new VariantsStep<>();
-        variants.setHeader("Add genomic variants identified in the investigated individual.");
         variants.genomicAssemblyRegistryProperty().bind(studyResources.genomicAssemblyRegistryProperty());
         variants.functionalAnnotationRegistryProperty().bind(studyResources.functionalAnnotationRegistryProperty());
         steps.add(variants);
