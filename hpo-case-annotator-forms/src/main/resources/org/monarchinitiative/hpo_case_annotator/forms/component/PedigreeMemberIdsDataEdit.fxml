@@ -33,6 +33,7 @@
                 <VBox styleClass="flow-box">
                     <children>
                         <Label text="Age" styleClass="h3"/>
+                        <CheckBox fx:id="ageIsUnknown" selected="true" text="Age is unknown"/>
                         <TimeElementDataEdit fx:id="ageComponent"/>
                     </children>
                 </VBox>
