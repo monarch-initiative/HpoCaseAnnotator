@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
@@ -11,8 +12,11 @@
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="VBox"
-         stylesheets="@individual-study.css"
          styleClass="outer-box">
+    <stylesheets>
+        <URL value="@../base.css"/>
+        <URL value="@individual-study.css"/>
+    </stylesheets>
     <children>
         <VBox styleClass="content-box">
             <children>

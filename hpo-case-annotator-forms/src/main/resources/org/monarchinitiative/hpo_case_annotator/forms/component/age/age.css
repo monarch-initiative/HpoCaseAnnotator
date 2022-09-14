@@ -1,7 +1,7 @@
-#age-grid {
-    -fx-alignment: center-left;
+/* This is a FlowPane */
+#age-box {
     -fx-hgap: 5;
-    -fx-max-width: 470;
+    -fx-vgap: 5;
 }
 
 #age-box TitledLabel {
@@ -11,4 +11,9 @@
 .age-datum {
     -fx-alignment: bottom-left;
     -fx-pref-width: 150;
+}
+
+ComboBox {
+    -fx-pref-width: 120;
+    -fx-max-width: 120;
 }

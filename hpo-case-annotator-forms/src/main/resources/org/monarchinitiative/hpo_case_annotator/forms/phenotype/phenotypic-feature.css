@@ -1,26 +1,12 @@
+#phenotypic-feature-column .tl-label {
+    -fx-wrap-text: true;
+}
+
+#phenotypic-feature-column TitledLabel {
+    -fx-padding: 5 0 0 0;
+}
 
 RadioButton {
     -fx-min-height: 30px;
     -fx-min-width: 80px;
-}
-
-
-#term-id {
-    -fx-font-size: 10pt;
-    -fx-text-fill: #707070;
-    -fx-font-style: italic;
-}
-
-#term-name {
-    -fx-font-size: 10pt;
-    -fx-text-fill: #444444;
-}
-
-#term-definition {
-    -fx-font-size: 10pt;
-    -fx-max-width: 300px;
-}
-
-TitledLabel {
-    -fx-padding: 10 0 0 0;
 }

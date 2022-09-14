@@ -5,10 +5,14 @@
 
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
 
+<?import java.net.URL?>
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="VBox"
-         stylesheets="@publication.css"
          id="publication-box">
+    <stylesheets>
+        <URL value="@../base.css"/>
+        <URL value="@publication.css"/>
+    </stylesheets>
     <children>
         <Label fx:id="title" id="title-label" text="Interpretable prioritization of splice variants in diagnostic next-generation sequencing" />
         <Label fx:id="authors" text="Danis D, Jacobsen JOB, Carmody LC, Gargano MA, McMurry JA, Hegde A, Haendel MA, Valentini G, Smedley D, Robinson PN" />

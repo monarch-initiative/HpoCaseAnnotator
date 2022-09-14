@@ -3,36 +3,6 @@
     -fx-font-weight: bold;
 }
 
-.h1 {
-    -fx-font-size: 1.3em;
-    -fx-font-weight: bold;
-    -fx-text-fill: colprimary;
-    -fx-padding: 10 0 3 0;
-}
-
-.h2 {
-    -fx-font-size: 1.2em;
-    -fx-font-style: italic;
-    -fx-text-fill: derive(colprimary, -30%);
-}
-
-.h3 {
-    -fx-font-size: 1.2em;
-    -fx-text-fill: derive(colmedium, -50%);
-    -fx-effect: dropshadow(gaussian, #dadada, 2, .5, 1, 1);
-}
-
-.h4 {
-
-}
-
-.section {
-    -fx-padding: 15 0 0 0;
-}
-
-.subsection {
-    -fx-padding: 10 0 0 5;
-}
 
 .spacer10px {
     -fx-pref-width: 10px;
@@ -86,27 +56,9 @@ Separator {
     -fx-background-radius: 10px;
 }
 
-.remove-button-tiny {
-    -fx-content-display: graphic-only;
-    -fx-graphic: url(icons/remove-button-tiny.png);
-    -fx-max-width: 20;
-    -fx-max-height: 20;
-    -fx-background-radius: 10px;
-}
-
 .clear-button {
-    -fx-graphic: url("icons/clear.png");
+    -fx-graphic: url('icons/clear.png');
     -fx-content-display: graphic-only;
-    -fx-background-radius: 30px;
-}
-
-.card {
-    -fx-border-color: black;
-    -fx-border-insets: 15px;
-    -fx-border-radius: 15px;
-    -fx-background-color: white;
-    -fx-background-radius: 15px;
-    -fx-background-insets: 15px;
-
-    -fx-effect: dropshadow(gaussian, gray, 10, .0, 4, 5);
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
 }

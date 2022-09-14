@@ -9,7 +9,7 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.age.SimpleEditableAge?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.VBox"
+         type="VBox"
          stylesheets="@time-element-component.css" >
     <children>
         <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
@@ -53,7 +53,7 @@
                         <Tooltip text="Age"/>
                     </tooltip>
                     <content>
-                        <VBox id="age-box">
+                        <VBox styleClass="age-col">
                             <children>
                                 <Label text="Age" styleClass="h3"/>
                                 <SimpleEditableAge fx:id="age"/>
@@ -71,7 +71,7 @@
                         <Tooltip text="Age range"/>
                     </tooltip>
                     <content>
-                        <VBox id="age-range-box">
+                        <VBox styleClass="age-col">
                             <children>
                                 <Label text="Age range" styleClass="h3"/>
                                 <HBox>
@@ -100,7 +100,7 @@
                         <Tooltip text="Age as ontology class"/>
                     </tooltip>
                     <content>
-                        <VBox>
+                        <VBox styleClass="age-col">
                             <children>
                                 <Label text="Ontology class" styleClass="h3"/>
                                 <HBox alignment="CENTER_LEFT">

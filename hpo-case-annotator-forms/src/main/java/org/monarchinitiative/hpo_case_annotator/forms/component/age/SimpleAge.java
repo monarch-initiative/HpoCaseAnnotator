@@ -3,12 +3,12 @@ package org.monarchinitiative.hpo_case_annotator.forms.component.age;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.FlowPane;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel;
 
 import java.io.IOException;
 
-public class SimpleAge extends HBox {
+public class SimpleAge extends FlowPane {
 
     @FXML
     private TitledLabel years;

@@ -2,8 +2,7 @@
     -fx-pref-width: 900;
 }
 
-#phenotype-feature-pane {
-    -fx-min-width: 250;
+#phenotype-feature {
     -fx-pref-width: 250;
-    -fx-max-width: 450;
+    -fx-max-width: 250;
 }

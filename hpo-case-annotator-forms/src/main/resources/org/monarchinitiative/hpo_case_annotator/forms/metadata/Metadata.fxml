@@ -4,39 +4,43 @@
 <?import javafx.scene.layout.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.metadata.*?>
 
-<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.VBox"
-         stylesheets="@metadata.css">
+<fx:root stylesheets="@metadata.css" type="VBox" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <VBox styleClass="subsection">
+        <GridPane hgap="10.0">
             <children>
-                <Label styleClass="h2" text="Free text description" />
-                <TextArea fx:id="freeTextArea" prefHeight="150.0" wrapText="true" />
+                <VBox>
+                    <children>
+                        <Label styleClass="h2" text="Free text description" />
+                        <TextArea id="meta-text" fx:id="freeTextArea" wrapText="true" VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
+
+                <VBox GridPane.columnIndex="1">
+                    <children>
+                        <Label styleClass="h2" text="Created by" />
+                        <EditHistory fx:id="createdBy"/>
+                        <Separator />
+                        <Label styleClass="h2" text="Modified by" />
+                        <TableView fx:id="editHistory" id="modified-by">
+                            <columns>
+                                <TableColumn fx:id="curatorIdColumn" editable="false" text="Curator ID" prefWidth="150"/>
+                                <TableColumn fx:id="softwareVersionColumn" editable="false" text="Software version" prefWidth="300"/>
+                                <TableColumn fx:id="timestampColumn" editable="false" text="Timestamp" prefWidth="300"/>
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                            <placeholder>
+                                <Label text="No edit history" />
+                            </placeholder>
+                        </TableView>
+                    </children>
+                </VBox>
             </children>
-        </VBox>
-        <VBox styleClass="subsection">
-            <children>
-                <Label styleClass="h2" text="Created by" />
-                <EditHistory fx:id="createdBy" />
-            </children>
-        </VBox>
-        <VBox styleClass="subsection">
-            <children>
-                <Label styleClass="h2" text="Modified by" />
-                <TableView fx:id="editHistory" prefHeight="150.0">
-                    <columns>
-                        <TableColumn fx:id="curatorIdColumn" editable="false" text="Curator ID" />
-                        <TableColumn fx:id="softwareVersionColumn" editable="false" text="Software version" />
-                        <TableColumn fx:id="timestampColumn" editable="false" text="Timestamp" />
-                    </columns>
-                    <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                    </columnResizePolicy>
-                    <placeholder>
-                        <Label text="No edit history" />
-                    </placeholder>
-                </TableView>
-            </children>
-        </VBox>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints hgrow="ALWAYS"/>
+         </columnConstraints>
+        </GridPane>
     </children>
 </fx:root>

@@ -19,3 +19,27 @@
     - #344055
      */
 }
+
+
+.h1 {
+    -fx-font-size: 1.3em;
+    -fx-font-weight: bold;
+    -fx-text-fill: colprimary;
+    -fx-padding: 10 0 3 0;
+}
+
+.h2 {
+    -fx-font-size: 1.2em;
+    -fx-font-style: italic;
+    -fx-text-fill: derive(colprimary, -30%);
+}
+
+.h3 {
+    -fx-font-size: 1.2em;
+    -fx-text-fill: derive(colmedium, -50%);
+    -fx-effect: dropshadow(gaussian, #dadada, 2, .5, 1, 1);
+}
+
+.h4 {
+
+}

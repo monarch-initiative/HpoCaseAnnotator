@@ -7,8 +7,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
-import javafx.stage.StageStyle;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
+import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.disease.BaseDiseaseDataEdit;
@@ -99,15 +99,12 @@ public abstract class BaseIndividual<T extends BaseObservableIndividual> extends
 
     @FXML
     private void editIdentifiersAction(ActionEvent e) {
-        Dialog<Boolean> dialog = new Dialog<>();
-        dialog.initOwner(getParent().getScene().getWindow());
+        Dialog<Boolean> dialog = prepareEditDialog();
+
         dialog.titleProperty().bind(concat("Edit identifiers for ", Utils.nullableStringProperty(data, "id")));
         BaseIndividualIdsDataEdit<T> content = getIdsDataEdit();
         content.setInitialData(data.getValue());
-
         dialog.getDialogPane().setContent(content);
-        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.UPDATE_CANCEL_BUTTONS);
-        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
 
         dialog.showAndWait()
                 .ifPresent(shouldUpdate -> {
@@ -121,19 +118,15 @@ public abstract class BaseIndividual<T extends BaseObservableIndividual> extends
 
     @FXML
     private void editPhenotypeAction(ActionEvent e) {
-        Dialog<Boolean> dialog = new Dialog<>();
-        dialog.initOwner(getParent().getScene().getWindow());
-        dialog.initStyle(StageStyle.DECORATED);
-        dialog.titleProperty().bind(concat("Edit phenotype features for ", Utils.nullableStringProperty(data, "id")));
-        dialog.setResizable(true);
+        Dialog<Boolean> dialog = prepareEditDialog();
 
+        dialog.titleProperty().bind(concat("Edit phenotype features for ", Utils.nullableStringProperty(data, "id")));
         BasePhenotypeDataEdit<T> content = getPhenotypeDataEdit();
         content.hpoProperty().bind(hpo);
         // Data is not null due to triggering button not visible when data is null (see `initialize()`).
         content.setInitialData(data.get());
         dialog.getDialogPane().setContent(content);
-        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_CANCEL_BUTTONS);
-        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
+
         dialog.showAndWait()
                 .ifPresent(shouldCommit -> {
                     if (shouldCommit) content.commit();
@@ -145,19 +138,14 @@ public abstract class BaseIndividual<T extends BaseObservableIndividual> extends
 
     @FXML
     private void editDiseasesAction(ActionEvent e) {
-        Dialog<Boolean> dialog = new Dialog<>();
-        dialog.initOwner(getParent().getScene().getWindow());
-        dialog.initStyle(StageStyle.DECORATED);
-        dialog.titleProperty().bind(concat("Edit diseases for ", Utils.nullableStringProperty(data, "id")));
-        dialog.setResizable(true);
+        Dialog<Boolean> dialog = prepareEditDialog();
 
+        dialog.titleProperty().bind(concat("Edit diseases for ", Utils.nullableStringProperty(data, "id")));
         BaseDiseaseDataEdit<T> content = getDiseaseDataEdit();
         content.diseaseIdentifierServiceProperty().bind(diseaseIdentifierService);
         // Data is not null due to triggering button not visible when data is null (see `initialize()`).
         content.setInitialData(data.get());
         dialog.getDialogPane().setContent(content);
-        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_CANCEL_BUTTONS);
-        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
         dialog.showAndWait()
                 .ifPresent(shouldCommit -> {
                     if (shouldCommit) content.commit();
@@ -166,5 +154,16 @@ public abstract class BaseIndividual<T extends BaseObservableIndividual> extends
     }
 
     protected abstract BaseDiseaseDataEdit<T> getDiseaseDataEdit();
+
+    private Dialog<Boolean> prepareEditDialog() {
+        Dialog<Boolean> dialog = new Dialog<>();
+        dialog.initOwner(phenotypePane.getParent().getScene().getWindow());
+        dialog.setResizable(true);
+        dialog.getDialogPane().getStylesheets().add(ObservableDataComponent.class.getResource("base.css").toExternalForm());
+        dialog.getDialogPane().setPrefWidth(1000);
+        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.UPDATE_CANCEL_BUTTONS);
+        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
+        return dialog;
+    }
 
 }

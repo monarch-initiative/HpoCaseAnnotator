@@ -11,9 +11,9 @@
             <children>
                 <TableView fx:id="diseases" editable="true">
                     <columns>
-                        <TableColumn fx:id="isExcludedColumn" minWidth="80.0" maxWidth="80.0" text="Excluded"/>
-                        <TableColumn fx:id="idColumn" editable="false" prefWidth="100.0" text="ID" />
-                        <TableColumn fx:id="labelColumn" editable="false" prefWidth="200.0" text="Label"/>
+                        <TableColumn fx:id="isExcludedColumn" minWidth="80.0" prefWidth="90.0" text="Excluded"/>
+                        <TableColumn fx:id="idColumn" editable="false" text="ID" />
+                        <TableColumn fx:id="labelColumn" editable="false" text="Label"/>
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>

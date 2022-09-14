@@ -7,7 +7,7 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.VBox">
+         type="VBox">
     <children>
         <Label text="Gestational age">
             <graphic>

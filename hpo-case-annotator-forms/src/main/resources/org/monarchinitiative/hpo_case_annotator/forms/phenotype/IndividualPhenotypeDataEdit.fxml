@@ -15,13 +15,12 @@
     <children>
         <HBox>
             <children>
-                <VBox styleClass="section">
+                <VBox>
                     <children>
-                        <Label styleClass="h2" text="Credentials"/>
                         <IndividualIdsComponent fx:id="individualIds"/>
                     </children>
                 </VBox>
-                <VBox styleClass="section">
+                <VBox>
                     <children>
                         <Label styleClass="h2" text="Add phenotype features"/>
                         <ButtonBar>
@@ -52,9 +51,9 @@
                         <PhenotypeTable fx:id="phenotypeTable"/>
                     </children>
                 </VBox>
-                <VBox>
+                <VBox id="phenotype-feature">
                     <children>
-                        <PhenotypicFeatureBinding id="phenotype-feature-pane" fx:id="phenotypicFeature"/>
+                        <PhenotypicFeatureBinding fx:id="phenotypicFeature"/>
                     </children>
                 </VBox>
             </items>

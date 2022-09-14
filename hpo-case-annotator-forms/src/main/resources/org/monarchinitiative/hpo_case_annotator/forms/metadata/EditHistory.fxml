@@ -4,11 +4,15 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.HBox"
+         type="HBox"
          stylesheets="@edit-history.css">
     <children>
-        <TitledLabel fx:id="curatorId" name="Curator ID" text="HPO:walterwhite"/>
-        <TitledLabel fx:id="softwareVersion" name="Software version" text="1.2.3"/>
-        <TitledLabel fx:id="timestamp" name="Timestamp" text="2021-01-02T12:00:00.0Z"/>
+        <GridPane hgap="10">
+            <children>
+                <TitledLabel fx:id="curatorId" name="Curator ID" text="N/A" id="curator-id"/>
+                <TitledLabel fx:id="softwareVersion" name="Software version" text="1.2.3" id="soft-version" GridPane.columnIndex="1"/>
+                <TitledLabel fx:id="timestamp" name="Timestamp" text="2021-01-02T12:00:00.0Z" id="timestamp" GridPane.columnIndex="2"/>
+            </children>
+        </GridPane>
     </children>
 </fx:root>

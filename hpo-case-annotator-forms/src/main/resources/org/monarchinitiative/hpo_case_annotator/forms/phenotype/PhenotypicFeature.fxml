@@ -7,15 +7,15 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      type="javafx.scene.layout.VBox"
-      stylesheets="@phenotypic-feature.css">
+         type="VBox"
+         stylesheets="@phenotypic-feature.css"
+         id="phenotypic-feature-box">
     <children>
         <VBox>
             <children>
                 <Label styleClass="h2" text="Phenotype feature"/>
-                <VBox id="phenotypic-feature-column" styleClass="column">
+                <VBox id="phenotypic-feature-column">
                     <children>
-                        <TitledLabel fx:id="termId" name="ID" id="term-id" />
                         <TitledLabel fx:id="name" name="Label" id="term-name" />
                         <TitledLabel fx:id="definition" name="Definition" id="term-definition" />
                     </children>
@@ -26,7 +26,7 @@
         <VBox>
             <children>
                 <Label styleClass="h2" text="Status"/>
-                <RadioButton fx:id="presentRadioButton" mnemonicParsing="false" text="Present"/>
+                <RadioButton fx:id="presentRadioButton" mnemonicParsing="false" text="Present" selected="true"/>
                 <RadioButton fx:id="absentRadioButton" mnemonicParsing="false" text="Excluded"/>
             </children>
         </VBox>
@@ -34,17 +34,17 @@
         <VBox>
             <children>
                 <Label styleClass="h2" text="Temporal"/>
-                <StackPane VBox.vgrow="ALWAYS">
+                <StackPane>
                     <children>
                         <VBox>
                             <children>
-                                <VBox styleClass="section">
+                                <VBox>
                                     <children>
                                         <Label styleClass="h3" text="Onset"/>
                                         <TimeElementComponent fx:id="onsetComponent"/>
                                     </children>
                                 </VBox>
-                                <VBox styleClass="section">
+                                <VBox>
                                     <children>
                                         <Label styleClass="h3" text="Resolution"/>
                                         <TimeElementComponent fx:id="resolutionComponent"/>
@@ -62,7 +62,7 @@
         <VBox>
             <children>
                 <Label styleClass="h2" text="Modifiers"/>
-                <Text text="Not yet implemented" style="-fx-fill: red"/>
+                <Text text="Not yet implemented" style="-fx-fill: grey"/>
             </children>
         </VBox>
     </children>

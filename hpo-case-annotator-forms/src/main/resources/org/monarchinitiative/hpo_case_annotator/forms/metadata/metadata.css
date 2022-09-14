@@ -1,0 +1,7 @@
+#meta-text {
+    -fx-min-width: 400;
+}
+
+#modified-by {
+    -fx-pref-height: 300;
+}

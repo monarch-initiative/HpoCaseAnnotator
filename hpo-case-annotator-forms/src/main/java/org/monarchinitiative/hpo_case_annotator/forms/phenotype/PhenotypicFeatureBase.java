@@ -36,8 +36,6 @@ public abstract class PhenotypicFeatureBase extends VBoxBindingObservableDataCom
 
     private BooleanBinding phenotypicFeatureIsExcluded;
     @FXML
-    private TitledLabel termId;
-    @FXML
     private TitledLabel name;
     @FXML
     private TitledLabel definition;
@@ -76,12 +74,10 @@ public abstract class PhenotypicFeatureBase extends VBoxBindingObservableDataCom
     @Override
     protected void bind(ObservablePhenotypicFeature data) {
         if (data == null) {
-            termId.setText(null);
-            name.setText(null);
-            definition.setText(null);
+            clear();
         } else {
             // term id & label
-            termId.setText(data.getTermId().getValue());
+            name.setName(data.getTermId().getValue());
             name.setText(data.getLabel());
             definition.setText(getDefinitionForTermId(data.getTermId()));
 
@@ -98,13 +94,8 @@ public abstract class PhenotypicFeatureBase extends VBoxBindingObservableDataCom
 
     @Override
     protected void unbind(ObservablePhenotypicFeature data) {
-        // term id & label
-        if (data == null) {
-            // TODO - should we do anything?
-        } else {
-            termId.setText(null);
-            name.setText(null);
-            definition.setText(null);
+        if (data != null) {
+            clear();
             data.excludedProperty().unbind();
         }
     }
@@ -123,7 +114,6 @@ public abstract class PhenotypicFeatureBase extends VBoxBindingObservableDataCom
         }, presenceStatusToggleGroup.selectedToggleProperty());
     }
 
-
     private String getDefinitionForTermId(TermId termId) {
         Ontology ontology = hpo.get();
         if (ontology == null)
@@ -133,5 +123,11 @@ public abstract class PhenotypicFeatureBase extends VBoxBindingObservableDataCom
         return term == null
                 ? NOT_AVAILABLE
                 : term.getDefinition();
+    }
+
+    private void clear() {
+        name.setName(null);
+        name.setText(null);
+        definition.setText(null);
     }
 }

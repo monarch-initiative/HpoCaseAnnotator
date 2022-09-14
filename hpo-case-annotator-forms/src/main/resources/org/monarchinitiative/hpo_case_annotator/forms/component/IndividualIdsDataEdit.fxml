@@ -9,54 +9,39 @@
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="VBox"
-         id="top-level">
+         id="ids-box">
     <stylesheets>
         <URL value="@../base.css"/>
-        <URL value="@individual-ids-component.css"/>
+        <URL value="@individual-pedigree-member-ids-component.css"/>
     </stylesheets>
     <children>
-        <SplitPane>
-            <items>
-                <VBox styleClass="section">
-                    <!-- Identifiers -->
+        <FlowPane id="id-flow-pane">
+            <children>
+                <!-- Identifiers -->
+                <VBox styleClass="flow-box">
                     <children>
-                        <Label text="Credentials" styleClass="h1"/>
-                        <HBox>
-                            <children>
-                                <VBox styleClass="credential-col">
-                                    <children>
-                                        <TitledTextField fx:id="individualId" name="ID" promptText="e.g. I:1"/>
-                                    </children>
-                                </VBox>
-                                <VBox styleClass="credential-col">
-                                    <children>
-                                        <TitledComboBox fx:id="sex" name="Sex" value="MALE"/>
-                                    </children>
-                                </VBox>
-                            </children>
-                        </HBox>
+                        <Label text="Credentials" styleClass="h3"/>
+                        <TitledTextField fx:id="individualId" name="ID" promptText="e.g. I:1"/>
+                        <TitledComboBox fx:id="sex" name="Sex"/>
                     </children>
                 </VBox>
 
-                <VBox styleClass="section">
-                    <!-- Age -->
+                <!-- Age -->
+                <VBox styleClass="flow-box">
                     <children>
-                        <Label text="Age" styleClass="h1"/>
-                        <HBox>
-                            <children>
-                                <TimeElementDataEdit fx:id="ageComponent" HBox.hgrow="ALWAYS"/>
-                            </children>
-                        </HBox>
+                        <Label text="Age" styleClass="h3"/>
+                        <TimeElementDataEdit fx:id="ageComponent"/>
                     </children>
                 </VBox>
 
-                <VBox styleClass="section">
+                <!-- Vital status -->
+                <VBox styleClass="flow-box">
                     <children>
-                        <Label text="Vital status" styleClass="h1"/>
+                        <Label text="Vital status" styleClass="h3"/>
                         <VitalStatusDataEdit fx:id="vitalStatusComponent"/>
                     </children>
                 </VBox>
-            </items>
-        </SplitPane>
+            </children>
+        </FlowPane>
     </children>
 </fx:root>

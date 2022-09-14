@@ -7,11 +7,12 @@
 
 /* HPO term labels can be rather lenghty. Let's make sure we have reasonable space! */
 #term {
-    -fx-min-width: 300;
+    -fx-min-width: 150;
 }
 
-#term .tl-label {
-    -fx-min-width: 300;
+.tl-label {
+    -fx-max-width: 150;
+    -fx-wrap-text: true;
 }
 
 .tl-box {
