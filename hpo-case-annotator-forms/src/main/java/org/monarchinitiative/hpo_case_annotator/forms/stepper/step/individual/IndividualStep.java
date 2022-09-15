@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.forms.stepper.step.individual;
 
 import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -15,7 +16,7 @@ import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierServi
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsBindingComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.disease.IndividualDiseaseDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.IndividualPhenotypeDataEdit;
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.forms.variants.IndividualVariantGenotypesObservableData;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
@@ -38,8 +39,8 @@ import java.util.stream.Stream;
 public class IndividualStep<T extends ObservableIndividualStudy> extends BaseStep<T> {
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
-    private final ListProperty<ObservableCuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();
+    private final ListProperty<ObservableCuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     @FXML
     private IndividualIdsBindingComponent individualIds;
@@ -102,18 +103,14 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
 
     @FXML
     private void addEditPhenotypesAction(ActionEvent e) {
-        Dialog<Boolean> dialog = new Dialog<>();
-        dialog.initOwner(individualIds.getParent().getScene().getWindow());
-        dialog.initStyle(StageStyle.DECORATED);
+        Dialog<Boolean> dialog = prepareEditDialog();
+
         dialog.setTitle("Add phenotypic features");
-        dialog.setResizable(true);
 
         IndividualPhenotypeDataEdit phenotypeDataEdit = new IndividualPhenotypeDataEdit();
         phenotypeDataEdit.hpoProperty().bind(hpo);
         phenotypeDataEdit.setInitialData(data.get().getIndividual()); // TODO - check non null?
         dialog.getDialogPane().setContent(phenotypeDataEdit);
-        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_CANCEL_BUTTONS);
-        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
         dialog.showAndWait()
                 .ifPresent(shouldCommit -> {
                     if (shouldCommit) phenotypeDataEdit.commit();
@@ -123,18 +120,13 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
 
     @FXML
     private void addEditDiseasesAction(ActionEvent e) {
-        Dialog<Boolean> dialog = new Dialog<>();
-        dialog.initOwner(individualIds.getParent().getScene().getWindow());
-        dialog.initStyle(StageStyle.DECORATED);
+        Dialog<Boolean> dialog = prepareEditDialog();
         dialog.setTitle("Set diseases"); // TODO - nicer title
-        dialog.setResizable(true);
 
         IndividualDiseaseDataEdit diseaseDataEdit = new IndividualDiseaseDataEdit();
         diseaseDataEdit.diseaseIdentifierServiceProperty().bind(diseaseIdentifierService);
         diseaseDataEdit.setInitialData(data.get().getIndividual());
         dialog.getDialogPane().setContent(diseaseDataEdit);
-        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_CANCEL_BUTTONS);
-        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
         dialog.showAndWait()
                 .ifPresent(shouldCommit -> {
                     if (shouldCommit) diseaseDataEdit.commit();
@@ -144,19 +136,32 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
 
     @FXML
     private void addEditGenotypesAction(ActionEvent e) {
-        Dialog<Boolean> dialog = new Dialog<>();
-        dialog.initOwner(individualIds.getParent().getScene().getWindow());
-        dialog.initStyle(StageStyle.DECORATED);
+        Dialog<Boolean> dialog = prepareEditDialog();
         dialog.setTitle("Set variant genotypes");
-        dialog.setResizable(true);
+
+        // We cannot cancel genotype change, hence no Cancel button.
+        dialog.getDialogPane().getButtonTypes().setAll(DialogUtil.OK_BUTTONS);
 
         IndividualVariantGenotypesObservableData content = new IndividualVariantGenotypesObservableData();
         content.setData(data.get().getIndividual()); // TODO - check non null?
         content.variantsProperty().bind(variants);
         dialog.getDialogPane().setContent(content);
-        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_BUTTONS);
-        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
+
         dialog.showAndWait();
         e.consume();
+    }
+
+    private Dialog<Boolean> prepareEditDialog() {
+        Dialog<Boolean> dialog = new Dialog<>();
+        dialog.initOwner(individualIds.getParent().getScene().getWindow());
+        dialog.initStyle(StageStyle.DECORATED);
+        dialog.setResizable(true);
+        // Bind "this" to "that", not "that" to "this"!
+        Bindings.bindContent(dialog.getDialogPane().getStylesheets(), individualIds.getParent().getStylesheets());
+
+        dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.OK_CANCEL_BUTTONS);
+        dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
+
+        return dialog;
     }
 }

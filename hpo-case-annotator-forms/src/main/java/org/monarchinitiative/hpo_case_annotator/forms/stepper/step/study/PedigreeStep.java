@@ -16,7 +16,7 @@ import javafx.stage.StageStyle;
 import org.monarchinitiative.hpo_case_annotator.forms.StudyResources;
 import org.monarchinitiative.hpo_case_annotator.forms.StudyResourcesAware;
 import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree;
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.Stepper;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.individual.PedigreeMemberSteps;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.*;

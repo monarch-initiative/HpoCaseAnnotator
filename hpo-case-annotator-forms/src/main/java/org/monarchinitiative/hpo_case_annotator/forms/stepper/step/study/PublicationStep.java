@@ -10,7 +10,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationBinding;
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.util.PubmedIO;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Publication;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;

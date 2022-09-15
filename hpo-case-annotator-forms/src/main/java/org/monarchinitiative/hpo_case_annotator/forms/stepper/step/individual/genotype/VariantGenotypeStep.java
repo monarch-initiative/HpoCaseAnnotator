@@ -5,7 +5,7 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantGenotypeTable;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;

@@ -4,7 +4,7 @@ import javafx.beans.Observable;
 import javafx.fxml.FXML;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextArea;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudy;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudyMetadata;
 

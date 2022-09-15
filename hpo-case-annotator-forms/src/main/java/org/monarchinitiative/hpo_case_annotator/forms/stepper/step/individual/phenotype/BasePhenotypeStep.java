@@ -14,7 +14,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.phenotype.BaseAddClinicalE
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.BrowseHpo;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeatureBinding;
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 

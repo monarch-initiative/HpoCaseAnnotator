@@ -11,7 +11,6 @@
          type="VBox"
          styleClass="step-box">
     <stylesheets>
-        <URL value="@../step-base.css"/>
         <URL value="@id-step.css"/>
     </stylesheets>
     <children>

@@ -6,8 +6,11 @@
 
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
-         type="VBox">
+         type="VBox"
+         stylesheets="@disease-step.css"
+         styleClass="step-box">
     <children>
+        <Label styleClass="h2" text="Diseases"/>
         <Label styleClass="stepper-instruction" text="Add diseases diagnosed in the individual"/>
 
         <GridPane hgap="5" vgap="5">
