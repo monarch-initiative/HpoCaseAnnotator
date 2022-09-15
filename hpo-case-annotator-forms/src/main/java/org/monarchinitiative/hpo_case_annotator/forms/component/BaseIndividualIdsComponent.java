@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
+import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
 import org.monarchinitiative.hpo_case_annotator.model.v2.VitalStatus;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
@@ -116,10 +117,17 @@ public class BaseIndividualIdsComponent<T extends BaseObservableIndividual> exte
     protected void bind(T data) {
         if (data != null) {
             individualId.textProperty().bind(data.idProperty());
-            sex.textProperty().bind(data.sexProperty().asString());
+            ObjectProperty<Sex> sexProperty = data.sexProperty();
+            sex.textProperty().bind(
+                    when(sexProperty.isNotNull())
+                            .then(sexProperty.asString())
+                            .otherwise("N/A"));
             age.bind(data.ageProperty());
             ObjectBinding<VitalStatus> vitalStatus = select(data, "vitalStatus", "status");
-            this.vitalStatus.textProperty().bind(when(vitalStatus.isNotNull()).then(vitalStatus.asString()).otherwise("N/A"));
+            this.vitalStatus.textProperty().bind(
+                    when(vitalStatus.isNotNull())
+                            .then(vitalStatus.asString())
+                            .otherwise("N/A"));
             timeOfDeath.item.dataProperty().bind(select(data, "vitalStatus", "timeOfDeath"));
         }
     }

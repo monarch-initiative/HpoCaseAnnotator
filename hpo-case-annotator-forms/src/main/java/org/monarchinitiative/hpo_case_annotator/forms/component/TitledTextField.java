@@ -59,6 +59,14 @@ public class TitledTextField extends TitledBase<TextField> {
         return item.textFormatterProperty();
     }
 
+    public final ObjectProperty<EventHandler<ActionEvent>> onActionProperty() {
+        return item.onActionProperty();
+    }
+
+    public final EventHandler<ActionEvent> getOnAction() {
+        return item.getOnAction();
+    }
+
     public void setOnAction(EventHandler<ActionEvent> handler) {
         item.setOnAction(handler);
     }

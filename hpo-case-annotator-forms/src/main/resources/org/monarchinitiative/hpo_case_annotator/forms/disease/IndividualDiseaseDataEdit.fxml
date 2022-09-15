@@ -14,13 +14,19 @@
         <GridPane hgap="5" vgap="5">
             <children>
                 <Label styleClass="h2" text="Search for diseases" />
-                <TitledTextField fx:id="diseaseIdTextField" onAction="#addDisease" name="Disease ID" promptText="E.g. OMIM:256000"
-                           GridPane.rowIndex="1" />
+                <TitledTextField fx:id="diseaseIdTextField" id="disease-id-search-field"
+                                 name="Disease ID" promptText="E.g. OMIM:256000"
+                                 onAction="#addDisease"
+                                 GridPane.rowIndex="1" />
 
-                <TitledTextField fx:id="diseaseNameTextField" onAction="#addDisease" name="Disease name" promptText="LEIGH SYNDROME; LS "
-                           GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TitledTextField fx:id="diseaseNameTextField" id="disease-name-search-field"
+                                 name="Disease name" promptText="LEIGH SYNDROME; LS "
+                                 onAction="#addDisease"
+                                 GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                <Button fx:id="addDiseaseButton" onAction="#addDisease" text="Add"
+                <Button fx:id="addDiseaseButton"
+                        text="Add"
+                        onAction="#addDisease"
                         GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
             </children>
         </GridPane>
