@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseTable;
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.DiseaseIdentifier;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableDiseaseStatus;

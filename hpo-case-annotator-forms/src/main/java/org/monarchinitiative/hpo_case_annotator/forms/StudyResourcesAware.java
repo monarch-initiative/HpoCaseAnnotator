@@ -7,6 +7,11 @@ public interface StudyResourcesAware {
 
     StudyResources getStudyResources();
 
+    /**
+     * Bind {@link StudyResources} of this instance to the {@code other} {@link StudyResourcesAware} implementation.
+     *
+     * @param other a {@link StudyResourcesAware} to be bound to.
+     */
     default void bindStudyResources(StudyResourcesAware other) {
         bind(this, other);
     }

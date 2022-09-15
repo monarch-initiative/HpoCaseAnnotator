@@ -1,7 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.forms.stepper.step.individual.id;
 
 import javafx.beans.Observable;
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 
 import java.net.URL;

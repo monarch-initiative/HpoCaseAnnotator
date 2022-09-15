@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
@@ -8,13 +7,9 @@
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="VBox"
          styleClass="step-box" >
-    <stylesheets>
-        <URL value="@../../step-base.css" />
-        <URL value="@../individual-step.css" />
-    </stylesheets>
     <children>
-        <Label styleClass="h2" text="Individual" />
-        <Label styleClass="stepper-instruction" text="Provide credentials of the individual under investigation." />
+        <Label styleClass="h2" text="Pedigree member"/>
+        <Label styleClass="stepper-instruction" text="Provide credentials for the pedigree member." />
         <PedigreeMemberIdsBindingComponent fx:id="individualIds" />
     </children>
 </fx:root>

@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms.individual;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -158,6 +159,8 @@ public abstract class BaseIndividual<T extends BaseObservableIndividual> extends
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.initOwner(phenotypePane.getParent().getScene().getWindow());
         dialog.setResizable(true);
+        // Bind "this" to "that", not "that" to "this"!
+        Bindings.bindContent(dialog.getDialogPane().getStylesheets(), phenotypePane.getParent().getStylesheets());
         dialog.getDialogPane().getButtonTypes().addAll(DialogUtil.UPDATE_CANCEL_BUTTONS);
         dialog.setResultConverter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
         return dialog;

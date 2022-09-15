@@ -7,7 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import org.monarchinitiative.hpo_case_annotator.forms.FunctionalAnnotationRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
-import org.monarchinitiative.hpo_case_annotator.forms.stepper.BaseStep;
+import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudy;
