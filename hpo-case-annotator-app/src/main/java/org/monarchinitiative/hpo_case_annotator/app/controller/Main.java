@@ -154,9 +154,13 @@ public class Main {
     private void newMenuItemAction(ActionEvent e) {
         var individualStudy = new CommandLinksDialog.CommandLinksButtonType(StudyType.INDIVIDUAL.getName(), StudyType.INDIVIDUAL.getDescription(), true);
         var familyStudy = new CommandLinksDialog.CommandLinksButtonType(StudyType.FAMILY.getName(), StudyType.FAMILY.getDescription(), false);
-        var cohortStudy = new CommandLinksDialog.CommandLinksButtonType(StudyType.COHORT.getName(), StudyType.COHORT.getDescription(), false);
+        // TODO - enable once we have Cohort Stepper
+//        var cohortStudy = new CommandLinksDialog.CommandLinksButtonType(StudyType.COHORT.getName(), StudyType.COHORT.getDescription(), false);
 
-        CommandLinksDialog dialog = new CommandLinksDialog(individualStudy, familyStudy, cohortStudy);
+        CommandLinksDialog dialog = new CommandLinksDialog(individualStudy,
+                familyStudy
+//                ,cohortStudy
+        );
 
         dialog.setTitle("New study");
         dialog.setHeaderText("Select study type");
@@ -168,8 +172,9 @@ public class Main {
                 return Optional.of(new ObservableIndividualStudy());
             } else if (bt.equals(familyStudy.getButtonType())) {
                 return Optional.of(new ObservableFamilyStudy());
-            } else if (bt.equals(cohortStudy.getButtonType())) {
-                return Optional.of(new ObservableCohortStudy());
+                // TODO - enable once we have Cohort Stepper
+//            } else if (bt.equals(cohortStudy.getButtonType())) {
+//                return Optional.of(new ObservableCohortStudy());
             } else {
                 return Optional.empty();
             }
