@@ -36,9 +36,15 @@ public abstract class BaseObservableIndividual extends DeepObservable implements
     protected BaseObservableIndividual(Individual individual) {
         if (individual != null) {
             id.set(individual.getId());
-            age.set(new ObservableTimeElement(individual.getAge()));
-            vitalStatus.set(new ObservableVitalStatus(individual.getVitalStatus()));
-            sex.set(individual.getSex());
+
+            if (individual.getAge() != null)
+                age.set(new ObservableTimeElement(individual.getAge()));
+
+            if (individual.getVitalStatus() != null)
+                vitalStatus.set(new ObservableVitalStatus(individual.getVitalStatus()));
+
+            if (individual.getSex() != null)
+                sex.set(individual.getSex());
 
             for (PhenotypicFeature pf : individual.getPhenotypicFeatures())
                 phenotypicFeatures.add(new ObservablePhenotypicFeature(pf));
