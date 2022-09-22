@@ -10,7 +10,7 @@ public class TitledCheckBox extends TitledBase<CheckBox> {
     private static final List<String> STYLECLASSES = List.of("tl-check-box");
 
     @Override
-    protected CheckBox createItem() {
+    protected CheckBox createTitledItem() {
         return new CheckBox();
     }
 
@@ -20,14 +20,14 @@ public class TitledCheckBox extends TitledBase<CheckBox> {
     }
 
     public boolean isSelected() {
-        return item.isSelected();
+        return titledItem.isSelected();
     }
 
     public void setSelected(boolean value) {
-        item.setSelected(value);
+        titledItem.setSelected(value);
     }
 
     public BooleanProperty selectedProperty() {
-        return item.selectedProperty();
+        return titledItem.selectedProperty();
     }
 }

@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.forms;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
+import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverService;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 /**
@@ -14,6 +15,7 @@ public class StudyResources {
     private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>(this, "diseaseIdentifierService");
     private final ObjectProperty<GenomicAssemblyRegistry> genomicAssemblyRegistry = new SimpleObjectProperty<>(this, "genomicAssemblyRegistry");
     private final ObjectProperty<FunctionalAnnotationRegistry> functionalAnnotationRegistry = new SimpleObjectProperty<>(this, "functionalAnnotationRegistry");
+    private final ObjectProperty<LiftOverService> liftoverService = new SimpleObjectProperty<>(this, "liftoverService");
 
     // -------------------------------------------------------------------------------------------------------------- //
 
@@ -47,5 +49,13 @@ public class StudyResources {
 
     public void setFunctionalAnnotationRegistry(FunctionalAnnotationRegistry functionalAnnotationRegistry) {
         this.functionalAnnotationRegistry.set(functionalAnnotationRegistry);
+    }
+
+    public ObjectProperty<LiftOverService> liftoverServiceProperty() {
+        return liftoverService;
+    }
+
+    public void setLiftoverService(LiftOverService liftoverService) {
+        this.liftoverService.set(liftoverService);
     }
 }

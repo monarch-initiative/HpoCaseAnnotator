@@ -21,5 +21,6 @@ public interface StudyResourcesAware {
         source.getStudyResources().diseaseIdentifierServiceProperty().bind(target.getStudyResources().diseaseIdentifierServiceProperty());
         source.getStudyResources().functionalAnnotationRegistryProperty().bind(target.getStudyResources().functionalAnnotationRegistryProperty());
         source.getStudyResources().genomicAssemblyRegistryProperty().bind(target.getStudyResources().genomicAssemblyRegistryProperty());
+        source.getStudyResources().liftoverServiceProperty().bind(target.getStudyResources().liftoverServiceProperty());
     }
 }

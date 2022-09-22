@@ -5,6 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.liftover.Liftover?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.variants.input.FunctionalAnnotationTable?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
@@ -19,7 +20,7 @@
           <children>
             <VBox>
                 <children>
-                    <Label styleClass="h2" text="VCF sequence variant" />
+                    <Label styleClass="h1" text="VCF sequence variant" />
                     <HBox alignment="CENTER_LEFT" styleClass="row">
                         <children>
                             <VBox alignment="CENTER_LEFT" styleClass="column" HBox.hgrow="ALWAYS">
@@ -102,7 +103,14 @@
             <VBox HBox.hgrow="SOMETIMES">
                 <FunctionalAnnotationTable fx:id="functionalAnnotationTable"/>
             </VBox>
+              <Separator orientation="VERTICAL" HBox.hgrow="NEVER" />
+            <VBox>
+              <children>
+                  <Liftover fx:id="liftover"/>
+              </children>
+            </VBox>
          </children>
       </HBox>
+
    </children>
 </fx:root>

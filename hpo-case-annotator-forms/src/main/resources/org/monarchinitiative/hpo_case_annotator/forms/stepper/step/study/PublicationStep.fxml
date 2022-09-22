@@ -12,7 +12,7 @@
          styleClass="step-box">
     <children>
         <Label styleClass="h1" text="Publication"/>
-        <Label styleClass="stepper-instruction"
+        <Label styleClass="instruction-text"
                text="Enter publication that describes the study or leave unset to set up later."/>
         <CheckBox fx:id="publicationIsUnknown" text="Leave unset"/>
         <VBox fx:id="publicationDataBox">
@@ -32,7 +32,7 @@
                 <HBox id="separator">
                     <children>
                         <Separator HBox.hgrow="ALWAYS"/>
-                        <Label styleClass="stepper-instruction" text="or"/>
+                        <Label styleClass="instruction-text" text="or"/>
                         <Separator HBox.hgrow="ALWAYS"/>
                     </children>
                 </HBox>

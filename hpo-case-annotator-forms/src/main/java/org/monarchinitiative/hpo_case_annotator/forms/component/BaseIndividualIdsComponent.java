@@ -128,7 +128,7 @@ public class BaseIndividualIdsComponent<T extends BaseObservableIndividual> exte
                     when(vitalStatus.isNotNull())
                             .then(vitalStatus.asString())
                             .otherwise("N/A"));
-            timeOfDeath.item.dataProperty().bind(select(data, "vitalStatus", "timeOfDeath"));
+            timeOfDeath.titledItem.dataProperty().bind(select(data, "vitalStatus", "timeOfDeath"));
         }
     }
 
@@ -139,7 +139,7 @@ public class BaseIndividualIdsComponent<T extends BaseObservableIndividual> exte
             sex.textProperty().unbind();
             age.unbind();
             vitalStatus.textProperty().unbind();
-            timeOfDeath.item.dataProperty().unbind();
+            timeOfDeath.titledItem.dataProperty().unbind();
         }
     }
 }

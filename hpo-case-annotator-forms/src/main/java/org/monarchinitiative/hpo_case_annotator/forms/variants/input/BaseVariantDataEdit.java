@@ -14,12 +14,14 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.util.Callback;
+import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverService;
 import org.monarchinitiative.hpo_case_annotator.core.reference.functional.FunctionalAnnotation;
 import org.monarchinitiative.hpo_case_annotator.core.reference.functional.FunctionalAnnotationService;
 import org.monarchinitiative.hpo_case_annotator.forms.*;
 import org.monarchinitiative.hpo_case_annotator.core.reference.genome.GenomicAssemblyService;
 import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataException;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.liftover.Liftover;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.StructuralVariantMetadata;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadata;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
@@ -47,7 +49,9 @@ import static javafx.beans.binding.Bindings.*;
  */
 public abstract class BaseVariantDataEdit extends VBoxDataEdit<ObservableCuratedVariant> implements Observable {
 
-    // Names corresponding to Svart assembly names.
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseVariantDataEdit.class);
+
+    // Names corresponding to Svart's assembly names.
     private static final String HG18_NAME = "NCBI36";
     private static final String HG19_NAME = "GRCh37.p13";
     private static final String HG38_NAME = "GRCh38.p13";
@@ -56,8 +60,6 @@ public abstract class BaseVariantDataEdit extends VBoxDataEdit<ObservableCurated
         Stream<Observable> dependencies = Stream.of(vc.genomeAssemblyToggleGroup.selectedToggleProperty());
         return Stream.concat(dependencies, vc.dependencies());
     };
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseVariantDataEdit.class);
 
     protected ObservableCuratedVariant item;
 
@@ -79,6 +81,8 @@ public abstract class BaseVariantDataEdit extends VBoxDataEdit<ObservableCurated
     private RadioButton hg38RadioButton;
     @FXML
     private FunctionalAnnotationTable functionalAnnotationTable;
+    @FXML
+    private Liftover liftover;
 
     protected BaseVariantDataEdit(URL location) {
         FXMLLoader loader = new FXMLLoader(location);
@@ -97,6 +101,9 @@ public abstract class BaseVariantDataEdit extends VBoxDataEdit<ObservableCurated
     }
     public ObjectProperty<FunctionalAnnotationRegistry> functionalAnnotationRegistryProperty() {
         return functionalAnnotationRegistry;
+    }
+    public ObjectProperty<LiftOverService> liftoverServiceProperty() {
+        return liftover.liftoverServiceProperty();
     }
 
     @FXML

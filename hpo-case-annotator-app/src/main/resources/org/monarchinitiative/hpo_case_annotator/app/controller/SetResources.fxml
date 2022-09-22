@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.monarchinitiative.hpo_case_annotator.app.controller.SetResourcesController"
+      stylesheets="@set-resources.css"
       styleClass="section">
-    <stylesheets>
-        <URL value="@../base.css" />
-        <URL value="@set-resources.css" />
-    </stylesheets>
     <children>
         <Label styleClass="title" text="Initialize resources" />
         <VBox styleClass="column">

@@ -4,6 +4,7 @@
 <?import java.net.URL?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.liftover.Liftover?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.variants.input.GenomicBreakendDataEdit?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.variants.input.FunctionalAnnotationTable?>
 
@@ -113,6 +114,12 @@
                 </VBox>
                 <Separator orientation="VERTICAL" HBox.hgrow="NEVER" />
                 <FunctionalAnnotationTable fx:id="functionalAnnotationTable"/>
+                <Separator orientation="VERTICAL" HBox.hgrow="NEVER" />
+                <VBox>
+                    <children>
+                        <Liftover fx:id="liftover"/>
+                    </children>
+                </VBox>
             </children>
         </HBox>
     </children>

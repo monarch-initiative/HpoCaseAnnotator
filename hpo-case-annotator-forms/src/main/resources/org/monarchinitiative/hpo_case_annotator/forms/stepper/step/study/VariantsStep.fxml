@@ -11,8 +11,8 @@
          styleClass="step-box">
     <children>
         <Label styleClass="h1" text="Variants"/>
-        <Label styleClass="stepper-instruction"
-               text="Add genomic variants identified in the study. Variant genotypes for study members will be set later."/>
+        <Label styleClass="instruction-text"
+               text="Add genomic variants identified in the study. Variant genotypes for the study members will be set later."/>
         <VariantSummary fx:id="variantSummary"/>
     </children>
 </fx:root>

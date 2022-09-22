@@ -11,7 +11,7 @@ public class TitledComboBox<T> extends TitledBase<ComboBox<T>> {
     private static final List<String> STYLECLASSES = List.of("tl-combo-box");
 
     @Override
-    protected ComboBox<T> createItem() {
+    protected ComboBox<T> createTitledItem() {
         return new ComboBox<>();
     }
 
@@ -21,19 +21,19 @@ public class TitledComboBox<T> extends TitledBase<ComboBox<T>> {
     }
 
     public void setValue(T value) {
-        item.setValue(value);
+        titledItem.setValue(value);
     }
 
     public T getValue() {
-        return item.getValue();
+        return titledItem.getValue();
     }
 
     public ObjectProperty<T> valueProperty() {
-        return item.valueProperty();
+        return titledItem.valueProperty();
     }
 
     public ObservableList<T> getItems() {
-        return item.getItems();
+        return titledItem.getItems();
     }
 
 }

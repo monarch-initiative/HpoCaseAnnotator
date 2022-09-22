@@ -59,7 +59,7 @@ public class BrowseHpo extends VBox {
         searchField.disableProperty().bind(hpo.isNull());
         suggestionProvider.ontologyProperty().bind(hpo);
 
-        AutoCompletionBinding<String> binding = TextFields.bindAutoCompletion(searchField.getItem(), suggestionProvider);
+        AutoCompletionBinding<String> binding = TextFields.bindAutoCompletion(searchField.getTitledItem(), suggestionProvider);
         binding.minWidthProperty().bind(searchField.widthProperty());
         binding.setVisibleRowCount(AUTOCOMPLETION_ROW_COUNT);
         binding.setHideOnEscape(true);
@@ -111,7 +111,7 @@ public class BrowseHpo extends VBox {
 
             phenotypicFeatureConsumer.get()
                     .accept(data);
-            searchField.getItem().clear();
+            searchField.getTitledItem().clear();
         }
 
         e.consume();

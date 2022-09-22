@@ -13,7 +13,7 @@
          styleClass="step-box" >
     <children>
         <Label styleClass="h2" text="Phenotypic features"/>
-        <Label styleClass="stepper-instruction" text="Add phenotype terms observed in the individual"/>
+        <Label styleClass="instruction-text" text="Add phenotype terms observed in the individual"/>
         <HBox>
             <children>
                 <VBox >

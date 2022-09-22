@@ -13,6 +13,7 @@ public class CohortStudySteps extends BaseStudySteps<ObservableCohortStudy> {
         VariantsStep<ObservableCohortStudy> variants = new VariantsStep<>();
         variants.genomicAssemblyRegistryProperty().bind(studyResources.genomicAssemblyRegistryProperty());
         variants.functionalAnnotationRegistryProperty().bind(studyResources.functionalAnnotationRegistryProperty());
+        variants.liftoverServiceProperty().bind(studyResources.liftoverServiceProperty());
         steps.add(variants);
 
         // TODO - implement adding cohort members

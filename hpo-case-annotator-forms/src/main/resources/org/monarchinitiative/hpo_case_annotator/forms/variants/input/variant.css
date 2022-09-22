@@ -18,6 +18,24 @@ Separator {
     -fx-padding: 0px 5px 0px 5px;
 }
 
+Liftover {
+    -fx-max-width: 250;
+}
+
+Liftover .instruction-text {
+    /* Should match the max width of the Liftover above */
+    -fx-max-width: 250;
+}
+
+Liftover .tl-box {
+    -fx-min-width: 250;
+}
+
+Liftover .tl-combo-box {
+    -fx-min-width: 250;
+    -fx-pref-width: 250;
+}
+
 /* ------------------------------------------------------------------------------------------------------------------ */
 /* The headings are the same as in family-study.css */
 

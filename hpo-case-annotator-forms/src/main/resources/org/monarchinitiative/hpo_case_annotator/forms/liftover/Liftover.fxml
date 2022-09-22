@@ -2,63 +2,57 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      type="VBox"
-      stylesheets="@liftover.css">
+         type="VBox"
+         stylesheets="@liftover.css">
     <children>
-      <HBox>
-         <children>
-            <VBox styleClass="column" HBox.hgrow="ALWAYS">
-               <children>
-                  <Label styleClass="h2" text="Input" />
-                      <VBox alignment="CENTER_LEFT" styleClass="column">
-                          <children>
-                              <Label styleClass="h3" text="Source" />
-                              <ComboBox fx:id="sourceAssembly" maxWidth="1.7976931348623157E308" />
-                          </children>
-                      </VBox>
-                      <VBox alignment="CENTER_LEFT" styleClass="column">
-                          <children>
-                              <Label styleClass="h3" text="Target" />
-                              <ComboBox fx:id="targetAssembly" maxWidth="1.7976931348623157E308" />
-                          </children>
-                      </VBox>
-                      <VBox alignment="CENTER_LEFT" styleClass="column">
-                          <children>
-                              <Label styleClass="h3" text="Contig" />
-                              <ComboBox fx:id="sourceContig" maxWidth="1.7976931348623157E308" />
-                          </children>
-                      </VBox>
-                      <VBox alignment="CENTER_LEFT" styleClass="column">
-                          <children>
-                              <Label styleClass="h3" text="Position" />
-                              <TextField fx:id="sourcePosition" />
-                          </children>
-                      </VBox>
-               </children>
-            </VBox>
-            <Separator orientation="VERTICAL" prefHeight="200.0" />
-            <VBox styleClass="column" HBox.hgrow="ALWAYS">
-               <children>
-                      <Label styleClass="h2" text="Result" />
-                  <VBox styleClass="column">
-                     <children>
-                        <Label styleClass="h3" text="Contig" />
-                        <Label fx:id="resultContigLabel" />
-                     </children>
-                  </VBox>
-                  <VBox styleClass="column">
-                     <children>
-                        <Label styleClass="h3" text="Position" />
-                            <TextField fx:id="resultPosition" editable="false" />
-                     </children>
-                  </VBox>
-               </children>
-            </VBox>
-         </children>
-      </HBox>
-      <Separator prefWidth="200.0" />
-      <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" />
+        <Label styleClass="h1" text="Liftover"/>
+        <Label styleClass="instruction-text" text="Lift genomic coordinates from the source genomic assembly to the target assembly."/>
+        <FlowPane>
+            <children>
+                <GridPane vgap="5">
+                    <children>
+                        <Label styleClass="h3" text="Source" />
+                        <TitledComboBox fx:id="sourceAssembly" name="Genomic assembly"
+                                        GridPane.rowIndex="1"/>
+                        <TitledComboBox fx:id="sourceContig" name="Contig"
+                                        GridPane.rowIndex="2" />
+                        <TitledTextField fx:id="sourcePosition" name="Position"
+                                         GridPane.rowIndex="3" />
+                    </children>
+                    <rowConstraints>
+                        <RowConstraints valignment="TOP" />
+                        <RowConstraints valignment="TOP" prefHeight="40"/>
+                        <RowConstraints valignment="TOP" prefHeight="40"/>
+                        <RowConstraints valignment="TOP" prefHeight="40"/>
+                    </rowConstraints>
+                </GridPane>
+
+                <GridPane vgap="5">
+                    <children>
+                        <Label styleClass="h3" text="Target"
+                               GridPane.rowIndex="0" />
+                        <TitledComboBox fx:id="targetAssembly" name="Genomic assembly"
+                                        GridPane.rowIndex="1" />
+                        <TitledLabel fx:id="resultContigLabel" name="Contig"
+                                     GridPane.rowIndex="2" />
+                        <TitledTextField fx:id="resultPosition" name="Position"
+                                         GridPane.rowIndex="3"/>
+                    </children>
+                    <rowConstraints>
+                        <RowConstraints valignment="TOP"/>
+                        <RowConstraints valignment="TOP" prefHeight="40"/>
+                        <RowConstraints valignment="TOP" prefHeight="40"/>
+                        <RowConstraints valignment="TOP" prefHeight="40"/>
+                    </rowConstraints>
+                </GridPane>
+            </children>
+        </FlowPane>
+
+        <Separator/>
+
+        <TitledLabel fx:id="messageLabel" name="Status"/>
     </children>
 </fx:root>

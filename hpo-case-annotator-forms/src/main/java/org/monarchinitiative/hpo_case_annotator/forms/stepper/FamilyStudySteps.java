@@ -13,6 +13,7 @@ public class FamilyStudySteps extends BaseStudySteps<ObservableFamilyStudy> {
         VariantsStep<ObservableFamilyStudy> variants = new VariantsStep<>();
         variants.genomicAssemblyRegistryProperty().bind(studyResources.genomicAssemblyRegistryProperty());
         variants.functionalAnnotationRegistryProperty().bind(studyResources.functionalAnnotationRegistryProperty());
+        variants.liftoverServiceProperty().bind(studyResources.liftoverServiceProperty());
         steps.add(variants);
 
         PedigreeStep<ObservableFamilyStudy> pedigree = new PedigreeStep<>();
