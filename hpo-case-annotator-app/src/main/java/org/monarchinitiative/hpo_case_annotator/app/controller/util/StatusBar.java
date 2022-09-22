@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.app.controller;
+package org.monarchinitiative.hpo_case_annotator.app.controller.util;
 
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ListProperty;
@@ -12,13 +12,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import org.monarchinitiative.hpo_case_annotator.app.model.StatusMessage;
 import org.monarchinitiative.hpo_case_annotator.app.model.StatusService;
-import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 
 import static javafx.beans.binding.Bindings.*;
 
-@Controller
 public class StatusBar extends HBox {
 
     private final ObjectProperty<StatusService> statusServiceProperty = new SimpleObjectProperty<>();

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@status-bar.css"
+         id="outer-box">
+    <children>
+        <TitledLabel fx:id="message" id="message-label" name="Status"/>
+    </children>
+</fx:root>

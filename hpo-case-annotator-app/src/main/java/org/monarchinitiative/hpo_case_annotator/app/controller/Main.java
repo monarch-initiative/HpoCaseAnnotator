@@ -24,6 +24,7 @@ import org.monarchinitiative.hpo_case_annotator.convert.ConversionCodecs;
 import org.monarchinitiative.hpo_case_annotator.forms.StudyResources;
 import org.monarchinitiative.hpo_case_annotator.forms.StudyResourcesAware;
 import org.monarchinitiative.hpo_case_annotator.forms.liftover.Liftover;
+import org.monarchinitiative.hpo_case_annotator.forms.status.StatusBar;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.*;
 import org.monarchinitiative.hpo_case_annotator.forms.study.BaseStudyComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.study.CohortStudyComponent;
@@ -112,6 +113,9 @@ public class Main {
     @FXML
     private TabPane studiesTabPane;
 
+    @FXML
+    private StatusBar statusBar;
+
     public Main(ControllerFactory controllerFactory,
                 OptionalResources optionalResources,
                 OptionalServices optionalServices,
@@ -127,6 +131,7 @@ public class Main {
         disableMenuEntriesDependentOnADataModel();
 
         liftoverMenuItem.disableProperty().bind(optionalServices.liftoverServiceProperty().isNull());
+        statusBar.messageProperty().bind(optionalResources.statusBinding());
     }
 
     private void disableMenuEntriesDependentOnADataModel() {

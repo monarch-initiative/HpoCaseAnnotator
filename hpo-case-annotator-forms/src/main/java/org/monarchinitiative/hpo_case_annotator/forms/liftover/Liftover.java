@@ -13,6 +13,7 @@ import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverService;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
+import org.monarchinitiative.hpo_case_annotator.forms.status.StatusBar;
 import org.monarchinitiative.hpo_case_annotator.forms.util.ContigNameStringConverter;
 import org.monarchinitiative.svart.Contig;
 
@@ -36,7 +37,7 @@ public class Liftover extends VBox {
     @FXML
     private TitledTextField resultPosition;
     @FXML
-    private TitledLabel messageLabel;
+    private StatusBar statusBar;
 
     public Liftover() {
         FXMLLoader loader = new FXMLLoader(Liftover.class.getResource("Liftover.fxml"));
@@ -71,13 +72,13 @@ public class Liftover extends VBox {
             LiftOverService service = liftoverService.get();
             if (service != null) {
                 if (service.sourceGenomicAssemblies().isEmpty()) {
-                    messageLabel.setText("Liftover is not set up");
+                    statusBar.setMessage("Liftover is not set up");
                 } else {
                     sourceAssembly.getItems().setAll(service.sourceGenomicAssemblyNames());
-                    messageLabel.setText("Set source genomic assembly");
+                    statusBar.setMessage("Set source genomic assembly");
                 }
             } else {
-                messageLabel.setText("Liftover is not set up");
+                statusBar.setMessage("Liftover is not set up");
             }
         };
     }
@@ -103,25 +104,25 @@ public class Liftover extends VBox {
         return Bindings.createObjectBinding(() -> {
                     LiftOverService service = liftoverService.get();
                     if (service == null) {
-                        messageLabel.setText("Liftover is not set up");
+                        statusBar.setMessage("Liftover is not set up");
                         return null;
                     }
                     String target = targetAssembly.getValue();
                     if (target == null) {
-                        messageLabel.setText("Set target genomic assembly");
+                        statusBar.setMessage("Set target genomic assembly");
                         return null;
                     }
 
                     Contig source = sourceContig.getValue();
                     if (source == null) {
-                        messageLabel.setText("Set source contig");
+                        statusBar.setMessage("Set source contig");
                         return null;
                     }
                     int pos;
                     try {
                         pos = Integer.parseInt(sourcePosition.getText());
                     } catch (NumberFormatException e) {
-                        messageLabel.setText("Set source position");
+                        statusBar.setMessage("Set source position");
                         return null;
                     }
 
@@ -137,11 +138,11 @@ public class Liftover extends VBox {
             if (novel == null) {
                 resultContigLabel.setText(null);
                 resultPosition.getTitledItem().clear();
-                messageLabel.setText(String.format("Unable to convert %s:%s", sourceContig.getValue().ucscName(), sourcePosition.getText()));
+                statusBar.setMessage(String.format("Unable to convert %s:%s", sourceContig.getValue().ucscName(), sourcePosition.getText()));
             } else {
                 resultContigLabel.setText(novel.contig());
                 resultPosition.setText(String.valueOf(novel.position()));
-                messageLabel.setText("Success!");
+                statusBar.setMessage("Success!");
             }
         };
     }
