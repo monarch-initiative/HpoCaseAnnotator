@@ -285,7 +285,7 @@ public class Main {
             stage.initStyle(StageStyle.DECORATED);
             stage.initOwner(getOwnerWindow());
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Initialize resources");
+            stage.setTitle("Settings");
             Scene scene = new Scene(parent);
             scene.getStylesheets().add(App.BASE_CSS);
             stage.setScene(scene);

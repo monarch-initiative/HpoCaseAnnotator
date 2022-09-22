@@ -41,7 +41,11 @@
                     </accelerator>
                 </MenuItem>
                 <SeparatorMenuItem mnemonicParsing="false"/>
-                <MenuItem mnemonicParsing="false" onAction="#setResourcesMenuItemAction" text="Settings"/>
+                <MenuItem mnemonicParsing="false" onAction="#setResourcesMenuItemAction" text="Settings">
+                    <accelerator>
+                        <KeyCodeCombination alt="DOWN" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP"/>
+                    </accelerator>
+                </MenuItem>
                 <SeparatorMenuItem mnemonicParsing="false"/>
                 <MenuItem mnemonicParsing="false" onAction="#exitMenuItemAction" text="Exit">
                     <accelerator>

@@ -1,5 +1,6 @@
-.section {
+#outer-box {
     -fx-pref-width: 1200px;
+    -fx-padding: 5;
 }
 
 .h2 {
