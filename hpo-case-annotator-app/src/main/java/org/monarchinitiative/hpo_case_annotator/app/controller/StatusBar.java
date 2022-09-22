@@ -1,22 +1,27 @@
 package org.monarchinitiative.hpo_case_annotator.app.controller;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.StringBinding;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import org.monarchinitiative.hpo_case_annotator.app.model.StatusMessage;
+import org.monarchinitiative.hpo_case_annotator.app.model.StatusService;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 
+import static javafx.beans.binding.Bindings.*;
+
+@Controller
 public class StatusBar extends HBox {
 
-    private final ObservableList<String> messages = FXCollections.observableArrayList();
+    private final ObjectProperty<StatusService> statusServiceProperty = new SimpleObjectProperty<>();
 
     @FXML
     private Label summaryLabel;
@@ -37,31 +42,37 @@ public class StatusBar extends HBox {
         }
     }
 
+    public ObjectProperty<StatusService> statusServiceProperty() {
+        return statusServiceProperty;
+    }
+
     @FXML
     private void initialize() {
-        StringBinding summaryBinding = Bindings.createStringBinding(
-                () -> switch (messages.size()) {
-                    case 0 -> "OK";
-                    case 1 -> "1 error";
-                    default -> messages.size() + " errors";
-                },
-                messages);
-        summaryLabel.textProperty().bind(summaryBinding);
+        statusServiceProperty.addListener((obs, old, novel) -> {
+            if (novel != null) {
+                novel.messagesProperty().sizeProperty()
+                        .addListener((sizeObservable, oldSize, newSize) ->
+                                summaryLabel.setText(switch (newSize.intValue()) {
+                                    case 0 -> "OK";
+                                    case 1 -> "1 issue";
+                                    default -> "%d issues".formatted(newSize.intValue());
+                                }));
+            }
+        });
 
-        StringBinding firstMessageBinding = Bindings.createStringBinding(
-                () -> (messages.isEmpty()) ? "" : messages.get(0),
-                messages);
-        messageLabel.textProperty().bind(firstMessageBinding);
 
-        BooleanBinding noMessagesBinding = Bindings.createBooleanBinding(messages::isEmpty, messages);
-        clearButton.disableProperty().bind(noMessagesBinding);
-    }
+        ObjectBinding<ListProperty<StatusMessage>> messages = select(statusServiceProperty, "messages");
 
-    public void showMessage(String message) {
-        showMessages(message);
-    }
-    public void showMessages(String... messages) {
-        this.messages.addAll(messages);
+        ObjectBinding<StatusMessage> messageBinding = when(messages.isNull())
+                .then((StatusMessage) null)
+                .otherwise(valueAt(messages.get(), 0));
+
+        messageLabel.textProperty().bind(when(messageBinding.isNotNull())
+                .then(messageBinding.getValue().messageProperty())
+                .otherwise((String) null));
+
+
+        clearButton.disableProperty().bind(messages.isNull().or(messages.get().emptyProperty()));
     }
 
     @FXML
@@ -72,6 +83,8 @@ public class StatusBar extends HBox {
 
     @FXML
     private void clearButtonAction() {
-        this.messages.clear();
+        StatusService service = statusServiceProperty.get();
+        if (service != null)
+            service.messagesProperty().clear();
     }
 }

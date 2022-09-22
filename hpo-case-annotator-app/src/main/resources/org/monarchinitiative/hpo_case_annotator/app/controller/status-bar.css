@@ -1,9 +1,9 @@
-HBox {
-    -fx-background-color: #ded7d7;
+#outer-box {
+    -fx-alignment: CENTER_LEFT;
     -fx-padding: 5px;
 }
 
-Button {
+#clear-button {
     -fx-min-width: 80px;
     -fx-min-height: 30px;
 }

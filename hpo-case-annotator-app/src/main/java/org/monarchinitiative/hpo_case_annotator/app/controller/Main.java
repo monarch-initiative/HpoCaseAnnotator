@@ -112,9 +112,6 @@ public class Main {
     @FXML
     private TabPane studiesTabPane;
 
-    @FXML
-    private StatusBar statusBar;
-
     public Main(ControllerFactory controllerFactory,
                 OptionalResources optionalResources,
                 OptionalServices optionalServices,
