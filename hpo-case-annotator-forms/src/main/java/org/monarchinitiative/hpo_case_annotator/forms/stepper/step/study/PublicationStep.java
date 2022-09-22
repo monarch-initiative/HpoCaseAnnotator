@@ -49,10 +49,12 @@ public class PublicationStep<T extends ObservableStudy> extends BaseStep<T> {
 
     @Override
     public void invalidated(Observable obs) {
-        if (valueIsBeingSetProgrammatically || data.get() == null)
+        if (valueIsBeingSetProgrammatically)
             return;
 
         T data = this.data.get();
+        if (data == null)
+            return;
 
         if (obs.equals(publicationIsUnknown.selectedProperty())) {
             if (publicationIsUnknown.isSelected())
@@ -70,12 +72,14 @@ public class PublicationStep<T extends ObservableStudy> extends BaseStep<T> {
     protected void bind(T data) {
         try {
             valueIsBeingSetProgrammatically = true;
-
-            publicationIsUnknown.setSelected(data == null || data.getPublication() == null);
-            if (data != null) {
-                publicationBinding.dataProperty().bind(data.publicationProperty());
-            } else {
+            if (data == null) {
+                publicationIsUnknown.setSelected(true);
                 publicationBinding.setData(null);
+            } else {
+                if (data.getPublication() == null)
+                    // By default, the publication should be available.
+                    data.setPublication(new ObservablePublication());
+                publicationBinding.dataProperty().bind(data.publicationProperty());
             }
         } finally {
             valueIsBeingSetProgrammatically = false;
