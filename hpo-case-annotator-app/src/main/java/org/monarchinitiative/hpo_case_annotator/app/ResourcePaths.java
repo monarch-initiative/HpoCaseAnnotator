@@ -20,7 +20,7 @@ public class ResourcePaths {
     /**
      * Use this name to save HPO file on the local filesystem.
      */
-    public static final String DEFAULT_HPO_FILE_NAME = "HP.json";
+    public static final String DEFAULT_HPO_FILE_NAME = "hp.json";
 
     public static final String LIFTOVER_CHAIN_PATHS_PROPERTY = "liftover.chain.paths";
 
