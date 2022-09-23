@@ -91,7 +91,7 @@
                                           <HBox alignment="CENTER_LEFT" styleClass="row">
                                               <children>
                                                   <Label text="Reference" />
-                                                  <TextField fx:id="referenceTextField" promptText="e.g. N" HBox.hgrow="ALWAYS" />
+                                                  <Label text="N" HBox.hgrow="ALWAYS" style="-fx-text-fill: gray"/>
                                               </children>
                                           </HBox>
                                           <HBox alignment="CENTER_LEFT" styleClass="row">

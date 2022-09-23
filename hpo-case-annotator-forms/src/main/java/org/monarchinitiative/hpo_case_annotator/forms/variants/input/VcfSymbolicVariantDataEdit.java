@@ -27,8 +27,6 @@ public class VcfSymbolicVariantDataEdit extends VcfSequenceOrSymbolicVariantData
     @FXML
     private TextField endTextField;
     @FXML
-    private TextField referenceTextField;
-    @FXML
     private ComboBox<VariantType> altComboBox;
 
     public VcfSymbolicVariantDataEdit() {
@@ -47,7 +45,6 @@ public class VcfSymbolicVariantDataEdit extends VcfSequenceOrSymbolicVariantData
 
         startTextField.setText(String.valueOf(data.getStart()));
         endTextField.setText(String.valueOf(data.getEnd()));
-        referenceTextField.setText(data.getRef());
         altComboBox.setValue(data.getVariantType());
     }
 
@@ -60,7 +57,8 @@ public class VcfSymbolicVariantDataEdit extends VcfSequenceOrSymbolicVariantData
         item.setStart(Integer.parseInt(startTextField.getText()));
         item.setEnd(Integer.parseInt(endTextField.getText()));
 
-        item.setRef(referenceTextField.getText());
+        item.setRef("N");
+        item.setAlt(altComboBox.getValue().toString());
         item.setVariantType(altComboBox.getValue());
     }
 
@@ -69,7 +67,6 @@ public class VcfSymbolicVariantDataEdit extends VcfSequenceOrSymbolicVariantData
         Stream<Observable> dependencies = Stream.of(
                 startTextField.textProperty(),
                 endTextField.textProperty(),
-                referenceTextField.textProperty(),
                 altComboBox.valueProperty());
         return Stream.concat(super.dependencies(), dependencies);
     }
