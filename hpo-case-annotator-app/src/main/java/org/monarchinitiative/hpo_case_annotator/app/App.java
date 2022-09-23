@@ -131,7 +131,10 @@ public class App extends Application {
         if (optionalResources.getBiocuratorId() != null) {
             resourceProperties.setProperty(ResourcePaths.BIOCURATOR_ID_PROPERTY, optionalResources.getBiocuratorId());
         }
-        resourceProperties.store(new FileWriter(target), "Hpo Case Annotator properties");
+        try (FileWriter writer = new FileWriter(target)) {
+            resourceProperties.store(writer, "Hpo Case Annotator properties");
+        }
+
         LOGGER.debug("Properties saved to `{}`", target.getAbsolutePath());
     }
 

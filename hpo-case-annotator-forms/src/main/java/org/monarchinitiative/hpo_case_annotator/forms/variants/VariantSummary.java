@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
 import org.controlsfx.dialog.CommandLinksDialog;
+import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverService;
 import org.monarchinitiative.hpo_case_annotator.forms.FunctionalAnnotationRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
@@ -41,6 +42,7 @@ public class VariantSummary extends VBox {
 
     private final ObjectProperty<GenomicAssemblyRegistry> genomicAssemblyRegistry = new SimpleObjectProperty<>();
     private final ObjectProperty<FunctionalAnnotationRegistry> functionalAnnotationRegistry = new SimpleObjectProperty<>();
+    private final ObjectProperty<LiftOverService> liftoverService = new SimpleObjectProperty<>();
 
     @FXML
     private VariantTable variantTable;
@@ -86,6 +88,10 @@ public class VariantSummary extends VBox {
 
     public ObjectProperty<FunctionalAnnotationRegistry> functionalAnnotationRegistryProperty() {
         return functionalAnnotationRegistry;
+    }
+
+    public ObjectProperty<LiftOverService> liftoverServiceProperty() {
+        return liftoverService;
     }
 
     @FXML
@@ -152,6 +158,7 @@ public class VariantSummary extends VBox {
         // bind properties
         content.genomicAssemblyRegistryProperty().bind(genomicAssemblyRegistry);
         content.functionalAnnotationRegistryProperty().bind(functionalAnnotationRegistry);
+        content.liftoverServiceProperty().bind(liftoverService);
         content.setInitialData(variant); // TODO - check non null?
 
         // (*) Setup dialog

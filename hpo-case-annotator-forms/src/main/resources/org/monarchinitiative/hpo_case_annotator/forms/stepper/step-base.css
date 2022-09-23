@@ -6,10 +6,3 @@
 .spacing-box {
     -fx-padding: 15 0 0 0;
 }
-
-.stepper-instruction {
-    -fx-font-style: italic;
-    -fx-font-size: 0.9em;
-    -fx-text-fill: derive(-col-medium, -50%);
-    -fx-padding: 5 0 10 10;
-}

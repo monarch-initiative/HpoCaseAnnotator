@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.status.StatusBar?>
 
 <BorderPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.monarchinitiative.hpo_case_annotator.app.controller.Main"
@@ -40,7 +41,11 @@
                     </accelerator>
                 </MenuItem>
                 <SeparatorMenuItem mnemonicParsing="false"/>
-                <MenuItem mnemonicParsing="false" onAction="#setResourcesMenuItemAction" text="Initialize resources"/>
+                <MenuItem mnemonicParsing="false" onAction="#setResourcesMenuItemAction" text="Settings">
+                    <accelerator>
+                        <KeyCodeCombination alt="DOWN" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP"/>
+                    </accelerator>
+                </MenuItem>
                 <SeparatorMenuItem mnemonicParsing="false"/>
                 <MenuItem mnemonicParsing="false" onAction="#exitMenuItemAction" text="Exit">
                     <accelerator>
@@ -111,4 +116,7 @@
             </children>
         </VBox>
     </center>
+    <bottom>
+        <StatusBar fx:id="statusBar"/>
+    </bottom>
 </BorderPane>

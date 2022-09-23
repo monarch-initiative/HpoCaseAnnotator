@@ -9,7 +9,7 @@
          styleClass="step-box">
     <children>
         <Label styleClass="h2" text="Individual" />
-        <Label styleClass="stepper-instruction" text="Provide credentials of the individual under investigation." />
+        <Label styleClass="instruction-text" text="Provide credentials of the individual under investigation." />
         <IndividualIdsBindingComponent fx:id="individualIds" />
     </children>
 </fx:root>

@@ -7,7 +7,8 @@
          type="VBox"
          stylesheets="@functional-annotation-table.css">
     <children>
-        <Label styleClass="h2" text="Functional annotations" />
+        <Label styleClass="h1" text="Functional annotations" />
+        <Label styleClass="instruction-text" text="Functional annotations of the variant with respect to genes and transcripts." />
         <TableView fx:id="functionalAnnotationTableView" maxWidth="1.7976931348623157E308">
             <columns>
                 <TableColumn fx:id="geneTableColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Gene" />

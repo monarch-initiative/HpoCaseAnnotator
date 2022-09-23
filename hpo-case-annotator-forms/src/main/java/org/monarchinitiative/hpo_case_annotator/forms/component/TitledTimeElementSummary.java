@@ -11,7 +11,7 @@ public class TitledTimeElementSummary extends TitledBase<TimeElementSummary> {
     private static final List<String> STYLECLASSES = List.of("tl-time-element-summary");
 
     @Override
-    protected TimeElementSummary createItem() {
+    protected TimeElementSummary createTitledItem() {
         return new TimeElementSummary();
     }
 
@@ -21,6 +21,6 @@ public class TitledTimeElementSummary extends TitledBase<TimeElementSummary> {
     }
 
     public ObjectProperty<ObservableTimeElement> timeElementProperty() {
-        return item.dataProperty();
+        return titledItem.dataProperty();
     }
 }

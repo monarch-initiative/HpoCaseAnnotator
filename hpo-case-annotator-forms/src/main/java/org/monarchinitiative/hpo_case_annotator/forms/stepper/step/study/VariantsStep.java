@@ -5,6 +5,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverService;
 import org.monarchinitiative.hpo_case_annotator.forms.FunctionalAnnotationRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.BaseStep;
@@ -26,7 +27,7 @@ public class VariantsStep<T extends ObservableStudy> extends BaseStep<T> {
 
     private final ObjectProperty<GenomicAssemblyRegistry> genomicAssemblyRegistry = new SimpleObjectProperty<>();
     private final ObjectProperty<FunctionalAnnotationRegistry> functionalAnnotationRegistry = new SimpleObjectProperty<>();
-
+    private final ObjectProperty<LiftOverService> liftoverService = new SimpleObjectProperty<>();
     @FXML
     private VariantSummary variantSummary;
 
@@ -38,6 +39,7 @@ public class VariantsStep<T extends ObservableStudy> extends BaseStep<T> {
         // The fields of this class are `null` when `initialize` is called in the super constructor.
         variantSummary.genomicAssemblyRegistryProperty().bind(genomicAssemblyRegistry);
         variantSummary.functionalAnnotationRegistryProperty().bind(functionalAnnotationRegistry);
+        variantSummary.liftoverServiceProperty().bind(liftoverService);
     }
 
     public ObjectProperty<ObservableList<ObservableCuratedVariant>> variantsProperty() {
@@ -50,6 +52,10 @@ public class VariantsStep<T extends ObservableStudy> extends BaseStep<T> {
 
     public ObjectProperty<FunctionalAnnotationRegistry> functionalAnnotationRegistryProperty() {
         return functionalAnnotationRegistry;
+    }
+
+    public ObjectProperty<LiftOverService> liftoverServiceProperty() {
+        return liftoverService;
     }
 
     @Override

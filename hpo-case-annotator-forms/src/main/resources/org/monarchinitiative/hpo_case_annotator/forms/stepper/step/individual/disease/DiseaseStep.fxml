@@ -11,7 +11,7 @@
          styleClass="step-box">
     <children>
         <Label styleClass="h2" text="Diseases"/>
-        <Label styleClass="stepper-instruction" text="Add diseases diagnosed in the individual"/>
+        <Label styleClass="instruction-text" text="Add diseases diagnosed in the individual"/>
 
         <GridPane hgap="5" vgap="5">
             <children>

@@ -17,6 +17,7 @@ public class IndividualStudySteps extends BaseStudySteps<ObservableIndividualStu
         VariantsStep<ObservableIndividualStudy> variants = new VariantsStep<>();
         variants.genomicAssemblyRegistryProperty().bind(studyResources.genomicAssemblyRegistryProperty());
         variants.functionalAnnotationRegistryProperty().bind(studyResources.functionalAnnotationRegistryProperty());
+        variants.liftoverServiceProperty().bind(studyResources.liftoverServiceProperty());
         steps.add(variants);
 
         IndividualStep<ObservableIndividualStudy> individual = new IndividualStep<>();

@@ -43,3 +43,11 @@
 .h4 {
 
 }
+
+.instruction-text {
+    -fx-font-style: italic;
+    -fx-font-size: 0.9em;
+    -fx-text-fill: derive(-col-medium, -50%);
+    -fx-padding: 5 0 10 10;
+    -fx-wrap-text: true;
+}

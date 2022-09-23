@@ -102,12 +102,12 @@ public abstract class BaseDiseaseDataEdit<T extends BaseObservableIndividual> ex
                 diseaseIdCompletion = null;
                 diseaseNameCompletion = null;
             } else {
-                diseaseIdCompletion = TextFields.bindAutoCompletion(diseaseIdTextField.getItem(), novel.diseaseIds());
+                diseaseIdCompletion = TextFields.bindAutoCompletion(diseaseIdTextField.getTitledItem(), novel.diseaseIds());
                 diseaseIdCompletion.setHideOnEscape(true);
                 diseaseIdCompletion.setVisibleRowCount(15);
                 diseaseIdCompletion.minWidthProperty().bind(diseaseIdTextField.widthProperty());
 
-                diseaseNameCompletion = TextFields.bindAutoCompletion(diseaseNameTextField.getItem(), novel.diseaseNames());
+                diseaseNameCompletion = TextFields.bindAutoCompletion(diseaseNameTextField.getTitledItem(), novel.diseaseNames());
                 diseaseNameCompletion.setHideOnEscape(true);
                 diseaseNameCompletion.setVisibleRowCount(15);
                 diseaseNameCompletion.minWidthProperty().bind(diseaseNameTextField.widthProperty());
@@ -132,8 +132,8 @@ public abstract class BaseDiseaseDataEdit<T extends BaseObservableIndividual> ex
             return;
         }
 
-        diseaseIdTextField.getItem().clear();
-        diseaseNameTextField.getItem().clear();
+        diseaseIdTextField.getTitledItem().clear();
+        diseaseNameTextField.getTitledItem().clear();
         e.consume();
     }
 

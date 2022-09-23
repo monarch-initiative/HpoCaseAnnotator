@@ -2,6 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.app.model.genome;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.util.Callback;
@@ -15,6 +16,7 @@ public class GenomicLocalResources extends GenomicResources<GenomicLocalResource
     private final ObjectProperty<GenomicLocalResource> hg18 = new SimpleObjectProperty<>(this, "hg18", new GenomicLocalResource());
     private final ObjectProperty<GenomicLocalResource> hg19 = new SimpleObjectProperty<>(this, "hg19", new GenomicLocalResource());
     private final ObjectProperty<GenomicLocalResource> hg38 = new SimpleObjectProperty<>(this, "hg38", new GenomicLocalResource());
+    private final BooleanBinding genomicResourcesAreUnset = hg18.isNull().and(hg19.isNull()).and(hg38.isNull());;
 
     public GenomicLocalResources() {
     }
@@ -32,6 +34,10 @@ public class GenomicLocalResources extends GenomicResources<GenomicLocalResource
     @Override
     public ObjectProperty<GenomicLocalResource> hg38Property() {
         return hg38;
+    }
+
+    public BooleanBinding genomicResourcesAreUnset() {
+        return genomicResourcesAreUnset;
     }
 
     @Override

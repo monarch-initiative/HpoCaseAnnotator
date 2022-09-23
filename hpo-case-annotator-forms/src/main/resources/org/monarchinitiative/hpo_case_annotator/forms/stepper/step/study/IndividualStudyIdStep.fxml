@@ -15,10 +15,10 @@
     </stylesheets>
     <children>
         <Label styleClass="h1" text="Case report ID"/>
-        <Label styleClass="stepper-instruction" text="Set case report ID."/>
+        <Label styleClass="instruction-text" text="Set case report ID."/>
         <TitledTextField fx:id="studyId" name="Case report ID" id="study-id"/>
         <Pane styleClass="spacer10px"/>
-        <Label styleClass="stepper-instruction" text="Add description that do not fit into the study fields."/>
+        <Label styleClass="instruction-text" text="Add description that do not fit into the study fields."/>
         <TitledTextArea fx:id="freeTextMetadata" name="Free text description" promptText="Enter free text description"/>
     </children>
 </fx:root>

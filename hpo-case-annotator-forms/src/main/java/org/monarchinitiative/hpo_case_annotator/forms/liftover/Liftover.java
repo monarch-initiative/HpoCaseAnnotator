@@ -8,14 +8,13 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverService;
+import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox;
+import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel;
+import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
+import org.monarchinitiative.hpo_case_annotator.forms.status.StatusBar;
 import org.monarchinitiative.hpo_case_annotator.forms.util.ContigNameStringConverter;
-import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
 import org.monarchinitiative.svart.Contig;
 
 import java.io.IOException;
@@ -26,20 +25,19 @@ public class Liftover extends VBox {
     private final ObjectProperty<LiftOverService.ContigPosition> lifted = new SimpleObjectProperty<>(this, "lifted");
 
     @FXML
-    private ComboBox<String> sourceAssembly;
+    private TitledComboBox<String> sourceAssembly;
     @FXML
-    private ComboBox<Contig> sourceContig;
+    private TitledComboBox<Contig> sourceContig;
     @FXML
-    private TextField sourcePosition;
-    private final TextFormatter<Number> sourceTextFormatter = Formats.numberFormatter();
+    private TitledTextField sourcePosition;
     @FXML
-    private ComboBox<String> targetAssembly;
+    private TitledComboBox<String> targetAssembly;
     @FXML
-    private Label resultContigLabel;
+    private TitledLabel resultContigLabel;
     @FXML
-    private TextField resultPosition;
+    private TitledTextField resultPosition;
     @FXML
-    private Label messageLabel;
+    private StatusBar statusBar;
 
     public Liftover() {
         FXMLLoader loader = new FXMLLoader(Liftover.class.getResource("Liftover.fxml"));
@@ -63,8 +61,7 @@ public class Liftover extends VBox {
 
         liftoverService.addListener(liftOverServiceListener());
         sourceAssembly.valueProperty().addListener(sourceGenomicAssemblyListener());
-        sourcePosition.setTextFormatter(sourceTextFormatter);
-        sourceContig.setConverter(ContigNameStringConverter.getInstance());
+        sourceContig.getTitledItem().setConverter(ContigNameStringConverter.getInstance());
 
         lifted.bind(createLiftoverCalculation());
         lifted.addListener(updateResultFields());
@@ -75,13 +72,13 @@ public class Liftover extends VBox {
             LiftOverService service = liftoverService.get();
             if (service != null) {
                 if (service.sourceGenomicAssemblies().isEmpty()) {
-                    messageLabel.setText("Liftover is not set up");
+                    statusBar.setMessage("Liftover is not set up");
                 } else {
                     sourceAssembly.getItems().setAll(service.sourceGenomicAssemblyNames());
-                    messageLabel.setText(null);
+                    statusBar.setMessage("Set source genomic assembly");
                 }
             } else {
-                messageLabel.setText("Liftover is not set up");
+                statusBar.setMessage("Liftover is not set up");
             }
         };
     }
@@ -107,43 +104,45 @@ public class Liftover extends VBox {
         return Bindings.createObjectBinding(() -> {
                     LiftOverService service = liftoverService.get();
                     if (service == null) {
-                        messageLabel.setText("Liftover is not set up");
+                        statusBar.setMessage("Liftover is not set up");
                         return null;
                     }
                     String target = targetAssembly.getValue();
                     if (target == null) {
-                        messageLabel.setText("Set target assembly");
+                        statusBar.setMessage("Set target genomic assembly");
                         return null;
                     }
 
                     Contig source = sourceContig.getValue();
                     if (source == null) {
-                        messageLabel.setText("Set contig");
+                        statusBar.setMessage("Set source contig");
                         return null;
                     }
-                    Number pos = sourceTextFormatter.getValue();
-                    if (pos == null) {
-                        messageLabel.setText("Set position");
+                    int pos;
+                    try {
+                        pos = Integer.parseInt(sourcePosition.getText());
+                    } catch (NumberFormatException e) {
+                        statusBar.setMessage("Set source position");
                         return null;
                     }
 
-                    LiftOverService.ContigPosition position = new LiftOverService.ContigPosition(source.ucscName(), pos.intValue());
+                    LiftOverService.ContigPosition position = new LiftOverService.ContigPosition(source.ucscName(), pos);
                     return service.liftOver(position, sourceAssembly.getValue(), target)
                             .orElse(null);
                 },
-                sourceAssembly.valueProperty(), targetAssembly.valueProperty(), sourceContig.valueProperty(), sourceTextFormatter.valueProperty());
+                sourceAssembly.valueProperty(), targetAssembly.valueProperty(), sourceContig.valueProperty(), sourcePosition.textProperty());
     }
 
     private ChangeListener<LiftOverService.ContigPosition> updateResultFields() {
         return (obs, old, novel) -> {
             if (novel == null) {
                 resultContigLabel.setText(null);
-                resultPosition.clear();
-                messageLabel.setText(String.format("Unable to convert %s:%s", sourceContig.getValue().ucscName(), sourceTextFormatter.getValue()));
+                resultPosition.getTitledItem().clear();
+                statusBar.setMessage(String.format("Unable to convert %s:%s", sourceContig.getValue().ucscName(), sourcePosition.getText()));
             } else {
                 resultContigLabel.setText(novel.contig());
                 resultPosition.setText(String.valueOf(novel.position()));
-                messageLabel.setText("Success!");
+                statusBar.setMessage("Success!");
             }
         };
     }

@@ -24,6 +24,7 @@ import org.monarchinitiative.hpo_case_annotator.convert.ConversionCodecs;
 import org.monarchinitiative.hpo_case_annotator.forms.StudyResources;
 import org.monarchinitiative.hpo_case_annotator.forms.StudyResourcesAware;
 import org.monarchinitiative.hpo_case_annotator.forms.liftover.Liftover;
+import org.monarchinitiative.hpo_case_annotator.forms.status.StatusBar;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.*;
 import org.monarchinitiative.hpo_case_annotator.forms.study.BaseStudyComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.study.CohortStudyComponent;
@@ -130,6 +131,7 @@ public class Main {
         disableMenuEntriesDependentOnADataModel();
 
         liftoverMenuItem.disableProperty().bind(optionalServices.liftoverServiceProperty().isNull());
+        statusBar.messageProperty().bind(optionalResources.statusBinding());
     }
 
     private void disableMenuEntriesDependentOnADataModel() {
@@ -283,8 +285,10 @@ public class Main {
             stage.initStyle(StageStyle.DECORATED);
             stage.initOwner(getOwnerWindow());
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Initialize resources");
-            stage.setScene(new Scene(parent));
+            stage.setTitle("Settings");
+            Scene scene = new Scene(parent);
+            scene.getStylesheets().add(App.BASE_CSS);
+            stage.setScene(scene);
             stage.showAndWait();
         } catch (IOException ex) {
             LOGGER.warn("Error setting up resources: {}", ex.getMessage(), ex);
@@ -377,7 +381,9 @@ public class Main {
         stage.initOwner(getOwnerWindow());
         stage.initModality(Modality.NONE);
         stage.setTitle("Liftover a contig position");
-        stage.setScene(new Scene(liftover));
+        Scene scene = new Scene(liftover, 500, 400);
+        scene.getStylesheets().add(App.BASE_CSS);
+        stage.setScene(scene);
         stage.show();
 
         e.consume();
@@ -480,6 +486,7 @@ public class Main {
         resources.diseaseIdentifierServiceProperty().bind(optionalServices.diseaseIdentifierServiceProperty());
         resources.genomicAssemblyRegistryProperty().set(optionalServices.getGenomicAssemblyRegistry());
         resources.functionalAnnotationRegistryProperty().set(optionalServices.getFunctionalAnnotationRegistry());
+        resources.liftoverServiceProperty().bind(optionalServices.liftoverServiceProperty());
     }
 
     private Window getOwnerWindow() {

@@ -4,7 +4,7 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.VBox"
+         type="VBox"
          stylesheets="@publication-editable.css">
     <children>
         <VBox styleClass="edit-area">

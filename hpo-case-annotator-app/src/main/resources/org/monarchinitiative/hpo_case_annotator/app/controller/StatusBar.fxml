@@ -4,12 +4,14 @@
 <?import javafx.scene.layout.*?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      type="HBox"
-      alignment="CENTER_LEFT" stylesheets="@status-bar.css">
+         type="HBox"
+         stylesheets="@status-bar.css"
+         id="outer-box">
    <children>
       <Label id="summary-label" fx:id="summaryLabel" />
       <Separator orientation="VERTICAL" HBox.hgrow="NEVER" />
-      <Label id="message-label" fx:id="messageLabel" maxWidth="1.7976931348623157E308" onMouseClicked="#messageLabelMouseClicked" HBox.hgrow="ALWAYS" />
-      <Button fx:id="clearButton" disable="true" mnemonicParsing="false" onAction="#clearButtonAction" text="Clear" />
+      <Label fx:id="messageLabel" id="message-label" maxWidth="1.7976931348623157E308"
+             onMouseClicked="#messageLabelMouseClicked" HBox.hgrow="ALWAYS" />
+      <Button fx:id="clearButton" id="clear-button" disable="true" mnemonicParsing="false" onAction="#clearButtonAction" text="Clear" />
    </children>
 </fx:root>

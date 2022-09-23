@@ -2,6 +2,8 @@ package org.monarchinitiative.hpo_case_annotator.forms.component;
 
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
@@ -15,21 +17,22 @@ abstract class TitledBase<T extends Region> extends VBox {
     private static final String NAME_STYLE_CLASS = "tl-name";
 
     private final Label name = new Label();
-    protected final T item = createItem();
+    protected final T titledItem = createTitledItem();
 
     TitledBase() {
         getStylesheets().add(STYLESHEET_LOCATION);
         getStyleClass().add(BOX_STYLE_CLASS);
         name.getStyleClass().add(NAME_STYLE_CLASS);
-        item.getStyleClass().addAll(itemStyleClasses());
+        titledItem.getStyleClass().addAll(itemStyleClasses());
+        HBox.setHgrow(titledItem, Priority.ALWAYS);
 
-        getChildren().addAll(name, item);
+        getChildren().addAll(name, titledItem);
 
-        item.prefWidthProperty().bind(prefWidthProperty());
-        item.minWidthProperty().bind(name.widthProperty());
+        titledItem.prefWidthProperty().bind(prefWidthProperty());
+        titledItem.minWidthProperty().bind(name.widthProperty());
     }
 
-    protected abstract T createItem();
+    protected abstract T createTitledItem();
 
     protected abstract List<String> itemStyleClasses();
 
@@ -45,7 +48,7 @@ abstract class TitledBase<T extends Region> extends VBox {
         return name.textProperty();
     }
 
-    public T getItem() {
-        return item;
+    public T getTitledItem() {
+        return titledItem;
     }
 }

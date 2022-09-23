@@ -9,7 +9,7 @@
          styleClass="step-box" >
     <children>
         <Label styleClass="h2" text="Pedigree member"/>
-        <Label styleClass="stepper-instruction" text="Provide credentials for the pedigree member." />
+        <Label styleClass="instruction-text" text="Provide credentials for the pedigree member." />
         <PedigreeMemberIdsBindingComponent fx:id="individualIds" />
     </children>
 </fx:root>

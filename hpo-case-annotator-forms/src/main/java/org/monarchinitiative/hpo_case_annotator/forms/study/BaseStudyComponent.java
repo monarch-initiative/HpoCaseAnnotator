@@ -75,6 +75,7 @@ public abstract class BaseStudyComponent<T extends ObservableStudy>
 
         variantSummary.functionalAnnotationRegistryProperty().bind(studyResources.functionalAnnotationRegistryProperty());
         variantSummary.genomicAssemblyRegistryProperty().bind(studyResources.genomicAssemblyRegistryProperty());
+        variantSummary.liftoverServiceProperty().bind(studyResources.liftoverServiceProperty());
     }
 
     @Override

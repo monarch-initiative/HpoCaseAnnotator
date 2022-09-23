@@ -1,12 +1,10 @@
 #separator {
     -fx-alignment: center;
-    -fx-max-width: 400;
 }
 
-.tl-text-field {
+#pmid-tl-text-field {
     -fx-min-height: 30;
     -fx-min-width: 250;
-    -fx-max-width: 250;
 }
 
 #separator Label {

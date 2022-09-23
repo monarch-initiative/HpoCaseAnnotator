@@ -9,7 +9,7 @@ public class TitledTextArea extends TitledBase<TextArea> {
 
     private static final List<String> STYLECLASSES = List.of("tl-text-area");
     @Override
-    protected TextArea createItem() {
+    protected TextArea createTitledItem() {
         return new TextArea();
     }
 
@@ -19,27 +19,27 @@ public class TitledTextArea extends TitledBase<TextArea> {
     }
 
     public void setText(String value) {
-        item.setText(value);
+        titledItem.setText(value);
     }
 
     public String getText() {
-        return item.getText();
+        return titledItem.getText();
     }
 
     public StringProperty textProperty() {
-        return item.textProperty();
+        return titledItem.textProperty();
     }
 
     public void setPromptText(String value) {
-        item.setPromptText(value);
+        titledItem.setPromptText(value);
     }
 
     public String getPromptText() {
-        return item.getPromptText();
+        return titledItem.getPromptText();
     }
 
     public StringProperty promptTextProperty() {
-        return item.promptTextProperty();
+        return titledItem.promptTextProperty();
     }
 
 }

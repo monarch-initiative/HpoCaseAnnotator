@@ -11,7 +11,7 @@
          styleClass="step-box">
     <children>
         <Label styleClass="h2" text="Variant genotypes"/>
-        <Label styleClass="stepper-instruction" text="Set genotypes observed in the individual for the study variants. Double-click on the genotype to edit."/>
+        <Label styleClass="instruction-text" text="Set genotypes observed in the individual for the study variants. Double-click on the genotype to edit."/>
         <VariantGenotypeTable fx:id="genotypeTable"/>
     </children>
 </fx:root>

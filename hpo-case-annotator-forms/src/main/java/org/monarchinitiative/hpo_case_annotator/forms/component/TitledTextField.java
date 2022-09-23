@@ -14,7 +14,7 @@ public class TitledTextField extends TitledBase<TextField> {
     private static final List<String> STYLECLASSES = List.of("tl-text-field");
 
     @Override
-    protected TextField createItem() {
+    protected TextField createTitledItem() {
         return new TextField();
     }
 
@@ -24,50 +24,50 @@ public class TitledTextField extends TitledBase<TextField> {
     }
 
     public void setText(String value) {
-        item.setText(value);
+        titledItem.setText(value);
     }
 
     public String getText() {
-        return item.getText();
+        return titledItem.getText();
     }
 
     public StringProperty textProperty() {
-        return item.textProperty();
+        return titledItem.textProperty();
     }
 
     public StringProperty promptTextProperty() {
-        return item.promptTextProperty();
+        return titledItem.promptTextProperty();
     }
 
     public String getPromptText() {
-        return item.getPromptText();
+        return titledItem.getPromptText();
     }
 
     public void setPromptText(String value) {
-        item.setPromptText(value);
+        titledItem.setPromptText(value);
     }
 
     public TextFormatter<?> getTextFormatter() {
-        return item.getTextFormatter();
+        return titledItem.getTextFormatter();
     }
 
     public void setTextFormatter(TextFormatter<?> formatter) {
-        item.setTextFormatter(formatter);
+        titledItem.setTextFormatter(formatter);
     }
 
     public ObjectProperty<TextFormatter<?>> textFormatterProperty() {
-        return item.textFormatterProperty();
+        return titledItem.textFormatterProperty();
     }
 
     public final ObjectProperty<EventHandler<ActionEvent>> onActionProperty() {
-        return item.onActionProperty();
+        return titledItem.onActionProperty();
     }
 
     public final EventHandler<ActionEvent> getOnAction() {
-        return item.getOnAction();
+        return titledItem.getOnAction();
     }
 
     public void setOnAction(EventHandler<ActionEvent> handler) {
-        item.setOnAction(handler);
+        titledItem.setOnAction(handler);
     }
 }

@@ -1,11 +1,14 @@
 package org.monarchinitiative.hpo_case_annotator.app.model;
 
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResources;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+
+import static javafx.beans.binding.Bindings.createStringBinding;
 
 /**
  * This class is a POJO holding paths to HCA resources.
@@ -14,6 +17,8 @@ import java.io.File;
  */
 @Component
 public class OptionalResources {
+
+    private static final String SETUP_HINT = "Finish the setup in `File | Settings`.";
 
     private final ObjectProperty<File> diseaseCaseDir = new SimpleObjectProperty<>(this, "diseaseCaseDir");
     private final ObjectProperty<File> hpoPath = new SimpleObjectProperty<>(this, "ontologyPath");
@@ -81,5 +86,34 @@ public class OptionalResources {
 
     public void setSoftwareVersion(String softwareVersion) {
         this.softwareVersion.set(softwareVersion);
+    }
+
+    public StringBinding statusBinding() {
+        return createStringBinding(() -> {
+            String message = "All resources are set.";
+
+            String biocuratorId = this.biocuratorId.get();
+            if (biocuratorId == null || biocuratorId.isBlank())
+                message = "Biocurator id is unset - saving/editing data is disabled. %s".formatted(SETUP_HINT);
+
+            if (liftoverChainFiles.isEmpty())
+                message = "Path(s) to Liftover chains are unset - liftover is disabled. %s".formatted(SETUP_HINT);
+
+            if (genomicLocalResources.genomicResourcesAreUnset().get())
+                message = "Genomic resources are unset - variant entry is disabled. %s".formatted(SETUP_HINT);
+
+            if (functionalAnnotationResources.functionalResourcesAreUnset().get())
+                message = "Path(s) to Jannovar file are unset - functional variant annotation is disabled. %s".formatted(SETUP_HINT);
+
+            if (hpoPath.get() == null)
+                message = "Path to HPO file is unset - phenotype annotation are disabled. %s".formatted(SETUP_HINT);
+
+            return message;
+        },
+                hpoPath,
+                genomicLocalResources.genomicResourcesAreUnset(),
+                functionalAnnotationResources.functionalResourcesAreUnset(),
+                liftoverChainFiles,
+                biocuratorId);
     }
 }
