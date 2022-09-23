@@ -30,6 +30,7 @@
             <includes>
                 <include>launch.sh</include>
                 <include>launch.command</include>
+                <include>launch.bat</include>
             </includes>
         </fileSet>
         <!-- Metadata -->
