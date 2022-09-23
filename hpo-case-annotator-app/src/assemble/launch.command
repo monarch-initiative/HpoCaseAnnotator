@@ -5,6 +5,7 @@
 # or by opening the Terminal and running manually.
 
 current_dir=$(dirname $(readlink ${0} || echo ${0}))
+cd ${current_dir}
 
 java --add-reads org.monarchinitiative.hca.app=ALL-UNNAMED \
   --add-exports=javafx.base/com.sun.javafx.event=org.controlsfx.controls \
