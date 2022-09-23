@@ -1,14 +1,12 @@
 module org.monarchinitiative.hca.forms {
     requires transitive org.monarchinitiative.hca.core;
-    requires transitive org.monarchinitiative.hpo_case_annotator.observable;
+    requires transitive org.monarchinitiative.hca.observable;
 
     // TODO - figure out transitivity of JavaFX modules
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.fxml;
     requires org.controlsfx.controls;
-
-    requires spring.context;
 
     requires org.slf4j;
 

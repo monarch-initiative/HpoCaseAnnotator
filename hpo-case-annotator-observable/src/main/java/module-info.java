@@ -1,4 +1,4 @@
-module org.monarchinitiative.hpo_case_annotator.observable {
+module org.monarchinitiative.hca.observable {
     requires transitive org.monarchinitiative.hca.model;
     requires transitive javafx.base;
 
