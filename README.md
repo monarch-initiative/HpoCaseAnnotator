@@ -2,7 +2,7 @@
 
 [![GitHub release](https://img.shields.io/github/release/monarch-initiative/HpoCaseAnnotator.svg)](https://github.com/monarch-initiative/HpoCaseAnnotator/releases)
 [![Java CI with Maven](https://github.com/monarch-initiative/HpoCaseAnnotator/workflows/Java%20CI%20with%20Maven/badge.svg)](https://github.com/monarch-initiative/HpoCaseAnnotator/actions/workflows/maven.yml)
-[![Documentation Status](https://readthedocs.org/projects/hpo-case-annotator/badge/?version=master)](https://hpo-case-annotator.readthedocs.io/en/master/?badge=master)
+[![Documentation Status](https://readthedocs.org/projects/hpo-case-annotator/badge/?version=stable)](https://hpo-case-annotator.readthedocs.io/en/stable/?badge=stable)
 
 Hpo Case Annotator makes biocuration of case reports easier.
 
