@@ -2,6 +2,9 @@
 Validation
 ==========
 
+.. warning::
+  The documentation has not been updated for the `2.*` version yet.
+
 For some of the uses of ``HpoCaseAnnotator``, we enter not only the phenotype and genotype information, but
 also information about the molecular pathomechanism of the variant as well as any experimental methods
 that were used to validate the pathogenicity of the variant.
@@ -10,7 +13,7 @@ Non-coding variants
 ~~~~~~~~~~~~~~~~~~~
 
 We have curated many non-coding variants that were used to validate
-the ``Genomiser <https://www.ncbi.nlm.nih.gov/pubmed/27569544>`_. As a rule,
+the `Genomiser <https://www.ncbi.nlm.nih.gov/pubmed/27569544>`_. As a rule,
 we  only include a mutation if there is adequate evidence for
 its pathogenicity. As a general rule, there should be some experimental
 evidence for the mutation changing gene regulation of a target gene in some
