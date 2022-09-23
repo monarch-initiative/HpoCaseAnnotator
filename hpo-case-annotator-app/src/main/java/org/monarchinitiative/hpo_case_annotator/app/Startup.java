@@ -205,10 +205,7 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
         return obs -> {
             GenomicLocalResource resource;
             Consumer<GenomicAssemblyService> consumer;
-            if (obs.equals(genomicResources.hg18Property())) {
-                resource = genomicResources.getHg18();
-                consumer = service -> services.getGenomicAssemblyRegistry().setHg18Service(service);
-            } else if (obs.equals(genomicResources.hg19Property())) {
+            if (obs.equals(genomicResources.hg19Property())) {
                 resource = genomicResources.getHg19();
                 consumer = service -> services.getGenomicAssemblyRegistry().setHg19Service(service);
             } else if (obs.equals(genomicResources.hg38Property())) {
@@ -254,12 +251,6 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
 
     private void setGenomicAssemblyResourceLocations() {
         GenomicLocalResourceValidator validator = GenomicLocalResourceValidator.of(LOGGER::debug);
-        String hg18 = resourceProperties.getProperty(ResourcePaths.HG18_FASTA_PATH_PROPETY);
-        if (hg18 != null) {
-            GenomicLocalResource.createFromFastaPath(Paths.get(hg18))
-                    .flatMap(local -> validator.verify(local, genomicRemoteResources.getHg18()))
-                    .ifPresent(resource -> optionalResources.getGenomicLocalResources().setHg18(resource));
-        }
 
         String hg19 = resourceProperties.getProperty(ResourcePaths.HG19_FASTA_PATH_PROPETY);
         if (hg19 != null) {

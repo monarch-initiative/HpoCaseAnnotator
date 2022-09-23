@@ -10,7 +10,6 @@ public class ResourcePaths {
 
     public static final String ONTOLOGY_PATH_PROPERTY = "hp.path";
 
-    public static final String HG18_FASTA_PATH_PROPETY = "hg18.fasta.path";
     public static final String HG19_FASTA_PATH_PROPETY = "hg19.fasta.path";
     public static final String HG38_FASTA_PATH_PROPETY = "hg38.fasta.path";
 

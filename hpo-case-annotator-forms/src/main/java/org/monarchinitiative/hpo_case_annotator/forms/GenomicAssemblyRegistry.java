@@ -6,21 +6,8 @@ import org.monarchinitiative.hpo_case_annotator.core.reference.genome.GenomicAss
 
 public class GenomicAssemblyRegistry {
 
-    private final ObjectProperty<GenomicAssemblyService> hg18Service = new SimpleObjectProperty<>(this, "hg18Service");
     private final ObjectProperty<GenomicAssemblyService> hg19Service = new SimpleObjectProperty<>(this, "hg19Service");
     private final ObjectProperty<GenomicAssemblyService> hg38Service = new SimpleObjectProperty<>(this, "hg38Service");
-
-    public GenomicAssemblyService getHg18Service() {
-        return hg18Service.get();
-    }
-
-    public void setHg18Service(GenomicAssemblyService hg18Service) {
-        this.hg18Service.set(hg18Service);
-    }
-
-    public ObjectProperty<GenomicAssemblyService> hg18ServiceProperty() {
-        return hg18Service;
-    }
 
     public GenomicAssemblyService getHg19Service() {
         return hg19Service.get();

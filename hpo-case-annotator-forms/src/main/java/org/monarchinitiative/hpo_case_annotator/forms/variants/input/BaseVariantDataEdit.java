@@ -52,7 +52,6 @@ public abstract class BaseVariantDataEdit extends VBoxDataEdit<ObservableCurated
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseVariantDataEdit.class);
 
     // Names corresponding to Svart's assembly names.
-    private static final String HG18_NAME = "NCBI36";
     private static final String HG19_NAME = "GRCh37.p13";
     private static final String HG38_NAME = "GRCh38.p13";
 
@@ -72,9 +71,6 @@ public abstract class BaseVariantDataEdit extends VBoxDataEdit<ObservableCurated
     private final ListProperty<FunctionalAnnotation> functionalAnnotations = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     private final ToggleGroup genomeAssemblyToggleGroup = new ToggleGroup();
-
-    @FXML
-    private RadioButton hg18RadioButton;
     @FXML
     private RadioButton hg19RadioButton;
     @FXML
@@ -126,9 +122,7 @@ public abstract class BaseVariantDataEdit extends VBoxDataEdit<ObservableCurated
     @Override
     public void commit() {
         Toggle toggle = genomeAssemblyToggleGroup.getSelectedToggle();
-        if (toggle.equals(hg18RadioButton)) {
-            item.setGenomicAssembly(HG18_NAME);
-        } else if (toggle.equals(hg19RadioButton)) {
+        if (toggle.equals(hg19RadioButton)) {
             item.setGenomicAssembly(HG19_NAME);
         } else if (toggle.equals(hg38RadioButton)) {
             item.setGenomicAssembly(HG38_NAME);
@@ -162,11 +156,9 @@ public abstract class BaseVariantDataEdit extends VBoxDataEdit<ObservableCurated
     }
 
     private void initializeGenomicAssemblyToggleGroup() {
-        hg18RadioButton.setToggleGroup(genomeAssemblyToggleGroup);
         hg19RadioButton.setToggleGroup(genomeAssemblyToggleGroup);
         hg38RadioButton.setToggleGroup(genomeAssemblyToggleGroup);
 
-        hg18RadioButton.disableProperty().bind(genomicAssemblyRegistry.isNull().or(select(genomicAssemblyRegistry, "hg18Service").isNull()));
         hg19RadioButton.disableProperty().bind(genomicAssemblyRegistry.isNull().or(select(genomicAssemblyRegistry, "hg19Service").isNull()));
         hg38RadioButton.disableProperty().bind(genomicAssemblyRegistry.isNull().or(select(genomicAssemblyRegistry, "hg38Service").isNull()));
 
@@ -183,10 +175,7 @@ public abstract class BaseVariantDataEdit extends VBoxDataEdit<ObservableCurated
 
     private Optional<GenomicAssemblyService> genomicAssemblyServiceForRadioButton(RadioButton assembly) {
         Optional<GenomicAssemblyService> serviceOptional;
-        if (assembly.equals(hg18RadioButton)) {
-            serviceOptional = Optional.ofNullable(genomicAssemblyRegistry.get())
-                    .map(GenomicAssemblyRegistry::getHg18Service);
-        } else if (assembly.equals(hg19RadioButton)) {
+        if (assembly.equals(hg19RadioButton)) {
             serviceOptional = Optional.ofNullable(genomicAssemblyRegistry.get())
                     .map(GenomicAssemblyRegistry::getHg19Service);
         } else if (assembly.equals(hg38RadioButton)) {
@@ -200,10 +189,7 @@ public abstract class BaseVariantDataEdit extends VBoxDataEdit<ObservableCurated
     }
 
     private Optional<FunctionalAnnotationService> functionalAnnotationServiceForRadioButton(RadioButton assembly) {
-        if (assembly.equals(hg18RadioButton)) {
-            return Optional.ofNullable(functionalAnnotationRegistry.get())
-                    .map(FunctionalAnnotationRegistry::getHg18Service);
-        } else if (assembly.equals(hg19RadioButton)) {
+        if (assembly.equals(hg19RadioButton)) {
             return Optional.ofNullable(functionalAnnotationRegistry.get())
                     .map(FunctionalAnnotationRegistry::getHg19Service);
         } else if (assembly.equals(hg38RadioButton)) {
@@ -219,9 +205,7 @@ public abstract class BaseVariantDataEdit extends VBoxDataEdit<ObservableCurated
         if (genomicAssemblyName == null)
             return Optional.empty();
 
-        if (genomicAssemblyName.matches("NCBI36.*")) {
-            return Optional.ofNullable(hg18RadioButton);
-        } else if (genomicAssemblyName.matches("GRCh37.*")) {
+        if (genomicAssemblyName.matches("GRCh37.*")) {
             return Optional.ofNullable(hg19RadioButton);
         } else if (genomicAssemblyName.matches("GRCh38.*")) {
             return Optional.ofNullable(hg38RadioButton);

@@ -96,8 +96,6 @@ public class App extends Application {
     private static void serializeResourceState(OptionalResources optionalResources, Properties resourceProperties, File target) throws IOException {
         GenomicLocalResources localResources = optionalResources.getGenomicLocalResources();
         if (localResources != null) {
-            createReferenceGenomeFastaPath(localResources.getHg18())
-                    .ifPresent(refGenomePath -> resourceProperties.setProperty(ResourcePaths.HG18_FASTA_PATH_PROPETY, refGenomePath));
             createReferenceGenomeFastaPath(localResources.getHg19())
                     .ifPresent(refGenomePath -> resourceProperties.setProperty(ResourcePaths.HG19_FASTA_PATH_PROPETY, refGenomePath));
             createReferenceGenomeFastaPath(localResources.getHg38())

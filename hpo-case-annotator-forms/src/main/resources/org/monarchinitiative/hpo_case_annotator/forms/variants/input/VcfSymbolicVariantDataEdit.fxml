@@ -27,7 +27,6 @@
                                     <Label styleClass="h3" text="Genome build" />
                                     <HBox alignment="CENTER_LEFT" VBox.vgrow="NEVER">
                                         <children>
-                                            <RadioButton fx:id="hg18RadioButton" disable="true" mnemonicParsing="false" text="hg18" />
                                             <RadioButton fx:id="hg19RadioButton" disable="true" mnemonicParsing="false" text="GRCh37" />
                                             <RadioButton fx:id="hg38RadioButton" disable="true" mnemonicParsing="false" text="GRCh38" />
                                         </children>
@@ -37,7 +36,7 @@
             
                             <VBox styleClass="column" HBox.hgrow="NEVER">
                                 <children>
-                                    <Label styleClass="h3" text="Contig" />
+                                    <Label styleClass="h3" text="Chromosome" />
                                     <SearchableComboBox fx:id="contigComboBox" disable="true" />
                                 </children>
                             </VBox>
