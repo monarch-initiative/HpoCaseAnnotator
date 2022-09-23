@@ -31,7 +31,7 @@ module org.monarchinitiative.hca.app {
     opens org.monarchinitiative.hpo_case_annotator.app;
     opens org.monarchinitiative.hpo_case_annotator.app.config;
     opens org.monarchinitiative.hpo_case_annotator.app.controller;
-    opens org.monarchinitiative.hpo_case_annotator.app.model;
-    opens org.monarchinitiative.hpo_case_annotator.app.model.genome;
+    opens org.monarchinitiative.hpo_case_annotator.app.model to javafx.base;
+    opens org.monarchinitiative.hpo_case_annotator.app.model.genome to javafx.base;
 
 }

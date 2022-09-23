@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.app.controller;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
+import javafx.beans.binding.ObjectBinding;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +33,8 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
+
+import static javafx.beans.binding.Bindings.*;
 
 /**
  * This class is the controller of the setResources dialog. The user performs initial setup of the
@@ -45,6 +47,7 @@ import java.util.function.Function;
 public class SetResourcesController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SetResourcesController.class);
+    private static final String UNSET = "Unset";
 
     private final OptionalResources optionalResources;
 
@@ -52,7 +55,7 @@ public class SetResourcesController {
 
     private final HcaProperties hcaProperties;
 
-    private final File appHomeDir;
+    private final File codeHomeDir;
 
     private final ExecutorService executorService;
 
@@ -97,19 +100,19 @@ public class SetResourcesController {
     public SetResourcesController(OptionalResources optionalResources,
                                   GenomicRemoteResources genomicRemoteResources,
                                   HcaProperties hcaProperties,
-                                  File appHomeDir,
+                                  File codeHomeDir,
                                   ExecutorService executorService) {
         this.optionalResources = optionalResources;
         this.genomicRemoteResources = genomicRemoteResources;
         this.hcaProperties = hcaProperties;
-        this.appHomeDir = appHomeDir;
+        this.codeHomeDir = codeHomeDir;
         this.executorService = executorService;
 
         initializeAppHomeDir();
     }
 
     private void initializeAppHomeDir() {
-        File liftoverDir = appHomeDir.toPath().resolve(ResourcePaths.DEFAULT_LIFTOVER_FOLDER).toFile();
+        File liftoverDir = codeHomeDir.toPath().resolve(ResourcePaths.DEFAULT_LIFTOVER_FOLDER).toFile();
         if (!liftoverDir.isDirectory()) {
             if (!liftoverDir.mkdirs()) {
                 LOGGER.warn("Unable to initialize directory for liftover chain files");
@@ -122,34 +125,25 @@ public class SetResourcesController {
      */
     @FXML
     private void initialize() {
-        // reference genomes
-        StringBinding hg19Path = Bindings.createStringBinding(() -> {
-                    GenomicLocalResource hg19 = optionalResources.getGenomicLocalResources().getHg19();
-                    if (hg19 == null) return "";
-
-                    Path fasta = hg19.getFasta();
-                    return fasta == null ? "" : fasta.toAbsolutePath().toString();
-                },
-                optionalResources.getGenomicLocalResources().hg19Property());
-        hg19GenomeLabel.textProperty().bind(hg19Path);
-        StringBinding hg38Path = Bindings.createStringBinding(() -> {
-                    GenomicLocalResource hg38 = optionalResources.getGenomicLocalResources().getHg38();
-                    if (hg38 == null) return "";
-                    Path fasta = hg38.getFasta();
-                    return fasta == null ? "" : fasta.toAbsolutePath().toString();
-                },
-                optionalResources.getGenomicLocalResources().hg38Property());
-        hg38GenomeLabel.textProperty().bind(hg38Path);
+        // Reference genomes
+        ObjectBinding<Path> hg19Fasta = select(optionalResources.getGenomicLocalResources(), "hg19", "fasta");
+        hg19GenomeLabel.textProperty().bind(when(hg19Fasta.isNull()).then(UNSET).otherwise(hg19Fasta.asString()));
+        ObjectBinding<Path> hg38Fasta = select(optionalResources.getGenomicLocalResources(), "hg38", "fasta");
+        hg38GenomeLabel.textProperty().bind(when(hg38Fasta.isNull()).then(UNSET).otherwise(hg38Fasta.asString()));
 
         // Jannovar databases
-        hg19JannovarLabel.textProperty().bind(optionalResources.getFunctionalAnnotationResources().hg19JannovarPathProperty().asString());
-        hg38JannovarLabel.textProperty().bind(optionalResources.getFunctionalAnnotationResources().hg38JannovarPathProperty().asString());
+        ObjectBinding<Path> hg19Jannovar = select(optionalResources.getFunctionalAnnotationResources(), "hg19JannovarPath");
+        hg19JannovarLabel.textProperty().bind(when(hg19Jannovar.isNotNull()).then(hg19Jannovar.asString()).otherwise(UNSET));
+        ObjectBinding<Path> hg38Jannovar = select(optionalResources.getFunctionalAnnotationResources(), "hg38JannovarPath");
+        hg38JannovarLabel.textProperty().bind(when(hg38Jannovar.isNotNull()).then(hg38Jannovar.asString()).otherwise(UNSET));
 
         // HPO
-        hpOboLabel.textProperty().bind(optionalResources.hpoPathProperty().asString());
+        ObjectBinding<Path> fileObjectProperty = select(optionalResources, "hpoPath");
+        hpOboLabel.textProperty().bind(when(fileObjectProperty.isNull()).then(UNSET).otherwise(fileObjectProperty.asString()));
 
         // Curated files folder
-        curatedFilesDirLabel.textProperty().bind(optionalResources.diseaseCaseDirProperty().asString());
+        ObjectBinding<Path> diseaseCaseDir = select(optionalResources, "diseaseCaseDir");
+        curatedFilesDirLabel.textProperty().bind(when(diseaseCaseDir.isNotNull()).then(diseaseCaseDir.asString()).otherwise(UNSET));
 
         // Liftover chains
         liftoverChainPathsListView.setCellFactory(FileListCell.of());
@@ -163,7 +157,7 @@ public class SetResourcesController {
     private void downloadHg19RefGenomeButtonAction(ActionEvent e) {
         e.consume();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(appHomeDir);
+        chooser.setInitialDirectory(codeHomeDir);
         chooser.setTitle("Save hg19 fasta as");
         chooser.setInitialFileName("hg19.fa");
         File target = chooser.showSaveDialog(hg19ProgressIndicator.getScene().getWindow());
@@ -193,7 +187,7 @@ public class SetResourcesController {
     private void setPathToHg19ButtonAction(ActionEvent e) {
         e.consume();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(appHomeDir);
+        chooser.setInitialDirectory(codeHomeDir);
         chooser.setTitle("Select local hg19 FASTA file");
         chooser.setInitialFileName("hg19.fa");
 
@@ -215,7 +209,7 @@ public class SetResourcesController {
     private void downloadHg38RefGenomeButtonAction(ActionEvent e) {
         e.consume();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(appHomeDir);
+        chooser.setInitialDirectory(codeHomeDir);
         chooser.setTitle("Save hg38 fasta as");
         chooser.setInitialFileName("hg38.fa");
         File fastaPath = chooser.showSaveDialog(hg38ProgressIndicator.getScene().getWindow());
@@ -240,7 +234,7 @@ public class SetResourcesController {
     private void setPathToHg38ButtonAction(ActionEvent e) {
         e.consume();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(appHomeDir);
+        chooser.setInitialDirectory(codeHomeDir);
         chooser.setTitle("Select local hg38 FASTA file");
         chooser.setInitialFileName("hg38.fa");
 
@@ -262,7 +256,7 @@ public class SetResourcesController {
     private void setPathToHg19JannovarButtonAction(ActionEvent e) {
         e.consume();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(appHomeDir);
+        chooser.setInitialDirectory(codeHomeDir);
         chooser.setTitle("Select Jannovar transcript database for hg19");
 
         File databasePath = chooser.showOpenDialog(hg19JannovarLabel.getScene().getWindow());
@@ -275,7 +269,7 @@ public class SetResourcesController {
     private void setPathToHg38JannovarButtonAction(ActionEvent e) {
         e.consume();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(appHomeDir);
+        chooser.setInitialDirectory(codeHomeDir);
         chooser.setTitle("Select Jannovar transcript database for hg38");
 
         File databasePath = chooser.showOpenDialog(hg38JannovarLabel.getScene().getWindow());
@@ -291,8 +285,8 @@ public class SetResourcesController {
     @FXML
     private void downloadHPOFileButtonAction(ActionEvent e) {
         e.consume();
-        File target = new File(appHomeDir, ResourcePaths.DEFAULT_HPO_FILE_NAME);
-        if (target.isFile()) {
+        Path target = codeHomeDir.toPath().resolve(ResourcePaths.DEFAULT_HPO_FILE_NAME);
+        if (Files.isRegularFile(target)) {
             boolean overwrite = Dialogs.getBooleanFromUser("Download HPO",
                             "HPO file already exists at the target location",
                             "Overwrite?")
@@ -312,7 +306,7 @@ public class SetResourcesController {
             LOGGER.warn("Malformed URL: {}", urlString, ex);
             return;
         }
-        Task<Void> task = new Downloader(url, target);
+        Task<Void> task = new Downloader(url, target.toFile());
 
         hpoProgressIndicator.progressProperty().unbind();
         hpoProgressIndicator.progressProperty().bind(task.progressProperty());
@@ -334,7 +328,7 @@ public class SetResourcesController {
             LOGGER.warn("Malformed URL: {}", ex.getMessage());
             return;
         }
-        Path liftoverFolder = appHomeDir.toPath().resolve(ResourcePaths.DEFAULT_LIFTOVER_FOLDER);
+        Path liftoverFolder = codeHomeDir.toPath().resolve(ResourcePaths.DEFAULT_LIFTOVER_FOLDER);
         for (URL url : urls) {
             String file = new File(url.getFile()).getName();
             Path target = liftoverFolder.resolve(file);
@@ -351,11 +345,11 @@ public class SetResourcesController {
     @FXML
     private void setCuratedDirButtonAction(ActionEvent e) {
         e.consume();
-        File initial = optionalResources.getDiseaseCaseDir() != null && optionalResources.getDiseaseCaseDir().isDirectory()
+        Path initial = optionalResources.getDiseaseCaseDir() != null && Files.isDirectory(optionalResources.getDiseaseCaseDir())
                 ? optionalResources.getDiseaseCaseDir()
-                : new File(System.getProperty("user.home"));
+                : Path.of(System.getProperty("user.home"));
 
-        File curatedDir = Dialogs.selectDirectory((Stage) hg19ProgressIndicator.getScene().getWindow(), initial, "Set directory for curated files.");
+        Path curatedDir = Dialogs.selectDirectory((Stage) hg19ProgressIndicator.getScene().getWindow(), initial, "Set directory for curated files.");
         optionalResources.setDiseaseCaseDir(curatedDir);
     }
 

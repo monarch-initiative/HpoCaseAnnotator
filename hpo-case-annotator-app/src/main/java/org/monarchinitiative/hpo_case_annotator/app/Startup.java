@@ -25,6 +25,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -135,13 +136,13 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
         loadOmimDiseases(executor, services, DATA_OMIM_TSV);
     }
 
-    private static ChangeListener<File> loadHpo(ExecutorService executor,
+    private static ChangeListener<Path> loadHpo(ExecutorService executor,
                                                 OptionalServices services) {
         return (obs, old, novel) -> {
             if (novel == null)
                 services.setHpo(null);
             else {
-                Task<Ontology> task = new LoadOntology(novel.toPath());
+                Task<Ontology> task = new LoadOntology(novel);
                 task.setOnSucceeded(e -> services.setHpo(task.getValue()));
                 task.setOnFailed(e -> {
                     // TODO - add meaningful error reporting
@@ -277,12 +278,16 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
 
     private void setCuratedFilesFolder() {
         String curatedDirPath = resourceProperties.getProperty(ResourcePaths.DISEASE_CASE_DIR_PROPERTY);
-        if (curatedDirPath != null && new File(curatedDirPath).isDirectory()) {
-            File curatedDir = new File(curatedDirPath);
-            LOGGER.debug("Setting curated files directory to '{}'", curatedDir.getAbsolutePath());
+        if (curatedDirPath == null) {
+            LOGGER.info("Not setting the curated files directory.");
+            return;
+        }
+        Path curatedDir = Path.of(curatedDirPath);
+        if (Files.isDirectory(curatedDir)) {
+            LOGGER.debug("Setting curated files directory to '{}'", curatedDir.toAbsolutePath());
             optionalResources.setDiseaseCaseDir(curatedDir);
         } else
-            LOGGER.info("Skipping setting of the curated files dictionary. Path '{}' does not point to directory", curatedDirPath);
+            LOGGER.info("Not setting the curated files directory. Path '{}' does not point to directory", curatedDirPath);
     }
 
     private void setLiftoverChainLocation() {
@@ -296,13 +301,17 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
     }
 
     private void setHpoLocation() {
-        String hpoPath = resourceProperties.getProperty(ResourcePaths.ONTOLOGY_PATH_PROPERTY);
-        if (hpoPath != null && new File(hpoPath).isFile()) {
-            File ontologyFile = new File(hpoPath);
-            optionalResources.setHpoPath(ontologyFile);
-        } else {
-            LOGGER.info("Skipping loading HPO file since the location is unset");
+        String hpo = resourceProperties.getProperty(ResourcePaths.ONTOLOGY_PATH_PROPERTY);
+        if (hpo == null) {
+            LOGGER.info("Not loading HPO file since the location is unset");
+            return;
         }
+
+        Path hpoPath = Path.of(hpo);
+        if (Files.isRegularFile(hpoPath))
+            optionalResources.setHpoPath(hpoPath);
+        else
+            LOGGER.info("Not loading HPO file. The path is not a file: `{}`", hpoPath.toAbsolutePath());
     }
 
     @Override

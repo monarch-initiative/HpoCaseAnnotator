@@ -21,6 +21,8 @@ public class LoadJannovarFunctionalAnnotationService extends Task<FunctionalAnno
     @Override
     protected FunctionalAnnotationService call() throws Exception {
         LOGGER.debug("Creating FunctionalAnnotationService from Jannovar cache at {}", jannovarPath.toAbsolutePath());
-        return JannovarFunctionalAnnotationService.of(jannovarPath);
+        JannovarFunctionalAnnotationService service = JannovarFunctionalAnnotationService.of(jannovarPath);
+        LOGGER.debug("Done!");
+        return service;
     }
 }

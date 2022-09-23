@@ -72,8 +72,7 @@ public class App extends Application {
         HcaProperties properties = context.getBean(HcaProperties.class);
         context.getBean(HostServicesUrlBrowser.class).setHostServices(getHostServices());
 
-        Parent parent = loader.load();
-        Scene scene = new Scene(parent, 1000, 800);
+        Scene scene = new Scene(loader.load());
         scene.getStylesheets().add(BASE_CSS);
         stage.setTitle(properties.name() + ' ' + properties.version());
         stage.getIcons().add(new Image(App.class.getResourceAsStream("/img/donald-duck.png")));
@@ -116,10 +115,10 @@ public class App extends Application {
         }
 
         if (optionalResources.getHpoPath() != null) {
-            resourceProperties.setProperty(ResourcePaths.ONTOLOGY_PATH_PROPERTY, optionalResources.getHpoPath().getAbsolutePath());
+            resourceProperties.setProperty(ResourcePaths.ONTOLOGY_PATH_PROPERTY, optionalResources.getHpoPath().toAbsolutePath().toString());
         }
         if (optionalResources.getDiseaseCaseDir() != null) {
-            resourceProperties.setProperty(ResourcePaths.DISEASE_CASE_DIR_PROPERTY, optionalResources.getDiseaseCaseDir().getAbsolutePath());
+            resourceProperties.setProperty(ResourcePaths.DISEASE_CASE_DIR_PROPERTY, optionalResources.getDiseaseCaseDir().toAbsolutePath().toString());
         }
 
         String liftoverChains = optionalResources.liftoverChainFilesProperty().stream()
