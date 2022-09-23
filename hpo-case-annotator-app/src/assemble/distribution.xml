@@ -29,6 +29,7 @@
             <filtered>true</filtered>
             <includes>
                 <include>launch.sh</include>
+                <include>launch.command</include>
             </includes>
         </fileSet>
         <!-- Metadata -->
