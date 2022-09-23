@@ -59,7 +59,7 @@ Setup
 Note, that *not* all the functionality is enabled after the first startup;
 the status bar in the bottom part of the screen indicates that e.g. path to HPO file is unset.
 
-.. image:: img/hca_welcome.png
+.. image:: img/hca_main.png
 
 Go to ``File | Settings`` as directed - a new dialog window is opened:
 
