@@ -122,7 +122,7 @@
                 <Label styleClass="instruction-text" text="Set ID to associate with your work."/>
                 <HBox alignment="CENTER_LEFT" styleClass="row">
                     <children>
-                        <TextField fx:id="biocuratorIDTextField" promptText="enter your curator ID here" />
+                        <TextField fx:id="biocuratorIDTextField" promptText="e.g. WalterWhite" />
                     </children>
                 </HBox>
             </children>

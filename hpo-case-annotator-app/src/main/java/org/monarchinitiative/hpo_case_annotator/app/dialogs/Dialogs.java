@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.file.Path;
 import java.util.Optional;
 
 public class Dialogs {
@@ -54,14 +55,16 @@ public class Dialogs {
      * @param ownerWindow      - Stage with which the DirectoryChooser will be associated
      * @param initialDirectory - Where to start the search
      * @param title            - Title of PopUp window
-     * @return {@link File} selected by user or <code>null</code>, if user closed dialog window without choosing
+     * @return {@link Path} selected by user or <code>null</code>, if user closed dialog window without choosing
      * anything
      */
-    public static File selectDirectory(Stage ownerWindow, File initialDirectory, String title) {
+    public static Path selectDirectory(Stage ownerWindow, Path initialDirectory, String title) {
         final DirectoryChooser dirchooser = new DirectoryChooser();
-        dirchooser.setInitialDirectory(initialDirectory);
+        dirchooser.setInitialDirectory(initialDirectory.toFile());
         dirchooser.setTitle(title);
-        return dirchooser.showDialog(ownerWindow);
+        File file = dirchooser.showDialog(ownerWindow);
+
+        return file == null ? null : file.toPath();
     }
 
     @Deprecated(since = "2.0.0", forRemoval = true)

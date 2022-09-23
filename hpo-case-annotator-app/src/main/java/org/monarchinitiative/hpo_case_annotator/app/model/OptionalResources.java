@@ -7,6 +7,7 @@ import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalRes
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import static javafx.beans.binding.Bindings.createStringBinding;
 
@@ -20,8 +21,8 @@ public class OptionalResources {
 
     private static final String SETUP_HINT = "Finish the setup in `File | Settings`.";
 
-    private final ObjectProperty<File> diseaseCaseDir = new SimpleObjectProperty<>(this, "diseaseCaseDir");
-    private final ObjectProperty<File> hpoPath = new SimpleObjectProperty<>(this, "ontologyPath");
+    private final ObjectProperty<Path> diseaseCaseDir = new SimpleObjectProperty<>(this, "diseaseCaseDir");
+    private final ObjectProperty<Path> hpoPath = new SimpleObjectProperty<>(this, "hpoPath");
     private final GenomicLocalResources genomicLocalResources = new GenomicLocalResources();
     private final FunctionalAnnotationResources functionalAnnotationResources = new FunctionalAnnotationResources();
     private final ListProperty<File> liftoverChainFiles = new SimpleListProperty<>(FXCollections.observableArrayList());
@@ -36,27 +37,27 @@ public class OptionalResources {
         return functionalAnnotationResources;
     }
 
-    public File getHpoPath() {
+    public Path getHpoPath() {
         return hpoPath.get();
     }
 
-    public void setHpoPath(File hpoPath) {
+    public void setHpoPath(Path hpoPath) {
         this.hpoPath.set(hpoPath);
     }
 
-    public ObjectProperty<File> hpoPathProperty() {
+    public ObjectProperty<Path> hpoPathProperty() {
         return hpoPath;
     }
 
-    public File getDiseaseCaseDir() {
+    public Path getDiseaseCaseDir() {
         return diseaseCaseDir.get();
     }
 
-    public void setDiseaseCaseDir(File diseaseCaseDir) {
+    public void setDiseaseCaseDir(Path diseaseCaseDir) {
         this.diseaseCaseDir.set(diseaseCaseDir);
     }
 
-    public ObjectProperty<File> diseaseCaseDirProperty() {
+    public ObjectProperty<Path> diseaseCaseDirProperty() {
         return diseaseCaseDir;
     }
 
