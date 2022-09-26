@@ -31,21 +31,21 @@
 
         <Separator/>
 
-        <SplitPane>
-            <items>
-                <VBox>
+        <HBox VBox.vgrow="ALWAYS">
+            <children>
+                <VBox HBox.hgrow="ALWAYS">
                     <children>
                         <Label styleClass="h2" text="Phenotype features"/>
                         <PhenotypeTable fx:id="phenotypeTable"/>
                     </children>
                 </VBox>
-                <VBox id="phenotype-feature">
+                <VBox HBox.hgrow="SOMETIMES">
                     <children>
                         <Label styleClass="h2" text="Phenotype feature"/>
                         <PhenotypicFeatureBinding fx:id="phenotypicFeature"/>
                     </children>
                 </VBox>
-            </items>
-        </SplitPane>
+            </children>
+        </HBox>
     </children>
 </fx:root>

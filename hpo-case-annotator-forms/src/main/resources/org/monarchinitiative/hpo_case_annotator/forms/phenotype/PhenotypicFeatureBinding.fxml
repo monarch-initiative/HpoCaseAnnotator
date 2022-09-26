@@ -6,14 +6,16 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.age.*?>
 
-<fx:root id="phenotypic-feature-box" stylesheets="@phenotypic-feature.css" type="VBox" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@phenotypic-feature.css" styleClass="pf-outer-box">
     <children>
         <VBox>
             <children>
-                <VBox id="phenotypic-feature-column" VBox.vgrow="SOMETIMES">
+                <VBox styleClass="ph-def-col">
                     <children>
-                        <TitledLabel id="term-name" fx:id="name" VBox.vgrow="SOMETIMES" />
-                        <TitledLabel id="term-definition" fx:id="definition" name="Definition" VBox.vgrow="SOMETIMES" />
+                        <TitledLabel id="term-name" fx:id="name" />
+                        <TitledLabel id="term-definition" fx:id="definition" name="Definition" />
                     </children>
                 </VBox>
             </children>
@@ -27,17 +29,17 @@
             </children>
         </VBox>
         <Separator />
-        <VBox>
+        <VBox styleClass="temporal-col">
             <children>
                 <Label styleClass="h2" text="Temporal" />
-                <VBox styleClass="temporal-box">
+                <VBox>
                     <children>
                         <Label styleClass="h3" text="Onset" />
                         <CheckBox fx:id="onsetIsUnknown" selected="true" text="Onset is unknown" />
                         <TimeElementBindingComponent fx:id="onsetComponent" visible="false" />
                     </children>
                 </VBox>
-                <VBox styleClass="temporal-box">
+                <VBox>
                     <children>
                         <Label styleClass="h3" text="Resolution" />
                         <CheckBox fx:id="resolutionIsUnknown" selected="true" text="Resolution is unknown" />
