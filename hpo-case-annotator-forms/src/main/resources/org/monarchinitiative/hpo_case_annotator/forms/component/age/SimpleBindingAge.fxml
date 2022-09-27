@@ -6,27 +6,30 @@
 
 <!-- the same as SimpleEditableAge -->
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="FlowPane"
-         stylesheets="@age.css"
-         id="age-box">
+         type="VBox"
+         stylesheets="@age.css">
     <children>
-        <HBox styleClass="age-datum">
+        <FlowPane id="age-box">
             <children>
-                <TitledTextField fx:id="years" name="Years" />
-                <Button onAction="#clearYears" styleClass="clear-button" />
+                <HBox styleClass="age-datum">
+                    <children>
+                        <TitledTextField fx:id="years" name="Years" HBox.hgrow="ALWAYS"/>
+                        <Button onAction="#clearYears" styleClass="clear-button" />
+                    </children>
+                </HBox>
+                <HBox styleClass="age-datum">
+                    <children>
+                        <TitledComboBox fx:id="months" name="Months" HBox.hgrow="ALWAYS"/>
+                        <Button onAction="#clearMonths" styleClass="clear-button" />
+                    </children>
+                </HBox>
+                <HBox styleClass="age-datum">
+                    <children>
+                        <TitledComboBox fx:id="days" name="Days" HBox.hgrow="ALWAYS"/>
+                        <Button onAction="#clearDays" styleClass="clear-button" />
+                    </children>
+                </HBox>
             </children>
-        </HBox>
-        <HBox styleClass="age-datum">
-            <children>
-                <TitledComboBox fx:id="months" name="Months" />
-                <Button onAction="#clearMonths" styleClass="clear-button" />
-            </children>
-        </HBox>
-        <HBox styleClass="age-datum">
-            <children>
-                <TitledComboBox fx:id="days" name="Days" />
-                <Button onAction="#clearDays" styleClass="clear-button" />
-            </children>
-        </HBox>
+        </FlowPane>
     </children>
 </fx:root>

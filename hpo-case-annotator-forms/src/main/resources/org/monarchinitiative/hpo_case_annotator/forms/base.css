@@ -59,6 +59,6 @@ Separator {
 .clear-button {
     -fx-graphic: url('icons/clear.png');
     -fx-content-display: graphic-only;
-    -fx-background-radius: 5;
-    -fx-border-radius: 5;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
 }
