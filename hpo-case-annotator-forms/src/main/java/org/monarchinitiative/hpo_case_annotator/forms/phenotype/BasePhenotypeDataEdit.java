@@ -44,6 +44,8 @@ public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> 
     @FXML
     private PhenotypeTable phenotypeTable;
     @FXML
+    private Button removeSelectedPhenotypicFeature;
+    @FXML
     private PhenotypicFeatureBinding phenotypicFeature;
 
     protected BasePhenotypeDataEdit(URL location) {
@@ -68,6 +70,7 @@ public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> 
         phenotypicFeature.dataProperty().bind(phenotypeTable.getSelectionModel().selectedItemProperty());
         phenotypicFeature.disableProperty().bind(phenotypeTable.getSelectionModel().selectedItemProperty().isNull());
         phenotypeTable.phenotypicFeaturesProperty().bind(phenotypicFeatures);
+        removeSelectedPhenotypicFeature.disableProperty().bind(phenotypeTable.getSelectionModel().selectedItemProperty().isNull());
     }
 
     @Override
@@ -104,6 +107,14 @@ public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> 
 
         showComponentNodeDialog(component);
         phenotypeTable.getPhenotypicFeatures().addAll(component.itemsProperty().get());
+
+        e.consume();
+    }
+
+    @FXML
+    private void removeSelectedPhenotypicFeatureAction(ActionEvent e) {
+        int selected = phenotypeTable.getSelectionModel().getSelectedIndex();
+        phenotypeTable.getPhenotypicFeatures().remove(selected);
 
         e.consume();
     }

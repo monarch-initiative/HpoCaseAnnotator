@@ -19,8 +19,11 @@ Separator {
 }
 
 .remove-item {
-    -fx-pref-width: 30px;
-    -fx-pref-height: 30px;
+    -fx-min-width: 30;
+    -fx-max-width: 30;
+
+    -fx-min-height: 30;
+    -fx-max-height: 30;
 }
 
 .edit-item {

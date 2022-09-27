@@ -9,7 +9,11 @@
          type="VBox"
          stylesheets="@phenotype.css">
     <children>
+        <Label styleClass="h2" text="Individual"/>
+        <Label styleClass="instruction-text" text="We edit phenotypic features of the individual with the following credentials"/>
         <PedigreeMemberIdsComponent fx:id="individualIds"/>
+
+        <Pane styleClass="spacer10px"/>
 
         <Label text="Add phenotype features" styleClass="h2"/>
         <HBox>
@@ -36,9 +40,21 @@
                 <VBox HBox.hgrow="ALWAYS">
                     <children>
                         <Label styleClass="h2" text="Phenotype features"/>
+                        <Label styleClass="instruction-text" text="Phenotypic features entered for the individual are listed below."/>
                         <PhenotypeTable fx:id="phenotypeTable"/>
+                        <Pane styleClass="spacer10px"/>
+                        <HBox>
+                            <children>
+                                <Button fx:id="removeSelectedPhenotypicFeature" onAction="#removeSelectedPhenotypicFeatureAction" styleClass="remove-item" text="-">
+                                    <tooltip>
+                                        <Tooltip text="Remove selected phenotypic feature" wrapText="true"/>
+                                    </tooltip>
+                                </Button>
+                            </children>
+                        </HBox>
                     </children>
                 </VBox>
+                <Pane styleClass="spacer10px"/>
                 <VBox HBox.hgrow="SOMETIMES">
                     <children>
                         <Label styleClass="h2" text="Phenotype feature"/>
