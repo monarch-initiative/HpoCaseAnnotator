@@ -5,10 +5,11 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.VBox;
+import org.monarchinitiative.hpo_case_annotator.core.mining.NamedEntityFinder;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementDataEdit;
+import org.monarchinitiative.hpo_case_annotator.forms.mining.TextMining;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
@@ -28,9 +29,7 @@ public class BaseAddClinicalEncounter<T extends BaseObservableIndividual> extend
     @FXML
     private BrowseHpo browseHpo;
     @FXML
-    private VBox textMining;
-    @FXML
-    private TextMiningController textMiningController;
+    private TextMining textMining;
     @FXML
     private PhenotypeTable phenotypeTable;
 
@@ -47,6 +46,10 @@ public class BaseAddClinicalEncounter<T extends BaseObservableIndividual> extend
 
     public ObjectProperty<Ontology> hpoProperty() {
         return hpo;
+    }
+
+    public ObjectProperty<NamedEntityFinder> namedEntityFinderProperty() {
+        return textMining.namedEntityFinderProperty();
     }
 
     public ObjectProperty<ObservableList<ObservablePhenotypicFeature>> itemsProperty() {

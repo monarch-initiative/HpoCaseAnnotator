@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
+import org.monarchinitiative.hpo_case_annotator.core.mining.NamedEntityFinder;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.disease.BaseDiseaseDataEdit;
@@ -32,6 +33,7 @@ import static javafx.beans.binding.Bindings.*;
  * {@link BaseIndividual} needs the following properties to be set in order to work.
  * <ul>
  *     <li>{@link #hpoProperty()}</li>
+ *     <li>{@link #namedEntityFinderProperty()}</li>
  *     <li>{@link #diseaseIdentifierServiceProperty()}</li>
  * </ul>
  * <p>
@@ -41,6 +43,7 @@ import static javafx.beans.binding.Bindings.*;
 public abstract class BaseIndividual<T extends BaseObservableIndividual> extends VBoxObservableDataComponent<T> {
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
+    private final ObjectProperty<NamedEntityFinder> namedEntityFinder = new SimpleObjectProperty<>();
     private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();
     private final ListProperty<ObservableCuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
 
@@ -76,6 +79,10 @@ public abstract class BaseIndividual<T extends BaseObservableIndividual> extends
 
     public ObjectProperty<Ontology> hpoProperty() {
         return hpo;
+    }
+
+    public ObjectProperty<NamedEntityFinder> namedEntityFinderProperty() {
+        return namedEntityFinder;
     }
 
     public ObjectProperty<DiseaseIdentifierService> diseaseIdentifierServiceProperty() {
@@ -123,6 +130,7 @@ public abstract class BaseIndividual<T extends BaseObservableIndividual> extends
         dialog.titleProperty().bind(concat("Edit phenotype features for ", Utils.nullableStringProperty(data, "id")));
         BasePhenotypeDataEdit<T> content = getPhenotypeDataEdit();
         content.hpoProperty().bind(hpo);
+        content.namedEntityFinderProperty().bind(namedEntityFinder);
         // Data is not null due to triggering button not visible when data is null (see `initialize()`).
         content.setInitialData(data.get());
         dialog.getDialogPane().setContent(content);

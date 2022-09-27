@@ -5,19 +5,24 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import org.monarchinitiative.hpo_case_annotator.core.mining.MinedTerm;
+import org.monarchinitiative.hpo_case_annotator.core.mining.TextMiningResults;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class MiningResultsVettingBox {
+public class MiningResultsVetting extends VBox {
 
-    private final Ontology hpo;
+    private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
     private final ObjectProperty<TextMiningResults> results = new SimpleObjectProperty<>();
 
     @FXML
@@ -36,8 +41,15 @@ public class MiningResultsVettingBox {
     @FXML
     private Label statusLabel;
 
-    public MiningResultsVettingBox(Ontology hpo) {
-        this.hpo = Objects.requireNonNull(hpo);
+    public MiningResultsVetting() {
+        FXMLLoader loader = new FXMLLoader(MiningResultsVetting.class.getResource("MiningResultsVetting.fxml"));
+        loader.setRoot(this);
+        loader.setController(this);
+        try {
+            loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
@@ -48,30 +60,46 @@ public class MiningResultsVettingBox {
         statusColumn.setCellFactory(c -> new ReviewStatusTableCell());
         statusColumn.setCellValueFactory(cellData -> cellData.getValue().reviewStatusProperty());
         results.addListener((obs, old, novel) -> {
-            if (old != null) unbind(old);
-            if (novel != null) bind(novel);
+            unbind(old);
+            bind(novel);
         });
     }
 
     private void bind(TextMiningResults results) {
-        String sourceText = results.sourceText();
+        if (results == null) {
+            textFlow.getChildren().clear();
+            vettedPhenotypicFeatures.getItems().clear();
+        } else {
+            String sourceText = results.sourceText();
 
-        ObservableList<ObservableMinedTerm> sortedObservableTerms = results.minedTerms().stream()
-                .sorted(Comparator.comparingInt(MinedTerm::start).thenComparingInt(MinedTerm::end))
-                .map(toObservableMinedTerm())
-                .collect(Collectors.toCollection(() -> FXCollections.observableArrayList(ObservableMinedTerm.EXTRACTOR)));
+            ObservableList<ObservableMinedTerm> sortedObservableTerms = results.minedTerms().stream()
+                    .sorted(Comparator.comparingInt(MinedTerm::start).thenComparingInt(MinedTerm::end))
+                    .map(toObservableMinedTerm())
+                    .flatMap(Optional::stream)
+                    .collect(Collectors.toCollection(() -> FXCollections.observableArrayList(ObservableMinedTerm.EXTRACTOR)));
 
-        ObservableList<Text> texts = prepareTexts(sourceText, sortedObservableTerms);
+            ObservableList<Text> texts = prepareTexts(sourceText, sortedObservableTerms);
 
-        textFlow.getChildren().addAll(texts);
-        vettedPhenotypicFeatures.setItems(sortedObservableTerms);
-        statusLabel.textProperty().bind(makeSummaryBinding(sortedObservableTerms));
+            textFlow.getChildren().addAll(texts);
+            vettedPhenotypicFeatures.setItems(sortedObservableTerms);
+            statusLabel.textProperty().bind(makeSummaryBinding(sortedObservableTerms));
+        }
     }
 
-    private Function<MinedTerm, ObservableMinedTerm> toObservableMinedTerm() {
+    private void unbind(TextMiningResults results) {
+        if (results != null) {
+            statusLabel.textProperty().unbind();
+        }
+    }
+
+    private Function<MinedTerm, Optional<ObservableMinedTerm>> toObservableMinedTerm() {
         return t -> {
-            Term term = hpo.getTermMap().get(t.id());
-            return new ObservableMinedTerm(t.id(), term == null ? "N/A" : term.getName(), t.start(), t.end(), t.isNegated());
+            Ontology h = hpo.get();
+            if (h == null)
+                return Optional.empty();
+
+            Term term = h.getTermMap().get(t.id());
+            return Optional.of(new ObservableMinedTerm(t.id(), term == null ? "N/A" : term.getName(), t.start(), t.end(), t.isNegated()));
         };
     }
 
@@ -109,11 +137,6 @@ public class MiningResultsVettingBox {
     }
 
 
-    private void unbind(TextMiningResults results) {
-        /* TODO - implement
-         */
-    }
-
     public TextMiningResults getResults() {
         return results.get();
     }
@@ -124,6 +147,18 @@ public class MiningResultsVettingBox {
 
     public void setResults(TextMiningResults results) {
         this.results.set(results);
+    }
+
+    public Ontology getHpo() {
+        return hpo.get();
+    }
+
+    public ObjectProperty<Ontology> hpoProperty() {
+        return hpo;
+    }
+
+    public void setHpo(Ontology hpo) {
+        this.hpo.set(hpo);
     }
 
     /**

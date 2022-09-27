@@ -4,9 +4,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.monarchinitiative.hpo_case_annotator.forms.mining.MiningResultsVettingBox"
-      stylesheets="@mining-results-vetting-box.css">
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      type="VBox"
+      stylesheets="@mining-results-vetting.css">
     <children>
         <HBox>
             <children>
@@ -37,4 +37,4 @@
             </children>
         </HBox>
     </children>
-</VBox>
+</fx:root>

@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import org.monarchinitiative.hpo_case_annotator.core.mining.NamedEntityFinder;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
@@ -29,11 +30,13 @@ import java.util.Objects;
  * {@link BasePhenotypeDataEdit} needs the following properties to be set in order to work.
  * <ul>
  *     <li>{@link #hpoProperty()}</li>
+ *     <li>{@link #namedEntityFinderProperty()}</li>
  * </ul>
  */
 public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> extends VBoxDataEdit<T> {
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
+    private final ObjectProperty<NamedEntityFinder> namedEntityFinder = new SimpleObjectProperty<>();
     private final ListProperty<ObservablePhenotypicFeature> phenotypicFeatures = new SimpleListProperty<>(FXCollections.observableArrayList());
     private T item;
     @FXML
@@ -63,6 +66,10 @@ public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> 
 
     public ObjectProperty<Ontology> hpoProperty() {
         return hpo;
+    }
+
+    public ObjectProperty<NamedEntityFinder> namedEntityFinderProperty() {
+        return namedEntityFinder;
     }
 
     @FXML
@@ -104,6 +111,7 @@ public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> 
     private void addClinicalEncounterAction(ActionEvent e) {
         BaseAddClinicalEncounter<T> component = clinicalEncounterComponent();
         component.hpoProperty().bind(hpo);
+        component.namedEntityFinderProperty().bind(namedEntityFinder);
         component.setData(item);
 
         showComponentNodeDialog(component, "Add clinical encounter");

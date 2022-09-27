@@ -120,6 +120,8 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
         resources.hpoPathProperty()
                 .addListener(loadHpo(executor, services));
 
+        // TODO - configure NamedEntityFinder
+
         // Load Liftover
         resources.liftoverChainFilesProperty()
                 .addListener(loadLiftover(executor, services));

@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverService;
+import org.monarchinitiative.hpo_case_annotator.core.mining.NamedEntityFinder;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 /**
@@ -12,6 +13,7 @@ import org.monarchinitiative.phenol.ontology.data.Ontology;
 public class StudyResources {
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>(this, "hpo");
+    private final ObjectProperty<NamedEntityFinder> namedEntityFinder = new SimpleObjectProperty<>(this, "namedEntityFinder");
     private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>(this, "diseaseIdentifierService");
     private final ObjectProperty<GenomicAssemblyRegistry> genomicAssemblyRegistry = new SimpleObjectProperty<>(this, "genomicAssemblyRegistry");
     private final ObjectProperty<FunctionalAnnotationRegistry> functionalAnnotationRegistry = new SimpleObjectProperty<>(this, "functionalAnnotationRegistry");
@@ -25,6 +27,14 @@ public class StudyResources {
 
     public void setHpo(Ontology hpo) {
         this.hpo.set(hpo);
+    }
+
+    public ObjectProperty<NamedEntityFinder> namedEntityFinderProperty() {
+        return namedEntityFinder;
+    }
+
+    public void setNamedEntityFinder(NamedEntityFinder namedEntityFinder) {
+        this.namedEntityFinder.set(namedEntityFinder);
     }
 
     public ObjectProperty<DiseaseIdentifierService> diseaseIdentifierServiceProperty() {

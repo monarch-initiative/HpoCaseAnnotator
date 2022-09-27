@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.mining;
+package org.monarchinitiative.hpo_case_annotator.core.mining;
 
 import org.monarchinitiative.phenol.ontology.data.Identified;
 

@@ -1,14 +1,14 @@
 package org.monarchinitiative.hpo_case_annotator.forms.mining;
 
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.monarchinitiative.hpo_case_annotator.core.mining.MinedTerm;
+import org.monarchinitiative.hpo_case_annotator.core.mining.TextMiningResults;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.testfx.api.FxRobot;
@@ -26,20 +26,16 @@ import java.util.concurrent.TimeUnit;
  */
 @Disabled("GUI tests are run manually or not at all")
 @ExtendWith(ApplicationExtension.class)
-public class MiningResultsVettingBoxTest {
+public class MiningResultsVettingTest {
 
-    private MiningResultsVettingBox controller;
+    private MiningResultsVetting controller;
 
     @Start
     public void start(Stage stage) throws Exception {
-        controller = new MiningResultsVettingBox(BaseControllerTest.HPO);
+        controller = new MiningResultsVetting();
+        controller.hpoProperty().set(BaseControllerTest.HPO);
 
-        FXMLLoader loader = new FXMLLoader(MiningResultsVettingBox.class.getResource("MiningResultsVettingBox.fxml"));
-        loader.setControllerFactory(clz -> controller);
-
-        Parent parent = loader.load();
-
-        Scene scene = new Scene(parent);
+        Scene scene = new Scene(controller);
         stage.setScene(scene);
         stage.initStyle(StageStyle.DECORATED);
         stage.show();

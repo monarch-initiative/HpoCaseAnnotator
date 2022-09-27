@@ -483,6 +483,7 @@ public class Main {
     private void wireFunctionalPropertiesToStudyResourcesAware(StudyResourcesAware resourcesAware) {
         StudyResources resources = resourcesAware.getStudyResources();
         resources.hpoProperty().bind(optionalServices.hpoProperty());
+        resources.namedEntityFinderProperty().bind(optionalServices.namedEntityFinderProperty());
         resources.diseaseIdentifierServiceProperty().bind(optionalServices.diseaseIdentifierServiceProperty());
         resources.genomicAssemblyRegistryProperty().set(optionalServices.getGenomicAssemblyRegistry());
         resources.functionalAnnotationRegistryProperty().set(optionalServices.getFunctionalAnnotationRegistry());

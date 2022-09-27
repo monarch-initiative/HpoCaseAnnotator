@@ -1,0 +1,13 @@
+#tm-tab-pane {
+    -fx-tab-min-width: 100;
+    -fx-tab-min-height: 30;
+}
+
+TextField {
+    -fx-max-height: 700;
+    -fx-alignment: top-left;
+}
+
+ButtonBar {
+    -fx-padding: 5 0 0 0;
+}

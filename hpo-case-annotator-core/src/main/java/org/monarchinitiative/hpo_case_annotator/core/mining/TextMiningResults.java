@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.mining;
+package org.monarchinitiative.hpo_case_annotator.core.mining;
 
 import java.util.List;
 
@@ -6,6 +6,10 @@ import java.util.List;
  * A container of text mining results.
  */
 public interface TextMiningResults {
+
+    static TextMiningResults of(String sourceText, List<MinedTerm> minedTerms) {
+        return new TextMiningResultsDefault(sourceText, minedTerms);
+    }
 
     /**
      * @return string with the source text that underwent text mining.

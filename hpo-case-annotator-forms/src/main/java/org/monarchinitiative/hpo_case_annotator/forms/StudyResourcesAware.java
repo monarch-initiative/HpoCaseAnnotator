@@ -18,6 +18,7 @@ public interface StudyResourcesAware {
 
     private static void bind(StudyResourcesAware source, StudyResourcesAware target) {
         source.getStudyResources().hpoProperty().bind(target.getStudyResources().hpoProperty());
+        source.getStudyResources().namedEntityFinderProperty().bind(target.getStudyResources().namedEntityFinderProperty());
         source.getStudyResources().diseaseIdentifierServiceProperty().bind(target.getStudyResources().diseaseIdentifierServiceProperty());
         source.getStudyResources().functionalAnnotationRegistryProperty().bind(target.getStudyResources().functionalAnnotationRegistryProperty());
         source.getStudyResources().genomicAssemblyRegistryProperty().bind(target.getStudyResources().genomicAssemblyRegistryProperty());

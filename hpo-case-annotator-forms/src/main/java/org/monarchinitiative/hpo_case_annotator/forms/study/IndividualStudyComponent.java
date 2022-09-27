@@ -21,6 +21,7 @@ public class IndividualStudyComponent extends BaseStudyComponent<ObservableIndiv
         super.initialize();
 
         individual.hpoProperty().bind(studyResources.hpoProperty());
+        individual.namedEntityFinderProperty().bind(studyResources.namedEntityFinderProperty());
         individual.diseaseIdentifierServiceProperty().bind(studyResources.diseaseIdentifierServiceProperty());
         individual.variantsProperty().bind(variantSummary.variantsProperty());
     }

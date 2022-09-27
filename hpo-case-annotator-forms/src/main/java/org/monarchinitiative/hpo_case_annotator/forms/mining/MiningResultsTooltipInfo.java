@@ -3,7 +3,6 @@ package org.monarchinitiative.hpo_case_annotator.forms.mining;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -24,7 +23,7 @@ public class MiningResultsTooltipInfo extends VBox {
 
     public MiningResultsTooltipInfo(ObservableMinedTerm minedTerm) {
         this.minedTerm = Objects.requireNonNull(minedTerm);
-        FXMLLoader loader = new FXMLLoader(MiningResultsVettingBox.class.getResource("MiningResultsTooltipInfo.fxml"));
+        FXMLLoader loader = new FXMLLoader(MiningResultsVetting.class.getResource("MiningResultsTooltipInfo.fxml"));
         loader.setRoot(this);
         loader.setController(this);
         try {
