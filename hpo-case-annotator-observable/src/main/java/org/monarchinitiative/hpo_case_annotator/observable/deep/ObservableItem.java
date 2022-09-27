@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.observable.v2;
+package org.monarchinitiative.hpo_case_annotator.observable.deep;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 /**
  * A little convenience class for implementing {@link Observable} based on {@link #observables()}.
  */
-abstract class ObservableItem implements Observable {
+public abstract class ObservableItem implements Observable {
 
     protected abstract Stream<Observable> observables();
 

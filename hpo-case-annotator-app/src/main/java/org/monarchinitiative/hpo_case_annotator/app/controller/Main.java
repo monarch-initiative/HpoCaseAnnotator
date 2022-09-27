@@ -277,7 +277,7 @@ public class Main {
     @FXML
     private void setResourcesMenuItemAction(ActionEvent e) {
         try {
-            FXMLLoader loader = new FXMLLoader(SetResourcesController.class.getResource("SetResources.fxml"));
+            FXMLLoader loader = new FXMLLoader(SettingsController.class.getResource("Settings.fxml"));
             loader.setControllerFactory(controllerFactory);
 
             Parent parent = loader.load();

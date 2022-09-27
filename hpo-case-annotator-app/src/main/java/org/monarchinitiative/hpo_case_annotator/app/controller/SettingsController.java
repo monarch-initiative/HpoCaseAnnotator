@@ -1,6 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.app.controller;
 
-import javafx.beans.binding.ObjectBinding;
+import javafx.beans.InvalidationListener;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,6 +14,7 @@ import org.monarchinitiative.hpo_case_annotator.app.model.*;
 import org.monarchinitiative.hpo_case_annotator.app.ResourcePaths;
 import org.monarchinitiative.hpo_case_annotator.app.io.Downloader;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResource;
+import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResources;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicRemoteResource;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicRemoteResources;
 import org.monarchinitiative.hpo_case_annotator.app.util.GenomicLocalResourceValidator;
@@ -34,8 +35,6 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
 
-import static javafx.beans.binding.Bindings.*;
-
 /**
  * This class is the controller of the setResources dialog. The user performs initial setup of the
  * resources that are required to run the GUI. The resource paths are stored in {@link OptionalResources} object. No
@@ -44,9 +43,9 @@ import static javafx.beans.binding.Bindings.*;
  * Created by Daniel Danis on 7/16/17.
  */
 @Controller
-public class SetResourcesController {
+public class SettingsController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SetResourcesController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SettingsController.class);
     private static final String UNSET = "Unset";
 
     private final OptionalResources optionalResources;
@@ -56,6 +55,7 @@ public class SetResourcesController {
     private final HcaProperties hcaProperties;
 
     private final File codeHomeDir;
+    private final File appHomeDir;
 
     private final ExecutorService executorService;
 
@@ -83,7 +83,7 @@ public class SetResourcesController {
     private Label hg38GenomeLabel;
 
     @FXML
-    private Label hpOboLabel;
+    private Label hpPathLabel;
 
     @FXML
     private ProgressIndicator hpoProgressIndicator;
@@ -97,15 +97,17 @@ public class SetResourcesController {
     @FXML
     private TextField biocuratorIDTextField;
 
-    public SetResourcesController(OptionalResources optionalResources,
-                                  GenomicRemoteResources genomicRemoteResources,
-                                  HcaProperties hcaProperties,
-                                  File codeHomeDir,
-                                  ExecutorService executorService) {
+    public SettingsController(OptionalResources optionalResources,
+                              GenomicRemoteResources genomicRemoteResources,
+                              HcaProperties hcaProperties,
+                              File codeHomeDir,
+                              File appHomeDir,
+                              ExecutorService executorService) {
         this.optionalResources = optionalResources;
         this.genomicRemoteResources = genomicRemoteResources;
         this.hcaProperties = hcaProperties;
         this.codeHomeDir = codeHomeDir;
+        this.appHomeDir = appHomeDir;
         this.executorService = executorService;
 
         initializeAppHomeDir();
@@ -126,24 +128,36 @@ public class SetResourcesController {
     @FXML
     private void initialize() {
         // Reference genomes
-        ObjectBinding<Path> hg19Fasta = select(optionalResources.getGenomicLocalResources(), "hg19", "fasta");
-        hg19GenomeLabel.textProperty().bind(when(hg19Fasta.isNull()).then(UNSET).otherwise(hg19Fasta.asString()));
-        ObjectBinding<Path> hg38Fasta = select(optionalResources.getGenomicLocalResources(), "hg38", "fasta");
-        hg38GenomeLabel.textProperty().bind(when(hg38Fasta.isNull()).then(UNSET).otherwise(hg38Fasta.asString()));
+        // Should never be null.
+        GenomicLocalResources glr = optionalResources.getGenomicLocalResources();
+        if (glr.getHg19() != null) {
+            Path fasta = glr.getHg19().getFasta();
+            if (fasta != null)
+                hg19GenomeLabel.setText(fasta.toAbsolutePath().toString());
+        }
+
+        if (glr.getHg38() != null) {
+            Path fasta = glr.getHg38().getFasta();
+            if (fasta != null)
+                hg38GenomeLabel.setText(fasta.toAbsolutePath().toString());
+        }
 
         // Jannovar databases
-        ObjectBinding<Path> hg19Jannovar = select(optionalResources.getFunctionalAnnotationResources(), "hg19JannovarPath");
-        hg19JannovarLabel.textProperty().bind(when(hg19Jannovar.isNotNull()).then(hg19Jannovar.asString()).otherwise(UNSET));
-        ObjectBinding<Path> hg38Jannovar = select(optionalResources.getFunctionalAnnotationResources(), "hg38JannovarPath");
-        hg38JannovarLabel.textProperty().bind(when(hg38Jannovar.isNotNull()).then(hg38Jannovar.asString()).otherwise(UNSET));
+        // Should never be null as well.
+        FunctionalAnnotationResources far = optionalResources.getFunctionalAnnotationResources();
+        if (far.getHg19JannovarPath() != null)
+            hg19JannovarLabel.setText(far.getHg19JannovarPath().toAbsolutePath().toString());
+
+        if (far.getHg38JannovarPath() != null)
+            hg38JannovarLabel.setText(far.getHg38JannovarPath().toAbsolutePath().toString());
 
         // HPO
-        ObjectBinding<Path> fileObjectProperty = select(optionalResources, "hpoPath");
-        hpOboLabel.textProperty().bind(when(fileObjectProperty.isNull()).then(UNSET).otherwise(fileObjectProperty.asString()));
+        if (optionalResources.getHpoPath() != null)
+            hpPathLabel.setText(optionalResources.getHpoPath().toAbsolutePath().toString());
 
         // Curated files folder
-        ObjectBinding<Path> diseaseCaseDir = select(optionalResources, "diseaseCaseDir");
-        curatedFilesDirLabel.textProperty().bind(when(diseaseCaseDir.isNotNull()).then(diseaseCaseDir.asString()).otherwise(UNSET));
+        if (optionalResources.getDiseaseCaseDir() != null)
+            curatedFilesDirLabel.setText(optionalResources.getDiseaseCaseDir().toAbsolutePath().toString());
 
         // Liftover chains
         liftoverChainPathsListView.setCellFactory(FileListCell.of());
@@ -151,11 +165,43 @@ public class SetResourcesController {
 
         // Biocurator
         biocuratorIDTextField.textProperty().bindBidirectional(optionalResources.biocuratorIdProperty());
+
+        // At last ...
+        InvalidationListener labelListener = updateLabelsIfChanged();
+        optionalResources.getGenomicLocalResources().addListener(labelListener);
+        optionalResources.getFunctionalAnnotationResources().addListener(labelListener);
+        optionalResources.hpoPathProperty().addListener(labelListener);
+        optionalResources.diseaseCaseDirProperty().addListener(labelListener);
+    }
+
+    private InvalidationListener updateLabelsIfChanged() {
+        return obs -> {
+            GenomicLocalResources glr = optionalResources.getGenomicLocalResources();
+            FunctionalAnnotationResources far = optionalResources.getFunctionalAnnotationResources();
+            if (obs.equals(glr.hg19Property())) {
+                hg19GenomeLabel.setText(pathOrUnsetIfNull(glr.getHg19().getFasta()));
+            } else if (obs.equals(glr.hg38Property())) {
+                hg38GenomeLabel.setText(pathOrUnsetIfNull(glr.getHg38().getFasta()));
+            } else if (obs.equals(far.hg19JannovarPathProperty())) {
+                hg19JannovarLabel.setText(pathOrUnsetIfNull(far.getHg19JannovarPath()));
+            } else if (obs.equals(far.hg38JannovarPathProperty())) {
+                hg38JannovarLabel.setText(pathOrUnsetIfNull(far.getHg38JannovarPath()));
+            } else if (obs.equals(optionalResources.hpoPathProperty())) {
+                hpPathLabel.setText(pathOrUnsetIfNull(optionalResources.getHpoPath()));
+            } else if (obs.equals(optionalResources.diseaseCaseDirProperty())) {
+                curatedFilesDirLabel.setText(pathOrUnsetIfNull(optionalResources.getDiseaseCaseDir()));
+            } else {
+                System.err.printf("Changed: %s%n", obs);
+            }
+        };
+    }
+
+    private static String pathOrUnsetIfNull(Path path) {
+        return path == null ? UNSET : path.toAbsolutePath().toString();
     }
 
     @FXML
     private void downloadHg19RefGenomeButtonAction(ActionEvent e) {
-        e.consume();
         FileChooser chooser = new FileChooser();
         chooser.setInitialDirectory(codeHomeDir);
         chooser.setTitle("Save hg19 fasta as");
@@ -177,6 +223,7 @@ public class SetResourcesController {
                 })
                 .ifPresent(executorService::submit);
 
+        e.consume();
     }
 
     private Function<GenomicLocalResource, GenomeAssemblyDownloader> createDownloader(GenomicRemoteResource resource) {
@@ -185,7 +232,6 @@ public class SetResourcesController {
 
     @FXML
     private void setPathToHg19ButtonAction(ActionEvent e) {
-        e.consume();
         FileChooser chooser = new FileChooser();
         chooser.setInitialDirectory(codeHomeDir);
         chooser.setTitle("Select local hg19 FASTA file");
@@ -203,11 +249,11 @@ public class SetResourcesController {
             LOGGER.error("Unable to use selected genome build: {}", ex.getMessage(), ex);
         }
 
+        e.consume();
     }
 
     @FXML
     private void downloadHg38RefGenomeButtonAction(ActionEvent e) {
-        e.consume();
         FileChooser chooser = new FileChooser();
         chooser.setInitialDirectory(codeHomeDir);
         chooser.setTitle("Save hg38 fasta as");
@@ -228,11 +274,12 @@ public class SetResourcesController {
                     return dwn;
                 })
                 .ifPresent(executorService::submit);
+
+        e.consume();
     }
 
     @FXML
     private void setPathToHg38ButtonAction(ActionEvent e) {
-        e.consume();
         FileChooser chooser = new FileChooser();
         chooser.setInitialDirectory(codeHomeDir);
         chooser.setTitle("Select local hg38 FASTA file");
@@ -250,11 +297,12 @@ public class SetResourcesController {
             Dialogs.showErrorDialog("Error", "Unable to use selected genome build", "See log for more details");
             LOGGER.error("Unable to use selected genome build: {}", ex.getMessage(), ex);
         }
+
+        e.consume();
     }
 
     @FXML
     private void setPathToHg19JannovarButtonAction(ActionEvent e) {
-        e.consume();
         FileChooser chooser = new FileChooser();
         chooser.setInitialDirectory(codeHomeDir);
         chooser.setTitle("Select Jannovar transcript database for hg19");
@@ -263,11 +311,12 @@ public class SetResourcesController {
 
         if (databasePath != null)
             optionalResources.getFunctionalAnnotationResources().setHg19JannovarPath(databasePath.toPath());
+
+        e.consume();
     }
 
     @FXML
     private void setPathToHg38JannovarButtonAction(ActionEvent e) {
-        e.consume();
         FileChooser chooser = new FileChooser();
         chooser.setInitialDirectory(codeHomeDir);
         chooser.setTitle("Select Jannovar transcript database for hg38");
@@ -276,6 +325,8 @@ public class SetResourcesController {
 
         if (databasePath != null)
             optionalResources.getFunctionalAnnotationResources().setHg38JannovarPath(databasePath.toPath());
+
+        e.consume();
     }
 
 
@@ -284,8 +335,7 @@ public class SetResourcesController {
      */
     @FXML
     private void downloadHPOFileButtonAction(ActionEvent e) {
-        e.consume();
-        Path target = codeHomeDir.toPath().resolve(ResourcePaths.DEFAULT_HPO_FILE_NAME);
+        Path target = appHomeDir.toPath().resolve(ResourcePaths.DEFAULT_HPO_FILE_NAME);
         if (Files.isRegularFile(target)) {
             boolean overwrite = Dialogs.getBooleanFromUser("Download HPO",
                             "HPO file already exists at the target location",
@@ -313,12 +363,13 @@ public class SetResourcesController {
         task.setOnSucceeded(event -> optionalResources.setHpoPath(target));
         task.setOnFailed(event -> optionalResources.setHpoPath(null));
         executorService.submit(task);
+
+        e.consume();
     }
 
 
     @FXML
     private void downloadLiftoverChainFiles(ActionEvent e) {
-        e.consume();
         List<URL> urls = new ArrayList<>();
         try {
             urls.add(new URL(hcaProperties.liftover().hg18ToHg38Url()));
@@ -328,7 +379,7 @@ public class SetResourcesController {
             LOGGER.warn("Malformed URL: {}", ex.getMessage());
             return;
         }
-        Path liftoverFolder = codeHomeDir.toPath().resolve(ResourcePaths.DEFAULT_LIFTOVER_FOLDER);
+        Path liftoverFolder = appHomeDir.toPath().resolve(ResourcePaths.DEFAULT_LIFTOVER_FOLDER);
         for (URL url : urls) {
             String file = new File(url.getFile()).getName();
             Path target = liftoverFolder.resolve(file);
@@ -337,6 +388,8 @@ public class SetResourcesController {
             task.setOnSucceeded(we -> optionalResources.liftoverChainFilesProperty().add(target.toFile()));
             executorService.submit(task);
         }
+
+        e.consume();
     }
 
     /**
@@ -344,13 +397,14 @@ public class SetResourcesController {
      */
     @FXML
     private void setCuratedDirButtonAction(ActionEvent e) {
-        e.consume();
         Path initial = optionalResources.getDiseaseCaseDir() != null && Files.isDirectory(optionalResources.getDiseaseCaseDir())
                 ? optionalResources.getDiseaseCaseDir()
                 : Path.of(System.getProperty("user.home"));
 
         Path curatedDir = Dialogs.selectDirectory((Stage) hg19ProgressIndicator.getScene().getWindow(), initial, "Set directory for curated files.");
         optionalResources.setDiseaseCaseDir(curatedDir);
+
+        e.consume();
     }
 
 }

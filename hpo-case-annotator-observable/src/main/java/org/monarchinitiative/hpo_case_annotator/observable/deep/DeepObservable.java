@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.observable.v2;
+package org.monarchinitiative.hpo_case_annotator.observable.deep;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  *
  * @author ielis
  */
-abstract class DeepObservable extends ObservableItem {
+public abstract class DeepObservable extends ObservableItem {
 
     private final ListenerHelper helper;
     /*

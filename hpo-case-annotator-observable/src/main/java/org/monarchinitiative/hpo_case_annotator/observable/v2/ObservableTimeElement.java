@@ -6,6 +6,7 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
+import org.monarchinitiative.hpo_case_annotator.observable.deep.DeepObservable;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.stream.Stream;

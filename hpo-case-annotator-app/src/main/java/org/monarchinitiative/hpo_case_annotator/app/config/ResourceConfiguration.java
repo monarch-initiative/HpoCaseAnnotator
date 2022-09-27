@@ -38,7 +38,7 @@ public class ResourceConfiguration {
         GenomicRemoteResourcesProperties.GenomicRemoteResource hg38Resources = reference.hg38();
         GenomicRemoteResource hg38 = new GenomicRemoteResource(new URL(hg38Resources.genomeFastaUrl()), new URL(hg38Resources.genomeAssemblyReportUrl()));
 
-        return new GenomicRemoteResources(null, hg19, hg38);
+        return new GenomicRemoteResources(hg19, hg38);
     }
 
     @Bean

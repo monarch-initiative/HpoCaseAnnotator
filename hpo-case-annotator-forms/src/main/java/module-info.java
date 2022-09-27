@@ -11,6 +11,7 @@ module org.monarchinitiative.hca.forms {
     requires org.slf4j;
 
     exports org.monarchinitiative.hpo_case_annotator.forms;
+    exports org.monarchinitiative.hpo_case_annotator.forms.base to org.monarchinitiative.hca.app;
     exports org.monarchinitiative.hpo_case_annotator.forms.liftover;
     exports org.monarchinitiative.hpo_case_annotator.forms.status;
     exports org.monarchinitiative.hpo_case_annotator.forms.study;

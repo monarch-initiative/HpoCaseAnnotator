@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
+import org.monarchinitiative.hpo_case_annotator.observable.deep.DeepObservable;
 
 import java.util.List;
 import java.util.stream.Stream;
