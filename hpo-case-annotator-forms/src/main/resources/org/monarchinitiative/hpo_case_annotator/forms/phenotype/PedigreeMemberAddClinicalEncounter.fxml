@@ -7,23 +7,24 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.*?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.VBox"
+         type="VBox"
          stylesheets="@add-clinical-encounter.css">
     <children>
-        <SplitPane dividerPositions="0.3">
-            <items>
-                <VBox>
+        <HBox VBox.vgrow="ALWAYS">
+            <children>
+                <VBox id="credentials-box">
                     <children>
-                        <Label text="Individual"/>
+                        <Label text="Individual" styleClass="h2"/>
                         <PedigreeMemberIdsComponent fx:id="individualIds"/>
 
-                        <Label text="Encounter time"/>
+                        <Label text="Encounter time" styleClass="h2"/>
                         <TimeElementDataEdit fx:id="encounterTime"/>
                     </children>
                 </VBox>
-                <VBox>
+
+                <!-- Widgets for adding phenotypic features -->
+                <VBox HBox.hgrow="ALWAYS">
                     <children>
-                        <Label text="Add terms"/>
                         <TabPane id="add-terms-tab-pane" tabClosingPolicy="UNAVAILABLE">
                             <tabs>
                                 <Tab text="Browse HPO hierarchy">
@@ -33,18 +34,20 @@
                                 </Tab>
                                 <Tab text="Text mining">
                                     <content>
-                                        <fx:include fx:id="textMining" source="TextMining.fxml"/>
+                                        <TextMining fx:id="textMining"/>
                                     </content>
                                 </Tab>
                             </tabs>
                         </TabPane>
                     </children>
                 </VBox>
-            </items>
-        </SplitPane>
+            </children>
+        </HBox>
+
+        <!-- A list of features added during this session -->
         <VBox>
             <children>
-                <Label text="Added phenotype features"/>
+                <Label text="Added phenotype features" styleClass="h2"/>
                 <PhenotypeTable fx:id="phenotypeTable"/>
             </children>
         </VBox>

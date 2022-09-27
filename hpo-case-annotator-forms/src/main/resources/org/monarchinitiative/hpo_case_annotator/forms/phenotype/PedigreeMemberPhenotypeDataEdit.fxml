@@ -10,7 +10,7 @@
          stylesheets="@phenotype.css">
     <children>
         <Label styleClass="h2" text="Individual"/>
-        <Label styleClass="instruction-text" text="We edit phenotypic features of the individual with the following credentials"/>
+        <Label styleClass="instruction-text" text="We review phenotypic features of the individual with the following credentials"/>
         <PedigreeMemberIdsComponent fx:id="individualIds"/>
 
         <Pane styleClass="spacer10px"/>
