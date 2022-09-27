@@ -15,6 +15,7 @@ import org.monarchinitiative.hpo_case_annotator.app.task.*;
 import org.monarchinitiative.hpo_case_annotator.app.util.GenomicLocalResourceValidator;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverService;
+import org.monarchinitiative.hpo_case_annotator.core.mining.NamedEntityFinder;
 import org.monarchinitiative.hpo_case_annotator.core.reference.functional.FunctionalAnnotationService;
 import org.monarchinitiative.hpo_case_annotator.core.reference.genome.GenomicAssemblyService;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
@@ -120,7 +121,9 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
         resources.hpoPathProperty()
                 .addListener(loadHpo(executor, services));
 
-        // TODO - configure NamedEntityFinder
+        // Load NamedEntityFinder when HPO becomes available
+        services.hpoProperty()
+                .addListener(loadNamedEntityFinder(executor, services));
 
         // Load Liftover
         resources.liftoverChainFilesProperty()
@@ -145,10 +148,35 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
                 services.setHpo(null);
             else {
                 Task<Ontology> task = new LoadOntology(novel);
-                task.setOnSucceeded(e -> services.setHpo(task.getValue()));
+                task.setOnSucceeded(e -> {
+                    LOGGER.debug("HPO was loaded");
+                    services.setHpo(task.getValue());
+                });
                 task.setOnFailed(e -> {
                     // TODO - add meaningful error reporting
                     LOGGER.error("Ontology load failed");
+                });
+                executor.submit(task);
+            }
+        };
+    }
+
+    private static ChangeListener<? super Ontology> loadNamedEntityFinder(ExecutorService executor, OptionalServices services) {
+        return (obs, old, novel) -> {
+            if (novel == null) {
+                LOGGER.debug("HPO is not available, hence no text mining");
+                services.setNamedEntityFinder(null);
+            } else {
+                Task<NamedEntityFinder> task = new LoadFenominalNamedEntityFinder(novel);
+                task.setOnSucceeded(e -> {
+                    LOGGER.debug("Named entity finder is configured");
+                    services.setNamedEntityFinder(task.getValue());
+                });
+                task.setOnFailed(e -> {
+                    // TODO - add meaningful error reporting
+                    Throwable exception = e.getSource().getException();
+                    LOGGER.error("Loading Fenominal named entity finder failed: {}", exception.getMessage());
+                    LOGGER.debug("Loading Fenominal named entity finder failed: {}", exception.getMessage(), exception);
                 });
                 executor.submit(task);
             }
@@ -164,7 +192,10 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
             }
             Task<LiftOverService> task = new LoadLiftOverService(change.getList());
 
-            task.setOnSucceeded(e -> services.setLiftoverService(task.getValue()));
+            task.setOnSucceeded(e -> {
+                LOGGER.debug("Liftover service is configured");
+                services.setLiftoverService(task.getValue());
+            });
             task.setOnFailed(e -> {
                 // TODO - add meaningful error reporting
                 LOGGER.error("Liftover chain load failed");
@@ -191,7 +222,10 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
             }
 
             Task<FunctionalAnnotationService> task = new LoadJannovarFunctionalAnnotationService(path);
-            task.setOnSucceeded(e -> consumer.accept(task.getValue()));
+            task.setOnSucceeded(e -> {
+                LOGGER.debug("Functional annotation service is configured");
+                consumer.accept(task.getValue());
+            });
             task.setOnFailed(e -> {
                 // TODO - add meaningful error reporting
                 LOGGER.error("Loading of functional annotation service failed");
@@ -219,7 +253,10 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
             }
 
             Task<GenomicAssemblyService> task = new LoadGenomicAssemblyService(resource);
-            task.setOnSucceeded(e -> consumer.accept(task.getValue()));
+            task.setOnSucceeded(e -> {
+                LOGGER.debug("Genomic assembly service is configured");
+                consumer.accept(task.getValue());
+            });
             task.setOnFailed(e -> {
                 // TODO - add meaningful error reporting
                 LOGGER.error("Loading of genomic resource failed");
@@ -233,7 +270,10 @@ public class Startup implements ApplicationListener<ApplicationStartedEvent>, Ru
                                          OptionalServices services,
                                          String omimPath) {
         Task<DiseaseIdentifierService> task = new LoadOmimDiseases(omimPath);
-        task.setOnSucceeded(e -> services.setDiseaseIdentifierService(task.getValue()));
+        task.setOnSucceeded(e -> {
+            LOGGER.debug("Disease identifier service is configured");
+            services.setDiseaseIdentifierService(task.getValue());
+        });
         task.setOnFailed(e -> {
             // TODO - add meaningful error reporting
             LOGGER.error("Loading of the bundled OMIM disease table failed");

@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import org.monarchinitiative.hpo_case_annotator.core.mining.NamedEntityFinder;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.BaseAddClinicalEncounter;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.BrowseHpo;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable;
@@ -24,6 +25,7 @@ public abstract class BasePhenotypeStep<T extends BaseObservableIndividual> exte
     // TODO - this is very similar to PhenotypeDataEdit. Perhaps we can extract the shared functionality?
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
+    private final ObjectProperty<NamedEntityFinder> namedEntityFinder = new SimpleObjectProperty<>();
     @FXML
     private Button browseHpo;
     @FXML
@@ -40,6 +42,9 @@ public abstract class BasePhenotypeStep<T extends BaseObservableIndividual> exte
 
     public ObjectProperty<Ontology> hpoProperty() {
         return hpo;
+    }
+    public ObjectProperty<NamedEntityFinder> namedEntityFinderProperty() {
+        return namedEntityFinder;
     }
 
     @Override
@@ -97,6 +102,7 @@ public abstract class BasePhenotypeStep<T extends BaseObservableIndividual> exte
     private void addClinicalEncounterAction(ActionEvent e) {
         BaseAddClinicalEncounter<T> component = clinicalEncounterComponent();
         component.hpoProperty().bind(hpo);
+        component.namedEntityFinderProperty().bind(namedEntityFinder);
         component.setData(data.get()); // TODO - should not be null but maybe..
 
         showComponentNodeDialog(component);

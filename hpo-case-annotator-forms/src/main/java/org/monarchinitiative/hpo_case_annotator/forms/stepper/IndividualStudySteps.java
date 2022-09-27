@@ -22,6 +22,7 @@ public class IndividualStudySteps extends BaseStudySteps<ObservableIndividualStu
 
         IndividualStep<ObservableIndividualStudy> individual = new IndividualStep<>();
         individual.hpoProperty().bind(studyResources.hpoProperty());
+        individual.namedEntityFinderProperty().bind(studyResources.namedEntityFinderProperty());
         individual.diseaseIdentifierServiceProperty().bind(studyResources.diseaseIdentifierServiceProperty());
         individual.variantsProperty().bind(variants.variantsProperty());
         steps.add(individual);

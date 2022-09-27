@@ -63,6 +63,10 @@ public class BaseAddClinicalEncounter<T extends BaseObservableIndividual> extend
         // Browse HPO tab
         browseHpo.setPhenotypicFeatureConsumer(phenotypeTable.getPhenotypicFeatures()::add);
         browseHpo.hpoProperty().bind(hpo);
+
+        // Text mining tab
+        textMining.hpoProperty().bind(hpo);
+
         ObservableTimeElement ote = new ObservableTimeElement();
         encounterTime.setInitialData(ote);
 

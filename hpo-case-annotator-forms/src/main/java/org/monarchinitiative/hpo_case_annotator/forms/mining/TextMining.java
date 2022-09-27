@@ -14,6 +14,7 @@ import org.monarchinitiative.hpo_case_annotator.core.mining.MinedTerm;
 import org.monarchinitiative.hpo_case_annotator.core.mining.NamedEntityFinder;
 import org.monarchinitiative.hpo_case_annotator.core.mining.TextMiningResults;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 import java.io.IOException;
 import java.util.List;
@@ -81,15 +82,12 @@ public class TextMining extends VBox {
         this.encounterTime.set(encounterTime);
     }
 
-    public NamedEntityFinder getNamedEntityFinder() {
-        return namedEntityFinder.get();
+    public ObjectProperty<Ontology> hpoProperty() {
+        return vetting.hpoProperty();
     }
 
     public ObjectProperty<NamedEntityFinder> namedEntityFinderProperty() {
         return namedEntityFinder;
     }
 
-    public void setNamedEntityFinder(NamedEntityFinder namedEntityFinder) {
-        this.namedEntityFinder.set(namedEntityFinder);
-    }
 }

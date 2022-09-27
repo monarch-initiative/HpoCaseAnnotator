@@ -4,6 +4,7 @@ module org.monarchinitiative.hca.app {
     requires org.monarchinitiative.hca.convert;
 
     requires org.monarchinitiative.phenol.io;
+    requires org.monarchinitiative.fenominal.core;
     requires jannovar.core;
     requires htsjdk;
 

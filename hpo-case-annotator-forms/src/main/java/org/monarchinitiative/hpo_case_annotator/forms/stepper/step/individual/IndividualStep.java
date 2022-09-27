@@ -13,6 +13,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Dialog;
 import javafx.stage.StageStyle;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
+import org.monarchinitiative.hpo_case_annotator.core.mining.NamedEntityFinder;
 import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsBindingComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.disease.IndividualDiseaseDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.IndividualPhenotypeDataEdit;
@@ -39,6 +40,7 @@ import java.util.stream.Stream;
 public class IndividualStep<T extends ObservableIndividualStudy> extends BaseStep<T> {
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
+    private final ObjectProperty<NamedEntityFinder> namedEntityFinder = new SimpleObjectProperty<>();
     private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();
     private final ListProperty<ObservableCuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
 
@@ -51,6 +53,10 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
 
     public ObjectProperty<Ontology> hpoProperty() {
         return hpo;
+    }
+
+    public ObjectProperty<NamedEntityFinder> namedEntityFinderProperty() {
+        return namedEntityFinder;
     }
 
     public ListProperty<ObservableCuratedVariant> variantsProperty() {
@@ -109,6 +115,7 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
 
         IndividualPhenotypeDataEdit phenotypeDataEdit = new IndividualPhenotypeDataEdit();
         phenotypeDataEdit.hpoProperty().bind(hpo);
+        phenotypeDataEdit.namedEntityFinderProperty().bind(namedEntityFinder);
         phenotypeDataEdit.setInitialData(data.get().getIndividual()); // TODO - check non null?
         dialog.getDialogPane().setContent(phenotypeDataEdit);
         dialog.showAndWait()
