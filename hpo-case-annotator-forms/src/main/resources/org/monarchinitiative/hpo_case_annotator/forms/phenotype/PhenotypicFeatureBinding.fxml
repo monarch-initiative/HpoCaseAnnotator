@@ -21,13 +21,15 @@
             </children>
         </VBox>
         <Separator />
-        <VBox>
+        <GridPane hgap="10" vgap="5">
             <children>
-                <Label styleClass="h2" text="Status" />
-                <RadioButton fx:id="presentRadioButton" mnemonicParsing="false" selected="true" text="Present" />
-                <RadioButton fx:id="absentRadioButton" mnemonicParsing="false" text="Excluded" />
+                <Label styleClass="h2" text="Status" GridPane.columnSpan="2"/>
+                <RadioButton fx:id="presentRadioButton" mnemonicParsing="false" GridPane.rowIndex="1"
+                             selected="true" text="Present" />
+                <RadioButton fx:id="absentRadioButton" mnemonicParsing="false" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                             text="Excluded" />
             </children>
-        </VBox>
+        </GridPane>
         <Separator />
         <VBox styleClass="temporal-col">
             <children>

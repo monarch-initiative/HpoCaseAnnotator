@@ -3,7 +3,6 @@ package org.monarchinitiative.hpo_case_annotator.app;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
@@ -52,6 +51,8 @@ public class App extends Application {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
     public static final String BASE_CSS = Objects.requireNonNull(App.class.getResource("base.css")).toExternalForm();
+    private static final int MAIN_WINDOW_WIDTH = 1600;
+    private static final int MAIN_WINDOW_HEIGHT = 800;
 
     private ConfigurableApplicationContext context;
 
@@ -72,7 +73,7 @@ public class App extends Application {
         HcaProperties properties = context.getBean(HcaProperties.class);
         context.getBean(HostServicesUrlBrowser.class).setHostServices(getHostServices());
 
-        Scene scene = new Scene(loader.load());
+        Scene scene = new Scene(loader.load(), MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
         scene.getStylesheets().add(BASE_CSS);
         stage.setTitle(properties.name() + ' ' + properties.version());
         stage.getIcons().add(new Image(App.class.getResourceAsStream("/img/donald-duck.png")));

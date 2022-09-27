@@ -1,0 +1,27 @@
+#hpo-search-box {
+    -fx-padding: 10 0 5 0;
+    -fx-alignment: center;
+}
+#search-magnifying-glass {
+    -fx-image: url("magnifying-glass.png");
+}
+
+#hpo-search {
+    -fx-max-width: 1000;
+    -fx-min-height: 30;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+}
+
+SimpleOntologyClassTreeView {
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-min-width: 300;
+    -fx-pref-width: 800;
+    -fx-max-width: 800;
+}
+
+#pf-scroll-pane {
+    -fx-min-width: 400;
+    -fx-background-color: white;
+}

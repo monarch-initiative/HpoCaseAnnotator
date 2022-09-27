@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms.phenotype;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -94,7 +95,7 @@ public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> 
         component.hpoProperty().bind(hpo);
         component.setPhenotypicFeatureConsumer(phenotypeTable.getPhenotypicFeatures()::add);
 
-        showComponentNodeDialog(component);
+        showComponentNodeDialog(component, "Browse HPO");
 
         e.consume();
     }
@@ -105,7 +106,7 @@ public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> 
         component.hpoProperty().bind(hpo);
         component.setData(item);
 
-        showComponentNodeDialog(component);
+        showComponentNodeDialog(component, "Add clinical encounter");
         phenotypeTable.getPhenotypicFeatures().addAll(component.itemsProperty().get());
 
         e.consume();
@@ -121,10 +122,13 @@ public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> 
 
     protected abstract BaseAddClinicalEncounter<T> clinicalEncounterComponent();
 
-    private void showComponentNodeDialog(Node component) {
+    private void showComponentNodeDialog(Node component, String title) {
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.initOwner(phenotypeTable.getParent().getScene().getWindow());
         dialog.setResizable(true);
+        dialog.setTitle(title);
+        // Bind "this" to "that", not "that" to "this"!
+        Bindings.bindContent(dialog.getDialogPane().getStylesheets(), phenotypeTable.getParent().getStylesheets());
         dialog.getDialogPane().getButtonTypes().add(new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE));
         dialog.getDialogPane().setContent(component);
         dialog.showAndWait();

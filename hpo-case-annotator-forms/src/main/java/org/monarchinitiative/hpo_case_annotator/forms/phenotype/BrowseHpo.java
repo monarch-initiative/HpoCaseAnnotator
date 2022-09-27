@@ -7,10 +7,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
-import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.forms.tree.SimpleOntologyClass;
 import org.monarchinitiative.hpo_case_annotator.forms.tree.SimpleOntologyClassTreeView;
 import org.monarchinitiative.hpo_case_annotator.model.v2.OntologyClass;
@@ -33,7 +33,7 @@ public class BrowseHpo extends VBox {
     private final PhenotypeSuggestionProvider suggestionProvider = new PhenotypeSuggestionProvider();
 
     @FXML
-    private TitledTextField searchField;
+    private TextField searchField;
     @FXML
     private SimpleOntologyClassTreeView ontologyTreeView;
     @FXML
@@ -59,7 +59,7 @@ public class BrowseHpo extends VBox {
         searchField.disableProperty().bind(hpo.isNull());
         suggestionProvider.ontologyProperty().bind(hpo);
 
-        AutoCompletionBinding<String> binding = TextFields.bindAutoCompletion(searchField.getTitledItem(), suggestionProvider);
+        AutoCompletionBinding<String> binding = TextFields.bindAutoCompletion(searchField, suggestionProvider);
         binding.minWidthProperty().bind(searchField.widthProperty());
         binding.setVisibleRowCount(AUTOCOMPLETION_ROW_COUNT);
         binding.setHideOnEscape(true);
@@ -111,7 +111,8 @@ public class BrowseHpo extends VBox {
 
             phenotypicFeatureConsumer.get()
                     .accept(data);
-            searchField.getTitledItem().clear();
+            searchField.clear();
+            searchField.requestFocus();
         }
 
         e.consume();
