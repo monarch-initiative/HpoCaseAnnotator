@@ -56,7 +56,8 @@ public class TextMiningTest {
 
         robot.sleep(60, TimeUnit.SECONDS);
 
-        controller.getReviewedPhenotypicFeatures().forEach(System.err::println);
+        controller.reviewedFeaturesProperty().get()
+                .forEach(System.err::println);
     }
 
 

@@ -35,7 +35,13 @@
                                 </Tab>
                                 <Tab text="Text mining">
                                     <content>
-                                        <TextMining fx:id="textMining"/>
+                                        <VBox>
+                                            <children>
+                                                <TextMining fx:id="textMining"/>
+                                                <Button fx:id="addTextMiningTerms" onAction="#addTextMiningTermsAction"
+                                                        text="Add approved terms" />
+                                            </children>
+                                        </VBox>
                                     </content>
                                 </Tab>
                             </tabs>

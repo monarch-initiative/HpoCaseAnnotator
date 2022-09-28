@@ -3,8 +3,10 @@ package org.monarchinitiative.hpo_case_annotator.forms.phenotype;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import org.monarchinitiative.hpo_case_annotator.core.mining.NamedEntityFinder;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsComponent;
@@ -30,6 +32,8 @@ public class BaseAddClinicalEncounter<T extends BaseObservableIndividual> extend
     private BrowseHpo browseHpo;
     @FXML
     private TextMining textMining;
+    @FXML
+    private Button addTextMiningTerms;
     @FXML
     private PhenotypeTable phenotypeTable;
 
@@ -79,6 +83,15 @@ public class BaseAddClinicalEncounter<T extends BaseObservableIndividual> extend
         // Text mining tab
         // TODO - setup
 //        textMiningController.encounterTimeProperty().bind(encounterTime.dataProperty());
+    }
+
+    @FXML
+    private void addTextMiningTermsAction(ActionEvent e) {
+        textMining.reviewedFeaturesProperty().get().stream()
+                .filter(pf -> pf.getReviewStatus().isApproved())
+                .forEachOrdered(phenotypeTable.getPhenotypicFeatures()::add);
+
+        e.consume();
     }
 
     @Override
