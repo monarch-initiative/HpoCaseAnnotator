@@ -1,13 +1,10 @@
-#tm-tab-pane {
-    -fx-tab-min-width: 100;
-    -fx-tab-min-height: 30;
-}
-
-TextField {
+#payload-text-area {
     -fx-max-height: 700;
     -fx-alignment: top-left;
 }
 
-ButtonBar {
-    -fx-padding: 5 0 0 0;
+#process-btn {
+    /* The width is set to Infinity in the FXML file. */
+    -fx-min-width: 120;
+    -fx-min-height: 30;
 }

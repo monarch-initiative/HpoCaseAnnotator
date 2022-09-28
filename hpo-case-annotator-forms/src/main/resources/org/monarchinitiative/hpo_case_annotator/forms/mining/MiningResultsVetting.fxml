@@ -8,33 +8,7 @@
       type="VBox"
       stylesheets="@mining-results-vetting.css">
     <children>
-        <HBox>
-            <children>
-                <VBox >
-                    <Label styleClass="tm-title" text="Text mining results"/>
-                    <Label text="Text"/>
-                    <TextFlow fx:id="textFlow" id="text-flow"/>
-                    <Label text="Status"/>
-                    <Label fx:id="statusLabel"/>
-                </VBox>
-                <VBox >
-                    <Label styleClass="tm-title" text="Vetted phenotypic features"/>
-                    <TableView fx:id="vettedPhenotypicFeatures">
-                        <columns>
-                            <TableColumn maxWidth="25.0" fx:id="statusColumn"/>
-                            <TableColumn minWidth="120.0" text="Id" fx:id="idColumn"/>
-                            <TableColumn minWidth="200.0" text="Name" fx:id="nameColumn"/>
-                            <TableColumn minWidth="100.0" text="Excluded" fx:id="excludedColumn"/>
-                        </columns>
-                        <placeholder>
-                            <Label text="No vetted features yet"/>
-                        </placeholder>
-                        <columnResizePolicy>
-                            <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
-                        </columnResizePolicy>
-                    </TableView>
-                </VBox>
-            </children>
-        </HBox>
+        <Label styleClass="h2" text="Text mining results"/>
+        <TextFlow fx:id="textFlow"/>
     </children>
 </fx:root>

@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class MiningResultsTooltipInfo extends VBox {
 
-    private final ObservableMinedTerm minedTerm;
+    private final ObservableReviewedPhenotypicFeature minedTerm;
 
     @FXML
     private Label idLabel;
@@ -21,7 +21,7 @@ public class MiningResultsTooltipInfo extends VBox {
     @FXML
     private CheckBox excludedCheckBox;
 
-    public MiningResultsTooltipInfo(ObservableMinedTerm minedTerm) {
+    public MiningResultsTooltipInfo(ObservableReviewedPhenotypicFeature minedTerm) {
         this.minedTerm = Objects.requireNonNull(minedTerm);
         FXMLLoader loader = new FXMLLoader(MiningResultsVetting.class.getResource("MiningResultsTooltipInfo.fxml"));
         loader.setRoot(this);
@@ -37,7 +37,7 @@ public class MiningResultsTooltipInfo extends VBox {
     private void initialize() {
         idLabel.setText(minedTerm.getTermId().toString());
         nameLabel.setText(minedTerm.getLabel());
-        excludedCheckBox.selectedProperty().bindBidirectional(minedTerm.isExcludedProperty());
+        excludedCheckBox.selectedProperty().bindBidirectional(minedTerm.excludedProperty());
     }
 
     @FXML

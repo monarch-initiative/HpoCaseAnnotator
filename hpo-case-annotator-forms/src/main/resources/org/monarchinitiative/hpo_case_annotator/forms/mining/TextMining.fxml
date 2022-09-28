@@ -4,43 +4,47 @@
 <?import javafx.scene.layout.*?>
 
 <?import org.monarchinitiative.hpo_case_annotator.forms.mining.MiningResultsVetting?>
+
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="VBox" stylesheets="@text-mining.css">
     <children>
-        <TabPane id="tm-tab-pane" fx:id="contentTabPane" side="LEFT" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
-            <Tab fx:id="submitTab" text="Submit">
-                <tooltip>
-                    <Tooltip text="Submit text for text mining" />
-                </tooltip>
-                <content>
-                    <VBox>
-                        <children>
-                            <Label text="Submit text" styleClass="h3"/>
-                            <TextField fx:id="payload" disable="true"
-                                       onAction="#submitInputText" VBox.vgrow="ALWAYS"
-                                       promptText="Paste the text to mine and hit Submit"/>
-                            <ButtonBar>
-                                <buttons>
-                                    <Button fx:id="submitButton" disable="true" onAction="#submitInputText" text="Submit" ButtonBar.buttonData="OK_DONE" />
-                                </buttons>
-                            </ButtonBar>
-                        </children>
-                    </VBox>
-                </content>
-            </Tab>
-            <Tab fx:id="reviewTab" text="Review">
-                <tooltip>
-                    <Tooltip text="Review text mining results" />
-                </tooltip>
-                <content>
-                    <VBox>
-                        <children>
-                            <Label text="Review results" />
-                            <MiningResultsVetting fx:id="vetting"/>
-                        </children>
-                    </VBox>
-                </content>
-            </Tab>
-        </TabPane>
+        <AnchorPane fx:id="content" VBox.vgrow="ALWAYS">
+            <children>
+                <!-- There is always just one child here - either `submit` or `review` section from the `fx:define` blocks below. -->
+            </children>
+
+            <fx:define>
+                <VBox fx:id="submit">
+                    <children>
+                        <Label text="Submit text" styleClass="h3"/>
+                        <TextArea fx:id="payload" id="payload-text-area" disable="true"
+                                   VBox.vgrow="ALWAYS"
+                                   promptText="Paste the text to mine and hit Submit"/>
+
+                        <Button fx:id="submitButton" text="Submit"
+                                id="process-btn" disable="true"
+                                onAction="#submitInputText" />
+                    </children>
+                </VBox>
+            </fx:define>
+            <fx:define>
+                <VBox fx:id="review">
+                    <children>
+                        <Label text="Review text mining results" />
+                        <MiningResultsVetting fx:id="vetting"/>
+                        <Button fx:id="startOverButton" text="Start over"
+                                id="process-btn"
+                                onAction="#startOverAction">
+                            <tooltip>
+                                <Tooltip text="Start over without accepting the approved terms"/>
+                            </tooltip>
+                        </Button>
+                    </children>
+                </VBox>
+            </fx:define>
+        </AnchorPane>
+
+        <Label text="Reviewed phenotypic features" styleClass="h2"/>
+        <ListView fx:id="reviewedPhenotypicFeatures"/>
     </children>
 </fx:root>
