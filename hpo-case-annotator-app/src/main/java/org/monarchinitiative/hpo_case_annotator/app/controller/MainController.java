@@ -165,8 +165,8 @@ public class MainController {
         );
 
         dialog.setTitle("New study");
-        dialog.setHeaderText("Select study type");
-        dialog.setContentText("HCA supports the following study types:");
+        dialog.setHeaderText("Choose study type");
+        dialog.setContentText("Choose one of the following study types:");
         Optional<ButtonType> buttonType = dialog.showAndWait();
 
         buttonType.flatMap(bt -> {
