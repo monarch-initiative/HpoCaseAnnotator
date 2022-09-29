@@ -5,7 +5,7 @@
 
 #titled-pane-box .title {
     /* The pedigree member summary with id, number of phenotype terms, disease states, and known genotypes. */
-    -fx-alignment: top-center;
+    -fx-alignment: center-left;
 }
 
 #titled-pane-box .content {

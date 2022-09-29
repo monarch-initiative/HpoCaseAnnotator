@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.HBox"
+         type="HBox"
          stylesheets="@pedigree-member-title.css"
          id="title-box">
     <children>
@@ -14,9 +14,9 @@
                 <Image url="@male-proband.png" />
             </image>
         </ImageView>
-        <Pane styleClass="spacer"/>
+        <Pane styleClass="spacer10px"/>
         <Label id="probandIdLabel" fx:id="probandId" text="FAM:001" />
-        <Pane styleClass="spacer"/>
+        <Pane styleClass="spacer10px"/>
         <Label id="summaryLabel" fx:id="summary" text="2 phenotype terms, 1 disease, 5 genotypes" />
     </children>
 </fx:root>

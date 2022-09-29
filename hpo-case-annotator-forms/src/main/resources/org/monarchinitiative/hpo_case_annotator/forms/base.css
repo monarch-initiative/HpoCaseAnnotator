@@ -13,17 +13,12 @@ Separator {
     -fx-padding: 5 0 5 0;
 }
 
-.add-item {
-    -fx-pref-width: 30px;
-    -fx-pref-height: 30px;
-}
+.add-item, .remove-item {
+    -fx-min-width: 40;
+    -fx-max-width: 40;
 
-.remove-item {
-    -fx-min-width: 30;
-    -fx-max-width: 30;
-
-    -fx-min-height: 30;
-    -fx-max-height: 30;
+    -fx-min-height: 40;
+    -fx-max-height: 40;
 }
 
 .edit-item {

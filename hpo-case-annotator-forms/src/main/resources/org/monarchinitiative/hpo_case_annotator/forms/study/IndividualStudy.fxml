@@ -61,7 +61,7 @@
                                         <VBox styleClass="study-section-title">
                                             <Label text="Publication" styleClass="h1" />
                                         </VBox>
-                                        <StackPane fx:id="publicationPane">
+                                        <StackPane fx:id="publicationPane" HBox.hgrow="ALWAYS">
                                             <children>
                                                 <Publication fx:id="publication" StackPane.alignment="CENTER"/>
                                                 <Button fx:id="editPublication" contentDisplay="GRAPHIC_ONLY"

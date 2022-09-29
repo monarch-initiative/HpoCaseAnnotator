@@ -6,6 +6,7 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication?>
 
 <fx:root xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
          type="VBox"
@@ -56,8 +57,16 @@
                                 <Pane styleClass="spacer10px"/>
                                 <VBox styleClass="section">
                                     <children>
-                                        <Label styleClass="h2" text="Publication" />
-                                        <fx:include fx:id="publication" source="../publication/Publication.fxml" />
+                                        <Label styleClass="h1" text="Publication" />
+                                        <StackPane fx:id="publicationPane" VBox.vgrow="ALWAYS">
+                                            <children>
+                                                <Publication fx:id="publication" StackPane.alignment="CENTER"/>
+                                                <Button fx:id="editPublication" contentDisplay="GRAPHIC_ONLY"
+                                                        mnemonicParsing="false" onAction="#editPublicationAction"
+                                                        styleClass="edit-button" visible="false"
+                                                        StackPane.alignment="TOP_RIGHT"/>
+                                            </children>
+                                        </StackPane>
                                     </children>
                                 </VBox>
                             </children>

@@ -7,7 +7,7 @@
          type="VBox"
          stylesheets="@variant-genotype-table.css">
     <children>
-        <TableView fx:id="genotypesTable" editable="true" id="variants-table">
+        <TableView fx:id="genotypesTable" editable="true" id="variants-table" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="genotypeTableColumn" text="Genotype" minWidth="55.0"/>
                 <TableColumn fx:id="variantIdTableColumn" editable="false" maxWidth="-1.0" minWidth="120.0" text="Id"/>
@@ -22,7 +22,7 @@
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
             </columnResizePolicy>
             <placeholder>
-                <Label text="No variants yet"/>
+                <Label text="No variants yet."/>
             </placeholder>
         </TableView>
     </children>

@@ -40,8 +40,7 @@
                     <content>
                         <VBox>
                             <children>
-<!--                                <Label styleClass="h3" text="Phenotype features"/>-->
-                                <StackPane fx:id="phenotypePane">
+                                <StackPane fx:id="phenotypePane" VBox.vgrow="ALWAYS">
                                     <children>
                                         <PhenotypeTable fx:id="phenotypeTable"/>
                                         <Button fx:id="editPhenotypeButton" visible="false" contentDisplay="GRAPHIC_ONLY"
@@ -67,8 +66,7 @@
                     <content>
                         <VBox>
                             <children>
-<!--                                <Label styleClass="h3" text="Diseases"/>-->
-                                <StackPane fx:id="diseasePane">
+                                <StackPane fx:id="diseasePane" VBox.vgrow="ALWAYS">
                                     <children>
                                         <DiseaseSummary fx:id="diseaseSummary"/>
                                         <Button fx:id="editDiseasesButton" visible="false" contentDisplay="GRAPHIC_ONLY"
@@ -92,9 +90,9 @@
                         <Tooltip text="Variant genotypes"/>
                     </tooltip>
                     <content>
-                        <VBox >
+                        <VBox>
                             <children>
-                                <VariantGenotypeTable fx:id="variantGenotypeTable"/>
+                                <VariantGenotypeTable fx:id="variantGenotypeTable" VBox.vgrow="ALWAYS"/>
                             </children>
                         </VBox>
                     </content>

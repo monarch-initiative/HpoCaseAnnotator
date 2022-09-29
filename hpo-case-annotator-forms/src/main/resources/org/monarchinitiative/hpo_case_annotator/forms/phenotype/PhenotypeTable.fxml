@@ -9,7 +9,7 @@
     <children>
         <ListView fx:id="phenotypes" VBox.vgrow="ALWAYS">
             <placeholder>
-                <Label text="No phenotype features yet"/>
+                <Label text="No phenotypic features yet."/>
             </placeholder>
         </ListView>
     </children>
