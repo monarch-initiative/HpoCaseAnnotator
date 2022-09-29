@@ -1,10 +1,11 @@
+/* Submit section */
 #payload-text-area {
-    -fx-max-height: 700;
-    -fx-alignment: top-left;
+    /* Should be the same as `vetting-area` height. */
+    -fx-pref-height: 600;
 }
 
-#process-btn {
-    /* The width is set to Infinity in the FXML file. */
-    -fx-min-width: 120;
-    -fx-min-height: 30;
+/* Vetting section */
+#vetting-area {
+    /* Should be the same as `payload-text-area` height. */
+    -fx-pref-height: 600;
 }

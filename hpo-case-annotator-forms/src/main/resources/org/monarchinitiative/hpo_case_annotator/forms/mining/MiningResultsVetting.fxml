@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
@@ -8,7 +7,6 @@
       type="VBox"
       stylesheets="@mining-results-vetting.css">
     <children>
-        <Label styleClass="h2" text="Text mining results"/>
         <TextFlow fx:id="textFlow"/>
     </children>
 </fx:root>

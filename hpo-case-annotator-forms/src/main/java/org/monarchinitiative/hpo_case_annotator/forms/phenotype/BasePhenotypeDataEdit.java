@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.stage.StageStyle;
 import org.monarchinitiative.hpo_case_annotator.core.mining.NamedEntityFinder;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsComponent;
@@ -133,6 +134,7 @@ public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> 
     private void showComponentNodeDialog(Node component, String title) {
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.initOwner(phenotypeTable.getParent().getScene().getWindow());
+        dialog.initStyle(StageStyle.DECORATED);
         dialog.setResizable(true);
         dialog.setTitle(title);
         // Bind "this" to "that", not "that" to "this"!

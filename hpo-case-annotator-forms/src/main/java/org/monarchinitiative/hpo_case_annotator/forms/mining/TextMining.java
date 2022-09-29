@@ -11,7 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.core.mining.MinedTerm;
 import org.monarchinitiative.hpo_case_annotator.core.mining.NamedEntityFinder;
@@ -36,7 +36,7 @@ public class TextMining extends VBox {
     private final ListProperty<ObservableReviewedPhenotypicFeature> reviewedFeatures = new SimpleListProperty<>(FXCollections.observableArrayList(ObservableReviewedPhenotypicFeature.EXTRACTOR));
 
     @FXML
-    private AnchorPane content;
+    private VBox content;
 
     /* *********************************** SUBMIT SECTION *********************************** */
     @FXML
@@ -131,10 +131,7 @@ public class TextMining extends VBox {
     private void setSectionContent(Node node) {
         content.getChildren().clear();
         content.getChildren().add(node);
-        AnchorPane.setTopAnchor(node, 0.);
-        AnchorPane.setRightAnchor(node, 0.);
-        AnchorPane.setBottomAnchor(node, 0.);
-        AnchorPane.setLeftAnchor(node, 0.);
+        VBox.setVgrow(content, Priority.ALWAYS);
     }
 
     public ObservableTimeElement getEncounterTime() {

@@ -23,9 +23,9 @@
             </children>
         </HBox>
 
-        <HBox >
+        <HBox>
             <children>
-                <VBox>
+                <VBox HBox.hgrow="ALWAYS">
                     <children>
                         <Label text="HPO Hierarchy" styleClass="h2"/>
                         <SimpleOntologyClassTreeView fx:id="ontologyTreeView" VBox.vgrow="ALWAYS"/>
@@ -46,7 +46,7 @@
             </children>
         </HBox>
 
-        <Button fx:id="addHpo" onAction="#addHpoTermAction" ButtonBar.buttonData="OK_DONE" text="Add HPO term">
+        <Button fx:id="addHpo" onAction="#addHpoTermAction" styleClass="sized-btn" text="Add HPO term">
             <tooltip>
                 <Tooltip text="Add the HPO term to patient's terms."/>
             </tooltip>

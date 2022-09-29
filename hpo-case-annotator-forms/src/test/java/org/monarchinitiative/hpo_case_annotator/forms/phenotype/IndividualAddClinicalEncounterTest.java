@@ -1,5 +1,6 @@
-package org.monarchinitiative.hpo_case_annotator.forms.mining;
+package org.monarchinitiative.hpo_case_annotator.forms.phenotype;
 
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -8,11 +9,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.monarchinitiative.hpo_case_annotator.forms.BaseControllerTest;
 import org.monarchinitiative.hpo_case_annotator.forms.MockNamedEntityFinder;
+import org.monarchinitiative.hpo_case_annotator.model.v2.IndividualStudy;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividual;
+import org.monarchinitiative.hpo_case_annotator.test.TestData;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
 
 /**
  * Ensure the following line is added to VM options of the run configuration:
@@ -22,14 +30,14 @@ import java.util.concurrent.TimeUnit;
  */
 @Disabled("GUI tests are run manually or not at all")
 @ExtendWith(ApplicationExtension.class)
-public class TextMiningTest {
+public class IndividualAddClinicalEncounterTest {
 
     private static final MockNamedEntityFinder MOCK_ENTITY_FINDER = new MockNamedEntityFinder();
-    private TextMining controller;
+    private IndividualAddClinicalEncounter controller;
 
     @Start
     public void start(Stage stage) throws Exception {
-        controller = new TextMining();
+        controller = new IndividualAddClinicalEncounter();
         controller.hpoProperty().set(BaseControllerTest.HPO);
         controller.namedEntityFinderProperty().set(MOCK_ENTITY_FINDER);
 
@@ -42,12 +50,14 @@ public class TextMiningTest {
 
     @Test
     public void showTheWidget(FxRobot robot) {
+        IndividualStudy is = TestData.V2.comprehensiveIndividualStudy();
+        ObservableIndividual individual = new ObservableIndividual(is.getIndividual());
         robot.sleep(1, TimeUnit.SECONDS);
+        Platform.runLater(() -> controller.setData(individual));
 
         robot.sleep(60, TimeUnit.SECONDS);
 
-        controller.reviewedFeaturesProperty().get()
-                .forEach(System.err::println);
+        System.err.println(controller.dataProperty().get());
     }
 
 }

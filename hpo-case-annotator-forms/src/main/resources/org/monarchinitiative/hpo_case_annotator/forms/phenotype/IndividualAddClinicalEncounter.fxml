@@ -24,13 +24,13 @@
                 </VBox>
 
                 <!-- Widgets for adding phenotypic features -->
-                <VBox HBox.hgrow="ALWAYS">
+                <VBox HBox.hgrow="ALWAYS" >
                     <children>
-                        <TabPane id="add-terms-tab-pane" tabClosingPolicy="UNAVAILABLE">
+                        <TabPane id="add-terms-tab-pane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" >
                             <tabs>
                                 <Tab text="Browse HPO hierarchy">
                                     <content>
-                                        <BrowseHpo fx:id="browseHpo"/>
+                                        <BrowseHpo fx:id="browseHpo" />
                                     </content>
                                 </Tab>
                                 <Tab text="Text mining">
@@ -39,7 +39,7 @@
                                             <children>
                                                 <TextMining fx:id="textMining"/>
                                                 <Button fx:id="addTextMiningTerms" onAction="#addTextMiningTermsAction"
-                                                        text="Add approved terms" />
+                                                        text="Add approved terms" styleClass="sized-btn"/>
                                             </children>
                                         </VBox>
                                     </content>

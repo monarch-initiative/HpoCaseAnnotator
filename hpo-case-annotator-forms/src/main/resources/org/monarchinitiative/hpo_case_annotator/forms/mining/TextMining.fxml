@@ -6,34 +6,37 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.mining.MiningResultsVetting?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="VBox" stylesheets="@text-mining.css">
+         type="VBox" stylesheets="@text-mining.css" >
     <children>
-        <AnchorPane fx:id="content" VBox.vgrow="ALWAYS">
+        <VBox fx:id="content" VBox.vgrow="ALWAYS">
             <children>
                 <!-- There is always just one child here - either `submit` or `review` section from the `fx:define` blocks below. -->
             </children>
 
+            <!-- Submit section -->
             <fx:define>
                 <VBox fx:id="submit">
                     <children>
-                        <Label text="Submit text" styleClass="h3"/>
+                        <Label text="Submit text" styleClass="h2"/>
                         <TextArea fx:id="payload" id="payload-text-area" disable="true"
                                    VBox.vgrow="ALWAYS"
-                                   promptText="Paste the text to mine and hit Submit"/>
-
+                                   promptText="Paste the text to be text mined here and hit the Submit button"/>
+                        <Pane styleClass="spacer10px"/>
                         <Button fx:id="submitButton" text="Submit"
-                                id="process-btn" disable="true"
+                                styleClass="sized-btn" disable="true"
                                 onAction="#submitInputText" />
                     </children>
                 </VBox>
             </fx:define>
+            <!-- Review section -->
             <fx:define>
                 <VBox fx:id="review">
                     <children>
-                        <Label text="Review text mining results" />
-                        <MiningResultsVetting fx:id="vetting"/>
+                        <Label text="Review text mining results" styleClass="h2"/>
+                        <MiningResultsVetting fx:id="vetting" id="vetting-area"/>
+                        <Pane styleClass="spacer10px"/>
                         <Button fx:id="startOverButton" text="Start over"
-                                id="process-btn"
+                                styleClass="sized-btn"
                                 onAction="#startOverAction">
                             <tooltip>
                                 <Tooltip text="Start over without accepting the approved terms"/>
@@ -42,9 +45,9 @@
                     </children>
                 </VBox>
             </fx:define>
-        </AnchorPane>
+        </VBox>
 
         <Label text="Reviewed phenotypic features" styleClass="h2"/>
-        <ListView fx:id="reviewedPhenotypicFeatures"/>
+        <ListView fx:id="reviewedPhenotypicFeatures" id="reviewed-features"/>
     </children>
 </fx:root>
