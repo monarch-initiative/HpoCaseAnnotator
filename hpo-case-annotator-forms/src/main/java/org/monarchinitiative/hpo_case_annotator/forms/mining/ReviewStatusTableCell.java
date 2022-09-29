@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 
 import java.util.Objects;
 
+@Deprecated(forRemoval = true)
 class ReviewStatusTableCell extends TableCell<ObservableMinedTerm, ReviewStatus> {
 
     private static final Image APPROVED = new Image(Objects.requireNonNull(ReviewStatusTableCell.class.getResourceAsStream("approved.png")));

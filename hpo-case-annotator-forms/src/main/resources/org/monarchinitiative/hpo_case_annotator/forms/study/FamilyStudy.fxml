@@ -46,9 +46,22 @@
                                 <HBox styleClass="study-section">
                                     <children>
                                         <VBox styleClass="study-section-title">
+                                            <Label text="Study ID" styleClass="h1" />
+                                        </VBox>
+                                        <VBox HBox.hgrow="ALWAYS" styleClass="study-id-box">
+                                            <children>
+                                                <TextField fx:id="studyId" promptText="e.g. PMID:1234567-family-5" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                                <Pane styleClass="spacer10px"/>
+                                <HBox styleClass="study-section">
+                                    <children>
+                                        <VBox styleClass="study-section-title">
                                             <Label text="Publication" styleClass="h1" />
                                         </VBox>
-                                        <StackPane fx:id="publicationPane">
+                                        <StackPane fx:id="publicationPane" HBox.hgrow="ALWAYS">
                                             <children>
                                                 <Publication fx:id="publication" StackPane.alignment="CENTER"/>
                                                 <Button fx:id="editPublication" contentDisplay="GRAPHIC_ONLY"
@@ -65,7 +78,7 @@
                                         <VBox styleClass="study-section-title">
                                             <Label text="Pedigree" styleClass="h1"/>
                                         </VBox>
-                                        <Pedigree fx:id="pedigree" VBox.vgrow="ALWAYS"/>
+                                        <Pedigree fx:id="pedigree" HBox.hgrow="ALWAYS"/>
                                     </children>
                                 </HBox>
                                 <Pane styleClass="spacer10px"/>
@@ -74,7 +87,7 @@
                                         <VBox styleClass="study-section-title">
                                             <Label text="Variants" styleClass="h1"/>
                                         </VBox>
-                                        <VariantSummary fx:id="variantSummary" />
+                                        <VariantSummary fx:id="variantSummary" HBox.hgrow="ALWAYS"/>
                                     </children>
                                 </HBox>
                                 <Pane styleClass="spacer10px"/>

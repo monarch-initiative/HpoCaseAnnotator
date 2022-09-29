@@ -53,7 +53,7 @@ public abstract class BaseDiseaseDataEdit<T extends BaseObservableIndividual> ex
     @FXML
     private BaseIndividualIdsComponent<T> individualIds;
     @FXML
-    private DiseaseTable diseaseTable;
+    private DiseaseSummary diseaseSummary;
 
     private AutoCompletionBinding<String> diseaseIdCompletion;
     private AutoCompletionBinding<String> diseaseNameCompletion;
@@ -95,7 +95,7 @@ public abstract class BaseDiseaseDataEdit<T extends BaseObservableIndividual> ex
         diseaseNameTextField.disableProperty().bind(diseaseIdentifierService.isNull());
         addDiseaseButton.disableProperty().bind(diseaseIdentifierService.isNull());
 
-        diseaseTable.diseaseStatesProperty().bind(diseaseStates);
+        diseaseSummary.diseaseStatesProperty().bind(diseaseStates);
 
         diseaseIdentifierService.addListener((obs, old, novel) -> {
             if (novel == null) {
@@ -167,7 +167,7 @@ public abstract class BaseDiseaseDataEdit<T extends BaseObservableIndividual> ex
         return di -> {
             ObservableDiseaseStatus ods = new ObservableDiseaseStatus();
             ods.setDiseaseId(di);
-            diseaseTable.getDiseaseStates().add(ods);
+            diseaseSummary.getDiseaseStates().add(ods);
         };
     }
 }

@@ -1,7 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.app.config;
 
+import org.monarchinitiative.hpo_case_annotator.app.App;
 import org.monarchinitiative.hpo_case_annotator.app.ResourcePaths;
-import org.monarchinitiative.hpo_case_annotator.app.controller.Main;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicRemoteResource;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicRemoteResources;
 import org.slf4j.Logger;
@@ -38,7 +38,7 @@ public class ResourceConfiguration {
         GenomicRemoteResourcesProperties.GenomicRemoteResource hg38Resources = reference.hg38();
         GenomicRemoteResource hg38 = new GenomicRemoteResource(new URL(hg38Resources.genomeFastaUrl()), new URL(hg38Resources.genomeAssemblyReportUrl()));
 
-        return new GenomicRemoteResources(null, hg19, hg38);
+        return new GenomicRemoteResources(hg19, hg38);
     }
 
     @Bean
@@ -54,7 +54,7 @@ public class ResourceConfiguration {
      */
     @Bean
     public File codeHomeDir() throws IOException {
-        File codeHomeDir = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getFile())
+        File codeHomeDir = new File(App.class.getProtectionDomain().getCodeSource().getLocation().getFile())
                 .getParentFile();
         if (codeHomeDir.exists() || codeHomeDir.mkdirs()) {// ensure that the home dir exists
             LOGGER.debug("Code home directory is '{}'", codeHomeDir.getAbsolutePath());

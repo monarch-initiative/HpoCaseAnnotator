@@ -5,6 +5,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListCell;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
+import org.monarchinitiative.hpo_case_annotator.core.mining.NamedEntityFinder;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
@@ -15,7 +16,8 @@ class ObservablePedigreeMemberListCell extends ListCell<ObservablePedigreeMember
 
     ObservablePedigreeMemberListCell(ListProperty<ObservableCuratedVariant> variants,
                                      ObjectProperty<Ontology> hpo,
-                                     ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService) {
+                                     ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService,
+                                     ObjectProperty<NamedEntityFinder> namedEntityFinder) {
         setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         pedigreeMemberPane = new PedigreeMemberPane();
 
@@ -24,6 +26,7 @@ class ObservablePedigreeMemberListCell extends ListCell<ObservablePedigreeMember
         pedigreeMemberPane.variantsProperty().bind(variants);
         pedigreeMemberPane.hpoProperty().bind(hpo);
         pedigreeMemberPane.diseaseIdentifierServiceProperty().bind(diseaseIdentifierService);
+        pedigreeMemberPane.namedEntityFinderProperty().bind(namedEntityFinder);
     }
 
     @Override

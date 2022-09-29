@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Pedigree;
 import org.monarchinitiative.hpo_case_annotator.model.v2.PedigreeMember;
+import org.monarchinitiative.hpo_case_annotator.observable.deep.DeepObservable;
 
 import java.util.stream.Stream;
 

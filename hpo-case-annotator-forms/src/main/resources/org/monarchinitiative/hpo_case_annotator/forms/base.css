@@ -13,14 +13,12 @@ Separator {
     -fx-padding: 5 0 5 0;
 }
 
-.add-item {
-    -fx-pref-width: 30px;
-    -fx-pref-height: 30px;
-}
+.add-item, .remove-item {
+    -fx-min-width: 40;
+    -fx-max-width: 40;
 
-.remove-item {
-    -fx-pref-width: 30px;
-    -fx-pref-height: 30px;
+    -fx-min-height: 40;
+    -fx-max-height: 40;
 }
 
 .edit-item {
@@ -59,6 +57,6 @@ Separator {
 .clear-button {
     -fx-graphic: url('icons/clear.png');
     -fx-content-display: graphic-only;
-    -fx-background-radius: 5;
-    -fx-border-radius: 5;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
 }

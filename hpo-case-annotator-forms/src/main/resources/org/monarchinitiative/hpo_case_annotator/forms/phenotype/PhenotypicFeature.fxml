@@ -6,12 +6,14 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.age.*?>
 
-<fx:root id="phenotypic-feature-box" stylesheets="@phenotypic-feature.css" type="VBox" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@phenotypic-feature.css" styleClass="pf-outer-box">
     <children>
         <VBox>
             <children>
                 <Label styleClass="h2" text="Phenotype feature" />
-                <VBox id="phenotypic-feature-column" VBox.vgrow="SOMETIMES">
+                <VBox styleClass="ph-def-col">
                     <children>
                         <TitledLabel id="term-name" fx:id="name" name="Label" VBox.vgrow="SOMETIMES" />
                         <TitledLabel id="term-definition" fx:id="definition" name="Definition" VBox.vgrow="SOMETIMES" />
@@ -20,28 +22,30 @@
             </children>
         </VBox>
         <Separator />
-        <VBox>
+        <GridPane hgap="10" vgap="5">
             <children>
-                <Label styleClass="h2" text="Status" />
-                <RadioButton fx:id="presentRadioButton" mnemonicParsing="false" selected="true" text="Present" />
-                <RadioButton fx:id="absentRadioButton" mnemonicParsing="false" text="Excluded" />
+                <Label styleClass="h2" text="Status" GridPane.columnSpan="2"/>
+                <RadioButton fx:id="presentRadioButton" mnemonicParsing="false" GridPane.rowIndex="1"
+                             selected="true" text="Present" />
+                <RadioButton fx:id="absentRadioButton" mnemonicParsing="false" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                             text="Excluded" />
             </children>
-        </VBox>
+        </GridPane>
         <Separator />
-        <VBox>
+        <VBox styleClass="temporal-col">
             <children>
                 <Label styleClass="h2" text="Temporal" />
                 <StackPane>
                     <children>
                         <VBox>
                             <children>
-                                <VBox styleClass="temporal-box">
+                                <VBox>
                                     <children>
                                         <Label styleClass="h3" text="Onset" />
                                         <TimeElementComponent fx:id="onsetComponent" />
                                     </children>
                                 </VBox>
-                                <VBox styleClass="temporal-box">
+                                <VBox >
                                     <children>
                                         <Label styleClass="h3" text="Resolution" />
                                         <TimeElementComponent fx:id="resolutionComponent" />

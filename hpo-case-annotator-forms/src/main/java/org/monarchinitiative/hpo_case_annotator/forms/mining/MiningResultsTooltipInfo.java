@@ -3,7 +3,6 @@ package org.monarchinitiative.hpo_case_annotator.forms.mining;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -11,7 +10,7 @@ import java.util.Objects;
 
 public class MiningResultsTooltipInfo extends VBox {
 
-    private final ObservableMinedTerm minedTerm;
+    private final ObservableReviewedPhenotypicFeature minedTerm;
 
     @FXML
     private Label idLabel;
@@ -22,9 +21,9 @@ public class MiningResultsTooltipInfo extends VBox {
     @FXML
     private CheckBox excludedCheckBox;
 
-    public MiningResultsTooltipInfo(ObservableMinedTerm minedTerm) {
+    public MiningResultsTooltipInfo(ObservableReviewedPhenotypicFeature minedTerm) {
         this.minedTerm = Objects.requireNonNull(minedTerm);
-        FXMLLoader loader = new FXMLLoader(MiningResultsVettingBox.class.getResource("MiningResultsTooltipInfo.fxml"));
+        FXMLLoader loader = new FXMLLoader(MiningResultsVetting.class.getResource("MiningResultsTooltipInfo.fxml"));
         loader.setRoot(this);
         loader.setController(this);
         try {
@@ -38,7 +37,7 @@ public class MiningResultsTooltipInfo extends VBox {
     private void initialize() {
         idLabel.setText(minedTerm.getTermId().toString());
         nameLabel.setText(minedTerm.getLabel());
-        excludedCheckBox.selectedProperty().bindBidirectional(minedTerm.isExcludedProperty());
+        excludedCheckBox.selectedProperty().bindBidirectional(minedTerm.excludedProperty());
     }
 
     @FXML

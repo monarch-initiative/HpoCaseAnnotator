@@ -46,6 +46,7 @@ public class PedigreeStep<T extends ObservableFamilyStudy> extends BaseStep<T> i
         // However, note that we cannot use `initialize` method.
         // The fields of this class are `null` when `initialize` is called in the super constructor.
         pedigree.hpoProperty().bind(studyResources.hpoProperty());
+        pedigree.namedEntityFinderProperty().bind(studyResources.namedEntityFinderProperty());
         pedigree.diseaseIdentifierServiceProperty().bind(studyResources.diseaseIdentifierServiceProperty());
         pedigree.variantsProperty().bind(variants);
     }

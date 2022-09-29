@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
 import org.monarchinitiative.hpo_case_annotator.core.liftover.LiftOverService;
+import org.monarchinitiative.hpo_case_annotator.core.mining.NamedEntityFinder;
 import org.monarchinitiative.hpo_case_annotator.forms.FunctionalAnnotationRegistry;
 import org.monarchinitiative.hpo_case_annotator.forms.GenomicAssemblyRegistry;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
@@ -17,6 +18,7 @@ public class OptionalServices {
 
     private final ObjectProperty<ExecutorService> executorService = new SimpleObjectProperty<>(this, "executorService");
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>(this, "hpo");
+    private final ObjectProperty<NamedEntityFinder> namedEntityFinder = new SimpleObjectProperty<>(this, "namedEntityFinder");
     private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>(this, "diseaseIdentifierService");
     private final GenomicAssemblyRegistry genomicAssemblyRegistry = new GenomicAssemblyRegistry();
     private final FunctionalAnnotationRegistry functionalAnnotationRegistry = new FunctionalAnnotationRegistry();
@@ -44,6 +46,18 @@ public class OptionalServices {
 
     public void setHpo(Ontology hpo) {
         this.hpo.set(hpo);
+    }
+
+    public NamedEntityFinder getNamedEntityFinder() {
+        return namedEntityFinder.get();
+    }
+
+    public ObjectProperty<NamedEntityFinder> namedEntityFinderProperty() {
+        return namedEntityFinder;
+    }
+
+    public void setNamedEntityFinder(NamedEntityFinder namedEntityFinder) {
+        this.namedEntityFinder.set(namedEntityFinder);
     }
 
     public DiseaseIdentifierService getDiseaseIdentifierService() {

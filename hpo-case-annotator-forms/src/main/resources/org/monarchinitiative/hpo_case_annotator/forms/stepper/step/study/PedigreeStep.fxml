@@ -7,14 +7,12 @@
 <?import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree?>
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="VBox"
+         stylesheets="@pedigree-step.css"
          styleClass="step-box">
-    <stylesheets>
-        <URL value="@pedigree-step.css"/>
-    </stylesheets>
     <children>
-        <Label text="Pedigree"/>
-        <Label text="Add data regarding the investigated family members."/>
-        <Pedigree fx:id="pedigree"/>
+        <Label text="Pedigree" styleClass="h1"/>
+        <Label text="Add data regarding the investigated family members." styleClass="instruction-text"/>
+        <Pedigree fx:id="pedigree" VBox.vgrow="ALWAYS"/>
         <HBox alignment="BOTTOM_LEFT" styleClass="edit-row">
             <children>
                 <Button fx:id="add" mnemonicParsing="false" onAction="#addButtonAction" styleClass="add-item" text="+" />

@@ -13,6 +13,6 @@
         <Label styleClass="h1" text="Variants"/>
         <Label styleClass="instruction-text"
                text="Add genomic variants identified in the study. Variant genotypes for the study members will be set later."/>
-        <VariantSummary fx:id="variantSummary"/>
+        <VariantSummary fx:id="variantSummary" VBox.vgrow="ALWAYS"/>
     </children>
 </fx:root>

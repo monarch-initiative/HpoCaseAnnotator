@@ -4,8 +4,8 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.monarchinitiative.hpo_case_annotator.app.controller.SetResourcesController"
-      stylesheets="@set-resources.css"
+      fx:controller="org.monarchinitiative.hpo_case_annotator.app.controller.SettingsController"
+      stylesheets="@settings.css"
       id="outer-box">
     <children>
         <VBox styleClass="column">
@@ -17,7 +17,7 @@
                         <HBox alignment="CENTER_LEFT" styleClass="row">
                             <children>
                                 <Label styleClass="h3" text="hg19" />
-                                <Label fx:id="hg19GenomeLabel" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                                <Label fx:id="hg19GenomeLabel" text="Unset" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                 <Button mnemonicParsing="false" onAction="#setPathToHg19ButtonAction" text="Set path" />
                                 <Button mnemonicParsing="false" onAction="#downloadHg19RefGenomeButtonAction" text="Download" />
                                 <ProgressIndicator fx:id="hg19ProgressIndicator" progress="0.0" />
@@ -35,7 +35,7 @@
                         <HBox alignment="CENTER_LEFT" styleClass="row">
                             <children>
                                 <Label styleClass="h3" text="hg38" />
-                                <Label fx:id="hg38GenomeLabel" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                                <Label fx:id="hg38GenomeLabel" text="Unset" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                 <Button mnemonicParsing="false" onAction="#setPathToHg38ButtonAction" text="Set path" />
                                 <Button mnemonicParsing="false" onAction="#downloadHg38RefGenomeButtonAction" text="Download" />
                                 <ProgressIndicator fx:id="hg38ProgressIndicator" progress="0.0" />
@@ -58,7 +58,7 @@
                 <HBox alignment="CENTER_LEFT" styleClass="row">
                     <children>
                         <Label styleClass="h3" text="hg19" />
-                        <Label fx:id="hg19JannovarLabel" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="hg19JannovarLabel" text="Unset" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                         <Button mnemonicParsing="false" onAction="#setPathToHg19JannovarButtonAction" text="Set path" />
                         <Pane styleClass="progress-bar-placeholder" />
                     </children>
@@ -66,7 +66,7 @@
                 <HBox alignment="CENTER_LEFT" styleClass="row">
                     <children>
                         <Label styleClass="h3" text="hg38" />
-                        <Label fx:id="hg38JannovarLabel" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="hg38JannovarLabel" text="Unset" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                         <Button mnemonicParsing="false" onAction="#setPathToHg38JannovarButtonAction" text="Set path" />
                         <Pane styleClass="progress-bar-placeholder" />
                     </children>
@@ -80,7 +80,7 @@
                 <Label styleClass="instruction-text" text="Download the latest HPO release."/>
                 <HBox alignment="CENTER_LEFT" styleClass="row">
                     <children>
-                        <Label fx:id="hpOboLabel" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="hpPathLabel" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                         <Button mnemonicParsing="false" onAction="#downloadHPOFileButtonAction" text="Download" />
                         <ProgressIndicator fx:id="hpoProgressIndicator" progress="0.0" />
                     </children>
@@ -108,7 +108,7 @@
                 <Label styleClass="instruction-text" text="Set path to a folder for storing curated data."/>
                 <HBox alignment="CENTER_LEFT" styleClass="row">
                     <children>
-                        <Label fx:id="curatedFilesDirLabel" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="curatedFilesDirLabel" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                         <Button mnemonicParsing="false" onAction="#setCuratedDirButtonAction" text="Set path" />
                         <Pane styleClass="progress-bar-placeholder" />
                     </children>

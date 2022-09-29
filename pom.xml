@@ -34,6 +34,8 @@
         <phenopacket.version>2.0.2</phenopacket.version>
         <phenol.version>2.0.0-RC4</phenol.version>
         <svart.version>2.0.0-RC1</svart.version>
+        <!-- TODO - use stable version -->
+        <fenominal.version>0.7.7-SNAPSHOT</fenominal.version>
         <htsjdk.version>2.24.1</htsjdk.version>
 
         <protobuf.version>3.19.3</protobuf.version>
@@ -85,6 +87,11 @@
                 <groupId>org.monarchinitiative.svart</groupId>
                 <artifactId>svart</artifactId>
                 <version>${svart.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.monarchinitiative.fenominal</groupId>
+                <artifactId>fenominal-core</artifactId>
+                <version>${fenominal.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.charite.compbio</groupId>

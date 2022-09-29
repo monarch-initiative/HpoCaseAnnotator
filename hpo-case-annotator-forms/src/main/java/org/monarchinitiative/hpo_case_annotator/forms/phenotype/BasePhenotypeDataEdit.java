@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms.phenotype;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -13,6 +14,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.stage.StageStyle;
+import org.monarchinitiative.hpo_case_annotator.core.mining.NamedEntityFinder;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
@@ -28,11 +31,13 @@ import java.util.Objects;
  * {@link BasePhenotypeDataEdit} needs the following properties to be set in order to work.
  * <ul>
  *     <li>{@link #hpoProperty()}</li>
+ *     <li>{@link #namedEntityFinderProperty()}</li>
  * </ul>
  */
 public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> extends VBoxDataEdit<T> {
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
+    private final ObjectProperty<NamedEntityFinder> namedEntityFinder = new SimpleObjectProperty<>();
     private final ListProperty<ObservablePhenotypicFeature> phenotypicFeatures = new SimpleListProperty<>(FXCollections.observableArrayList());
     private T item;
     @FXML
@@ -43,6 +48,8 @@ public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> 
     private Button addClinicalEncounter;
     @FXML
     private PhenotypeTable phenotypeTable;
+    @FXML
+    private Button removeSelectedPhenotypicFeature;
     @FXML
     private PhenotypicFeatureBinding phenotypicFeature;
 
@@ -62,12 +69,17 @@ public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> 
         return hpo;
     }
 
+    public ObjectProperty<NamedEntityFinder> namedEntityFinderProperty() {
+        return namedEntityFinder;
+    }
+
     @FXML
     protected void initialize() {
         phenotypicFeature.hpoProperty().bind(hpo);
         phenotypicFeature.dataProperty().bind(phenotypeTable.getSelectionModel().selectedItemProperty());
         phenotypicFeature.disableProperty().bind(phenotypeTable.getSelectionModel().selectedItemProperty().isNull());
         phenotypeTable.phenotypicFeaturesProperty().bind(phenotypicFeatures);
+        removeSelectedPhenotypicFeature.disableProperty().bind(phenotypeTable.getSelectionModel().selectedItemProperty().isNull());
     }
 
     @Override
@@ -91,7 +103,7 @@ public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> 
         component.hpoProperty().bind(hpo);
         component.setPhenotypicFeatureConsumer(phenotypeTable.getPhenotypicFeatures()::add);
 
-        showComponentNodeDialog(component);
+        showComponentNodeDialog(component, "Browse HPO");
 
         e.consume();
     }
@@ -100,20 +112,33 @@ public abstract class BasePhenotypeDataEdit<T extends BaseObservableIndividual> 
     private void addClinicalEncounterAction(ActionEvent e) {
         BaseAddClinicalEncounter<T> component = clinicalEncounterComponent();
         component.hpoProperty().bind(hpo);
+        component.namedEntityFinderProperty().bind(namedEntityFinder);
         component.setData(item);
 
-        showComponentNodeDialog(component);
+        showComponentNodeDialog(component, "Add clinical encounter");
         phenotypeTable.getPhenotypicFeatures().addAll(component.itemsProperty().get());
+
+        e.consume();
+    }
+
+    @FXML
+    private void removeSelectedPhenotypicFeatureAction(ActionEvent e) {
+        int selected = phenotypeTable.getSelectionModel().getSelectedIndex();
+        phenotypeTable.getPhenotypicFeatures().remove(selected);
 
         e.consume();
     }
 
     protected abstract BaseAddClinicalEncounter<T> clinicalEncounterComponent();
 
-    private void showComponentNodeDialog(Node component) {
+    private void showComponentNodeDialog(Node component, String title) {
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.initOwner(phenotypeTable.getParent().getScene().getWindow());
+        dialog.initStyle(StageStyle.DECORATED);
         dialog.setResizable(true);
+        dialog.setTitle(title);
+        // Bind "this" to "that", not "that" to "this"!
+        Bindings.bindContent(dialog.getDialogPane().getStylesheets(), phenotypeTable.getParent().getStylesheets());
         dialog.getDialogPane().getButtonTypes().add(new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE));
         dialog.getDialogPane().setContent(component);
         dialog.showAndWait();

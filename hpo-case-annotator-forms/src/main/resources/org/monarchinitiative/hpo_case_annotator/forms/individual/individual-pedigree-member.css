@@ -1,3 +1,7 @@
 #pheno-disease-geno-tabpane .tab-header-background {
     -fx-background-color: derive(-col-primary, 80%);
 }
+
+#pheno-disease-geno-tabpane {
+    -fx-max-height: 1000;
+}

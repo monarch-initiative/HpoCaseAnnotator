@@ -6,8 +6,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxObservableDataComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +55,7 @@ public class Stepper<T> extends VBoxObservableDataComponent<T> {
     private final IntegerProperty currentStep = new SimpleIntegerProperty(-1);
 
     @FXML
-    private StackPane content;
+    private VBox content;
     @FXML
     private Button previous;
     @FXML
@@ -113,9 +115,12 @@ public class Stepper<T> extends VBoxObservableDataComponent<T> {
             // Remove the previous step, if any.
             content.getChildren().remove(currentContentSize - 1);
 
-        if (step != null)
+        if (step != null) {
             // Show step if required.
-            content.getChildren().add(step.getContent());
+            Parent current = step.getContent();
+            VBox.setVgrow(current, Priority.ALWAYS);
+            content.getChildren().add(current);
+        }
     }
 
     public ObservableList<Step<T>> getSteps() {

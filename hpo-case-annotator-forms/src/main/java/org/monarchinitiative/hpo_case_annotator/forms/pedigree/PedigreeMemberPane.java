@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
+import org.monarchinitiative.hpo_case_annotator.core.mining.NamedEntityFinder;
 import org.monarchinitiative.hpo_case_annotator.forms.individual.PedigreeMember;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Utils;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
@@ -29,8 +30,9 @@ import static javafx.beans.binding.Bindings.*;
  * <h2>Properties</h2>
  * {@link PedigreeMemberPane} needs the following properties to be set in order to work.
  * <ul>
- *     <li>{@link #diseaseIdentifierServiceProperty()}</li>
  *     <li>{@link #hpoProperty()}</li>
+ *     <li>{@link #namedEntityFinderProperty()}</li>
+ *     <li>{@link #diseaseIdentifierServiceProperty()}</li>
  * </ul>
  * <p>
  * Furthermore, the {@link PedigreeMemberPane} tracks {@link #variantsProperty()} to keep track of genotypes
@@ -67,6 +69,10 @@ public class PedigreeMemberPane extends TitledPane {
 
     public ObjectProperty<Ontology> hpoProperty() {
         return pedigreeMember.hpoProperty();
+    }
+
+    public ObjectProperty<NamedEntityFinder> namedEntityFinderProperty() {
+        return pedigreeMember.namedEntityFinderProperty();
     }
 
     public ObjectProperty<DiseaseIdentifierService> diseaseIdentifierServiceProperty() {

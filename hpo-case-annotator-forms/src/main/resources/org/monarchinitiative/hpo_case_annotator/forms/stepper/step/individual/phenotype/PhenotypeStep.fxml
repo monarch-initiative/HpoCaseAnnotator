@@ -18,7 +18,7 @@
             <children>
                 <VBox >
                     <children>
-                        <Label text="Add phenotype features"/>
+                        <Label text="Add phenotype features" styleClass="h3"/>
                         <ButtonBar>
                             <buttons>
                                 <Button fx:id="browseHpo" onAction="#browseHpoAction"
@@ -39,12 +39,13 @@
                 </VBox>
             </children>
         </HBox>
-        <SplitPane>
-            <items>
-                <VBox>
+        <HBox>
+            <children>
+                <VBox HBox.hgrow="ALWAYS">
                     <children>
-                        <Label text="Phenotype features"/>
-                        <PhenotypeTable fx:id="phenotypeTable"/>
+                        <Label text="Phenotypic features" styleClass="h3"/>
+                        <Label text="Phenotypic features of the individual are listed below." styleClass="instruction-text"/>
+                        <PhenotypeTable fx:id="phenotypeTable" VBox.vgrow="ALWAYS"/>
                     </children>
                 </VBox>
                 <VBox>
@@ -52,7 +53,7 @@
                         <PhenotypicFeatureBinding fx:id="phenotypicFeature"/>
                     </children>
                 </VBox>
-            </items>
-        </SplitPane>
+            </children>
+        </HBox>
     </children>
 </fx:root>

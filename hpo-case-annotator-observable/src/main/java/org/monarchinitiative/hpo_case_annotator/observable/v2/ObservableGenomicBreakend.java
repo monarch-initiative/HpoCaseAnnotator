@@ -4,6 +4,7 @@ import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
+import org.monarchinitiative.hpo_case_annotator.observable.deep.ObservableItem;
 import org.monarchinitiative.svart.Contig;
 import org.monarchinitiative.svart.GenomicBreakend;
 import org.monarchinitiative.svart.Strand;

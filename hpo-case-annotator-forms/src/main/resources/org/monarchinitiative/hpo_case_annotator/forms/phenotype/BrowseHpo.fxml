@@ -2,30 +2,54 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.tree.SimpleOntologyClassTreeView?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeatureBinding?>
 
+<?import javafx.scene.image.ImageView?>
+
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.VBox"
+         type="VBox"
          stylesheets="@browse-hpo.css">
     <children>
-        <TitledTextField fx:id="searchField" name="Search for HPO term" promptText="e.g. Arachnodactyly" />
-        <SplitPane>
-            <items>
-                <SimpleOntologyClassTreeView fx:id="ontologyTreeView" />
-                <PhenotypicFeatureBinding fx:id="phenotypicFeature"/>
-            </items>
-        </SplitPane>
+        <Label text="Search for an HPO term" styleClass="h2"/>
+        <Label styleClass="instruction-text" text="Navigate through the HPO hierarchy to find the right term"/>
+        <HBox id="hpo-search-box">
+            <children>
+                <Pane HBox.hgrow="SOMETIMES"/>
+                <ImageView id="search-magnifying-glass"/>
+                <TextField fx:id="searchField" id="hpo-search"
+                           promptText="e.g. Arachnodactyly" HBox.hgrow="ALWAYS"/>
+                <Pane HBox.hgrow="SOMETIMES"/>
+            </children>
+        </HBox>
 
-        <ButtonBar >
-            <buttons>
-                <Button fx:id="addHpo" onAction="#addHpoTermAction" ButtonBar.buttonData="OK_DONE" text="Add HPO term">
-                    <tooltip>
-                        <Tooltip text="Add the HPO term to patient's terms."/>
-                    </tooltip>
-                </Button>
-            </buttons>
-        </ButtonBar>
+        <HBox>
+            <children>
+                <VBox HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label text="HPO Hierarchy" styleClass="h2"/>
+                        <SimpleOntologyClassTreeView fx:id="ontologyTreeView" VBox.vgrow="ALWAYS"/>
+                    </children>
+                </VBox>
+
+                <ScrollPane id="pf-scroll-pane">
+                    <content>
+                        <VBox>
+                            <children>
+                                <Label text="Phenotypic feature" styleClass="h2"/>
+                                <Label text="Set attributes for the selected phenotypic feature" styleClass="instruction-text"/>
+                                <PhenotypicFeatureBinding fx:id="phenotypicFeature"/>
+                            </children>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </children>
+        </HBox>
+
+        <Button fx:id="addHpo" onAction="#addHpoTermAction" styleClass="sized-btn" text="Add HPO term">
+            <tooltip>
+                <Tooltip text="Add the HPO term to patient's terms."/>
+            </tooltip>
+        </Button>
     </children>
 </fx:root>

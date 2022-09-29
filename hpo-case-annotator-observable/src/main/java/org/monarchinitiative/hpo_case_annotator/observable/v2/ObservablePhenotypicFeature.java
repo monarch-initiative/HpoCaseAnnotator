@@ -4,6 +4,7 @@ import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.PhenotypicFeature;
+import org.monarchinitiative.hpo_case_annotator.observable.deep.DeepObservable;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.stream.Stream;

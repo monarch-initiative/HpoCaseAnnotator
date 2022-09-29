@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
+import org.monarchinitiative.hpo_case_annotator.core.mining.NamedEntityFinder;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigree;
@@ -28,8 +29,9 @@ import java.io.IOException;
  * <h2>Properties</h2>
  * {@link Pedigree} needs the following properties to be set in order to work.
  * <ul>
- *     <li>{@link #diseaseIdentifierServiceProperty()}</li>
  *     <li>{@link #hpoProperty()}</li>
+ *     <li>{@link #namedEntityFinderProperty()}</li>
+ *     <li>{@link #diseaseIdentifierServiceProperty()}</li>
  * </ul>
  * <p>
  * Furthermore, the {@link Pedigree} tracks {@link #variantsProperty()} to keep variant genotype tables of the managed
@@ -38,6 +40,7 @@ import java.io.IOException;
 public class Pedigree extends VBoxBindingObservableDataComponent<ObservablePedigree> {
 
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
+    private final ObjectProperty<NamedEntityFinder> namedEntityFinder = new SimpleObjectProperty<>();
     private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();
     private final ListProperty<ObservableCuratedVariant> variants = new SimpleListProperty<>(FXCollections.observableArrayList());
 
@@ -65,6 +68,10 @@ public class Pedigree extends VBoxBindingObservableDataComponent<ObservablePedig
         return hpo;
     }
 
+    public ObjectProperty<NamedEntityFinder> namedEntityFinderProperty() {
+        return namedEntityFinder;
+    }
+
     public ObjectProperty<DiseaseIdentifierService> diseaseIdentifierServiceProperty() {
         return diseaseIdentifierService;
     }
@@ -84,7 +91,7 @@ public class Pedigree extends VBoxBindingObservableDataComponent<ObservablePedig
     @Override
     protected void initialize() {
         super.initialize();
-        members.setCellFactory(lv -> new ObservablePedigreeMemberListCell(variants, hpo, diseaseIdentifierService));
+        members.setCellFactory(lv -> new ObservablePedigreeMemberListCell(variants, hpo, diseaseIdentifierService, namedEntityFinder));
     }
 
     @Override

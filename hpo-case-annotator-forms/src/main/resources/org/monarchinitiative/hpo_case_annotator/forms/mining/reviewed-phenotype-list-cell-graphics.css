@@ -1,0 +1,21 @@
+#cell-box {
+    /* This is a FlowPane. */
+    -fx-padding: 5 0 5 0;
+    -fx-hgap: 5;
+}
+
+#review-status {
+    -fx-min-width: 20;
+}
+
+#term {
+    -fx-min-width: 250;
+}
+
+#status {
+    -fx-min-width: 80;
+}
+
+TitledTimeElementSummary {
+    -fx-min-width: 150;
+}

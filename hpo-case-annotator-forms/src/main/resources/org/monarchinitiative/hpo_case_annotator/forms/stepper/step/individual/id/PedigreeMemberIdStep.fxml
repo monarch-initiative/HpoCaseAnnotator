@@ -10,6 +10,6 @@
     <children>
         <Label styleClass="h2" text="Pedigree member"/>
         <Label styleClass="instruction-text" text="Provide credentials for the pedigree member." />
-        <PedigreeMemberIdsBindingComponent fx:id="individualIds" />
+        <PedigreeMemberIdsBindingComponent fx:id="individualIds" VBox.vgrow="ALWAYS"/>
     </children>
 </fx:root>

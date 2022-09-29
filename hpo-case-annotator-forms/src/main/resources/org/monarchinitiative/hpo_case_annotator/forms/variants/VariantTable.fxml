@@ -7,6 +7,10 @@
          type="VBox"
          stylesheets="@variant-table.css">
     <children>
-        <ListView fx:id="variantList"/>
+        <ListView fx:id="variantList" VBox.vgrow="ALWAYS">
+            <placeholder>
+                <Label text="No variants yet."/>
+            </placeholder>
+        </ListView>
     </children>
 </fx:root>

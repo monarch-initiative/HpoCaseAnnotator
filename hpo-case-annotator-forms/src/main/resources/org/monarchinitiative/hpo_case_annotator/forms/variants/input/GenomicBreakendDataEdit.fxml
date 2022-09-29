@@ -10,7 +10,7 @@
     <children>
         <HBox alignment="CENTER_LEFT" styleClass="row">
             <children>
-                <Label text="Contig" />
+                <Label text="Chromosome" />
                 <SearchableComboBox fx:id="contigComboBox" HBox.hgrow="ALWAYS" />
             </children>
         </HBox>

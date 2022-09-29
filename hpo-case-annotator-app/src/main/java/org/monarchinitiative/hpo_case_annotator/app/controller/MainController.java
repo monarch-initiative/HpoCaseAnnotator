@@ -52,9 +52,9 @@ import java.util.function.Function;
 import static javafx.beans.binding.Bindings.*;
 
 @Controller
-public class Main {
+public class MainController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
     private static final String SEE_LOG_FOR_MORE_DETAILS = "See log for more details.";
 
     private final ControllerFactory controllerFactory;
@@ -116,10 +116,10 @@ public class Main {
     @FXML
     private StatusBar statusBar;
 
-    public Main(ControllerFactory controllerFactory,
-                OptionalResources optionalResources,
-                OptionalServices optionalServices,
-                PublicationBrowser publicationBrowser) {
+    public MainController(ControllerFactory controllerFactory,
+                          OptionalResources optionalResources,
+                          OptionalServices optionalServices,
+                          PublicationBrowser publicationBrowser) {
         this.controllerFactory = controllerFactory;
         this.optionalResources = optionalResources;
         this.optionalServices = optionalServices;
@@ -165,8 +165,8 @@ public class Main {
         );
 
         dialog.setTitle("New study");
-        dialog.setHeaderText("Select study type");
-        dialog.setContentText("HCA supports the following study types:");
+        dialog.setHeaderText("Choose study type");
+        dialog.setContentText("Choose one of the following study types:");
         Optional<ButtonType> buttonType = dialog.showAndWait();
 
         buttonType.flatMap(bt -> {
@@ -277,7 +277,7 @@ public class Main {
     @FXML
     private void setResourcesMenuItemAction(ActionEvent e) {
         try {
-            FXMLLoader loader = new FXMLLoader(SetResourcesController.class.getResource("SetResources.fxml"));
+            FXMLLoader loader = new FXMLLoader(SettingsController.class.getResource("Settings.fxml"));
             loader.setControllerFactory(controllerFactory);
 
             Parent parent = loader.load();
@@ -483,6 +483,7 @@ public class Main {
     private void wireFunctionalPropertiesToStudyResourcesAware(StudyResourcesAware resourcesAware) {
         StudyResources resources = resourcesAware.getStudyResources();
         resources.hpoProperty().bind(optionalServices.hpoProperty());
+        resources.namedEntityFinderProperty().bind(optionalServices.namedEntityFinderProperty());
         resources.diseaseIdentifierServiceProperty().bind(optionalServices.diseaseIdentifierServiceProperty());
         resources.genomicAssemblyRegistryProperty().set(optionalServices.getGenomicAssemblyRegistry());
         resources.functionalAnnotationRegistryProperty().set(optionalServices.getFunctionalAnnotationRegistry());

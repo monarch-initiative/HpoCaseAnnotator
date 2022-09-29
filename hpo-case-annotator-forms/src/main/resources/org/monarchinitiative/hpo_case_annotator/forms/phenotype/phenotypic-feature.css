@@ -1,10 +1,23 @@
-#phenotypic-feature-column .tl-label {
-    -fx-max-width: 250;
-    -fx-wrap-text: true;
+.pf-outer-box {
+    /* No matter where PhenotypicFeature is presented, it is always a column with max width of 300px. */
+    -fx-pref-width: 300;
+    -fx-max-width: 300;
+    -fx-padding: 0 0 0 5;
 }
 
-#phenotypic-feature-column TitledLabel {
+.ph-def-col {
+    /* HPO title and definition should not be too short. */
+    -fx-min-height: 180;
+}
+
+TitledLabel {
     -fx-padding: 5 0 0 0;
+}
+
+.tl-label {
+    /* pf-outer-box.max-width - pf-outer-box.padding is 295 */
+    -fx-max-width: 295;
+    -fx-wrap-text: true;
 }
 
 RadioButton {
@@ -12,6 +25,6 @@ RadioButton {
     -fx-min-width: 80px;
 }
 
-.temporal-box {
-    -fx-min-height: 300;
+.temporal-col {
+    -fx-max-height: 500;
 }

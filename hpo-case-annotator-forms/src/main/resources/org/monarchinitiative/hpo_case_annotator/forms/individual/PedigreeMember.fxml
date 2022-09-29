@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsComponent?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseTable?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseSummary?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantGenotypeTable?>
 
@@ -38,9 +38,9 @@
                         <Tooltip text="Phenotype features of the individual"/>
                     </tooltip>
                     <content>
-                        <VBox >
+                        <VBox>
                             <children>
-                                <StackPane fx:id="phenotypePane">
+                                <StackPane fx:id="phenotypePane" VBox.vgrow="ALWAYS">
                                     <children>
                                         <PhenotypeTable fx:id="phenotypeTable"/>
                                         <Button fx:id="editPhenotypeButton" visible="false" contentDisplay="GRAPHIC_ONLY"
@@ -61,9 +61,9 @@
                     <content>
                         <VBox>
                             <children>
-                                <StackPane fx:id="diseasePane">
+                                <StackPane fx:id="diseasePane" VBox.vgrow="ALWAYS">
                                     <children>
-                                        <DiseaseTable fx:id="diseaseTable"/>
+                                        <DiseaseSummary fx:id="diseaseSummary"/>
                                         <Button fx:id="editDiseasesButton" visible="false" contentDisplay="GRAPHIC_ONLY"
                                                 StackPane.alignment="TOP_RIGHT" styleClass="edit-button"
                                                 onAction="#editDiseasesAction" />
@@ -82,7 +82,7 @@
                     <content>
                         <VBox>
                             <children>
-                                <VariantGenotypeTable fx:id="variantGenotypeTable"/>
+                                <VariantGenotypeTable fx:id="variantGenotypeTable" VBox.vgrow="ALWAYS"/>
                             </children>
                         </VBox>
                     </content>

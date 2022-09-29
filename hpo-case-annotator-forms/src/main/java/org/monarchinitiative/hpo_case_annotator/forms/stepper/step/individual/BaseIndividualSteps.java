@@ -22,6 +22,7 @@ abstract class BaseIndividualSteps<T extends BaseObservableIndividual> extends R
 
         BasePhenotypeStep<T> phenotype = getPhenotypeStep();
         phenotype.hpoProperty().bind(studyResources.hpoProperty());
+        phenotype.namedEntityFinderProperty().bind(studyResources.namedEntityFinderProperty());
         steps.add(phenotype);
 
         DiseaseStep<T> disease = new DiseaseStep<>();

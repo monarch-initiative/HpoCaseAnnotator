@@ -12,7 +12,18 @@
         <URL value="@step-base.css"/>
     </stylesheets>
     <children>
-        <StackPane id="stepper-content" fx:id="content" VBox.vgrow="ALWAYS"/>
+        <ScrollPane id="stepper-scroll-pane"
+                    VBox.vgrow="ALWAYS"
+                    fitToWidth="true" fitToHeight="true">
+            <content>
+                <VBox id="stepper-centerer">
+                    <children>
+                        <VBox fx:id="content" id="stepper-content" VBox.vgrow="ALWAYS"/>
+                    </children>
+                </VBox>
+
+            </content>
+        </ScrollPane>
 
         <ButtonBar id="button-bar">
             <buttons>

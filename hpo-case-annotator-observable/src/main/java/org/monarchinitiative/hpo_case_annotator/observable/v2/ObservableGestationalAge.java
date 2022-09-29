@@ -5,6 +5,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.GestationalAge;
+import org.monarchinitiative.hpo_case_annotator.observable.deep.ObservableItem;
 
 import java.util.stream.Stream;
 

@@ -1,0 +1,11 @@
+/* Submit section */
+#payload-text-area {
+    /* Should be the same as `vetting-area` height. */
+    -fx-pref-height: 600;
+}
+
+/* Vetting section */
+#vetting-area {
+    /* Should be the same as `payload-text-area` height. */
+    -fx-pref-height: 600;
+}

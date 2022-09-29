@@ -5,6 +5,7 @@ import javafx.beans.property.*;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadata;
+import org.monarchinitiative.hpo_case_annotator.observable.deep.ObservableItem;
 import org.monarchinitiative.svart.*;
 
 import java.util.Optional;

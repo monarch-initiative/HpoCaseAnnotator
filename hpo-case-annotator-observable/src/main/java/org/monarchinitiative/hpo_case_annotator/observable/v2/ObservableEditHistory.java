@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.model.v2.EditHistory;
+import org.monarchinitiative.hpo_case_annotator.observable.deep.ObservableItem;
 
 import java.time.Instant;
 import java.util.stream.Stream;
