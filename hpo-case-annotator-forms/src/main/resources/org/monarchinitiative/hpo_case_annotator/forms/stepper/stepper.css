@@ -1,11 +1,23 @@
 #stepper-box {
     -fx-pref-width: 1400;
+    -fx-pref-height: 650;
+}
+
+#stepper-scroll-pane {
+    -fx-fit-to-width: true;
+}
+
+#stepper-centerer {
+    /* The only purpose of this box is to span the entire content of
+    the ScrollPane and align the `stepper-content` in center. */
     -fx-alignment: top-center;
 }
 
 #stepper-content {
+    /* The main area of the stepper grows vertically and has the max width of 1200 */
     -fx-pref-width: 1200;
     -fx-max-width: 1200;
+    -fx-min-height: 600;
     -fx-border-color: transparent black transparent black;
     -fx-effect: dropshadow(gaussian, -col-medium, 5, .25, 1, 1);
 }
