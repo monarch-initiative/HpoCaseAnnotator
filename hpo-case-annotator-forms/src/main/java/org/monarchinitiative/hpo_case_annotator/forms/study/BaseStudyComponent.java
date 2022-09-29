@@ -35,6 +35,8 @@ public abstract class BaseStudyComponent<T extends ObservableStudy>
 
     @FXML
     private ScrollPane studyScrollPane;
+    @FXML
+    private TextField studyId;
     // ------------------------------------ PUBLICATION SECTION ----------------------------------------------------- //
     @FXML
     private StackPane publicationPane;
@@ -80,7 +82,13 @@ public abstract class BaseStudyComponent<T extends ObservableStudy>
 
     @Override
     protected void bind(T data) {
-        if (data != null) {
+        if (data == null) {
+           studyId.setText(null);
+           publication.setData(null);
+           variantSummary.variantsProperty().set(null);
+           metadataSummary.setData(null);
+        } else {
+            studyId.textProperty().bindBidirectional(data.idProperty());
             publication.dataProperty().bindBidirectional(data.publicationProperty());
 
             variantSummary.variantsProperty().bindBidirectional(data.variantsProperty());

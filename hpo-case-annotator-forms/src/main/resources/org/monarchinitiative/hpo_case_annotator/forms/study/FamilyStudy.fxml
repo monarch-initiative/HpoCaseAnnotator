@@ -46,6 +46,19 @@
                                 <HBox styleClass="study-section">
                                     <children>
                                         <VBox styleClass="study-section-title">
+                                            <Label text="Study ID" styleClass="h1" />
+                                        </VBox>
+                                        <VBox HBox.hgrow="ALWAYS" styleClass="study-id-box">
+                                            <children>
+                                                <TextField fx:id="studyId" promptText="e.g. PMID:1234567-family-5" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                                <Pane styleClass="spacer10px"/>
+                                <HBox styleClass="study-section">
+                                    <children>
+                                        <VBox styleClass="study-section-title">
                                             <Label text="Publication" styleClass="h1" />
                                         </VBox>
                                         <StackPane fx:id="publicationPane">
