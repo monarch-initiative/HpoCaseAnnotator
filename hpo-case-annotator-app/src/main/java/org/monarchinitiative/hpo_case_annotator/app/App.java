@@ -9,8 +9,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.monarchinitiative.hpo_case_annotator.app.config.*;
+import org.monarchinitiative.hpo_case_annotator.app.controller.MainController;
 import org.monarchinitiative.hpo_case_annotator.app.dialogs.Dialogs;
-import org.monarchinitiative.hpo_case_annotator.app.controller.Main;
 import org.monarchinitiative.hpo_case_annotator.app.model.FunctionalAnnotationResources;
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResource;
@@ -67,7 +67,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("Main.fxml"));
+        FXMLLoader loader = new FXMLLoader(MainController.class.getResource("Main.fxml"));
         loader.setControllerFactory(context::getBean);
 
         HcaProperties properties = context.getBean(HcaProperties.class);

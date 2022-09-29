@@ -52,9 +52,9 @@ import java.util.function.Function;
 import static javafx.beans.binding.Bindings.*;
 
 @Controller
-public class Main {
+public class MainController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
     private static final String SEE_LOG_FOR_MORE_DETAILS = "See log for more details.";
 
     private final ControllerFactory controllerFactory;
@@ -116,10 +116,10 @@ public class Main {
     @FXML
     private StatusBar statusBar;
 
-    public Main(ControllerFactory controllerFactory,
-                OptionalResources optionalResources,
-                OptionalServices optionalServices,
-                PublicationBrowser publicationBrowser) {
+    public MainController(ControllerFactory controllerFactory,
+                          OptionalResources optionalResources,
+                          OptionalServices optionalServices,
+                          PublicationBrowser publicationBrowser) {
         this.controllerFactory = controllerFactory;
         this.optionalResources = optionalResources;
         this.optionalServices = optionalServices;
