@@ -61,11 +61,15 @@ public class Metadata extends VBox implements ObservableDataComponent<Observable
     }
 
     private void unbind(ObservableStudyMetadata metadata) {
-        freeTextArea.textProperty().unbindBidirectional(metadata.freeTextProperty());
+        if (metadata != null)
+            freeTextArea.textProperty().unbindBidirectional(metadata.freeTextProperty());
     }
 
     private void bind(ObservableStudyMetadata metadata) {
-        freeTextArea.textProperty().bindBidirectional(metadata.freeTextProperty());
+        if (metadata == null)
+            freeTextArea.setText(null);
+        else
+            freeTextArea.textProperty().bindBidirectional(metadata.freeTextProperty());
     }
 
 

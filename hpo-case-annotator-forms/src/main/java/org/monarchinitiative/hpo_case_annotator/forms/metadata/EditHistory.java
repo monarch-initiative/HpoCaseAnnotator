@@ -1,19 +1,18 @@
 package org.monarchinitiative.hpo_case_annotator.forms.metadata;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.binding.ObjectBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.HBox;
-import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.base.HBoxObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableEditHistory;
 
 import java.io.IOException;
+import java.time.Instant;
 
-public class EditHistory extends HBox implements ObservableDataComponent<ObservableEditHistory> {
+import static javafx.beans.binding.Bindings.*;
 
-    private final ObjectProperty<ObservableEditHistory> data = new SimpleObjectProperty<>();
+public class EditHistory extends HBoxObservableDataComponent<ObservableEditHistory> {
 
     @FXML
     private TitledLabel curatorId;
@@ -32,32 +31,16 @@ public class EditHistory extends HBox implements ObservableDataComponent<Observa
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        data.addListener((obs, old, novel) -> {
-            if (old != null) unbind(old);
-            if (novel != null) bind(novel);
-        });
-    }
-
-    private void unbind(ObservableEditHistory data) {
-        curatorId.textProperty().unbind();
-        softwareVersion.textProperty().unbind();
-        timestamp.textProperty().unbind();
-    }
-
-    private void bind(ObservableEditHistory data) {
-        curatorId.textProperty().bind(data.curatorIdProperty());
-        softwareVersion.textProperty().bind(data.softwareVersionProperty());
-        timestamp.textProperty().bind(data.timestampProperty().asString());
-    }
-
-    @Override
-    public ObjectProperty<ObservableEditHistory> dataProperty() {
-        return data;
     }
 
     @FXML
-    private void initialize() {
-        // no-op
+    protected void initialize() {
+        curatorId.textProperty().bind(selectString(data, "curatorId"));
+        softwareVersion.textProperty().bind(selectString(data, "softwareVersion"));
+        ObjectBinding<Instant> ts = select(data, "timestamp");
+        timestamp.textProperty().bind(when(ts.isNull())
+                .then("N/A")
+                .otherwise(ts.asString()));
     }
 
 }
