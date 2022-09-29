@@ -7,7 +7,7 @@
 
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.IndividualIdsComponent?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseTable?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseSummary?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantGenotypeTable?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
@@ -70,7 +70,7 @@
 <!--                                <Label styleClass="h3" text="Diseases"/>-->
                                 <StackPane fx:id="diseasePane">
                                     <children>
-                                        <DiseaseTable fx:id="diseaseTable"/>
+                                        <DiseaseSummary fx:id="diseaseSummary"/>
                                         <Button fx:id="editDiseasesButton" visible="false" contentDisplay="GRAPHIC_ONLY"
                                                 StackPane.alignment="TOP_RIGHT" styleClass="edit-button"
                                                 onAction="#editDiseasesAction" />

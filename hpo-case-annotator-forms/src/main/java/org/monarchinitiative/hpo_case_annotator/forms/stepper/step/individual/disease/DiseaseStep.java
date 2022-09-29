@@ -8,7 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.monarchinitiative.hpo_case_annotator.core.data.DiseaseIdentifierService;
-import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseTable;
+import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseSummary;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.DiseaseIdentifier;
@@ -34,7 +34,7 @@ public class DiseaseStep<T extends BaseObservableIndividual> extends BaseStep<T>
     @FXML
     private Button addDiseaseButton;
     @FXML
-    private DiseaseTable diseaseTable;
+    private DiseaseSummary diseaseSummary;
 
     public DiseaseStep() {
         super(DiseaseStep.class.getResource("DiseaseStep.fxml"));
@@ -57,15 +57,15 @@ public class DiseaseStep<T extends BaseObservableIndividual> extends BaseStep<T>
     @Override
     protected void bind(T data) {
         if (data != null)
-            diseaseTable.diseaseStatesProperty().bindBidirectional(data.diseaseStatesProperty());
+            diseaseSummary.diseaseStatesProperty().bindBidirectional(data.diseaseStatesProperty());
         else
-            diseaseTable.getDiseaseStates().clear();
+            diseaseSummary.getDiseaseStates().clear();
     }
 
     @Override
     protected void unbind(T data) {
         if (data != null)
-            diseaseTable.diseaseStatesProperty().unbindBidirectional(data.diseaseStatesProperty());
+            diseaseSummary.diseaseStatesProperty().unbindBidirectional(data.diseaseStatesProperty());
     }
 
     @FXML
@@ -115,7 +115,7 @@ public class DiseaseStep<T extends BaseObservableIndividual> extends BaseStep<T>
         return di -> {
             ObservableDiseaseStatus ods = new ObservableDiseaseStatus();
             ods.setDiseaseId(di);
-            diseaseTable.getDiseaseStates().add(ods);
+            diseaseSummary.getDiseaseStates().add(ods);
         };
     }
 

@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.PedigreeMemberIdsComponent?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseTable?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseSummary?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="VBox"
@@ -33,6 +33,6 @@
         </GridPane>
 
         <Label text="Diseases" styleClass="h2" />
-        <DiseaseTable fx:id="diseaseTable"/>
+        <DiseaseSummary fx:id="diseaseSummary" VBox.vgrow="ALWAYS"/>
     </children>
 </fx:root>

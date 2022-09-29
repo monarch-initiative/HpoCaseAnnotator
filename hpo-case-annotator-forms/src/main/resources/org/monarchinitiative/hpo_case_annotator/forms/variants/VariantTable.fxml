@@ -7,6 +7,6 @@
          type="VBox"
          stylesheets="@variant-table.css">
     <children>
-        <ListView fx:id="variantList"/>
+        <ListView fx:id="variantList" VBox.vgrow="ALWAYS"/>
     </children>
 </fx:root>

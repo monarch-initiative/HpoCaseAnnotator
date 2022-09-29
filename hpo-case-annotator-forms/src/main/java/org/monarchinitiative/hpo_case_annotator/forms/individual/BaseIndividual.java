@@ -13,7 +13,7 @@ import org.monarchinitiative.hpo_case_annotator.core.mining.NamedEntityFinder;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.BaseIndividualIdsDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.disease.BaseDiseaseDataEdit;
-import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseTable;
+import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseSummary;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.BasePhenotypeDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
@@ -58,7 +58,7 @@ public abstract class BaseIndividual<T extends BaseObservableIndividual> extends
     @FXML
     private Button editDiseasesButton;
     @FXML
-    private DiseaseTable diseaseTable;
+    private DiseaseSummary diseaseSummary;
     @FXML
     private VariantGenotypeTable variantGenotypeTable;
 
@@ -95,8 +95,8 @@ public abstract class BaseIndividual<T extends BaseObservableIndividual> extends
         phenotypeTable.phenotypicFeaturesProperty().bind(select(data, "phenotypicFeatures"));
         editPhenotypeButton.visibleProperty().bind(phenotypePane.hoverProperty().and(data.isNotNull()));
 
-        // Diseases table view
-        diseaseTable.diseaseStatesProperty().bind(select(data, "diseaseStates"));
+        // Diseases summary view
+        diseaseSummary.diseaseStatesProperty().bind(select(data, "diseaseStates"));
         editDiseasesButton.visibleProperty().bind(diseasePane.hoverProperty().and(data.isNotNull()));
 
         // Genotypes table view

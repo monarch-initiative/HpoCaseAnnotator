@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseTable?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@disease-summary.css">
+    <children>
+        <DiseaseTable fx:id="diseaseTable" VBox.vgrow="ALWAYS"/>
+        <Button fx:id="removeDiseaseStatus" disable="true" mnemonicParsing="false"
+                onAction="#removeDiseaseAction" styleClass="remove-item" text="-" >
+            <tooltip>
+                <Tooltip text="Remove the selected disease entry"/>
+            </tooltip>
+        </Button>
+    </children>
+</fx:root>
