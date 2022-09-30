@@ -10,8 +10,8 @@ import org.monarchinitiative.hpo_case_annotator.forms.StudyResourcesAware;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 
 import org.monarchinitiative.hpo_case_annotator.forms.metadata.Metadata;
-import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication;
 import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationEditable;
+import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationNullable;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
@@ -19,8 +19,6 @@ import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudy;
 
 import java.io.IOException;
 import java.net.URL;
-
-import static javafx.beans.binding.Bindings.select;
 
 /**
  * This controller is the base for all {@link org.monarchinitiative.hpo_case_annotator.model.v2.Study} types.
@@ -41,7 +39,7 @@ public abstract class BaseStudyComponent<T extends ObservableStudy>
     @FXML
     private StackPane publicationPane;
     @FXML
-    private Publication publication;
+    private PublicationNullable publication;
     @FXML
     private Button editPublication;
 
@@ -73,7 +71,6 @@ public abstract class BaseStudyComponent<T extends ObservableStudy>
     protected void initialize() {
         super.initialize();
         editPublication.visibleProperty().bind(publicationPane.hoverProperty());
-        publication.disableProperty().bind(select(data, "publication").isNull());
 
         variantSummary.functionalAnnotationRegistryProperty().bind(studyResources.functionalAnnotationRegistryProperty());
         variantSummary.genomicAssemblyRegistryProperty().bind(studyResources.genomicAssemblyRegistryProperty());

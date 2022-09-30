@@ -7,7 +7,7 @@
          type="VBox"
          stylesheets="@publication-editable.css">
     <children>
-        <VBox styleClass="edit-area">
+        <VBox>
             <children>
                 <TitledTextField fx:id="title" name="Title"/>
                 <TitledTextField fx:id="authors" name="Authors"/>

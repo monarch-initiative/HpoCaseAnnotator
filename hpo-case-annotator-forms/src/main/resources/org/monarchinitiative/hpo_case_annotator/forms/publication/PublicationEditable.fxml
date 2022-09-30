@@ -4,7 +4,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Separator?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="javafx.scene.layout.VBox"
@@ -13,13 +12,8 @@
         <URL value="@../base.css"/>
         <URL value="@publication-editable.css"/>
     </stylesheets>
-    <VBox styleClass="summary-area">
-        <children>
-            <Publication fx:id="publication"/>
-        </children>
-    </VBox>
     <Separator/>
-    <VBox styleClass="edit-area">
+    <VBox>
         <children>
             <TitledTextField fx:id="title" name="Title"/>
             <TitledTextField fx:id="authors" name="Authors"/>
