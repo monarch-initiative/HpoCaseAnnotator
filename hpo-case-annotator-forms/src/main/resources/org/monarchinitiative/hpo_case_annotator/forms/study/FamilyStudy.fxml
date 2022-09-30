@@ -7,7 +7,7 @@
 
 <?import org.monarchinitiative.hpo_case_annotator.forms.metadata.Metadata?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationNullable?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
@@ -63,7 +63,7 @@
                                         </VBox>
                                         <StackPane fx:id="publicationPane" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <Publication fx:id="publication" StackPane.alignment="CENTER"/>
+                                                <PublicationNullable fx:id="publication" StackPane.alignment="CENTER"/>
                                                 <Button fx:id="editPublication" contentDisplay="GRAPHIC_ONLY"
                                                         mnemonicParsing="false" onAction="#editPublicationAction"
                                                         styleClass="edit-button" visible="false"

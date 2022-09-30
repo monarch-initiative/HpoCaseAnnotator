@@ -6,7 +6,7 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.publication.PublicationNullable?>
 
 <fx:root xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
          type="VBox"
@@ -60,7 +60,7 @@
                                         <Label styleClass="h1" text="Publication" />
                                         <StackPane fx:id="publicationPane" VBox.vgrow="ALWAYS">
                                             <children>
-                                                <Publication fx:id="publication" StackPane.alignment="CENTER"/>
+                                                <PublicationNullable fx:id="publication" StackPane.alignment="CENTER"/>
                                                 <Button fx:id="editPublication" contentDisplay="GRAPHIC_ONLY"
                                                         mnemonicParsing="false" onAction="#editPublicationAction"
                                                         styleClass="edit-button" visible="false"

@@ -1,12 +1,10 @@
 package org.monarchinitiative.hpo_case_annotator.forms.publication;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.binding.ObjectBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.ObservableDataComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
 
@@ -14,9 +12,7 @@ import java.io.IOException;
 
 import static javafx.beans.binding.Bindings.*;
 
-public class Publication extends VBox implements ObservableDataComponent<ObservablePublication> {
-
-    private final ObjectProperty<ObservablePublication> item = new SimpleObjectProperty<>();
+public class Publication extends VBoxObservableDataComponent<ObservablePublication> {
 
     @FXML
     private Label title;
@@ -47,18 +43,14 @@ public class Publication extends VBox implements ObservableDataComponent<Observa
 
     @FXML
     protected void initialize() {
-        title.textProperty().bind(selectString(item, "title"));
-        authors.textProperty().bind(selectString(item, "authors"));
-        journal.textProperty().bind(selectString(item, "journal"));
-        year.textProperty().bind(selectInteger(item, "year").asString());
-        volume.textProperty().bind(selectString(item, "volume"));
-        pages.textProperty().bind(selectString(item, "pages"));
-        pmid.textProperty().bind(selectString(item, "pmid"));
-    }
-
-    @Override
-    public ObjectProperty<ObservablePublication> dataProperty() {
-        return item;
+        title.textProperty().bind(selectString(data, "title"));
+        authors.textProperty().bind(selectString(data, "authors"));
+        journal.textProperty().bind(selectString(data, "journal"));
+        ObjectBinding<Integer> y = select(data, "year");
+        year.textProperty().bind(when(y.isNotNull()).then(y.asString()).otherwise("N/A"));
+        volume.textProperty().bind(selectString(data, "volume"));
+        pages.textProperty().bind(selectString(data, "pages"));
+        pmid.textProperty().bind(selectString(data, "pmid"));
     }
 
 }

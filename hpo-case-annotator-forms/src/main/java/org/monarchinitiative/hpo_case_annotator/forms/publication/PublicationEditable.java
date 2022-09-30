@@ -18,8 +18,6 @@ public class PublicationEditable extends VBoxDataEdit<ObservablePublication> {
     private ObservablePublication item;
 
     @FXML
-    private Publication publication;
-    @FXML
     private TitledTextField title;
     @FXML
     private TitledTextField authors;
@@ -57,8 +55,6 @@ public class PublicationEditable extends VBoxDataEdit<ObservablePublication> {
     public void setInitialData(ObservablePublication data) {
         item = Objects.requireNonNull(data);
 
-        publication.setData(item);
-
         title.setText(data.getTitle());
         authors.setText(data.getAuthors());
         journal.setText(data.getJournal());
@@ -73,6 +69,7 @@ public class PublicationEditable extends VBoxDataEdit<ObservablePublication> {
         item.setTitle(title.getText());
         item.setAuthors(authors.getText());
         item.setJournal(journal.getText());
+        // TODO - this can fail if the user provides a wrong input (well, not a number)
         item.setYear(yearTextFormatter.getValue());
         item.setVolume(volume.getText());
         item.setPages(pages.getText());
