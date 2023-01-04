@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 public class ObservableCuratedVariant extends ObservableItem implements CuratedVariant {
 
-    public static final Strand VCF_SEQUENCE_SYMBOLIC_VARIANT_STRAND = Strand.POSITIVE;
+//    public static final Strand VCF_SEQUENCE_SYMBOLIC_VARIANT_STRAND = Strand.POSITIVE;
     public static final Callback<ObservableCuratedVariant, Observable[]> EXTRACTOR = obs -> new Observable[]{
             obs.variantNotation,
             obs.genomicAssembly,
@@ -253,7 +253,7 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
                             GenomicVariant.of(
                                     contig.get(),
                                     id.get(),
-                                    VCF_SEQUENCE_SYMBOLIC_VARIANT_STRAND,
+                                    VCF_STRAND,
                                     VCF_COORDINATE_SYSTEM,
                                     start.get(),
                                     ref.get(),
@@ -271,7 +271,7 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
                             GenomicVariant.of(
                                     contig.get(),
                                     id.get(),
-                                    VCF_SEQUENCE_SYMBOLIC_VARIANT_STRAND,
+                                    VCF_STRAND,
                                     coordinates,
                                     ref.get(),
                                     alt.get()
