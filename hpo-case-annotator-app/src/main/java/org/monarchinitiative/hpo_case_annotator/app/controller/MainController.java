@@ -189,7 +189,9 @@ public class MainController {
     @FXML
     private void openMenuItemAction(ActionEvent e) {
         FileChooser filechooser = new FileChooser();
-        filechooser.setInitialDirectory(optionalResources.getDiseaseCaseDir().toFile());
+        Path diseaseCaseDir = optionalResources.getDiseaseCaseDir();
+        if (diseaseCaseDir != null)
+            filechooser.setInitialDirectory(diseaseCaseDir.toFile());
         filechooser.setTitle("Open study");
 
         String HCA_JSON = "HCA JSON data format (*.json)";
@@ -524,7 +526,9 @@ public class MainController {
         fileChooser.setTitle("Save study");
         String suggestedName = studyId + ".json";
         fileChooser.setInitialFileName(suggestedName);
-        fileChooser.setInitialDirectory(optionalResources.getDiseaseCaseDir().toFile());
+        Path diseaseCaseDir = optionalResources.getDiseaseCaseDir();
+        if (diseaseCaseDir != null)
+            fileChooser.setInitialDirectory(diseaseCaseDir.toFile());
         fileChooser.getExtensionFilters().add(jsonFileFormat);
         File which = fileChooser.showSaveDialog(getOwnerWindow());
 
