@@ -27,7 +27,7 @@ public class StructuralVariantMetadataDeserializer extends StdDeserializer<Struc
         return StructuralVariantMetadata.of(metadata.getSnippet(),
                 metadata.getVariantClass(),
                 metadata.getPathomechanism(),
-                metadata.isCosegregation(),
-                metadata.isComparability());
+                metadata.hasCosegregation(),
+                metadata.hasComparability());
     }
 }

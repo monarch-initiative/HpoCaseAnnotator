@@ -47,7 +47,7 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
 
     private final ObjectProperty<ObservableGenomicBreakend> left = new SimpleObjectProperty<>(this, "left");
     private final ObjectProperty<ObservableGenomicBreakend> right = new SimpleObjectProperty<>(this, "right");
-    private final ObjectProperty<VariantMetadata> variantMetadata = new SimpleObjectProperty<>(this, "variantMetadata");
+    private final ObjectProperty<VariantMetadata> variantMetadata = new SimpleObjectProperty<>(this, "variantMetadata", VariantMetadata.emptyMetadata());
 
     public ObservableCuratedVariant() {
     }

@@ -25,11 +25,16 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
     }
 
     static VariantMetadata deserializeVariantMetadata(JsonNode jsonNode) {
-        String snippet = jsonNode.get("snippet").asText();
-        String variantClass = jsonNode.get("variantClass").asText();
-        String pathomechanism = jsonNode.get("pathomechanism").asText();
-        boolean cosegregation = jsonNode.get("cosegregation").asBoolean();
-        boolean comparability = jsonNode.get("comparability").asBoolean();
+        JsonNode snippetNode = jsonNode.get("snippet");
+        String snippet = snippetNode == null ? null : snippetNode.asText();
+        JsonNode vClassNode = jsonNode.get("variantClass");
+        String variantClass = vClassNode == null ? null : vClassNode.asText();
+        JsonNode pathoNode = jsonNode.get("pathomechanism");
+        String pathomechanism = pathoNode == null ? null : pathoNode.asText();
+        JsonNode cosegNode = jsonNode.get("cosegregation");
+        boolean cosegregation = cosegNode == null ? false : cosegNode.asBoolean();
+        JsonNode comparabilityNode = jsonNode.get("comparability");
+        boolean comparability = comparabilityNode == null ? false : comparabilityNode.asBoolean();
 
         return VariantMetadata.of(VariantMetadataContext.UNKNOWN, snippet, variantClass, pathomechanism, cosegregation, comparability);
     }
