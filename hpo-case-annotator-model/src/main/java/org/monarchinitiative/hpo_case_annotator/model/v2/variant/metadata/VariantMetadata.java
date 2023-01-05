@@ -59,11 +59,11 @@ public abstract class VariantMetadata {
         return pathomechanism;
     }
 
-    public boolean hasCosegregation() {
+    public boolean isCosegregation() {
         return cosegregation;
     }
 
-    public boolean hasComparability() {
+    public boolean isComparability() {
         return comparability;
     }
 

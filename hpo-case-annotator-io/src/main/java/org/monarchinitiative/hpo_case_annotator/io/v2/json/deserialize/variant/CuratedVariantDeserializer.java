@@ -32,9 +32,9 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
         JsonNode pathoNode = jsonNode.get("pathomechanism");
         String pathomechanism = pathoNode == null ? null : pathoNode.asText();
         JsonNode cosegNode = jsonNode.get("cosegregation");
-        boolean cosegregation = cosegNode == null ? false : cosegNode.asBoolean();
+        boolean cosegregation = cosegNode != null && cosegNode.asBoolean();
         JsonNode comparabilityNode = jsonNode.get("comparability");
-        boolean comparability = comparabilityNode == null ? false : comparabilityNode.asBoolean();
+        boolean comparability = comparabilityNode != null && comparabilityNode.asBoolean();
 
         return VariantMetadata.of(VariantMetadataContext.UNKNOWN, snippet, variantClass, pathomechanism, cosegregation, comparability);
     }
