@@ -108,8 +108,10 @@
                   </HBox>
                 </children>
             </VBox>
-            <Separator orientation="VERTICAL" />
-             <VBox>
+             <!-- The separator and functional annotation table are invisible and non-managed since we do not yet have
+                  functional annotation for symbolic variants. -->
+             <Separator orientation="VERTICAL" visible="false" managed="false"/>
+             <VBox visible="false" managed="false">
                  <FunctionalAnnotationTable fx:id="functionalAnnotationTable"/>
              </VBox>
              <Separator orientation="VERTICAL" />
