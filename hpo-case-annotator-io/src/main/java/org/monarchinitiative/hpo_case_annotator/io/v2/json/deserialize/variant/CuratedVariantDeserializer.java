@@ -7,8 +7,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadata;
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadataContext;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.*;
 import org.monarchinitiative.svart.*;
 import org.monarchinitiative.svart.assembly.GenomicAssembly;
 
@@ -26,17 +25,21 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
 
     static VariantMetadata deserializeVariantMetadata(JsonNode jsonNode) {
         JsonNode snippetNode = jsonNode.get("snippet");
-        String snippet = snippetNode == null ? null : snippetNode.asText();
+        String snippet = isNullNode(snippetNode) ? null : snippetNode.asText();
         JsonNode vClassNode = jsonNode.get("variantClass");
-        String variantClass = vClassNode == null ? null : vClassNode.asText();
+        String variantClass = isNullNode(vClassNode) ? null : vClassNode.asText();
         JsonNode pathoNode = jsonNode.get("pathomechanism");
-        String pathomechanism = pathoNode == null ? null : pathoNode.asText();
+        String pathomechanism = isNullNode(pathoNode) ? null : pathoNode.asText();
         JsonNode cosegNode = jsonNode.get("cosegregation");
         boolean cosegregation = cosegNode != null && cosegNode.asBoolean();
         JsonNode comparabilityNode = jsonNode.get("comparability");
         boolean comparability = comparabilityNode != null && comparabilityNode.asBoolean();
 
         return VariantMetadata.of(VariantMetadataContext.UNKNOWN, snippet, variantClass, pathomechanism, cosegregation, comparability);
+    }
+
+    private static boolean isNullNode(JsonNode node) {
+        return node == null || node.isNull();
     }
 
     private static ConfidenceInterval parseConfidenceInterval(String ciFieldName, JsonNode node, ObjectCodec codec) throws JsonProcessingException {
@@ -55,7 +58,21 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
         String md5Hex = node.get("md5Hex").asText();
         String genomicAssemblyAccession = node.get("genomicAssemblyAccession").asText();
 
-        VariantMetadata variantMetadata = codec.treeToValue(node.get("variantValidation"), VariantMetadata.class);
+        JsonNode validationContext = node.get("validationContext");
+        JsonNode validationMetadata = node.get("validationMetadata");
+        VariantMetadata variantMetadata;
+        if (validationContext == null || validationMetadata == null) {
+            variantMetadata = VariantMetadata.emptyMetadata();
+        } else {
+            Class<? extends VariantMetadata> clz = switch (validationContext.asText()) {
+                case "MendelianVariantMetadata" -> MendelianVariantMetadata.class;
+                case "SomaticVariantMetadata" -> SomaticVariantMetadata.class;
+                case "SplicingVariantMetadata" -> SplicingVariantMetadata.class;
+                case "StructuralVariantMetadata" -> StructuralVariantMetadata.class;
+                default -> VariantMetadata.class;
+            };
+            variantMetadata = codec.treeToValue(validationMetadata, clz);
+        }
 
         String variantType = node.get("variantType").asText();
         GenomicVariant variant;

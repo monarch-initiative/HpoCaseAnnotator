@@ -70,11 +70,9 @@ public class CuratedVariantSerializer extends StdSerializer<CuratedVariant> {
         }
 
         // validation
-        gen.writeObjectFieldStart("variantValidation");
         VariantMetadata variantMetadata = curatedVariant.getVariantMetadata();
-        gen.writeStringField("validationContext", variantMetadata.getVariantMetadataContext().toString());
+        gen.writeStringField("validationContext", variantMetadata.getClass().getSimpleName());
         gen.writeObjectField("validationMetadata", variantMetadata); // metadata have default serializers
-        gen.writeEndObject();
 
         gen.writeEndObject();
     }
