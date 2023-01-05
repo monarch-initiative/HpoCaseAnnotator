@@ -13,7 +13,12 @@
     <children>
         <Label styleClass="h1" text="Family study ID"/>
         <Label fx:id="header" text="Set family study ID."/>
-        <TitledTextField fx:id="studyId" name="Family study ID"/>
+        <HBox alignment="BOTTOM_LEFT">
+            <children>
+                <TitledTextField minWidth="500" id="study-id" fx:id="studyId" name="Family study ID" />
+                <Button fx:id="generateIdButton" onAction="#generateIdButtonAction" text="Generate" />
+            </children>
+        </HBox>
         <Separator/>
         <Label text="Add description that do not fit into the study fields."/>
         <TitledTextArea fx:id="freeTextMetadata" name="Free text description"

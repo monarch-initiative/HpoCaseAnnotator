@@ -8,4 +8,8 @@ public class FamilyStudyIdStep extends BaseStudyIdStep<ObservableFamilyStudy> {
         super(FamilyStudyIdStep.class.getResource("FamilyStudyIdStep.fxml"));
     }
 
+    @Override
+    protected String generateId(ObservableFamilyStudy data) {
+        return "family-id";
+    }
 }
