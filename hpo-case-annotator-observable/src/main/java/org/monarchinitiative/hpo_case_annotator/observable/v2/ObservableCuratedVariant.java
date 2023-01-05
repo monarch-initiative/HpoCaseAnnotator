@@ -13,7 +13,6 @@ import java.util.stream.Stream;
 
 public class ObservableCuratedVariant extends ObservableItem implements CuratedVariant {
 
-//    public static final Strand VCF_SEQUENCE_SYMBOLIC_VARIANT_STRAND = Strand.POSITIVE;
     public static final Callback<ObservableCuratedVariant, Observable[]> EXTRACTOR = obs -> new Observable[]{
             obs.variantNotation,
             obs.genomicAssembly,
@@ -34,8 +33,10 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
     private final ObjectProperty<VariantNotation> variantNotation = new SimpleObjectProperty<>(this, "variantNotation");
     private final StringProperty genomicAssembly = new SimpleStringProperty(this, "genomicAssembly");
     private final ObjectProperty<Contig> contig = new SimpleObjectProperty<>(this, "contig");
+    // 1-based (included) start coordinate of the variant.
     private final ObjectProperty<Integer> start = new SimpleObjectProperty<>(this, "start");
     private final ObjectProperty<ConfidenceInterval> startCi = new SimpleObjectProperty<>(this, "startCi");
+    // 1-based (included) end coordinate of the variant.
     private final ObjectProperty<Integer> end = new SimpleObjectProperty<>(this, "end");
     private final ObjectProperty<ConfidenceInterval> endCi = new SimpleObjectProperty<>(this, "endCi");
     // Serves as variant ID for sequence and symbolic notations, and as event ID for breakends.
@@ -58,43 +59,55 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
             genomicAssembly.set(curatedVariant.getGenomicAssembly());
 
             // (*) GenomicVariant
-            curatedVariant.getVariant().ifPresent(gv -> {
-                // Notation
-                if (gv.isBreakend()) {
-                    variantNotation.set(VariantNotation.BREAKEND);
-                    GenomicBreakendVariant gb = (GenomicBreakendVariant) gv;
-                    id.set(gb.eventId());
-                    left.set(new ObservableGenomicBreakend(gb.left()));
-                    right.set(new ObservableGenomicBreakend(gb.right()));
-                } else {
-                    Contig contig = gv.contig();
-                    if (contig != null)
-                        this.contig.set(contig);
+            if (curatedVariant instanceof ObservableCuratedVariant ocv) {
+                variantNotation.set(ocv.getVariantNotation());
+                contig.set(ocv.getContig());
+                start.set(ocv.getStart());
+                startCi.set(ocv.getStartCi());
+                end.set(ocv.getEnd());
+                endCi.set(ocv.getEndCi());
+                id.set(ocv.getId());
+                ref.set(ocv.getRef());
+                alt.set(ocv.getAlt());
+                variantType.set(ocv.getVariantType());
+                changeLength.set(ocv.getChangeLength());
+                left.set(ocv.getLeft());
+                right.set(ocv.getRight());
+                variantMetadata.set(ocv.getVariantMetadata());
+            } else {
+                curatedVariant.getVariant()
+                        .ifPresent(gv -> {
+                            // Notation
+                            if (gv.isBreakend()) {
+                                variantNotation.set(VariantNotation.BREAKEND);
+                                GenomicBreakendVariant gb = (GenomicBreakendVariant) gv;
+                                id.set(gb.eventId());
+                                left.set(new ObservableGenomicBreakend(gb.left()));
+                                right.set(new ObservableGenomicBreakend(gb.right()));
+                            } else {
+                                Contig contig = gv.contig();
+                                if (contig != null)
+                                    this.contig.set(contig);
+                                if (gv.isSymbolic()) {
+                                    variantNotation.set(VariantNotation.SYMBOLIC);
+                                } else {
+                                    variantNotation.set(VariantNotation.SEQUENCE);
+                                }
+                                start.set(gv.startWithCoordinateSystem(VCF_COORDINATE_SYSTEM));
+                                end.set(gv.endWithCoordinateSystem(VCF_COORDINATE_SYSTEM));
+                                changeLength.set(gv.changeLength());
+                                id.set(gv.id());
+                            }
 
-                    if (gv.isSymbolic()) {
-                        variantNotation.set(VariantNotation.SYMBOLIC);
-
-                        start.set(gv.startWithCoordinateSystem(VCF_COORDINATE_SYSTEM));
-                        end.set(gv.endWithCoordinateSystem(VCF_COORDINATE_SYSTEM));
-                        changeLength.set(gv.changeLength());
-                    } else {
-                        variantNotation.set(VariantNotation.SEQUENCE);
-                        start.set(gv.startWithCoordinateSystem(VCF_COORDINATE_SYSTEM));
-                    }
-
-                    id.set(gv.id());
-                }
-
-                // Common for all notations.
-                ref.set(gv.ref());
-                alt.set(gv.alt());
-                variantType.set(gv.variantType());
-            });
+                            // Common for all notations.
+                            ref.set(gv.ref());
+                            alt.set(gv.alt());
+                            variantType.set(gv.variantType());
+                        });
+            }
 
             // (*) Metadata
-            VariantMetadata metadata = curatedVariant.getVariantMetadata();
-            if (metadata != null)
-                variantMetadata.set(metadata);
+            variantMetadata.set(curatedVariant.getVariantMetadata());
         }
     }
 
@@ -274,7 +287,7 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
                             VCF_STRAND,
                             coordinates,
                             ref.get(),
-                            "<%s>".formatted(alt.get()),
+                            alt.get(),
                             changeLength.get()
                     );
                     yield Optional.of(gv);

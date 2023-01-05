@@ -65,6 +65,6 @@ public class TextFormatters {
     }
 
     public static TextFormatter<String> vcfAlleleFormatter() {
-        return new TextFormatter<>(VCF_ALLELE_FILTER);
+        return new TextFormatter<>(TextFormatter.IDENTITY_STRING_CONVERTER, null, VCF_ALLELE_FILTER);
     }
 }

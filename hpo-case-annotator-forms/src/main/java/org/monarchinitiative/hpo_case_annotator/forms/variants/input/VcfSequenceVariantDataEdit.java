@@ -58,8 +58,12 @@ public class VcfSequenceVariantDataEdit extends VcfSequenceOrSymbolicVariantData
         super.commit();
 
         item.setVariantNotation(VariantNotation.SEQUENCE);
-        item.setStart(positionTextFormatter.getValue());
-        item.setRef(referenceTextFormatter.getValue());
+        String ref = referenceTextFormatter.getValue();
+        int start = positionTextFormatter.getValue();
+        int end = start + ref.length() - 1;
+        item.setStart(start);
+        item.setEnd(end);
+        item.setRef(ref);
         item.setAlt(alternativeTextFormatter.getValue());
     }
 
@@ -86,7 +90,6 @@ public class VcfSequenceVariantDataEdit extends VcfSequenceOrSymbolicVariantData
                     alternativeTextFormatter.getValue());
             return Optional.of(gv);
         } catch (Exception e) {
-            e.printStackTrace();
             return Optional.empty();
         }
     }
