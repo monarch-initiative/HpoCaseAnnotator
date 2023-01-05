@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import org.monarchinitiative.hpo_case_annotator.io.v2.json.deserialize.Util;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.MendelianVariantMetadata;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadata;
 
@@ -25,14 +26,14 @@ public class MendelianVariantMetadataDeserializer extends StdDeserializer<Mendel
 
         VariantMetadata variantMetadata = CuratedVariantDeserializer.deserializeVariantMetadata(node);
 
-        String regulator = node.get("regulator").asText();
-        String reporterRegulation = node.get("reporterRegulation").asText();
-        String reporterResidualActivity = node.get("reporterResidualActivity").asText();
+        String regulator = Util.readNullableString(node, "regulator");
+        String reporterRegulation = Util.readNullableString(node, "reporterRegulation");
+        String reporterResidualActivity = Util.readNullableString(node, "reporterResidualActivity");
         boolean emsaValidationPerformed = node.get("emsaValidationPerformed").asBoolean();
-        String emsaTfSymbol = node.get("emsaTfSymbol").asText();
-        String emsaGeneId = node.get("emsaGeneId").asText();
-        String otherChoices = node.get("otherChoices").asText();
-        String otherEffect = node.get("otherEffect").asText();
+        String emsaTfSymbol = Util.readNullableString(node, "emsaTfSymbol");
+        String emsaGeneId = Util.readNullableString(node, "emsaGeneId");
+        String otherChoices = Util.readNullableString(node, "otherChoices");
+        String otherEffect = Util.readNullableString(node, "otherEffect");
 
         return MendelianVariantMetadata.of(
                 variantMetadata.getSnippet(),

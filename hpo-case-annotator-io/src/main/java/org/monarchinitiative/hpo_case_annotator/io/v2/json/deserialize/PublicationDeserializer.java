@@ -38,12 +38,12 @@ public class PublicationDeserializer extends StdDeserializer<Publication> {
             authors = authorsNode.asText();
 
 
-        String title = node.get("title").asText();
-        String journal = node.get("journal").asText();
+        String title = Util.readNullableString(node, "title");
+        String journal = Util.readNullableString(node, "journal");
         int year = node.get("year").asInt();
-        String volume = node.get("volume").asText();
-        String pages = node.get("pages").asText();
-        String pmid = node.get("pmid").asText();
+        String volume = Util.readNullableString(node, "volume");
+        String pages = Util.readNullableString(node, "pages");
+        String pmid = Util.readNullableString(node, "pmid");
 
         return Publication.of(authors, title, journal, year, volume, pages, pmid);
     }

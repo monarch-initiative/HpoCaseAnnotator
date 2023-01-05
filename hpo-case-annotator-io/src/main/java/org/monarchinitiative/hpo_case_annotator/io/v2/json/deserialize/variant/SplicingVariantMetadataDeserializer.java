@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import org.monarchinitiative.hpo_case_annotator.io.v2.json.deserialize.Util;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.SplicingVariantMetadata;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadata;
 
@@ -27,8 +28,8 @@ public class SplicingVariantMetadataDeserializer extends StdDeserializer<Splicin
 
         int crypticPosition = node.get("crypticPosition").asInt();
         SplicingVariantMetadata.CrypticSpliceSiteType crypticSpliceSiteType = SplicingVariantMetadata.CrypticSpliceSiteType.valueOf(node.get("crypticSpliceSiteType").asText());
-        String crypticSpliceSiteSnippet = node.get("crypticSpliceSiteSnippet").asText();
-        String consequence = node.get("consequence").asText();
+        String crypticSpliceSiteSnippet = Util.readNullableString(node, "crypticSpliceSiteSnippet");
+        String consequence = Util.readNullableString(node, "consequence");
         boolean minigeneValidation = node.get("minigeneValidation").asBoolean();
         boolean siteDirectedMutagenesisValidation = node.get("siteDirectedMutagenesisValidation").asBoolean();
         boolean rtPcrValidation = node.get("rtPcrValidation").asBoolean();

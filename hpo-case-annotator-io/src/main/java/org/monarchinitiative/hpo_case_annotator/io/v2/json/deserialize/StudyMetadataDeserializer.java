@@ -29,7 +29,8 @@ public class StudyMetadataDeserializer extends StdDeserializer<StudyMetadata> {
         ObjectCodec codec = jp.getCodec();
         JsonNode node = codec.readTree(jp);
 
-        String freeText = node.get("freeText").asText();
+        JsonNode freeTextNode = node.get("freeText");
+        String freeText = freeTextNode == null || freeTextNode.isNull() ? null : freeTextNode.asText();
         EditHistory createdBy = codec.treeToValue(node.get("createdBy"), EditHistory.class);
 
 
