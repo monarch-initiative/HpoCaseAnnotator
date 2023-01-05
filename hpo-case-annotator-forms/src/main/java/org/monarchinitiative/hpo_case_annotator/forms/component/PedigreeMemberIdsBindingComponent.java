@@ -4,13 +4,10 @@ import javafx.beans.Observable;
 import javafx.fxml.FXML;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePedigreeMember;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.stream.Stream;
 
 public class PedigreeMemberIdsBindingComponent extends BaseIndividualIdsBindingComponent<ObservablePedigreeMember> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PedigreeMemberIdsBindingComponent.class);
 
     static final Callback<PedigreeMemberIdsBindingComponent, Stream<Observable>> EXTRACTOR = item -> Stream.of(
             item.paternalId.textProperty(),
@@ -61,8 +58,8 @@ public class PedigreeMemberIdsBindingComponent extends BaseIndividualIdsBindingC
     }
 
     @Override
-    public void invalidated(Observable obs) {
-        super.invalidated(obs);
+    public void updateDataModel(Observable obs) {
+        super.updateDataModel(obs);
 
         if (valueIsNotBeingSetByUserInteraction)
             return;

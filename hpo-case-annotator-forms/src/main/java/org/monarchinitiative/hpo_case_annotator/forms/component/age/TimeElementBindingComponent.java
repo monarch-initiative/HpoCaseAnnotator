@@ -25,8 +25,9 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 import java.io.IOException;
 import java.util.stream.Stream;
 
-public class TimeElementBindingComponent extends VBoxBindingObservableDataComponent<ObservableTimeElement>
-        implements Observable, InvalidationListener {
+public class TimeElementBindingComponent
+        extends VBoxBindingObservableDataComponent<ObservableTimeElement>
+        implements Observable {
 
     static final Callback<TimeElementBindingComponent, Stream<Observable>> EXTRACTOR = tbc -> Stream.of(
             tbc.tabPane.getSelectionModel().selectedItemProperty(),
@@ -90,11 +91,11 @@ public class TimeElementBindingComponent extends VBoxBindingObservableDataCompon
         gestationalWeeks.setTextFormatter(gestationalWeeksFormatter);
 
         // Update the data model upon change of each UI component
-        addListener(this);
+        addListener(this::updateDataModel);
     }
 
-    @Override
-    public void invalidated(Observable obs) {
+
+    private void updateDataModel(Observable obs) {
         if (valueIsNotBeingSetByUserInteraction)
             return;
         ObservableTimeElement te = data.get();
