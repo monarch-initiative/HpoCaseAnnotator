@@ -68,7 +68,7 @@ public class MainController {
      * The items are added into the list exclusively in {@link #addStudy(StudyWrapper)}
      * and removed in {@link #removeStudy(int)}.
      */
-    private final ObservableList<StudyWrapper<?>> wrappers = FXCollections.observableArrayList();
+    private final ObservableList<StudyWrapper<? extends ObservableStudy>> wrappers = FXCollections.observableArrayList();
 
     /* **************************************************   FILE   ************************************************** */
     @FXML
@@ -181,7 +181,10 @@ public class MainController {
                 return Optional.empty();
             }
         }).flatMap(displayStepper())
-                .flatMap(st -> wrapStudy(st, null))
+                .flatMap(st -> {
+                    st.getStudyMetadata().setCreatedBy(prepareEditHistoryEntry());
+                    return wrapStudy(st, null, false);
+                })
                 .ifPresent(this::addStudy);
         e.consume();
     }
@@ -206,7 +209,7 @@ public class MainController {
 
         for (File file : files) {
             readStudy(file.toPath())
-                    .flatMap(st -> wrapStudy(st, file.toPath()))
+                    .flatMap(st -> wrapStudy(st, file.toPath(), true))
                     .ifPresent(this::addStudy);
         }
         e.consume();
@@ -216,23 +219,22 @@ public class MainController {
     private void saveMenuItemAction(ActionEvent e) {
         int tabIdx = studiesTabPane.getSelectionModel().getSelectedIndex();
         StudyWrapper<?> wrapper = wrappers.get(tabIdx);
-        saveAsV2Study(wrapper.component().getData(), wrapper.studyPath());
+        saveAsV2Study(wrapper);
         e.consume();
     }
 
     @FXML
     private void saveAsMenuItemAction(ActionEvent e) {
         int tabIdx = studiesTabPane.getSelectionModel().getSelectedIndex();
-        StudyWrapper<?> wrapper = wrappers.get(tabIdx);
-        ObservableStudy study = wrapper.component().getData();
-        saveAsV2Study(study, null);
+        StudyWrapper<? extends ObservableStudy> wrapper = wrappers.get(tabIdx);
+        saveAsV2Study(wrapper);
         e.consume();
     }
 
     @FXML
     private void saveAllMenuItemAction(ActionEvent e) {
-        for (StudyWrapper<?> wrapper : wrappers) {
-            if (!saveAsV2Study(wrapper.component().getData(), wrapper.studyPath())) {
+        for (StudyWrapper<? extends ObservableStudy> wrapper : wrappers) {
+            if (!saveAsV2Study(wrapper)) {
                 // The user cancelled.
                 break;
             }
@@ -461,22 +463,22 @@ public class MainController {
         return Optional.ofNullable(study);
     }
 
-    private Optional<StudyWrapper<? extends ObservableStudy>> wrapStudy(Study study, Path path) {
+    private Optional<StudyWrapper<? extends ObservableStudy>> wrapStudy(Study study, Path path, boolean addEditHistoryItem) {
         if (study instanceof IndividualStudy is) {
             IndividualStudyComponent component = new IndividualStudyComponent();
             component.setData(new ObservableIndividualStudy(is));
             wireFunctionalPropertiesToStudyResourcesAware(component);
-            return Optional.of(StudyWrapper.of(component, path));
+            return Optional.of(new StudyWrapper<>(component, path, addEditHistoryItem));
         } else if (study instanceof CohortStudy cs) {
             CohortStudyComponent component = new CohortStudyComponent();
             component.setData(new ObservableCohortStudy(cs));
             wireFunctionalPropertiesToStudyResourcesAware(component);
-            return Optional.of(StudyWrapper.of(component, path));
+            return Optional.of(new StudyWrapper<>(component, path, addEditHistoryItem));
         } else if (study instanceof FamilyStudy fs) {
             FamilyStudyComponent component = new FamilyStudyComponent();
             component.setData(new ObservableFamilyStudy(fs));
             wireFunctionalPropertiesToStudyResourcesAware(component);
-            return Optional.of(StudyWrapper.of(component, path));
+            return Optional.of(new StudyWrapper<>(component, path, addEditHistoryItem));
         } else {
             return Optional.empty();
         }
@@ -496,18 +498,21 @@ public class MainController {
         return studiesTabPane.getParent().getScene().getWindow();
     }
 
-    private boolean saveAsV2Study(ObservableStudy study, Path path) {
-        if (path == null) {
-            path = askForPath(study.getId());
-        }
+    private boolean saveAsV2Study(StudyWrapper<? extends ObservableStudy> wrapper) {
+        ObservableStudy study = wrapper.component().getData();
+        Path path = wrapper.getStudyPath() == null
+                ? askForPath(study.getId())
+                : wrapper.getStudyPath();
 
         if (path == null) // the user canceled
             return false;
 
-        study.getStudyMetadata().getModifiedBy().add(prepareEditHistoryEntry());
+        if (wrapper.addEditHistoryItem())
+            study.getStudyMetadata().getModifiedBy().add(prepareEditHistoryEntry());
 
         try {
             ModelParsers.V2.jsonParser().write(study, path);
+            wrapper.setStudyPath(path);
             return true;
         } catch (IOException e) {
             LOGGER.warn("Error serializing study: {}", e.getMessage(), e);
@@ -560,7 +565,8 @@ public class MainController {
                     return Optional.ofNullable(cloned);
                 })
                 // Path must be null to not overwrite the original file
-                .flatMap(cloned -> wrapStudy(cloned, null));
+                // We assume that the study has creator and we should be adding an edit history.
+                .flatMap(cloned -> wrapStudy(cloned, null, true));
     }
 
     private Optional<BaseStudyComponent<?>> getCurrentStudyComponent() {
