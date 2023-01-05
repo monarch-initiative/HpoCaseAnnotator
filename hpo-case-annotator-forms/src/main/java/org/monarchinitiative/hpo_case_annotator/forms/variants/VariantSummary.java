@@ -121,8 +121,13 @@ public class VariantSummary extends VBox {
     private Optional<VariantNotation> askForVariantNotation() {
         var sequenceVariant = new CommandLinksDialog.CommandLinksButtonType("Sequence variant", "Both REF and ALT alleles are known.", true);
         var symbolicVariant = new CommandLinksDialog.CommandLinksButtonType("Symbolic variant", "The ALT allele is symbolic (E.g. \"<DEL>\").", false);
-        var breakendVariant = new CommandLinksDialog.CommandLinksButtonType("Breakend variant", "A rearrangement involving two chromosomes.", false);
-        CommandLinksDialog dialog = new CommandLinksDialog(sequenceVariant, symbolicVariant, breakendVariant);
+        // TODO - reenable when we figure out breakend variant details.
+        // var breakendVariant = new CommandLinksDialog.CommandLinksButtonType("Breakend variant", "A rearrangement involving two chromosomes.", false);
+        CommandLinksDialog dialog = new CommandLinksDialog(
+                sequenceVariant,
+                symbolicVariant
+//                breakendVariant
+        );
         dialog.setTitle("New variant");
         dialog.setHeaderText("Select variant notation");
         dialog.setContentText("The following variant notations are supported:");
@@ -133,8 +138,8 @@ public class VariantSummary extends VBox {
                         return Optional.of(VariantNotation.SEQUENCE);
                     } else if (bt.equals(symbolicVariant.getButtonType())) {
                         return Optional.of(VariantNotation.SYMBOLIC);
-                    } else if (bt.equals(breakendVariant.getButtonType())) {
-                        return Optional.of(VariantNotation.BREAKEND);
+//                    } else if (bt.equals(breakendVariant.getButtonType())) {
+//                        return Optional.of(VariantNotation.BREAKEND);
                     } else {
                         return Optional.empty();
                     }
