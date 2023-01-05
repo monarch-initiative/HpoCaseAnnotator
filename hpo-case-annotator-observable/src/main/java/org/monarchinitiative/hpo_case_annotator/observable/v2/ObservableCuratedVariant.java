@@ -261,23 +261,25 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
                             )
                     );
                 } catch (Exception e) { // TODO - narrow down exception, or even throw the exception if necessary
+                    e.printStackTrace();
                     yield Optional.empty();
                 }
             }
             case SYMBOLIC -> {
                 try {
                     Coordinates coordinates = Coordinates.of(VCF_COORDINATE_SYSTEM, start.get(), end.get());
-                    yield Optional.of(
-                            GenomicVariant.of(
-                                    contig.get(),
-                                    id.get(),
-                                    VCF_STRAND,
-                                    coordinates,
-                                    ref.get(),
-                                    alt.get()
-                            )
+                    GenomicVariant gv = GenomicVariant.of(
+                            contig.get(),
+                            id.get(),
+                            VCF_STRAND,
+                            coordinates,
+                            ref.get(),
+                            "<%s>".formatted(alt.get()),
+                            changeLength.get()
                     );
+                    yield Optional.of(gv);
                 } catch (Exception e) { // TODO - narrow down exception, or even throw the exception if necessary
+                    e.printStackTrace();
                     yield Optional.empty();
                 }
             }
@@ -288,6 +290,7 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
                     GenomicVariant gv = GenomicVariant.of(id.get(), l, r, ref.get(), alt.get());
                     yield Optional.of(gv);
                 } catch (Exception e) { // TODO - narrow down exception, or even throw the exception if necessary
+                    e.printStackTrace();
                     yield Optional.empty();
                 }
 
