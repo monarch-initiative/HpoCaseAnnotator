@@ -9,8 +9,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxObservableDataComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
-import org.monarchinitiative.hpo_case_annotator.forms.util.GenotypeStringConverter;
+import org.monarchinitiative.hpo_case_annotator.forms.util.TextFormatters;
+import org.monarchinitiative.hpo_case_annotator.forms.util.converters.GenotypeStringConverter;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
@@ -70,8 +70,8 @@ public class VariantGenotypeTable extends VBoxObservableDataComponent<BaseObserv
         variantIdTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getId()));
         genomicAssemblyTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getGenomicAssembly()));
         contigTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(Utils.getContigNameOrEmptyString(cdf.getValue().getContig())));
-        startTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(Formats.NUMBER_FORMAT.format(cdf.getValue().getStart())));
-        endTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(Formats.NUMBER_FORMAT.format(cdf.getValue().getEnd())));
+        startTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(TextFormatters.NUMBER_FORMAT.format(cdf.getValue().getStart())));
+        endTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(TextFormatters.NUMBER_FORMAT.format(cdf.getValue().getEnd())));
         refTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getRef()));
         altTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getAlt()));
 

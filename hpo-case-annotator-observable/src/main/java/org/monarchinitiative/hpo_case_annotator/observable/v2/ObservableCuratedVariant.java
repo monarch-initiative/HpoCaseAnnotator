@@ -34,9 +34,9 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
     private final ObjectProperty<VariantNotation> variantNotation = new SimpleObjectProperty<>(this, "variantNotation");
     private final StringProperty genomicAssembly = new SimpleStringProperty(this, "genomicAssembly");
     private final ObjectProperty<Contig> contig = new SimpleObjectProperty<>(this, "contig");
-    private final IntegerProperty start = new SimpleIntegerProperty(this, "start");
+    private final ObjectProperty<Integer> start = new SimpleObjectProperty<>(this, "start");
     private final ObjectProperty<ConfidenceInterval> startCi = new SimpleObjectProperty<>(this, "startCi");
-    private final IntegerProperty end = new SimpleIntegerProperty(this, "end");
+    private final ObjectProperty<Integer> end = new SimpleObjectProperty<>(this, "end");
     private final ObjectProperty<ConfidenceInterval> endCi = new SimpleObjectProperty<>(this, "endCi");
     // Serves as variant ID for sequence and symbolic notations, and as event ID for breakends.
     private final StringProperty id = new SimpleStringProperty(this, "id");
@@ -135,15 +135,15 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
         this.contig.set(contig);
     }
 
-    public int getStart() {
+    public Integer getStart() {
         return start.get();
     }
 
-    public IntegerProperty startProperty() {
+    public ObjectProperty<Integer> startProperty() {
         return start;
     }
 
-    public void setStart(int start) {
+    public void setStart(Integer start) {
         this.start.set(start);
     }
 
@@ -159,15 +159,15 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
         this.startCi.set(startCi);
     }
 
-    public int getEnd() {
+    public Integer getEnd() {
         return end.get();
     }
 
-    public IntegerProperty endProperty() {
+    public ObjectProperty<Integer> endProperty() {
         return end;
     }
 
-    public void setEnd(int end) {
+    public void setEnd(Integer end) {
         this.end.set(end);
     }
 

@@ -8,7 +8,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
-import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
+import org.monarchinitiative.hpo_case_annotator.forms.util.TextFormatters;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAgeRange;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableGestationalAge;
@@ -32,7 +32,7 @@ public class TimeElementDataEdit extends VBoxDataEdit<ObservableTimeElement> {
     private Tab gestationalAgeTab;
     @FXML
     private TitledTextField gestationalWeeks;
-    private final TextFormatter<Integer> gestationalWeeksFormatter = Formats.integerFormatter();
+    private final TextFormatter<Integer> gestationalWeeksFormatter = TextFormatters.integerFormatter();
     @FXML
     private TitledComboBox<Integer> gestationalDays;
 

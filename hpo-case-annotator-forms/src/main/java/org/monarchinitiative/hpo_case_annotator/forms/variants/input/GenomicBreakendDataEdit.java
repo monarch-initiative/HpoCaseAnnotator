@@ -12,7 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.core.reference.genome.GenomicAssemblyService;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxDataEdit;
-import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
+import org.monarchinitiative.hpo_case_annotator.forms.util.TextFormatters;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableGenomicBreakend;
 import org.monarchinitiative.svart.Contig;
@@ -68,7 +68,7 @@ public class GenomicBreakendDataEdit extends VBoxDataEdit<ObservableGenomicBreak
     @FXML
     protected void initialize() {
         FormUtils.initializeContigComboBox(contigComboBox, genomicAssemblyService);
-        positionTextField.setTextFormatter(Formats.numberFormatter());
+        positionTextField.setTextFormatter(TextFormatters.numberFormatter());
     }
 
     @Override

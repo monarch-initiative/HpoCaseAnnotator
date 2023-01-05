@@ -4,8 +4,10 @@ import javafx.beans.Observable;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataException;
-import org.monarchinitiative.hpo_case_annotator.forms.util.VariantTypeStringConverter;
+import org.monarchinitiative.hpo_case_annotator.forms.util.TextFormatters;
+import org.monarchinitiative.hpo_case_annotator.forms.util.converters.VariantTypeStringConverter;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.VariantNotation;
 import org.monarchinitiative.svart.GenomicVariant;
@@ -24,13 +26,19 @@ public class VcfSymbolicVariantDataEdit extends VcfSequenceOrSymbolicVariantData
 
     @FXML
     private TextField startTextField;
+    private final TextFormatter<Integer> startTextFormatter = TextFormatters.nonNegativeIntegerFormatter();
     @FXML
     private TextField endTextField;
+    private final TextFormatter<Integer> endTextFormatter = TextFormatters.positiveIntegerFormatter();
     @FXML
     private ComboBox<VariantType> altComboBox;
 
     public VcfSymbolicVariantDataEdit() {
         super(VcfSymbolicVariantDataEdit.class.getResource("VcfSymbolicVariantDataEdit.fxml"));
+
+        // Unusually, we do not set this in initialize.
+        startTextField.setTextFormatter(startTextFormatter);
+        endTextField.setTextFormatter(endTextFormatter);
     }
 
     @FXML
@@ -43,8 +51,8 @@ public class VcfSymbolicVariantDataEdit extends VcfSequenceOrSymbolicVariantData
     public void setInitialData(ObservableCuratedVariant data) {
         super.setInitialData(data);
 
-        startTextField.setText(String.valueOf(data.getStart()));
-        endTextField.setText(String.valueOf(data.getEnd()));
+        startTextFormatter.setValue(data.getStart());
+        endTextFormatter.setValue(data.getEnd());
         altComboBox.setValue(data.getVariantType());
     }
 
@@ -53,9 +61,8 @@ public class VcfSymbolicVariantDataEdit extends VcfSequenceOrSymbolicVariantData
         super.commit();
 
         item.setVariantNotation(VariantNotation.SYMBOLIC);
-        // TODO - check this is OK
-        item.setStart(Integer.parseInt(startTextField.getText()));
-        item.setEnd(Integer.parseInt(endTextField.getText()));
+        item.setStart(startTextFormatter.getValue());
+        item.setEnd(endTextFormatter.getValue());
 
         item.setRef("N");
         item.setAlt(altComboBox.getValue().toString());
@@ -73,7 +80,7 @@ public class VcfSymbolicVariantDataEdit extends VcfSequenceOrSymbolicVariantData
 
     @Override
     protected Optional<GenomicVariant> getVariant() {
-        // TODO - implement
+        // Always empty since functional annotation is not (yet) supported.
         return Optional.empty();
     }
 

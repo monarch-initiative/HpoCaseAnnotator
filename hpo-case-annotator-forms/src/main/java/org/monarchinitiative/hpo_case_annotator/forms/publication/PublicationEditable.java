@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextFormatter;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
-import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
+import org.monarchinitiative.hpo_case_annotator.forms.util.TextFormatters;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
 
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class PublicationEditable extends VBoxDataEdit<ObservablePublication> {
     private TitledTextField journal;
     @FXML
     private TitledTextField year;
-    private final TextFormatter<Integer> yearTextFormatter = Formats.integerFormatter();
+    private final TextFormatter<Integer> yearTextFormatter = TextFormatters.integerFormatter();
     @FXML
     private TitledTextField volume;
     @FXML

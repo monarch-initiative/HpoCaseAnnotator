@@ -1,4 +1,4 @@
-package org.monarchinitiative.hpo_case_annotator.forms.util;
+package org.monarchinitiative.hpo_case_annotator.forms.util.converters;
 
 import javafx.util.StringConverter;
 import org.monarchinitiative.svart.Contig;

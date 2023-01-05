@@ -7,12 +7,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextFormatter;
 import javafx.util.Callback;
-import org.monarchinitiative.hpo_case_annotator.forms.base.FlowPaneBindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
-import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
+import org.monarchinitiative.hpo_case_annotator.forms.util.TextFormatters;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
 
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class SimpleBindingAge extends VBoxBindingObservableDataComponent<Observa
 
     @FXML
     private TitledTextField years;
-    private final TextFormatter<Integer> yearsFormatter = Formats.integerFormatter();
+    private final TextFormatter<Integer> yearsFormatter = TextFormatters.integerFormatter();
     @FXML
     private TitledComboBox<Integer> months;
     @FXML

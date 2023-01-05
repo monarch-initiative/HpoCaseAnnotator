@@ -9,13 +9,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import org.monarchinitiative.hpo_case_annotator.forms.base.BindingObservableDataComponent;
-import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
+import org.monarchinitiative.hpo_case_annotator.forms.util.TextFormatters;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
 
 public class PublicationController extends BindingObservableDataComponent<ObservablePublication> {
 
     private final ObjectProperty<ObservablePublication> publication = new SimpleObjectProperty<>(this, "publication", new ObservablePublication());
-    private final TextFormatter<Integer> yearFormatter = Formats.integerFormatter();
+    private final TextFormatter<Integer> yearFormatter = TextFormatters.integerFormatter();
     @FXML
     private Label summaryLabel;
     @FXML
