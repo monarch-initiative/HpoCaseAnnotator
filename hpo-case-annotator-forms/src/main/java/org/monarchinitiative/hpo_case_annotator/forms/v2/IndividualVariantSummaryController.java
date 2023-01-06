@@ -11,7 +11,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
+import org.monarchinitiative.hpo_case_annotator.forms.util.TextFormatters;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.GenotypedVariant;
@@ -61,8 +61,8 @@ public class IndividualVariantSummaryController {
         variantIdTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getId()));
         genomicAssemblyTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getGenomicAssembly()));
         contigTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getContig().name()));
-        startTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getCuratedVariant().getStart())));
-        endTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(Formats.NUMBER_FORMAT.format(cdf.getValue().getCuratedVariant().getEnd())));
+        startTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(TextFormatters.NUMBER_FORMAT.format(cdf.getValue().getCuratedVariant().getStart())));
+        endTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(TextFormatters.NUMBER_FORMAT.format(cdf.getValue().getCuratedVariant().getEnd())));
         refTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getRef()));
         altTableColumn.setCellValueFactory(cdf -> new ReadOnlyObjectWrapper<>(cdf.getValue().getCuratedVariant().getAlt()));
 

@@ -218,9 +218,9 @@ public abstract class BaseVariantDataEdit extends VBoxDataEdit<ObservableCurated
         // TODO - implement
     }
 
-    protected VariantMetadata getVariantMetadata() throws InvalidComponentDataException {
+    protected VariantMetadata getVariantMetadata() {
         // TODO - add real metadata
-        return StructuralVariantMetadata.of("", "", "", false, false);
+        return VariantMetadata.emptyMetadata();
     }
 
     @Override

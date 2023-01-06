@@ -6,9 +6,9 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import org.monarchinitiative.hpo_case_annotator.io.v2.json.deserialize.Util;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadata;
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadataContext;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.*;
 import org.monarchinitiative.svart.*;
 import org.monarchinitiative.svart.assembly.GenomicAssembly;
 
@@ -25,11 +25,13 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
     }
 
     static VariantMetadata deserializeVariantMetadata(JsonNode jsonNode) {
-        String snippet = jsonNode.get("snippet").asText();
-        String variantClass = jsonNode.get("variantClass").asText();
-        String pathomechanism = jsonNode.get("pathomechanism").asText();
-        boolean cosegregation = jsonNode.get("cosegregation").asBoolean();
-        boolean comparability = jsonNode.get("comparability").asBoolean();
+        String snippet = Util.readNullableString(jsonNode, "snippet");
+        String variantClass = Util.readNullableString(jsonNode, "variantClass");
+        String pathomechanism = Util.readNullableString(jsonNode, "pathomechanism");
+        JsonNode cosegNode = jsonNode.get("cosegregation");
+        boolean cosegregation = cosegNode != null && cosegNode.asBoolean();
+        JsonNode comparabilityNode = jsonNode.get("comparability");
+        boolean comparability = comparabilityNode != null && comparabilityNode.asBoolean();
 
         return VariantMetadata.of(VariantMetadataContext.UNKNOWN, snippet, variantClass, pathomechanism, cosegregation, comparability);
     }
@@ -50,7 +52,21 @@ public class CuratedVariantDeserializer extends StdDeserializer<CuratedVariant> 
         String md5Hex = node.get("md5Hex").asText();
         String genomicAssemblyAccession = node.get("genomicAssemblyAccession").asText();
 
-        VariantMetadata variantMetadata = codec.treeToValue(node.get("variantValidation"), VariantMetadata.class);
+        String validationContext = Util.readNullableString(node, "validationContext");
+        JsonNode validationMetadata = node.get("validationMetadata");
+        VariantMetadata variantMetadata;
+        if (validationContext == null || validationMetadata == null) {
+            variantMetadata = VariantMetadata.emptyMetadata();
+        } else {
+            Class<? extends VariantMetadata> metadataClass = switch (validationContext) {
+                case "MendelianVariantMetadata" -> MendelianVariantMetadata.class;
+                case "SomaticVariantMetadata" -> SomaticVariantMetadata.class;
+                case "SplicingVariantMetadata" -> SplicingVariantMetadata.class;
+                case "StructuralVariantMetadata" -> StructuralVariantMetadata.class;
+                default -> VariantMetadata.class;
+            };
+            variantMetadata = codec.treeToValue(validationMetadata, metadataClass);
+        }
 
         String variantType = node.get("variantType").asText();
         GenomicVariant variant;

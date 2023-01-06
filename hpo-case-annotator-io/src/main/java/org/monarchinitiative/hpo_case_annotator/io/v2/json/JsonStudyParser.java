@@ -63,7 +63,7 @@ public class JsonStudyParser implements ModelParser<Study> {
 
         module.addDeserializer(CuratedVariant.class, new CuratedVariantDeserializer(assemblies));
         module.addDeserializer(ConfidenceInterval.class, new ConfidenceIntervalDeserializer());
-        module.addDeserializer(VariantMetadata.class, new VariantMetadataDeserializer());
+        module.addDeserializer(VariantMetadata.class, new DefaultVariantMetadataDeserializer());
         module.addDeserializer(MendelianVariantMetadata.class, new MendelianVariantMetadataDeserializer());
         module.addDeserializer(SomaticVariantMetadata.class, new SomaticVariantMetadataDeserializer());
         module.addDeserializer(SplicingVariantMetadata.class, new SplicingVariantMetadataDeserializer());

@@ -13,7 +13,6 @@ import java.util.stream.Stream;
 
 public class ObservableCuratedVariant extends ObservableItem implements CuratedVariant {
 
-    public static final Strand VCF_SEQUENCE_SYMBOLIC_VARIANT_STRAND = Strand.POSITIVE;
     public static final Callback<ObservableCuratedVariant, Observable[]> EXTRACTOR = obs -> new Observable[]{
             obs.variantNotation,
             obs.genomicAssembly,
@@ -34,9 +33,11 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
     private final ObjectProperty<VariantNotation> variantNotation = new SimpleObjectProperty<>(this, "variantNotation");
     private final StringProperty genomicAssembly = new SimpleStringProperty(this, "genomicAssembly");
     private final ObjectProperty<Contig> contig = new SimpleObjectProperty<>(this, "contig");
-    private final IntegerProperty start = new SimpleIntegerProperty(this, "start");
+    // 1-based (included) start coordinate of the variant.
+    private final ObjectProperty<Integer> start = new SimpleObjectProperty<>(this, "start");
     private final ObjectProperty<ConfidenceInterval> startCi = new SimpleObjectProperty<>(this, "startCi");
-    private final IntegerProperty end = new SimpleIntegerProperty(this, "end");
+    // 1-based (included) end coordinate of the variant.
+    private final ObjectProperty<Integer> end = new SimpleObjectProperty<>(this, "end");
     private final ObjectProperty<ConfidenceInterval> endCi = new SimpleObjectProperty<>(this, "endCi");
     // Serves as variant ID for sequence and symbolic notations, and as event ID for breakends.
     private final StringProperty id = new SimpleStringProperty(this, "id");
@@ -47,7 +48,7 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
 
     private final ObjectProperty<ObservableGenomicBreakend> left = new SimpleObjectProperty<>(this, "left");
     private final ObjectProperty<ObservableGenomicBreakend> right = new SimpleObjectProperty<>(this, "right");
-    private final ObjectProperty<VariantMetadata> variantMetadata = new SimpleObjectProperty<>(this, "variantMetadata");
+    private final ObjectProperty<VariantMetadata> variantMetadata = new SimpleObjectProperty<>(this, "variantMetadata", VariantMetadata.emptyMetadata());
 
     public ObservableCuratedVariant() {
     }
@@ -58,43 +59,55 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
             genomicAssembly.set(curatedVariant.getGenomicAssembly());
 
             // (*) GenomicVariant
-            curatedVariant.getVariant().ifPresent(gv -> {
-                // Notation
-                if (gv.isBreakend()) {
-                    variantNotation.set(VariantNotation.BREAKEND);
-                    GenomicBreakendVariant gb = (GenomicBreakendVariant) gv;
-                    id.set(gb.eventId());
-                    left.set(new ObservableGenomicBreakend(gb.left()));
-                    right.set(new ObservableGenomicBreakend(gb.right()));
-                } else {
-                    Contig contig = gv.contig();
-                    if (contig != null)
-                        this.contig.set(contig);
+            if (curatedVariant instanceof ObservableCuratedVariant ocv) {
+                variantNotation.set(ocv.getVariantNotation());
+                contig.set(ocv.getContig());
+                start.set(ocv.getStart());
+                startCi.set(ocv.getStartCi());
+                end.set(ocv.getEnd());
+                endCi.set(ocv.getEndCi());
+                id.set(ocv.getId());
+                ref.set(ocv.getRef());
+                alt.set(ocv.getAlt());
+                variantType.set(ocv.getVariantType());
+                changeLength.set(ocv.getChangeLength());
+                left.set(ocv.getLeft());
+                right.set(ocv.getRight());
+                variantMetadata.set(ocv.getVariantMetadata());
+            } else {
+                curatedVariant.getVariant()
+                        .ifPresent(gv -> {
+                            // Notation
+                            if (gv.isBreakend()) {
+                                variantNotation.set(VariantNotation.BREAKEND);
+                                GenomicBreakendVariant gb = (GenomicBreakendVariant) gv;
+                                id.set(gb.eventId());
+                                left.set(new ObservableGenomicBreakend(gb.left()));
+                                right.set(new ObservableGenomicBreakend(gb.right()));
+                            } else {
+                                Contig contig = gv.contig();
+                                if (contig != null)
+                                    this.contig.set(contig);
+                                if (gv.isSymbolic()) {
+                                    variantNotation.set(VariantNotation.SYMBOLIC);
+                                } else {
+                                    variantNotation.set(VariantNotation.SEQUENCE);
+                                }
+                                start.set(gv.startWithCoordinateSystem(VCF_COORDINATE_SYSTEM));
+                                end.set(gv.endWithCoordinateSystem(VCF_COORDINATE_SYSTEM));
+                                changeLength.set(gv.changeLength());
+                                id.set(gv.id());
+                            }
 
-                    if (gv.isSymbolic()) {
-                        variantNotation.set(VariantNotation.SYMBOLIC);
-
-                        start.set(gv.startWithCoordinateSystem(VCF_COORDINATE_SYSTEM));
-                        end.set(gv.endWithCoordinateSystem(VCF_COORDINATE_SYSTEM));
-                        changeLength.set(gv.changeLength());
-                    } else {
-                        variantNotation.set(VariantNotation.SEQUENCE);
-                        start.set(gv.startWithCoordinateSystem(VCF_COORDINATE_SYSTEM));
-                    }
-
-                    id.set(gv.id());
-                }
-
-                // Common for all notations.
-                ref.set(gv.ref());
-                alt.set(gv.alt());
-                variantType.set(gv.variantType());
-            });
+                            // Common for all notations.
+                            ref.set(gv.ref());
+                            alt.set(gv.alt());
+                            variantType.set(gv.variantType());
+                        });
+            }
 
             // (*) Metadata
-            VariantMetadata metadata = curatedVariant.getVariantMetadata();
-            if (metadata != null)
-                variantMetadata.set(metadata);
+            variantMetadata.set(curatedVariant.getVariantMetadata());
         }
     }
 
@@ -135,15 +148,15 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
         this.contig.set(contig);
     }
 
-    public int getStart() {
+    public Integer getStart() {
         return start.get();
     }
 
-    public IntegerProperty startProperty() {
+    public ObjectProperty<Integer> startProperty() {
         return start;
     }
 
-    public void setStart(int start) {
+    public void setStart(Integer start) {
         this.start.set(start);
     }
 
@@ -159,15 +172,15 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
         this.startCi.set(startCi);
     }
 
-    public int getEnd() {
+    public Integer getEnd() {
         return end.get();
     }
 
-    public IntegerProperty endProperty() {
+    public ObjectProperty<Integer> endProperty() {
         return end;
     }
 
-    public void setEnd(int end) {
+    public void setEnd(Integer end) {
         this.end.set(end);
     }
 
@@ -253,7 +266,7 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
                             GenomicVariant.of(
                                     contig.get(),
                                     id.get(),
-                                    VCF_SEQUENCE_SYMBOLIC_VARIANT_STRAND,
+                                    VCF_STRAND,
                                     VCF_COORDINATE_SYSTEM,
                                     start.get(),
                                     ref.get(),
@@ -261,23 +274,25 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
                             )
                     );
                 } catch (Exception e) { // TODO - narrow down exception, or even throw the exception if necessary
+                    e.printStackTrace();
                     yield Optional.empty();
                 }
             }
             case SYMBOLIC -> {
                 try {
                     Coordinates coordinates = Coordinates.of(VCF_COORDINATE_SYSTEM, start.get(), end.get());
-                    yield Optional.of(
-                            GenomicVariant.of(
-                                    contig.get(),
-                                    id.get(),
-                                    VCF_SEQUENCE_SYMBOLIC_VARIANT_STRAND,
-                                    coordinates,
-                                    ref.get(),
-                                    alt.get()
-                            )
+                    GenomicVariant gv = GenomicVariant.of(
+                            contig.get(),
+                            id.get(),
+                            VCF_STRAND,
+                            coordinates,
+                            ref.get(),
+                            alt.get(),
+                            changeLength.get()
                     );
+                    yield Optional.of(gv);
                 } catch (Exception e) { // TODO - narrow down exception, or even throw the exception if necessary
+                    e.printStackTrace();
                     yield Optional.empty();
                 }
             }
@@ -288,6 +303,7 @@ public class ObservableCuratedVariant extends ObservableItem implements CuratedV
                     GenomicVariant gv = GenomicVariant.of(id.get(), l, r, ref.get(), alt.get());
                     yield Optional.of(gv);
                 } catch (Exception e) { // TODO - narrow down exception, or even throw the exception if necessary
+                    e.printStackTrace();
                     yield Optional.empty();
                 }
 

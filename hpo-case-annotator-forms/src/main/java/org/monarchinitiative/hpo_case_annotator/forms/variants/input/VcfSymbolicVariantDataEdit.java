@@ -4,8 +4,9 @@ import javafx.beans.Observable;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataException;
-import org.monarchinitiative.hpo_case_annotator.forms.util.VariantTypeStringConverter;
+import javafx.scene.control.TextFormatter;
+import org.monarchinitiative.hpo_case_annotator.forms.util.TextFormatters;
+import org.monarchinitiative.hpo_case_annotator.forms.util.converters.VariantTypeStringConverter;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.VariantNotation;
 import org.monarchinitiative.svart.GenomicVariant;
@@ -20,17 +21,30 @@ import java.util.stream.Stream;
  */
 public class VcfSymbolicVariantDataEdit extends VcfSequenceOrSymbolicVariantDataEdit {
 
-    private static final Set<VariantType> IGNORED = Set.of(VariantType.UNKNOWN, VariantType.SYMBOLIC, VariantType.TRA, VariantType.STR);
+    // Note - the set must be kept in sync with calculateChangeLength function
+    private static final Set<VariantType> IGNORED = Set.of(VariantType.UNKNOWN,
+            VariantType.SNV,
+            VariantType.MNV,
+            VariantType.BND,
+            VariantType.TRA,
+            VariantType.STR,
+            VariantType.SYMBOLIC);
 
     @FXML
     private TextField startTextField;
+    private final TextFormatter<Integer> startTextFormatter = TextFormatters.nonNegativeIntegerFormatter();
     @FXML
     private TextField endTextField;
+    private final TextFormatter<Integer> endTextFormatter = TextFormatters.positiveIntegerFormatter();
     @FXML
     private ComboBox<VariantType> altComboBox;
 
     public VcfSymbolicVariantDataEdit() {
         super(VcfSymbolicVariantDataEdit.class.getResource("VcfSymbolicVariantDataEdit.fxml"));
+
+        // Unusually, we do not set this in initialize.
+        startTextField.setTextFormatter(startTextFormatter);
+        endTextField.setTextFormatter(endTextFormatter);
     }
 
     @FXML
@@ -43,8 +57,8 @@ public class VcfSymbolicVariantDataEdit extends VcfSequenceOrSymbolicVariantData
     public void setInitialData(ObservableCuratedVariant data) {
         super.setInitialData(data);
 
-        startTextField.setText(String.valueOf(data.getStart()));
-        endTextField.setText(String.valueOf(data.getEnd()));
+        startTextFormatter.setValue(data.getStart());
+        endTextFormatter.setValue(data.getEnd());
         altComboBox.setValue(data.getVariantType());
     }
 
@@ -53,13 +67,16 @@ public class VcfSymbolicVariantDataEdit extends VcfSequenceOrSymbolicVariantData
         super.commit();
 
         item.setVariantNotation(VariantNotation.SYMBOLIC);
-        // TODO - check this is OK
-        item.setStart(Integer.parseInt(startTextField.getText()));
-        item.setEnd(Integer.parseInt(endTextField.getText()));
+        item.setStart(startTextFormatter.getValue());
+        item.setEnd(endTextFormatter.getValue());
 
         item.setRef("N");
-        item.setAlt(altComboBox.getValue().toString());
+        item.setAlt("<%s>".formatted(altComboBox.getValue()));
         item.setVariantType(altComboBox.getValue());
+        int changeLength = calculateChangeLength(altComboBox.getValue(),
+                startTextFormatter.getValue(),
+                endTextFormatter.getValue());
+        item.setChangeLength(changeLength);
     }
 
     @Override
@@ -73,7 +90,7 @@ public class VcfSymbolicVariantDataEdit extends VcfSequenceOrSymbolicVariantData
 
     @Override
     protected Optional<GenomicVariant> getVariant() {
-        // TODO - implement
+        // Always empty since functional annotation is not (yet) supported.
         return Optional.empty();
     }
 
@@ -87,13 +104,17 @@ public class VcfSymbolicVariantDataEdit extends VcfSequenceOrSymbolicVariantData
                 .forEachOrdered(vt -> altComboBox.getItems().add(vt));
     }
 
-    private int calculateChangeLength(VariantType value, int start, int end) throws InvalidComponentDataException {
+    private int calculateChangeLength(VariantType value, int start, int end) {
         int change = end - start + 1;
         return switch (value.baseType()) {
-            case SNV, DUP, INS, CNV -> change;
-            case DEL -> -change;
             case INV -> 0;
-            default -> throw new InvalidComponentDataException("Unexpected variant type: " + value.baseType());
+            case DUP, DUP_TANDEM, DUP_INV_BEFORE, DUP_INV_AFTER,
+                    CNV, CNV_COMPLEX, CNV_GAIN, CNV_LOSS, CNV_LOH,
+                    INS, INS_ME, INS_ME_ALU, INS_ME_LINE1, INS_ME_SVA, INS_ME_HERV -> change;
+            case DEL, DEL_ME_ALU, DEL_ME, DEL_ME_LINE1, DEL_ME_SVA, DEL_ME_HERV -> -change;
+            // This is UI for symbolic variants, hence no breakends!
+            // Note - the branch must be kept in sync with `IGNORED` set
+            case UNKNOWN, SNV, MNV, BND, TRA, STR, SYMBOLIC -> throw new IllegalArgumentException("Illegal variant type %s".formatted(value));
         };
     }
 

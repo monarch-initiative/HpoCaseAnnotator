@@ -14,7 +14,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.forms.status.StatusBar;
-import org.monarchinitiative.hpo_case_annotator.forms.util.ContigNameStringConverter;
+import org.monarchinitiative.hpo_case_annotator.forms.util.converters.ContigNameStringConverter;
 import org.monarchinitiative.svart.Contig;
 
 import java.io.IOException;

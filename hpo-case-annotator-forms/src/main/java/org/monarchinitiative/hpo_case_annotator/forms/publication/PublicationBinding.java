@@ -8,7 +8,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
-import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
+import org.monarchinitiative.hpo_case_annotator.forms.util.TextFormatters;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class PublicationBinding extends VBoxBindingObservableDataComponent<Obser
     private TitledTextField journal;
     @FXML
     private TitledTextField year;
-    private final TextFormatter<Integer> yearTextFormatter = Formats.integerFormatter();
+    private final TextFormatter<Integer> yearTextFormatter = TextFormatters.integerFormatter();
     @FXML
     private TitledTextField volume;
     @FXML

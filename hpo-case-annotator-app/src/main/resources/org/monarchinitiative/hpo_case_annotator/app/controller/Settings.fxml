@@ -10,6 +10,43 @@
     <children>
         <VBox styleClass="column">
             <children>
+                <Label styleClass="h2" text="Human Phenotype Ontology" wrapText="true" />
+                <Label styleClass="instruction-text" text="Download the latest HPO release."/>
+                <HBox alignment="CENTER_LEFT" styleClass="row">
+                    <children>
+                        <Label fx:id="hpPathLabel" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#downloadHPOFileButtonAction" text="Download" />
+                        <ProgressIndicator fx:id="hpoProgressIndicator" progress="0.0" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+        <Separator />
+        <VBox styleClass="column">
+            <children>
+                <Label styleClass="h2" text="Jannovar transcript databases" />
+                <Label styleClass="instruction-text" text="Provide path to Jannovar transcript databases to enable functional annotation of variants. Locations of Jannovar databases can be found at `https://github.com/charite/jannovar`" />
+                <HBox alignment="CENTER_LEFT" styleClass="row">
+                    <children>
+                        <Label styleClass="h3" text="hg19" />
+                        <Label fx:id="hg19JannovarLabel" text="Unset" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#setPathToHg19JannovarButtonAction" text="Set path" />
+                        <Pane styleClass="progress-bar-placeholder" />
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" styleClass="row">
+                    <children>
+                        <Label styleClass="h3" text="hg38" />
+                        <Label fx:id="hg38JannovarLabel" text="Unset" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#setPathToHg38JannovarButtonAction" text="Set path" />
+                        <Pane styleClass="progress-bar-placeholder" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+        <Separator />
+        <VBox styleClass="column">
+            <children>
                 <Label styleClass="h2" text="Reference genomes" />
                 <Label styleClass="instruction-text" text="Provide path to local genome FASTA files or download the FASTA files to a selected folder" />
                 <VBox>
@@ -53,36 +90,13 @@
         <Separator />
         <VBox styleClass="column">
             <children>
-                <Label styleClass="h2" text="Jannovar transcript databases" />
-                <Label styleClass="instruction-text" text="Provide path to Jannovar transcript databases to enable functional annotation of variants. Locations of Jannovar databases can be found at `https://github.com/charite/jannovar`" />
+                <Label styleClass="h2" text="Curated files directory" wrapText="true" />
+                <Label styleClass="instruction-text" text="Set path to a folder for storing curated data."/>
                 <HBox alignment="CENTER_LEFT" styleClass="row">
                     <children>
-                        <Label styleClass="h3" text="hg19" />
-                        <Label fx:id="hg19JannovarLabel" text="Unset" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" onAction="#setPathToHg19JannovarButtonAction" text="Set path" />
+                        <Label fx:id="curatedFilesDirLabel" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#setCuratedDirButtonAction" text="Set path" />
                         <Pane styleClass="progress-bar-placeholder" />
-                    </children>
-                </HBox>
-                <HBox alignment="CENTER_LEFT" styleClass="row">
-                    <children>
-                        <Label styleClass="h3" text="hg38" />
-                        <Label fx:id="hg38JannovarLabel" text="Unset" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" onAction="#setPathToHg38JannovarButtonAction" text="Set path" />
-                        <Pane styleClass="progress-bar-placeholder" />
-                    </children>
-                </HBox>
-            </children>
-        </VBox>
-        <Separator />
-        <VBox styleClass="column">
-            <children>
-                <Label styleClass="h2" text="Human Phenotype Ontology" wrapText="true" />
-                <Label styleClass="instruction-text" text="Download the latest HPO release."/>
-                <HBox alignment="CENTER_LEFT" styleClass="row">
-                    <children>
-                        <Label fx:id="hpPathLabel" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" onAction="#downloadHPOFileButtonAction" text="Download" />
-                        <ProgressIndicator fx:id="hpoProgressIndicator" progress="0.0" />
                     </children>
                 </HBox>
             </children>
@@ -96,20 +110,6 @@
                     <children>
                         <ListView fx:id="liftoverChainPathsListView" prefHeight="60.0" HBox.hgrow="ALWAYS" />
                         <Button mnemonicParsing="false" onAction="#downloadLiftoverChainFiles" text="Download" />
-                        <Pane styleClass="progress-bar-placeholder" />
-                    </children>
-                </HBox>
-            </children>
-        </VBox>
-        <Separator />
-        <VBox styleClass="column">
-            <children>
-                <Label styleClass="h2" text="Curated files directory" wrapText="true" />
-                <Label styleClass="instruction-text" text="Set path to a folder for storing curated data."/>
-                <HBox alignment="CENTER_LEFT" styleClass="row">
-                    <children>
-                        <Label fx:id="curatedFilesDirLabel" wrapText="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" onAction="#setCuratedDirButtonAction" text="Set path" />
                         <Pane styleClass="progress-bar-placeholder" />
                     </children>
                 </HBox>

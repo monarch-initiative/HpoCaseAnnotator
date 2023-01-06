@@ -2,9 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
-<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextArea?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="VBox"
@@ -13,7 +11,12 @@
     <children>
         <Label styleClass="h1" text="Case report ID"/>
         <Label styleClass="instruction-text" text="Set case report ID."/>
-        <TitledTextField fx:id="studyId" name="Case report ID" id="study-id"/>
+        <HBox alignment="BOTTOM_LEFT">
+            <children>
+                <TitledTextField minWidth="500" id="study-id" fx:id="studyId" name="Case report ID" />
+                <Button fx:id="generateIdButton" onAction="#generateIdButtonAction" text="Generate" />
+            </children>
+        </HBox>
         <Pane styleClass="spacer10px"/>
         <Label styleClass="instruction-text" text="Add description that do not fit into the study fields."/>
         <TitledTextArea fx:id="freeTextMetadata" name="Free text description"

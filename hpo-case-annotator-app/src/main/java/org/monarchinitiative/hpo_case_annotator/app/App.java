@@ -76,7 +76,7 @@ public class App extends Application {
         Scene scene = new Scene(loader.load(), MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
         scene.getStylesheets().add(BASE_CSS);
         stage.setTitle(properties.name() + ' ' + properties.version());
-        stage.getIcons().add(new Image(App.class.getResourceAsStream("/img/donald-duck.png")));
+        stage.getIcons().add(new Image(App.class.getResourceAsStream("/img/icon.png")));
         stage.setScene(scene);
         stage.setOnCloseRequest(quitUponUserConfirmation());
         stage.show();

@@ -1,12 +1,12 @@
 package org.monarchinitiative.hpo_case_annotator.forms.stepper.step.study;
 
 import javafx.beans.Observable;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextArea;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.BaseStep;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudy;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudyMetadata;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.*;
 
 import java.net.URL;
 import java.util.stream.Stream;
@@ -22,6 +22,59 @@ public abstract class BaseStudyIdStep<T extends ObservableStudy> extends BaseSte
         super(location);
     }
 
+    protected static String summarizePublication(ObservablePublication publication) {
+        StringBuilder publicationBuilder = new StringBuilder();
+        String authors = publication.getAuthors();
+        if (authors != null) {
+            String lastName = authors.substring(0, authors.indexOf(" "));
+            publicationBuilder.append(lastName);
+        }
+        addSeparator(publicationBuilder, '_');
+        Integer year = publication.getYear();
+        if (year != null) {
+            publicationBuilder.append(year);
+        }
+
+        addSeparator(publicationBuilder, '_');
+        String pmid = publication.getPmid();
+        if (pmid != null) {
+            publicationBuilder.append(pmid);
+        }
+        return publicationBuilder.toString();
+    }
+
+    protected static void addSeparator(StringBuilder builder, char separator) {
+        if (!builder.isEmpty())
+            builder.append(separator);
+    }
+
+    protected static String summarizeAge(ObservableTimeElement age) {
+        return switch (age.getTimeElementCase()) {
+            case GESTATIONAL_AGE -> {
+                StringBuilder builder = new StringBuilder();
+                ObservableGestationalAge ga = age.getGestationalAge();
+                if (ga.getWeeks() != null)
+                    builder.append(ga.getWeeks()).append('w');
+                if (ga.getDays() != null)
+                    builder.append(ga.getDays()).append('d');
+                yield builder.toString();
+            }
+            case AGE -> {
+                StringBuilder builder = new StringBuilder();
+                ObservableAge a = age.getAge();
+                if (a.getYears() != null)
+                    builder.append(a.getYears()).append('y');
+                if (a.getMonths() != null)
+                    builder.append(a.getMonths()).append('m');
+                if (a.getDays() != null)
+                    builder.append(a.getDays()).append('d');
+
+                yield builder.toString();
+            }
+            case AGE_RANGE, ONTOLOGY_CLASS -> "";
+        };
+    }
+
     @Override
     protected Stream<Observable> dependencies() {
         return Stream.of(studyId.textProperty(), freeTextMetadata.textProperty());
@@ -31,6 +84,14 @@ public abstract class BaseStudyIdStep<T extends ObservableStudy> extends BaseSte
     public void invalidated(Observable obs) {
         // no-op as of now
     }
+
+    @FXML
+    private void generateIdButtonAction(ActionEvent e) {
+        studyId.setText(generateId(getData()));
+        e.consume();
+    }
+
+    protected abstract String generateId(T data);
 
     @Override
     protected void bind(T data) {

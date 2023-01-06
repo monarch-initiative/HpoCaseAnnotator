@@ -5,6 +5,8 @@ import javafx.beans.Observable;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
+import javafx.scene.control.TextFormatter;
+import org.monarchinitiative.hpo_case_annotator.forms.util.TextFormatters;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.VariantNotation;
@@ -21,13 +23,21 @@ public class VcfSequenceVariantDataEdit extends VcfSequenceOrSymbolicVariantData
 
     @FXML
     private TextField positionTextField;
+    private final TextFormatter<Integer> positionTextFormatter = TextFormatters.positiveIntegerFormatter();
     @FXML
     private TextField referenceTextField;
+    private final TextFormatter<String> referenceTextFormatter = TextFormatters.vcfAlleleFormatter();
     @FXML
     private TextField alternativeTextField;
+    private final TextFormatter<String> alternativeTextFormatter = TextFormatters.vcfAlleleFormatter();
 
     public VcfSequenceVariantDataEdit() {
         super(VcfSequenceVariantDataEdit.class.getResource("VcfSequenceVariantDataEdit.fxml"));
+
+        // Unusually, we do not set this in initialize.
+        positionTextField.setTextFormatter(positionTextFormatter);
+        referenceTextField.setTextFormatter(referenceTextFormatter);
+        alternativeTextField.setTextFormatter(alternativeTextFormatter);
     }
 
     @FXML
@@ -38,10 +48,9 @@ public class VcfSequenceVariantDataEdit extends VcfSequenceOrSymbolicVariantData
     @Override
     public void setInitialData(ObservableCuratedVariant data) {
         super.setInitialData(data);
-
-        positionTextField.setText(String.valueOf(data.getStart()));
-        referenceTextField.setText(data.getRef());
-        alternativeTextField.setText(data.getAlt());
+        positionTextFormatter.setValue(data.getStart());
+        referenceTextFormatter.setValue(data.getRef());
+        alternativeTextFormatter.setValue(data.getAlt());
     }
 
     @Override
@@ -49,11 +58,13 @@ public class VcfSequenceVariantDataEdit extends VcfSequenceOrSymbolicVariantData
         super.commit();
 
         item.setVariantNotation(VariantNotation.SEQUENCE);
-        // TODO - check this is OK
-        int value = Integer.parseInt(positionTextField.getText());
-        item.setStart(value);
-        item.setRef(referenceTextField.getText());
-        item.setAlt(alternativeTextField.getText());
+        String ref = referenceTextFormatter.getValue();
+        int start = positionTextFormatter.getValue();
+        int end = start + ref.length() - 1;
+        item.setStart(start);
+        item.setEnd(end);
+        item.setRef(ref);
+        item.setAlt(alternativeTextFormatter.getValue());
     }
 
     @Override
@@ -70,18 +81,15 @@ public class VcfSequenceVariantDataEdit extends VcfSequenceOrSymbolicVariantData
     @Override
     protected Optional<GenomicVariant> getVariant() {
         try {
-            // TODO - prettify
-            int position = Integer.parseInt(positionTextField.getText());
             GenomicVariant gv = GenomicVariant.of(contigComboBox.getValue(),
                     idTextField.getText(),
                     CuratedVariant.VCF_STRAND,
                     CuratedVariant.VCF_COORDINATE_SYSTEM,
-                    position,
-                    referenceTextField.getText(),
-                    alternativeTextField.getText());
+                    positionTextFormatter.getValue(),
+                    referenceTextFormatter.getValue(),
+                    alternativeTextFormatter.getValue());
             return Optional.of(gv);
         } catch (Exception e) {
-            // TODO - handle properly
             return Optional.empty();
         }
     }

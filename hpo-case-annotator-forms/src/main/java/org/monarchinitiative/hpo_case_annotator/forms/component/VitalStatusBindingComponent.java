@@ -2,7 +2,6 @@ package org.monarchinitiative.hpo_case_annotator.forms.component;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
@@ -34,6 +33,7 @@ public class VitalStatusBindingComponent extends VBoxBindingObservableDataCompon
     private CheckBox timeOfDeathIsUnknown;
     @FXML
     private TimeElementBindingComponent timeOfDeathComponent;
+    private boolean valueIsNotBeingSetByUserInteraction;
 
     public VitalStatusBindingComponent() {
         FXMLLoader loader = new FXMLLoader(VitalStatusBindingComponent.class.getResource("VitalStatusBindingComponent.fxml"));
@@ -51,9 +51,8 @@ public class VitalStatusBindingComponent extends VBoxBindingObservableDataCompon
     protected void initialize() {
         super.initialize();
         vitalStatus.getItems().addAll(VitalStatus.Status.values());
-        BooleanBinding isNotDeceased = vitalStatus.valueProperty().isNotEqualTo(VitalStatus.Status.DECEASED);
         vitalStatus.setValue(VitalStatus.Status.UNKNOWN);
-        deathBox.disableProperty().bind(isNotDeceased);
+        deathBox.disableProperty().bind(vitalStatus.valueProperty().isNotEqualTo(VitalStatus.Status.DECEASED));
         timeOfDeathComponent.disableProperty().bind(timeOfDeathIsUnknown.selectedProperty());
 
         timeOfDeathIsUnknown.selectedProperty().addListener((obs, old, isUnknown) -> {
@@ -63,6 +62,41 @@ public class VitalStatusBindingComponent extends VBoxBindingObservableDataCompon
                 timeOfDeathComponent.setData(new ObservableTimeElement());
             }
         });
+        addListener(this::updateDataModel);
+    }
+
+    private void updateDataModel(Observable obs) {
+        if (valueIsNotBeingSetByUserInteraction)
+            return;
+
+        ObservableVitalStatus item = data.get();
+        if (item == null) {
+            // The user is updating the UI but the data has not been set yet. We MUST set it now!
+            item = new ObservableVitalStatus();
+            data.set(item);
+        }
+
+        if (obs.equals(vitalStatus.valueProperty())) {
+            item.setStatus(vitalStatus.getValue());
+        }
+        // We don't care about the rest
+    }
+
+    @Override
+    protected void bind(ObservableVitalStatus data) {
+        try {
+            valueIsNotBeingSetByUserInteraction = true;
+
+            if (data != null) {
+                vitalStatus.valueProperty().bindBidirectional(data.statusProperty());
+
+                timeOfDeathIsUnknown.setSelected(data.getTimeOfDeath() == null);
+                timeOfDeathComponent.dataProperty().bindBidirectional(data.timeOfDeathProperty());
+            } else
+                clear();
+        } finally {
+            valueIsNotBeingSetByUserInteraction = false;
+        }
     }
 
     @Override
@@ -71,17 +105,6 @@ public class VitalStatusBindingComponent extends VBoxBindingObservableDataCompon
             vitalStatus.valueProperty().unbindBidirectional(data.statusProperty());
             timeOfDeathComponent.dataProperty().unbindBidirectional(data.timeOfDeathProperty());
         }
-    }
-
-    @Override
-    protected void bind(ObservableVitalStatus data) {
-        if (data != null) {
-            vitalStatus.valueProperty().bindBidirectional(data.statusProperty());
-
-            timeOfDeathIsUnknown.setSelected(data.getTimeOfDeath() == null);
-            timeOfDeathComponent.dataProperty().bindBidirectional(data.timeOfDeathProperty());
-        } else
-            clear();
     }
 
     private void clear() {

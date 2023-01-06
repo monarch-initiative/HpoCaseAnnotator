@@ -8,4 +8,8 @@ public class CohortStudyIdStep extends BaseStudyIdStep<ObservableCohortStudy> {
         super(CohortStudyIdStep.class.getResource("CohortStudyIdStep.fxml"));
     }
 
+    @Override
+    protected String generateId(ObservableCohortStudy data) {
+        return "cohort-id";
+    }
 }

@@ -8,7 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import org.monarchinitiative.hpo_case_annotator.forms.base.BindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
-import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
+import org.monarchinitiative.hpo_case_annotator.forms.util.TextFormatters;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
 
 public class AgeController extends BindingObservableDataComponent<ObservableAge> {
@@ -16,7 +16,7 @@ public class AgeController extends BindingObservableDataComponent<ObservableAge>
     private final ObjectProperty<ObservableAge> age = new SimpleObjectProperty<>(this, "age", new ObservableAge());
     @FXML
     private TextField yearsTextField;
-    private final TextFormatter<Integer> yearsFormatter = Formats.integerFormatter();
+    private final TextFormatter<Integer> yearsFormatter = TextFormatters.integerFormatter();
     @FXML
     private ComboBox<Integer> monthsComboBox;
     @FXML

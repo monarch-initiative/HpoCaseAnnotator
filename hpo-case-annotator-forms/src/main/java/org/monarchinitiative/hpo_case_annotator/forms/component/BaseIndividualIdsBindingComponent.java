@@ -11,17 +11,14 @@ import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementB
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.stream.Stream;
 
-public abstract class BaseIndividualIdsBindingComponent<T extends BaseObservableIndividual> extends VBoxBindingObservableDataComponent<T>
-        implements Observable, InvalidationListener {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseIndividualIdsBindingComponent.class);
+public abstract class BaseIndividualIdsBindingComponent<T extends BaseObservableIndividual>
+        extends VBoxBindingObservableDataComponent<T>
+        implements Observable {
 
     static final  Callback<BaseIndividualIdsBindingComponent<?>, Stream<Observable>> EXTRACTOR = item -> Stream.of(
             item.individualId.textProperty(),
@@ -64,11 +61,10 @@ public abstract class BaseIndividualIdsBindingComponent<T extends BaseObservable
         sex.setValue(Sex.UNKNOWN);
         ageComponent.disableProperty().bind(ageIsUnknown.selectedProperty());
 
-        addListener(this);
+        addListener(this::updateDataModel);
     }
 
-    @Override
-    public void invalidated(Observable obs) {
+    protected void updateDataModel(Observable obs) {
         if (valueIsNotBeingSetByUserInteraction)
             return;
         T item = data.get();

@@ -14,7 +14,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservable
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
-import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
+import org.monarchinitiative.hpo_case_annotator.forms.util.TextFormatters;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAgeRange;
@@ -25,8 +25,9 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 import java.io.IOException;
 import java.util.stream.Stream;
 
-public class TimeElementBindingComponent extends VBoxBindingObservableDataComponent<ObservableTimeElement>
-        implements Observable, InvalidationListener {
+public class TimeElementBindingComponent
+        extends VBoxBindingObservableDataComponent<ObservableTimeElement>
+        implements Observable {
 
     static final Callback<TimeElementBindingComponent, Stream<Observable>> EXTRACTOR = tbc -> Stream.of(
             tbc.tabPane.getSelectionModel().selectedItemProperty(),
@@ -48,7 +49,7 @@ public class TimeElementBindingComponent extends VBoxBindingObservableDataCompon
     private Tab gestationalAgeTab;
     @FXML
     private TitledTextField gestationalWeeks;
-    private final TextFormatter<Integer> gestationalWeeksFormatter = Formats.integerFormatter();
+    private final TextFormatter<Integer> gestationalWeeksFormatter = TextFormatters.integerFormatter();
     @FXML
     private TitledComboBox<Integer> gestationalDays;
 
@@ -90,11 +91,11 @@ public class TimeElementBindingComponent extends VBoxBindingObservableDataCompon
         gestationalWeeks.setTextFormatter(gestationalWeeksFormatter);
 
         // Update the data model upon change of each UI component
-        addListener(this);
+        addListener(this::updateDataModel);
     }
 
-    @Override
-    public void invalidated(Observable obs) {
+
+    private void updateDataModel(Observable obs) {
         if (valueIsNotBeingSetByUserInteraction)
             return;
         ObservableTimeElement te = data.get();
