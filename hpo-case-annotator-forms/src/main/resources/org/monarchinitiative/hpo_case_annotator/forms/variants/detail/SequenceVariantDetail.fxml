@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@variant-detail.css">
+    <children>
+        <Label text="Sequence"/>
+        <HBox>
+            <children>
+                <TitledLabel fx:id="variantId" name="ID"/>
+                <TitledLabel fx:id="assembly" id="assembly-field" name="Genomic assembly"/>
+                <TitledLabel fx:id="contig" name="Contig"/>
+                <TitledLabel fx:id="pos" id="pos-field" name="Position"/>
+                <TitledLabel fx:id="ref" name="Reference allele"/>
+                <TitledLabel fx:id="alt" name="Alternate allele"/>
+            </children>
+        </HBox>
+    </children>
+</fx:root>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@variant-detail.css">
+    <children>
+        <Label text="Genomic breakend"/>
+        <HBox>
+            <children>
+                <TitledLabel fx:id="variantId" name="Event ID"/>
+                <TitledLabel fx:id="assembly" id="assembly-field" name="Genomic assembly"/>
+                <Label text="Sorry, not yet implemented" style="-fx-text-fill: red"/>
+            </children>
+        </HBox>
+    </children>
+</fx:root>

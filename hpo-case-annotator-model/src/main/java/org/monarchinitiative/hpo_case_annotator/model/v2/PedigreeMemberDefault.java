@@ -1,8 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.model.v2;
 
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 
-import java.time.Period;
 import java.util.*;
 
 class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember {
@@ -15,12 +14,13 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
                                   String paternalId,
                                   String maternalId,
                                   boolean isProband,
-                                  Set<PhenotypicFeature> phenotypicFeatures,
+                                  List<PhenotypicFeature> phenotypicFeatures,
                                   List<DiseaseStatus> diseases,
-                                  Map<String, Genotype> genotypes,
-                                  Period age,
+                                  List<VariantGenotype> genotypes,
+                                  TimeElement age,
+                                  VitalStatus vitalStatus,
                                   Sex sex) {
-        super(id, phenotypicFeatures, diseases, genotypes, age, sex);
+        super(id, phenotypicFeatures, diseases, genotypes, age, vitalStatus, sex);
         this.paternalId = paternalId;
         this.maternalId = maternalId;
         this.isProband = isProband;
@@ -30,30 +30,32 @@ class PedigreeMemberDefault extends IndividualDefault implements PedigreeMember 
                                     String paternalId,
                                     String maternalId,
                                     boolean isProband,
-                                    Collection<PhenotypicFeature> phenotypicFeatures,
-                                    List<DiseaseStatus> diseases,
-                                    Map<String, Genotype> genotypes,
-                                    Period age,
+                                    Collection<? extends PhenotypicFeature> phenotypicFeatures,
+                                    List<? extends DiseaseStatus> diseases,
+                                    List<? extends VariantGenotype> genotypes,
+                                    TimeElement age,
+                                    VitalStatus vitalStatus,
                                     Sex sex) {
         // wrap the collections
         return new PedigreeMemberDefault(Objects.requireNonNull(id, "Individual ID must not be null"),
                 paternalId,
                 maternalId,
                 isProband,
-                Set.copyOf(Objects.requireNonNull(phenotypicFeatures, "Phenotypic observations must not be null")),
+                List.copyOf(Objects.requireNonNull(phenotypicFeatures, "Phenotypic observations must not be null")),
                 List.copyOf(Objects.requireNonNull(diseases, "Diseases must not be null")),
-                Map.copyOf(Objects.requireNonNull(genotypes, "Genotypes must not be null")),
+                List.copyOf(Objects.requireNonNull(genotypes, "Genotypes must not be null")),
                 age,
+                vitalStatus,
                 Objects.requireNonNull(sex, "Sex must not be null"));
     }
 
     @Override
-    public Optional<String> paternalId() {
+    public Optional<String> getPaternalId() {
         return Optional.ofNullable(paternalId);
     }
 
     @Override
-    public Optional<String> maternalId() {
+    public Optional<String> getMaternalId() {
         return Optional.ofNullable(maternalId);
     }
 

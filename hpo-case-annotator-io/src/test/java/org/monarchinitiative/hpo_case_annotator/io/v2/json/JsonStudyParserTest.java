@@ -44,7 +44,7 @@ public class JsonStudyParserTest {
             Study actual = parser.read(getFamilyStudyPayload());
 
             FamilyStudy expected = TestData.V2.comprehensiveFamilyStudy();
-            assertThat(actual, equalTo(expected));
+            assertThat(expected, equalTo(actual));
         }
 
         @Test
@@ -85,7 +85,7 @@ public class JsonStudyParserTest {
             Study actual = parser.read(getCohortStudyPayload());
 
             CohortStudy expected = TestData.V2.comprehensiveCohortStudy();
-            assertThat(actual, equalTo(expected));
+            assertThat(expected, equalTo(actual));
         }
 
         @Test

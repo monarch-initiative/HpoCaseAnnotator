@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.mining.TextMining?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.*?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@add-clinical-encounter.css">
+    <children>
+        <HBox VBox.vgrow="ALWAYS">
+            <children>
+                <VBox id="credentials-box">
+                    <children>
+                        <Label text="Individual" styleClass="h2"/>
+                        <IndividualIdsComponent fx:id="individualIds"/>
+
+                        <Label text="Encounter time" styleClass="h2"/>
+                        <TimeElementDataEdit fx:id="encounterTime"/>
+                    </children>
+                </VBox>
+
+                <!-- Widgets for adding phenotypic features -->
+                <VBox HBox.hgrow="ALWAYS" >
+                    <children>
+                        <TabPane id="add-terms-tab-pane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" >
+                            <tabs>
+                                <Tab text="Browse HPO hierarchy">
+                                    <content>
+                                        <BrowseHpo fx:id="browseHpo" />
+                                    </content>
+                                </Tab>
+                                <Tab text="Text mining">
+                                    <content>
+                                        <VBox>
+                                            <children>
+                                                <TextMining fx:id="textMining"/>
+                                                <Button fx:id="addTextMiningTerms" onAction="#addTextMiningTermsAction"
+                                                        text="Add approved terms" styleClass="sized-btn"/>
+                                            </children>
+                                        </VBox>
+                                    </content>
+                                </Tab>
+                            </tabs>
+                        </TabPane>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+
+        <!-- A list of features added during this session -->
+        <VBox>
+            <children>
+                <Label text="Added phenotypic features" styleClass="h2"/>
+                <PhenotypeTable fx:id="phenotypeTable"/>
+            </children>
+        </VBox>
+    </children>
+</fx:root>

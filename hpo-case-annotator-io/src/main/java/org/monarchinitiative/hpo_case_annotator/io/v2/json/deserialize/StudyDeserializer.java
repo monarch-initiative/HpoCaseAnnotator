@@ -29,7 +29,7 @@ public class StudyDeserializer extends StdDeserializer<Study> {
         ObjectCodec codec = jp.getCodec();
         JsonNode node = codec.readTree(jp);
 
-        String id = node.get("id").asText();
+        String id = Util.readNullableString(node, "id");
         Publication publication = codec.treeToValue(node.get("publication"), Publication.class);
         StudyMetadata studyMetadata = codec.treeToValue(node.get("studyMetadata"), StudyMetadata.class);
 
@@ -53,6 +53,11 @@ public class StudyDeserializer extends StdDeserializer<Study> {
             }
 
             return CohortStudy.of(id, publication, variants, individuals, studyMetadata);
+        } else if (node.has("individual")) {
+            // IndividualStudy
+            Individual individual = codec.treeToValue(node.get("individual"), Individual.class);
+
+            return IndividualStudy.of(id, publication, variants, individual, studyMetadata);
         } else {
             throw new IOException("Invalid input. Neither `pedigree` nor `individuals` field was found");
         }

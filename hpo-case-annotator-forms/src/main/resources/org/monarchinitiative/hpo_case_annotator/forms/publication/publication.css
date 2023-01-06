@@ -1,0 +1,26 @@
+#publication-box {
+    -fx-pref-height: 70;
+}
+
+#title-label {
+    /* Publication title is slightly larger than the other texts. */
+    -fx-font-size: 1.1em;
+    -fx-font-weight: bold;
+    -fx-wrap-text: true;
+}
+
+#journal {
+    -fx-max-width: 200;
+}
+#journal Label {
+    -fx-font-style: italic;
+}
+
+#publication-metadata {
+    -fx-alignment: center-left;
+}
+
+.publication-meta {
+    -fx-padding: 0 10 0 0;
+    -fx-min-width: 100;
+}

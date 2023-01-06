@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.disease.DiseaseSummary?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@disease-data-edit.css">
+    <children>
+        <IndividualIdsComponent fx:id="individualIds" />
+
+        <GridPane hgap="5" vgap="5">
+            <children>
+                <Label styleClass="h2" text="Search for diseases" />
+                <TitledTextField fx:id="diseaseIdTextField" id="disease-id-search-field"
+                                 name="Disease ID" promptText="E.g. OMIM:256000"
+                                 onAction="#addDisease"
+                                 GridPane.rowIndex="1" />
+
+                <TitledTextField fx:id="diseaseNameTextField" id="disease-name-search-field"
+                                 name="Disease name" promptText="LEIGH SYNDROME; LS "
+                                 onAction="#addDisease"
+                                 GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <Button fx:id="addDiseaseButton"
+                        text="Add"
+                        onAction="#addDisease"
+                        GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+            </children>
+        </GridPane>
+
+        <Label styleClass="h2" text="Diseases" />
+        <DiseaseSummary fx:id="diseaseSummary" VBox.vgrow="ALWAYS"/>
+    </children>
+</fx:root>

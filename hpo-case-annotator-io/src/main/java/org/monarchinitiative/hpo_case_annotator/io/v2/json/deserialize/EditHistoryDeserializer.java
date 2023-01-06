@@ -23,8 +23,8 @@ public class EditHistoryDeserializer extends StdDeserializer<EditHistory> {
     public EditHistory deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         JsonNode node = jp.getCodec().readTree(jp);
 
-        String curatorId = node.get("curatorId").asText();
-        String softwareVersion = node.get("softwareVersion").asText();
+        String curatorId = Util.readNullableString(node, "curatorId");
+        String softwareVersion = Util.readNullableString(node, "softwareVersion");
         Instant timestamp = Instant.parse(node.get("timestamp").asText());
 
         return EditHistory.of(curatorId, softwareVersion, timestamp);

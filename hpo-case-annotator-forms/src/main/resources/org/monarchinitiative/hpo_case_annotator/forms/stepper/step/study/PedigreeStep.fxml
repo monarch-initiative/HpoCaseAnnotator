@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.monarchinitiative.hpo_case_annotator.forms.pedigree.Pedigree?>
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@pedigree-step.css"
+         styleClass="step-box">
+    <children>
+        <Label text="Pedigree" styleClass="h1"/>
+        <Label text="Add data regarding the investigated family members." styleClass="instruction-text"/>
+        <Pedigree fx:id="pedigree" VBox.vgrow="ALWAYS"/>
+        <HBox alignment="BOTTOM_LEFT" styleClass="edit-row">
+            <children>
+                <Button fx:id="add" mnemonicParsing="false" onAction="#addButtonAction" styleClass="add-item" text="+" />
+                <Button fx:id="remove" disable="true" mnemonicParsing="false" onAction="#removeButtonAction" styleClass="remove-item" text="-" />
+            </children>
+        </HBox>
+    </children>
+</fx:root>

@@ -1,27 +1,25 @@
 package org.monarchinitiative.hpo_case_annotator.model.v2;
 
-import java.util.List;
-
 public interface Publication {
 
-    static Publication of(List<String> authors, String title, String journal,
+    static Publication of(String authors, String title, String journal,
                           int year, String volume, String pages, String pmid) {
         return new PublicationDefault(authors, title, journal, year, volume, pages, pmid);
     }
 
-    List<String> authors();
+    String getAuthors();
 
-    String title();
+    String getTitle();
 
-    String journal();
+    String getJournal();
 
-    int year();
+    Integer getYear();
 
-    String volume();
+    String getVolume();
 
-    String pages();
+    String getPages();
 
-    String pmid();
+    String getPmid();
 
     int hashCode();
 

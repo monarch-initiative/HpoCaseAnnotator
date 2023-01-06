@@ -1,22 +1,47 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.Observable;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.Callback;
+import org.monarchinitiative.hpo_case_annotator.model.v2.Study;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
+import org.monarchinitiative.hpo_case_annotator.observable.deep.DeepObservable;
 
-import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Stream;
 
-public class ObservableStudy {
+public abstract class ObservableStudy extends DeepObservable implements Study {
+
+    public static final Callback<ObservableStudy, Observable[]> EXTRACTOR = obs -> new Observable[]{obs.id, obs.publication, obs.variants, obs.studyMetadata};
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
-    private final ObjectProperty<ObservablePublication> publication = new SimpleObjectProperty<>(this, "publication", new ObservablePublication());
-    private final ObservableList<CuratedVariant> variants = FXCollections.observableList(new LinkedList<>());
-    private final ObjectProperty<ObservableStudyMetadata> studyMetadata = new SimpleObjectProperty<>(this, "studyMetadata", new ObservableStudyMetadata());
+    private final ObjectProperty<ObservablePublication> publication = new SimpleObjectProperty<>(this, "publication");
+    private final ListProperty<ObservableCuratedVariant> variants = new SimpleListProperty<>(this, "variants", FXCollections.observableArrayList());
+    private final ObjectProperty<ObservableStudyMetadata> studyMetadata = new SimpleObjectProperty<>(this, "studyMetadata");
 
+    public ObservableStudy() {
+    }
+
+    public ObservableStudy(Study study) {
+        if (study != null) {
+            id.set(study.getId());
+
+            if (study.getPublication() != null)
+                publication.set(new ObservablePublication(study.getPublication()));
+
+            for (CuratedVariant variant : study.getVariants()) {
+                if (variant != null)
+                    variants.add(new ObservableCuratedVariant(variant));
+            }
+
+            if (study.getStudyMetadata() != null)
+                studyMetadata.set(new ObservableStudyMetadata(study.getStudyMetadata()));
+        }
+    }
+
+    @Override
     public String getId() {
         return id.get();
     }
@@ -29,6 +54,7 @@ public class ObservableStudy {
         return id;
     }
 
+    @Override
     public ObservablePublication getPublication() {
         return publication.get();
     }
@@ -41,10 +67,20 @@ public class ObservableStudy {
         return publication;
     }
 
-    public ObservableList<CuratedVariant> variants() {
+    @Override
+    public List<? extends ObservableCuratedVariant> getVariants() {
         return variants;
     }
 
+    public void setVariants(ObservableList<ObservableCuratedVariant> variants) {
+        this.variants.set(variants);
+    }
+
+    public ListProperty<ObservableCuratedVariant> variantsProperty() {
+        return variants;
+    }
+
+    @Override
     public ObservableStudyMetadata getStudyMetadata() {
         return studyMetadata.get();
     }
@@ -55,5 +91,20 @@ public class ObservableStudy {
 
     public ObjectProperty<ObservableStudyMetadata> studyMetadataProperty() {
         return studyMetadata;
+    }
+
+    @Override
+    protected Stream<Property<? extends Observable>> objectProperties() {
+        return Stream.of(publication, variants, studyMetadata);
+    }
+
+    @Override
+    public String toString() {
+        return "ObservableStudy{" +
+                "id=" + id.get() +
+                ", publication=" + publication.get() +
+                ", variants=" + variants.get() +
+                ", studyMetadata=" + studyMetadata.get() +
+                '}';
     }
 }

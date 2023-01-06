@@ -1,0 +1,22 @@
+@import "../base.css";
+
+#phenotype-list-cell-graphics-box {
+    -fx-hgap: 5;
+    -fx-vgap: 5;
+}
+
+/* HPO term labels can be rather lenghty. Let's make sure we have reasonable space! */
+#term {
+    -fx-min-width: 150;
+}
+
+.tl-label {
+    -fx-max-width: 150;
+    -fx-wrap-text: true;
+}
+
+.tl-box {
+    -fx-padding: 5;
+    -fx-pref-width: 100;
+}
+

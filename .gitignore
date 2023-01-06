@@ -20,6 +20,7 @@ target/
 # hpo-case-annotator-core/src/test/resources/org/monarchinitiative/hpo_case_annotator/io/genome/shortHg19ChromFa.tar.gz
 
 *.jar
+!maven-wrapper.jar
 *.war
 *.nar
 *.ear

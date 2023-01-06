@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.URL?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.liftover.Liftover?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.variants.input.GenomicBreakendDataEdit?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.variants.input.FunctionalAnnotationTable?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         styleClass="section"
+         disable="true">
+    <!-- TODO - enable after implemented -->
+    <stylesheets>
+        <URL value="@variant.css"/>
+        <URL value="@../../base.css"/>
+    </stylesheets>
+    <children>
+        <HBox>
+            <children>
+                <VBox>
+                    <children>
+                        <Label styleClass="h2" text="VCF breakend variant"/>
+                        <HBox alignment="CENTER_LEFT" styleClass="row" VBox.vgrow="NEVER">
+                            <children>
+                                <VBox alignment="CENTER_LEFT" minHeight="50.0" minWidth="250.0" styleClass="column"
+                                      HBox.hgrow="SOMETIMES">
+                                    <children>
+                                        <Label styleClass="h3" text="Genome build"/>
+                                        <HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="5.0" VBox.vgrow="NEVER">
+                                            <children>
+                                                <RadioButton fx:id="hg19RadioButton" disable="true" mnemonicParsing="false"
+                                                             text="GRCh37"/>
+                                                <RadioButton fx:id="hg38RadioButton" disable="true" mnemonicParsing="false"
+                                                             text="GRCh38"/>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="286.0" styleClass="row">
+                            <children>
+                                <VBox styleClass="column" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="h3" text="Event id" wrapText="true"/>
+                                        <TextField fx:id="eventIdTextField" promptText="e.g. CCTAAGCT"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" styleClass="row">
+                            <children>
+                                <VBox styleClass="column" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="h3" text="Breakpoints"/>
+                                        <HBox prefHeight="100.0" prefWidth="200.0" styleClass="row">
+                                            <children>
+                                                <VBox styleClass="column">
+                                                    <children>
+                                                        <Label contentDisplay="CENTER" styleClass="h4" text="Left"/>
+                                                        <GenomicBreakendDataEdit fx:id="left"/>
+                                                    </children>
+                                                </VBox>
+                                                <Separator orientation="VERTICAL"/>
+                                                <VBox styleClass="column">
+                                                    <children>
+                                                        <Label styleClass="h4" text="Right"/>
+                                                        <GenomicBreakendDataEdit fx:id="right"/>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" layoutX="15.0" layoutY="291.0" styleClass="row">
+                            <children>
+                                <VBox styleClass="column" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="h3" text="Alleles"/>
+                                        <HBox alignment="CENTER_LEFT">
+                                            <children>
+                                                <Label text="Reference sequence" wrapText="true"/>
+                                                <TextField fx:id="referenceSequenceTextField" promptText="e.g. CCTAAGCT"
+                                                           HBox.hgrow="ALWAYS"/>
+                                            </children>
+                                            <styleClass>
+                                                <String fx:value="row"/>
+                                                <String fx:value="allele-row"/>
+                                            </styleClass>
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT">
+                                            <children>
+                                                <Label text="Inserted sequence" wrapText="true"/>
+                                                <TextField fx:id="insertedSequenceTextField" promptText="e.g. CCTAAGCT"
+                                                           HBox.hgrow="ALWAYS"/>
+                                            </children>
+                                            <styleClass>
+                                                <String fx:value="row"/>
+                                                <String fx:value="allele-row"/>
+                                            </styleClass>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+                <Separator orientation="VERTICAL" HBox.hgrow="NEVER" />
+                <FunctionalAnnotationTable fx:id="functionalAnnotationTable"/>
+                <Separator orientation="VERTICAL" HBox.hgrow="NEVER" />
+                <VBox>
+                    <children>
+                        <Liftover fx:id="liftover"/>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</fx:root>

@@ -3,7 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.util;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.ComboBox;
 import org.monarchinitiative.hpo_case_annotator.core.reference.genome.GenomicAssemblyService;
-import org.monarchinitiative.hpo_case_annotator.forms.InvalidComponentDataException;
+import org.monarchinitiative.hpo_case_annotator.forms.util.converters.ContigNameStringConverter;
 import org.monarchinitiative.svart.Contig;
 
 import java.util.List;
@@ -38,11 +38,4 @@ public class FormUtils {
         });
     }
 
-    public static int processFormattedInteger(String integerText) throws InvalidComponentDataException {
-        try {
-            return Integer.parseInt(integerText.replaceAll(",", ""));
-        } catch (NumberFormatException e) {
-            throw new InvalidComponentDataException(e);
-        }
-    }
 }

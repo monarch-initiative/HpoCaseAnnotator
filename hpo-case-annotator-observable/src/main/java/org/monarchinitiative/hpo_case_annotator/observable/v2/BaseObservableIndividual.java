@@ -1,40 +1,65 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.Observable;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
-import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import javafx.util.Callback;
+import org.monarchinitiative.hpo_case_annotator.model.v2.*;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
+import org.monarchinitiative.hpo_case_annotator.observable.deep.DeepObservable;
 
-import java.util.*;
+import java.util.stream.Stream;
 
-public class BaseObservableIndividual {
+public abstract class BaseObservableIndividual extends DeepObservable implements Individual {
+
+    public static final Callback<BaseObservableIndividual, Observable[]> EXTRACTOR = obs -> new Observable[]{
+            obs.id,
+            obs.age,
+            obs.vitalStatus,
+            obs.sex,
+            obs.phenotypicFeatures,
+            obs.diseaseStates,
+            obs.genotypes
+    };
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
-    private final ObjectProperty<ObservableAge> age = new SimpleObjectProperty<>(this, "age", new ObservableAge());
+    private final ObjectProperty<ObservableTimeElement> age = new SimpleObjectProperty<>(this, "age");
+    private final ObjectProperty<ObservableVitalStatus> vitalStatus = new SimpleObjectProperty<>(this, "vitalStatus");
     private final ObjectProperty<Sex> sex = new SimpleObjectProperty<>(this, "sex", Sex.UNKNOWN);
-    private final ObservableList<ObservablePhenotypicFeature> phenotypicFeatures = FXCollections.observableList(new LinkedList<>());
-    private final ObservableList<ObservableDiseaseStatus> diseaseStates = FXCollections.observableList(new LinkedList<>());
-    private final ObservableMap<String, Genotype> genotypes = FXCollections.observableHashMap();
+    private final ListProperty<ObservablePhenotypicFeature> phenotypicFeatures = new SimpleListProperty<>(this, "phenotypicFeatures", FXCollections.observableArrayList(ObservablePhenotypicFeature.EXTRACTOR));
+    private final ListProperty<ObservableDiseaseStatus> diseaseStates = new SimpleListProperty<>(this, "diseaseStates", FXCollections.observableArrayList(ObservableDiseaseStatus.EXTRACTOR));
+    private final ListProperty<ObservableVariantGenotype> genotypes = new SimpleListProperty<>(this, "genotypes", FXCollections.observableArrayList(ObservableVariantGenotype.EXTRACTOR));
 
-    public BaseObservableIndividual() {
+    protected BaseObservableIndividual() {
     }
 
-    protected BaseObservableIndividual(Builder<?> builder) {
-        this.id.set(builder.id);
-        this.age.get().setYears(builder.age.getYears());
-        this.age.get().setMonths(builder.age.getMonths());
-        this.age.get().setDays(builder.age.getDays());
-        this.sex.set(builder.sex);
-        this.phenotypicFeatures.addAll(builder.phenotypicFeatures);
-        this.diseaseStates.addAll(builder.diseaseStates);
-        this.genotypes.putAll(builder.genotypes);
+    protected BaseObservableIndividual(Individual individual) {
+        if (individual != null) {
+            id.set(individual.getId());
+
+            if (individual.getAge() != null)
+                age.set(new ObservableTimeElement(individual.getAge()));
+
+            if (individual.getVitalStatus() != null)
+                vitalStatus.set(new ObservableVitalStatus(individual.getVitalStatus()));
+
+            if (individual.getSex() != null)
+                sex.set(individual.getSex());
+
+            for (PhenotypicFeature pf : individual.getPhenotypicFeatures())
+                phenotypicFeatures.add(new ObservablePhenotypicFeature(pf));
+
+            for (DiseaseStatus ds : individual.getDiseaseStates())
+                diseaseStates.add(new ObservableDiseaseStatus(ds));
+
+            for (VariantGenotype vg : individual.getGenotypes())
+                genotypes.add(new ObservableVariantGenotype(vg));
+
+        }
     }
 
+    @Override
     public String getId() {
         return id.get();
     }
@@ -47,18 +72,72 @@ public class BaseObservableIndividual {
         return id;
     }
 
-    public ObservableAge getAge() {
+    @Override
+    public ObservableList<ObservablePhenotypicFeature> getPhenotypicFeatures() {
+        return phenotypicFeatures;
+    }
+
+    public void setPhenotypicFeatures(ObservableList<ObservablePhenotypicFeature> phenotypicFeatures) {
+        this.phenotypicFeatures.set(phenotypicFeatures);
+    }
+
+    public ListProperty<ObservablePhenotypicFeature> phenotypicFeaturesProperty() {
+        return phenotypicFeatures;
+    }
+
+    @Override
+    public ObservableList<ObservableDiseaseStatus> getDiseaseStates() {
+        return diseaseStates;
+    }
+
+    public void setDiseaseStates(ObservableList<ObservableDiseaseStatus> diseaseStates) {
+        this.diseaseStates.set(diseaseStates);
+    }
+
+    public ListProperty<ObservableDiseaseStatus> diseaseStatesProperty() {
+        return diseaseStates;
+    }
+
+    @Override
+    public ObservableList<ObservableVariantGenotype> getGenotypes() {
+        return genotypes;
+    }
+
+    public void setGenotypes(ObservableList<ObservableVariantGenotype> genotypes) {
+        this.genotypes.set(genotypes);
+    }
+
+    public ListProperty<ObservableVariantGenotype> genotypesProperty() {
+        return genotypes;
+    }
+
+    @Override
+    public ObservableTimeElement getAge() {
         return age.get();
     }
 
-    public void setAge(ObservableAge age) {
+    public void setAge(ObservableTimeElement age) {
         this.age.set(age);
     }
 
-    public ObjectProperty<ObservableAge> ageProperty() {
+    public ObjectProperty<ObservableTimeElement> ageProperty() {
         return age;
     }
 
+    @Override
+    public ObservableVitalStatus getVitalStatus() {
+        return vitalStatus.get();
+    }
+
+    public void setVitalStatus(ObservableVitalStatus vitalStatus) {
+        this.vitalStatus.set(vitalStatus);
+    }
+
+    public ObjectProperty<ObservableVitalStatus> vitalStatusProperty() {
+        return vitalStatus;
+    }
+
+    @Override
     public Sex getSex() {
         return sex.get();
     }
@@ -71,16 +150,9 @@ public class BaseObservableIndividual {
         return sex;
     }
 
-    public ObservableList<ObservablePhenotypicFeature> phenotypicFeatures() {
-        return phenotypicFeatures;
-    }
-
-    public ObservableList<ObservableDiseaseStatus> diseaseStatuses() {
-        return diseaseStates;
-    }
-
-    public ObservableMap<String, Genotype> genotypes() {
-        return genotypes;
+    @Override
+    protected Stream<Property<? extends Observable>> objectProperties() {
+        return Stream.of(age, vitalStatus, phenotypicFeatures, diseaseStates, genotypes);
     }
 
     @Override
@@ -88,83 +160,12 @@ public class BaseObservableIndividual {
         return "BaseObservableIndividual{" +
                 "id=" + id.get() +
                 ", age=" + age.get() +
+                ", vitalStatus=" + vitalStatus.get() +
                 ", sex=" + sex.get() +
-                ", phenotypicFeatures=" + phenotypicFeatures +
-                ", diseaseStates=" + diseaseStates +
-                ", genotypes=" + genotypes +
+                ", phenotypicFeatures=" + phenotypicFeatures.stream().map(PhenotypicFeature::toString).toList() +
+                ", diseaseStates=" + diseaseStates.get().stream().map(DiseaseStatus::toString).toList() +
+                ", genotypes=" + genotypes.get() +
                 '}';
-    }
-
-    public abstract static class Builder<T extends Builder<T>> {
-
-        private final List<ObservablePhenotypicFeature> phenotypicFeatures = new LinkedList<>();
-        private final List<ObservableDiseaseStatus> diseaseStates = new LinkedList<>();
-        private final Map<String, Genotype> genotypes = new HashMap<>();
-        private String id;
-        private final ObservableAge age = new ObservableAge();
-        private Sex sex;
-
-        protected Builder() {
-        }
-
-        public T setId(String id) {
-            this.id = id;
-            return self();
-        }
-
-        protected abstract T self();
-
-        public T setYears(Integer years) {
-            this.age.setYears(years);
-            return self();
-        }
-
-        public T setMonths(int months) {
-            this.age.setMonths(months);
-            return self();
-        }
-
-        public T setDays(int days) {
-            this.age.setDays(days);
-            return self();
-        }
-
-        public T setSex(Sex sex) {
-            this.sex = sex;
-            return self();
-        }
-
-        public T addPhenotypicFeature(ObservablePhenotypicFeature phenotypicFeature) {
-            this.phenotypicFeatures.add(phenotypicFeature);
-            return self();
-        }
-
-        public T addAllPhenotypicFeatures(Collection<ObservablePhenotypicFeature> phenotypicFeatures) {
-            this.phenotypicFeatures.addAll(phenotypicFeatures);
-            return self();
-        }
-
-        public T addDiseaseStatus(ObservableDiseaseStatus diseaseStatus) {
-            this.diseaseStates.add(diseaseStatus);
-            return self();
-        }
-
-        public T addAllDiseaseStatuses(Collection<ObservableDiseaseStatus> diseaseStatuses) {
-            this.diseaseStates.addAll(diseaseStatuses);
-            return self();
-        }
-
-        public T putGenotype(String variantId, Genotype genotype) {
-            this.genotypes.put(variantId, genotype);
-            return self();
-        }
-
-        public T putAllGenotypes(Map<? extends String, ? extends Genotype> genotypes) {
-            this.genotypes.putAll(genotypes);
-            return self();
-        }
-
-        public abstract <U extends BaseObservableIndividual> U build();
     }
 
 }

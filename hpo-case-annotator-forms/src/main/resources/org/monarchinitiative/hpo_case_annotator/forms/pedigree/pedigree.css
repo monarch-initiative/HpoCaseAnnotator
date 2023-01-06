@@ -1,0 +1,9 @@
+#pedigree-members {
+    -fx-border-color: white;
+    -fx-border-width: 0;
+}
+
+#pedigree-members .cell.indexed-cell.list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}

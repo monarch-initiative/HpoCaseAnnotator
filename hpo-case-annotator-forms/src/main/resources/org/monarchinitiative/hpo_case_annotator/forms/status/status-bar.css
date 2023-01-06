@@ -1,0 +1,16 @@
+#outer-box {
+    -fx-padding: 5;
+    -fx-background-color: -fx-base;
+    -fx-border-color: derive(-fx-base, -50%);
+    -fx-border-width: 1 0 0 0;
+}
+
+#message-label {
+    -fx-font-style: italic;
+    -fx-font-size: 0.9em;
+    -fx-wrap-text: true;
+}
+
+#message-label .tl-label {
+    -fx-padding: 0 0 0 5;
+}

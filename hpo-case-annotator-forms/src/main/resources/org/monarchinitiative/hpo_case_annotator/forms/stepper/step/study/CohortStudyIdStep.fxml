@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextArea?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@id-step.css"
+         styleClass="step-box">
+    <children>
+        <Label styleClass="h1" text="Cohort study ID"/>
+        <Label fx:id="header" text="Set cohort study ID."/>
+        <HBox alignment="BOTTOM_LEFT">
+            <children>
+                <TitledTextField minWidth="500" id="study-id" fx:id="studyId" name="Cohort study ID" />
+                <Button fx:id="generateIdButton" onAction="#generateIdButtonAction" text="Generate" />
+            </children>
+        </HBox>
+        <Separator/>
+        <Label text="Add description that do not fit into the study fields."/>
+        <TitledTextArea fx:id="freeTextMetadata" name="Free text description"
+                        promptText="Enter free text description"
+                        VBox.vgrow="ALWAYS"/>
+    </children>
+</fx:root>

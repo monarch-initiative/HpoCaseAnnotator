@@ -1,14 +1,23 @@
 package org.monarchinitiative.hpo_case_annotator.app.model;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.util.Callback;
 
 import java.nio.file.Path;
+import java.util.stream.Stream;
 
-public class FunctionalAnnotationResources {
+public class FunctionalAnnotationResources implements Observable {
+
+    static final Callback<FunctionalAnnotationResources, Stream<Observable>> EXTRACTOR = far -> Stream.of(far.hg19JannovarPath, far.hg38JannovarPath);
+
 
     private final ObjectProperty<Path> hg19JannovarPath = new SimpleObjectProperty<>(this, "hg19JannovarPath");
     private final ObjectProperty<Path> hg38JannovarPath = new SimpleObjectProperty<>(this, "hg38JannovarPath");
+    private final BooleanBinding functionalResourcesAreUnset = hg19JannovarPath.isNull().and(hg38JannovarPath.isNull());
 
     public Path getHg19JannovarPath() {
         return hg19JannovarPath.get();
@@ -32,5 +41,19 @@ public class FunctionalAnnotationResources {
 
     public ObjectProperty<Path> hg38JannovarPathProperty() {
         return hg38JannovarPath;
+    }
+
+    public BooleanBinding functionalResourcesAreUnset() {
+        return functionalResourcesAreUnset;
+    }
+
+    @Override
+    public void addListener(InvalidationListener listener) {
+        EXTRACTOR.call(this).forEach(obs -> obs.addListener(listener));
+    }
+
+    @Override
+    public void removeListener(InvalidationListener listener) {
+        EXTRACTOR.call(this).forEach(obs -> obs.removeListener(listener));
     }
 }

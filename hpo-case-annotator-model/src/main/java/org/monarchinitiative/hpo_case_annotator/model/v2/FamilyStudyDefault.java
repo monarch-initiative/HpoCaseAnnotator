@@ -9,4 +9,28 @@ record FamilyStudyDefault(String id,
                           List<CuratedVariant> variants,
                           Pedigree pedigree,
                           StudyMetadata studyMetadata) implements FamilyStudy {
+    @Override
+    public Pedigree getPedigree() {
+        return pedigree;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public Publication getPublication() {
+        return publication;
+    }
+
+    @Override
+    public List<? extends CuratedVariant> getVariants() {
+        return variants;
+    }
+
+    @Override
+    public StudyMetadata getStudyMetadata() {
+        return studyMetadata;
+    }
 }

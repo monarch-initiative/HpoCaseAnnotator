@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         styleClass="step-box" >
+    <children>
+        <Label styleClass="h2" text="Pedigree member"/>
+        <Label styleClass="instruction-text" text="Provide credentials for the pedigree member." />
+        <PedigreeMemberIdsBindingComponent fx:id="individualIds" VBox.vgrow="ALWAYS"/>
+    </children>
+</fx:root>

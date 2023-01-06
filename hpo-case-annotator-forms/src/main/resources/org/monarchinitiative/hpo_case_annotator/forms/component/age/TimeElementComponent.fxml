@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         fx:id="box" disable="true"
+         stylesheets="@time-element-component.css"
+         id="te-outer-box">
+    <!-- Intentionally empty. All logic for displaying UI components is in the controller. -->
+</fx:root>

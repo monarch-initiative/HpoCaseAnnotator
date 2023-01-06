@@ -8,9 +8,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.base.BindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.v2.AgeController;
-import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAgeRange;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePhenotypicFeature;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
@@ -20,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
-public class PhenotypicFeatureController extends BindingDataController<ObservablePhenotypicFeature> {
+public class PhenotypicFeatureController extends BindingObservableDataComponent<ObservablePhenotypicFeature> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PhenotypicFeatureController.class);
 
@@ -63,6 +62,7 @@ public class PhenotypicFeatureController extends BindingDataController<Observabl
     }
 
     private BooleanBinding preparePhenotypicFeatureIsExcludedBinding() {
+        // TODO - this class should be removed in future, hence the duplicate is no issue.
         return Bindings.createBooleanBinding(() -> {
             RadioButton selected = (RadioButton) presenceStatusToggleGroup.getSelectedToggle();
             if (selected.equals(presentRadioButton)) {
@@ -92,12 +92,14 @@ public class PhenotypicFeatureController extends BindingDataController<Observabl
         feature.excludedProperty().bind(phenotypicFeatureIsExcluded);
 
         // observation onset & resolution
-        ObservableAgeRange ageRange = feature.getObservationAge();
+        // TODO - fix or discard
+//        ObservableAgeRange ageRange = feature.getObservationAge();
         // onset
-        if (ageRange != null) {
-        onsetAgeController.dataProperty().bindBidirectional(ageRange.onsetProperty());
-        resolutionAgeController.dataProperty().bindBidirectional(ageRange.resolutionProperty());
-        }
+        // TODO - fix or discard
+//        if (ageRange != null) {
+//        onsetAgeController.dataProperty().bindBidirectional(ageRange.onsetProperty());
+//        resolutionAgeController.dataProperty().bindBidirectional(ageRange.resolutionProperty());
+//        }
     }
 
     @Override
@@ -112,11 +114,12 @@ public class PhenotypicFeatureController extends BindingDataController<Observabl
 
 
         // onset & resolution
-        ObservableAgeRange ageRange = feature.getObservationAge();
-        if (ageRange != null) {
-            onsetAgeController.dataProperty().unbindBidirectional(ageRange.onsetProperty());
-            resolutionAgeController.dataProperty().unbindBidirectional(ageRange.resolutionProperty());
-        }
+        // TODO - fix or discard
+//        ObservableAgeRange ageRange = feature.getObservationAge();
+//        if (ageRange != null) {
+//            onsetAgeController.dataProperty().unbindBidirectional(ageRange.onsetProperty());
+//            resolutionAgeController.dataProperty().unbindBidirectional(ageRange.resolutionProperty());
+//        }
     }
 
     private String getLabelForTerm(TermId termId) {

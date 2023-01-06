@@ -37,14 +37,15 @@ public class PedigreeMemberDeserializer extends StdDeserializer<PedigreeMember> 
         // to cut the boilerplate
         Individual individual = codec.treeToValue(node, Individual.class);
 
-        return PedigreeMember.of(individual.id(),
+        return PedigreeMember.of(individual.getId(),
                 paternalId,
                 maternalId,
                 isProband,
-                individual.phenotypicFeatures().toList(),
-                individual.diseases(),
-                individual.genotypes(),
-                individual.age().isEmpty() ? null : individual.age().get(),
-                individual.sex());
+                individual.getPhenotypicFeatures(),
+                individual.getDiseaseStates(),
+                individual.getGenotypes(),
+                individual.getAge() == null ? null : individual.getAge(),
+                individual.getVitalStatus(),
+                individual.getSex());
     }
 }

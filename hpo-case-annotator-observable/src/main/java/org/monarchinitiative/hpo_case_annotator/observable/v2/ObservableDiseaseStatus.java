@@ -1,24 +1,42 @@
 package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
+import javafx.beans.Observable;
 import javafx.beans.property.*;
+import javafx.util.Callback;
+import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
+import org.monarchinitiative.hpo_case_annotator.observable.deep.ObservableItem;
 
-public class ObservableDiseaseStatus {
+import java.util.stream.Stream;
 
-    private final ObjectProperty<ObservableDiseaseIdentifier> diseaseIdentifier = new SimpleObjectProperty<>(this, "diseaseIdentifier", new ObservableDiseaseIdentifier());
+public class ObservableDiseaseStatus extends ObservableItem implements DiseaseStatus {
+
+    public static final Callback<ObservableDiseaseStatus, Observable[]> EXTRACTOR = obs -> new Observable[]{obs.excluded};
+
+    private DiseaseIdentifier diseaseId;
     private final BooleanProperty excluded = new SimpleBooleanProperty(this, "excluded");
 
-    public ObservableDiseaseIdentifier getDiseaseIdentifier() {
-        return diseaseIdentifier.get();
+    public ObservableDiseaseStatus() {
     }
 
-    public void setDiseaseIdentifier(ObservableDiseaseIdentifier diseaseIdentifier) {
-        this.diseaseIdentifier.set(diseaseIdentifier);
+    public ObservableDiseaseStatus(DiseaseStatus diseaseStatus) {
+        if (diseaseStatus != null) {
+            if (diseaseStatus.getDiseaseId() != null)
+                diseaseId = new DiseaseIdentifier(diseaseStatus.getDiseaseId());
+
+            excluded.set(diseaseStatus.isExcluded());
+        }
     }
 
-    public ObjectProperty<ObservableDiseaseIdentifier> diseaseIdentifierProperty() {
-        return diseaseIdentifier;
+    @Override
+    public DiseaseIdentifier getDiseaseId() {
+        return diseaseId;
     }
 
+    public void setDiseaseId(DiseaseIdentifier diseaseId) {
+        this.diseaseId = diseaseId;
+    }
+
+    @Override
     public boolean isExcluded() {
         return excluded.get();
     }
@@ -29,5 +47,18 @@ public class ObservableDiseaseStatus {
 
     public BooleanProperty excludedProperty() {
         return excluded;
+    }
+
+    @Override
+    public Stream<Observable> observables() {
+        return Stream.of(EXTRACTOR.call(this));
+    }
+
+    @Override
+    public String toString() {
+        return "ObservableDiseaseStatus{" +
+                "diseaseId=" + diseaseId +
+                ", excluded=" + excluded.get() +
+                '}';
     }
 }

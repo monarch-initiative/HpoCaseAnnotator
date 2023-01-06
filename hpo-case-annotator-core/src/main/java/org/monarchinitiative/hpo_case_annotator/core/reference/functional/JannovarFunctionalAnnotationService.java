@@ -27,10 +27,14 @@ public class JannovarFunctionalAnnotationService implements FunctionalAnnotation
 
     public static JannovarFunctionalAnnotationService of(Path jannovarCache) throws HpoCaseAnnotatorException {
         try {
-            return new JannovarFunctionalAnnotationService(new JannovarDataSerializer(jannovarCache.toString()).load());
+            return of(new JannovarDataSerializer(jannovarCache.toString()).load());
         } catch (SerializationException e) {
             throw new HpoCaseAnnotatorException(e);
         }
+    }
+
+    public static JannovarFunctionalAnnotationService of(JannovarData jannovarData) {
+        return new JannovarFunctionalAnnotationService(jannovarData);
     }
 
     private JannovarFunctionalAnnotationService(JannovarData jannovarData) {
@@ -40,7 +44,8 @@ public class JannovarFunctionalAnnotationService implements FunctionalAnnotation
 
     @Override
     public List<FunctionalAnnotation> annotate(GenomicVariant variant) {
-        if (variantAnnotator == null)
+        if (variant.isSymbolic())
+            // Annotation of symbolic variants is not yet supported.
             return List.of();
 
         Integer contig = referenceDictionary.getContigNameToID().get(variant.contigName());
@@ -68,7 +73,7 @@ public class JannovarFunctionalAnnotationService implements FunctionalAnnotation
                     .sorted()
                     .map(VariantEffect::toString)
                     .toList();
-            return new FunctionalAnnotation(ann.getGeneSymbol(), ann.getTranscript().getAccession(), effects, ann.getCDSNTChangeStr(), ann.getProteinChangeStr());
+            return FunctionalAnnotation.of(ann.getGeneSymbol(), ann.getTranscript().getAccession(), effects, ann.getCDSNTChangeStr(), ann.getProteinChangeStr());
         };
     }
 }

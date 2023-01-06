@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@disease-table.css">
+    <children>
+        <TableView fx:id="diseases" editable="true" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="isExcludedColumn" minWidth="90.0" text="Excluded"/>
+                <TableColumn fx:id="idColumn" editable="false" minWidth="150" text="ID" />
+                <TableColumn fx:id="labelColumn" editable="false" minWidth="350" text="Label"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+            <placeholder>
+                <Label text="No diseases yet"/>
+            </placeholder>
+        </TableView>
+    </children>
+</fx:root>

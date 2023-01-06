@@ -1,0 +1,7 @@
+#title-box {
+    -fx-alignment: center-left;
+}
+
+#probandIdLabel {
+    -fx-font-weight: bold;
+}

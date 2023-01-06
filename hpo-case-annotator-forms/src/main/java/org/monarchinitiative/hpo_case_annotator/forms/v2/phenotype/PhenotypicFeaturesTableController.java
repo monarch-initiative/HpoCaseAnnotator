@@ -2,6 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.v2.phenotype;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.SelectionMode;
@@ -35,15 +36,17 @@ public class PhenotypicFeaturesTableController {
 
     @FXML
     private void initialize() {
-        termIdTableColumn.setCellValueFactory(cd -> cd.getValue().termIdProperty().asString());
+        termIdTableColumn.setCellValueFactory(cd -> new ReadOnlyStringWrapper(cd.getValue().getTermId().getValue()));
 
         excludedTableColumn.setCellValueFactory(cd -> cd.getValue().excludedProperty());
         excludedTableColumn.setCellFactory(CheckBoxTableCell.forTableColumn(excludedTableColumn));
 
-        onsetTableColumn.setCellValueFactory(cd -> cd.getValue().getObservationAge().getOnset().period());
+        // TODO - implement or discard
+//        onsetTableColumn.setCellValueFactory(cd -> cd.getValue().getObservationAge().getOnset().period());
         onsetTableColumn.setCellFactory(PeriodTableCell.of());
 
-        resolutionTableColumn.setCellValueFactory(cd -> cd.getValue().getObservationAge().getResolution().period());
+        // TODO - implement or discard
+//        resolutionTableColumn.setCellValueFactory(cd -> cd.getValue().getObservationAge().getResolution().period());
         resolutionTableColumn.setCellFactory(PeriodTableCell.of());
 
         termsTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);

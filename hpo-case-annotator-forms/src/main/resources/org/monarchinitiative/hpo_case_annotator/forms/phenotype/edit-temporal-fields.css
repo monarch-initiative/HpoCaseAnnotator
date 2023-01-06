@@ -1,0 +1,7 @@
+#box {
+    -fx-background-color: white;
+}
+
+TitledLabel {
+    -fx-padding: 0 20 0 0;
+}

@@ -22,14 +22,13 @@ public class StudyMetadataSerializer extends StdSerializer<StudyMetadata> {
     public void serialize(StudyMetadata studyMetadata, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
 
-        gen.writeStringField("freeText", studyMetadata.freeText());
+        gen.writeStringField("freeText", studyMetadata.getFreeText());
 
-        gen.writeObjectField("createdBy", studyMetadata.createdBy());
+        gen.writeObjectField("createdBy", studyMetadata.getCreatedBy());
 
         gen.writeArrayFieldStart("modifiedBy");
-        for (EditHistory modified : studyMetadata.modifiedBy()) {
+        for (EditHistory modified : studyMetadata.getModifiedBy())
             gen.writeObject(modified);
-        }
         gen.writeEndArray();
 
         gen.writeEndObject();

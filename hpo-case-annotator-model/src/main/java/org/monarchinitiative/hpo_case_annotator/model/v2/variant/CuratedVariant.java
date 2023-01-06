@@ -4,7 +4,13 @@ import org.monarchinitiative.hpo_case_annotator.model.util.MD5Digest;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.VariantMetadata;
 import org.monarchinitiative.svart.*;
 
+import java.util.Optional;
+import java.util.OptionalInt;
+
 public interface CuratedVariant {
+
+    CoordinateSystem VCF_COORDINATE_SYSTEM = CoordinateSystem.oneBased();
+    Strand VCF_STRAND = Strand.POSITIVE;
 
     static CuratedVariant of(String genomicAssembly,
                              GenomicVariant variant,
@@ -12,103 +18,72 @@ public interface CuratedVariant {
         return CuratedVariantDefault.of(genomicAssembly, variant, variantMetadata);
     }
 
-    String genomicAssembly();
+    String getGenomicAssembly();
 
-    GenomicVariant variant();
+    /**
+     * Get {@link GenomicVariant} if all bits for its assembly are present.
+     * Note that {@link GenomicBreakendVariant} is returned if the variant is a translocation.
+     *
+     * @return optional with variant or an empty optional if the data is incomplete.
+     */
+    Optional<GenomicVariant> getVariant();
 
-    VariantMetadata variantMetadata();
+    VariantMetadata getVariantMetadata();
 
     default String md5Hex() {
         String id;
-        if (variant() instanceof GenomicBreakendVariant bv) {
-            GenomicBreakend left = bv.left();
-            GenomicBreakend right = bv.right();
-            id = String.join("-",
-                    genomicAssembly(),
-                    left.contigName(),
-                    // For breakends, start == end in 0-based CS, no need to hash both.
-                    String.valueOf(left.startWithCoordinateSystem(CoordinateSystem.zeroBased())),
-                    right.contigName(),
-                    String.valueOf(right.startWithCoordinateSystem(CoordinateSystem.zeroBased())),
-                    bv.eventId(),
-                    bv.ref(),
-                    bv.alt());
+        Optional<GenomicVariant> variant = getVariant();
+        if (variant.isPresent()) {
+            GenomicVariant v = variant.get();
+            if (v instanceof GenomicBreakendVariant bv) {
+                GenomicBreakend left = bv.left();
+                GenomicBreakend right = bv.right();
+                id = String.join("-",
+                        getGenomicAssembly(),
+                        left.contigName(),
+                        // For breakends, start == end in 0-based CS, no need to hash both.
+                        String.valueOf(left.startWithCoordinateSystem(CoordinateSystem.zeroBased())),
+                        right.contigName(),
+                        String.valueOf(right.startWithCoordinateSystem(CoordinateSystem.zeroBased())),
+                        bv.eventId(),
+                        bv.ref(),
+                        bv.alt());
+            } else {
+                id = String.join("-",
+                        getGenomicAssembly(),
+                        v.contig().name(),
+                        String.valueOf(v.startWithCoordinateSystem(CoordinateSystem.zeroBased())),
+                        String.valueOf(v.endWithCoordinateSystem(CoordinateSystem.zeroBased())),
+                        v.ref(),
+                        v.alt());
+            }
         } else {
-            id = String.join("-",
-                    genomicAssembly(),
-                    contig().name(),
-                    String.valueOf(startWithCoordinateSystem(CoordinateSystem.zeroBased())),
-                    String.valueOf(endWithCoordinateSystem(CoordinateSystem.zeroBased())),
-                    ref(),
-                    alt());
+            id = "";
         }
+
         return MD5Digest.digest(id);
     }
 
-    default Contig contig() {
-        return variant().contig();
+    // ************************************** DERIVED METHODS ******************************************************** *
+
+    default Optional<String> id() {
+        return getVariant().map(v -> {
+            if (v instanceof GenomicBreakendVariant bv) {
+                return bv.eventId();
+            } else {
+                return v.id();
+            }
+        });
     }
 
-    default Strand strand() {
-        return variant().strand();
+    default OptionalInt changeLength() {
+        Optional<GenomicVariant> variant = getVariant();
+        return variant.map(genomicVariant -> OptionalInt.of(genomicVariant.changeLength()))
+                .orElseGet(OptionalInt::empty);
     }
 
-    default Coordinates coordinates() {
-        return variant().coordinates();
+    default Optional<VariantType> variantType() {
+        return getVariant().map(GenomicVariant::variantType);
     }
-
-    default int start() {
-        return coordinates().start();
-    }
-
-    default int startWithCoordinateSystem(CoordinateSystem target) {
-        return variant().startWithCoordinateSystem(target);
-    }
-
-    default int startOnStrandWithCoordinateSystem(Strand strand, CoordinateSystem coordinateSystem) {
-        return variant().startOnStrandWithCoordinateSystem(strand, coordinateSystem);
-    }
-
-    default int end() {
-        return coordinates().end();
-    }
-
-    default int endWithCoordinateSystem(CoordinateSystem target) {
-        return variant().endWithCoordinateSystem(target);
-    }
-
-    default int endOnStrandWithCoordinateSystem(Strand strand, CoordinateSystem coordinateSystem) {
-        return variant().endOnStrandWithCoordinateSystem(strand, coordinateSystem);
-    }
-
-    default String ref() {
-        return variant().ref();
-    }
-
-    default String alt() {
-        return variant().alt();
-    }
-
-    default String id() {
-        if (variant() instanceof GenomicBreakendVariant bv) {
-            return bv.eventId();
-        } else {
-            return variant().id();
-        }
-    }
-
-    default int changeLength() {
-        return variant().changeLength();
-    }
-
-    default VariantType variantType() {
-        return variant().variantType();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    int hashCode();
-
-    boolean equals(Object o);
 
 }

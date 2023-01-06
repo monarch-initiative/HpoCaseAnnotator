@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.io.v2.json.deserialize;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -25,11 +24,11 @@ public class StudyMetadataDeserializer extends StdDeserializer<StudyMetadata> {
     }
 
     @Override
-    public StudyMetadata deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public StudyMetadata deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         ObjectCodec codec = jp.getCodec();
         JsonNode node = codec.readTree(jp);
 
-        String freeText = node.get("freeText").asText();
+        String freeText = Util.readNullableString(node, "freeText");
         EditHistory createdBy = codec.treeToValue(node.get("createdBy"), EditHistory.class);
 
 

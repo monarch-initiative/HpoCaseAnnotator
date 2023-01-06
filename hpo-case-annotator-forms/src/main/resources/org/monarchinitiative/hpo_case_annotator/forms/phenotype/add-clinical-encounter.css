@@ -1,0 +1,16 @@
+#credentials-box {
+    -fx-padding: 0 5 0 0;
+    /* A column on the left for showing the credentials and setting the encounter time. */
+    -fx-max-width: 300;
+    -fx-min-width: 300;
+}
+
+#add-terms-tab-pane {
+    -fx-tab-min-width: 150;
+    -fx-tab-min-height: 30;
+}
+
+.sized-btn {
+    -fx-min-width: 150;
+    -fx-min-height: 30;
+}

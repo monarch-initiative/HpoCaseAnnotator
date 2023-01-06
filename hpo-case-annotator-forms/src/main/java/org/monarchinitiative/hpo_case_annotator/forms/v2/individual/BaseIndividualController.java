@@ -117,7 +117,8 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual> exte
         individualIdTextField.textProperty().bindBidirectional(individual.idProperty());
 
         // age
-        ageController.dataProperty().bindBidirectional(individual.ageProperty());
+        // TODO - fix or discard
+//        ageController.dataProperty().bindBidirectional(individual.observableAgeProperty());
 
         // sex
         if (individual.getSex() != null) {
@@ -131,14 +132,14 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual> exte
         individual.sexProperty().bind(sexBinding);
 
         // phenotype
-        summarizePhenotypeCount(individual.phenotypicFeatures());
-        individual.phenotypicFeatures().addListener(summarizePhenotypeCount);
+        summarizePhenotypeCount(individual.phenotypicFeaturesProperty());
+        individual.phenotypicFeaturesProperty().addListener(summarizePhenotypeCount);
 
         // diseases
-        Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatuses());
+        Bindings.bindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatesProperty());
 
         // genotypes
-        Bindings.bindContentBidirectional(individualVariantSummaryController.genotypes(), individual.genotypes());
+        Bindings.bindContentBidirectional(individualVariantSummaryController.genotypesList(), individual.getGenotypes());
     }
 
     @Override
@@ -146,19 +147,20 @@ abstract class BaseIndividualController<T extends BaseObservableIndividual> exte
         individualIdTextField.textProperty().unbindBidirectional(individual.idProperty());
 
         // age
-        ageController.dataProperty().unbindBidirectional(individual.ageProperty());
+        // TODO - fix or discard
+//        ageController.dataProperty().unbindBidirectional(individual.observableAgeProperty());
 
         // sex
         individual.sexProperty().unbind();
 
         // phenotype
-        individual.phenotypicFeatures().removeListener(summarizePhenotypeCount);
+        individual.phenotypicFeaturesProperty().removeListener(summarizePhenotypeCount);
 
         // diseases
-        Bindings.unbindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatuses());
+        Bindings.unbindContentBidirectional(diseaseTableController.diseaseStatuses(), individual.diseaseStatesProperty());
 
         // genotypes
-        Bindings.unbindContentBidirectional(individualVariantSummaryController.genotypes(), individual.genotypes());
+        Bindings.unbindContentBidirectional(individualVariantSummaryController.genotypes(), individual.getGenotypes());
     }
 
 }

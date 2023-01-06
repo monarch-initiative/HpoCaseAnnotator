@@ -3,15 +3,14 @@ package org.monarchinitiative.hpo_case_annotator.app;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.monarchinitiative.hpo_case_annotator.app.config.*;
+import org.monarchinitiative.hpo_case_annotator.app.controller.MainController;
 import org.monarchinitiative.hpo_case_annotator.app.dialogs.Dialogs;
-import org.monarchinitiative.hpo_case_annotator.app.controller.Main;
 import org.monarchinitiative.hpo_case_annotator.app.model.FunctionalAnnotationResources;
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalResources;
 import org.monarchinitiative.hpo_case_annotator.app.model.genome.GenomicLocalResource;
@@ -27,6 +26,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -50,6 +50,9 @@ import java.util.stream.Collectors;
 public class App extends Application {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
+    public static final String BASE_CSS = Objects.requireNonNull(App.class.getResource("base.css")).toExternalForm();
+    private static final int MAIN_WINDOW_WIDTH = 1600;
+    private static final int MAIN_WINDOW_HEIGHT = 800;
 
     private ConfigurableApplicationContext context;
 
@@ -64,16 +67,16 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("Main.fxml"));
+        FXMLLoader loader = new FXMLLoader(MainController.class.getResource("Main.fxml"));
         loader.setControllerFactory(context::getBean);
 
         HcaProperties properties = context.getBean(HcaProperties.class);
         context.getBean(HostServicesUrlBrowser.class).setHostServices(getHostServices());
 
-        Parent parent = loader.load();
-        Scene scene = new Scene(parent, 1000, 800);
+        Scene scene = new Scene(loader.load(), MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
+        scene.getStylesheets().add(BASE_CSS);
         stage.setTitle(properties.name() + ' ' + properties.version());
-        stage.getIcons().add(new Image(App.class.getResourceAsStream("/img/donald-duck.png")));
+        stage.getIcons().add(new Image(App.class.getResourceAsStream("/img/icon.png")));
         stage.setScene(scene);
         stage.setOnCloseRequest(quitUponUserConfirmation());
         stage.show();
@@ -94,8 +97,6 @@ public class App extends Application {
     private static void serializeResourceState(OptionalResources optionalResources, Properties resourceProperties, File target) throws IOException {
         GenomicLocalResources localResources = optionalResources.getGenomicLocalResources();
         if (localResources != null) {
-            createReferenceGenomeFastaPath(localResources.getHg18())
-                    .ifPresent(refGenomePath -> resourceProperties.setProperty(ResourcePaths.HG18_FASTA_PATH_PROPETY, refGenomePath));
             createReferenceGenomeFastaPath(localResources.getHg19())
                     .ifPresent(refGenomePath -> resourceProperties.setProperty(ResourcePaths.HG19_FASTA_PATH_PROPETY, refGenomePath));
             createReferenceGenomeFastaPath(localResources.getHg38())
@@ -112,14 +113,14 @@ public class App extends Application {
                 resourceProperties.setProperty(ResourcePaths.HG38_JANNOVAR_CACHE_PATH, hg38JannovarPath.toAbsolutePath().toString());
         }
 
-        if (optionalResources.getOntologyPath() != null) {
-            resourceProperties.setProperty(ResourcePaths.ONTOLOGY_PATH_PROPERTY, optionalResources.getOntologyPath().getAbsolutePath());
+        if (optionalResources.getHpoPath() != null) {
+            resourceProperties.setProperty(ResourcePaths.ONTOLOGY_PATH_PROPERTY, optionalResources.getHpoPath().toAbsolutePath().toString());
         }
         if (optionalResources.getDiseaseCaseDir() != null) {
-            resourceProperties.setProperty(ResourcePaths.DISEASE_CASE_DIR_PROPERTY, optionalResources.getDiseaseCaseDir().getAbsolutePath());
+            resourceProperties.setProperty(ResourcePaths.DISEASE_CASE_DIR_PROPERTY, optionalResources.getDiseaseCaseDir().toAbsolutePath().toString());
         }
 
-        String liftoverChains = optionalResources.liftoverChainFiles().stream()
+        String liftoverChains = optionalResources.liftoverChainFilesProperty().stream()
                 .map(File::getAbsolutePath)
                 .collect(Collectors.joining(ResourcePaths.LIFTOVER_CHAIN_PATH_SEPARATOR));
         if (!liftoverChains.isBlank())
@@ -128,7 +129,10 @@ public class App extends Application {
         if (optionalResources.getBiocuratorId() != null) {
             resourceProperties.setProperty(ResourcePaths.BIOCURATOR_ID_PROPERTY, optionalResources.getBiocuratorId());
         }
-        resourceProperties.store(new FileWriter(target), "Hpo Case Annotator properties");
+        try (FileWriter writer = new FileWriter(target)) {
+            resourceProperties.store(writer, "Hpo Case Annotator properties");
+        }
+
         LOGGER.debug("Properties saved to `{}`", target.getAbsolutePath());
     }
 

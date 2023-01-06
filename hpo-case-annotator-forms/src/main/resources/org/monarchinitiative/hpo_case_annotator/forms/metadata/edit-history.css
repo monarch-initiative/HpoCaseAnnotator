@@ -1,0 +1,14 @@
+#curator-id {
+    -fx-min-width: 130;
+    -fx-pref-width: 130;
+}
+
+#soft-version {
+    -fx-min-width: 300;
+    -fx-pref-width: 300;
+}
+
+#timestamp {
+    -fx-min-width: 300;
+    -fx-pref-width: 300;
+}

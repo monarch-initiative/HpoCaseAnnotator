@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@publication-editable.css">
+    <children>
+        <VBox>
+            <children>
+                <TitledTextField fx:id="title" name="Title"/>
+                <TitledTextField fx:id="authors" name="Authors"/>
+                <TitledTextField fx:id="journal" name="Journal"/>
+                <TitledTextField fx:id="year" name="Year"/>
+                <TitledTextField fx:id="volume" name="Volume"/>
+                <TitledTextField fx:id="pages" name="Pages"/>
+                <TitledTextField fx:id="pmid" name="PMID"/>
+            </children>
+        </VBox>
+    </children>
+</fx:root>

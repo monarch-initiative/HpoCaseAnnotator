@@ -1,0 +1,19 @@
+.ar-label {
+    -fx-min-width: 45;
+    -fx-max-width: 45;
+}
+
+ComboBox {
+    -fx-max-width: 160;
+}
+
+.age-col {
+    -fx-pref-width: 150;
+    -fx-min-width: 120;
+}
+
+.age-datum {
+    -fx-alignment: bottom-left;
+    -fx-pref-width: 150;
+    -fx-min-width: 120;
+}

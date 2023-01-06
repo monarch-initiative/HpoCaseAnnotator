@@ -1,0 +1,9 @@
+ToggleButton {
+    -fx-font-size: .8 em;
+    -fx-font-weight: bold;
+}
+
+ToggleButton:selected {
+    -fx-background-color: black;
+    -fx-text-fill: white
+}

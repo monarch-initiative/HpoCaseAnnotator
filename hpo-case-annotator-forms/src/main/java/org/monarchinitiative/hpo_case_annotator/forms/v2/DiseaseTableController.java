@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.forms.v2;
 
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -19,8 +20,8 @@ public class DiseaseTableController {
 
     @FXML
     private void initialize() {
-        diseaseIdTableColumn.setCellValueFactory(cdf -> cdf.getValue().getDiseaseIdentifier().diseaseIdProperty().asString());
-        diseaseNameTableColumn.setCellValueFactory(cdf -> cdf.getValue().getDiseaseIdentifier().diseaseNameProperty());
+        diseaseIdTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getDiseaseId().id().getValue()));
+        diseaseNameTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getDiseaseId().getDiseaseName()));
         isExcludedTableColumn.setCellValueFactory(cdf -> cdf.getValue().excludedProperty());
         isExcludedTableColumn.setCellFactory(CheckBoxTableCell.forTableColumn(isExcludedTableColumn));
     }

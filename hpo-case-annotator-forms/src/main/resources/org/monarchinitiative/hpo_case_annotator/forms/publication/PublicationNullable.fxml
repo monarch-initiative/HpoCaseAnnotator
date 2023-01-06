@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.publication.Publication?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="HBox"
+         stylesheets="@publication.css">
+    <fx:define>
+        <!-- PublicationNullable shows either `publicationIsUnset` or the `Publication` -->
+        <Publication fx:id="publication"/>
+    </fx:define>
+    <children>
+        <Label fx:id="publicationIsUnset" text="Publication is unset." styleClass="h3"/>
+    </children>
+</fx:root>

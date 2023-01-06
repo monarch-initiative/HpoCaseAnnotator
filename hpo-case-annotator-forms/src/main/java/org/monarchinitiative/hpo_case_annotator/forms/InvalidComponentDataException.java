@@ -2,6 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.forms;
 
 import org.monarchinitiative.hpo_case_annotator.model.HpoCaseAnnotatorException;
 
+@Deprecated
 public class InvalidComponentDataException extends HpoCaseAnnotatorException {
 
     public InvalidComponentDataException() {

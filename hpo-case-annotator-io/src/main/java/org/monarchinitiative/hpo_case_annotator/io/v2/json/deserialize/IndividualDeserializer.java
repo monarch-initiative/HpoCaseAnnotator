@@ -1,19 +1,22 @@
 package org.monarchinitiative.hpo_case_annotator.io.v2.json.deserialize;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.time.Period;
 import java.util.*;
 
 public class IndividualDeserializer extends StdDeserializer<Individual> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(IndividualDeserializer.class);
 
     public IndividualDeserializer() {
         this(Individual.class);
@@ -24,14 +27,18 @@ public class IndividualDeserializer extends StdDeserializer<Individual> {
     }
 
     @Override
-    public Individual deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Individual deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         ObjectCodec codec = jp.getCodec();
         JsonNode node = codec.readTree(jp);
 
         String id = node.get("id").asText();
 
-        JsonNode ageNode = node.get("age");
-        Period age = (ageNode.isTextual()) ? Period.parse(ageNode.asText()) : null;
+        // TODO - can fail due to age being previously stored as `Age`
+        TimeElement age = codec.treeToValue(node.get("age"), TimeElement.class);
+
+        VitalStatus vitalStatus = node.has("vitalStatus")
+                ? codec.treeToValue(node.get("vitalStatus"), VitalStatus.class)
+                : VitalStatus.of(VitalStatus.Status.UNKNOWN, null);
 
         List<DiseaseStatus> diseaseStatuses = new LinkedList<>();
         Iterator<JsonNode> diseasesIterator = node.get("diseases").elements();
@@ -39,14 +46,24 @@ public class IndividualDeserializer extends StdDeserializer<Individual> {
             diseaseStatuses.add(codec.treeToValue(diseasesIterator.next(), DiseaseStatus.class));
         }
 
-        Map<String, Genotype> genotypeMap = new HashMap<>();
+        List<VariantGenotype> genotypes = new ArrayList<>();
         Iterator<JsonNode> genotypesIterator = node.get("genotypes").elements();
         while (genotypesIterator.hasNext()) {
             JsonNode genotypeNode = genotypesIterator.next();
-            genotypeMap.put(genotypeNode.get("variantId").asText(), Genotype.valueOf(genotypeNode.get("genotype").asText()));
+            String md5Hex;
+            if (genotypeNode.has("variantMd5Hex")) {
+                md5Hex = genotypeNode.get("variantMd5Hex").asText();
+            } else if (genotypeNode.has("variantId")) {
+                md5Hex = genotypeNode.get("variantId").asText();
+                LOGGER.warn("MD5 hex used in deprecated field `variantId`. Convert the data to the latest version ASAP");
+            } else {
+                LOGGER.warn("Missing MD5 hex for variant genotype");
+                continue;
+            }
+            genotypes.add(VariantGenotype.of(md5Hex, Genotype.valueOf(genotypeNode.get("genotype").asText())));
         }
 
-        Set<PhenotypicFeature> phenotypicFeatures = new HashSet<>();
+        List<PhenotypicFeature> phenotypicFeatures = new LinkedList<>();
         Iterator<JsonNode> phenotypicFeaturesIterator = node.get("phenotypicFeatures").elements();
         while (phenotypicFeaturesIterator.hasNext()) {
             phenotypicFeatures.add(codec.treeToValue(phenotypicFeaturesIterator.next(), PhenotypicFeature.class));
@@ -57,8 +74,9 @@ public class IndividualDeserializer extends StdDeserializer<Individual> {
         return Individual.of(id,
                 phenotypicFeatures,
                 diseaseStatuses,
-                genotypeMap,
+                genotypes,
                 age,
+                vitalStatus,
                 sex);
     }
 }

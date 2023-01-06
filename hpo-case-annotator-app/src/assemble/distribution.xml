@@ -1,0 +1,47 @@
+<assembly xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+    <id>distribution-${os.name}</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <fileSets>
+        <!-- The driver JAR -->
+        <fileSet>
+            <directory>${project.build.directory}</directory>
+            <outputDirectory>./lib</outputDirectory>
+            <includes>
+                <include>hpo-case-annotator-app-${project.version}.jar</include>
+            </includes>
+        </fileSet>
+        <!-- Java dependency JARs -->
+        <fileSet>
+            <directory>${project.build.directory}</directory>
+            <outputDirectory>./</outputDirectory>
+            <includes>
+                <include>lib/</include>
+            </includes>
+        </fileSet>
+        <!-- Launch script -->
+        <fileSet>
+            <directory>${project.basedir}/src/assemble</directory>
+            <outputDirectory>./</outputDirectory>
+            <includes>
+                <include>launch.sh</include>
+                <include>launch.command</include>
+                <include>launch.cmd</include>
+            </includes>
+        </fileSet>
+        <!-- Metadata -->
+        <fileSet>
+            <directory>${project.parent.basedir}</directory>
+            <outputDirectory>./</outputDirectory>
+            <filtered>true</filtered>
+            <includes>
+                <include>README.md</include>
+                <include>LICENSE</include>
+                <include>CHANGELOG.md</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>

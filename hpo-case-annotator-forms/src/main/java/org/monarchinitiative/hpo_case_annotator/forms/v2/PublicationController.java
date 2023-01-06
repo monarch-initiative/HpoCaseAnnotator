@@ -8,14 +8,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
-import org.monarchinitiative.hpo_case_annotator.forms.util.Formats;
+import org.monarchinitiative.hpo_case_annotator.forms.base.BindingObservableDataComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.util.TextFormatters;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservablePublication;
 
-public class PublicationController extends BindingDataController<ObservablePublication> {
+public class PublicationController extends BindingObservableDataComponent<ObservablePublication> {
 
     private final ObjectProperty<ObservablePublication> publication = new SimpleObjectProperty<>(this, "publication", new ObservablePublication());
-    private final TextFormatter<Integer> yearFormatter = Formats.integerFormatter();
+    private final TextFormatter<Integer> yearFormatter = TextFormatters.integerFormatter();
     @FXML
     private Label summaryLabel;
     @FXML
@@ -60,7 +60,7 @@ public class PublicationController extends BindingDataController<ObservablePubli
         titleTextField.textProperty().bindBidirectional(publication.titleProperty());
         authorsTextField.textProperty().bindBidirectional(publication.authorsProperty());
         journalTextField.textProperty().bindBidirectional(publication.journalProperty());
-        yearFormatter.valueProperty().bindBidirectional(publication.yearProperty().asObject());
+        yearFormatter.valueProperty().bindBidirectional(publication.yearProperty());
         volumeTextField.textProperty().bindBidirectional(publication.volumeProperty());
         pagesTextField.textProperty().bindBidirectional(publication.pagesProperty());
         pmidTextField.textProperty().bindBidirectional(publication.pmidProperty());
@@ -71,7 +71,7 @@ public class PublicationController extends BindingDataController<ObservablePubli
         titleTextField.textProperty().unbindBidirectional(publication.titleProperty());
         authorsTextField.textProperty().unbindBidirectional(publication.authorsProperty());
         journalTextField.textProperty().unbindBidirectional(publication.journalProperty());
-        yearFormatter.valueProperty().unbindBidirectional(publication.yearProperty().asObject());
+        yearFormatter.valueProperty().unbindBidirectional(publication.yearProperty());
         volumeTextField.textProperty().unbindBidirectional(publication.volumeProperty());
         pagesTextField.textProperty().unbindBidirectional(publication.pagesProperty());
         pmidTextField.textProperty().unbindBidirectional(publication.pmidProperty());

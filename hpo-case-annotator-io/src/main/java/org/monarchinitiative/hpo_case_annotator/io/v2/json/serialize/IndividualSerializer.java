@@ -6,10 +6,9 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import org.monarchinitiative.hpo_case_annotator.model.v2.DiseaseStatus;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Individual;
 import org.monarchinitiative.hpo_case_annotator.model.v2.PhenotypicFeature;
-import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class IndividualSerializer extends StdSerializer<Individual> {
 
@@ -22,35 +21,31 @@ public class IndividualSerializer extends StdSerializer<Individual> {
     }
 
     static void writeIndividualFields(Individual individual, JsonGenerator gen) throws IOException {
-        gen.writeStringField("id", individual.id());
+        gen.writeStringField("id", individual.getId());
 
-        if (individual.age().isPresent()) // age
-            gen.writeStringField("age", individual.age().get().toString());
-        else
-            gen.writeNullField("age");
+        gen.writeObjectField("age", individual.getAge());
+        gen.writeObjectField("vitalStatus", individual.getVitalStatus());
 
         gen.writeArrayFieldStart("diseases");
-        for (DiseaseStatus diseaseStatus : individual.diseases())
+        for (DiseaseStatus diseaseStatus : individual.getDiseaseStates())
             gen.writeObject(diseaseStatus);
         gen.writeEndArray();
 
         gen.writeArrayFieldStart("genotypes");
-        for (Map.Entry<String, Genotype> entry : individual.genotypes().entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .toList()) {
+        for (VariantGenotype vg : individual.getGenotypes()) {
             gen.writeStartObject();
-            gen.writeStringField("variantId", entry.getKey());
-            gen.writeStringField("genotype", entry.getValue().toString());
+            gen.writeStringField("variantMd5Hex", vg.getMd5Hex());
+            gen.writeStringField("genotype", vg.getGenotype().toString());
             gen.writeEndObject();
         }
         gen.writeEndArray();
 
         gen.writeArrayFieldStart("phenotypicFeatures");
-        for (PhenotypicFeature phenotypicFeature : individual.phenotypicFeatures().toList())
+        for (PhenotypicFeature phenotypicFeature : individual.getPhenotypicFeatures())
             gen.writeObject(phenotypicFeature);
         gen.writeEndArray();
 
-        gen.writeObjectField("sex", individual.sex());
+        gen.writeObjectField("sex", individual.getSex());
     }
 
     @Override

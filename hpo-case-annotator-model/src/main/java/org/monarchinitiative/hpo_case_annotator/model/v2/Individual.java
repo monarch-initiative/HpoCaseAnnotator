@@ -2,50 +2,53 @@ package org.monarchinitiative.hpo_case_annotator.model.v2;
 
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 
-import java.time.Period;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 public interface Individual {
 
     static Individual of(String id,
-                         Collection<PhenotypicFeature> phenotypicFeatures,
+                         List<PhenotypicFeature> phenotypicFeatures,
                          List<DiseaseStatus> diseases,
-                         Map<String, Genotype> genotypes,
-                         Period age,
+                         List<VariantGenotype> genotypes,
+                         TimeElement age,
+                         VitalStatus vitalStatus,
                          Sex sex) {
         return IndividualDefault.of(id,
                 phenotypicFeatures,
                 diseases,
                 genotypes,
                 age,
+                vitalStatus,
                 sex);
     }
 
     /**
      * @return String with ID of the individual within the publication.
      */
-    String id();
+    String getId();
 
     /**
-     * @return proband age at the time of the report.
+     * @return proband age at the time of the report or {@code null} if not known.
      */
-    Optional<Period> age();
-
-    Stream<PhenotypicFeature> phenotypicFeatures();
-
-    List<DiseaseStatus> diseases();
+    TimeElement getAge();
 
     /**
-     * @return map linking {@link CuratedVariant#md5Hex()} to the {@link Genotype} observed in this individual.
+     * @return proband's vital status or {@code null} if not known.
      */
-    Map<String, Genotype> genotypes();
+    VitalStatus getVitalStatus();
 
-    Sex sex();
+    Sex getSex();
+
+    List<? extends PhenotypicFeature> getPhenotypicFeatures();
+
+    List<? extends DiseaseStatus> getDiseaseStates();
+
+    /**
+     * @return list linking {@link CuratedVariant#md5Hex()} to the {@link Genotype} observed in this individual.
+     */
+    List<? extends VariantGenotype> getGenotypes();
 
     int hashCode();
 
@@ -53,9 +56,12 @@ public interface Individual {
 
     // ---------------------------------------------------------------------
 
+    /**
+     * @return {@code true} if at least one disease is indicated to be present in the {@link Individual}.
+     */
     default boolean isAffected() {
-        return diseases().stream()
-                .anyMatch(d -> !d.isExcluded());
+        return getDiseaseStates().stream()
+                .anyMatch(DiseaseStatus::isPresent);
     }
 
 }

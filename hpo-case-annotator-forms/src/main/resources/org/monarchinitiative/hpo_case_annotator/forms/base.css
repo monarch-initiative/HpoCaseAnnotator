@@ -1,56 +1,24 @@
-.title {
-    -fx-font-size: 22pt;
+.scene-title {
+    -fx-font-size: 1.4em;
     -fx-font-weight: bold;
-    -fx-padding: 15px 5px 5px 5px;
 }
 
-.h1 {
-    -fx-font-size: 18pt;
-    -fx-font-weight: bold;
-    -fx-padding: 15px 0px 5px 0px;
+
+.spacer10px {
+    -fx-pref-width: 10px;
+    -fx-pref-height: 10px;
 }
 
-.h2 {
-    -fx-font-size: 14pt;
-    -fx-font-style: italic;
-    -fx-text-fill: #003688;
-    -fx-effect: dropshadow(gaussian, #d7d7d7, 5, .5, 1, 1);
-    -fx-padding: 10px 0px 5px 0px;
+Separator {
+    -fx-padding: 5 0 5 0;
 }
 
-.h3 {
-    -fx-font-size: 12pt;
-    -fx-font-style: italic;
-}
+.add-item, .remove-item {
+    -fx-min-width: 40;
+    -fx-max-width: 40;
 
-.h4 {
-    -fx-font-size: 12pt;
-    -fx-padding: 10px 0px 5px 5px;
-}
-
-.section {
-    -fx-border-color: rgba(128, 128, 128, 0.5);
-    -fx-border-style: dotted;
-    -fx-border-width: 1px;
-    -fx-padding: 15px 0px 0px 15px;
-}
-
-.row {
-    -fx-padding: 10px 0px 5px 0px;
-}
-
-.column {
-    -fx-padding: 0px 10px 0px 0px;
-}
-
-.add-item {
-    -fx-pref-width: 30px;
-    -fx-pref-height: 30px;
-}
-
-.remove-item {
-    -fx-pref-width: 30px;
-    -fx-pref-height: 30px;
+    -fx-min-height: 40;
+    -fx-max-height: 40;
 }
 
 .edit-item {
@@ -66,4 +34,29 @@
 .ok-button {
     -fx-pref-width: 100px;
     -fx-pref-height: 30px;
+}
+.add-button {
+    -fx-graphic: url("icons/add-button.png");
+}
+
+.remove-button {
+    -fx-graphic: url("icons/remove-button.png");
+}
+
+.edit-button {
+    -fx-graphic: url("icons/pencil.png");
+}
+
+.add-button, .remove-button, .edit-button {
+    -fx-content-display: graphic-only;
+    -fx-max-width: 20;
+    -fx-max-height: 20;
+    -fx-background-radius: 10px;
+}
+
+.clear-button {
+    -fx-graphic: url('icons/clear.png');
+    -fx-content-display: graphic-only;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
 }

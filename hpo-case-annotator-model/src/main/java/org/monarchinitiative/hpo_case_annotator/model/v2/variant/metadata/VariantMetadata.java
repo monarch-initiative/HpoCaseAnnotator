@@ -4,6 +4,10 @@ import java.util.Objects;
 
 public abstract class VariantMetadata {
 
+    public static VariantMetadata emptyMetadata() {
+        return VariantMetadataDefault.EMPTY;
+    }
+
     private final VariantMetadataContext variantMetadataContext;
     private final String snippet;
     private final String variantClass;
@@ -18,9 +22,9 @@ public abstract class VariantMetadata {
                               boolean cosegregation,
                               boolean comparability) {
         this.variantMetadataContext = Objects.requireNonNull(variantMetadataContext, "Metadata context cannot be null");
-        this.snippet = Objects.requireNonNull(snippet, "Snippet cannot be null");
-        this.variantClass = Objects.requireNonNull(variantClass, "Variant class cannot be null");
-        this.pathomechanism = Objects.requireNonNull(pathomechanism, "Pathomechanism cannot be null");
+        this.snippet = snippet; // nullable
+        this.variantClass = variantClass; // nullable
+        this.pathomechanism = pathomechanism; // nullable
         this.cosegregation = cosegregation;
         this.comparability = comparability;
     }

@@ -1,14 +1,14 @@
 package org.monarchinitiative.hpo_case_annotator.forms.v2;
 
 
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import org.monarchinitiative.hpo_case_annotator.forms.BindingDataController;
+import org.monarchinitiative.hpo_case_annotator.forms.base.BindingObservableDataComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantSummary;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudy;
 
-public abstract class StudyController<T extends ObservableStudy> extends BindingDataController<T> {
+public abstract class StudyController<T extends ObservableStudy> extends BindingObservableDataComponent<T> {
 
     @FXML
     private TextField studyIdTextField;
@@ -19,9 +19,7 @@ public abstract class StudyController<T extends ObservableStudy> extends Binding
     private PublicationController publicationController;
 
     @FXML
-    private VBox variantSummary;
-    @FXML
-    protected VariantSummaryController variantSummaryController;
+    protected VariantSummary variantSummary;
 
     @FXML
     private VBox studyMetadata;
@@ -40,7 +38,7 @@ public abstract class StudyController<T extends ObservableStudy> extends Binding
 
         publicationController.dataProperty().bindBidirectional(study.publicationProperty());
 
-        Bindings.bindContentBidirectional(variantSummaryController.curatedVariants(), study.variants());
+        variantSummary.variantsProperty().bindBidirectional(study.variantsProperty());
 
         studyMetadataController.dataProperty().bindBidirectional(study.studyMetadataProperty());
     }
@@ -51,7 +49,7 @@ public abstract class StudyController<T extends ObservableStudy> extends Binding
 
         publicationController.dataProperty().unbindBidirectional(study.publicationProperty());
 
-        Bindings.unbindContentBidirectional(variantSummaryController.curatedVariants(), study.variants());
+        variantSummary.variantsProperty().unbindBidirectional(study.variantsProperty());
 
         studyMetadataController.dataProperty().unbindBidirectional(study.studyMetadataProperty());
     }

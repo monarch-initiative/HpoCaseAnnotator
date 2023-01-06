@@ -1,13 +1,24 @@
 package org.monarchinitiative.hpo_case_annotator.app.model.genome;
 
+import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.util.Callback;
+import org.monarchinitiative.hpo_case_annotator.observable.deep.ObservableItem;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.stream.Stream;
 
-public class GenomicLocalResource {
+public class GenomicLocalResource extends ObservableItem {
+
+    private static final Callback<GenomicLocalResource, Stream<Observable>> EXTRACTOR = item -> Stream.of(
+            item.assemblyReport,
+            item.fasta,
+            item.fastaFai,
+            item.fastaDict
+    );
 
     private final ObjectProperty<Path> assemblyReport = new SimpleObjectProperty<>(this, "assemblyReport");
     private final ObjectProperty<Path> fasta = new SimpleObjectProperty<>(this, "fasta");
@@ -73,6 +84,11 @@ public class GenomicLocalResource {
         return fastaDict;
     }
 
+    @Override
+    protected Stream<Observable> observables() {
+        return EXTRACTOR.call(this);
+    }
+
     public static Optional<GenomicLocalResource> createFromFastaPath(File fastaPath) {
         return fastaPath == null
                 ? Optional.empty()
@@ -94,5 +110,15 @@ public class GenomicLocalResource {
         Path fastaDict = parent.resolve(fastaName + ".dict");
 
         return Optional.of(new GenomicLocalResource(assemblyReport, fastaPath, fastaFai, fastaDict));
+    }
+
+    @Override
+    public String toString() {
+        return "GenomicLocalResource{" +
+                "assemblyReport=" + assemblyReport.get() +
+                ", fasta=" + fasta.get() +
+                ", fastaFai=" + fastaFai.get() +
+                ", fastaDict=" + fastaDict.get() +
+                '}';
     }
 }

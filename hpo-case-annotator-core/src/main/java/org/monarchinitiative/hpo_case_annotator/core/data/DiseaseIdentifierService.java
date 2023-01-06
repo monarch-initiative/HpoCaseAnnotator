@@ -9,11 +9,15 @@ import java.util.stream.Stream;
 
 public interface DiseaseIdentifierService {
 
+    static DiseaseIdentifierService of(List<DiseaseIdentifier> diseaseIdentifiers) {
+        return new DiseaseIdentifierServiceDefault(diseaseIdentifiers);
+    }
+
     Stream<DiseaseIdentifier> diseaseIdentifiers();
 
     default List<String> diseaseIds() {
         return diseaseIdentifiers()
-                .map(DiseaseIdentifier::diseaseId)
+                .map(DiseaseIdentifier::id)
                 .map(TermId::getValue)
                 .distinct()
                 .toList();
@@ -21,20 +25,20 @@ public interface DiseaseIdentifierService {
 
     default List<String> diseaseNames() {
         return diseaseIdentifiers()
-                .map(DiseaseIdentifier::diseaseName)
+                .map(DiseaseIdentifier::getDiseaseName)
                 .distinct()
                 .toList();
     }
 
     default Optional<DiseaseIdentifier> diseaseIdentifierForDiseaseId(TermId diseaseId) {
         return diseaseIdentifiers()
-                .filter(di -> di.diseaseId().equals(diseaseId))
+                .filter(di -> di.id().equals(diseaseId))
                 .findAny();
     }
 
     default Optional<DiseaseIdentifier> diseaseIdentifierForDiseaseName(String name) {
         return diseaseIdentifiers()
-                .filter(di -> di.diseaseName().equals(name))
+                .filter(di -> di.getDiseaseName().equals(name))
                 .findAny();
     }
 }

@@ -1,0 +1,13 @@
+#publication-editable-box {
+    -fx-pref-width: 800;
+    -fx-background-color: white;
+}
+
+.tl-text-field {
+    -fx-pref-height: 25;
+    -fx-max-width: 800;
+}
+
+#publication-editable-box .summary-area {
+    -fx-padding: 10 0 10 0;
+}

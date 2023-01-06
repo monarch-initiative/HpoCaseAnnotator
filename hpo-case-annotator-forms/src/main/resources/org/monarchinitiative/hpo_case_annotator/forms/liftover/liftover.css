@@ -1,13 +1,4 @@
-
-ComboBox {
-    -fx-pref-width: 120px;
-    -fx-pref-height: 30px;
-}
-
-TextField {
-    -fx-pref-height: 30px;
-}
-
-Label {
-    -fx-pref-height: 30px;
+FlowPane {
+    -fx-hgap: 5;
+    -fx-vgap: 5;
 }

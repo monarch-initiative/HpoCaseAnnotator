@@ -1,0 +1,8 @@
+.step-box {
+    -fx-background-color: white;
+    -fx-padding: 0 10 10 10;
+}
+
+.spacing-box {
+    -fx-padding: 15 0 0 0;
+}

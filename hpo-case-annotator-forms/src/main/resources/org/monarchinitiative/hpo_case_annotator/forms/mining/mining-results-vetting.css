@@ -1,0 +1,26 @@
+
+.hpo-term {
+    /* To add a "clickable" feel. */
+    -fx-cursor: hand;
+}
+
+.unreviewed {
+    -fx-fill: orange;
+    -fx-font-weight: bold;
+}
+
+.approved {
+    -fx-fill: seagreen;
+    -fx-underline: true;
+    -fx-font-weight: bold;
+}
+
+.rejected {
+    -fx-fill: red;
+    -fx-strikethrough: true;
+    -fx-font-weight: bold;
+}
+
+.tooltip {
+    -fx-font-size: 15;
+}

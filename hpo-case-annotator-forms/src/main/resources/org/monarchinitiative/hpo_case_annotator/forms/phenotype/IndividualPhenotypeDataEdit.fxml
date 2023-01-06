@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.*?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@phenotype.css">
+    <children>
+        <Label styleClass="h2" text="Individual"/>
+        <Label styleClass="instruction-text" text="We review phenotypic features of the individual with the following credentials"/>
+        <IndividualIdsComponent fx:id="individualIds"/>
+
+        <Pane styleClass="spacer10px"/>
+
+        <Label styleClass="h2" text="Add phenotype features"/>
+        <HBox>
+            <children>
+                <Button fx:id="browseHpo" onAction="#browseHpoAction"
+                        text="Browse HPO hierarchy">
+                    <tooltip>
+                        <Tooltip text="Add a single phenotype term by browsing HPO hierarchy" wrapText="true"/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="addClinicalEncounter" onAction="#addClinicalEncounterAction"
+                        text="Add clinical encounter">
+                    <tooltip>
+                        <Tooltip text="Add one or more phenotype terms for a clinical encounter" wrapText="true"/>
+                    </tooltip>
+                </Button>
+            </children>
+        </HBox>
+
+        <Separator/>
+
+        <HBox VBox.vgrow="ALWAYS">
+            <children>
+                <VBox HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="h2" text="Phenotype features"/>
+                        <Label styleClass="instruction-text" text="Phenotypic features entered for the individual are listed below."/>
+                        <PhenotypeTable fx:id="phenotypeTable" VBox.vgrow="ALWAYS"/>
+                        <Pane styleClass="spacer10px"/>
+                        <HBox>
+                            <children>
+                                <Button fx:id="removeSelectedPhenotypicFeature" onAction="#removeSelectedPhenotypicFeatureAction" styleClass="remove-item" text="-">
+                                    <tooltip>
+                                        <Tooltip text="Remove selected phenotypic feature" wrapText="true"/>
+                                    </tooltip>
+                                </Button>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+                <Pane styleClass="spacer10px"/>
+                <VBox HBox.hgrow="SOMETIMES">
+                    <children>
+                        <Label styleClass="h2" text="Phenotype feature"/>
+                        <PhenotypicFeatureBinding fx:id="phenotypicFeature"/>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</fx:root>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel?>
+
+<?import java.net.URL?>
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         id="publication-box">
+    <stylesheets>
+        <URL value="@../base.css"/>
+        <URL value="@publication.css"/>
+    </stylesheets>
+    <children>
+        <Label fx:id="title" id="title-label" text="Interpretable prioritization of splice variants in diagnostic next-generation sequencing" />
+        <Label fx:id="authors" text="Danis D, Jacobsen JOB, Carmody LC, Gargano MA, McMurry JA, Hegde A, Haendel MA, Valentini G, Smedley D, Robinson PN" />
+        <HBox id="publication-metadata">
+            <children>
+                <TitledLabel fx:id="year" styleClass="publication-meta" name="Year" text="2021" />
+                <TitledLabel fx:id="journal" id="journal" styleClass="publication-meta" name="Journal" text="Am J Hum Genet" />
+                <TitledLabel fx:id="volume" styleClass="publication-meta" name="Volume" text="108(9)" />
+                <TitledLabel fx:id="pages" styleClass="publication-meta" name="Pages" text="1564-1577" />
+                <TitledLabel fx:id="pmid" styleClass="publication-meta" name="PMID" text="34289339" />
+            </children>
+        </HBox>
+    </children>
+</fx:root>

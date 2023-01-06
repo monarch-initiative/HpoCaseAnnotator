@@ -4,6 +4,9 @@
 Entering data
 =============
 
+.. warning::
+  The documentation has not been updated for the `2.*` version yet.
+
 Publication
 ###########
 There are two ways of entering the data regarding the publication which describes the curated case:
@@ -191,5 +194,3 @@ Many of the individual papers about disease-causing variants have a lot of inter
   of PTF1A and that the mutations abolish enhancer activity. The mutation was shown to abolish
   binding of FOXA2 (Supplementary Figure 8 of Wheedon et al., 2014).
 
-
------------------------------

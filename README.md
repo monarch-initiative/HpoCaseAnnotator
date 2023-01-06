@@ -1,40 +1,19 @@
-[![CI CD](https://github.com/monarch-initiative/HpoCaseAnnotator/actions/workflows/maven.yml/badge.svg)](https://github.com/monarch-initiative/HpoCaseAnnotator/actions/workflows/maven.yml/badge.svg)
-
 # Hpo Case Annotator
 
-Hpo Case Annotator (HCA) is Java app created with aim to make the biocuration of published pathogenic human variants easier.
+[![GitHub release](https://img.shields.io/github/release/monarch-initiative/HpoCaseAnnotator.svg)](https://github.com/monarch-initiative/HpoCaseAnnotator/releases)
+[![Java CI with Maven](https://github.com/monarch-initiative/HpoCaseAnnotator/workflows/Java%20CI%20with%20Maven/badge.svg)](https://github.com/monarch-initiative/HpoCaseAnnotator/actions/workflows/maven.yml)
+[![Documentation Status](https://readthedocs.org/projects/hpo-case-annotator/badge/?version=stable)](https://hpo-case-annotator.readthedocs.io/en/stable/?badge=stable)
 
-### Building & installation
-Running *HCA* requires *Java 17* or better, the app is built with *Maven*.
+Hpo Case Annotator makes biocuration of case reports easier.
 
-- **build** - building a the *distribution ZIP archive* requires running:
+Most users should download the latest *Hpo Case Annotator* distribution ZIP file from
+the [Releases page](https://github.com/monarch-initiative/HpoCaseAnnotator/releases).
 
-```bash
-git clone https://github.com/monarch-initiative/HpoCaseAnnotator.git
-cd HpoCaseAnnotator
-
-./mvnw clean package
-```
-> After running these commands, the executable JAR file are available at `hpo-case-annotator-app/target/hpo-case-annotator-app-2.0.0.jar`
-
-- **installation** - the recommended way of using the *HCA* is to copy the executable JAR into a directory (`/home/user/software` or similar). Then, to start the app from command line:
-
-```bash
-cd /home/user/software
-java -jar hpo-case-annotator-app-2.0.0.jar
-```
-
-### Initial set up
-Some buttons and fields are disabled after the first start of the GUI. You have to download some resources in order to enable all the functions. Click on `File > Settings > Initialize resources` menu and:
-
-- download reference genome files
-- download Human Phenotype Ontology file
-- set paths to Jannovar transcript caches
-- set the path to *curated files directory*, where the data for a project will be stored
-- download *Liftover chain files*
-- set your **biocurator ID**
+Please consult the Read the docs site for detailed documentation:
+- [stable version](https://hpo-case-annotator.readthedocs.io/en/stable) describing the latest release at the *Releases page*, or
+- [latest version](https://hpo-case-annotator.readthedocs.io/en/latest) summarizing the latest development on `development` branch.
 
 ## Issues?
 
-Feel free to submit an issue into the [tracker](https://github.com/monarch-initiative/HpoCaseAnnotator/issues).
+Feel free to submit an issue to our [tracker](https://github.com/monarch-initiative/HpoCaseAnnotator/issues).
 

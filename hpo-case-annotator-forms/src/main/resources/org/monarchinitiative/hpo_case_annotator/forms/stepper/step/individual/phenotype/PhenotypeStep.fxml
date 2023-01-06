@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypicFeatureBinding?>
+
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         type="VBox"
+         stylesheets="@phenotype-step.css"
+         styleClass="step-box" >
+    <children>
+        <Label styleClass="h2" text="Phenotypic features"/>
+        <Label styleClass="instruction-text" text="Add phenotype terms observed in the individual"/>
+        <HBox>
+            <children>
+                <VBox >
+                    <children>
+                        <Label text="Add phenotype features" styleClass="h3"/>
+                        <ButtonBar>
+                            <buttons>
+                                <Button fx:id="browseHpo" onAction="#browseHpoAction"
+                                        text="Browse HPO hierarchy">
+                                    <tooltip>
+                                        <Tooltip text="Add a single phenotype term by browsing HPO hierarchy" wrapText="true"/>
+                                    </tooltip>
+                                </Button>
+                                <Button fx:id="addClinicalEncounter" onAction="#addClinicalEncounterAction"
+                                        text="Add clinical encounter">
+                                    <tooltip>
+                                        <Tooltip text="Add one or more phenotype terms for a clinical encounter" wrapText="true"/>
+                                    </tooltip>
+                                </Button>
+                            </buttons>
+                        </ButtonBar>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <HBox>
+            <children>
+                <VBox HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label text="Phenotypic features" styleClass="h3"/>
+                        <Label text="Phenotypic features of the individual are listed below." styleClass="instruction-text"/>
+                        <PhenotypeTable fx:id="phenotypeTable" VBox.vgrow="ALWAYS"/>
+                    </children>
+                </VBox>
+                <VBox>
+                    <children>
+                        <PhenotypicFeatureBinding fx:id="phenotypicFeature"/>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</fx:root>

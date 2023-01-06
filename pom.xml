@@ -33,6 +33,8 @@
         <jannovar.version>0.36</jannovar.version>
         <phenol.version>2.0.0-RC4</phenol.version>
         <svart.version>2.0.0-RC1</svart.version>
+        <!-- TODO - use stable version -->
+        <fenominal.version>0.7.7-SNAPSHOT</fenominal.version>
         <htsjdk.version>2.24.1</htsjdk.version>
 
         <protobuf.version>3.19.3</protobuf.version>
@@ -84,6 +86,11 @@
                 <groupId>org.monarchinitiative.svart</groupId>
                 <artifactId>svart</artifactId>
                 <version>${svart.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.monarchinitiative.fenominal</groupId>
+                <artifactId>fenominal-core</artifactId>
+                <version>${fenominal.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.charite.compbio</groupId>
@@ -246,16 +253,20 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.0.0-M4</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>2.7</version>
+                    <configuration>
+                        <generateBackupPoms>false</generateBackupPoms>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
@@ -263,44 +274,6 @@
     <profiles>
         <profile>
             <id>release</id>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-javadoc-plugin</artifactId>
-                            <version>3.1.0</version>
-                            <configuration>
-                                <doclint>none</doclint>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-source-plugin</artifactId>
-                            <version>3.1.0</version>
-                            <executions>
-                                <execution>
-                                    <id>attach-sources</id>
-                                    <phase>verify</phase>
-                                    <goals>
-                                        <goal>jar-no-fork</goal>
-                                    </goals>
-                                </execution>
-                            </executions>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
         <profile>
             <id>dev</id>

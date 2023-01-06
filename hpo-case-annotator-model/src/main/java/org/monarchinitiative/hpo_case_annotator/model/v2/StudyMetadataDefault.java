@@ -4,4 +4,18 @@ import java.util.List;
 
 record StudyMetadataDefault(String freeText, EditHistory createdBy,
                             List<EditHistory> modifiedBy) implements StudyMetadata {
+    @Override
+    public String getFreeText() {
+        return freeText;
+    }
+
+    @Override
+    public EditHistory getCreatedBy() {
+        return createdBy;
+    }
+
+    @Override
+    public List<EditHistory> getModifiedBy() {
+        return modifiedBy;
+    }
 }

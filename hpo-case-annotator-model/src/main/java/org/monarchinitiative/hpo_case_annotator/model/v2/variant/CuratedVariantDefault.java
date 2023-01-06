@@ -4,6 +4,7 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.Varian
 import org.monarchinitiative.svart.*;
 
 import java.util.Objects;
+import java.util.Optional;
 
 record CuratedVariantDefault(String genomicAssembly,
                              GenomicVariant variant,
@@ -21,6 +22,22 @@ record CuratedVariantDefault(String genomicAssembly,
                                     GenomicVariant variant,
                                     VariantMetadata variantMetadata) {
         return new CuratedVariantDefault(genomicAssembly, variant, variantMetadata);
+    }
+
+    @Override
+    public String getGenomicAssembly() {
+        return genomicAssembly;
+    }
+
+    @Override
+    public Optional<GenomicVariant> getVariant() {
+        // Never empty
+        return Optional.of(variant);
+    }
+
+    @Override
+    public VariantMetadata getVariantMetadata() {
+        return variantMetadata;
     }
 
 }

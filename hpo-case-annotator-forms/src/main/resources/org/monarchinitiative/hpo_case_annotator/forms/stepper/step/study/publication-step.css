@@ -1,0 +1,20 @@
+#separator {
+    -fx-alignment: center;
+}
+
+#pmid-tl-text-field {
+    -fx-min-height: 30;
+    -fx-min-width: 250;
+}
+
+#separator Label {
+    -fx-padding: 0 5 0 5;
+}
+
+#separator Separator {
+    -fx-fill-width: true;
+}
+
+HBox {
+    -fx-alignment: bottom-left;
+}

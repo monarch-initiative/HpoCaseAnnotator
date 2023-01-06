@@ -34,8 +34,8 @@ public class JannovarFunctionalAnnotationServiceTest {
         List<FunctionalAnnotation> annotations = SERVICE.annotate(variant);
 
         assertThat(annotations, hasSize(2));
-        assertThat(annotations, hasItem(new FunctionalAnnotation("SURF2", "NM_017503.4", List.of("MISSENSE_VARIANT", "SPLICE_REGION_VARIANT"), "c.689A>C", "p.(K230T)")));
-        assertThat(annotations, hasItem(new FunctionalAnnotation("SURF2", "NM_001278928.1", List.of("SPLICE_ACCEPTOR_VARIANT", "CODING_TRANSCRIPT_INTRON_VARIANT"), "c.688-2A>C", "p.?")));
+        assertThat(annotations, hasItem(FunctionalAnnotation.of("SURF2", "NM_017503.4", List.of("MISSENSE_VARIANT", "SPLICE_REGION_VARIANT"), "c.689A>C", "p.(K230T)")));
+        assertThat(annotations, hasItem(FunctionalAnnotation.of("SURF2", "NM_001278928.1", List.of("SPLICE_ACCEPTOR_VARIANT", "CODING_TRANSCRIPT_INTRON_VARIANT"), "c.688-2A>C", "p.?")));
     }
 
     @Test
@@ -44,6 +44,6 @@ public class JannovarFunctionalAnnotationServiceTest {
         List<FunctionalAnnotation> annotations = SERVICE.annotate(variant);
 
         assertThat(annotations, hasSize(1));
-        assertThat(annotations, hasItem(new FunctionalAnnotation("FBN1", "NM_000138.4", List.of("FRAMESHIFT_ELONGATION"), "c.6115_6116insA", "p.(L2039Hfs*28)")));
+        assertThat(annotations, hasItem(FunctionalAnnotation.of("FBN1", "NM_000138.4", List.of("FRAMESHIFT_ELONGATION"), "c.6115_6116insA", "p.(L2039Hfs*28)")));
     }
 }

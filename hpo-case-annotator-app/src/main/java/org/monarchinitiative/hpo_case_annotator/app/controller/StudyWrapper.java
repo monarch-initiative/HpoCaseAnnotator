@@ -1,57 +1,52 @@
 package org.monarchinitiative.hpo_case_annotator.app.controller;
 
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import org.monarchinitiative.hpo_case_annotator.forms.study.BaseStudyComponent;
+import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableStudy;
+
 import java.nio.file.Path;
-import java.util.Objects;
 
-public class StudyWrapper<T> {
+class StudyWrapper<T extends ObservableStudy> {
+    private final BaseStudyComponent<T> component;
+    private final ObjectProperty<Path> studyPath = new SimpleObjectProperty<>();
+    private final boolean addEditHistoryItem;
 
-    private final T study;
-    private Path studyPath;
-
-    public static <T> StudyWrapper<T> of(T study) {
-        return of(study, null);
+    StudyWrapper(BaseStudyComponent<T> component,
+                 Path studyPath,
+                 boolean addEditHistoryItem) {
+        this.component = component;
+        this.studyPath.set(studyPath);
+        this.addEditHistoryItem = addEditHistoryItem;
     }
 
-    public static <T> StudyWrapper<T> of(T study, Path studyPath) {
-        return new StudyWrapper<>(study, studyPath);
-    }
-
-    private StudyWrapper(T controller, Path studyPath) {
-        this.study = controller;
-        this.studyPath = studyPath;
-    }
-
-    public T study() {
-        return study;
-    }
-
-    public Path studyPath() {
-        return studyPath;
+    public BaseStudyComponent<T> component() {
+        return component;
     }
 
     public void setStudyPath(Path studyPath) {
-        this.studyPath = studyPath;
+        this.studyPath.set(studyPath);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        StudyWrapper<?> that = (StudyWrapper<?>) o;
-        return Objects.equals(study, that.study) && Objects.equals(studyPath, that.studyPath);
+    public Path getStudyPath() {
+        return studyPath.get();
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(study, studyPath);
+    public ObjectProperty<Path> studyPathProperty() {
+        return studyPath;
+    }
+
+    public boolean addEditHistoryItem() {
+        return addEditHistoryItem;
     }
 
     @Override
     public String toString() {
         return "StudyWrapper{" +
-                "study=" + study +
-                ", studyPath=" + studyPath +
+                "study=" + component +
+                ", studyPath=" + studyPath.get() +
+                ", addEditHistoryItem=" + addEditHistoryItem +
                 '}';
     }
 }

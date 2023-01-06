@@ -19,7 +19,6 @@
         <dependency>
             <groupId>org.monarchinitiative.phenol</groupId>
             <artifactId>phenol-io</artifactId>
-            <version>${phenol.version}</version>
         </dependency>
         <dependency>
             <groupId>de.charite.compbio</groupId>

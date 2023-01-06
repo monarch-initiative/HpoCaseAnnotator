@@ -18,7 +18,7 @@
     } ]
   },
   "publication" : {
-    "authors" : [ "Beygó J", "Buiting K", "Seland S", "Lüdecke HJ", "Hehr U", "Lich C", "Prager B", "Lohmann DR", "Wieczorek D" ],
+    "authors" : "Beygó J, Buiting K, Seland S, Lüdecke HJ, Hehr U, Lich C, Prager B, Lohmann DR, Wieczorek D",
     "title" : "First Report of a Single Exon Deletion in TCOF1 Causing Treacher Collins Syndrome",
     "journal" : "Mol Syndromol",
     "year" : 2012,
@@ -38,24 +38,22 @@
     "md5Hex" : "c9dda67d707ab3c69142d891d6a0a4e1",
     "ref" : "C",
     "alt" : "G",
-    "variantValidation" : {
-      "validationContext" : "MENDELIAN",
-      "validationMetadata" : {
-        "variantMetadataContext" : "MENDELIAN",
-        "snippet" : "TTCATTTAC[C/G]TCTACTGG",
-        "variantClass" : "promoter",
-        "pathomechanism" : "promoter|reduced-transcription",
-        "cosegregation" : false,
-        "comparability" : false,
-        "regulator" : "TEST_REGULATOR",
-        "reporterRegulation" : "no",
-        "reporterResidualActivity" : "RES_ACT",
-        "emsaValidationPerformed" : true,
-        "emsaTfSymbol" : "TF_SYMBOL_TEST",
-        "emsaGeneId" : "TF_GENEID_TEST",
-        "otherChoices" : "down",
-        "otherEffect" : "in vitro mRNA expression assay"
-      }
+    "validationContext" : "MendelianVariantMetadata",
+    "validationMetadata" : {
+      "variantMetadataContext" : "MENDELIAN",
+      "snippet" : "TTCATTTAC[C/G]TCTACTGG",
+      "variantClass" : "promoter",
+      "pathomechanism" : "promoter|reduced-transcription",
+      "cosegregation" : false,
+      "comparability" : false,
+      "regulator" : "TEST_REGULATOR",
+      "reporterRegulation" : "no",
+      "reporterResidualActivity" : "RES_ACT",
+      "emsaValidationPerformed" : true,
+      "emsaTfSymbol" : "TF_SYMBOL_TEST",
+      "emsaGeneId" : "TF_GENEID_TEST",
+      "otherChoices" : "down",
+      "otherEffect" : "in vitro mRNA expression assay"
     }
   }, {
     "variantType" : "SNV",
@@ -69,23 +67,21 @@
     "md5Hex" : "f2e88a99810ce259880f744fbbddc0f3",
     "ref" : "C",
     "alt" : "A",
-    "variantValidation" : {
-      "validationContext" : "SOMATIC",
-      "validationMetadata" : {
-        "variantMetadataContext" : "SOMATIC",
-        "snippet" : "TTCATTTAC[C/A]TCTACTGG",
-        "variantClass" : "5UTR",
-        "pathomechanism" : "5UTR|transcription",
-        "cosegregation" : false,
-        "comparability" : false,
-        "regulator" : "SOMATIC_REGULATOR",
-        "reporterRegulation" : "up",
-        "reporterResidualActivity" : "SOMATIC_RP_PERC",
-        "emsaGeneId" : "TF_GENE_SYMBOL_TEST",
-        "otherChoices" : "up",
-        "nPatients" : 78,
-        "mPatients" : 100
-      }
+    "validationContext" : "SomaticVariantMetadata",
+    "validationMetadata" : {
+      "variantMetadataContext" : "SOMATIC",
+      "snippet" : "TTCATTTAC[C/A]TCTACTGG",
+      "variantClass" : "5UTR",
+      "pathomechanism" : "5UTR|transcription",
+      "cosegregation" : false,
+      "comparability" : false,
+      "regulator" : "SOMATIC_REGULATOR",
+      "reporterRegulation" : "up",
+      "reporterResidualActivity" : "SOMATIC_RP_PERC",
+      "emsaGeneId" : "TF_GENE_SYMBOL_TEST",
+      "otherChoices" : "up",
+      "nPatients" : 78,
+      "mPatients" : 100
     }
   }, {
     "variantType" : "SNV",
@@ -99,29 +95,27 @@
     "md5Hex" : "bfed08fc27778a1587dcaebc2b455718",
     "ref" : "C",
     "alt" : "T",
-    "variantValidation" : {
-      "validationContext" : "SPLICING",
-      "validationMetadata" : {
-        "variantMetadataContext" : "SPLICING",
-        "snippet" : "TTCATTTAC[C/T]TCTACTGG",
-        "variantClass" : "splicing",
-        "pathomechanism" : "splicing|3css|activated",
-        "cosegregation" : true,
-        "comparability" : false,
-        "crypticPosition" : 123737090,
-        "crypticSpliceSiteType" : "FIVE_PRIME",
-        "crypticSpliceSiteSnippet" : "ATATG|GCGAGTTCTT",
-        "consequence" : "Cryptic splicing",
-        "minigeneValidation" : true,
-        "siteDirectedMutagenesisValidation" : false,
-        "rtPcrValidation" : true,
-        "srProteinOverexpressionValidation" : false,
-        "srProteinKnockdownValidation" : true,
-        "cDnaSequencingValidation" : false,
-        "pcrValidation" : true,
-        "mutOfWtSpliceSiteValidation" : false,
-        "otherValidation" : true
-      }
+    "validationContext" : "SplicingVariantMetadata",
+    "validationMetadata" : {
+      "variantMetadataContext" : "SPLICING",
+      "snippet" : "TTCATTTAC[C/T]TCTACTGG",
+      "variantClass" : "splicing",
+      "pathomechanism" : "splicing|3css|activated",
+      "cosegregation" : true,
+      "comparability" : false,
+      "crypticPosition" : 123737090,
+      "crypticSpliceSiteType" : "FIVE_PRIME",
+      "crypticSpliceSiteSnippet" : "ATATG|GCGAGTTCTT",
+      "consequence" : "Cryptic splicing",
+      "minigeneValidation" : true,
+      "siteDirectedMutagenesisValidation" : false,
+      "rtPcrValidation" : true,
+      "srProteinOverexpressionValidation" : false,
+      "srProteinKnockdownValidation" : true,
+      "cDnaSequencingValidation" : false,
+      "pcrValidation" : true,
+      "mutOfWtSpliceSiteValidation" : false,
+      "otherValidation" : true
     }
   }, {
     "variantType" : "DEL",
@@ -143,16 +137,14 @@
     "md5Hex" : "94f38002744f2dfdbad129153880603f",
     "ref" : "N",
     "alt" : "<DEL>",
-    "variantValidation" : {
-      "validationContext" : "STRUCTURAL",
-      "validationMetadata" : {
-        "variantMetadataContext" : "STRUCTURAL",
-        "snippet" : "",
-        "variantClass" : "structural",
-        "pathomechanism" : "intronic deletion",
-        "cosegregation" : true,
-        "comparability" : false
-      }
+    "validationContext" : "StructuralVariantMetadata",
+    "validationMetadata" : {
+      "variantMetadataContext" : "STRUCTURAL",
+      "snippet" : "",
+      "variantClass" : "structural",
+      "pathomechanism" : "intronic deletion",
+      "cosegregation" : true,
+      "comparability" : false
     }
   }, {
     "variantType" : "BND",
@@ -175,21 +167,30 @@
     "md5Hex" : "ab671d73cb3a1ba57d3a31889c4d29cc",
     "ref" : "G",
     "alt" : "ACGT",
-    "variantValidation" : {
-      "validationContext" : "STRUCTURAL",
-      "validationMetadata" : {
-        "variantMetadataContext" : "STRUCTURAL",
-        "snippet" : "",
-        "variantClass" : "structural",
-        "pathomechanism" : "intronic deletion",
-        "cosegregation" : true,
-        "comparability" : false
-      }
+    "validationContext" : "StructuralVariantMetadata",
+    "validationMetadata" : {
+      "variantMetadataContext" : "STRUCTURAL",
+      "snippet" : "",
+      "variantClass" : "structural",
+      "pathomechanism" : "intronic deletion",
+      "cosegregation" : true,
+      "comparability" : false
     }
   } ],
   "individuals" : [ {
     "id" : "abc",
-    "age" : "P10Y20D",
+    "age" : {
+      "timeCase" : "AGE",
+      "age" : {
+        "years" : 14,
+        "months" : null,
+        "days" : null
+      }
+    },
+    "vitalStatus" : {
+      "status" : "ALIVE",
+      "timeOfDeath" : null
+    },
     "diseases" : [ {
       "diseaseIdentifier" : {
         "diseaseId" : "OMIM:219700",
@@ -198,40 +199,69 @@
       "isExcluded" : false
     } ],
     "genotypes" : [ {
-      "variantId" : "94f38002744f2dfdbad129153880603f",
-      "genotype" : "HETEROZYGOUS"
-    }, {
-      "variantId" : "ab671d73cb3a1ba57d3a31889c4d29cc",
-      "genotype" : "HETEROZYGOUS"
-    }, {
-      "variantId" : "bfed08fc27778a1587dcaebc2b455718",
+      "variantMd5Hex" : "c9dda67d707ab3c69142d891d6a0a4e1",
       "genotype" : "HOMOZYGOUS_ALTERNATE"
     }, {
-      "variantId" : "c9dda67d707ab3c69142d891d6a0a4e1",
+      "variantMd5Hex" : "f2e88a99810ce259880f744fbbddc0f3",
+      "genotype" : "HETEROZYGOUS"
+    }, {
+      "variantMd5Hex" : "bfed08fc27778a1587dcaebc2b455718",
       "genotype" : "HOMOZYGOUS_ALTERNATE"
     }, {
-      "variantId" : "f2e88a99810ce259880f744fbbddc0f3",
+      "variantMd5Hex" : "94f38002744f2dfdbad129153880603f",
+      "genotype" : "HETEROZYGOUS"
+    }, {
+      "variantMd5Hex" : "ab671d73cb3a1ba57d3a31889c4d29cc",
       "genotype" : "HETEROZYGOUS"
     } ],
     "phenotypicFeatures" : [ {
-      "termId" : "HP:0002110",
-      "isExcluded" : false,
-      "observationAge" : {
-        "onset" : "P0D",
-        "resolution" : "P10Y20D"
-      }
-    }, {
       "termId" : "HP:0000822",
+      "label" : "Hypertension",
       "isExcluded" : true,
-      "observationAge" : {
-        "onset" : "P0D",
-        "resolution" : "P10Y20D"
-      }
+      "onset" : {
+        "timeCase" : "GESTATIONAL_AGE",
+        "gestationalAge" : {
+          "weeks" : 38,
+          "days" : 3
+        }
+      },
+      "resolution" : null
+    }, {
+      "termId" : "HP:0002110",
+      "label" : "Bronchiectasis",
+      "isExcluded" : false,
+      "onset" : {
+        "timeCase" : "AGE",
+        "age" : {
+          "years" : 10,
+          "months" : 0,
+          "days" : 20
+        }
+      },
+      "resolution" : null
     } ],
     "sex" : "MALE"
   }, {
     "id" : "def",
-    "age" : "P15Y2M4D",
+    "age" : {
+      "timeCase" : "AGE",
+      "age" : {
+        "years" : 25,
+        "months" : null,
+        "days" : null
+      }
+    },
+    "vitalStatus" : {
+      "status" : "DECEASED",
+      "timeOfDeath" : {
+        "timeCase" : "AGE",
+        "age" : {
+          "years" : 35,
+          "months" : null,
+          "days" : null
+        }
+      }
+    },
     "diseases" : [ {
       "diseaseIdentifier" : {
         "diseaseId" : "OMIM:219700",
@@ -240,35 +270,50 @@
       "isExcluded" : true
     } ],
     "genotypes" : [ {
-      "variantId" : "94f38002744f2dfdbad129153880603f",
+      "variantMd5Hex" : "c9dda67d707ab3c69142d891d6a0a4e1",
+      "genotype" : "HOMOZYGOUS_REFERENCE"
+    }, {
+      "variantMd5Hex" : "f2e88a99810ce259880f744fbbddc0f3",
+      "genotype" : "HOMOZYGOUS_REFERENCE"
+    }, {
+      "variantMd5Hex" : "bfed08fc27778a1587dcaebc2b455718",
+      "genotype" : "HOMOZYGOUS_ALTERNATE"
+    }, {
+      "variantMd5Hex" : "94f38002744f2dfdbad129153880603f",
       "genotype" : "HETEROZYGOUS"
     }, {
-      "variantId" : "ab671d73cb3a1ba57d3a31889c4d29cc",
+      "variantMd5Hex" : "ab671d73cb3a1ba57d3a31889c4d29cc",
       "genotype" : "HOMOZYGOUS_ALTERNATE"
-    }, {
-      "variantId" : "bfed08fc27778a1587dcaebc2b455718",
-      "genotype" : "HOMOZYGOUS_ALTERNATE"
-    }, {
-      "variantId" : "c9dda67d707ab3c69142d891d6a0a4e1",
-      "genotype" : "HOMOZYGOUS_REFERENCE"
-    }, {
-      "variantId" : "f2e88a99810ce259880f744fbbddc0f3",
-      "genotype" : "HOMOZYGOUS_REFERENCE"
     } ],
     "phenotypicFeatures" : [ {
       "termId" : "HP:0000822",
+      "label" : "Hypertension",
       "isExcluded" : false,
-      "observationAge" : {
-        "onset" : "P0D",
-        "resolution" : "P15Y2M4D"
-      }
+      "onset" : {
+        "timeCase" : "AGE_RANGE",
+        "ageRange" : {
+          "start" : {
+            "years" : 15,
+            "months" : null,
+            "days" : null
+          },
+          "end" : {
+            "years" : 16,
+            "months" : null,
+            "days" : null
+          }
+        }
+      },
+      "resolution" : null
     }, {
       "termId" : "HP:0002110",
+      "label" : "Bronchiectasis",
       "isExcluded" : true,
-      "observationAge" : {
-        "onset" : "P0D",
-        "resolution" : "P15Y2M4D"
-      }
+      "onset" : {
+        "timeCase" : "ONTOLOGY_CLASS",
+        "ontologyClass" : "HP:0003581"
+      },
+      "resolution" : null
     } ],
     "sex" : "FEMALE"
   } ]

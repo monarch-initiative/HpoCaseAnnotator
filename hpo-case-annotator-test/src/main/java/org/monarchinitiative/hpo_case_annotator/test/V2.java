@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.test;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.CuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.Genotype;
+import org.monarchinitiative.hpo_case_annotator.model.v2.variant.VariantGenotype;
 import org.monarchinitiative.hpo_case_annotator.model.v2.variant.metadata.*;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.monarchinitiative.svart.*;
@@ -10,14 +11,17 @@ import org.monarchinitiative.svart.assembly.GenomicAssemblies;
 import org.monarchinitiative.svart.assembly.GenomicAssembly;
 
 import java.time.Instant;
-import java.time.Period;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 class V2 {
 
     private static final GenomicAssembly HG19 = GenomicAssemblies.GRCh37p13();
+
+    public static IndividualStudy comprehensiveIndividualStudy() {
+        DiseaseIdentifier diseaseIdentifier = cysticFibrosis();
+        return IndividualStudy.of("individualStudyTest", getPublication(), getVariants(), abcIndividual(diseaseIdentifier), getStudyMetadata());
+    }
 
     public static FamilyStudy comprehensiveFamilyStudy() {
         return FamilyStudy.of("familyStudyTest", getPublication(), getVariants(), getPedigree(), getStudyMetadata());
@@ -31,7 +35,7 @@ class V2 {
 
     private static Publication getPublication() {
         return Publication.of(
-                List.of("Beygó J", "Buiting K", "Seland S", "Lüdecke HJ", "Hehr U", "Lich C", "Prager B", "Lohmann DR", "Wieczorek D"),
+                String.join(", ", List.of("Beygó J", "Buiting K", "Seland S", "Lüdecke HJ", "Hehr U", "Lich C", "Prager B", "Lohmann DR", "Wieczorek D")),
                 "First Report of a Single Exon Deletion in TCOF1 Causing Treacher Collins Syndrome",
                 "Mol Syndromol",
                 2012,
@@ -158,60 +162,95 @@ class V2 {
     }
 
     private static Pedigree getPedigree() {
-        DiseaseIdentifier diseaseIdentifier = DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF");
-        List<DiseaseStatus> diseases = List.of(DiseaseStatus.of(diseaseIdentifier , false));
+        DiseaseIdentifier diseaseIdentifier = cysticFibrosis();
+        List<DiseaseStatus> diseases = List.of(DiseaseStatus.of(diseaseIdentifier, false));
 
-        Map<String, Genotype> genotypes = Map.of(
-                mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
-                somaticVariant().md5Hex(), Genotype.HETEROZYGOUS,
-                splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
-                symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS,
-                symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS);
+        List<VariantGenotype> genotypes = List.of(
+                VariantGenotype.of(mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE),
+                VariantGenotype.of(somaticVariant().md5Hex(), Genotype.HETEROZYGOUS),
+                VariantGenotype.of(splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE),
+                VariantGenotype.of(symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS),
+                VariantGenotype.of(symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS));
 
+        TimeElement hypertensionOnset = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(4, 6, null), null, null);
+        TimeElement bronchiectasisOnset = TimeElement.of(TimeElement.TimeElementCase.AGE_RANGE, null, null, AgeRange.of(Age.of(10, null, null), Age.of(10, 6, null)), null);
         List<PhenotypicFeature> phenotypes = List.of(
-                PhenotypicFeature.of(TermId.of("HP:0002110"), false, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D"))), // Bronchiectasis
-                PhenotypicFeature.of(TermId.of("HP:0000822"), true, AgeRange.sinceBirthUntilAge(Period.parse("P10Y5M4D"))) // Hypertension
+                PhenotypicFeature.of(TermId.of("HP:0000822"), "Hypertension", true, hypertensionOnset, null), // Hypertension
+                PhenotypicFeature.of(TermId.of("HP:0002110"), "Bronchiectasis", false, bronchiectasisOnset, null) // Bronchiectasis
         );
 
-
+        TimeElement age = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(10, 5, 4), null, null);
+        VitalStatus vitalStatus = VitalStatus.of(VitalStatus.Status.ALIVE, null);
         return Pedigree.of(
                 List.of(PedigreeMember.of("FAM:001",
                         "FAM:002",
                         null,
-                        true, phenotypes, diseases, genotypes, Period.parse("P10Y5M4D"),
+                        true, phenotypes, diseases, genotypes, age,
+                        vitalStatus,
                         Sex.MALE))
         );
     }
 
     private static Collection<? extends Individual> getCohortMembers() {
-        DiseaseIdentifier diseaseIdentifier = DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF");
-        // abc
-        Individual abc = Individual.of("abc",
+        DiseaseIdentifier diseaseIdentifier = cysticFibrosis();
+        return List.of(abcIndividual(diseaseIdentifier), defIndividual(diseaseIdentifier));
+    }
+
+    private static DiseaseIdentifier cysticFibrosis() {
+        return DiseaseIdentifier.of(TermId.of("OMIM:219700"), "CYSTIC FIBROSIS; CF");
+    }
+
+    private static Individual abcIndividual(DiseaseIdentifier diseaseIdentifier) {
+        TimeElement abcHypertensionOnset = TimeElement.of(TimeElement.TimeElementCase.GESTATIONAL_AGE, GestationalAge.of(38, 3), null, null, null);
+        TimeElement abcBronchiectasisOnset = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(10, 0, 20), null, null);
+
+        TimeElement abcAge = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(14, null, null), null, null);
+        VitalStatus abcVitalStatus = VitalStatus.of(VitalStatus.Status.ALIVE, null);
+        return Individual.of("abc",
+                // The phenotypic features are nonsense, just for testing.
                 List.of(
-                        PhenotypicFeature.of(TermId.of("HP:0002110"), false, AgeRange.sinceBirthUntilAge(Period.parse("P10Y0M20D"))), // Bronchiectasis
-                        PhenotypicFeature.of(TermId.of("HP:0000822"), true, AgeRange.sinceBirthUntilAge(Period.parse("P10Y0M20D"))) // Hypertension
-                ), List.of(DiseaseStatus.of(diseaseIdentifier, false)), Map.of(
-                        mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
-                        somaticVariant().md5Hex(), Genotype.HETEROZYGOUS,
-                        splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
-                        symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS,
-                        symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS), Period.of(10, 0, 20),
+                        PhenotypicFeature.of(TermId.of("HP:0000822"), "Hypertension", true, abcHypertensionOnset, null), // Hypertension
+                        PhenotypicFeature.of(TermId.of("HP:0002110"), "Bronchiectasis", false, abcBronchiectasisOnset, null) // Bronchiectasis
+                ),
+                List.of(DiseaseStatus.of(diseaseIdentifier, false)),
+                List.of(
+                        VariantGenotype.of(mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE),
+                        VariantGenotype.of(somaticVariant().md5Hex(), Genotype.HETEROZYGOUS),
+                        VariantGenotype.of(splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE),
+                        VariantGenotype.of(symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS),
+                        VariantGenotype.of(symbolicBreakendVariant().md5Hex(), Genotype.HETEROZYGOUS)),
+                abcAge,
+                abcVitalStatus,
                 Sex.MALE);
+    }
 
-        // def
-        Individual def = Individual.of("def",
+    private static Individual defIndividual(DiseaseIdentifier diseaseIdentifier) {
+        // Onset somewhere in the 16th year of life.
+        Age start = Age.of(15, null, null);
+        Age end = Age.of(16, null, null);
+        TimeElement defHypertensionOnset = TimeElement.of(TimeElement.TimeElementCase.AGE_RANGE, null, null, AgeRange.of(start, end), null);
+
+        TermId adultOnset = TermId.of("HP:0003581");
+        TimeElement defBronchiectasisOnset = TimeElement.of(TimeElement.TimeElementCase.ONTOLOGY_CLASS, null, null, null, adultOnset);
+
+        TimeElement defAge = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(25, null, null), null, null);
+        VitalStatus defVitalStatus = VitalStatus.of(VitalStatus.Status.DECEASED, TimeElement.age(Age.of(35, null, null)));
+        return Individual.of("def",
+                // The phenotypic features are nonsense, just for testing.
                 List.of(
-                        PhenotypicFeature.of(TermId.of("HP:0002110"), true, AgeRange.sinceBirthUntilAge(Period.parse("P15Y2M4D"))), // Bronchiectasis
-                        PhenotypicFeature.of(TermId.of("HP:0000822"), false, AgeRange.sinceBirthUntilAge(Period.parse("P15Y2M4D"))) // Hypertension
-                ), List.of(DiseaseStatus.of(diseaseIdentifier, true)), Map.of(
-                        mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE,
-                        somaticVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE,
-                        splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE,
-                        symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS,
-                        symbolicBreakendVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE), Period.of(15, 2, 4),
+                        PhenotypicFeature.of(TermId.of("HP:0000822"), "Hypertension", false, defHypertensionOnset, null), // Hypertension
+                        PhenotypicFeature.of(TermId.of("HP:0002110"), "Bronchiectasis", true, defBronchiectasisOnset, null) // Bronchiectasis
+                ),
+                List.of(DiseaseStatus.of(diseaseIdentifier, true)),
+                List.of(
+                        VariantGenotype.of(mendelianVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE),
+                        VariantGenotype.of(somaticVariant().md5Hex(), Genotype.HOMOZYGOUS_REFERENCE),
+                        VariantGenotype.of(splicingVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE),
+                        VariantGenotype.of(symbolicDeletion().md5Hex(), Genotype.HETEROZYGOUS),
+                        VariantGenotype.of(symbolicBreakendVariant().md5Hex(), Genotype.HOMOZYGOUS_ALTERNATE)),
+                defAge,
+                defVitalStatus,
                 Sex.FEMALE);
-
-        return List.of(abc, def);
     }
 
     private static StudyMetadata getStudyMetadata() {

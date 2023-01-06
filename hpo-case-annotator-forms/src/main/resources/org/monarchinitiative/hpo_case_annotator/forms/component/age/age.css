@@ -1,0 +1,8 @@
+/* This is a FlowPane */
+#age-box {
+    -fx-hgap: 5;
+    -fx-vgap: 5;
+}
+
+/* .age-datum is defined in `time-element-component.css` */
+

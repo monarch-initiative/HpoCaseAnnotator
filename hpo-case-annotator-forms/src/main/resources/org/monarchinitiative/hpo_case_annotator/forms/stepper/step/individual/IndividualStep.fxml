@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox"
+         stylesheets="@individual-step.css"
+         styleClass="step-box">
+    <children>
+        <Label text="Individual" styleClass="h1"/>
+        <Label styleClass="instruction-text" text="Provide credentials of the individual under investigation."/>
+
+        <IndividualIdsBindingComponent fx:id="individualIds" />
+
+        <GridPane hgap="5">
+            <children>
+                <Button onAction="#addEditPhenotypesAction" text="Add/Edit phenotype features" />
+                <Button onAction="#addEditDiseasesAction" text="Add/Edit diseases" GridPane.columnIndex="1"/>
+                <Button onAction="#addEditGenotypesAction" text="Add/Edit variant genotypes" GridPane.columnIndex="2"/>
+            </children>
+        </GridPane>
+    </children>
+</fx:root>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledCheckBox?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.VitalStatusBindingComponent?>
+<?import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementBindingComponent?>
+
+<fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         type="VBox">
+    <stylesheets>
+        <URL value="@../base.css"/>
+        <URL value="@individual-pedigree-member-ids-component.css"/>
+    </stylesheets>
+    <children>
+        <FlowPane id="id-flow-pane">
+            <children>
+                <!-- Credentials -->
+                <VBox styleClass="flow-box">
+                    <children>
+                        <Label styleClass="h3" text="IDs"/>
+                        <TitledTextField fx:id="individualId" name="ID" promptText="e.g. I:1"/>
+                        <TitledTextField fx:id="paternalId" name="Paternal ID" promptText="II:2" />
+                        <TitledTextField fx:id="maternalId" name="Maternal ID" promptText="II:3" />
+                        <TitledComboBox fx:id="sex" name="Sex"/>
+                        <TitledCheckBox fx:id="proband" name="Proband?" />
+                    </children>
+                </VBox>
+
+                <!-- Age -->
+                <VBox styleClass="flow-box">
+                    <children>
+                        <Label styleClass="h3" text="Age"/>
+                        <CheckBox fx:id="ageIsUnknown" text="Age is unknown"/>
+                        <HBox>
+                            <children>
+                                <TimeElementBindingComponent fx:id="ageComponent" HBox.hgrow="ALWAYS"/>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <!-- Vital status -->
+                <VBox styleClass="flow-box">
+                    <children>
+                        <Label styleClass="h3" text="Vital status"/>
+                        <VitalStatusBindingComponent fx:id="vitalStatusComponent"/>
+                    </children>
+                </VBox>
+            </children>
+        </FlowPane>
+    </children>
+</fx:root>
