@@ -31,13 +31,14 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <jannovar.version>0.36</jannovar.version>
-        <phenol.version>2.0.0-RC4</phenol.version>
+        <phenol.version>2.0.0-RC5</phenol.version>
         <svart.version>2.0.0-RC1</svart.version>
         <!-- TODO - use stable version -->
         <fenominal.version>0.7.7-SNAPSHOT</fenominal.version>
         <htsjdk.version>2.24.1</htsjdk.version>
 
         <protobuf.version>3.19.3</protobuf.version>
+        <phenopacket-tools.version>1.0.0-RC1</phenopacket-tools.version>
         <hpotextmining.version>0.2.8</hpotextmining.version>
 
         <javafx.version>17.0.2</javafx.version>
@@ -160,7 +161,12 @@
             <dependency>
                 <groupId>org.phenopackets.phenopackettools</groupId>
                 <artifactId>phenopacket-tools-builder</artifactId>
-                <version>0.4.0-SNAPSHOT</version>
+                <version>${phenopacket-tools.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.phenopackets.phenopackettools</groupId>
+                <artifactId>phenopacket-tools-io</artifactId>
+                <version>${phenopacket-tools.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.protobuf</groupId>
@@ -171,6 +177,11 @@
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-java-util</artifactId>
                 <version>${protobuf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>1.33</version>
             </dependency>
             <dependency>
                 <groupId>com.beust</groupId>

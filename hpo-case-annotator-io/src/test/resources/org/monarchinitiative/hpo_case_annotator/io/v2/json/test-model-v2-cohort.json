@@ -215,8 +215,8 @@
       "genotype" : "HETEROZYGOUS"
     } ],
     "phenotypicFeatures" : [ {
-      "termId" : "HP:0000822",
-      "label" : "Hypertension",
+      "termId" : "HP:0001166",
+      "label" : "Arachnodactyly",
       "isExcluded" : true,
       "onset" : {
         "timeCase" : "GESTATIONAL_AGE",
@@ -227,8 +227,8 @@
       },
       "resolution" : null
     }, {
-      "termId" : "HP:0002110",
-      "label" : "Bronchiectasis",
+      "termId" : "HP:0002266",
+      "label" : "Focal clonic seizure",
       "isExcluded" : false,
       "onset" : {
         "timeCase" : "AGE",
@@ -286,8 +286,8 @@
       "genotype" : "HOMOZYGOUS_ALTERNATE"
     } ],
     "phenotypicFeatures" : [ {
-      "termId" : "HP:0000822",
-      "label" : "Hypertension",
+      "termId" : "HP:0001433",
+      "label" : "Hepatosplenomegaly",
       "isExcluded" : false,
       "onset" : {
         "timeCase" : "AGE_RANGE",
@@ -306,8 +306,8 @@
       },
       "resolution" : null
     }, {
-      "termId" : "HP:0002110",
-      "label" : "Bronchiectasis",
+      "termId" : "HP:0010677",
+      "label" : "Enuresis nocturna",
       "isExcluded" : true,
       "onset" : {
         "timeCase" : "ONTOLOGY_CLASS",

@@ -201,16 +201,16 @@ class V2 {
     }
 
     private static Individual abcIndividual(DiseaseIdentifier diseaseIdentifier) {
-        TimeElement abcHypertensionOnset = TimeElement.of(TimeElement.TimeElementCase.GESTATIONAL_AGE, GestationalAge.of(38, 3), null, null, null);
-        TimeElement abcBronchiectasisOnset = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(10, 0, 20), null, null);
+        TimeElement abcArachnodactylyOnset = TimeElement.of(TimeElement.TimeElementCase.GESTATIONAL_AGE, GestationalAge.of(38, 3), null, null, null);
+        TimeElement abcSeizureOnset = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(10, 0, 20), null, null);
 
         TimeElement abcAge = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(14, null, null), null, null);
         VitalStatus abcVitalStatus = VitalStatus.of(VitalStatus.Status.ALIVE, null);
         return Individual.of("abc",
                 // The phenotypic features are nonsense, just for testing.
                 List.of(
-                        PhenotypicFeature.of(TermId.of("HP:0000822"), "Hypertension", true, abcHypertensionOnset, null), // Hypertension
-                        PhenotypicFeature.of(TermId.of("HP:0002110"), "Bronchiectasis", false, abcBronchiectasisOnset, null) // Bronchiectasis
+                        PhenotypicFeature.of(TermId.of("HP:0001166"), "Arachnodactyly", true, abcArachnodactylyOnset, null), // Arachnodactyly
+                        PhenotypicFeature.of(TermId.of("HP:0002266"), "Focal clonic seizure", false, abcSeizureOnset, null) // Focal tonic seizure
                 ),
                 List.of(DiseaseStatus.of(diseaseIdentifier, false)),
                 List.of(
@@ -228,18 +228,18 @@ class V2 {
         // Onset somewhere in the 16th year of life.
         Age start = Age.of(15, null, null);
         Age end = Age.of(16, null, null);
-        TimeElement defHypertensionOnset = TimeElement.of(TimeElement.TimeElementCase.AGE_RANGE, null, null, AgeRange.of(start, end), null);
+        TimeElement defHepatosplenomegalyOnset = TimeElement.of(TimeElement.TimeElementCase.AGE_RANGE, null, null, AgeRange.of(start, end), null);
 
         TermId adultOnset = TermId.of("HP:0003581");
-        TimeElement defBronchiectasisOnset = TimeElement.of(TimeElement.TimeElementCase.ONTOLOGY_CLASS, null, null, null, adultOnset);
+        TimeElement defEnuresisNocturnaOnset = TimeElement.of(TimeElement.TimeElementCase.ONTOLOGY_CLASS, null, null, null, adultOnset);
 
         TimeElement defAge = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(25, null, null), null, null);
         VitalStatus defVitalStatus = VitalStatus.of(VitalStatus.Status.DECEASED, TimeElement.age(Age.of(35, null, null)));
         return Individual.of("def",
                 // The phenotypic features are nonsense, just for testing.
                 List.of(
-                        PhenotypicFeature.of(TermId.of("HP:0000822"), "Hypertension", false, defHypertensionOnset, null), // Hypertension
-                        PhenotypicFeature.of(TermId.of("HP:0002110"), "Bronchiectasis", true, defBronchiectasisOnset, null) // Bronchiectasis
+                        PhenotypicFeature.of(TermId.of("HP:0001433"), "Hepatosplenomegaly", false, defHepatosplenomegalyOnset, null), // Hepatosplenomegaly
+                        PhenotypicFeature.of(TermId.of("HP:0010677"), "Enuresis nocturna", true, defEnuresisNocturnaOnset, null) // Enuresis nocturna
                 ),
                 List.of(DiseaseStatus.of(diseaseIdentifier, true)),
                 List.of(
