@@ -2,9 +2,14 @@ module org.monarchinitiative.hca.app {
     requires org.monarchinitiative.hca.io;
     requires org.monarchinitiative.hca.forms;
     requires org.monarchinitiative.hca.convert;
+    requires org.monarchinitiative.hca.export;
 
     requires org.monarchinitiative.phenol.io;
     requires org.monarchinitiative.fenominal.core;
+
+    requires org.phenopackets.phenopackettools.core; // TODO should be redundant with phenopacket-tools v1.0.0-RC2 or better
+    requires org.phenopackets.phenopackettools.io;
+
     requires jannovar.core;
     requires htsjdk;
 

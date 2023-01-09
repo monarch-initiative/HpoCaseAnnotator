@@ -1,13 +1,16 @@
 package org.monarchinitiative.hpo_case_annotator.export;
 
 import com.google.protobuf.Message;
+import org.monarchinitiative.hpo_case_annotator.export.ppv2.CohortStudyToV2PhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.export.ppv2.FamilyStudyToV2PhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.export.ppv2.IndividualStudyToV2PhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.model.convert.Codec;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
+import org.monarchinitiative.hpo_case_annotator.model.v2.CohortStudy;
 import org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy;
 import org.monarchinitiative.hpo_case_annotator.model.v2.IndividualStudy;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
+import org.phenopackets.schema.v2.Cohort;
 import org.phenopackets.schema.v2.Family;
 import org.phenopackets.schema.v2.Phenopacket;
 
@@ -35,6 +38,10 @@ public final class ExportCodecs {
 
     public static Codec<FamilyStudy, Family> familyStudyToFamilyCodec(Ontology hpo) {
         return new FamilyStudyToV2PhenopacketCodec(hpo);
+    }
+
+    public static Codec<CohortStudy, Cohort> cohortStudyToFamilyCodec(Ontology hpo) {
+        return new CohortStudyToV2PhenopacketCodec(hpo);
     }
 
     /**
