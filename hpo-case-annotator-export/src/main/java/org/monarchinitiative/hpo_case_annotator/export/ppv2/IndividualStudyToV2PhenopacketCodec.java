@@ -60,8 +60,8 @@ public class IndividualStudyToV2PhenopacketCodec extends BaseStudyToV2Phenopacke
     }
 
     private void encodeIndividual(Individual individual,
-                                         Map<String, ? extends CuratedVariant> variantByMd5Hex,
-                                         PhenopacketBuilder phenopacketBuilder) throws ModelTransformationException {
+                                  Map<String, ? extends CuratedVariant> variantByMd5Hex,
+                                  PhenopacketBuilder phenopacketBuilder) throws ModelTransformationException {
         // INDIVIDUAL
         // - id
         IndividualBuilder individualBuilder = IndividualBuilder.builder(individual.getId())
@@ -111,76 +111,82 @@ public class IndividualStudyToV2PhenopacketCodec extends BaseStudyToV2Phenopacke
         List<? extends DiseaseStatus> presentDiseaseStates = individual.getDiseaseStates().stream()
                 .filter(DiseaseStatus::isPresent)
                 .toList();
-        if (!individual.getGenotypes().isEmpty() && presentDiseaseStates.size() != 1)
-            // We only export variants if the number of disease states is 1.
-            throw new ModelTransformationException("Export of a study with >1 variants for a study with >1 observed diseases is not yet supported");
+
+        if (!individual.getGenotypes().isEmpty() && !presentDiseaseStates.isEmpty()) {
+            // It only makes sense to consider variants & genotypes if we have both variants and diseases.
+
+            if (presentDiseaseStates.size() != 1)
+                // We only export variants if the number of disease states is 1.
+                throw new ModelTransformationException("Export of a study with >1 variants for a study with >1 observed diseases is not yet supported");
 
 
-        DiseaseStatus diseaseStatus = presentDiseaseStates.get(0);
-        DiagnosisBuilder diagnosis = DiagnosisBuilder.builder(diseaseStatus.getDiseaseId().id().getValue(), diseaseStatus.getDiseaseId().getDiseaseName());
+            DiseaseStatus diseaseStatus = presentDiseaseStates.get(0);
+            DiagnosisBuilder diagnosis = DiagnosisBuilder.builder(diseaseStatus.getDiseaseId().id().getValue(), diseaseStatus.getDiseaseId().getDiseaseName());
 
-        List<? extends VariantGenotype> genotypes = individual.getGenotypes();
-        for (int i = 0; i < genotypes.size(); i++) {
-            VariantGenotype vgt = genotypes.get(i);
-            CuratedVariant cv = variantByMd5Hex.get(vgt.getMd5Hex());
-            if (cv == null) {
-                LOGGER.warn("Unable to export genotype of variant[{}]", i);
-                continue;
-            }
-            Optional<GenomicVariant> gvo = cv.getVariant();
-            if (gvo.isEmpty()) {
-                LOGGER.warn("Unable to export variant[{}], cannot create representation", i);
-                continue;
-            }
-
-            VariationDescriptorBuilder vdb = VariationDescriptorBuilder.builder(cv.id().orElse(cv.md5Hex()));
-            GenomicVariant gv = gvo.get();
-
-            // The builder creation handles the sequence notation, nothing really to add here.
-            VcfRecordBuilder builder = VcfRecordBuilder.builder(cv.getGenomicAssembly(),
-                    gv.contigName(),
-                    gv.startOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()),
-                    gv.ref(),
-                    gv.alt())
-                    .id(gv.id());
-            if (gv.isSymbolic() && !gv.isBreakend()) {
-                // But we may need to add some extra bits in case of symbolic variant.
-                builder.info(
-                        "SVTYPE=%s;END=%d".formatted(
-                                gv.variantType().baseType().toString(),
-                                gv.endOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))
-                );
-            }
-
-            vdb.vcfRecord(builder.build());
-
-            //
-            switch (vgt.getGenotype()) {
-                // TODO(ielis) - replace with builder method once we use pxf>=1.0.0-RC2
-                case UNKNOWN, UNSET -> vdb.zygosity(ontologyClass("GENO:0000137", "unspecified zygosity"));
-                case HETEROZYGOUS -> vdb.heterozygous();
-                case HOMOZYGOUS_ALTERNATE -> vdb.homozygous();
-                case HOMOZYGOUS_REFERENCE -> {
-                    // TODO - what we want here?
+            List<? extends VariantGenotype> genotypes = individual.getGenotypes();
+            for (int i = 0; i < genotypes.size(); i++) {
+                VariantGenotype vgt = genotypes.get(i);
+                CuratedVariant cv = variantByMd5Hex.get(vgt.getMd5Hex());
+                if (cv == null) {
+                    LOGGER.warn("Unable to export genotype of variant[{}]", i);
+                    continue;
                 }
-                case HEMIZYGOUS -> vdb.hemizygous();
+                Optional<GenomicVariant> gvo = cv.getVariant();
+                if (gvo.isEmpty()) {
+                    LOGGER.warn("Unable to export variant[{}], cannot create representation", i);
+                    continue;
+                }
+
+                VariationDescriptorBuilder vdb = VariationDescriptorBuilder.builder(cv.id().orElse(cv.md5Hex()));
+                GenomicVariant gv = gvo.get();
+
+                // The builder creation handles the sequence notation, nothing really to add here.
+                VcfRecordBuilder builder = VcfRecordBuilder.builder(cv.getGenomicAssembly(),
+                                gv.contigName(),
+                                gv.startOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()),
+                                gv.ref(),
+                                gv.alt())
+                        .id(gv.id());
+                if (gv.isSymbolic() && !gv.isBreakend()) {
+                    // But we may need to add some extra bits in case of symbolic variant.
+                    builder.info(
+                            "SVTYPE=%s;END=%d".formatted(
+                                    gv.variantType().baseType().toString(),
+                                    gv.endOnStrandWithCoordinateSystem(Strand.POSITIVE, CoordinateSystem.oneBased()))
+                    );
+                }
+
+                vdb.vcfRecord(builder.build());
+
+                //
+                switch (vgt.getGenotype()) {
+                    // TODO(ielis) - replace with builder method once we use pxf>=1.0.0-RC2
+                    case UNKNOWN, UNSET -> vdb.zygosity(ontologyClass("GENO:0000137", "unspecified zygosity"));
+                    case HETEROZYGOUS -> vdb.heterozygous();
+                    case HOMOZYGOUS_ALTERNATE -> vdb.homozygous();
+                    case HOMOZYGOUS_REFERENCE -> {
+                        // TODO - what we want here?
+                    }
+                    case HEMIZYGOUS -> vdb.hemizygous();
+                }
+
+                VariantInterpretation vi = VariantInterpretationBuilder.builder(vdb)
+                        .actionabilityUnknown()
+                        .acmgNotProvided()
+                        .build();
+
+                GenomicInterpretationBuilder giBuilder = GenomicInterpretationBuilder.builder(individual.getId())
+                        .unknown() // TODO - what genomic interpretation status do we want here? We should NOT just assume.. :'(
+                        .variantInterpretation(vi);
+                diagnosis.addGenomicInterpretation(giBuilder.build());
             }
 
-            VariantInterpretation vi = VariantInterpretationBuilder.builder(vdb)
-                    .actionabilityUnknown()
-                    .acmgNotProvided()
-                    .build();
-
-            GenomicInterpretationBuilder giBuilder = GenomicInterpretationBuilder.builder(individual.getId())
-                    .unknown() // TODO - what genomic interpretation status do we want here? We should NOT just assume.. :'(
-                    .variantInterpretation(vi);
-            diagnosis.addGenomicInterpretation(giBuilder.build());
+            UUID interpretationId = UUID.randomUUID();
+            InterpretationBuilder builder = InterpretationBuilder.builder(interpretationId.toString());
+            // TODO - what interpretation status should we use? We should not just assume solved.
+            phenopacketBuilder.addInterpretation(builder.solved(diagnosis.build()));
         }
 
-        UUID interpretationId = UUID.randomUUID();
-        InterpretationBuilder builder = InterpretationBuilder.builder(interpretationId.toString());
-        // TODO - what interpretation status should we use? We should not just assume solved.
-        phenopacketBuilder.addInterpretation(builder.solved(diagnosis.build()));
     }
 
 }
