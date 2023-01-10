@@ -94,7 +94,10 @@ abstract class BaseStudyToV2PhenopacketCodec<STUDY extends Study, MSG extends Me
         return Stream.of(pfb.build());
     }
 
-    static Optional<org.phenopackets.schema.v2.core.TimeElement> mapTimeElement(org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement age) {
+    Optional<org.phenopackets.schema.v2.core.TimeElement> mapTimeElement(org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement age) {
+        if (age == null)
+            return Optional.empty();
+        
         return switch (age.getTimeElementCase()) {
             case GESTATIONAL_AGE -> {
                 GestationalAge ga = age.getGestationalAge();
@@ -127,23 +130,27 @@ abstract class BaseStudyToV2PhenopacketCodec<STUDY extends Study, MSG extends Me
             }
             case ONTOLOGY_CLASS -> {
                 TermId tid = age.getOntologyClass();
-                yield Optional.of(TimeElements.ontologyClass(ontologyClass(tid.getId(), ""))); // TODO - add term label
+                String label = hpo.getTermLabel(tid).orElse("UNKNOWN_TERM_ID");
+                yield Optional.of(TimeElements.ontologyClass(ontologyClass(tid.getId(), label)));
             }
         };
     }
 
     MetaData encodeMetaData(Publication publication, StudyMetadata studyMetadata) {
-        return MetaData.newBuilder()
+        MetaData.Builder builder = MetaData.newBuilder()
                 .setCreated(Timestamp.newBuilder().setSeconds(Instant.now().getEpochSecond()).build())
                 .setCreatedBy(studyMetadata.getCreatedBy().getSoftwareVersion())
                 .setSubmittedBy(curatorId(studyMetadata))
                 .setPhenopacketSchemaVersion(PHENOPACKET_SCHEMA_VERSION)
-                .addAllResources(resources)
-                .addExternalReferences(ExternalReference.newBuilder()
-                        .setId(String.format("PMID:%s", publication.getPmid()))
-                        .setDescription(publication.getTitle())
-                        .build())
-                .build();
+                .addAllResources(resources);
+
+        if (publication != null)
+            builder.addExternalReferences(ExternalReference.newBuilder()
+                    .setId(String.format("PMID:%s", publication.getPmid()))
+                    .setDescription(publication.getTitle())
+                    .build());
+
+        return builder.build();
     }
 
     private static String curatorId(StudyMetadata studyMetadata) {
