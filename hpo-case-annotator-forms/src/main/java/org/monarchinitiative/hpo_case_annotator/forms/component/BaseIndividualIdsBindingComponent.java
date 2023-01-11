@@ -2,12 +2,16 @@ package org.monarchinitiative.hpo_case_annotator.forms.component;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementBindingComponent;
+import org.monarchinitiative.hpo_case_annotator.model.v2.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
@@ -27,6 +31,8 @@ public abstract class BaseIndividualIdsBindingComponent<T extends BaseObservable
             item.ageComponent,
             item.vitalStatusComponent
     );
+
+    private final ObservableList<OntologyClass> onsetOntologyClasses = FXCollections.observableArrayList();
 
     @FXML
     private TitledTextField individualId;
@@ -60,8 +66,14 @@ public abstract class BaseIndividualIdsBindingComponent<T extends BaseObservable
         sex.getItems().addAll(Sex.values());
         sex.setValue(Sex.UNKNOWN);
         ageComponent.disableProperty().bind(ageIsUnknown.selectedProperty());
+        Bindings.bindContent(ageComponent.onsetOntologyClasses(), onsetOntologyClasses);
+        Bindings.bindContent(vitalStatusComponent.onsetOntologyClasses(), onsetOntologyClasses);
 
         addListener(this::updateDataModel);
+    }
+
+    public ObservableList<OntologyClass> onsetOntologyClasses() {
+        return onsetOntologyClasses;
     }
 
     protected void updateDataModel(Observable obs) {

@@ -8,16 +8,19 @@ import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
+import org.monarchinitiative.hpo_case_annotator.forms.util.OntologyClassListCell;
 import org.monarchinitiative.hpo_case_annotator.forms.util.TextFormatters;
+import org.monarchinitiative.hpo_case_annotator.forms.util.converters.OntologyClassStringConverter;
+import org.monarchinitiative.hpo_case_annotator.model.v2.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAgeRange;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableGestationalAge;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 public class TimeElementDataEdit extends VBoxDataEdit<ObservableTimeElement> {
@@ -51,7 +54,7 @@ public class TimeElementDataEdit extends VBoxDataEdit<ObservableTimeElement> {
     @FXML
     private Tab ontologyClassTab;
     @FXML
-    private ComboBox<TermId> ontologyClassComboBox;
+    private ComboBox<OntologyClass> ontologyClassComboBox;
 
     public TimeElementDataEdit() {
         FXMLLoader loader = new FXMLLoader(TimeElementDataEdit.class.getResource("TimeElementDataEdit.fxml"));
@@ -70,9 +73,12 @@ public class TimeElementDataEdit extends VBoxDataEdit<ObservableTimeElement> {
         gestationalWeeks.setTextFormatter(gestationalWeeksFormatter);
         gestationalDays.getItems().addAll(FormUtils.getIntegers(6));
 
-        // TODO - add all HPO onset terms
-//        ontologyClassComboBox.getItems().addAll();
+        ontologyClassComboBox.setCellFactory(OntologyClassListCell.cellFactory());
+        ontologyClassComboBox.setConverter(new OntologyClassStringConverter());
+    }
 
+    public List<OntologyClass> onsetOntologyClasses() {
+        return ontologyClassComboBox.getItems();
     }
 
     private void clearForm() {

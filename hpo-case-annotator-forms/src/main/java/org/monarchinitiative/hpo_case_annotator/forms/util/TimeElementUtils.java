@@ -1,10 +1,10 @@
 package org.monarchinitiative.hpo_case_annotator.forms.util;
 
+import org.monarchinitiative.hpo_case_annotator.model.v2.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAgeRange;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableGestationalAge;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 
 public class TimeElementUtils {
 
@@ -68,7 +68,7 @@ public class TimeElementUtils {
         return "%s - %s".formatted(summarizeAge(ageRange.getStart()), summarizeAge(ageRange.getEnd()));
     }
 
-    private static String summarizeOntologyClass(TermId item) {
-        return item == null ? NA : item.getValue();
+    private static String summarizeOntologyClass(OntologyClass item) {
+        return item == null ? NA : item.getLabel();
     }
 }

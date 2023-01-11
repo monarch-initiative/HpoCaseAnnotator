@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.individual;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +20,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.phenotype.PhenotypeTable;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
 import org.monarchinitiative.hpo_case_annotator.forms.util.Utils;
 import org.monarchinitiative.hpo_case_annotator.forms.variants.VariantGenotypeTable;
+import org.monarchinitiative.hpo_case_annotator.model.v2.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
@@ -42,6 +44,7 @@ import static javafx.beans.binding.Bindings.*;
  */
 public abstract class BaseIndividual<T extends BaseObservableIndividual> extends VBoxObservableDataComponent<T> {
 
+    private final ObservableList<OntologyClass> onsetOntologyClasses = FXCollections.observableArrayList();
     private final ObjectProperty<Ontology> hpo = new SimpleObjectProperty<>();
     private final ObjectProperty<NamedEntityFinder> namedEntityFinder = new SimpleObjectProperty<>();
     private final ObjectProperty<DiseaseIdentifierService> diseaseIdentifierService = new SimpleObjectProperty<>();
@@ -102,6 +105,8 @@ public abstract class BaseIndividual<T extends BaseObservableIndividual> extends
         // Genotypes table view
         variantGenotypeTable.dataProperty().bind(data);
         variantGenotypeTable.variantsProperty().bind(variants);
+
+        hpo.addListener(obs -> onsetOntologyClasses.setAll(Utils.prepareOnsetOntologyClasses(hpo.get())));
     }
 
     @FXML
@@ -111,6 +116,7 @@ public abstract class BaseIndividual<T extends BaseObservableIndividual> extends
         dialog.titleProperty().bind(concat("Edit identifiers for ", Utils.nullableStringProperty(data, "id")));
         BaseIndividualIdsDataEdit<T> content = getIdsDataEdit();
         content.setInitialData(data.getValue());
+        Bindings.bindContent(content.onsetOntologyClasses(), onsetOntologyClasses);
         dialog.getDialogPane().setContent(content);
 
         dialog.showAndWait()

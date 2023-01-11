@@ -5,9 +5,9 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.util.Callback;
+import org.monarchinitiative.hpo_case_annotator.model.v2.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
 import org.monarchinitiative.hpo_case_annotator.observable.deep.DeepObservable;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.stream.Stream;
 
@@ -21,7 +21,7 @@ public class ObservableTimeElement extends DeepObservable implements TimeElement
     private final ObjectProperty<ObservableGestationalAge> gestationalAge = new SimpleObjectProperty<>(this, "gestationalAge");
     private final ObjectProperty<ObservableAge> age = new SimpleObjectProperty<>(this, "age");
     private final ObjectProperty<ObservableAgeRange> ageRange = new SimpleObjectProperty<>(this, "ageRange");
-    private final ObjectProperty<TermId> ontologyClass = new SimpleObjectProperty<>(this, "ontologyClass");
+    private final ObjectProperty<OntologyClass> ontologyClass = new SimpleObjectProperty<>(this, "ontologyClass");
 
     public ObservableTimeElement() {
         super();
@@ -94,15 +94,15 @@ public class ObservableTimeElement extends DeepObservable implements TimeElement
     }
 
     @Override
-    public TermId getOntologyClass() {
+    public OntologyClass getOntologyClass() {
         return ontologyClass.get();
     }
 
-    public void setOntologyClass(TermId ontologyClass) {
+    public void setOntologyClass(OntologyClass ontologyClass) {
         this.ontologyClass.set(ontologyClass);
     }
 
-    public ObjectProperty<TermId> ontologyClassProperty() {
+    public ObjectProperty<OntologyClass> ontologyClassProperty() {
         return ontologyClass;
     }
 

@@ -78,7 +78,7 @@ public class TimeElementComponent extends VBox implements ObservableDataComponen
         ageRange.endMonthsProperty().bind(toIntegerOrShowPlaceholderIfNull(data, "ageRange", "end", "months"));
         ageRange.endDaysProperty().bind(toIntegerOrShowPlaceholderIfNull(data, "ageRange", "end", "days"));
 
-        ontologyClassAge.termIdProperty().bind(select(data, "ontologyClass"));
+        ontologyClassAge.ontologyClassProperty().bind(select(data, "ontologyClass"));
     }
 
     private void setContent(Node node) {

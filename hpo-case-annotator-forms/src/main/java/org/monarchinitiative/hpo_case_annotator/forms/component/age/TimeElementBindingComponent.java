@@ -2,6 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.forms.component.age;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,13 +15,15 @@ import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservable
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledComboBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledTextField;
 import org.monarchinitiative.hpo_case_annotator.forms.util.FormUtils;
+import org.monarchinitiative.hpo_case_annotator.forms.util.OntologyClassListCell;
 import org.monarchinitiative.hpo_case_annotator.forms.util.TextFormatters;
+import org.monarchinitiative.hpo_case_annotator.forms.util.converters.OntologyClassStringConverter;
+import org.monarchinitiative.hpo_case_annotator.model.v2.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAge;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableAgeRange;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableGestationalAge;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.IOException;
 import java.util.stream.Stream;
@@ -68,7 +71,7 @@ public class TimeElementBindingComponent
     @FXML
     private Tab ontologyClassTab;
     @FXML
-    private ComboBox<TermId> ontologyClassComboBox;
+    private ComboBox<OntologyClass> ontologyClassComboBox;
 
     private boolean valueIsNotBeingSetByUserInteraction;
 
@@ -89,11 +92,16 @@ public class TimeElementBindingComponent
         super.initialize();
         gestationalDays.getItems().addAll(FormUtils.getIntegers(6));
         gestationalWeeks.setTextFormatter(gestationalWeeksFormatter);
+        ontologyClassComboBox.setCellFactory(OntologyClassListCell.cellFactory());
+        ontologyClassComboBox.setConverter(new OntologyClassStringConverter());
 
         // Update the data model upon change of each UI component
         addListener(this::updateDataModel);
     }
 
+    public ObservableList<OntologyClass> onsetOntologyClasses() {
+        return ontologyClassComboBox.getItems();
+    }
 
     private void updateDataModel(Observable obs) {
         if (valueIsNotBeingSetByUserInteraction)

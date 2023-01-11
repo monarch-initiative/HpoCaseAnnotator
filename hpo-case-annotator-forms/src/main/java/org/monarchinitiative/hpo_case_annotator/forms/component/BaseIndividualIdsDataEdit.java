@@ -1,10 +1,14 @@
 package org.monarchinitiative.hpo_case_annotator.forms.component;
 
+import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementDataEdit;
+import org.monarchinitiative.hpo_case_annotator.model.v2.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Sex;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.BaseObservableIndividual;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
@@ -14,6 +18,8 @@ import java.net.URL;
 import java.util.Objects;
 
 public abstract class BaseIndividualIdsDataEdit<T extends BaseObservableIndividual> extends VBoxDataEdit<T> {
+
+    private final ObservableList<OntologyClass> onsetOntologyClasses = FXCollections.observableArrayList();
 
     protected T item;
     private boolean originalAgeWasNull;
@@ -59,6 +65,13 @@ public abstract class BaseIndividualIdsDataEdit<T extends BaseObservableIndividu
                     ageComponent.setInitialData(item.getAge());
             }
         });
+
+        Bindings.bindContent(ageComponent.onsetOntologyClasses(), onsetOntologyClasses);
+        Bindings.bindContent(vitalStatusComponent.onsetOntologyClasses(), onsetOntologyClasses);
+    }
+
+    public ObservableList<OntologyClass> onsetOntologyClasses() {
+        return onsetOntologyClasses;
     }
 
     @Override

@@ -6,13 +6,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.component.TitledLabel;
-import org.monarchinitiative.phenol.ontology.data.TermId;
+import org.monarchinitiative.hpo_case_annotator.model.v2.OntologyClass;
 
 import java.io.IOException;
 
 public class OntologyClassAge extends VBox {
 
-    private final ObjectProperty<TermId> termId = new SimpleObjectProperty<>();
+    private final ObjectProperty<OntologyClass> ocProperty = new SimpleObjectProperty<>();
 
     @FXML
     private TitledLabel ontologyClass;
@@ -30,10 +30,10 @@ public class OntologyClassAge extends VBox {
 
     @FXML
     private void initialize() {
-        termId.addListener((obs, old, novel) -> ontologyClass.setText(novel == null ? null : novel.getValue()));
+        ocProperty.addListener((obs, old, novel) -> ontologyClass.setText(novel == null ? null : novel.getLabel()));
     }
 
-    public ObjectProperty<TermId> termIdProperty() {
-        return termId;
+    public ObjectProperty<OntologyClass> ontologyClassProperty() {
+        return ocProperty;
     }
 }

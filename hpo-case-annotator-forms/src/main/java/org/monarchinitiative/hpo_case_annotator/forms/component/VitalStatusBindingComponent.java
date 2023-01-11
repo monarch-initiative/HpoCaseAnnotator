@@ -9,11 +9,13 @@ import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.forms.base.VBoxBindingObservableDataComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementBindingComponent;
+import org.monarchinitiative.hpo_case_annotator.model.v2.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.model.v2.VitalStatus;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableVitalStatus;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class VitalStatusBindingComponent extends VBoxBindingObservableDataComponent<ObservableVitalStatus>
@@ -63,6 +65,10 @@ public class VitalStatusBindingComponent extends VBoxBindingObservableDataCompon
             }
         });
         addListener(this::updateDataModel);
+    }
+
+    public List<OntologyClass> onsetOntologyClasses() {
+        return timeOfDeathComponent.onsetOntologyClasses();
     }
 
     private void updateDataModel(Observable obs) {

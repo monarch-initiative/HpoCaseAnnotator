@@ -230,7 +230,7 @@ class V2 {
         Age end = Age.of(16, null, null);
         TimeElement defHepatosplenomegalyOnset = TimeElement.of(TimeElement.TimeElementCase.AGE_RANGE, null, null, AgeRange.of(start, end), null);
 
-        TermId adultOnset = TermId.of("HP:0003581");
+        OntologyClass adultOnset = OntologyClass.of(TermId.of("HP:0003581"), "Adult onset");
         TimeElement defEnuresisNocturnaOnset = TimeElement.of(TimeElement.TimeElementCase.ONTOLOGY_CLASS, null, null, null, adultOnset);
 
         TimeElement defAge = TimeElement.of(TimeElement.TimeElementCase.AGE, null, Age.of(25, null, null), null, null);

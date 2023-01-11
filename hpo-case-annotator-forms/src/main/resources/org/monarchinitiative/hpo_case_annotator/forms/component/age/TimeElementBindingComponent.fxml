@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.*?>
 <?import org.monarchinitiative.hpo_case_annotator.forms.component.age.*?>
+<?import org.controlsfx.control.SearchableComboBox?>
 
 <fx:root xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          type="VBox"
@@ -104,7 +105,7 @@
                                 <Label styleClass="h3" text="Ontology class"/>
                                 <HBox styleClass="age-datum">
                                     <children>
-                                        <ComboBox fx:id="ontologyClassComboBox"/>
+                                        <SearchableComboBox fx:id="ontologyClassComboBox"/>
                                         <Button onAction="#clearOntologyClass" styleClass="clear-button"/>
                                     </children>
                                 </HBox>

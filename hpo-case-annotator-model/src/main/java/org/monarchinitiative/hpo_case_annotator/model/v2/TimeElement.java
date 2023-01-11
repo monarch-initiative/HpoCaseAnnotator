@@ -1,7 +1,5 @@
 package org.monarchinitiative.hpo_case_annotator.model.v2;
 
-import org.monarchinitiative.phenol.ontology.data.TermId;
-
 /**
  * Naive specification of oneof field of Phenopacket Schema.
  * <p>
@@ -26,7 +24,7 @@ public interface TimeElement {
             GestationalAge gestationalAge,
             Age age,
             AgeRange ageRange,
-            TermId ontologyClass) {
+            OntologyClass ontologyClass) {
         return new TimeElementDefault(timeElementCase, gestationalAge, age, ageRange, ontologyClass);
     }
 
@@ -55,8 +53,8 @@ public interface TimeElement {
     AgeRange getAgeRange();
 
     /**
-     * @return {@link TermId} or {@code null} if {@link #getTimeElementCase()} is not set to {@link TimeElementCase#ONTOLOGY_CLASS}.
+     * @return {@link OntologyClass} or {@code null} if {@link #getTimeElementCase()} is not set to {@link TimeElementCase#ONTOLOGY_CLASS}.
      */
-    TermId getOntologyClass();
+    OntologyClass getOntologyClass();
 
 }

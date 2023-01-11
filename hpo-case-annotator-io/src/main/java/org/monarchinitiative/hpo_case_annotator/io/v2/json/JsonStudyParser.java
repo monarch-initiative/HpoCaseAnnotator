@@ -51,6 +51,7 @@ public class JsonStudyParser implements ModelParser<Study> {
         module.addDeserializer(EditHistory.class, new EditHistoryDeserializer());
         module.addDeserializer(GestationalAge.class, new GestationalAgeDeserializer());
         module.addDeserializer(Individual.class, new IndividualDeserializer());
+        module.addDeserializer(OntologyClass.class, new OntologyClassDeserializer());
         module.addDeserializer(PhenotypicFeature.class, new PhenotypicFeatureDeserializer());
         module.addDeserializer(PhenotypicObservation.class, new PhenotypicObservationDeserializer());
         module.addDeserializer(Pedigree.class, new PedigreeDeserializer());
@@ -91,6 +92,7 @@ public class JsonStudyParser implements ModelParser<Study> {
                 new EditHistorySerializer(),
                 new GestationalAgeSerializer(),
                 new IndividualSerializer(),
+                new OntologyClassSerializer(),
                 new PedigreeMemberSerializer(),
                 new PedigreeSerializer(),
                 new PhenotypicFeatureSerializer(),
