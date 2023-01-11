@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.export;
 
+import com.google.protobuf.Message;
 import com.google.protobuf.Timestamp;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.monarchinitiative.hpo_case_annotator.model.convert.Codec;
@@ -30,7 +31,9 @@ import java.util.stream.Collectors;
  * @author <a href="mailto:daniel.danis@jax.org">Daniel Danis</a>
  */
 @SuppressWarnings("HttpUrlsUsage")
-class DiseaseCaseToV1PhenopacketCodec implements Codec<DiseaseCase, Phenopacket> {
+class DiseaseCaseToV1PhenopacketCodec implements Codec<DiseaseCase, Message> {
+
+    private static final DiseaseCaseToV1PhenopacketCodec INSTANCE = new DiseaseCaseToV1PhenopacketCodec();
 
     // source https://bioportal.bioontology.org/ontologies/ECO/?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FECO_0000033&jump_to_nav=true
     static final OntologyClass TRACEABLE_AUTHOR_STATEMENT = OntologyClass.newBuilder()
@@ -217,6 +220,13 @@ class DiseaseCaseToV1PhenopacketCodec implements Codec<DiseaseCase, Phenopacket>
         };
     }
 
+    static DiseaseCaseToV1PhenopacketCodec instance() {
+        return INSTANCE;
+    }
+
+    private DiseaseCaseToV1PhenopacketCodec() {
+    }
+
     /**
      * Encode {@link DiseaseCase} into {@link Phenopacket}.
      *
@@ -224,7 +234,7 @@ class DiseaseCaseToV1PhenopacketCodec implements Codec<DiseaseCase, Phenopacket>
      * @return {@link Phenopacket}
      */
     @Override
-    public Phenopacket encode(DiseaseCase data) {
+    public Message encode(DiseaseCase data) {
         String familyOrProbandId = data.getFamilyInfo().getFamilyOrProbandId();
         Publication publication = data.getPublication();
         String phenopacketVersion = "1.0.0";

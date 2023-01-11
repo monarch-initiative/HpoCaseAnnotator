@@ -14,7 +14,7 @@ public class ObservableVitalStatus extends DeepObservable implements VitalStatus
 
     public static final Callback<ObservableVitalStatus, Observable[]> EXTRACTOR = obs -> new Observable[]{obs.status, obs.timeOfDeath};
 
-    private final ObjectProperty<Status> status = new SimpleObjectProperty<>(this, "status");
+    private final ObjectProperty<Status> status = new SimpleObjectProperty<>(this, "status", Status.UNKNOWN);
     private final ObjectProperty<ObservableTimeElement> timeOfDeath = new SimpleObjectProperty<>(this, "timeOfDeath");
 
     public ObservableVitalStatus() {

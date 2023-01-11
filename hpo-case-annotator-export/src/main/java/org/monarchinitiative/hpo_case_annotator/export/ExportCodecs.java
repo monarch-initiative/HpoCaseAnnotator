@@ -1,8 +1,18 @@
 package org.monarchinitiative.hpo_case_annotator.export;
 
+import com.google.protobuf.Message;
+import org.monarchinitiative.hpo_case_annotator.export.ppv2.CohortStudyToV2PhenopacketCodec;
+import org.monarchinitiative.hpo_case_annotator.export.ppv2.FamilyStudyToV2PhenopacketCodec;
+import org.monarchinitiative.hpo_case_annotator.export.ppv2.IndividualStudyToV2PhenopacketCodec;
 import org.monarchinitiative.hpo_case_annotator.model.convert.Codec;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
-import org.phenopackets.schema.v1.Phenopacket;
+import org.monarchinitiative.hpo_case_annotator.model.v2.CohortStudy;
+import org.monarchinitiative.hpo_case_annotator.model.v2.FamilyStudy;
+import org.monarchinitiative.hpo_case_annotator.model.v2.IndividualStudy;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
+import org.phenopackets.schema.v2.Cohort;
+import org.phenopackets.schema.v2.Family;
+import org.phenopackets.schema.v2.Phenopacket;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +28,20 @@ public final class ExportCodecs {
         // private no-op
     }
 
-    public static Codec<DiseaseCase, Phenopacket> diseaseCasePhenopacketCodec() {
-        return new DiseaseCaseToV1PhenopacketCodec();
+    public static Codec<DiseaseCase, Message> diseaseCasePhenopacketCodec() {
+        return DiseaseCaseToV1PhenopacketCodec.instance();
+    }
+
+    public static Codec<IndividualStudy, Phenopacket> individualStudyToPhenopacketCodec(Ontology hpo) {
+        return new IndividualStudyToV2PhenopacketCodec(hpo);
+    }
+
+    public static Codec<FamilyStudy, Family> familyStudyToFamilyCodec(Ontology hpo) {
+        return new FamilyStudyToV2PhenopacketCodec(hpo);
+    }
+
+    public static Codec<CohortStudy, Cohort> cohortStudyToFamilyCodec(Ontology hpo) {
+        return new CohortStudyToV2PhenopacketCodec(hpo);
     }
 
     /**

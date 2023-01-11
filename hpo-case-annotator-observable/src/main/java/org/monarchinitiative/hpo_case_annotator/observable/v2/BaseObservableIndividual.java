@@ -25,7 +25,7 @@ public abstract class BaseObservableIndividual extends DeepObservable implements
 
     private final StringProperty id = new SimpleStringProperty(this, "id");
     private final ObjectProperty<ObservableTimeElement> age = new SimpleObjectProperty<>(this, "age");
-    private final ObjectProperty<ObservableVitalStatus> vitalStatus = new SimpleObjectProperty<>(this, "vitalStatus");
+    private final ObjectProperty<ObservableVitalStatus> vitalStatus = new SimpleObjectProperty<>(this, "vitalStatus", new ObservableVitalStatus());
     private final ObjectProperty<Sex> sex = new SimpleObjectProperty<>(this, "sex", Sex.UNKNOWN);
     private final ListProperty<ObservablePhenotypicFeature> phenotypicFeatures = new SimpleListProperty<>(this, "phenotypicFeatures", FXCollections.observableArrayList(ObservablePhenotypicFeature.EXTRACTOR));
     private final ListProperty<ObservableDiseaseStatus> diseaseStates = new SimpleListProperty<>(this, "diseaseStates", FXCollections.observableArrayList(ObservableDiseaseStatus.EXTRACTOR));

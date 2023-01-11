@@ -97,7 +97,7 @@
                         <MenuItem id="phenopacketMenuItem" fx:id="exportPhenopacketMenuItem" disable="true"
                                   mnemonicParsing="false" onAction="#exportPhenopacketCurrentCaseMenuItemAction"
                                   text="Current case"/>
-                        <MenuItem disable="true" mnemonicParsing="false" onAction="#exportPhenopacketAllCasesMenuItemAction"
+                        <MenuItem fx:id="exportAllPhenopacketsMenuItem" disable="true" mnemonicParsing="false" onAction="#exportPhenopacketAllCasesMenuItemAction"
                                   text="All cases"/>
                     </items>
                 </Menu>

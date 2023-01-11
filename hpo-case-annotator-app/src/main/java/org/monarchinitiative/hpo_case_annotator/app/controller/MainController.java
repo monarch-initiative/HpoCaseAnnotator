@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo_case_annotator.app.controller;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.StringBinding;
@@ -21,6 +22,7 @@ import org.monarchinitiative.hpo_case_annotator.app.StudyType;
 import org.monarchinitiative.hpo_case_annotator.app.model.OptionalServices;
 import org.monarchinitiative.hpo_case_annotator.app.publication.PublicationBrowser;
 import org.monarchinitiative.hpo_case_annotator.convert.ConversionCodecs;
+import org.monarchinitiative.hpo_case_annotator.export.ExportCodecs;
 import org.monarchinitiative.hpo_case_annotator.forms.StudyResources;
 import org.monarchinitiative.hpo_case_annotator.forms.StudyResourcesAware;
 import org.monarchinitiative.hpo_case_annotator.forms.liftover.Liftover;
@@ -30,12 +32,20 @@ import org.monarchinitiative.hpo_case_annotator.forms.study.BaseStudyComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.study.CohortStudyComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.study.FamilyStudyComponent;
 import org.monarchinitiative.hpo_case_annotator.forms.study.IndividualStudyComponent;
+import org.monarchinitiative.hpo_case_annotator.model.convert.Codec;
 import org.monarchinitiative.hpo_case_annotator.model.convert.ModelTransformationException;
 import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.*;
 import org.monarchinitiative.hpo_case_annotator.io.ModelParsers;
 import org.monarchinitiative.hpo_case_annotator.model.proto.DiseaseCase;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
+import org.phenopackets.phenopackettools.core.PhenopacketFormat;
+import org.phenopackets.phenopackettools.core.PhenopacketSchemaVersion;
+import org.phenopackets.phenopackettools.io.PhenopacketPrinter;
+import org.phenopackets.phenopackettools.io.PhenopacketPrinterFactory;
+import org.phenopackets.schema.v2.Cohort;
+import org.phenopackets.schema.v2.Family;
+import org.phenopackets.schema.v2.Phenopacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -100,8 +110,13 @@ public class MainController {
 
     @FXML
     private MenuItem validateCurrentEntryMenuItem;
+
+    /* ************************************************    EXPORT   ************************************************* */
+
     @FXML
     private MenuItem exportPhenopacketMenuItem;
+    @FXML
+    private MenuItem exportAllPhenopacketsMenuItem;
 
     /* ************************************************     HELP    ************************************************* */
     @FXML
@@ -146,6 +161,8 @@ public class MainController {
         cloneCaseMenuItem.disableProperty().bind(noTabIsPresent);
         studyMenu.disableProperty().bind(noTabIsPresent);
         viewOnPubmedMenuItem.disableProperty().bind(noTabIsPresent);
+        exportPhenopacketMenuItem.disableProperty().bind(optionalServices.hpoProperty().isNull());
+        exportAllPhenopacketsMenuItem.disableProperty().bind(optionalServices.hpoProperty().isNull());
 
         validateCurrentEntryMenuItem.disableProperty().bind(noTabIsPresent);
     }
@@ -266,8 +283,18 @@ public class MainController {
 
     @FXML
     private void exportPhenopacketCurrentCaseMenuItemAction(ActionEvent e) {
-        // TODO - implement
-        Dialogs.showInfoDialog("Sorry", null, "Not yet implemented");
+        int tabIdx = studiesTabPane.getSelectionModel().getSelectedIndex();
+        StudyWrapper<? extends ObservableStudy> wrapper = wrappers.get(tabIdx);
+        ObservableStudy study = wrapper.component().getData();
+        // The button should be disabled when HPO is null, hence `hpo` should never be null here.
+        Ontology hpo = optionalServices.getHpo();
+
+        boolean exportedOk = exportStudyAsPhenopacket(study, hpo);
+        if (exportedOk)
+            Dialogs.showInfoDialog("Export to phenopacket",
+                    "Export to phenopacket",
+                    "The study %s was exported successfully".formatted(study.getId()));
+
         e.consume();
     }
 
@@ -500,19 +527,27 @@ public class MainController {
 
     private boolean saveAsV2Study(StudyWrapper<? extends ObservableStudy> wrapper) {
         ObservableStudy study = wrapper.component().getData();
-        Path path = wrapper.getStudyPath() == null
-                ? askForPath(study.getId())
-                : wrapper.getStudyPath();
+        Path destination;
+        if (wrapper.getStudyPath() != null)
+            destination = wrapper.getStudyPath();
+        else {
+            String suggestedName = study.getId() + ".json";
+            destination = askForPath(optionalResources.getDiseaseCaseDir(),
+                    "Save study",
+                    "JSON data format (*.json)",
+                    new String[]{"*.json"},
+                    suggestedName);
+        }
 
-        if (path == null) // the user canceled
+        if (destination == null) // the user canceled
             return false;
 
         if (wrapper.addEditHistoryItem())
             study.getStudyMetadata().getModifiedBy().add(prepareEditHistoryEntry());
 
         try {
-            ModelParsers.V2.jsonParser().write(study, path);
-            wrapper.setStudyPath(path);
+            ModelParsers.V2.jsonParser().write(study, destination);
+            wrapper.setStudyPath(destination);
             return true;
         } catch (IOException e) {
             LOGGER.warn("Error serializing study: {}", e.getMessage(), e);
@@ -520,26 +555,26 @@ public class MainController {
         }
     }
 
-    private Path askForPath(String studyId) {
+    private Path askForPath(Path initialDirectory, // nullable
+                            String dialogTitle,
+                            String extensionDescription,
+                            String[] extensions,
+                            String suggestedName) {
         FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter fileFormat = new FileChooser.ExtensionFilter(extensionDescription, extensions);
+        fileChooser.getExtensionFilters().add(fileFormat);
+        fileChooser.setSelectedExtensionFilter(fileFormat);
 
-        final String PROTO_JSON = "JSON data format (*.json)";
-
-        FileChooser.ExtensionFilter jsonFileFormat = new FileChooser.ExtensionFilter(PROTO_JSON, "*.json");
-        fileChooser.setSelectedExtensionFilter(jsonFileFormat);
-
-        fileChooser.setTitle("Save study");
-        String suggestedName = studyId + ".json";
+        fileChooser.setTitle(dialogTitle);
         fileChooser.setInitialFileName(suggestedName);
-        Path diseaseCaseDir = optionalResources.getDiseaseCaseDir();
-        if (diseaseCaseDir != null)
-            fileChooser.setInitialDirectory(diseaseCaseDir.toFile());
-        fileChooser.getExtensionFilters().add(jsonFileFormat);
-        File which = fileChooser.showSaveDialog(getOwnerWindow());
+        if (initialDirectory != null)
+            fileChooser.setInitialDirectory(initialDirectory.toFile());
 
-        return (which == null)
+        File response = fileChooser.showSaveDialog(getOwnerWindow());
+
+        return response == null
                 ? null
-                : which.toPath();
+                : response.toPath();
     }
 
     private ObservableEditHistory prepareEditHistoryEntry() {
@@ -639,6 +674,59 @@ public class MainController {
 
         //noinspection unchecked
         return Optional.of((BaseStudySteps<T>) steps);
+    }
+
+    private boolean exportStudyAsPhenopacket(Study study, Ontology hpo) {
+        Message message = mapToMessage(study, hpo);
+
+        if (message == null) {
+            LOGGER.warn("Export of {} to phenopacket is not supported", study.getClass());
+            return false;
+        }
+
+        Path lastExportFolder = null; // TODO - persist the last export folder
+        Path destination = askForPath(lastExportFolder,
+                "Export study into v2 Phenopacket",
+                "JSON file",
+                new String[]{"*.json"},
+                study.getId() + ".json");
+
+        PhenopacketPrinterFactory printerFactory = PhenopacketPrinterFactory.getInstance();
+        PhenopacketPrinter printer = printerFactory.forFormat(PhenopacketSchemaVersion.V2, PhenopacketFormat.JSON);
+        try {
+            printer.print(message, destination);
+        } catch (IOException ex) {
+            Dialogs.showErrorDialog("Export study into v2 phenopacket", "Cannot store phenopacket", ex.getMessage());
+        }
+
+        return true;
+    }
+
+    private static Message mapToMessage(Study study, Ontology hpo) {
+        if (study instanceof IndividualStudy individualStudy) {
+            Codec<IndividualStudy, Phenopacket> codec = ExportCodecs.individualStudyToPhenopacketCodec(hpo);
+            try {
+                return codec.encode(individualStudy);
+            } catch (ModelTransformationException ex) {
+                Dialogs.showErrorDialog("Export individual study into v2 phenopacket", "Error while exporting phenopacket", ex.getMessage());
+            }
+        } else if (study instanceof FamilyStudy familyStudy) {
+            Codec<FamilyStudy, Family> codec = ExportCodecs.familyStudyToFamilyCodec(hpo);
+            try {
+                return codec.encode(familyStudy);
+            } catch (ModelTransformationException ex) {
+                Dialogs.showErrorDialog("Export family study into v2 phenopacket", "Error while exporting family study", ex.getMessage());
+            }
+        } else if (study instanceof CohortStudy cohortStudy) {
+            Codec<CohortStudy, Cohort> codec = ExportCodecs.cohortStudyToFamilyCodec(hpo);
+            try {
+                return codec.encode(cohortStudy);
+            } catch (ModelTransformationException ex) {
+                Dialogs.showErrorDialog("Export cohort study into v2 phenopacket", "Error while exporting cohort study", ex.getMessage());
+            }
+        }
+
+        return null;
     }
 
 }

@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo_case_annotator.export;
 
+import com.google.protobuf.Message;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +24,7 @@ public class DiseaseCaseToV1PhenopacketCodecTest {
 
     @BeforeEach
     public void setUp() {
-        instance = new DiseaseCaseToV1PhenopacketCodec();
+        instance = DiseaseCaseToV1PhenopacketCodec.instance();
     }
 
     @Test
@@ -32,7 +33,9 @@ public class DiseaseCaseToV1PhenopacketCodecTest {
         DiseaseCase diseaseCase = TestData.V1.comprehensiveCase();
 
         // act
-        Phenopacket pp = instance.encode(diseaseCase);
+        Message message = instance.encode(diseaseCase);
+        assertThat(message, is(instanceOf(Phenopacket.class)));
+        Phenopacket pp = (Phenopacket) message;
 
         // assert
         assertThat(pp, is(notNullValue()));
@@ -120,7 +123,9 @@ public class DiseaseCaseToV1PhenopacketCodecTest {
         DiseaseCase diseaseCase = TestData.V1.comprehensiveCase();
 
         // -- act
-        Phenopacket pp = instance.encode(diseaseCase);
+        Message message = instance.encode(diseaseCase);
+        assertThat(message, is(instanceOf(Phenopacket.class)));
+        Phenopacket pp = (Phenopacket) message;
 
         // -- assert
         // id
@@ -209,7 +214,9 @@ public class DiseaseCaseToV1PhenopacketCodecTest {
         DiseaseCase diseaseCase = TestData.V1.comprehensiveCase();
 
         // -- act
-        Phenopacket pp = instance.encode(diseaseCase);
+        Message message = instance.encode(diseaseCase);
+        assertThat(message, is(instanceOf(Phenopacket.class)));
+        Phenopacket pp = (Phenopacket) message;
 
         // -- assert
         // id
