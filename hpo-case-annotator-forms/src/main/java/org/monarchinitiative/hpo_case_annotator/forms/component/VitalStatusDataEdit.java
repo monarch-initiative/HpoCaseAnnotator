@@ -8,11 +8,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.monarchinitiative.hpo_case_annotator.forms.DataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementDataEdit;
+import org.monarchinitiative.hpo_case_annotator.model.v2.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.model.v2.VitalStatus;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableTimeElement;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableVitalStatus;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 public class VitalStatusDataEdit extends HBox implements DataEdit<ObservableVitalStatus> {
@@ -48,6 +50,10 @@ public class VitalStatusDataEdit extends HBox implements DataEdit<ObservableVita
         vitalStatus.setValue(VitalStatus.Status.UNKNOWN); // default
         deathBox.disableProperty().bind(isNotDeceased);
         timeOfDeathComponent.disableProperty().bind(timeOfDeathIsUnknown.selectedProperty());
+    }
+
+    public List<OntologyClass> onsetOntologyClasses() {
+        return timeOfDeathComponent.onsetOntologyClasses();
     }
 
     @Override

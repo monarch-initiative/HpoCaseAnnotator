@@ -19,6 +19,7 @@ import org.monarchinitiative.hpo_case_annotator.forms.disease.IndividualDiseaseD
 import org.monarchinitiative.hpo_case_annotator.forms.phenotype.IndividualPhenotypeDataEdit;
 import org.monarchinitiative.hpo_case_annotator.forms.stepper.step.BaseStep;
 import org.monarchinitiative.hpo_case_annotator.forms.util.DialogUtil;
+import org.monarchinitiative.hpo_case_annotator.forms.util.Utils;
 import org.monarchinitiative.hpo_case_annotator.forms.variants.IndividualVariantGenotypesObservableData;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableCuratedVariant;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.ObservableIndividual;
@@ -49,6 +50,10 @@ public class IndividualStep<T extends ObservableIndividualStudy> extends BaseSte
 
     public IndividualStep() {
         super(IndividualStep.class.getResource("IndividualStep.fxml"));
+
+        // Unconventionally, we do it here and not in initialize
+        // Load HPO onset IDs
+        hpo.addListener(obs -> individualIds.onsetOntologyClasses().setAll(Utils.prepareOnsetOntologyClasses(hpo.get())));
     }
 
     public ObjectProperty<Ontology> hpoProperty() {

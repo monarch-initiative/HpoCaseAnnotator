@@ -5,11 +5,7 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import org.monarchinitiative.hpo_case_annotator.model.v2.Age;
-import org.monarchinitiative.hpo_case_annotator.model.v2.AgeRange;
-import org.monarchinitiative.hpo_case_annotator.model.v2.GestationalAge;
-import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
-import org.monarchinitiative.phenol.ontology.data.TermId;
+import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 
 import java.io.IOException;
 
@@ -45,8 +41,8 @@ public class TimeElementDeserializer extends StdDeserializer<TimeElement> {
                 yield TimeElement.of(teCase, null, null, ageRange, null);
             }
             case ONTOLOGY_CLASS -> {
-                TermId onsetTermId = TermId.of(node.get("ontologyClass").asText());
-                yield TimeElement.of(teCase, null, null, null, onsetTermId);
+                OntologyClass onsetOntologyClass = codec.treeToValue(node.get("ontologyClass"), OntologyClass.class);
+                yield TimeElement.of(teCase, null, null, null, onsetOntologyClass);
             }
         };
     }

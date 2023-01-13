@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.IOException;
 
@@ -29,11 +28,7 @@ public class TimeElementSerializer extends StdSerializer<TimeElement> {
                 case GESTATIONAL_AGE -> gen.writeObjectField("gestationalAge", value.getGestationalAge());
                 case AGE -> gen.writeObjectField("age", value.getAge());
                 case AGE_RANGE -> gen.writeObjectField("ageRange", value.getAgeRange());
-                case ONTOLOGY_CLASS -> {
-                    TermId ontologyClass = value.getOntologyClass();
-                    if (ontologyClass != null)
-                        gen.writeStringField("ontologyClass", ontologyClass.getValue());
-                }
+                case ONTOLOGY_CLASS -> gen.writeObjectField("ontologyClass", value.getOntologyClass());
             }
         }
 

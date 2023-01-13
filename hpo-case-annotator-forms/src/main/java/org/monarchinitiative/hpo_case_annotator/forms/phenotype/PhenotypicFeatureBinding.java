@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo_case_annotator.forms.component.age.TimeElementBindingComponent;
+import org.monarchinitiative.hpo_case_annotator.forms.util.Utils;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
 import org.monarchinitiative.hpo_case_annotator.observable.v2.*;
 import org.slf4j.Logger;
@@ -46,41 +47,44 @@ public class PhenotypicFeatureBinding extends PhenotypicFeatureBase implements O
         onsetComponent.visibleProperty().bind(onsetIsUnknown.selectedProperty().not());
         resolutionComponent.visibleProperty().bind(resolutionIsUnknown.selectedProperty().not());
 
-        addListener(obs -> {
-            if (valueIsNotBeingSetByUserInteraction)
-                return;
+        addListener(this::updateDataModel);
+        hpoProperty().addListener(obs -> onsetComponent.onsetOntologyClasses().setAll(Utils.prepareOnsetOntologyClasses(hpoProperty().get())));
+    }
 
-            ObservablePhenotypicFeature data = this.data.get();
-            if (data == null)
-                return;
+    private void updateDataModel(Observable obs) {
+        if (valueIsNotBeingSetByUserInteraction)
+            return;
 
-            // We handle change of onset/resolution known status separately.
-            if (obs.equals(onsetIsUnknown.selectedProperty())) {
-                if (onsetIsUnknown.isSelected()) {
-                    data.setOnset(null);
-                    onsetComponent.setData(null);
-                } else {
-                    ObservableTimeElement onset = new ObservableTimeElement();
-                    data.setOnset(onset);
-                    onsetComponent.setData(onset);
-                }
-            } else if (obs.equals(resolutionIsUnknown.selectedProperty())) {
-                if (resolutionIsUnknown.isSelected()) {
-                    data.setResolution(null);
-                    resolutionComponent.setData(null);
-                } else {
-                    ObservableTimeElement resolution = new ObservableTimeElement();
-                    data.setResolution(resolution);
-                    resolutionComponent.setData(resolution);
-                }
+        ObservablePhenotypicFeature data = this.data.get();
+        if (data == null)
+            return;
+
+        // We handle change of onset/resolution known status separately.
+        if (obs.equals(onsetIsUnknown.selectedProperty())) {
+            if (onsetIsUnknown.isSelected()) {
+                data.setOnset(null);
+                onsetComponent.setData(null);
             } else {
-                // Otherwise re-compute the state of the onset and resolution.
-                if (!onsetIsUnknown.isSelected())
-                    copyTimeElement(onsetComponent.getData(), data.getOnset());
-                if (!resolutionIsUnknown.isSelected())
-                    copyTimeElement(resolutionComponent.getData(), data.getResolution());
+                ObservableTimeElement onset = new ObservableTimeElement();
+                data.setOnset(onset);
+                onsetComponent.setData(onset);
             }
-        });
+        } else if (obs.equals(resolutionIsUnknown.selectedProperty())) {
+            if (resolutionIsUnknown.isSelected()) {
+                data.setResolution(null);
+                resolutionComponent.setData(null);
+            } else {
+                ObservableTimeElement resolution = new ObservableTimeElement();
+                data.setResolution(resolution);
+                resolutionComponent.setData(resolution);
+            }
+        } else {
+            // Otherwise re-compute the state of the onset and resolution.
+            if (!onsetIsUnknown.isSelected())
+                copyTimeElement(onsetComponent.getData(), data.getOnset());
+            if (!resolutionIsUnknown.isSelected())
+                copyTimeElement(resolutionComponent.getData(), data.getResolution());
+        }
     }
 
     @Override

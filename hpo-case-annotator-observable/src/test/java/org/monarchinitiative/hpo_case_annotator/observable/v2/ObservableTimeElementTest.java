@@ -2,6 +2,7 @@ package org.monarchinitiative.hpo_case_annotator.observable.v2;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.monarchinitiative.hpo_case_annotator.model.v2.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
@@ -18,7 +19,8 @@ public class ObservableTimeElementTest {
         ote.addListener(obs -> System.err.println("Something changed"));
         System.err.println("Setting ontology class");
         ote.setTimeElementCase(TimeElement.TimeElementCase.ONTOLOGY_CLASS);
-        ote.setOntologyClass(TermId.of("HP:123456"));
+        OntologyClass adultOnset = OntologyClass.of(TermId.of("HP:0003581"), "Adult onset");
+        ote.setOntologyClass(adultOnset);
 
         System.err.println("Setting age");
         ote.setTimeElementCase(TimeElement.TimeElementCase.AGE);

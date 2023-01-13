@@ -7,6 +7,7 @@ import org.monarchinitiative.hpo_case_annotator.model.v2.*;
 import org.monarchinitiative.hpo_case_annotator.model.v2.Age;
 import org.monarchinitiative.hpo_case_annotator.model.v2.AgeRange;
 import org.monarchinitiative.hpo_case_annotator.model.v2.GestationalAge;
+import org.monarchinitiative.hpo_case_annotator.model.v2.OntologyClass;
 import org.monarchinitiative.hpo_case_annotator.model.v2.PhenotypicFeature;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
@@ -94,7 +95,7 @@ abstract class BaseStudyToV2PhenopacketCodec<STUDY extends Study, MSG extends Me
         return Stream.of(pfb.build());
     }
 
-    Optional<org.phenopackets.schema.v2.core.TimeElement> mapTimeElement(org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement age) {
+    static Optional<org.phenopackets.schema.v2.core.TimeElement> mapTimeElement(org.monarchinitiative.hpo_case_annotator.model.v2.TimeElement age) {
         if (age == null)
             return Optional.empty();
         
@@ -129,9 +130,9 @@ abstract class BaseStudyToV2PhenopacketCodec<STUDY extends Study, MSG extends Me
                 }
             }
             case ONTOLOGY_CLASS -> {
-                TermId tid = age.getOntologyClass();
-                String label = hpo.getTermLabel(tid).orElse("UNKNOWN_TERM_ID");
-                yield Optional.of(TimeElements.ontologyClass(ontologyClass(tid.getId(), label)));
+                OntologyClass oc = age.getOntologyClass();
+                String label = oc.getLabel();
+                yield Optional.of(TimeElements.ontologyClass(ontologyClass(oc.getId().getValue(), label)));
             }
         };
     }

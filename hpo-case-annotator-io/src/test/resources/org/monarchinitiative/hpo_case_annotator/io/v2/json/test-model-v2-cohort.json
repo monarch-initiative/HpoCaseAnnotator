@@ -311,7 +311,10 @@
       "isExcluded" : true,
       "onset" : {
         "timeCase" : "ONTOLOGY_CLASS",
-        "ontologyClass" : "HP:0003581"
+        "ontologyClass" : {
+          "id" : "HP:0003581",
+          "label" : "Adult onset"
+        }
       },
       "resolution" : null
     } ],
