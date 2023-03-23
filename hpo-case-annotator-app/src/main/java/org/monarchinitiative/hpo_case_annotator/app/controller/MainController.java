@@ -54,6 +54,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -300,8 +301,55 @@ public class MainController {
 
     @FXML
     private void exportPhenopacketAllCasesMenuItemAction(ActionEvent e) {
-        // TODO - implement
-        Dialogs.showInfoDialog("Sorry", null, "Not yet implemented");
+        File[] studyPaths = optionalResources.getDiseaseCaseDir().toFile()
+                .listFiles(f -> f.getName().endsWith(".json"));
+        if (studyPaths == null) {
+            LOGGER.warn("Study paths were null");
+            return;
+        }
+
+        List<Message> phenopackets = new ArrayList<>(studyPaths.length);
+        List<String> studyIds = new ArrayList<>(studyPaths.length);
+        for (File studyPath : studyPaths) {
+            Optional<? extends Study> studyOpt = readStudy(studyPath.toPath());
+            if (studyOpt.isEmpty()) {
+                Dialogs.showWarningDialog("Export phenopackets", "Sorry",
+                        "Unable to read study from %s".formatted(studyPath.getAbsolutePath()));
+                return;
+            }
+
+            Study study = studyOpt.get();
+            Message message = mapToMessage(study, optionalServices.getHpo());
+            if (message == null)
+                return; // We complained elsewhere
+
+            phenopackets.add(message);
+            studyIds.add(study.getId());
+        }
+
+        // Ask the user for the export dir
+        DirectoryChooser chooser = new DirectoryChooser();
+        chooser.setTitle("Select export directory");
+        File exportFolder = chooser.showDialog(getOwnerWindow());
+        if (exportFolder == null)
+            // the user cancelled
+            return;
+        Path exportFolderPath = exportFolder.toPath();
+
+        PhenopacketPrinterFactory printerFactory = PhenopacketPrinterFactory.getInstance();
+        PhenopacketPrinter printer = printerFactory.forFormat(PhenopacketSchemaVersion.V2, PhenopacketFormat.JSON);
+        for (int i = 0; i < phenopackets.size(); i++) {
+            Message phenopacket = phenopackets.get(i);
+            String studyId = studyIds.get(i);
+            Path destination = exportFolderPath.resolve(studyId + ".json");
+
+            try {
+                printer.print(phenopacket, destination);
+            } catch (IOException ex) {
+                Dialogs.showErrorDialog("Export study into v2 phenopacket", "Cannot store phenopacket", ex.getMessage());
+            }
+        }
+
         e.consume();
     }
 
