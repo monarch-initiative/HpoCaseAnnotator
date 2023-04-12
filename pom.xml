@@ -31,14 +31,13 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <jannovar.version>0.36</jannovar.version>
-        <phenol.version>2.0.0-RC5</phenol.version>
+        <phenol.version>2.0.0</phenol.version>
         <svart.version>2.0.0-RC1</svart.version>
-        <!-- TODO - use stable version -->
-        <fenominal.version>0.7.7-SNAPSHOT</fenominal.version>
+        <fenominal.version>0.7.9</fenominal.version>
         <htsjdk.version>2.24.1</htsjdk.version>
 
         <protobuf.version>3.19.3</protobuf.version>
-        <phenopacket-tools.version>1.0.0-RC1</phenopacket-tools.version>
+        <phenopacket-tools.version>1.0.0-RC2</phenopacket-tools.version>
         <hpotextmining.version>0.2.8</hpotextmining.version>
 
         <javafx.version>17.0.2</javafx.version>

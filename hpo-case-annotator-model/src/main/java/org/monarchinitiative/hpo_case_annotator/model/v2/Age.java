@@ -29,16 +29,26 @@ public interface Age {
             return Optional.empty();
 
         StringBuilder builder = new StringBuilder("P");
-        if (years != null && years != 0)
+        if (years != null && years > 0)
             builder.append("%sY".formatted(years));
 
-        if (months != null && months != 0)
+        if (months != null && months > 0)
             builder.append("%sM".formatted(months));
 
-        if (days != null && days != 0)
+        if (days != null && days > 0)
             builder.append("%sD".formatted(days));
+
+        // Handle 0D case
+        boolean atLeastOneNonnullValue = isPositiveNonNull(years)
+                || isPositiveNonNull(months)
+                || isPositiveNonNull(days);
+        if (!atLeastOneNonnullValue)
+            builder.append("0D");
 
         return Optional.of(builder.toString());
     }
 
+    private boolean isPositiveNonNull(Integer value) {
+        return value != null && value > 0;
+    }
 }
