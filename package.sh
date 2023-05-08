@@ -17,7 +17,7 @@ JAR_NAME="hpo-case-annotator-app-${VERSION}.jar"
 VENDOR="The Monarch Initiative"
 DESCRIPTION="Hpo Case Annotator simplifies curation of published pathogenic human variants."
 COPYRIGHT="Copyright 2022, All rights reserved"
-ICON="${BUILD_DIR}/classes/img/donald-duck" # Update icon once we have a better one
+ICON="${BUILD_DIR}/classes/img/icon"
 
 
 function detect_platform() {
